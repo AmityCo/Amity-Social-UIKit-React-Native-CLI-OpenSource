@@ -71,7 +71,7 @@ export default function AllMyCommunity() {
   }, [searchTerm, isFocused]);
 
   const searchCommunities = (text: string) => {
-    const unsubscribe = CommunityRepository.getCommunities(
+    const unsubscribe = CommunityRepository.searchCommunities(
       { displayName: text, membership: 'member', limit: 20 },
       (data) => {
         setCommunities(data);
