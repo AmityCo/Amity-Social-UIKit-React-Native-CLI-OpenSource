@@ -16,6 +16,10 @@ export class TimeWindowTracker {
     return TimeWindowTracker.#instance;
   }
 
+  clear() {
+    this.#markedTimeWindow.clear();
+  }
+
   hasReachedLimit(placement: Amity.AdPlacement): boolean {
     const currentWindowKey = this.#getCurrentWindowKey(placement);
     return this.#markedTimeWindow.get(placement) === currentWindowKey;
