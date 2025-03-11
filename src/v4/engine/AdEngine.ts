@@ -76,7 +76,7 @@ export class AdEngine {
   private clearAllCache() {
     this.ads = [];
     this.settings = null;
-    // timewindowTracker.clear();
+    TimeWindowTracker.instance.clear();
     // AssetSyncEngine.cancelAllDownload();
     // AssetSyncEngine.removeAllAssets();
     // assetDB.clear();
