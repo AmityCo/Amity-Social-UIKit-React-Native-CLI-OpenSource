@@ -14,6 +14,7 @@ export class AdSupplier {
 
   recommendedAds({
     ads,
+    // placement,
     count,
     communityId,
   }: {
@@ -23,7 +24,7 @@ export class AdSupplier {
     communityId?: string;
   }) {
     // calculate impression age
-    const impressionAges = this.calculateImpressionAges(ads);
+    const impressionAges = this.#calculateImpressionAges(ads);
 
     // calculate score for all ads
     const scores = new Map<string, number>();
@@ -39,13 +40,13 @@ export class AdSupplier {
       scores.set(ad.adId, score);
     });
 
-    return this.selectAdsByWeightedRandomChoice({ ads, scores, count });
+    return this.#selectAdsByWeightedRandomChoice({ ads, scores, count });
   }
 
-  private calculateImpressionAges(ads: Amity.Ad[]) {
+  #calculateImpressionAges(ads: Amity.Ad[]) {
     const recencySortedAds = ads.sort((ad1, ad2) => {
-      const ad1ID = AdEngine.instance.getLastSeen(ad1.adId) || 0;
-      const ad2ID = AdEngine.instance.getLastSeen(ad2.adId) || 0;
+      const ad1ID = AdEngine.instance.getLastSeen(ad1.adId) ?? 0;
+      const ad2ID = AdEngine.instance.getLastSeen(ad2.adId) ?? 0;
       return ad2ID - ad1ID;
     });
 
@@ -69,7 +70,7 @@ export class AdSupplier {
     return impressionAges;
   }
 
-  private weightedRandomChoice(weights: number[]) {
+  #weightedRandomChoice(weights: number[]) {
     let cumulativeWeight = 0;
     const randomValue = Math.random();
 
@@ -83,7 +84,7 @@ export class AdSupplier {
     return weights.length - 1;
   }
 
-  private selectAdsByWeightedRandomChoice({
+  #selectAdsByWeightedRandomChoice({
     ads: inputAds,
     scores,
     count,
@@ -105,7 +106,7 @@ export class AdSupplier {
       const likelihoods = weights.map(
         (weight) => weight / weights.reduce((acc, w) => acc + w, 0)
       );
-      const selectedAdIndex = this.weightedRandomChoice(likelihoods);
+      const selectedAdIndex = this.#weightedRandomChoice(likelihoods);
 
       selectedAds.push(ads[selectedAdIndex]);
       ads.splice(selectedAdIndex, 1);
