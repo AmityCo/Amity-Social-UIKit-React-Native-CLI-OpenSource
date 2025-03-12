@@ -1,11 +1,6 @@
-import React, {
-  useContext,
-  useEffect,
-  useState,
-  createContext,
-  PropsWithChildren,
-} from 'react';
-import { AdEngine } from '../engine/AdEngine';
+import React, { useContext, useEffect, useState, createContext } from 'react';
+import { AdEngine } from '~/v4/engine/AdEngine';
+import { AdSupplier } from '~/v4/engine/AdSupplier';
 import { TimeWindowTracker } from '../engine/TimeWindowTracker';
 
 export const AdEngineContext = createContext<{
@@ -32,7 +27,7 @@ export const AdEngineContext = createContext<{
   getItemsPaginationCache: () => undefined,
 });
 
-export const AdEngineProvider: React.FC<PropsWithChildren> = ({ children }) => {
+export const AdEngineProvider: React.FC = ({ children }) => {
   const [networkAds, setNetworkAds] = useState<Amity.NetworkAds | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -140,25 +135,12 @@ export const useRecommendAds = ({
 }) => {
   const adContext = useContext(AdEngineContext);
   const ads = adContext.ads;
-  const [recommendedAds, setRecommendedAds] = useState<
-    Amity.Ad[] | undefined
-  >();
+  const [recommendedAds, setRecommendedAds] = useState<Amity.Ad[]>([]);
   const adSettings = useAdSettings();
   const adFrequency = AdEngine.instance.getAdFrequencyByPlacement(placement);
-  const getRecommendedAds = () => {
-    AdEngine.instance
-      .getRecommendedAds({
-        placement,
-        count,
-        communityId,
-      })
-      .then((ads) => {
-        setRecommendedAds(ads);
-      });
-  };
 
   useEffect(() => {
-    if (!adSettings?.enabled || ads.length === 0) {
+    if (!adSettings?.enabled) {
       return;
     }
     if (
@@ -168,14 +150,15 @@ export const useRecommendAds = ({
       return;
     }
 
-    getRecommendedAds();
+    setRecommendedAds(
+      AdSupplier.instance.recommendedAds({
+        ads,
+        placement,
+        count,
+        communityId,
+      })
+    );
   }, [ads, count, placement, communityId, adFrequency, adSettings]);
 
-  return {
-    resetRecommendedAds: () => {
-      setRecommendedAds(undefined);
-      getRecommendedAds();
-    },
-    recommendedAds,
-  };
+  return recommendedAds;
 };
