@@ -97,7 +97,7 @@ export default function App() {
   if (!fcmToken) return null;
   return (
     <AmityUiKitProvider
-      configs={config}
+      configs={config} //put your config json object
       apiKey="YOUR_API_KEY" // Put your apiKey
       apiRegion="API_REGION" // Put your apiRegion
       userId="USER_ID" // Put your UserId
