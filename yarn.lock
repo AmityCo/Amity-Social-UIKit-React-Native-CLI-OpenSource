@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@^6.31.1":
-  version "6.31.1"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-6.31.1.tgz#843e9e8b5b26b042d68612b04baf106389a8256a"
-  integrity sha512-IQpXYqrPeCwZ1PdeX+3kmZ3C8285ohgXShfnXwX2ovdlhdQnHYGe8m75DJCLn7fAmTz8qky1MqArm0M7Dz3SSg==
+"@amityco/ts-sdk-react-native@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.0.1.tgz#7f8198cafe0175ae63263819568adb53683107d4"
+  integrity sha512-TC8d7g7ZRjutWJDr3Lj/bQjw49SSHv+1A4EmXy1sxHQcMTuMl4mvyoZbC6zqXZcnC6Jb0gMks3lBKzT+g3m+mA==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
@@ -14,6 +14,7 @@
     debug "^4.3.4"
     hls.js "^1.4.10"
     js-base64 "^3.7.2"
+    mime "3.0.0"
     mitt "^3.0.0"
     mqtt "^4.3.7"
     object-hash "^3.0.0"
@@ -41,7 +42,7 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
-"@api.video/react-native-livestream@^2.0.0":
+"@api.video/react-native-livestream@2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@api.video/react-native-livestream/-/react-native-livestream-2.0.0.tgz#e8d30caa87760b19ccd5486ac6ba0b284f722e90"
   integrity sha512-uu6nfFg2JX1FdbwUhg7o9894kbhQLGwXWqUhHjlW0rzp5O8uC1o5HtN79kRCHYUDn1+Fk5hLdT9A82FVEjNKhQ==
@@ -8495,6 +8496,11 @@ mime@1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
   integrity sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==
+
+mime@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-3.0.0.tgz#b374550dca3a0c18443b0c950a6a58f1931cf7a7"
+  integrity sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==
 
 mime@^2.4.1:
   version "2.6.0"

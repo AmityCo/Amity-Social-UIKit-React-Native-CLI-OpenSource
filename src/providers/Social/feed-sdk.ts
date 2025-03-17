@@ -13,8 +13,8 @@ import { text_contain_blocked_word } from '../../constants';
 
 export interface IGlobalFeedRes {
   data: Amity.Post<any>[];
-  nextPage: Amity.Page<number> | undefined;
-  prevPage: Amity.Page<number> | undefined;
+  nextPage?: string;
+  prevPage?: string;
 }
 
 interface PostParam {
@@ -32,16 +32,18 @@ interface PostParam {
 }
 
 export async function getGlobalFeed(
-  page: Amity.Page<number>
+  queryToken?: string
 ): Promise<IGlobalFeedRes> {
   const feedObject: Promise<IGlobalFeedRes> = new Promise(
     async (resolve, reject) => {
       try {
-        const { data, nextPage, prevPage } =
-          await FeedRepository.queryGlobalFeed({
-            page,
+        const { data, paging } =
+          await FeedRepository.getCustomRankingGlobalFeed({
+            queryToken,
+            limit: 20,
           });
-        resolve({ data, nextPage, prevPage });
+
+        resolve({ data, nextPage: paging.next, prevPage: paging.prev });
       } catch (error) {
         reject(error);
       }
