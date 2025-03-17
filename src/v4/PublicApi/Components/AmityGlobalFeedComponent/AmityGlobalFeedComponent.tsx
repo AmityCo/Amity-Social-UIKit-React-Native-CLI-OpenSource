@@ -11,7 +11,6 @@ import { useStyle } from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
 import { RootState } from '../../../../redux/store';
-
 import { RefreshControl } from 'react-native';
 import AmityPostContentComponent, {
   IPost,
@@ -22,12 +21,8 @@ import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostConte
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
 import { usePostImpression } from '../../../../v4/hook/usePostImpression';
-import useAuth from '../../../../hooks/useAuth';
-import {
-  isAmityAd,
-  useCustomRankingGlobalFeed,
-} from '../../../../v4/hook/useCustomRankingGlobalFeed';
-import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
+import { useCustomRankingGlobalFeed } from '../../../../v4/hook/useCustomRankingGlobalFeed';
+import AmityPostAdComponent from '../../../component/AmityPostAdComponent/AmityPostAdComponent';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
@@ -38,29 +33,26 @@ export const globalFeedPageLimit = 20;
 const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
 }) => {
-  const { fetch, itemWithAds, refresh, loading } = useCustomRankingGlobalFeed();
+  const { nextPage, refresh } = useCustomRankingGlobalFeed();
   const componentId = ComponentID.global_feed_component;
   const { isExcluded, themeStyles, accessibilityId } = useAmityComponent({
     pageId,
     componentId,
   });
-
+  const { postList } = useSelector(
+    (state: RootState) => state.globalFeed as { postList: (IPost | Amity.Ad)[] }
+  );
   const [refreshing, setRefreshing] = useState(false);
   const { clearFeed } = globalFeedSlice.actions;
   const dispatch = useDispatch();
   const styles = useStyle(themeStyles);
-  const { isConnected } = useAuth();
   const flatListRef = useRef(null);
   const nextPage = useSelector(
     (state: RootState) => state.globalFeed.paginationData.next
   );
 
   const handleLoadMore = () => {
-    if (loading || !nextPage) return;
-
-    fetch({
-      queryToken: nextPage,
-    });
+    nextPage();
   };
 
   const onRefresh = useCallback(async () => {
@@ -71,18 +63,8 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   }, [clearFeed, dispatch, refresh]);
 
   const { handleViewChange } = usePostImpression(
-    itemWithAds.filter((item: IPost | Amity.Ad) =>
-      isAmityAd(item) ? item?.adId : item?.postId
-    )
+    postList.filter((item: IPost) => item.postId) as IPost[]
   );
-
-  useEffect(() => {
-    if (isConnected) {
-      fetch({
-        limit: globalFeedPageLimit,
-      });
-    }
-  }, [isConnected]);
 
   if (isExcluded) return null;
 
@@ -92,21 +74,25 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
       style={styles.feedWrap}
-      data={itemWithAds}
+      data={postList}
       renderItem={({ item }) => {
-        if (isAmityAd(item)) return <PostAdComponent ad={item as Amity.Ad} />;
+        if ((item as IPost).postId)
+          return (
+            <AmityPostContentComponent
+              post={item as IPost}
+              AmityPostContentComponentStyle={
+                AmityPostContentComponentStyleEnum.feed
+              }
+            />
+          );
 
-        return (
-          <AmityPostContentComponent
-            post={item as IPost}
-            AmityPostContentComponentStyle={
-              AmityPostContentComponentStyleEnum.feed
-            }
-          />
-        );
+        if ((item as Amity.Ad).adId)
+          return <AmityPostAdComponent ad={item as Amity.Ad} />;
       }}
-      keyExtractor={(item, index) =>
-        isAmityAd(item) ? item.adId.toString() + index : item.postId.toString()
+      keyExtractor={(item) =>
+        (item as IPost).postId
+          ? (item as IPost).postId.toString()
+          : (item as Amity.Ad)?.adId.toString()
       }
       onEndReachedThreshold={0.5}
       onEndReached={handleLoadMore}

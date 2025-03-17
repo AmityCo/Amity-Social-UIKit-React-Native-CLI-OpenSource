@@ -1,32 +1,33 @@
 import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { usePaginatorCore } from './usePaginator';
+import useAuth from '../../hooks/useAuth';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
-import { RootState } from '../../redux/store';
-import { IPost } from '../../v4/PublicApi/Components/AmityPostContentComponent/AmityPostContentComponent';
-import { usePaginatorApi } from '../../v4/hook/usePaginator';
-
-export const isAmityAd = (item: Amity.Post | Amity.Ad): item is Amity.Ad => {
-  return (item as Amity.Ad)?.adId !== undefined;
-};
+import { useDispatch } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const useCustomRankingGlobalFeed = () => {
   const dispatch = useDispatch();
+  const pageLimit = 10;
 
-  const { updateGlobalFeed, clearFeed, setPaginationData, setNewGlobalFeed } =
-    globalFeedSlice.actions;
+  const { isConnected } = useAuth();
+  const { updateGlobalFeed } = globalFeedSlice.actions;
+
+  const getItemId = useCallback((item: Amity.Post) => item.postId, []);
+
+  const { combineItemsWithAds } = usePaginatorCore<Amity.Post>({
+    placement: 'feed' as Amity.AdPlacement,
+    pageSize: pageLimit,
+    getItemId,
+  });
+
+  const [paging, setPaging] = useState<{
+    next?: string;
+    previous?: string;
+  } | null>(null);
 
   const [fetching, setFetching] = useState(false);
-  const postList = useSelector((state: RootState) => state.globalFeed.postList);
-
-  const { itemWithAds, reset } = usePaginatorApi<IPost | Amity.Ad>({
-    items: postList as (IPost | Amity.Ad)[],
-    placement: 'feed' as Amity.AdPlacement,
-    pageSize: globalFeedPageLimit,
-    getItemId: (item) => (item as IPost).postId.toString(),
-  });
 
   const processPosts = async (posts: Amity.Post[]) => {
     const results = await Promise.all(
@@ -61,8 +62,7 @@ export const useCustomRankingGlobalFeed = () => {
 
     const filteredResult = results.filter((result) => result !== null);
     const formattedPostList = await amityPostsFormatter(filteredResult);
-
-    return formattedPostList;
+    dispatch(updateGlobalFeed(combineItemsWithAds(formattedPostList)));
   };
 
   const fetch = async ({
@@ -72,9 +72,6 @@ export const useCustomRankingGlobalFeed = () => {
     queryToken?: string;
     limit?: number;
   }) => {
-    // if load first page, reset all the running index in paginator
-    setFetching(true);
-    if (!queryToken) reset();
     const {
       data,
       paging: { next, previous },
@@ -85,26 +82,33 @@ export const useCustomRankingGlobalFeed = () => {
 
     if (data) {
       setFetching(false);
-      dispatch(setPaginationData({ next, previous }));
-      const processedPosts = await processPosts(data);
-      if (!queryToken) {
-        dispatch(setNewGlobalFeed(processedPosts));
-      } else {
-        dispatch(updateGlobalFeed(processedPosts));
-      }
+      setPaging({ next, previous });
+      await processPosts(data);
     }
   };
 
+  const nextPage = () => {
+    setFetching(true);
+    if (paging?.next) fetch({ queryToken: paging.next });
+  };
+
+  const previousPage = () => {
+    setFetching(true);
+    if (paging?.previous) fetch({ queryToken: paging.previous });
+  };
+
   const refresh = async () => {
-    dispatch(clearFeed());
-    await fetch({ limit: globalFeedPageLimit });
+    setFetching(true);
+    dispatch(updateGlobalFeed([]));
+    await fetch({ limit: pageLimit });
     return true;
   };
 
-  return {
-    fetch,
-    loading: fetching,
-    refresh,
-    itemWithAds,
-  };
+  useFocusEffect(
+    useCallback(() => {
+      if (isConnected) fetch({ limit: pageLimit });
+    }, [isConnected])
+  );
+
+  return { loading: fetching, nextPage, previousPage, refresh };
 };
