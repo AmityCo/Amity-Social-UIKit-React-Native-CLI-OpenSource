@@ -33,10 +33,15 @@ const PostAdHeader: FC<PostAdHeaderType> = ({ advertiser, pageId }) => {
         elementID={ElementID.WildCardElement}
         componentID={componentId}
       />
-      <View style={styles.headerRightSection}>
+      <View>
         <Text style={styles.headerText}>{advertiser?.name}</Text>
         <View style={styles.adBadge}>
-          <SvgXml xml={star()} width="32" height="32" />
+          <SvgXml
+            style={styles.adBadgeIcon}
+            xml={star()}
+            width="12"
+            height="12"
+          />
           <Text style={styles.adBadgeContent}>Sponsored</Text>
         </View>
       </View>
