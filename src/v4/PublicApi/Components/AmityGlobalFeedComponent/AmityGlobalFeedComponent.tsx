@@ -1,12 +1,9 @@
 import React, { FC, memo, useCallback, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
-import useAuth from '../../../../hooks/useAuth';
 import { useStyle } from './styles';
-import { amityPostsFormatter } from '../../../../util/postDataFormatter';
 import { useDispatch, useSelector } from 'react-redux';
 import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
 import { RootState } from '../../../../redux/store';
-import { useFocusEffect } from '@react-navigation/native';
 import { RefreshControl } from 'react-native';
 import AmityPostContentComponent, {
   IPost,
@@ -16,8 +13,9 @@ import { useAmityComponent } from '../../../hook/useUiKitReference';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
-import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { usePostImpression } from '../../../../v4/hook/usePostImpression';
+import { useCustomRankingGlobalFeed } from '../../../../v4/hook/useCustomRankingGlobalFeed';
+import AmityPostAdComponent from '../../../component/AmityPostAdComponent/AmityPostAdComponent';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
@@ -26,101 +24,36 @@ type AmityGlobalFeedComponentType = {
 const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
 }) => {
+  const { nextPage, refresh } = useCustomRankingGlobalFeed();
   const componentId = ComponentID.global_feed_component;
   const { isExcluded, themeStyles, accessibilityId } = useAmityComponent({
     pageId,
     componentId,
   });
   const { postList } = useSelector(
-    (state: RootState) => state.globalFeed as { postList: IPost[] }
+    (state: RootState) => state.globalFeed as { postList: (IPost | Amity.Ad)[] }
   );
   const [refreshing, setRefreshing] = useState(false);
-  const { updateGlobalFeed, clearFeed } = globalFeedSlice.actions;
+  const { clearFeed } = globalFeedSlice.actions;
   const dispatch = useDispatch();
   const styles = useStyle(themeStyles);
-  const { isConnected } = useAuth();
-  const [postData, setPostData] = useState<{ data: any; nextPage: string }>();
-  const { data: posts = [], nextPage } = postData ?? {};
+
   const flatListRef = useRef(null);
 
-  const getGlobalFeedList = async (queryToken?: string) => {
-    const {
-      data,
-      paging: { next },
-    } = await FeedRepository.getCustomRankingGlobalFeed({
-      queryToken,
-      limit: 20,
-    });
-    if (data) {
-      setPostData({ data, nextPage: next });
-    }
-  };
   const handleLoadMore = () => {
-    if (nextPage) {
-      getGlobalFeedList(nextPage);
-    }
+    nextPage();
   };
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     dispatch(clearFeed());
-    await getGlobalFeedList();
+    await refresh();
     setRefreshing(false);
   }, [clearFeed, dispatch]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (isConnected) {
-        FeedRepository.getCustomRankingGlobalFeed({
-          limit: 20,
-        }).then(({ data, paging: { next } }) => {
-          setPostData({ data, nextPage: next });
-        });
-      }
-    }, [isConnected])
+  const { handleViewChange } = usePostImpression(
+    postList.filter((item: IPost) => item.postId) as IPost[]
   );
-  const getPostList = useCallback(async () => {
-    if (posts.length > 0) {
-      //filter image and video post. remove this later
-      const results = await Promise.all(
-        posts.map((post) => {
-          if (post?.children.length > 0) {
-            return new Promise((resolve) => {
-              PostRepository.getPost(
-                post?.children[0],
-                ({ error, loading, data }) => {
-                  if (!error && !loading) {
-                    if (
-                      data?.dataType === 'image' ||
-                      data?.dataType === 'video'
-                    ) {
-                      resolve(post);
-                    } else {
-                      resolve(null);
-                    }
-                  } else {
-                    resolve(null);
-                  }
-                }
-              );
-            });
-          } else {
-            return post;
-          }
-        })
-      );
-      const filteredResult = results.filter((result) => result !== null);
-      const formattedPostList = await amityPostsFormatter(filteredResult);
-      dispatch(updateGlobalFeed(formattedPostList));
-    }
-  }, [dispatch, posts, updateGlobalFeed]);
-
-  useFocusEffect(
-    useCallback(() => {
-      posts && getPostList();
-    }, [getPostList, posts])
-  );
-
-  const { handleViewChange } = usePostImpression(postList);
 
   if (isExcluded) return null;
 
@@ -131,15 +64,25 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       accessibilityLabel={accessibilityId}
       style={styles.feedWrap}
       data={postList}
-      renderItem={({ item }) => (
-        <AmityPostContentComponent
-          post={item}
-          AmityPostContentComponentStyle={
-            AmityPostContentComponentStyleEnum.feed
-          }
-        />
-      )}
-      keyExtractor={(item) => item.postId.toString()}
+      renderItem={({ item }) => {
+        if ((item as IPost).postId)
+          return (
+            <AmityPostContentComponent
+              post={item as IPost}
+              AmityPostContentComponentStyle={
+                AmityPostContentComponentStyleEnum.feed
+              }
+            />
+          );
+
+        if ((item as Amity.Ad).adId)
+          return <AmityPostAdComponent ad={item as Amity.Ad} />;
+      }}
+      keyExtractor={(item) =>
+        (item as IPost).postId
+          ? (item as IPost).postId.toString()
+          : (item as Amity.Ad)?.adId.toString()
+      }
       onEndReachedThreshold={0.5}
       onEndReached={handleLoadMore}
       ref={flatListRef}
