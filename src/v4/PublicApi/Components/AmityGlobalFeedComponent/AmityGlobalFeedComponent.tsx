@@ -14,12 +14,18 @@ import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostConte
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
 import { usePostImpression } from '../../../../v4/hook/usePostImpression';
-import { useCustomRankingGlobalFeed } from '../../../../v4/hook/useCustomRankingGlobalFeed';
+import {
+  isAmityAd,
+  useCustomRankingGlobalFeed,
+} from '../../../../v4/hook/useCustomRankingGlobalFeed';
 import AmityPostAdComponent from '../../../component/AmityPostAdComponent/AmityPostAdComponent';
+import { usePaginatorApi } from '../../../hook/usePaginator';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
 };
+
+export const globalFeedPageLimit = 10;
 
 const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
@@ -30,9 +36,18 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
     pageId,
     componentId,
   });
+
   const { postList } = useSelector(
     (state: RootState) => state.globalFeed as { postList: (IPost | Amity.Ad)[] }
   );
+
+  const { itemWithAds } = usePaginatorApi<IPost | Amity.Ad>({
+    items: postList as (IPost | Amity.Ad)[],
+    placement: 'feed' as Amity.AdPlacement,
+    pageSize: globalFeedPageLimit,
+    getItemId: (item) => (item as IPost).postId.toString(),
+  });
+
   const [refreshing, setRefreshing] = useState(false);
   const { clearFeed } = globalFeedSlice.actions;
   const dispatch = useDispatch();
@@ -63,25 +78,22 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
       style={styles.feedWrap}
-      data={postList}
+      data={itemWithAds}
       renderItem={({ item }) => {
-        if ((item as IPost).postId)
-          return (
-            <AmityPostContentComponent
-              post={item as IPost}
-              AmityPostContentComponentStyle={
-                AmityPostContentComponentStyleEnum.feed
-              }
-            />
-          );
-
-        if ((item as Amity.Ad).adId)
+        if (isAmityAd(item))
           return <AmityPostAdComponent ad={item as Amity.Ad} />;
+
+        return (
+          <AmityPostContentComponent
+            post={item as IPost}
+            AmityPostContentComponentStyle={
+              AmityPostContentComponentStyleEnum.feed
+            }
+          />
+        );
       }}
       keyExtractor={(item) =>
-        (item as IPost).postId
-          ? (item as IPost).postId.toString()
-          : (item as Amity.Ad)?.adId.toString()
+        isAmityAd(item) ? item.adId.toString() : item.postId.toString()
       }
       onEndReachedThreshold={0.5}
       onEndReached={handleLoadMore}

@@ -1,8 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { IPost } from '../../components/Social/PostList';
+import { isAmityAd } from '../../v4/hook/useCustomRankingGlobalFeed';
 
 interface GlobalFeedState {
-  postList: IPost[];
+  postList: (IPost | Amity.Ad)[];
 }
 const initialState: GlobalFeedState = {
   postList: [],
@@ -13,9 +14,15 @@ const globalFeedSlice = createSlice({
   initialState,
   reducers: {
     updateGlobalFeed: (state, action: PayloadAction<IPost[]>) => {
-      const getUniqueArrayById = (arr: IPost[]) => {
-        const uniqueIds = new Set(state.postList.map((post) => post.postId));
-        return arr.filter((post) => !uniqueIds.has(post.postId));
+      const getUniqueArrayById = (arr: (IPost | Amity.Ad)[]) => {
+        const uniqueIds = new Set(
+          state.postList.map((post) =>
+            isAmityAd(post) ? post.adId : post.postId
+          )
+        );
+        return arr.filter(
+          (post) => !uniqueIds.has(isAmityAd(post) ? post.adId : post.postId)
+        );
       };
       state.postList = [
         ...state.postList,
@@ -31,14 +38,16 @@ const globalFeedSlice = createSlice({
       action: PayloadAction<{ postId: string; postDetail: IPost }>
     ) => {
       const { postId, postDetail } = action.payload;
-      const index = state.postList.findIndex((item) => item.postId === postId);
+      const index = state.postList.findIndex(
+        (item) => !isAmityAd(item) && item.postId === postId
+      );
       state.postList[index] = postDetail;
     },
     deleteByPostId: (state, action: PayloadAction<{ postId: string }>) => {
       const { postId } = action.payload;
-      const prevPostList: IPost[] = [...state.postList];
-      const updatedPostList: IPost[] = prevPostList.filter(
-        (item) => item.postId !== postId
+      const prevPostList: (IPost | Amity.Ad)[] = [...state.postList];
+      const updatedPostList: (IPost | Amity.Ad)[] = prevPostList.filter(
+        (item) => !isAmityAd(item) && item.postId !== postId
       );
 
       state.postList = updatedPostList;
