@@ -1,26 +1,21 @@
 import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { useCallback, useState } from 'react';
-import { usePaginatorCore } from './usePaginator';
 import useAuth from '../../hooks/useAuth';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import { useDispatch } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
+import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
+
+export const isAmityAd = (item: Amity.Post | Amity.Ad): item is Amity.Ad => {
+  return (item as Amity.Ad)?.adId !== undefined;
+};
 
 export const useCustomRankingGlobalFeed = () => {
   const dispatch = useDispatch();
-  const pageLimit = 10;
 
   const { isConnected } = useAuth();
   const { updateGlobalFeed } = globalFeedSlice.actions;
-
-  const getItemId = useCallback((item: Amity.Post) => item.postId, []);
-
-  const { combineItemsWithAds } = usePaginatorCore<Amity.Post>({
-    placement: 'feed' as Amity.AdPlacement,
-    pageSize: pageLimit,
-    getItemId,
-  });
 
   const [paging, setPaging] = useState<{
     next?: string;
@@ -62,7 +57,8 @@ export const useCustomRankingGlobalFeed = () => {
 
     const filteredResult = results.filter((result) => result !== null);
     const formattedPostList = await amityPostsFormatter(filteredResult);
-    dispatch(updateGlobalFeed(combineItemsWithAds(formattedPostList)));
+
+    dispatch(updateGlobalFeed(formattedPostList));
   };
 
   const fetch = async ({
@@ -100,13 +96,13 @@ export const useCustomRankingGlobalFeed = () => {
   const refresh = async () => {
     setFetching(true);
     dispatch(updateGlobalFeed([]));
-    await fetch({ limit: pageLimit });
+    await fetch({ limit: globalFeedPageLimit });
     return true;
   };
 
   useFocusEffect(
     useCallback(() => {
-      if (isConnected) fetch({ limit: pageLimit });
+      if (isConnected) fetch({ limit: globalFeedPageLimit });
     }, [isConnected])
   );
 

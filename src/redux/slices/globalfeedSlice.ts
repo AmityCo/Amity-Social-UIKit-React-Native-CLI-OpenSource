@@ -4,10 +4,6 @@ import { isAmityAd } from '../../v4/hook/useCustomRankingGlobalFeed';
 
 interface GlobalFeedState {
   postList: (IPost | Amity.Ad)[];
-  paginationData: {
-    next: string | null;
-    previous: string | null;
-  };
 }
 const initialState: GlobalFeedState = {
   postList: [],

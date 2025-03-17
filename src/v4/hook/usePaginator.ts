@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdEngine } from '../engine/AdEngine';
 import {
   useAdSettings,
@@ -34,6 +34,11 @@ export const usePaginatorCore = <T>({
   })();
 
   const recommendedAds = useRecommendAds({ count, placement, communityId });
+  const recommendedAdsRef = useRef(recommendedAds);
+
+  useEffect(() => {
+    recommendedAdsRef.current = recommendedAds;
+  }, [recommendedAds]);
 
   const combineItemsWithAds = (newItems: T[]) => {
     if (!adSettings?.enabled) {
@@ -93,6 +98,7 @@ export const usePaginatorCore = <T>({
 
       let runningAdIndex = currentAdIndex;
       let runningIndex = currentIndex;
+
       const suffixItems: Array<[T] | [T, Amity.Ad]> = filteredNewItems.map(
         (newItem) => {
           runningIndex = runningIndex + 1;
@@ -100,10 +106,10 @@ export const usePaginatorCore = <T>({
 
           if (!shouldPlaceAd) return [newItem];
 
-          const ad = recommendedAds[runningAdIndex];
+          const ad = recommendedAdsRef.current[runningAdIndex];
 
           runningAdIndex =
-            runningAdIndex + 1 > recommendedAds.length - 1
+            runningAdIndex + 1 > recommendedAdsRef.current.length - 1
               ? 0
               : runningAdIndex + 1;
           return [newItem, ad];
@@ -113,16 +119,14 @@ export const usePaginatorCore = <T>({
       setCurrentAdIndex(runningAdIndex);
       setCurrentIndex(runningIndex);
       const newItemsWithAds = [...prevItems, ...suffixItems];
-      setItemWithAds([...prevItems, ...suffixItems]);
+
+      setItemWithAds(newItemsWithAds);
       if (newItemsWithAds.length === 0) {
         setCurrentAdIndex(0);
         setCurrentIndex(0);
       }
 
-      const result = [...prevItems, ...suffixItems]
-        .flatMap((item) => item)
-        .filter(Boolean);
-
+      const result = newItemsWithAds.filter(Boolean).flatMap((item) => item);
       return result;
     } else if (frequency?.type === 'time-window') {
       if (newItems.length === 0) {
@@ -144,4 +148,19 @@ export const usePaginatorCore = <T>({
   };
 
   return { combineItemsWithAds, reset };
+};
+
+export const usePaginatorApi = <T>(params: {
+  items: T[];
+  placement: Amity.AdPlacement;
+  pageSize: number;
+  communityId?: string;
+  getItemId: (item: T) => string;
+}) => {
+  const { items, ...rest } = params;
+  const { combineItemsWithAds, reset } = usePaginatorCore(rest);
+
+  const itemWithAds = useMemo(() => combineItemsWithAds(items), [items]);
+
+  return { itemWithAds, reset };
 };
