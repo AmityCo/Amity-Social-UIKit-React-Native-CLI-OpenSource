@@ -1,6 +1,12 @@
-import React, { useContext, useEffect, useState, createContext } from 'react';
-import { AdEngine } from '~/v4/engine/AdEngine';
-import { AdSupplier } from '~/v4/engine/AdSupplier';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  createContext,
+  PropsWithChildren,
+} from 'react';
+import { AdEngine } from '../engine/AdEngine';
+import { AdSupplier } from '../engine/AdSupplier';
 import { TimeWindowTracker } from '../engine/TimeWindowTracker';
 
 export const AdEngineContext = createContext<{
@@ -27,7 +33,7 @@ export const AdEngineContext = createContext<{
   getItemsPaginationCache: () => undefined,
 });
 
-export const AdEngineProvider: React.FC = ({ children }) => {
+export const AdEngineProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [networkAds, setNetworkAds] = useState<Amity.NetworkAds | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

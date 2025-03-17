@@ -21,15 +21,15 @@ export class TimeWindowTracker {
   }
 
   hasReachedLimit(placement: Amity.AdPlacement): boolean {
-    const currentWindowKey = this.#getCurrentWindowKey(placement);
+    const currentWindowKey = this.getCurrentWindowKey(placement);
     return this.#markedTimeWindow.get(placement) === currentWindowKey;
   }
 
   markSeen(placement: Amity.AdPlacement) {
-    this.#markedTimeWindow.set(placement, this.#getCurrentWindowKey(placement));
+    this.#markedTimeWindow.set(placement, this.getCurrentWindowKey(placement));
   }
 
-  #getTimeWindowSettings(placement: Amity.AdPlacement): number {
+  private getTimeWindowSettings(placement: Amity.AdPlacement): number {
     const adFrequency = AdEngine.instance.getAdFrequencyByPlacement(placement);
 
     if (adFrequency == null || adFrequency.type !== 'time-window') {
@@ -38,11 +38,11 @@ export class TimeWindowTracker {
     return adFrequency.value;
   }
 
-  #getCurrentWindowKey(placement: Amity.AdPlacement) {
+  private getCurrentWindowKey(placement: Amity.AdPlacement) {
     const today = dayjs();
     const minuteSinceStartOfADay = today.startOf('day').diff(today, 'minute');
     const windowIndex = Math.ceil(
-      minuteSinceStartOfADay / this.#getTimeWindowSettings(placement)
+      minuteSinceStartOfADay / this.getTimeWindowSettings(placement)
     );
     return `${today.format('DD-MM-YYYY')}-${windowIndex}`;
   }
