@@ -101,7 +101,7 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
         setLivestreamId([...livestreamIds]);
       });
     } catch (error) {
-      console.log('error: =>', error);
+      console.log('error: ', error);
     }
   }, [apiRegion, childrenPosts]);
 
