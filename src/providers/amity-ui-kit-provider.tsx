@@ -40,6 +40,7 @@ export interface CustomColors {
   secondaryShade3?: string;
   secondaryShade4?: string;
   background?: string;
+  backgroundShade1?: string;
   base?: string;
   baseShade1?: string;
   baseShade2?: string;
@@ -98,6 +99,9 @@ export default function AmityUiKitProvider({
       secondaryShade3: validateConfigColor(secondaryShades[2]),
       secondaryShade4: validateConfigColor(secondaryShades[3]),
       background: validateConfigColor(themeColor?.background_color),
+      backgroundShade1: validateConfigColor(
+        themeColor?.background_shade1_color
+      ),
       base: validateConfigColor(themeColor?.base_color),
       baseShade1: validateConfigColor(themeColor?.base_shade1_color),
       baseShade2: validateConfigColor(themeColor?.base_shade2_color),
