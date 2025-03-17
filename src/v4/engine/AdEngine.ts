@@ -18,7 +18,7 @@ class SeenRecencyCache {
     return SeenRecencyCache.#instance;
   }
 
-  async #getSeenRecencyCache() {
+  private async getSeenRecencyCache() {
     return JSON.parse(
       (await AsyncStorage.getItem(this.#persistentCacheKey)) || '{}'
     );
@@ -26,11 +26,11 @@ class SeenRecencyCache {
 
   getSeenRecencyByAdId(adId?: string): number | undefined {
     if (!adId) return;
-    return this.#getSeenRecencyCache()[adId];
+    return this.getSeenRecencyCache()[adId];
   }
 
   async setSeenRecencyCache(adId: string, value: number) {
-    const seenRecencyCache = this.#getSeenRecencyCache();
+    const seenRecencyCache = this.getSeenRecencyCache();
     seenRecencyCache[adId] = value;
     await AsyncStorage.setItem(
       this.#persistentCacheKey,
@@ -86,15 +86,16 @@ export class AdEngine {
 
   private async consumeNetworkAds() {
     const networkAds = await AdRepository.getNetworkAds();
+
     this.ads = networkAds.ads;
     this.settings = networkAds.settings;
     this.subscribers.forEach((subscriber) => subscriber(networkAds));
     // Reomove unused Asset fileIds[]
     // AssetSyncEngine.getInstance().removeUnusedAssets(fileIds)
-    this.subscribers.forEach((subscriber) => subscriber(null));
+    // this.subscribers.forEach((subscriber) => subscriber(null));
   }
 
-  #getAdFrequency(placement: Amity.AdPlacement) {
+  private getAdFrequency(placement: Amity.AdPlacement) {
     if (!this.settings) return null;
     switch (placement) {
       case 'feed':
@@ -119,14 +120,14 @@ export class AdEngine {
   markSeen(ad: Amity.Ad, placement: Amity.AdPlacement) {
     // update recency seen time as now
     SeenRecencyCache.instance.setSeenRecencyCache(ad.adId, Date.now());
-    if (this.#getAdFrequency(placement)?.type === 'time-window') {
+    if (this.getAdFrequency(placement)?.type === 'time-window') {
       TimeWindowTracker.instance.markSeen(placement);
     }
     ad.analytics.markAsSeen(placement);
   }
 
   getAdFrequencyByPlacement(placement: Amity.AdPlacement) {
-    return this.#getAdFrequency(placement);
+    return this.getAdFrequency(placement);
   }
 }
 

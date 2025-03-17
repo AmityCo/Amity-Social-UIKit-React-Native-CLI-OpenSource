@@ -12,6 +12,7 @@ import fallBackConfig from '../../uikit.config.json';
 import { BehaviourProvider } from '../v4/providers/BehaviourProvider';
 import { IBehaviour } from '../v4/types/behaviour.interface';
 import { lighten, parseToHsl, hslToColorString } from 'polished';
+import { AdEngineProvider } from '../v4/providers/AdEngineProvider';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
@@ -117,11 +118,13 @@ export default function AmityUiKitProvider({
         authToken={authToken}
         fcmToken={fcmToken}
       >
-        <ConfigProvider configs={configData}>
-          <BehaviourProvider behaviour={behaviour}>
-            <PaperProvider theme={globalTheme}>{children}</PaperProvider>
-          </BehaviourProvider>
-        </ConfigProvider>
+        <AdEngineProvider>
+          <ConfigProvider configs={configData}>
+            <BehaviourProvider behaviour={behaviour}>
+              <PaperProvider theme={globalTheme}>{children}</PaperProvider>
+            </BehaviourProvider>
+          </ConfigProvider>
+        </AdEngineProvider>
       </AuthContextProvider>
     </Provider>
   );
