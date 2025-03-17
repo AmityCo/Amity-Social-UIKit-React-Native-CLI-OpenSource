@@ -49,7 +49,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
     dispatch(clearFeed());
     await refresh();
     setRefreshing(false);
-  }, [clearFeed, dispatch]);
+  }, [clearFeed, dispatch, refresh]);
 
   const { handleViewChange } = usePostImpression(
     postList.filter((item: IPost) => item.postId) as IPost[]
