@@ -48,6 +48,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       color: theme.colors.baseShade1,
     },
     contentDetailText: {
+      flex: 1,
       fontSize: 13,
       lineHeight: 18,
       color: theme.colors.baseShade1,
