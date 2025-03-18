@@ -126,7 +126,7 @@ export const usePaginatorCore = <T>({
         setCurrentIndex(0);
       }
 
-      const result = newItemsWithAds.filter(Boolean).flatMap((item) => item);
+      const result = newItemsWithAds.flatMap((item) => item).filter(Boolean);
       return result;
     } else if (frequency?.type === 'time-window') {
       if (newItems.length === 0) {

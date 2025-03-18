@@ -32,9 +32,9 @@ const AmityPostAdComponent: FC<AmityPostAdComponentType> = ({ ad, pageId }) => {
       setImage(result);
     };
 
-    if (!ad?.image1_1.fileId) return;
+    if (!ad?.image1_1?.fileId) return;
     fetchImage(ad?.image1_1.fileId);
-  }, [ad?.image1_1.fileId, getImage]);
+  }, [ad?.image1_1?.fileId, getImage]);
 
   if (!ad) return null;
 

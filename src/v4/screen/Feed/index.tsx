@@ -24,9 +24,8 @@ import { deletePostById } from '../../../providers/Social/feed-sdk';
 import { amityPostsFormatter } from '../../../util/postDataFormatter';
 import { useFocusEffect } from '@react-navigation/native';
 import { usePaginatorApi } from '../../hook/usePaginator';
-import { usePostImpression } from '../../../v4/hook/usePostImpression';
 import { isAmityAd } from '../../../v4/hook/useCustomRankingGlobalFeed';
-import PostAdComponent from '../../component/PostAdComponent/PostAdComponent';
+import AmityPostAdComponent from '../../../v4/component/AmityPostAdComponent/AmityPostAdComponent';
 
 interface IFeed {
   targetId: string;
@@ -48,16 +47,6 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
     getItemId: (item) =>
       isAmityAd(item) ? item?.adId.toString() : item?.postId.toString(),
   });
-
-  const shouldShowAds = targetType !== 'user';
-  const feedItems = shouldShowAds ? itemWithAds : postData;
-
-  const { handleViewChange } = usePostImpression(
-    itemWithAds.filter(
-      (item: Amity.Post | Amity.Ad) =>
-        !!(isAmityAd(item) ? item?.adId : item?.postId)
-    ) as (Amity.Post | Amity.Ad)[]
-  );
 
   let isSubscribed = false;
 
@@ -140,9 +129,10 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
     <View style={styles.feedWrap}>
       <FlatList
         scrollEnabled={false}
-        data={feedItems ?? []}
+        data={itemWithAds ?? []}
         renderItem={({ item, index }) => {
-          if (isAmityAd(item)) return <PostAdComponent ad={item as Amity.Ad} />;
+          if (isAmityAd(item))
+            return <AmityPostAdComponent ad={item as Amity.Ad} />;
 
           return (
             <PostList
@@ -153,13 +143,9 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
             />
           );
         }}
-        keyExtractor={(item, index) =>
-          isAmityAd(item)
-            ? item.adId.toString() + index
-            : item.postId.toString()
+        keyExtractor={(item) =>
+          isAmityAd(item) ? item.adId.toString() : item.postId.toString()
         }
-        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
-        onViewableItemsChanged={handleViewChange}
         extraData={itemWithAds}
       />
     </View>
