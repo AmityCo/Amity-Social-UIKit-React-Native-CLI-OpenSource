@@ -50,11 +50,8 @@ const PostAdComponent: FC<PostAdComponentType> = ({
 
   return (
     <View style={styles.container} testID={accessibilityId}>
-      <SvgXml
+      <TouchableOpacity
         style={styles.infoIcon}
-        xml={infoIcon()}
-        width="16"
-        height="16"
         onPress={() => {
           ad?.advertiser?.companyName &&
             dispatch(
@@ -69,7 +66,9 @@ const PostAdComponent: FC<PostAdComponentType> = ({
               })
             );
         }}
-      />
+      >
+        <SvgXml xml={infoIcon()} width="16" height="16" />
+      </TouchableOpacity>
       <PostAdHeader advertiser={ad?.advertiser} pageId={pageId} />
       <Text style={styles.textContent}>{ad.body}</Text>
       {image && (
