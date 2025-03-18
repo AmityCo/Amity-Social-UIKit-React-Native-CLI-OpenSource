@@ -142,8 +142,10 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
             />
           );
         }}
-        keyExtractor={(item) =>
-          isAmityAd(item) ? item.adId.toString() : item.postId.toString()
+        keyExtractor={(item, index) =>
+          isAmityAd(item)
+            ? item.adId.toString() + index
+            : item.postId.toString()
         }
         extraData={itemWithAds}
       />
