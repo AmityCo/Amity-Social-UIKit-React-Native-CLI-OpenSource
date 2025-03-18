@@ -25,7 +25,7 @@ import { amityPostsFormatter } from '../../../util/postDataFormatter';
 import { useFocusEffect } from '@react-navigation/native';
 import { usePaginatorApi } from '../../hook/usePaginator';
 import { isAmityAd } from '../../../v4/hook/useCustomRankingGlobalFeed';
-import AmityPostAdComponent from '../../../v4/component/AmityPostAdComponent/AmityPostAdComponent';
+import PostAdComponent from '../../component/PostAdComponent/PostAdComponent';
 
 interface IFeed {
   targetId: string;
@@ -131,8 +131,7 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
         scrollEnabled={false}
         data={itemWithAds ?? []}
         renderItem={({ item, index }) => {
-          if (isAmityAd(item))
-            return <AmityPostAdComponent ad={item as Amity.Ad} />;
+          if (isAmityAd(item)) return <PostAdComponent ad={item as Amity.Ad} />;
 
           return (
             <PostList

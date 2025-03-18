@@ -1,13 +1,13 @@
 import React, { FC, memo } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 
 import { useStyles } from './styles';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';
 import { useAmityComponent } from '../../hook';
 import { PageID, ComponentID, ElementID } from '../../enum';
+import { Text } from 'react-native-paper';
 import { star } from '../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
-import { defaultAdAvatarUri } from '../../assets';
 
 type PostAdHeaderType = {
   advertiser?: Amity.Ad['advertiser'];
@@ -25,19 +25,16 @@ const PostAdHeader: FC<PostAdHeaderType> = ({ advertiser, pageId }) => {
   if (!advertiser) return null;
 
   return (
-    <View testID={accessibilityId} style={styles.header}>
+    <View testID={accessibilityId} style={styles.headerSection}>
       <AvatarElement
         style={styles.avatar}
         avatarId={advertiser?.avatarFileId}
         pageID={pageId}
         elementID={ElementID.WildCardElement}
         componentID={componentId}
-        defaultAvatar={defaultAdAvatarUri}
       />
-      <View style={styles.headerRightSection}>
-        <Text numberOfLines={1} style={styles.headerText}>
-          {advertiser?.name}
-        </Text>
+      <View>
+        <Text style={styles.headerText}>{advertiser?.name}</Text>
         <View style={styles.adBadge}>
           <SvgXml
             style={styles.adBadgeIcon}
