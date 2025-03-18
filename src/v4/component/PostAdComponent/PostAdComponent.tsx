@@ -11,6 +11,7 @@ import { SvgXml } from 'react-native-svg';
 import AdInformation from '../AdInformation/AdInformation';
 import bottomSheetSlice from '../../../redux/slices/bottomSheetSlice';
 import { useDispatch } from 'react-redux';
+import AdEngine from '../../engine/AdEngine';
 
 type PostAdComponentType = {
   pageId?: PageID;
@@ -90,7 +91,10 @@ const PostAdComponent: FC<PostAdComponentType> = ({
         {ad?.callToActionUrl && (
           <TouchableOpacity
             style={styles.callToActionButton}
-            onPress={() => Linking.openURL(ad?.callToActionUrl)}
+            onPress={() => {
+              AdEngine.instance.markClicked(ad, 'feed' as Amity.AdPlacement);
+              Linking.openURL(ad?.callToActionUrl);
+            }}
           >
             <Text style={styles.callToActionText}>{ad.callToAction}</Text>
           </TouchableOpacity>
