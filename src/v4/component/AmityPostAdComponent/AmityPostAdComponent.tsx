@@ -74,54 +74,6 @@ const AmityPostAdComponent: FC<AmityPostAdComponentType> = ({ ad, pageId }) => {
           <Text style={styles.callToActionText}>{ad.callToAction}</Text>
         </TouchableOpacity>
       </View>
-
-      <BottomSheet
-        ref={sheetRef}
-        // onClose={onCloseBottomSheet}
-        closeOnDragDown
-        height={500}
-        style={styles.bottomSheet}
-      >
-        <View>
-          <Text style={styles.bottomSheetHeader}>About this advertisement</Text>
-          <View style={styles.divider} />
-          <View style={styles.bottomSheetContent}>
-            <View style={styles.buttomSheetContentItem}>
-              <Text style={styles.buttomSheetContentTitle}>
-                Why this advertisement?
-              </Text>
-              <View style={styles.buttomSheetContentDetail}>
-                <SvgXml
-                  style={styles.buttomSheetContentDetailIcon}
-                  xml={infoIcon()}
-                  width="16"
-                  height="16"
-                />
-                <Text style={styles.buttomSheetContentDetailText}>
-                  You're seeing this advertisement because it was displayed to
-                  all users in the system.
-                </Text>
-              </View>
-            </View>
-            <View style={styles.buttomSheetContentItem}>
-              <Text style={styles.buttomSheetContentTitle}>
-                About this advertiser
-              </Text>
-              <View style={styles.buttomSheetContentDetail}>
-                <SvgXml
-                  style={styles.buttomSheetContentDetailIcon}
-                  xml={infoIcon()}
-                  width="16"
-                  height="16"
-                />
-                <Text style={styles.buttomSheetContentDetailText}>
-                  Advertiser name: {ad?.advertiser?.companyName}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </BottomSheet>
     </View>
   );
 };
