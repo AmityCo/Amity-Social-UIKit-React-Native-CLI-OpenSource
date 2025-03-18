@@ -13,6 +13,7 @@ import { BehaviourProvider } from '../v4/providers/BehaviourProvider';
 import { IBehaviour } from '../v4/types/behaviour.interface';
 import { lighten, parseToHsl, hslToColorString } from 'polished';
 import { AdEngineProvider } from '../v4/providers/AdEngineProvider';
+import BottomSheetComponent from '../v4/component/BottomSheetComponent/BottomSheetComponent';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
@@ -125,7 +126,10 @@ export default function AmityUiKitProvider({
         <AdEngineProvider>
           <ConfigProvider configs={configData}>
             <BehaviourProvider behaviour={behaviour}>
-              <PaperProvider theme={globalTheme}>{children}</PaperProvider>
+              <PaperProvider theme={globalTheme}>
+                {children}
+                <BottomSheetComponent />
+              </PaperProvider>
             </BehaviourProvider>
           </ConfigProvider>
         </AdEngineProvider>
