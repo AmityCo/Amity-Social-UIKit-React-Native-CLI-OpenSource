@@ -18,7 +18,7 @@ import {
   isAmityAd,
   useCustomRankingGlobalFeed,
 } from '../../../../v4/hook/useCustomRankingGlobalFeed';
-import AmityPostAdComponent from '../../../component/AmityPostAdComponent/AmityPostAdComponent';
+import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
 import { usePaginatorApi } from '../../../hook/usePaginator';
 
 type AmityGlobalFeedComponentType = {
@@ -80,8 +80,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       style={styles.feedWrap}
       data={itemWithAds}
       renderItem={({ item }) => {
-        if (isAmityAd(item))
-          return <AmityPostAdComponent ad={item as Amity.Ad} />;
+        if (isAmityAd(item)) return <PostAdComponent ad={item as Amity.Ad} />;
 
         return (
           <AmityPostContentComponent

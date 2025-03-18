@@ -10,12 +10,12 @@ import { infoIcon } from '../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 
-type AmityPostAdComponentType = {
+type PostAdComponentType = {
   pageId?: PageID;
   ad?: Amity.Ad;
 };
 
-const AmityPostAdComponent: FC<AmityPostAdComponentType> = ({ ad, pageId }) => {
+const PostAdComponent: FC<PostAdComponentType> = ({ ad, pageId }) => {
   const componentId = ComponentID.post_content;
   const [image, setImage] = useState<string | null>(null);
   const { accessibilityId, themeStyles } = useAmityComponent({
@@ -78,4 +78,4 @@ const AmityPostAdComponent: FC<AmityPostAdComponentType> = ({ ad, pageId }) => {
   );
 };
 
-export default memo(AmityPostAdComponent);
+export default memo(PostAdComponent);
