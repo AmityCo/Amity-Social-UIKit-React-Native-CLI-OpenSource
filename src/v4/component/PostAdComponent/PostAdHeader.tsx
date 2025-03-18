@@ -8,6 +8,7 @@ import { PageID, ComponentID, ElementID } from '../../enum';
 import { Text } from 'react-native-paper';
 import { star } from '../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
+import { defaultAdAvatarUri } from '../../assets';
 
 type PostAdHeaderType = {
   advertiser?: Amity.Ad['advertiser'];
@@ -32,6 +33,7 @@ const PostAdHeader: FC<PostAdHeaderType> = ({ advertiser, pageId }) => {
         pageID={pageId}
         elementID={ElementID.WildCardElement}
         componentID={componentId}
+        defaultAvatar={defaultAdAvatarUri}
       />
       <View style={styles.headerRightSection}>
         <Text numberOfLines={1} style={styles.headerText}>
