@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useState, useRef } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 import { Image, View, TouchableOpacity, Linking } from 'react-native';
 
 import { ComponentID, PageID } from '../../enum';
@@ -8,22 +8,29 @@ import { useAmityComponent, useFile } from '../../hook';
 import { Text } from 'react-native-paper';
 import { infoIcon } from '../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
-import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import AdInformation from '../AdInformation/AdInformation';
+import bottomSheetSlice from '../../../redux/slices/bottomSheetSlice';
+import { useDispatch } from 'react-redux';
 
 type PostAdComponentType = {
   pageId?: PageID;
   ad?: Amity.Ad;
 };
 
-const PostAdComponent: FC<PostAdComponentType> = ({ ad, pageId }) => {
+const PostAdComponent: FC<PostAdComponentType> = ({
+  ad,
+  pageId = PageID.WildCardPage,
+}) => {
   const componentId = ComponentID.post_content;
+  const dispatch = useDispatch();
+
   const [image, setImage] = useState<string | null>(null);
+
+  const { openBottomSheet } = bottomSheetSlice.actions;
   const { accessibilityId, themeStyles } = useAmityComponent({
     pageId: pageId,
     componentId: componentId,
   });
-
-  const sheetRef = useRef<BottomSheetMethods>(null);
 
   const { getImage } = useFile();
 
@@ -49,8 +56,18 @@ const PostAdComponent: FC<PostAdComponentType> = ({ ad, pageId }) => {
         width="16"
         height="16"
         onPress={() => {
-          console.log('open sheet');
-          sheetRef.current.open();
+          ad?.advertiser?.companyName &&
+            dispatch(
+              openBottomSheet({
+                content: (
+                  <AdInformation
+                    pageId={pageId}
+                    companyName={ad.advertiser.companyName}
+                  />
+                ),
+                height: 400,
+              })
+            );
         }}
       />
       <PostAdHeader advertiser={ad?.advertiser} pageId={pageId} />

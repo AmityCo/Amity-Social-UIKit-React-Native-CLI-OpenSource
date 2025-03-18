@@ -43,7 +43,6 @@ export const useStyles = (theme: MyMD3Theme) => {
       borderRadius: 8,
     },
     infoIcon: {
-      position: 'absolute',
       width: 16,
       height: 16,
       color: theme.colors.baseShade1,

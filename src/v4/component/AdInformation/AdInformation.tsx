@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect } from 'react';
+import React, { FC, memo } from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { infoIcon } from '../../../svg/svg-xml-list';
@@ -10,24 +10,19 @@ import { useAmityComponent } from '../../hook';
 type AdInformationType = {
   pageId?: PageID;
   companyName: string;
-  isOpen: boolean;
-  onOpenChanged: (isOpen: boolean) => void;
 };
 
 const AdInformation: FC<AdInformationType> = ({
-  pageId,
+  pageId = PageID.WildCardPage,
   companyName,
-  isOpen,
-  onOpenChanged,
 }) => {
   const componentId = ComponentID.post_content;
+
   const { accessibilityId, themeStyles } = useAmityComponent({
     pageId,
     componentId: componentId,
   });
   const styles = useStyles(themeStyles);
-
-  useEffect(() => {}, [isOpen]);
 
   return (
     <View testID={accessibilityId} style={styles.container}>
