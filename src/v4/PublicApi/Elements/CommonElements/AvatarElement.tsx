@@ -26,7 +26,6 @@ const AvatarElement: FC<AvatarElementType> = ({
   defaultAvatar,
   ...props
 }) => {
-  const { client } = useAuth();
   const fallbackAvatar = useMemo(() => {
     if (defaultAvatar) return defaultAvatar;
     return targetType === 'community'
