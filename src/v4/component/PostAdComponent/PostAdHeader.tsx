@@ -25,7 +25,7 @@ const PostAdHeader: FC<PostAdHeaderType> = ({ advertiser, pageId }) => {
   if (!advertiser) return null;
 
   return (
-    <View testID={accessibilityId} style={styles.headerSection}>
+    <View testID={accessibilityId} style={styles.header}>
       <AvatarElement
         style={styles.avatar}
         avatarId={advertiser?.avatarFileId}
@@ -33,8 +33,10 @@ const PostAdHeader: FC<PostAdHeaderType> = ({ advertiser, pageId }) => {
         elementID={ElementID.WildCardElement}
         componentID={componentId}
       />
-      <View>
-        <Text style={styles.headerText}>{advertiser?.name}</Text>
+      <View style={styles.headerRightSection}>
+        <Text numberOfLines={1} style={styles.headerText}>
+          {advertiser?.name}
+        </Text>
         <View style={styles.adBadge}>
           <SvgXml
             style={styles.adBadgeIcon}

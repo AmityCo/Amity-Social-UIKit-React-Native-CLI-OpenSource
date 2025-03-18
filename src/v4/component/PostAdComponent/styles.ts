@@ -15,10 +15,14 @@ export const useStyles = (theme: MyMD3Theme) => {
       top: 4,
       right: 4,
     },
-    headerSection: {
+    header: {
       gap: 12,
       flexDirection: 'row',
       alignItems: 'center',
+    },
+    headerRightSection: {
+      flex: 1,
+      marginRight: 12,
     },
     adBadge: {
       flexDirection: 'row',
@@ -30,6 +34,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       paddingRight: 6,
       opacity: 0.5,
       alignItems: 'center',
+      alignSelf: 'flex-start',
     },
     adBadgeIcon: {
       width: 16,
@@ -51,7 +56,6 @@ export const useStyles = (theme: MyMD3Theme) => {
       width: 32,
       borderRadius: 16,
     },
-    badge: {},
     textContent: {
       color: theme.colors.base,
       fontSize: 15,
