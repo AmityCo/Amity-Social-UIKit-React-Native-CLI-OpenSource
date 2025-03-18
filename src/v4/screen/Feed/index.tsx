@@ -23,16 +23,31 @@ import type { FeedRefType } from '../CommunityHome';
 import { deletePostById } from '../../../providers/Social/feed-sdk';
 import { amityPostsFormatter } from '../../../util/postDataFormatter';
 import { useFocusEffect } from '@react-navigation/native';
+import { usePaginatorApi } from '../../hook/usePaginator';
+import { isAmityAd } from '../../../v4/hook/useCustomRankingGlobalFeed';
+import AmityPostAdComponent from '../../../v4/component/AmityPostAdComponent/AmityPostAdComponent';
 
 interface IFeed {
   targetId: string;
   targetType: string;
 }
+
+const pageLimit = 10;
+
 function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
   const styles = useStyles();
-  const [postData, setPostData] = useState<Amity.Post>(null);
+  const [postData, setPostData] = useState<Amity.Post>([]);
   const [onNextPage, setOnNextPage] = useState(null);
   const disposers: Amity.Unsubscriber[] = useMemo(() => [], []);
+
+  const { itemWithAds } = usePaginatorApi<Amity.Post | Amity.Ad>({
+    items: postData as Amity.Post[],
+    placement: 'feed' as Amity.AdPlacement,
+    pageSize: pageLimit,
+    getItemId: (item) =>
+      isAmityAd(item) ? item?.adId.toString() : item?.postId.toString(),
+  });
+
   let isSubscribed = false;
 
   const subscribePostTopic = useCallback((type: string, id: string) => {
@@ -89,7 +104,7 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
             const filterData: any[] = data.map((item) => {
               if (item.dataType === 'text') return item;
             });
-            console.log(data.length);
+
             setOnNextPage(hasNextPage ? () => nextPage : null);
             const formattedPostList = await amityPostsFormatter(filterData);
             setPostData(formattedPostList);
@@ -114,17 +129,24 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
     <View style={styles.feedWrap}>
       <FlatList
         scrollEnabled={false}
-        data={postData ?? []}
-        renderItem={({ item, index }) => (
-          <PostList
-            onDelete={onDeletePost}
-            postDetail={item}
-            isGlobalfeed={false}
-            postIndex={index}
-          />
-        )}
-        keyExtractor={(_, index) => index.toString()}
-        extraData={postData}
+        data={itemWithAds ?? []}
+        renderItem={({ item, index }) => {
+          if (isAmityAd(item))
+            return <AmityPostAdComponent ad={item as Amity.Ad} />;
+
+          return (
+            <PostList
+              onDelete={onDeletePost}
+              postDetail={item}
+              isGlobalfeed={false}
+              postIndex={index}
+            />
+          );
+        }}
+        keyExtractor={(item) =>
+          isAmityAd(item) ? item.adId.toString() : item.postId.toString()
+        }
+        extraData={itemWithAds}
       />
     </View>
   );
