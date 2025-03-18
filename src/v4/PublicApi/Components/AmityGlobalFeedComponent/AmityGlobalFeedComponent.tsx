@@ -67,7 +67,10 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   }, [clearFeed, dispatch, refresh]);
 
   const { handleViewChange } = usePostImpression(
-    postList.filter((item: IPost) => item.postId) as IPost[]
+    itemWithAds.filter(
+      (item: IPost | Amity.Ad) =>
+        !!(isAmityAd(item) ? item?.adId : item?.postId)
+    ) as (IPost | Amity.Ad)[]
   );
 
   if (isExcluded) return null;
@@ -115,7 +118,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       }
       viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
       onViewableItemsChanged={handleViewChange}
-      extraData={postList}
+      extraData={itemWithAds}
     />
   );
 };
