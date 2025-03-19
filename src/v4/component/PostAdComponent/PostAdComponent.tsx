@@ -1,10 +1,10 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC, memo } from 'react';
 import { Image, View, TouchableOpacity, Linking } from 'react-native';
 
 import { ComponentID, PageID } from '../../enum';
 import { useStyles } from './styles';
 import PostAdHeader from './PostAdHeader';
-import { useAmityComponent, useFile } from '../../hook';
+import { useAmityComponent } from '../../hook';
 import { Text } from 'react-native-paper';
 import { infoIcon } from '../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
@@ -12,6 +12,7 @@ import AdInformation from '../AdInformation/AdInformation';
 import bottomSheetSlice from '../../../redux/slices/bottomSheetSlice';
 import { useDispatch } from 'react-redux';
 import AdEngine from '../../engine/AdEngine';
+import AssetDownloader from '../../engine/AssetDownloader';
 
 type PostAdComponentType = {
   pageId?: PageID;
@@ -25,27 +26,13 @@ const PostAdComponent: FC<PostAdComponentType> = ({
   const componentId = ComponentID.post_content;
   const dispatch = useDispatch();
 
-  const [image, setImage] = useState<string | null>(null);
-
   const { openBottomSheet } = bottomSheetSlice.actions;
   const { accessibilityId, themeStyles } = useAmityComponent({
     pageId: pageId,
     componentId: componentId,
   });
 
-  const { getImage } = useFile();
-
   const styles = useStyles(themeStyles);
-
-  useEffect(() => {
-    const fetchImage = async (fileId: string) => {
-      const result = await getImage({ fileId });
-      setImage(result);
-    };
-
-    if (!ad?.image1_1?.fileId) return;
-    fetchImage(ad?.image1_1.fileId);
-  }, [ad?.image1_1?.fileId, getImage]);
 
   if (!ad) return null;
 
@@ -72,9 +59,13 @@ const PostAdComponent: FC<PostAdComponentType> = ({
       </TouchableOpacity>
       <PostAdHeader advertiser={ad?.advertiser} pageId={pageId} />
       {ad.body && <Text style={styles.textContent}>{ad.body}</Text>}
-      {image && (
+      {ad?.image1_1?.fileUrl && (
         <Image
-          source={{ uri: image }}
+          source={{
+            uri: AssetDownloader.instance.getFilePath(
+              ad?.image1_1?.fileUrl + '?size=large'
+            ),
+          }}
           style={styles.image}
           resizeMode="cover"
         />
