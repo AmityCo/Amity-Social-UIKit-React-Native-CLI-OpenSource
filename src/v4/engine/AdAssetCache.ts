@@ -8,14 +8,13 @@ export type AdAsset = {
 
 class AdAssetCache {
   static #instance: AdAssetCache;
-  static #adAssetPrefix = 'amity.adAsset.';
+  static #adAssetPrefix = 'ad_asset_';
   constructor() {}
 
   public static get instance(): AdAssetCache {
     if (!AdAssetCache.#instance) {
       AdAssetCache.#instance = new AdAssetCache();
     }
-
     return AdAssetCache.#instance;
   }
 
@@ -46,8 +45,8 @@ class AdAssetCache {
     AsyncStorage.mergeItem(adAssetKey, JSON.stringify({ downloadId }));
   }
 
-  updateDownloadStatus(fileUrl: string, status: number) {
-    const adAssetKey = AdAssetCache.#adAssetPrefix + fileUrl;
+  updateDownloadStatus(downloadId: string, status: number) {
+    const adAssetKey = AdAssetCache.#adAssetPrefix + downloadId;
     AsyncStorage.mergeItem(
       adAssetKey,
       JSON.stringify({ downloadStatus: status })

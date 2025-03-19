@@ -1,5 +1,4 @@
 import RNFS from 'react-native-fs';
-import { Client as ASCClient } from '@amityco/ts-sdk-react-native';
 
 export enum DownloadStatus {
   NOT_DOWNLOADED = -1,
@@ -11,14 +10,11 @@ export enum DownloadStatus {
 
 class AssetDownloader {
   static #instance: AssetDownloader;
-  private client: Amity.Client;
   private downloadJobs: Map<string, number> = new Map();
   private statusListeners: Map<string, ((status: DownloadStatus) => void)[]> =
     new Map();
 
-  private constructor() {
-    this.client = ASCClient.getActiveClient();
-  }
+  private constructor() {}
 
   public static get instance(): AssetDownloader {
     if (!AssetDownloader.#instance) {
@@ -34,6 +30,7 @@ class AssetDownloader {
    */
   public async enqueue(url: string): Promise<number> {
     // Create directory if it doesn't exist
+    console.log('Enqueueing download:', url);
     const dirPath = `${RNFS.DocumentDirectoryPath}/amityDir`;
     const exists = await RNFS.exists(dirPath);
 
@@ -48,6 +45,8 @@ class AssetDownloader {
     // Check if file already exists
     const fileExists = await RNFS.exists(filePath);
     if (fileExists) {
+      // File already downloaded
+      console.log(`File already exists: ${filePath}`);
       const dummyId = Date.now();
       this.downloadJobs.set(url, dummyId);
       // Notify as completed
@@ -60,17 +59,18 @@ class AssetDownloader {
 
     try {
       // Begin download
-      const accessToken = this.client.token.accessToken;
       const downloadOptions = {
         fromUrl: url,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
         toFile: filePath,
         background: true,
         discretionary: true,
         begin: () => {
           this.notifyListeners(url, DownloadStatus.DOWNLOADING);
+        },
+        progress: (res) => {
+          // You could add more nuanced progress reporting here
+          const progress = res.bytesWritten / res.contentLength;
+          console.log(`Download progress: ${progress * 100}%`);
         },
       };
 
@@ -81,13 +81,12 @@ class AssetDownloader {
       const download = RNFS.downloadFile(downloadOptions);
 
       download.promise
-        .then((data: RNFS.DownloadResult) => {
-          if (data.statusCode !== 200) {
-            this.notifyListeners(url, DownloadStatus.FAILED);
-          } else this.notifyListeners(url, DownloadStatus.COMPLETED);
+        .then(() => {
+          console.log('File downloaded successfully');
+          this.notifyListeners(url, DownloadStatus.COMPLETED);
         })
         .catch((error) => {
-          console.error('Download file failed:', error); // Log result
+          console.error('Download error:', error);
           this.notifyListeners(url, DownloadStatus.FAILED);
         });
 
@@ -105,18 +104,6 @@ class AssetDownloader {
   getFilePath(url: string): string {
     const fileName = `${Math.abs(this.hashCode(url))}.jpg`;
     return `${RNFS.DocumentDirectoryPath}/amityDir/${fileName}`;
-  }
-
-  /**
-   * Check if a file is existed
-   */
-  public async fileExists(url: string): Promise<boolean> {
-    try {
-      const localPath = this.getFilePath(url);
-      return await RNFS.exists(localPath);
-    } catch (error) {
-      return false;
-    }
   }
 
   /**

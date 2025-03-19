@@ -4,6 +4,8 @@ import {
   AdRepository,
 } from '@amityco/ts-sdk-react-native';
 import { TimeWindowTracker } from './TimeWindowTracker';
+import AdAssetCache, { AdAsset } from './AdAssetCache';
+import AssetDownloader, { DownloadStatus } from './AssetDownloader';
 
 class SeenRecencyCache {
   static #instance: SeenRecencyCache;
@@ -36,6 +38,10 @@ class SeenRecencyCache {
       this.#persistentCacheKey,
       JSON.stringify(seenRecencyCache)
     );
+  }
+
+  async clear() {
+    await AsyncStorage.removeItem(this.#persistentCacheKey);
   }
 }
 
@@ -73,14 +79,19 @@ export class AdEngine {
     this.subscribers.push(callback);
   }
 
-  private clearAllCache() {
+  private async clearAllCache() {
     this.ads = [];
     this.settings = null;
+
+    const allAssets = await AdAssetCache.instance.getAllAdAssets();
+    for (const asset of allAssets) {
+      AssetDownloader.instance.deleteFile(asset.fileUrl);
+    }
+
+    AdAssetCache.instance.deleteAll();
+    SeenRecencyCache.instance.clear();
     TimeWindowTracker.instance.clear();
-    // AssetSyncEngine.cancelAllDownload();
-    // AssetSyncEngine.removeAllAssets();
-    // assetDB.clear();
-    // adRecencyDB.clear();
+
     this.subscribers.forEach((subscriber) => subscriber(null));
   }
 
@@ -89,10 +100,92 @@ export class AdEngine {
 
     this.ads = networkAds.ads;
     this.settings = networkAds.settings;
+
+    await this.diffAssets(this.generateAssets(this.ads));
+    await this.refreshDownloadStatuses();
+
     this.subscribers.forEach((subscriber) => subscriber(networkAds));
-    // Reomove unused Asset fileIds[]
-    // AssetSyncEngine.getInstance().removeUnusedAssets(fileIds)
-    // this.subscribers.forEach((subscriber) => subscriber(null));
+  }
+
+  private generateAssets(ads: Amity.Ad[]): AdAsset[] {
+    const assets = ads
+      .flatMap(
+        (ad) =>
+          [ad?.image1_1?.fileUrl, ad?.image9_16?.fileUrl].filter(
+            Boolean
+          ) as string[]
+      )
+      .map((url) => ({
+        fileUrl: url + '?size=large',
+        downloadStatus: -1,
+        downloadId: null,
+      }));
+    return assets;
+  }
+
+  private async diffAssets(newAsset: AdAsset[]) {
+    const oldAssets = await AdAssetCache.instance.getAllAdAssets();
+
+    const newAssetUrls = newAsset.map((asset) => asset.fileUrl);
+
+    const assetToInsert = newAsset.filter(
+      (asset) =>
+        !oldAssets.some((oldAsset) => oldAsset.fileUrl === asset.fileUrl)
+    );
+    const assetToDelete = oldAssets.filter(
+      (oldAsset) => !newAssetUrls.includes(oldAsset.fileUrl)
+    );
+
+    assetToDelete.forEach((asset) => {
+      AdAssetCache.instance.deleteAdAsset(asset.fileUrl);
+    });
+
+    assetToInsert.forEach((asset) => {
+      AdAssetCache.instance.insertAdAsset(asset);
+    });
+  }
+
+  private async refreshDownloadStatuses() {
+    const assets = await AdAssetCache.instance.getAllAdAssets();
+
+    for (const asset of assets) {
+      if (
+        asset.downloadStatus === -1 ||
+        asset.downloadStatus === DownloadStatus.FAILED
+      ) {
+        try {
+          const instance = AssetDownloader.instance;
+          console.log('instance: ', instance);
+          const downloadId = await AssetDownloader.instance.enqueue(
+            asset.fileUrl
+          );
+
+          // Listen to download status, to update the status when it changes
+          AssetDownloader.instance.addStatusListener(
+            asset.fileUrl,
+            (status) => {
+              AdAssetCache.instance.updateDownloadStatus(
+                downloadId.toString(),
+                status
+              );
+            }
+          );
+
+          AdAssetCache.instance.updateDownloadId(asset.fileUrl, downloadId);
+          AdAssetCache.instance.updateDownloadStatus(
+            downloadId.toString(),
+            DownloadStatus.DOWNLOADING
+          );
+        } catch (e) {
+          console.log('error: ', e);
+        }
+      } else if (asset.downloadStatus !== DownloadStatus.COMPLETED) {
+        AdAssetCache.instance.updateDownloadStatus(
+          asset.downloadId.toString(),
+          AssetDownloader.instance.getDownloadStatus(asset.downloadId)
+        );
+      }
+    }
   }
 
   private getAdFrequency(placement: Amity.AdPlacement) {
