@@ -8,7 +8,7 @@ export type AdAsset = {
 
 class AdAssetCache {
   static #instance: AdAssetCache;
-  static #adAssetPrefix = 'ad_asset_';
+  static #adAssetPrefix = 'amity.adAsset.';
   constructor() {}
 
   public static get instance(): AdAssetCache {
