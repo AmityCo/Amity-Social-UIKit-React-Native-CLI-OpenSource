@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type AdAsset = {
+export type AdAsset = {
   fileUrl: string;
   downloadStatus: number;
-  downloadId: number;
+  downloadId: number | null;
 };
 
 class AdAssetCache {
@@ -11,7 +11,7 @@ class AdAssetCache {
   static #adAssetPrefix = 'ad_asset_';
   constructor() {}
 
-  get instance(): AdAssetCache {
+  public static get instance(): AdAssetCache {
     if (!AdAssetCache.#instance) {
       AdAssetCache.#instance = new AdAssetCache();
     }
