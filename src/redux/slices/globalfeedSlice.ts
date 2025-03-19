@@ -4,15 +4,26 @@ import { isAmityAd } from '../../v4/hook/useCustomRankingGlobalFeed';
 
 interface GlobalFeedState {
   postList: (IPost | Amity.Ad)[];
+  paginationData: {
+    next: string | null;
+    previous: string | null;
+  };
 }
 const initialState: GlobalFeedState = {
   postList: [],
+  paginationData: {
+    next: null,
+    previous: null,
+  },
 };
 
 const globalFeedSlice = createSlice({
   name: 'globalFeed',
   initialState,
   reducers: {
+    setNewGlobalFeed: (state, action: PayloadAction<IPost[]>) => {
+      state.postList = action.payload;
+    },
     updateGlobalFeed: (state, action: PayloadAction<IPost[]>) => {
       const getUniqueArrayById = (arr: (IPost | Amity.Ad)[]) => {
         const uniqueIds = new Set(
@@ -29,10 +40,15 @@ const globalFeedSlice = createSlice({
         ...getUniqueArrayById(action.payload),
       ];
     },
+    setPaginationData: (
+      state,
+      action: PayloadAction<{ next: string | null; previous: string | null }>
+    ) => {
+      state.paginationData = action.payload;
+    },
     addPostToGlobalFeed: (state, action: PayloadAction<IPost>) => {
       state.postList = [action.payload, ...state.postList];
     },
-
     updateByPostId: (
       state,
       action: PayloadAction<{ postId: string; postDetail: IPost }>

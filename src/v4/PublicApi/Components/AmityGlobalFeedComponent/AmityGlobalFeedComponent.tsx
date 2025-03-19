@@ -1,9 +1,17 @@
-import React, { FC, memo, useCallback, useRef, useState } from 'react';
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { FlatList } from 'react-native';
 import { useStyle } from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
 import { RootState } from '../../../../redux/store';
+
 import { RefreshControl } from 'react-native';
 import AmityPostContentComponent, {
   IPost,
@@ -14,49 +22,44 @@ import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostConte
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
 import { usePostImpression } from '../../../../v4/hook/usePostImpression';
+import useAuth from '../../../../hooks/useAuth';
 import {
   isAmityAd,
   useCustomRankingGlobalFeed,
 } from '../../../../v4/hook/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
-import { usePaginatorApi } from '../../../hook/usePaginator';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
 };
 
-export const globalFeedPageLimit = 10;
+export const globalFeedPageLimit = 20;
 
 const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
 }) => {
-  const { nextPage, refresh } = useCustomRankingGlobalFeed();
+  const { fetch, itemWithAds, loading, refresh } = useCustomRankingGlobalFeed();
   const componentId = ComponentID.global_feed_component;
   const { isExcluded, themeStyles, accessibilityId } = useAmityComponent({
     pageId,
     componentId,
   });
 
-  const { postList } = useSelector(
-    (state: RootState) => state.globalFeed as { postList: (IPost | Amity.Ad)[] }
-  );
-
-  const { itemWithAds } = usePaginatorApi<IPost | Amity.Ad>({
-    items: postList as (IPost | Amity.Ad)[],
-    placement: 'feed' as Amity.AdPlacement,
-    pageSize: globalFeedPageLimit,
-    getItemId: (item) => (item as IPost).postId.toString(),
-  });
-
   const [refreshing, setRefreshing] = useState(false);
   const { clearFeed } = globalFeedSlice.actions;
   const dispatch = useDispatch();
   const styles = useStyle(themeStyles);
-
+  const { isConnected } = useAuth();
   const flatListRef = useRef(null);
+  const nextPage = useSelector(
+    (state: RootState) => state.globalFeed.paginationData.next
+  );
 
   const handleLoadMore = () => {
-    nextPage();
+    console.log('queryToken', nextPage);
+    fetch({
+      queryToken: nextPage,
+    });
   };
 
   const onRefresh = useCallback(async () => {
@@ -67,11 +70,19 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   }, [clearFeed, dispatch, refresh]);
 
   const { handleViewChange } = usePostImpression(
-    itemWithAds.filter(
-      (item: IPost | Amity.Ad) =>
-        !!(isAmityAd(item) ? item?.adId : item?.postId)
-    ) as (IPost | Amity.Ad)[]
+    itemWithAds.filter((item: IPost | Amity.Ad) =>
+      isAmityAd(item) ? item?.adId : item?.postId
+    )
   );
+
+  useEffect(() => {
+    if (isConnected) {
+      console.log('fetching');
+      fetch({
+        limit: globalFeedPageLimit,
+      });
+    }
+  }, [isConnected]);
 
   if (isExcluded) return null;
 
@@ -102,7 +113,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       ref={flatListRef}
       refreshControl={
         <RefreshControl
-          refreshing={refreshing}
+          refreshing={refreshing || loading}
           onRefresh={onRefresh}
           colors={['lightblue']}
           tintColor="lightblue"
