@@ -6,7 +6,6 @@ import React, {
   PropsWithChildren,
 } from 'react';
 import { AdEngine } from '../engine/AdEngine';
-import { AdSupplier } from '../engine/AdSupplier';
 import { TimeWindowTracker } from '../engine/TimeWindowTracker';
 
 export const AdEngineContext = createContext<{
@@ -146,7 +145,7 @@ export const useRecommendAds = ({
   const adFrequency = AdEngine.instance.getAdFrequencyByPlacement(placement);
 
   useEffect(() => {
-    if (!adSettings?.enabled) {
+    if (!adSettings?.enabled || ads.length === 0) {
       return;
     }
     if (
@@ -156,14 +155,15 @@ export const useRecommendAds = ({
       return;
     }
 
-    setRecommendedAds(
-      AdSupplier.instance.recommendedAds({
-        ads,
+    AdEngine.instance
+      .getRecommendedAds({
         placement,
         count,
         communityId,
       })
-    );
+      .then((ads) => {
+        setRecommendedAds(ads);
+      });
   }, [ads, count, placement, communityId, adFrequency, adSettings]);
 
   return recommendedAds;

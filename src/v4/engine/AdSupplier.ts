@@ -14,7 +14,6 @@ export class AdSupplier {
 
   recommendedAds({
     ads,
-    // placement,
     count,
     communityId,
   }: {

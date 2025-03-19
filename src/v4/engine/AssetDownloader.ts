@@ -30,7 +30,6 @@ class AssetDownloader {
    */
   public async enqueue(url: string): Promise<number> {
     // Create directory if it doesn't exist
-    console.log('Enqueueing download:', url);
     const dirPath = `${RNFS.DocumentDirectoryPath}/amityDir`;
     const exists = await RNFS.exists(dirPath);
 
@@ -45,8 +44,6 @@ class AssetDownloader {
     // Check if file already exists
     const fileExists = await RNFS.exists(filePath);
     if (fileExists) {
-      // File already downloaded
-      console.log(`File already exists: ${filePath}`);
       const dummyId = Date.now();
       this.downloadJobs.set(url, dummyId);
       // Notify as completed
@@ -67,11 +64,6 @@ class AssetDownloader {
         begin: () => {
           this.notifyListeners(url, DownloadStatus.DOWNLOADING);
         },
-        progress: (res) => {
-          // You could add more nuanced progress reporting here
-          const progress = res.bytesWritten / res.contentLength;
-          console.log(`Download progress: ${progress * 100}%`);
-        },
       };
 
       // Store job ID for tracking
@@ -82,11 +74,10 @@ class AssetDownloader {
 
       download.promise
         .then(() => {
-          console.log('File downloaded successfully');
           this.notifyListeners(url, DownloadStatus.COMPLETED);
         })
         .catch((error) => {
-          console.error('Download error:', error);
+          console.error('Download file error:', error);
           this.notifyListeners(url, DownloadStatus.FAILED);
         });
 
