@@ -27,7 +27,7 @@ class SeenRecencyCache {
     );
   }
 
-  getSeenRecencyByAdId(adId?: string): number | undefined {
+  getSeenRecencyByAdId(adId?: string): number | void {
     if (!adId) return;
     return this.getSeenRecencyCache()[adId];
   }
