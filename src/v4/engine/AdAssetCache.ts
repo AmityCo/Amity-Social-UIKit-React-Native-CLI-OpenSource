@@ -15,6 +15,7 @@ class AdAssetCache {
     if (!AdAssetCache.#instance) {
       AdAssetCache.#instance = new AdAssetCache();
     }
+
     return AdAssetCache.#instance;
   }
 
@@ -45,8 +46,8 @@ class AdAssetCache {
     AsyncStorage.mergeItem(adAssetKey, JSON.stringify({ downloadId }));
   }
 
-  updateDownloadStatus(downloadId: string, status: number) {
-    const adAssetKey = AdAssetCache.#adAssetPrefix + downloadId;
+  updateDownloadStatus(fileUrl: string, status: number) {
+    const adAssetKey = AdAssetCache.#adAssetPrefix + fileUrl;
     AsyncStorage.mergeItem(
       adAssetKey,
       JSON.stringify({ downloadStatus: status })

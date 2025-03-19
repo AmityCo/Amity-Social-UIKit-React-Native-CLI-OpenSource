@@ -150,30 +150,25 @@ export class AdEngine {
 
     for (const asset of assets) {
       if (
-        asset.downloadStatus === -1 ||
+        asset.downloadStatus === DownloadStatus.NOT_DOWNLOADED ||
         asset.downloadStatus === DownloadStatus.FAILED
       ) {
         try {
-          const instance = AssetDownloader.instance;
-          console.log('instance: ', instance);
-          const downloadId = await AssetDownloader.instance.enqueue(
-            asset.fileUrl
-          );
-
           // Listen to download status, to update the status when it changes
           AssetDownloader.instance.addStatusListener(
             asset.fileUrl,
             (status) => {
-              AdAssetCache.instance.updateDownloadStatus(
-                downloadId.toString(),
-                status
-              );
+              AdAssetCache.instance.updateDownloadStatus(asset.fileUrl, status);
             }
+          );
+
+          const downloadId = await AssetDownloader.instance.enqueue(
+            asset.fileUrl
           );
 
           AdAssetCache.instance.updateDownloadId(asset.fileUrl, downloadId);
           AdAssetCache.instance.updateDownloadStatus(
-            downloadId.toString(),
+            asset.fileUrl,
             DownloadStatus.DOWNLOADING
           );
         } catch (e) {
@@ -181,7 +176,7 @@ export class AdEngine {
         }
       } else if (asset.downloadStatus !== DownloadStatus.COMPLETED) {
         AdAssetCache.instance.updateDownloadStatus(
-          asset.downloadId.toString(),
+          asset.fileUrl,
           AssetDownloader.instance.getDownloadStatus(asset.downloadId)
         );
       }
