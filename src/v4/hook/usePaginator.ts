@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AdEngine } from '../engine/AdEngine';
 import {
   useAdSettings,
@@ -40,7 +40,9 @@ export const usePaginatorCore = <T>({
     recommendedAdsRef.current = recommendedAds;
   }, [recommendedAds]);
 
-  const combineItemsWithAds = (newItems: T[]) => {
+  const combineItemsWithAds = async (
+    newItems: T[]
+  ): Promise<Array<T | Amity.Ad>> => {
     if (!adSettings?.enabled) {
       return newItems;
     }
@@ -99,25 +101,34 @@ export const usePaginatorCore = <T>({
       let runningAdIndex = currentAdIndex;
       let runningIndex = currentIndex;
 
-      const suffixItems: Array<[T] | [T, Amity.Ad]> = filteredNewItems.map(
-        (newItem) => {
-          runningIndex = runningIndex + 1;
-          const shouldPlaceAd = runningIndex % frequency.value === 0;
+      const suffixItemsPromises = filteredNewItems.map(async (newItem) => {
+        runningIndex = runningIndex + 1;
+        const shouldPlaceAd = runningIndex % frequency.value === 0;
 
-          if (!shouldPlaceAd) return [newItem];
+        if (!shouldPlaceAd) return [newItem];
 
-          const ad = recommendedAdsRef.current[runningAdIndex];
+        const recommendAds = await AdEngine.instance.getRecommendedAds({
+          placement,
+          count,
+          communityId,
+        });
 
-          runningAdIndex =
-            runningAdIndex + 1 > recommendedAdsRef.current.length - 1
-              ? 0
-              : runningAdIndex + 1;
-          return [newItem, ad];
-        }
-      );
+        const ad = recommendAds[runningAdIndex];
+
+        runningAdIndex =
+          runningAdIndex + 1 > recommendedAdsRef.current.length - 1
+            ? 0
+            : runningAdIndex + 1;
+        return [newItem, ad];
+      });
+
+      const suffixItems = (await Promise.all(suffixItemsPromises)) as Array<
+        [T] | [T, Amity.Ad]
+      >;
 
       setCurrentAdIndex(runningAdIndex);
       setCurrentIndex(runningIndex);
+
       const newItemsWithAds = [...prevItems, ...suffixItems];
 
       setItemWithAds(newItemsWithAds);
@@ -158,9 +169,14 @@ export const usePaginatorApi = <T>(params: {
   getItemId: (item: T) => string;
 }) => {
   const { items, ...rest } = params;
+  const [itemWithAds, setItemWithAds] = useState<Array<T | Amity.Ad>>([]);
   const { combineItemsWithAds, reset } = usePaginatorCore(rest);
 
-  const itemWithAds = useMemo(() => combineItemsWithAds(items), [items]);
+  useEffect(() => {
+    combineItemsWithAds(items).then((result) => {
+      setItemWithAds(result);
+    });
+  }, [items]);
 
   return { itemWithAds, reset };
 };

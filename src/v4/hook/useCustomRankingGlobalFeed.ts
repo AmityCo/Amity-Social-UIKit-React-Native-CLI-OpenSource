@@ -1,11 +1,12 @@
 import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
-import { useCallback, useState } from 'react';
-import useAuth from '../../hooks/useAuth';
+import { useState } from 'react';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
-import { useDispatch } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
+import { RootState } from '../../redux/store';
+import { IPost } from '../../v4/PublicApi/Components/AmityPostContentComponent/AmityPostContentComponent';
+import { usePaginatorApi } from '../../v4/hook/usePaginator';
 
 export const isAmityAd = (item: Amity.Post | Amity.Ad): item is Amity.Ad => {
   return (item as Amity.Ad)?.adId !== undefined;
@@ -14,15 +15,18 @@ export const isAmityAd = (item: Amity.Post | Amity.Ad): item is Amity.Ad => {
 export const useCustomRankingGlobalFeed = () => {
   const dispatch = useDispatch();
 
-  const { isConnected } = useAuth();
-  const { updateGlobalFeed } = globalFeedSlice.actions;
-
-  const [paging, setPaging] = useState<{
-    next?: string;
-    previous?: string;
-  } | null>(null);
+  const { updateGlobalFeed, clearFeed, setPaginationData, setNewGlobalFeed } =
+    globalFeedSlice.actions;
 
   const [fetching, setFetching] = useState(false);
+  const postList = useSelector((state: RootState) => state.globalFeed.postList);
+
+  const { itemWithAds, reset } = usePaginatorApi<IPost | Amity.Ad>({
+    items: postList as (IPost | Amity.Ad)[],
+    placement: 'feed' as Amity.AdPlacement,
+    pageSize: globalFeedPageLimit,
+    getItemId: (item) => (item as IPost).postId.toString(),
+  });
 
   const processPosts = async (posts: Amity.Post[]) => {
     const results = await Promise.all(
@@ -58,7 +62,7 @@ export const useCustomRankingGlobalFeed = () => {
     const filteredResult = results.filter((result) => result !== null);
     const formattedPostList = await amityPostsFormatter(filteredResult);
 
-    dispatch(updateGlobalFeed(formattedPostList));
+    return formattedPostList;
   };
 
   const fetch = async ({
@@ -78,33 +82,29 @@ export const useCustomRankingGlobalFeed = () => {
 
     if (data) {
       setFetching(false);
-      setPaging({ next, previous });
-      await processPosts(data);
+      dispatch(setPaginationData({ next, previous }));
+      const processedPosts = await processPosts(data);
+      if (!queryToken) {
+        reset();
+        dispatch(setNewGlobalFeed(processedPosts));
+      } else {
+        dispatch(updateGlobalFeed(processedPosts));
+      }
     }
-  };
-
-  const nextPage = () => {
-    setFetching(true);
-    if (paging?.next) fetch({ queryToken: paging.next });
-  };
-
-  const previousPage = () => {
-    setFetching(true);
-    if (paging?.previous) fetch({ queryToken: paging.previous });
   };
 
   const refresh = async () => {
     setFetching(true);
-    dispatch(updateGlobalFeed([]));
+    dispatch(clearFeed());
+    reset();
     await fetch({ limit: globalFeedPageLimit });
     return true;
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      if (isConnected) fetch({ limit: globalFeedPageLimit });
-    }, [isConnected])
-  );
-
-  return { loading: fetching, nextPage, previousPage, refresh };
+  return {
+    fetch,
+    loading: fetching,
+    refresh,
+    itemWithAds,
+  };
 };
