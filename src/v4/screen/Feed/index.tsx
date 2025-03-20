@@ -49,6 +49,9 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
       isAmityAd(item) ? item?.adId.toString() : item?.postId.toString(),
   });
 
+  const shouldShowAds = targetType !== 'user';
+  const feedItems = shouldShowAds ? itemWithAds : postData;
+
   const { handleViewChange } = usePostImpression(
     itemWithAds.filter(
       (item: Amity.Post | Amity.Ad) =>
@@ -137,7 +140,7 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
     <View style={styles.feedWrap}>
       <FlatList
         scrollEnabled={false}
-        data={itemWithAds ?? []}
+        data={feedItems ?? []}
         renderItem={({ item, index }) => {
           if (isAmityAd(item)) return <PostAdComponent ad={item as Amity.Ad} />;
 
