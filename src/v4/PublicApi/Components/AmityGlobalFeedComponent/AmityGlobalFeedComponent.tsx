@@ -38,7 +38,7 @@ export const globalFeedPageLimit = 20;
 const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
 }) => {
-  const { fetch, itemWithAds, loading, refresh } = useCustomRankingGlobalFeed();
+  const { fetch, itemWithAds, refresh } = useCustomRankingGlobalFeed();
   const componentId = ComponentID.global_feed_component;
   const { isExcluded, themeStyles, accessibilityId } = useAmityComponent({
     pageId,
@@ -56,7 +56,6 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   );
 
   const handleLoadMore = () => {
-    console.log('queryToken', nextPage);
     fetch({
       queryToken: nextPage,
     });
@@ -77,7 +76,6 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 
   useEffect(() => {
     if (isConnected) {
-      console.log('fetching');
       fetch({
         limit: globalFeedPageLimit,
       });
@@ -113,7 +111,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       ref={flatListRef}
       refreshControl={
         <RefreshControl
-          refreshing={refreshing || loading}
+          refreshing={refreshing}
           onRefresh={onRefresh}
           colors={['lightblue']}
           tintColor="lightblue"

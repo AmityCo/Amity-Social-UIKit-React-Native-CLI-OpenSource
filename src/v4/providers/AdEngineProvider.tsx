@@ -140,7 +140,9 @@ export const useRecommendAds = ({
 }) => {
   const adContext = useContext(AdEngineContext);
   const ads = adContext.ads;
-  const [recommendedAds, setRecommendedAds] = useState<Amity.Ad[]>([]);
+  const [recommendedAds, setRecommendedAds] = useState<
+    Amity.Ad[] | undefined
+  >();
   const adSettings = useAdSettings();
   const adFrequency = AdEngine.instance.getAdFrequencyByPlacement(placement);
 

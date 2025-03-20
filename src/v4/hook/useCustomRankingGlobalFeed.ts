@@ -72,6 +72,8 @@ export const useCustomRankingGlobalFeed = () => {
     queryToken?: string;
     limit?: number;
   }) => {
+    // if load first page, reset all the running index in paginator
+    if (!queryToken) reset();
     const {
       data,
       paging: { next, previous },
@@ -85,7 +87,6 @@ export const useCustomRankingGlobalFeed = () => {
       dispatch(setPaginationData({ next, previous }));
       const processedPosts = await processPosts(data);
       if (!queryToken) {
-        reset();
         dispatch(setNewGlobalFeed(processedPosts));
       } else {
         dispatch(updateGlobalFeed(processedPosts));
@@ -96,7 +97,6 @@ export const useCustomRankingGlobalFeed = () => {
   const refresh = async () => {
     setFetching(true);
     dispatch(clearFeed());
-    reset();
     await fetch({ limit: globalFeedPageLimit });
     return true;
   };
