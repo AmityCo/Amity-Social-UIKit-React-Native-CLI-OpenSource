@@ -336,15 +336,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8C0C65B8225B8EE822B5FE37 /* [CP] Embed Pods Frameworks */ = {

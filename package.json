@@ -120,7 +120,6 @@
     "react": "*",
     "react-native": "*",
     "react-native-create-thumbnail": "^2.0.0",
-    "react-native-fs": "2.20.0",
     "react-native-gesture-handler": "^2.16.0",
     "react-native-get-random-values": "^1.11.0",
     "react-native-image-picker": "^7.0.0",
