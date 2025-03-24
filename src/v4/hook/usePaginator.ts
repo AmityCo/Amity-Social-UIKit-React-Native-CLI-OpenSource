@@ -115,7 +115,6 @@ export const usePaginatorCore = <T>({
           if (!shouldPlaceAd) return [newItem];
 
           const ad = recommendedAdsRef.current[runningAdIndex];
-          console.log('ad => ', ad.advertiser.name);
 
           runningAdIndex =
             runningAdIndex + 1 > recommendedAdsRef.current.length - 1
