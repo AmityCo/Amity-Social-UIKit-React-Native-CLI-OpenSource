@@ -53,8 +53,6 @@ export const usePaginatorCore = <T>({
       return newItems;
     }
     if (frequency?.type === 'fixed') {
-      console.log('processCombineItems', newItems);
-
       const newItemIds = new Set(newItems.map((item) => getItemId(item)));
 
       const prevItemWithAds: Array<[T] | [T, Amity.Ad]> = itemWithAds
@@ -117,7 +115,6 @@ export const usePaginatorCore = <T>({
           if (!shouldPlaceAd) return [newItem];
 
           const ad = recommendedAdsRef.current[runningAdIndex];
-          console.log('ad => ', ad.advertiser.name);
 
           runningAdIndex =
             runningAdIndex + 1 > recommendedAdsRef.current.length - 1
@@ -155,7 +152,6 @@ export const usePaginatorCore = <T>({
 
   const combineItemsWithAds = useCallback(
     (newItems: T[]): Array<T | Amity.Ad> => {
-      console.log('combineItemsWithAds: adsLoaded => ', adsLoaded);
       if (!adsLoaded) {
         return newItems; // Return items without ads for now
       }

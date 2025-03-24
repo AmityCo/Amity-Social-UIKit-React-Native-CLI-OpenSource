@@ -5,7 +5,6 @@ import { ComponentID, PageID } from '../../enum';
 import { useStyles } from './styles';
 import PostAdHeader from './PostAdHeader';
 import { useAmityComponent } from '../../hook';
-
 import { infoIcon } from '../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import AdInformation from '../AdInformation/AdInformation';
