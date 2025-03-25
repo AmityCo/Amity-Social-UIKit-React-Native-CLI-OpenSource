@@ -112,14 +112,9 @@ class AssetDownloader {
    */
   public async fileExists(url: string): Promise<boolean> {
     try {
-      console.log('find file: ', url);
       const localPath = this.getFilePath(url);
-      const result = await RNFS.exists(localPath);
-      console.log('localPath: ', url, 'existed: ', result);
       return await RNFS.exists(localPath);
     } catch (error) {
-      console.log('file not existed: ', url);
-      console.log('Error checking file existence:', error);
       return false;
     }
   }
