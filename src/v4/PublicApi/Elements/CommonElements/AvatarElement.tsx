@@ -5,6 +5,7 @@ import { useFile } from '../../../hook';
 import { ImageSizeState } from '../../../enum';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
 import useConfig from '../../../hook/useConfig';
+import useAuth from '../../../../hooks/useAuth';
 
 type AvatarElementType = Partial<ImageProps> & {
   avatarId: string;
@@ -25,6 +26,7 @@ const AvatarElement: FC<AvatarElementType> = ({
   defaultAvatar,
   ...props
 }) => {
+  const { client } = useAuth();
   const fallbackAvatar = useMemo(() => {
     if (defaultAvatar) return defaultAvatar;
     return targetType === 'community'
@@ -53,11 +55,18 @@ const AvatarElement: FC<AvatarElementType> = ({
 
   if (excludes.includes(configId)) return null;
 
+  console.log('avatarUrl:', avatarUrl);
+
   return (
     <Image
       testID={configId}
       accessibilityLabel={configId}
-      source={{ uri: avatarUrl }}
+      source={{
+        uri: avatarUrl,
+        headers: {
+          Authorization: `Bearer ${(client as Amity.Client).token.accessToken}`,
+        },
+      }}
       {...props}
     />
   );
