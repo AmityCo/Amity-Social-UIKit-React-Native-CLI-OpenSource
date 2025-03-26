@@ -34,7 +34,11 @@ export const usePaginatorCore = <T>({
     return 1;
   })();
 
-  const recommendedAds = useRecommendAds({ count, placement, communityId });
+  const { recommendedAds, resetRecommendedAds } = useRecommendAds({
+    count,
+    placement,
+    communityId,
+  });
   const recommendedAdsRef = useRef(recommendedAds);
 
   // Update ref and track when ads are loaded
@@ -168,6 +172,7 @@ export const usePaginatorCore = <T>({
   const reset = () => {
     setCurrentAdIndex(0);
     setAdsLoaded(false);
+    resetRecommendedAds();
     setItemWithAds([]);
     setCurrentIndex(0);
   };
