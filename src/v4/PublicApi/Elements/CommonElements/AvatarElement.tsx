@@ -55,8 +55,6 @@ const AvatarElement: FC<AvatarElementType> = ({
 
   if (excludes.includes(configId)) return null;
 
-  console.log('avatarUrl:', avatarUrl);
-
   return (
     <Image
       testID={configId}
