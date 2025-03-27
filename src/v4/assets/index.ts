@@ -1,8 +1,8 @@
 import { Image } from 'react-native';
 
-const defaultAvatar = require('./images/Placeholder.png');
-const defaultCommunityAvatar = require('./images/communityAvatar.png');
-const defaultAdAvatar = require('./images/adAvatar.png');
+const defaultAvatar = require('./icon/Placeholder.png');
+const defaultCommunityAvatar = require('./icon/communityAvatar.png');
+const defaultAdAvatar = require('./icon/adAvatar.png');
 
 export const defaultAvatarUri = Image.resolveAssetSource(defaultAvatar).uri;
 export const defaultCommunityAvatarUri = Image.resolveAssetSource(

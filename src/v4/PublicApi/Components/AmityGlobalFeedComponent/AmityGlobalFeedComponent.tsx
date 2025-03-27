@@ -7,7 +7,9 @@ import React, {
   useState,
 } from 'react';
 import { FlatList } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useStyle } from './styles';
+import { useDispatch, useSelector } from 'react-redux';
+import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
 import { RootState } from '../../../../redux/store';
 
 import { RefreshControl } from 'react-native';
@@ -19,13 +21,11 @@ import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabCompo
 import { AmityStoryTabComponentEnum } from '../../types';
 import { usePostImpression } from '../../../../v4/hook/usePostImpression';
 import useAuth from '../../../../hooks/useAuth';
-import { useStyle } from './styles';
 import {
   isAmityAd,
   useCustomRankingGlobalFeed,
-} from '../../../hook/useCustomRankingGlobalFeed';
+} from '../../../../v4/hook/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
-import Divider from '../../../component/Divider';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
@@ -44,7 +44,9 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   });
 
   const [refreshing, setRefreshing] = useState(false);
-  const styles = useStyle();
+  const { clearFeed } = globalFeedSlice.actions;
+  const dispatch = useDispatch();
+  const styles = useStyle(themeStyles);
   const { isConnected } = useAuth();
   const flatListRef = useRef(null);
   const nextPage = useSelector(
@@ -61,12 +63,13 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
+    dispatch(clearFeed());
     await refresh();
     setRefreshing(false);
-  }, [refresh]);
+  }, [clearFeed, dispatch, refresh]);
 
   const { handleViewChange } = usePostImpression(
-    itemWithAds.filter((item: Amity.Post | Amity.Ad) =>
+    itemWithAds.filter((item: IPost | Amity.Ad) =>
       isAmityAd(item) ? item?.adId : item?.postId
     )
   );
@@ -77,7 +80,6 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
         limit: globalFeedPageLimit,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
 
   if (isExcluded) return null;
@@ -89,26 +91,20 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       accessibilityLabel={accessibilityId}
       style={styles.feedWrap}
       data={itemWithAds}
-      renderItem={({ item, index }) => {
+      renderItem={({ item }) => {
+        if (isAmityAd(item)) return <PostAdComponent ad={item as Amity.Ad} />;
+
         return (
-          <>
-            {index !== 0 && <Divider themeStyles={themeStyles} />}
-            {isAmityAd(item) ? (
-              <PostAdComponent ad={item as Amity.Ad} />
-            ) : (
-              <AmityPostContentComponent
-                post={item as Amity.Post}
-                AmityPostContentComponentStyle={
-                  AmityPostContentComponentStyleEnum.feed
-                }
-              />
-            )}
-          </>
+          <AmityPostContentComponent
+            post={item as IPost}
+            AmityPostContentComponentStyle={
+              AmityPostContentComponentStyleEnum.feed
+            }
+          />
         );
       }}
       keyExtractor={(item, index) =>
-        (isAmityAd(item) ? item.adId.toString() : item.postId.toString()) +
-        `_${index}`
+        isAmityAd(item) ? item.adId.toString() + index : item.postId.toString()
       }
       onEndReachedThreshold={0.5}
       onEndReached={handleLoadMore}
