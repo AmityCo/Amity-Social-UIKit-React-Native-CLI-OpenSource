@@ -14,7 +14,6 @@
 		2F2F6ABA2F779CF0BE66EA6A /* libPods-AmityReactNativeSocialUiKitExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C43CFC54F61B4CFA3812C411 /* libPods-AmityReactNativeSocialUiKitExample.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		BE8B4F552C0ECF55001DFE94 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BE8B4F542C0ECF55001DFE94 /* GoogleService-Info.plist */; };
-		E215FDF13A20C36D4E242AC2 /* libPods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F0837EC43B59CD5C6D0037A /* libPods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,8 +43,6 @@
 		B53CFFDEA22C3C93865F2FDA /* Pods-AmityReactNativeSocialUiKitExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmityReactNativeSocialUiKitExample.debug.xcconfig"; path = "Target Support Files/Pods-AmityReactNativeSocialUiKitExample/Pods-AmityReactNativeSocialUiKitExample.debug.xcconfig"; sourceTree = "<group>"; };
 		BE8B4F542C0ECF55001DFE94 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BE8B4F562C0ECF7E001DFE94 /* AmityReactNativeSocialUiKitExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AmityReactNativeSocialUiKitExample.entitlements; path = AmityReactNativeSocialUiKitExample/AmityReactNativeSocialUiKitExample.entitlements; sourceTree = "<group>"; };
-		C43CFC54F61B4CFA3812C411 /* libPods-AmityReactNativeSocialUiKitExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AmityReactNativeSocialUiKitExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA94CB64B2B3C01ED698A720 /* Pods-AmityReactNativeSocialUiKitExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmityReactNativeSocialUiKitExample.release.xcconfig"; path = "Target Support Files/Pods-AmityReactNativeSocialUiKitExample/Pods-AmityReactNativeSocialUiKitExample.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -396,6 +393,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CAA641027BEE31BD4451EF74 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DD7658AF5E4F2874AAF87C81 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests/Pods-AmityReactNativeSocialUiKitExample-AmityReactNativeSocialUiKitExampleTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
