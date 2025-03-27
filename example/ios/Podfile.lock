@@ -1,5 +1,5 @@
 PODS:
-  - amity-react-native-social-ui-kit (4.0.0-beta-20):
+  - amity-react-native-social-ui-kit (4.0.0-beta-18):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - ApiVideoLiveStream (1.4.1):
