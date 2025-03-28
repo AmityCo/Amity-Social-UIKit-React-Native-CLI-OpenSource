@@ -366,7 +366,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
                   numberOfLines={1}
                   style={styles.headerText}
                 >
-                  {creator?.displayName}
+                  {user?.displayName}
                 </Text>
               </TouchableOpacity>
 
