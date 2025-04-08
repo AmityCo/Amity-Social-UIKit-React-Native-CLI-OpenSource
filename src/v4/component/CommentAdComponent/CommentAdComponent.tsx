@@ -113,7 +113,9 @@ const CommentAdComponent: FC<CommnetAdComponentType> = ({
                   Linking.openURL(ad?.callToActionUrl);
                 }}
               >
-                <Text style={styles.callToActionText}>{ad.callToAction}</Text>
+                <Text numberOfLines={1} style={styles.callToActionText}>
+                  {ad.callToAction}
+                </Text>
               </TouchableOpacity>
             )}
           </View>

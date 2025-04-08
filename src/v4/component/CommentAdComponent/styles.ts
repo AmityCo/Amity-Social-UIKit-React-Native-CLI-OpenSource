@@ -9,6 +9,8 @@ export const useStyles = (theme: MyMD3Theme) => {
       paddingHorizontal: 16,
       paddingTop: 4,
       width: '100%',
+      flexDirection: 'row',
+      gap: 8,
     },
     avatar: {
       height: 32,
@@ -18,7 +20,9 @@ export const useStyles = (theme: MyMD3Theme) => {
     bubble: {
       backgroundColor: theme.colors.baseShade4,
       padding: 12,
+      borderTopLeftRadius: 0,
       borderRadius: 12,
+      flex: 1,
     },
     infoIcon: {
       position: 'absolute',
@@ -33,6 +37,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       fontSize: 14,
       color: theme.colors.base,
       lineHeight: 20,
+      marginBottom: 4,
     },
     adBadge: {
       flexDirection: 'row',
@@ -59,7 +64,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       color: theme.colors.base,
       fontSize: 14,
       lineHeight: 20,
-      marginVertical: 8,
+      marginBottom: 4,
     },
     callToActionCard: {
       display: 'flex',
@@ -67,20 +72,26 @@ export const useStyles = (theme: MyMD3Theme) => {
       overflow: 'hidden',
       borderColor: theme.colors.baseShade4,
       borderWidth: 1,
+      backgroundColor: theme.colors.background,
+      flexDirection: 'row',
+      height: 116,
     },
     callToActionCardImage: {
-      width: '100%',
-      height: 150,
+      width: 116,
+      height: '100%',
     },
     callToActionCardRightSection: {
-      padding: 12,
+      paddingVertical: 14.5,
+      paddingHorizontal: 12,
       borderLeftWidth: 1,
       borderLeftColor: theme.colors.baseShade4,
+      flex: 1,
     },
     callToActionCardDescription: {
-      fontSize: 11,
+      fontSize: 10,
       color: theme.colors.baseShade1,
-      lineHeight: 18,
+      lineHeight: 13,
+      marginBottom: 2,
     },
     callToActionCardHeadline: {
       fontSize: 13,
@@ -90,18 +101,17 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     callToActionButton: {
       marginTop: 8,
-      paddingHorizontal: 12,
-      paddingVertical: 6,
+      paddingHorizontal: 8,
+      paddingVertical: 5,
       backgroundColor: theme.colors.primary,
       borderRadius: 4,
+      alignSelf: 'flex-start',
     },
     callToActionText: {
       fontSize: 13,
       fontWeight: '600',
       color: 'white',
       lineHeight: 18,
-      paddingHorizontal: 12,
-      paddingVertical: 6,
     },
   });
 
