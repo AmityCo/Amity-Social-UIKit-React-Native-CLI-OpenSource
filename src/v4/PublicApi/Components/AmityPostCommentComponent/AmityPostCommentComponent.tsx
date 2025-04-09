@@ -20,8 +20,9 @@ import uiSlice from '../../../../redux/slices/uiSlice';
 import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
 import CommentAdComponent from '../../../component/CommentAdComponent/CommentAdComponent';
 import { usePaginatorApi } from '../../../hook/usePaginator';
+import { useCommentAdImpression } from '../../../hook/useCommentAdImpression';
 
-interface IComment {
+export interface IComment {
   commentId: string;
   data: Record<string, any>;
   dataType: string | undefined;
@@ -69,6 +70,8 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
   const onNextPageRef = useRef<() => void | null>(null);
   const [commentList, setCommentList] = useState<IComment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { handleViewChange } = useCommentAdImpression();
 
   const { itemWithAds } = usePaginatorApi<IComment>({
     items: commentList,
@@ -216,9 +219,11 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         renderItem={renderCommentListItem}
         keyExtractor={(item) => (isAmityAd(item) ? item.adId : item.commentId)}
         onEndReachedThreshold={0.8}
+        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
         onEndReached={() => {
           onNextPageRef.current && onNextPageRef.current();
         }}
+        onViewableItemsChanged={handleViewChange}
       />
     </View>
   );
