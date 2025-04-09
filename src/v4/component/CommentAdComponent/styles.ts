@@ -86,6 +86,8 @@ export const useStyles = (theme: MyMD3Theme) => {
       borderLeftWidth: 1,
       borderLeftColor: theme.colors.baseShade4,
       flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
     callToActionCardDescription: {
       fontSize: 10,
