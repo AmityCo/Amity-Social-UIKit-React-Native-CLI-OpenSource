@@ -1,11 +1,30 @@
-import React from 'react';
-import { Text, FlatList } from 'react-native';
-
+import React, { FC } from 'react';
+import { Text, FlatList, View } from 'react-native';
 import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedCommunityItems';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
+import { ComponentID, ElementID, PageID } from '../../../enum';
+import { useAmityElement } from '../../../hook';
 
-export const AmityRecommendedCommunityComponent = () => {
+type AmityRecommendedCommunityComponentProps = {
+  pageId?: PageID;
+  componentId?: ComponentID;
+};
+
+export const AmityRecommendedCommunityComponent: FC<
+  AmityRecommendedCommunityComponentProps
+> = ({
+  pageId = PageID.WildCardPage,
+  componentId = ComponentID.WildCardComponent,
+}) => {
+  const elementId = ElementID.explore_recommended_title;
+
+  const { config, accessibilityId } = useAmityElement({
+    pageId,
+    componentId,
+    elementId,
+  });
+
   const styles = useStyles();
   const [recommendedCommunities, setRecommendedCommunities] = React.useState<
     Amity.Community[]
@@ -33,15 +52,15 @@ export const AmityRecommendedCommunityComponent = () => {
   }, []);
 
   return (
-    <>
-      <Text style={styles.headerText}>Recommended for you</Text>
+    <View testID={accessibilityId}>
+      <Text style={styles.headerText}>{config.text as string}</Text>
       <FlatList
         horizontal={true}
         data={recommendedCommunities}
         renderItem={({ item }) => <RecommendedCommunityItem community={item} />}
         keyExtractor={(item) => item.communityId}
-        contentContainerStyle={{ gap: 16 }}
+        contentContainerStyle={styles.listContainer}
       />
-    </>
+    </View>
   );
 };

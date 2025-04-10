@@ -67,7 +67,8 @@ const AmitySocialHomePage = () => {
 
   const renderNewsFeed = () => {
     if (pageLoading) return <NewsFeedLoadingComponent />;
-    if (activeTab === exploreTab) return <AmityExploreComponent />;
+    if (activeTab === exploreTab)
+      return <AmityExploreComponent pageId={PageID.social_home_page} />;
     if (!myCommunities?.length)
       return (
         <AmityEmptyNewsFeedComponent

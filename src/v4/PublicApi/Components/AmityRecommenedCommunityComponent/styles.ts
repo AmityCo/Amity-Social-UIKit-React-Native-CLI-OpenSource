@@ -12,6 +12,9 @@ export const useStyles = () => {
       color: theme.colors.base,
       marginBottom: 16,
     },
+    listContainer: {
+      gap: 16,
+    },
   });
   return styles;
 };
