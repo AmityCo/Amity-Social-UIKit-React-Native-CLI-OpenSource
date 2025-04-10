@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 import { Text, FlatList, View } from 'react-native';
 import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedCommunityItems';
-import { CommunityRepository } from '@amityco/ts-sdk-react-native';
+
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../../enum';
 import { useAmityElement } from '../../../hook';
+import { useRecommendedCommunities } from '../../../hook/useRecommenedCommunities';
 
 type AmityRecommendedCommunityComponentProps = {
   pageId?: PageID;
@@ -26,37 +27,14 @@ export const AmityRecommendedCommunityComponent: FC<
   });
 
   const styles = useStyles();
-  const [recommendedCommunities, setRecommendedCommunities] = React.useState<
-    Amity.Community[]
-  >([]);
-  // const [loading, setLoading] = React.useState(true);
-  // const [error, setError] = React.useState(null);
-  React.useEffect(() => {
-    const subscriber = CommunityRepository.getRecommendedCommunities(
-      {
-        limit: 4,
-      },
-      ({ data, error, loading }) => {
-        if (error) {
-          // setError(error);
-          return;
-        }
-        if (!loading && data) setRecommendedCommunities(data);
-        // setLoading(loading);
-      }
-    );
-
-    return () => {
-      subscriber();
-    };
-  }, []);
+  const { communities } = useRecommendedCommunities();
 
   return (
     <View testID={accessibilityId}>
       <Text style={styles.headerText}>{config.text as string}</Text>
       <FlatList
         horizontal={true}
-        data={recommendedCommunities}
+        data={communities}
         renderItem={({ item }) => <RecommendedCommunityItem community={item} />}
         keyExtractor={(item) => item.communityId}
         contentContainerStyle={styles.listContainer}

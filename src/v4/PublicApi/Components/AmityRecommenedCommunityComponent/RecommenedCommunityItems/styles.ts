@@ -34,10 +34,12 @@ export const useStyles = () => {
     communityNameWarp: {
       flexDirection: 'row',
       gap: 2,
+      alignItems: 'center',
+      marginBottom: 4,
     },
     communityName: {
+      flex: 1,
       color: theme.colors.base,
-      marginBottom: 4,
     },
     detailBottomWrap: {
       justifyContent: 'space-between',

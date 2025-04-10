@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, View } from 'react-native';
 import { CategoryChips } from '../../../../component/CategoryChips/CategoryChips';
 import { ImageSizeState } from '../../../../enum';
 import { useFile } from '../../../../hook';
@@ -9,7 +9,11 @@ import CommunityJoinedButtonElement from '../../../../PublicApi/Elements/Communi
 import CommunityJoinButtonElement from '../../../../PublicApi/Elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import { Typography } from '../../../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
-import { community as communityIcon } from '../../../../assets/icons';
+import {
+  community as communityIcon,
+  lock,
+  verifiedBadge,
+} from '../../../../assets/icons';
 
 type RecommendedCommunityItemProps = {
   community: Amity.Community;
@@ -52,11 +56,11 @@ export const RecommendedCommunityItem: React.FC<
 
       <View style={styles.detailWrap}>
         <View style={styles.communityNameWarp}>
-          {!community.isPublic && <Text>Private</Text>}
-          <Typography.BodyBold style={styles.communityName}>
-            {community.displayName}{' '}
+          {!community.isPublic && <SvgXml xml={lock()} />}
+          <Typography.BodyBold style={styles.communityName} numberOfLines={1}>
+            {community.displayName}
           </Typography.BodyBold>
-          {community.isOfficial && <Text>Official</Text>}
+          {community.isOfficial && <SvgXml xml={verifiedBadge()} />}
         </View>
         <View style={styles.detailBottomWrap}>
           <View>
