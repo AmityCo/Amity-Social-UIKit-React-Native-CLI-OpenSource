@@ -272,7 +272,7 @@ export default function CommunityHome({ route }: any) {
                 ? {
                     uri: avatarUrl,
                   }
-                : require('../../assets/icon/Placeholder.png')
+                : require('../../assets/images/Placeholder.png')
             }
           />
           <View style={styles.darkOverlay} />
