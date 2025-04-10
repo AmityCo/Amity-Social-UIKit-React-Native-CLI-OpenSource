@@ -10,6 +10,8 @@ export enum PageID {
   post_composer_page = 'post_composer_page',
   select_post_target_page = 'select_post_target_page',
   select_story_target_page = 'select_story_target_page',
+  all_categories_page = 'all_categories_page',
+  communities_by_category_page = 'communities_by_category_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',
@@ -28,6 +30,11 @@ export enum ComponentID {
   media_attachment = 'media_attachment',
   detailed_media_attachment = 'detailed_media_attachment',
   create_post_menu = 'create_post_menu',
+  explore_empty = 'explore_empty',
+  explore_community_empty = 'explore_community_empty',
+  explore_community_categories = 'explore_community_categories',
+  recommended_communities = 'recommended_communities',
+  trending_communities = 'trending_communities',
 }
 export enum ElementID {
   CloseBtn = 'close_button',
@@ -90,8 +97,22 @@ export enum ElementID {
   my_timeline_avatar = 'my_timeline_avatar',
   my_timeline_text = 'my_timeline_text',
   close_button = 'close_button',
+  explore_trending_title = 'explore_trending_title',
+  explore_recommended_title = 'explore_recommended_title',
+  explore_empty_image = 'explore_empty_image',
+  explore_create_community = 'explore_create_community',
+  category_chip = 'category_chip',
+  community_card_image = 'community_card_image',
   community_join_button = 'community_join_button',
   community_joined_button = 'community_joined_button',
+  community_category = 'community_category',
+  community_member_count = 'community_member_count',
+  community_row_image = 'community_row_image',
+  all_categories_title = 'all_categories_title',
+  category_row_image = 'category_row_image',
+  category_row_name = 'category_row_name',
+  category_title = 'category_title',
+  community_empty_title = 'community_empty_title',
 }
 
 export interface UiKitConfigKeys {
