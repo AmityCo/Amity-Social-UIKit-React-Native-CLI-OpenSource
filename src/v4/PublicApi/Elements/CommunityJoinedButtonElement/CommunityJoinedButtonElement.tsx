@@ -20,6 +20,7 @@ const CommunityJoinedButtonElement: FC<CommunityJoinedButtonElementType> = ({
   componentId = ComponentID.WildCardComponent,
   ...props
 }) => {
+  // TODO: add theme styles
   const { excludes } = useConfig();
 
   const elementId = ElementID.community_join_button;
