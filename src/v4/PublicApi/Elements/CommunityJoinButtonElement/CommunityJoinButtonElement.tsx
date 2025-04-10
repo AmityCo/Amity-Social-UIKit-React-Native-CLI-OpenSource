@@ -1,4 +1,5 @@
 import React, { FC, memo } from 'react';
+import { TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
 import useConfig from '../../../hook/useConfig';
 import { useAmityElement } from '../../../hook';
@@ -9,7 +10,7 @@ import { SvgXml } from 'react-native-svg';
 type CommunityJoinButtonElementType = {
   pageId?: PageID;
   componentId?: ComponentID;
-};
+} & TouchableOpacityProps;
 
 const CommunityJoinButtonElement: FC<CommunityJoinButtonElementType> = ({
   pageId = PageID.WildCardPage,

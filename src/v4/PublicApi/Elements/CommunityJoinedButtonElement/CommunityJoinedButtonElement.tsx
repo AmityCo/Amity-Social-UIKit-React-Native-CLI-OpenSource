@@ -23,7 +23,7 @@ const CommunityJoinedButtonElement: FC<CommunityJoinedButtonElementType> = ({
   // TODO: add theme styles
   const { excludes } = useConfig();
 
-  const elementId = ElementID.community_join_button;
+  const elementId = ElementID.community_joined_button;
   const configKey: keyof UiKitConfigKeys = 'icon';
   const configId = `${pageId}/${componentId}/${elementId}`;
 
@@ -47,7 +47,7 @@ const CommunityJoinedButtonElement: FC<CommunityJoinedButtonElementType> = ({
   return (
     <Button
       testID={accessibilityId}
-      type="primary"
+      type="secondary"
       icon={<Image source={imageSource} />}
       {...props}
     >

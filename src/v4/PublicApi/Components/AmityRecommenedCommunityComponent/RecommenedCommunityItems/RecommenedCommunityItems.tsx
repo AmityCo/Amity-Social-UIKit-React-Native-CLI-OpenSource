@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Image, View } from 'react-native';
 import { CategoryChips } from '../../../../component/CategoryChips/CategoryChips';
 import { ImageSizeState } from '../../../../enum';
@@ -14,6 +14,7 @@ import {
   lock,
   verifiedBadge,
 } from '../../../../assets/icons';
+import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 
 type RecommendedCommunityItemProps = {
   community: Amity.Community;
@@ -25,6 +26,10 @@ export const RecommendedCommunityItem: React.FC<
   const { getImage } = useFile();
   const styles = useStyles();
   const [imageUrl, setImageUrl] = React.useState<string | undefined>(undefined);
+
+  const onJoinCommunity = useCallback(() => {
+    CommunityRepository.joinCommunity(community.communityId);
+  }, [community.communityId]);
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -70,10 +75,11 @@ export const RecommendedCommunityItem: React.FC<
               {community.membersCount > 1 ? 's' : ''}
             </Typography.Caption>
           </View>
+          {/* TODO: if join community it should be disappeared */}
           {community.isJoined ? (
             <CommunityJoinedButtonElement />
           ) : (
-            <CommunityJoinButtonElement />
+            <CommunityJoinButtonElement onPress={() => onJoinCommunity()} />
           )}
         </View>
       </View>
