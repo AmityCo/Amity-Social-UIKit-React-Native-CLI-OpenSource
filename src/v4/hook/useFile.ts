@@ -13,7 +13,6 @@ export const useFile = () => {
     async ({ fileId, imageSize = ImageSizeState.medium }: useFileProps) => {
       if (!fileId) return defaultAvatarUri;
       const file = await FileRepository.getFile(fileId);
-      console.log('file => ', file);
       if (!file) return defaultAvatarUri;
       const newImageUrl =
         FileRepository.fileUrlWithSize(file.data.fileUrl, imageSize) ??
