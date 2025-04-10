@@ -5,6 +5,7 @@ export const useRecommendedCommunities = () => {
   const [communities, setCommunities] = useState<Amity.Community[]>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   useEffect(() => {
     const unsubscribe = CommunityRepository.getRecommendedCommunities(
       { limit: 4 },
@@ -18,5 +19,6 @@ export const useRecommendedCommunities = () => {
     );
     return unsubscribe;
   }, []);
+
   return { communities, loading, error };
 };

@@ -10,7 +10,8 @@ export const useStyles = () => {
     },
     chipContainer: {
       backgroundColor: theme.colors.baseShade4,
-      paddingVertical: 6,
+      paddingHorizontal: 6,
+      borderRadius: 20,
     },
     chipText: {
       fontSize: 13,
