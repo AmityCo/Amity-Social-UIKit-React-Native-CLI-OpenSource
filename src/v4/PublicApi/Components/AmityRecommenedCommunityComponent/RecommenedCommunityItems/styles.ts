@@ -13,6 +13,16 @@ export const useStyles = () => {
       borderWidth: 1,
       borderColor: theme.colors.baseShade4,
     },
+    imagePlaceholder: {
+      width: '100%',
+      height: 134,
+      backgroundColor: theme.colors.secondaryShade3,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 8,
+    },
     image: {
       width: '100%',
       height: 134,

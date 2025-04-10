@@ -8,6 +8,8 @@ import { useStyles } from './styles';
 import CommunityJoinedButtonElement from '../../../../PublicApi/Elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
 import CommunityJoinButtonElement from '../../../../PublicApi/Elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import { Typography } from '../../../../component/Typography/Typography';
+import { SvgXml } from 'react-native-svg';
+import { community as communityIcon } from '../../../../assets/icons';
 
 type RecommendedCommunityItemProps = {
   community: Amity.Community;
@@ -21,8 +23,9 @@ export const RecommendedCommunityItem: React.FC<
   const [imageUrl, setImageUrl] = React.useState<string | undefined>(undefined);
 
   useEffect(() => {
-    // TODO: fix default image
     const fetchImage = async () => {
+      if (!community.avatarFileId) return;
+
       const url = await getImage({
         fileId: community.avatarFileId,
         imageSize: ImageSizeState.large,
@@ -35,11 +38,18 @@ export const RecommendedCommunityItem: React.FC<
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={{ uri: imageUrl }}
-        resizeMode="cover"
-      />
+      {community.avatarFileId && imageUrl ? (
+        <Image
+          style={styles.image}
+          source={{ uri: imageUrl }}
+          resizeMode="cover"
+        />
+      ) : (
+        <View style={styles.imagePlaceholder}>
+          <SvgXml xml={communityIcon()} />
+        </View>
+      )}
+
       <View style={styles.detailWrap}>
         <View style={styles.communityNameWarp}>
           {!community.isPublic && <Text>Private</Text>}
