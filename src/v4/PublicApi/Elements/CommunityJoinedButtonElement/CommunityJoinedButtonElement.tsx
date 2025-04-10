@@ -1,14 +1,10 @@
-import { Image } from 'react-native';
 import React, { FC, memo } from 'react';
-import {
-  ComponentID,
-  ElementID,
-  PageID,
-  UiKitConfigKeys,
-} from '../../../enum/enumUIKitID';
+import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
 import useConfig from '../../../hook/useConfig';
-import { useAmityElement, useConfigImageUri } from '../../../hook';
+import { useAmityElement } from '../../../hook';
 import { Button } from '../../../component/Button/Button';
+import { SvgXml } from 'react-native-svg';
+import { check } from '../../../assets/icons';
 
 type CommunityJoinedButtonElementType = {
   pageId?: PageID;
@@ -24,7 +20,6 @@ const CommunityJoinedButtonElement: FC<CommunityJoinedButtonElementType> = ({
   const { excludes } = useConfig();
 
   const elementId = ElementID.community_joined_button;
-  const configKey: keyof UiKitConfigKeys = 'icon';
   const configId = `${pageId}/${componentId}/${elementId}`;
 
   const { config, accessibilityId } = useAmityElement({
@@ -33,22 +28,13 @@ const CommunityJoinedButtonElement: FC<CommunityJoinedButtonElementType> = ({
     elementId,
   });
 
-  const imageSource = useConfigImageUri({
-    configPath: {
-      page: pageId,
-      component: componentId,
-      element: elementId,
-    },
-    configKey: configKey,
-  });
-
   if (excludes.includes(configId)) return null;
 
   return (
     <Button
       testID={accessibilityId}
       type="secondary"
-      icon={<Image source={imageSource} />}
+      icon={<SvgXml xml={check()} />}
       {...props}
     >
       {config.text as string}

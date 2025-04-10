@@ -21,6 +21,8 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ categoryId }) => {
     fetch();
   }, [categoryId]);
 
+  if (category == null) return null;
+
   return (
     <View style={styles.chipContainer}>
       <Text style={styles.chipText} numberOfLines={1}>
