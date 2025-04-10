@@ -26,21 +26,20 @@ export const useStyles = () => {
       gap: 2,
     },
     communityName: {
-      fontSize: 15,
-      lineHeight: 18,
       color: theme.colors.base,
+      marginBottom: 4,
+    },
+    detailBottomWrap: {
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      gap: 8,
+    },
+    detailBottomWrapLeft: {
+      flex: 1,
     },
     memberText: {
-      fontSize: 13,
-      lineHeight: 18,
       color: theme.colors.baseShade1,
-    },
-    joinButton: {
-      backgroundColor: theme.colors.primary,
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-      borderRadius: 4,
-      marginTop: 8,
+      marginTop: 4,
     },
   });
   return styles;

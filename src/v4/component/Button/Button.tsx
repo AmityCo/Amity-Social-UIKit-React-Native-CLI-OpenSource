@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   TouchableOpacity,
   StyleProp,
@@ -40,20 +40,24 @@ export const Button = ({
   ];
 
   const iconStyles = [styles.icon, iconStyle];
+  const textStyles = useMemo(
+    () => [styles[`text${capitalize(type)}`], textStyle],
+    [type, textStyle, styles]
+  );
 
   const renderText = useCallback(() => {
     if (size === 'small') {
       return (
-        <Typography.CaptionBold style={textStyle}>
+        <Typography.CaptionBold style={textStyles}>
           {children}
         </Typography.CaptionBold>
       );
     }
 
     return (
-      <Typography.BodyBold style={textStyle}>{children}</Typography.BodyBold>
+      <Typography.BodyBold style={textStyles}>{children}</Typography.BodyBold>
     );
-  }, [size, children, textStyle]);
+  }, [size, children, textStyles]);
 
   return (
     <TouchableOpacity
