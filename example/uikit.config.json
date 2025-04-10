@@ -309,6 +309,12 @@
     },
     "*/*/community_private_badge": {
       "image": "lockIcon"
+    },
+    "*/*/community_joined_button": {
+      "text": "Joined"
+    },
+    "*/*/community_join_button": {
+      "text": "Join"
     }
   }
 }

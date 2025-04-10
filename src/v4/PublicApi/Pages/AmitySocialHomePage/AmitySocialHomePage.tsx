@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { LogBox, SafeAreaView } from 'react-native';
-import Explore from '../../../../screens/Explore';
 import CustomSocialTab from '../../../component/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../../hook';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
@@ -13,6 +12,7 @@ import AmityEmptyNewsFeedComponent from '../../Components/AmityEmptyNewsFeedComp
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import AmityMyCommunitiesComponent from '../../Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
 import AmityNewsFeedComponent from '../../Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
+import AmityExploreComponent from '../../Components/AmityExploreComponent/AmityExploreComponent';
 import NewsFeedLoadingComponent from '../../../component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
 LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {
@@ -67,7 +67,7 @@ const AmitySocialHomePage = () => {
 
   const renderNewsFeed = () => {
     if (pageLoading) return <NewsFeedLoadingComponent />;
-    if (activeTab === exploreTab) return <Explore />;
+    if (activeTab === exploreTab) return <AmityExploreComponent />;
     if (!myCommunities?.length)
       return (
         <AmityEmptyNewsFeedComponent

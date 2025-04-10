@@ -90,6 +90,8 @@ export enum ElementID {
   my_timeline_avatar = 'my_timeline_avatar',
   my_timeline_text = 'my_timeline_text',
   close_button = 'close_button',
+  community_join_button = 'community_join_button',
+  community_joined_button = 'community_joined_button',
 }
 
 export interface UiKitConfigKeys {
