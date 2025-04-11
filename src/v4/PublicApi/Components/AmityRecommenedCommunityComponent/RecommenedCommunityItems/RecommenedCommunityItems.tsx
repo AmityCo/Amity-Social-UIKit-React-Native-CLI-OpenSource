@@ -68,7 +68,7 @@ export const RecommendedCommunityItem: React.FC<
           {community.isOfficial && <SvgXml xml={verifiedBadge()} />}
         </View>
         <View style={styles.detailBottomWrap}>
-          <View>
+          <View style={styles.detailBottomWrapLeft}>
             <CategoryChips categoryIds={community.categoryIds} />
             <Typography.Caption style={styles.memberText}>
               {community.membersCount} member

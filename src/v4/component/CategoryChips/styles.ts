@@ -7,6 +7,7 @@ export const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
+      gap: 4,
     },
     chipContainer: {
       backgroundColor: theme.colors.baseShade4,

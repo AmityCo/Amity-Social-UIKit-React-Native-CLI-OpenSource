@@ -5,24 +5,48 @@ import { useStyles } from './styles';
 
 type CategoryChipsProps = {
   categoryIds: string[];
-  maxVisible?: number;
 };
+
+const MAX_VISIBLE_CATEGORIES = 2;
 
 export const CategoryChips: React.FC<CategoryChipsProps> = ({
   categoryIds,
-  maxVisible = 2,
 }) => {
   const styles = useStyles();
-  const visibleCategories = categoryIds.slice(0, maxVisible);
-  const hiddenCategoriesCount = categoryIds.length - maxVisible;
+  const visibleCategories = categoryIds.slice(0, MAX_VISIBLE_CATEGORIES);
+  const hiddenCategoriesCount = categoryIds.length - MAX_VISIBLE_CATEGORIES;
   const showMoreText =
     hiddenCategoriesCount > 0 ? `+${hiddenCategoriesCount}` : '';
   const showMore = hiddenCategoriesCount > 0;
 
+  // Dynamic maxWidth based on number of visible categories
+  const getMaxWidthForItem = (totalVisibleItems: number) => {
+    // If only 1 visible category, let it use more space (but still have some limit)
+    if (totalVisibleItems === 1 && !showMore) {
+      return '100%'; // Use percentage for flexibility
+    }
+
+    if (totalVisibleItems === 2 && !showMore) {
+      return '50%'; // Use percentage for flexibility
+    }
+
+    // More restrictive as items increase
+    if (totalVisibleItems === 2 || showMore) {
+      return '40%'; // Match your existing maxWidth
+    }
+
+    // Default case
+    return '40%';
+  };
+
   return (
     <View style={styles.container}>
       {visibleCategories.map((id, index) => (
-        <CategoryItem key={index} categoryId={id} />
+        <CategoryItem
+          key={index}
+          categoryId={id}
+          maxWidth={getMaxWidthForItem(visibleCategories.length)}
+        />
       ))}
       {showMore && (
         <View style={styles.chipContainer}>
