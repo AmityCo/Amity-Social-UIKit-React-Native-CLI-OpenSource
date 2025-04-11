@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { DimensionValue, Text, View } from 'react-native';
 import { useStyles } from '../styles';
 
-type CategoryItemProps = {
+type CommunityCategoryChipProps = {
   categoryId: string;
   style?: object;
   maxWidth?: number | string;
 };
 
-export const CategoryItem: React.FC<CategoryItemProps> = ({
+export const CommunityCategoryChip: React.FC<CommunityCategoryChipProps> = ({
   categoryId,
   style,
   maxWidth,

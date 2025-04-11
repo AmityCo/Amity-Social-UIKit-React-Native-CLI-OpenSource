@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { Image, View } from 'react-native';
-import { CategoryChips } from '../../../../component/CategoryChips/CategoryChips';
+import { CommunityCategoryChips } from '../../../../component/CommunityCategoryChips/CommunityCategoryChips';
 import { ImageSizeState } from '../../../../enum';
 import { useFile } from '../../../../hook';
 import { useStyles } from './styles';
@@ -72,7 +72,7 @@ export const RecommendedCommunityItem: React.FC<
         </View>
         <View style={styles.detailBottomWrap}>
           <View style={styles.detailBottomWrapLeft}>
-            <CategoryChips categoryIds={community.categoryIds} />
+            <CommunityCategoryChips categoryIds={community.categoryIds} />
             <Typography.Caption style={styles.memberText}>
               {memberCounts} member
               {community.membersCount > 1 ? 's' : ''}

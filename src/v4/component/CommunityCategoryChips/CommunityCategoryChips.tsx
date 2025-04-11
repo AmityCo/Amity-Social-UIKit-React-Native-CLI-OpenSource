@@ -1,15 +1,15 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { CategoryItem } from './CategoryItem/CategoryItem';
+import { CommunityCategoryChip } from './CommunityCategoryChip/CommunityCategoryChip';
 import { useStyles } from './styles';
 
-type CategoryChipsProps = {
+type CommunityCategoryChipsProps = {
   categoryIds: string[];
 };
 
 const MAX_VISIBLE_CATEGORIES = 2;
 
-export const CategoryChips: React.FC<CategoryChipsProps> = ({
+export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
   categoryIds,
 }) => {
   const styles = useStyles();
@@ -42,7 +42,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = ({
   return (
     <View style={styles.container}>
       {visibleCategories.map((id, index) => (
-        <CategoryItem
+        <CommunityCategoryChip
           key={index}
           categoryId={id}
           maxWidth={getMaxWidthForItem(visibleCategories.length)}
