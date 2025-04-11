@@ -15,6 +15,7 @@ import {
   verifiedBadge,
 } from '../../../../assets/icons';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
+import { formatNumber } from '../../../../../util/numberUtil';
 
 type RecommendedCommunityItemProps = {
   community: Amity.Community;
@@ -45,6 +46,8 @@ export const RecommendedCommunityItem: React.FC<
     fetchImage();
   }, [community.avatarFileId, getImage]);
 
+  const memberCounts = formatNumber(community.membersCount);
+
   return (
     <View style={styles.container}>
       {community.avatarFileId && imageUrl ? (
@@ -71,7 +74,7 @@ export const RecommendedCommunityItem: React.FC<
           <View style={styles.detailBottomWrapLeft}>
             <CategoryChips categoryIds={community.categoryIds} />
             <Typography.Caption style={styles.memberText}>
-              {community.membersCount} member
+              {memberCounts} member
               {community.membersCount > 1 ? 's' : ''}
             </Typography.Caption>
           </View>
