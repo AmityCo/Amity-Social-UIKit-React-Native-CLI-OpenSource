@@ -16,7 +16,9 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
 
   return (
     <View style={styles.container}>
-      <AmityRecommendedCommunityComponent pageId={pageId} />
+      <View style={styles.recommendContainer}>
+        <AmityRecommendedCommunityComponent pageId={pageId} />
+      </View>
     </View>
   );
 };
