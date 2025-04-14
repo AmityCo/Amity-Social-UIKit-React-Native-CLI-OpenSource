@@ -24,6 +24,10 @@
     "strict": false,
     "target": "esnext",
     "noImplicitAny": false,
-    "allowSyntheticDefaultImports": true
-  }
+    "allowSyntheticDefaultImports": true,
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationDir": "./lib/typescript"
+  },
+  "exclude": ["example"]
 }
