@@ -25,9 +25,7 @@
     "target": "esnext",
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
-    "rootDir": "./src",
-    "declaration": true,
-    "declarationDir": "./lib/typescript"
+    "rootDir": "./src"
   },
   "exclude": ["example"]
 }
