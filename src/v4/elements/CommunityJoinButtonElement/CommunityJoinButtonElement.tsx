@@ -1,10 +1,10 @@
 import React, { FC, memo } from 'react';
 import { TouchableOpacityProps } from 'react-native';
-import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
-import useConfig from '../../../hook/useConfig';
-import { useAmityElement } from '../../../hook';
-import { Button } from '../../../component/Button/Button';
-import { plus } from '../../../assets/icons';
+import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
+import useConfig from '../../hook/useConfig';
+import { useAmityElement } from '../../hook';
+import { Button } from '../../component/Button/Button';
+import { plus } from '../../assets/icons';
 import { SvgXml } from 'react-native-svg';
 
 type CommunityJoinButtonElementType = {

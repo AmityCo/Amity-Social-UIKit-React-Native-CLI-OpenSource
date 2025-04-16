@@ -1,10 +1,10 @@
 import React, { FC, memo } from 'react';
-import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
-import useConfig from '../../../hook/useConfig';
-import { useAmityElement } from '../../../hook';
-import { Button } from '../../../component/Button/Button';
+import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
+import useConfig from '../../hook/useConfig';
+import { useAmityElement } from '../../hook';
+import { Button } from '../../component/Button/Button';
 import { SvgXml } from 'react-native-svg';
-import { check } from '../../../assets/icons';
+import { check } from '../../assets/icons';
 
 type CommunityJoinedButtonElementType = {
   pageId?: PageID;
