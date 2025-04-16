@@ -3,6 +3,7 @@ import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 
 export const useCommunities = () => {
   const [communities, setCommunities] = useState<Amity.Community[]>();
+  const [loading, setLoading] = useState(true);
   const [onNextCommunityPage, setOnNextCommunityPage] =
     useState<() => void | null>(null);
   useEffect(() => {
@@ -17,9 +18,11 @@ export const useCommunities = () => {
             return null;
           });
         }
+
+        setLoading(loading);
       }
     );
     return unsubscribe;
   }, []);
-  return { communities, onNextCommunityPage };
+  return { communities, onNextCommunityPage, loading };
 };
