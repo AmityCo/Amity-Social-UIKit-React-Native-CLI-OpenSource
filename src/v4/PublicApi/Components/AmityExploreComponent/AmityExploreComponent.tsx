@@ -2,9 +2,11 @@ import * as React from 'react';
 
 import { View } from 'react-native';
 import { useStyles } from './styles';
-import { AmityRecommendedCommunityComponent } from '../AmityRecommenedCommunityComponent/AmityRecommenedCommunityComponent';
 import { PageID } from '../../../enum';
-import { AmityCommunityCategoriesComponent } from '../AmityCommunityCategoriesComponent/AmityCommunityCategoriesComponent';
+
+import AmityRecommendedCommunityComponent from '../AmityRecommenedCommunityComponent/AmityRecommenedCommunityComponent';
+import AmityCommunityCategoriesComponent from '../AmityCommunityCategoriesComponent/AmityCommunityCategoriesComponent';
+import AmityTrendingCommunitiesComponent from '../AmityTrendingCommunitiesComponent/AmityTrendingCommunitiesComponent';
 
 type AmityExploreComponentProps = {
   pageId?: PageID;
@@ -22,6 +24,9 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
       </View>
       <View style={styles.recommendContainer}>
         <AmityRecommendedCommunityComponent pageId={pageId} />
+      </View>
+      <View style={styles.trendingContainer}>
+        <AmityTrendingCommunitiesComponent pageId={pageId} />
       </View>
     </View>
   );

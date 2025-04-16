@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../../../enum';
 import { Typography } from '../../../../component/Typography/Typography';
 import { useStyles } from './styles';
@@ -9,9 +9,9 @@ type TrendingCommunityTitleProps = {
   pageId?: PageID;
 };
 
-export const TrendingCommunityTitleComponent: FC<
-  TrendingCommunityTitleProps
-> = ({ pageId = PageID.WildCardPage }) => {
+const TrendingCommunityTitleComponent: FC<TrendingCommunityTitleProps> = ({
+  pageId = PageID.WildCardPage,
+}) => {
   const { isExcluded, accessibilityId, themeStyles, config } = useAmityElement({
     pageId,
     componentId: ComponentID.WildCardComponent,
@@ -30,3 +30,5 @@ export const TrendingCommunityTitleComponent: FC<
     </View>
   );
 };
+
+export default memo(TrendingCommunityTitleComponent);

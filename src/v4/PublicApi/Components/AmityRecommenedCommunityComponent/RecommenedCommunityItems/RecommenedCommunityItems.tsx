@@ -18,13 +18,13 @@ import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityC
 import CommunityMemeberCount from '../../../../elements/CommunityMemeberCount/CommunityMemeberCount';
 
 type RecommendedCommunityItemProps = {
-  pageId: PageID;
+  pageId?: PageID;
   community: Amity.Community;
 };
 
 export const RecommendedCommunityItem: React.FC<
   RecommendedCommunityItemProps
-> = ({ community, pageId }) => {
+> = ({ community, pageId = PageID.WildCardPage }) => {
   const { getImage } = useFile();
   const componentId = ComponentID.recommended_communities;
   const styles = useStyles();

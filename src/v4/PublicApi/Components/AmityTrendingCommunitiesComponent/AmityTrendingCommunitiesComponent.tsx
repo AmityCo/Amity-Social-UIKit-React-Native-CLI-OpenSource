@@ -1,16 +1,16 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum';
 // import { useStyles } from './styles';
 import { useAmityComponent } from '../../../hook';
-import { TrendingCommunityTitleComponent } from './TrendingCommunityTitle/TrendingCommunityTitle';
+import TrendingCommunityTitleComponent from './TrendingCommunityTitle/TrendingCommunityTitle';
 
-type AmityTrendingCommunitiesComponentComponentProps = {
+type AmityTrendingCommunitiesCommunityProps = {
   pageId?: PageID;
 };
 
-export const AmityTrendingCommunitiesComponentComponent: FC<
-  AmityTrendingCommunitiesComponentComponentProps
+const AmityTrendingCommunitiesCommunity: FC<
+  AmityTrendingCommunitiesCommunityProps
 > = ({ pageId = PageID.WildCardPage }) => {
   const componentId = ComponentID.trending_communities;
   const { isExcluded, accessibilityId } = useAmityComponent({
@@ -28,3 +28,5 @@ export const AmityTrendingCommunitiesComponentComponent: FC<
     </View>
   );
 };
+
+export default memo(AmityTrendingCommunitiesCommunity);

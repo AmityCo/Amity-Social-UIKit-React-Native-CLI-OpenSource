@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { FlatList, View } from 'react-native';
 import { arrowRight } from '../../../assets/icons';
 import { CategoryChip } from '../../../component/CategoryChip/CategoryChip';
@@ -13,7 +13,7 @@ type AmityCommunityCategoriesComponentProps = {
   pageId?: PageID;
 };
 
-export const AmityCommunityCategoriesComponent: FC<
+const AmityCommunityCategoriesComponent: FC<
   AmityCommunityCategoriesComponentProps
 > = ({ pageId = PageID.WildCardPage }) => {
   const { categories, hasMore } = useCategories();
@@ -49,3 +49,5 @@ export const AmityCommunityCategoriesComponent: FC<
     />
   );
 };
+
+export default memo(AmityCommunityCategoriesComponent);

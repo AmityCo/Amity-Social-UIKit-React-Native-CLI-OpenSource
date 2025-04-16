@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { Text, FlatList, View } from 'react-native';
 import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedCommunityItems';
 
@@ -12,7 +12,7 @@ type AmityRecommendedCommunityComponentProps = {
   componentId?: ComponentID;
 };
 
-export const AmityRecommendedCommunityComponent: FC<
+const AmityRecommendedCommunityComponent: FC<
   AmityRecommendedCommunityComponentProps
 > = ({
   pageId = PageID.WildCardPage,
@@ -35,10 +35,14 @@ export const AmityRecommendedCommunityComponent: FC<
       <FlatList
         horizontal={true}
         data={communities}
-        renderItem={({ item }) => <RecommendedCommunityItem community={item} />}
+        renderItem={({ item }) => (
+          <RecommendedCommunityItem pageId={pageId} community={item} />
+        )}
         keyExtractor={(item) => item.communityId}
         contentContainerStyle={styles.listContainer}
       />
     </View>
   );
 };
+
+export default memo(AmityRecommendedCommunityComponent);
