@@ -50,6 +50,7 @@ export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
           key={index}
           categoryId={id}
           maxWidth={getMaxWidthForItem(visibleCategories.length)}
+          themeStyles={themeStyles}
         />
       ))}
       {showMore && (

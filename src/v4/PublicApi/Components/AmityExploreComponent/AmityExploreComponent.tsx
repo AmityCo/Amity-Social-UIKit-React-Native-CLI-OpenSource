@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
 
@@ -18,7 +18,7 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
   const styles = useStyles();
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.categoriesContainer}>
         <AmityCommunityCategoriesComponent pageId={pageId} />
       </View>
@@ -28,7 +28,7 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
       <View style={styles.trendingContainer}>
         <AmityTrendingCommunitiesComponent pageId={pageId} />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

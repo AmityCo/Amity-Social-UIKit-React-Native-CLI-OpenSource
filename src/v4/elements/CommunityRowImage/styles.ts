@@ -19,11 +19,17 @@ export const useStyles = () => {
       alignItems: 'center',
     },
     image: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
       width: '100%',
       height: '100%',
       overflow: 'hidden',
     },
     label: {
+      position: 'absolute',
+      bottom: 6,
+      left: 8,
       color: 'white',
     },
     gradientLayer: {
@@ -31,7 +37,6 @@ export const useStyles = () => {
       width: '100%',
       height: '100%',
       borderRadius: 4,
-      backgroundColor: '#000000',
     },
   });
   return styles;

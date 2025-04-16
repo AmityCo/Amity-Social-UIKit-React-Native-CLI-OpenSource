@@ -6,7 +6,10 @@ export const useStyles = () => {
   // const theme = useTheme() as MyMD3Theme;
 
   const styles = StyleSheet.create({
-    container: {},
+    container: {
+      flex: 1,
+      overflow: 'scroll',
+    },
     categoriesContainer: {
       paddingLeft: 16,
     },
@@ -15,6 +18,7 @@ export const useStyles = () => {
     },
     trendingContainer: {
       paddingHorizontal: 16,
+      marginTop: 20,
     },
   });
   return styles;

@@ -27,7 +27,11 @@ export const CommunityDisplayname: FC<CommunityDisplaynameProps> = ({
   if (isExcluded) return null;
 
   return (
-    <Typography.TitleBold testID={accessibilityId} style={styles.displayName}>
+    <Typography.TitleBold
+      testID={accessibilityId}
+      style={styles.displayName}
+      numberOfLines={1}
+    >
       {displayName}
     </Typography.TitleBold>
   );

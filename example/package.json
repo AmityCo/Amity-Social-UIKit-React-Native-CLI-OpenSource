@@ -25,6 +25,7 @@
     "react-native-gesture-handler": "^2.15.0",
     "react-native-get-random-values": "^1.11.0",
     "react-native-image-picker": "^7.0.0",
+    "react-native-linear-gradient": "^2.8.3",
     "react-native-netinfo": "^1.1.0",
     "react-native-push-notification": "^8.1.1",
     "react-native-rsa-native": "^2.0.5",

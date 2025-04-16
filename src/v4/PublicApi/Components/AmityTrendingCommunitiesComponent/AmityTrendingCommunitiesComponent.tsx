@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum';
-// import { useStyles } from './styles';
+import { useStyles } from './styles';
 import { useAmityComponent } from '../../../hook';
 import { useTrendingCommunities } from '../../../hook/useTrendingCommunities';
 import TrendingCommunityTitleComponent from './TrendingCommunityTitle/TrendingCommunityTitle';
@@ -22,23 +22,25 @@ const AmityTrendingCommunitiesCommunity: FC<
 
   const { communities } = useTrendingCommunities();
 
-  // const styles = useStyles(themeStyles);
+  const styles = useStyles();
 
   if (isExcluded) return null;
 
   return (
     <View testID={accessibilityId}>
       <TrendingCommunityTitleComponent pageId={pageId} />
-      {communities.map((community, index) => {
-        return (
-          <TrendingCommunityItem
-            key={community.communityId}
-            pageId={pageId}
-            community={community}
-            label={`0${index + 1}`}
-          />
-        );
-      })}
+      <View style={styles.container}>
+        {communities?.map((community, index) => {
+          return (
+            <TrendingCommunityItem
+              key={community.communityId}
+              pageId={pageId}
+              community={community}
+              label={`0${index + 1}`}
+            />
+          );
+        })}
+      </View>
     </View>
   );
 };

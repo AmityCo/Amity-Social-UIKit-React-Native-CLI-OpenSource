@@ -3,11 +3,12 @@ import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
 import CommunityRowImage from '../../../../elements/CommunityRowImage/CommunityRowImage';
 import { ComponentID, PageID } from '../../../../enum';
 import { View } from 'react-native';
-import CommunityJoinedButtonElement from '~/v4/elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
-import CommunityJoinButtonElement from '~/v4/elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
-import { CommunityDisplayname } from '~/v4/elements/CommunityDisplayname/CommunityDisplayname';
-import CommunityCategory from '~/v4/elements/CommunityCatetory/CommunityCategory';
-import CommunityMemeberCount from '~/v4/elements/CommunityMemeberCount/CommunityMemeberCount';
+import CommunityJoinedButtonElement from '../../../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
+import CommunityJoinButtonElement from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
+import { CommunityDisplayname } from '../../../../elements/CommunityDisplayname/CommunityDisplayname';
+import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityCategory';
+import CommunityMemeberCount from '../../../../elements/CommunityMemeberCount/CommunityMemeberCount';
+import { useStyles } from './styles';
 
 type TrendingCommunityItemProps = {
   pageId?: PageID;
@@ -23,22 +24,23 @@ const TrendingCommunityItem: FC<TrendingCommunityItemProps> = ({
   community,
   label,
 }) => {
+  const styles = useStyles();
   return (
-    <View>
+    <View style={styles.container}>
       <CommunityRowImage
         pageId={pageId}
         componentId={componentId}
         fileId={community.avatarFileId}
         label={label}
       />
-      <View>
+      <View style={styles.detailWrap}>
         <CommunityDisplayname
           displayName={community.displayName}
           pageId={pageId}
           componentId={componentId}
         />
-        <View>
-          <View>
+        <View style={styles.detailBottomWrap}>
+          <View style={styles.detailBottomWrapLeft}>
             <CommunityCategory
               categoryIds={community.categoryIds}
               pageId={pageId}
@@ -51,9 +53,15 @@ const TrendingCommunityItem: FC<TrendingCommunityItemProps> = ({
             />
           </View>
           {community.isJoined ? (
-            <CommunityJoinedButtonElement />
+            <CommunityJoinedButtonElement
+              pageId={pageId}
+              componentId={componentId}
+            />
           ) : (
-            <CommunityJoinButtonElement />
+            <CommunityJoinButtonElement
+              pageId={pageId}
+              componentId={componentId}
+            />
           )}
         </View>
       </View>

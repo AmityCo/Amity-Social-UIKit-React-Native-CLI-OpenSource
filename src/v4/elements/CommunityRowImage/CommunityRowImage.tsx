@@ -6,7 +6,7 @@ import { Image, View } from 'react-native';
 import { useStyles } from './styles';
 import { Typography } from '../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
-import { community } from '../../assets/icons';
+import { community as communityIcon } from '../../assets/icons';
 
 type CommunityRowImageyProps = {
   fileId?: string;
@@ -44,7 +44,9 @@ const CommunityRowImagey: FC<CommunityRowImageyProps> = ({
 
   useEffect(() => {
     const getImageUrl = async () => {
-      if (uri) {
+      if (!fileId) return;
+
+      if (!fileId && uri) {
         setImage(uri);
       } else if (fileId) {
         const url = await getImage({ fileId });
@@ -57,12 +59,6 @@ const CommunityRowImagey: FC<CommunityRowImageyProps> = ({
 
   return (
     <View testID={accessibilityId} style={styles.container}>
-      <LinearGradient
-        colors={['transparent', 'black']}
-        style={styles.gradientLayer}
-      >
-        <Typography.BodyBold style={styles.label}>{label}</Typography.BodyBold>
-      </LinearGradient>
       {image ? (
         <Image
           source={{ uri: image as string }}
@@ -71,9 +67,16 @@ const CommunityRowImagey: FC<CommunityRowImageyProps> = ({
         />
       ) : (
         <View style={styles.placeholder}>
-          <SvgXml xml={community()} width={36} height={22} />
+          <SvgXml xml={communityIcon()} width={36} height={22} />
         </View>
       )}
+      <LinearGradient
+        colors={['rgba(0, 0, 0, 0.4)', 'rgba(0, 0, 0, 0)', 'transparent']}
+        style={styles.gradientLayer}
+        start={{ x: 0, y: 1 }}
+        end={{ x: 0, y: 0 }}
+      />
+      <Typography.BodyBold style={styles.label}>{label}</Typography.BodyBold>
     </View>
   );
 };

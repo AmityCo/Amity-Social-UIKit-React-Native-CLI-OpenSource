@@ -1,15 +1,26 @@
 import { StyleSheet } from 'react-native';
-// import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
 
 export const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
+      gap: 12,
     },
     detailWrap: {
+      paddingVertical: 8,
       flex: 1,
     },
-    buttonWarp: {},
+    detailBottomWrap: {
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      marginTop: 4,
+      gap: 8,
+    },
+    detailBottomWrapLeft: {
+      flexDirection: 'column',
+      gap: 4,
+      flex: 1,
+    },
   });
   return styles;
 };
