@@ -1,9 +1,12 @@
 import React, { FC, memo } from 'react';
 import { useAmityComponent } from '../../../hook';
 import { PageID, ComponentID } from '../../../enum';
+import { emptyCommunity } from '../../../assets/icons';
 import TitleElement from '../../Elements/TitleElement/TitleElement';
+import DescriptionElement from '../../Elements/DescriptionElement/DescriptionElement';
 import { View } from 'react-native';
 import { useStyles } from './styles';
+import { SvgXml } from 'react-native-svg';
 
 type AmityExploreEmptyComponentProps = {
   pageId?: PageID;
@@ -24,10 +27,16 @@ const AmityExploreEmptyComponent: FC<AmityExploreEmptyComponentProps> = ({
 
   return (
     <View testID={accessibilityId} style={styles.container}>
+      <SvgXml xml={emptyCommunity({})} />
       <TitleElement
         pageId={pageId}
         componentId={componentId}
         style={styles.title}
+      />
+      <DescriptionElement
+        pageId={pageId}
+        componentId={componentId}
+        style={styles.description}
       />
     </View>
   );
