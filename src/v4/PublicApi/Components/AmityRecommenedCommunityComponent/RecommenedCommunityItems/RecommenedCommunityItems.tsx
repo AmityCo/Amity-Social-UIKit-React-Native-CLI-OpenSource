@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 import { Image, View } from 'react-native';
-import { CommunityCategoryChips } from '../../../../component/CommunityCategoryChips/CommunityCategoryChips';
-import { ImageSizeState } from '../../../../enum';
+import { ComponentID, ImageSizeState, PageID } from '../../../../enum';
 import { useFile } from '../../../../hook';
 import { useStyles } from './styles';
 
-import CommunityJoinedButtonElement from '../../../../PublicApi/Elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
-import CommunityJoinButtonElement from '../../../../PublicApi/Elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
+import CommunityJoinedButtonElement from '../../../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
+import CommunityJoinButtonElement from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import { Typography } from '../../../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import {
@@ -16,15 +15,18 @@ import {
 } from '../../../../assets/icons';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { formatNumber } from '../../../../../util/numberUtil';
+import { CommunityCategory } from '~/v4/elements/CommunityCatetory/CommunityCategory';
 
 type RecommendedCommunityItemProps = {
+  pageId: PageID;
   community: Amity.Community;
 };
 
 export const RecommendedCommunityItem: React.FC<
   RecommendedCommunityItemProps
-> = ({ community }) => {
+> = ({ community, pageId }) => {
   const { getImage } = useFile();
+  const componentId = ComponentID.recommended_communities;
   const styles = useStyles();
   const [imageUrl, setImageUrl] = React.useState<string | undefined>(undefined);
 
@@ -72,7 +74,11 @@ export const RecommendedCommunityItem: React.FC<
         </View>
         <View style={styles.detailBottomWrap}>
           <View style={styles.detailBottomWrapLeft}>
-            <CommunityCategoryChips categoryIds={community.categoryIds} />
+            <CommunityCategory
+              categoryIds={community.categoryIds}
+              pageId={pageId}
+              componentId={componentId}
+            />
             <Typography.Caption style={styles.memberText}>
               {memberCounts} member
               {community.membersCount > 1 ? 's' : ''}

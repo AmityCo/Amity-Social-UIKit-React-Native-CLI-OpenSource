@@ -1,9 +1,11 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, ViewProps } from 'react-native';
 import { CommunityCategoryChip } from './CommunityCategoryChip/CommunityCategoryChip';
+import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
 import { useStyles } from './styles';
 
-type CommunityCategoryChipsProps = {
+type CommunityCategoryChipsProps = ViewProps & {
+  themeStyles: MyMD3Theme;
   categoryIds: string[];
 };
 
@@ -11,8 +13,10 @@ const MAX_VISIBLE_CATEGORIES = 2;
 
 export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
   categoryIds,
+  themeStyles,
+  ...props
 }) => {
-  const styles = useStyles();
+  const styles = useStyles(themeStyles);
   const visibleCategories = categoryIds.slice(0, MAX_VISIBLE_CATEGORIES);
   const hiddenCategoriesCount = categoryIds.length - MAX_VISIBLE_CATEGORIES;
   const showMoreText =
@@ -40,7 +44,7 @@ export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} {...props}>
       {visibleCategories.map((id, index) => (
         <CommunityCategoryChip
           key={index}
