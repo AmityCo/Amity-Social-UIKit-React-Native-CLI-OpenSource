@@ -24,7 +24,7 @@ const AmityTrendingCommunitiesCommunity: FC<
 
   const styles = useStyles();
 
-  if (isExcluded) return null;
+  if (isExcluded || communities.length === 0) return null;
 
   return (
     <View testID={accessibilityId}>
