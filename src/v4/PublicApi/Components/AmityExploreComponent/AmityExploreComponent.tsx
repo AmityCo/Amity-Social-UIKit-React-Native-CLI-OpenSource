@@ -9,6 +9,8 @@ import AmityCommunityCategoriesComponent from '../AmityCommunityCategoriesCompon
 import AmityTrendingCommunitiesComponent from '../AmityTrendingCommunitiesComponent/AmityTrendingCommunitiesComponent';
 import { useCommunities } from '../../../hook';
 import AmityExploreCommunityEmptyComponent from '../AmityExploreCommunityEmptyComponent/AmityExploreCommunityEmptyComponent';
+import AmityExploreEmptyComponent from '../AmityExploreEmptyComponent/AmityExploreEmptyComponent';
+import { useCategories } from '~/v4/hook/useCategories';
 
 type AmityExploreComponentProps = {
   pageId?: PageID;
@@ -19,26 +21,41 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
 }) => {
   const styles = useStyles();
   const { communities, loading } = useCommunities();
+  const { categories, loading: loadingCategories } = useCategories();
+
+  const isNothingToShow =
+    !loadingCategories &&
+    !loading &&
+    communities?.length === 0 &&
+    categories?.length === 0;
+
+  const isNoCommunities = !loading && communities?.length === 0;
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.categoriesContainer}>
-        <AmityCommunityCategoriesComponent pageId={pageId} />
-      </View>
-      <View style={styles.communitiesSection}>
-        {!loading && communities?.length !== 0 ? (
-          <AmityExploreCommunityEmptyComponent pageId={pageId} />
-        ) : (
-          <>
-            <View style={styles.recommendContainer}>
-              <AmityRecommendedCommunityComponent pageId={pageId} />
-            </View>
-            <View style={styles.trendingContainer}>
-              <AmityTrendingCommunitiesComponent pageId={pageId} />
-            </View>
-          </>
-        )}
-      </View>
+      {isNothingToShow ? (
+        <AmityExploreEmptyComponent pageId={pageId} />
+      ) : (
+        <>
+          <View style={styles.categoriesContainer}>
+            <AmityCommunityCategoriesComponent pageId={pageId} />
+          </View>
+          <View style={styles.communitiesSection}>
+            {isNoCommunities ? (
+              <AmityExploreCommunityEmptyComponent pageId={pageId} />
+            ) : (
+              <>
+                <View style={styles.recommendContainer}>
+                  <AmityRecommendedCommunityComponent pageId={pageId} />
+                </View>
+                <View style={styles.trendingContainer}>
+                  <AmityTrendingCommunitiesComponent pageId={pageId} />
+                </View>
+              </>
+            )}
+          </View>
+        </>
+      )}
     </ScrollView>
   );
 };
