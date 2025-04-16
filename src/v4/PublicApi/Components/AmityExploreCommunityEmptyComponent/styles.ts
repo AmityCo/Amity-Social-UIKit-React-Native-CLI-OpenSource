@@ -16,6 +16,9 @@ export const useStyles = () => {
     description: {
       textAlign: 'center',
     },
+    createCommunityButton: {
+      marginTop: 17,
+    },
   });
   return styles;
 };

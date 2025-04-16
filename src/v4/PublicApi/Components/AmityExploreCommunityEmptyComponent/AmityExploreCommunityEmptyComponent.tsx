@@ -7,14 +7,15 @@ import DescriptionElement from '../../Elements/DescriptionElement/DescriptionEle
 import { View } from 'react-native';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
+import ExploreCreateCommunity from '../../../elements/ExploreCreateCommunity/ExploreCreateCommunity';
 
-type AmityExploreEmptyComponentProps = {
+type AmityExploreCommunityEmptyComponentProps = {
   pageId?: PageID;
 };
 
-const AmityExploreEmptyComponent: FC<AmityExploreEmptyComponentProps> = ({
-  pageId = PageID.WildCardPage,
-}) => {
+const AmityExploreCommunityEmptyComponent: FC<
+  AmityExploreCommunityEmptyComponentProps
+> = ({ pageId = PageID.WildCardPage }) => {
   const componentId = ComponentID.explore_community_empty;
   const { isExcluded, accessibilityId } = useAmityComponent({
     pageId,
@@ -38,7 +39,13 @@ const AmityExploreEmptyComponent: FC<AmityExploreEmptyComponentProps> = ({
         componentId={componentId}
         style={styles.description}
       />
+      <ExploreCreateCommunity
+        pageId={pageId}
+        componentId={componentId}
+        style={styles.createCommunityButton}
+        // TODO: add onPress handler
+      />
     </View>
   );
 };
-export default memo(AmityExploreEmptyComponent);
+export default memo(AmityExploreCommunityEmptyComponent);

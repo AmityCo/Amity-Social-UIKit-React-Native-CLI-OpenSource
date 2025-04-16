@@ -8,7 +8,7 @@ import AmityRecommendedCommunityComponent from '../AmityRecommenedCommunityCompo
 import AmityCommunityCategoriesComponent from '../AmityCommunityCategoriesComponent/AmityCommunityCategoriesComponent';
 import AmityTrendingCommunitiesComponent from '../AmityTrendingCommunitiesComponent/AmityTrendingCommunitiesComponent';
 import { useCommunities } from '../../../hook';
-import AmityExploreEmptyComponent from '../AmityExploreEmptyComponent/AmityExploreEmptyComponent';
+import AmityExploreCommunityEmptyComponent from '../AmityExploreCommunityEmptyComponent/AmityExploreCommunityEmptyComponent';
 
 type AmityExploreComponentProps = {
   pageId?: PageID;
@@ -25,18 +25,20 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
       <View style={styles.categoriesContainer}>
         <AmityCommunityCategoriesComponent pageId={pageId} />
       </View>
-      {!loading && communities?.length !== 0 ? (
-        <AmityExploreEmptyComponent pageId={pageId} />
-      ) : (
-        <>
-          <View style={styles.recommendContainer}>
-            <AmityRecommendedCommunityComponent pageId={pageId} />
-          </View>
-          <View style={styles.trendingContainer}>
-            <AmityTrendingCommunitiesComponent pageId={pageId} />
-          </View>
-        </>
-      )}
+      <View style={styles.communitiesSection}>
+        {!loading && communities?.length !== 0 ? (
+          <AmityExploreCommunityEmptyComponent pageId={pageId} />
+        ) : (
+          <>
+            <View style={styles.recommendContainer}>
+              <AmityRecommendedCommunityComponent pageId={pageId} />
+            </View>
+            <View style={styles.trendingContainer}>
+              <AmityTrendingCommunitiesComponent pageId={pageId} />
+            </View>
+          </>
+        )}
+      </View>
     </ScrollView>
   );
 };

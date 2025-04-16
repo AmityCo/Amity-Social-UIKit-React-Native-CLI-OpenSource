@@ -9,6 +9,9 @@ export const useStyles = () => {
     categoriesContainer: {
       paddingLeft: 16,
     },
+    communitiesSection: {
+      flex: 1,
+    },
     recommendContainer: {
       paddingLeft: 16,
     },
