@@ -49,10 +49,6 @@ export const useStyles = () => {
     detailBottomWrapLeft: {
       flex: 1,
     },
-    memberText: {
-      color: theme.colors.baseShade1,
-      marginTop: 4,
-    },
   });
   return styles;
 };

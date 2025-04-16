@@ -4,8 +4,8 @@ import { ComponentID, ImageSizeState, PageID } from '../../../../enum';
 import { useFile } from '../../../../hook';
 import { useStyles } from './styles';
 
-import CommunityJoinedButtonElement from '../../../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
-import CommunityJoinButtonElement from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
+import CommunityJoinedButton from '../../../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
+import CommunityJoinButton from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import { Typography } from '../../../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import {
@@ -14,8 +14,8 @@ import {
   verifiedBadge,
 } from '../../../../assets/icons';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { formatNumber } from '../../../../../util/numberUtil';
-import { CommunityCategory } from '~/v4/elements/CommunityCatetory/CommunityCategory';
+import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityCategory';
+import CommunityMemeberCount from '../../../../elements/CommunityMemeberCount/CommunityMemeberCount';
 
 type RecommendedCommunityItemProps = {
   pageId: PageID;
@@ -48,8 +48,6 @@ export const RecommendedCommunityItem: React.FC<
     fetchImage();
   }, [community.avatarFileId, getImage]);
 
-  const memberCounts = formatNumber(community.membersCount);
-
   return (
     <View style={styles.container}>
       {community.avatarFileId && imageUrl ? (
@@ -79,16 +77,21 @@ export const RecommendedCommunityItem: React.FC<
               pageId={pageId}
               componentId={componentId}
             />
-            <Typography.Caption style={styles.memberText}>
-              {memberCounts} member
-              {community.membersCount > 1 ? 's' : ''}
-            </Typography.Caption>
+            <CommunityMemeberCount
+              counts={community.membersCount}
+              pageId={pageId}
+              componentId={componentId}
+            />
           </View>
           {/* TODO: if join community it should be disappeared */}
           {community.isJoined ? (
-            <CommunityJoinedButtonElement />
+            <CommunityJoinedButton pageId={pageId} componentId={componentId} />
           ) : (
-            <CommunityJoinButtonElement onPress={() => onJoinCommunity()} />
+            <CommunityJoinButton
+              pageId={pageId}
+              componentId={componentId}
+              onPress={() => onJoinCommunity()}
+            />
           )}
         </View>
       </View>

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { CommunityCategoryChips } from '../../component/CommunityCategoryChips/CommunityCategoryChips';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import { useAmityElement } from '../../hook';
@@ -9,7 +9,7 @@ type CommunityCategoryProps = {
   componentId?: ComponentID;
 };
 
-export const CommunityCategory: FC<CommunityCategoryProps> = ({
+const CommunityCategory: FC<CommunityCategoryProps> = ({
   categoryIds,
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
@@ -30,3 +30,5 @@ export const CommunityCategory: FC<CommunityCategoryProps> = ({
     />
   );
 };
+
+export default memo(CommunityCategory);

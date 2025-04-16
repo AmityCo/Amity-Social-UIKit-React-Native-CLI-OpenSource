@@ -6,12 +6,12 @@ import { Button } from '../../component/Button/Button';
 import { plus } from '../../assets/icons';
 import { SvgXml } from 'react-native-svg';
 
-type CommunityJoinButtonElementType = {
+type CommunityJoinButtonType = {
   pageId?: PageID;
   componentId?: ComponentID;
 } & TouchableOpacityProps;
 
-const CommunityJoinButtonElement: FC<CommunityJoinButtonElementType> = ({
+const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   ...props
@@ -37,4 +37,4 @@ const CommunityJoinButtonElement: FC<CommunityJoinButtonElementType> = ({
   );
 };
 
-export default memo(CommunityJoinButtonElement);
+export default memo(CommunityJoinButton);

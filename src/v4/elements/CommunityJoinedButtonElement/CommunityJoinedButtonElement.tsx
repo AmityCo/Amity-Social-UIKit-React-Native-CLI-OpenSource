@@ -5,12 +5,12 @@ import { Button } from '../../component/Button/Button';
 import { SvgXml } from 'react-native-svg';
 import { check } from '../../assets/icons';
 
-type CommunityJoinedButtonElementType = {
+type CommunityJoinedButtonType = {
   pageId?: PageID;
   componentId?: ComponentID;
 };
 
-const CommunityJoinedButtonElement: FC<CommunityJoinedButtonElementType> = ({
+const CommunityJoinedButton: FC<CommunityJoinedButtonType> = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   ...props
@@ -36,4 +36,4 @@ const CommunityJoinedButtonElement: FC<CommunityJoinedButtonElementType> = ({
   );
 };
 
-export default memo(CommunityJoinedButtonElement);
+export default memo(CommunityJoinedButton);
