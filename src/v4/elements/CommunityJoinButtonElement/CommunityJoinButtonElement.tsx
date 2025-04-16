@@ -1,7 +1,6 @@
 import React, { FC, memo } from 'react';
 import { TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
-import useConfig from '../../hook/useConfig';
 import { useAmityElement } from '../../hook';
 import { Button } from '../../component/Button/Button';
 import { plus } from '../../assets/icons';
@@ -17,25 +16,20 @@ const CommunityJoinButtonElement: FC<CommunityJoinButtonElementType> = ({
   componentId = ComponentID.WildCardComponent,
   ...props
 }) => {
-  // TODO: add theme styles
-  const { excludes } = useConfig();
-
-  const elementId = ElementID.community_join_button;
-  const configId = `${pageId}/${componentId}/${elementId}`;
-
-  const { config, accessibilityId } = useAmityElement({
+  const { config, accessibilityId, isExcluded, themeStyles } = useAmityElement({
     pageId,
     componentId,
-    elementId,
+    elementId: ElementID.community_join_button,
   });
 
-  if (excludes.includes(configId)) return null;
+  if (isExcluded) return null;
 
   return (
     <Button
       testID={accessibilityId}
       type="primary"
       icon={<SvgXml xml={plus()} />}
+      themeStyle={themeStyles}
       {...props}
     >
       {config.text as string}
