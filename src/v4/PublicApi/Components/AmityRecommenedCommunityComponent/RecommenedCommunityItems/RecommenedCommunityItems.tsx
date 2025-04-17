@@ -10,7 +10,7 @@ import { SvgXml } from 'react-native-svg';
 import { community as communityIcon } from '../../../../assets/icons';
 import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityCategory';
 import CommunityMemeberCount from '../../../../elements/CommunityMemeberCount/CommunityMemeberCount';
-import { CommunityDisplayname } from '~/v4/elements/CommunityDisplayname/CommunityDisplayname';
+import { CommunityDisplayname } from '../../../../elements/CommunityDisplayname/CommunityDisplayname';
 
 type RecommendedCommunityItemProps = {
   pageId?: PageID;

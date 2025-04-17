@@ -1,6 +1,5 @@
-// useJoinCommunity.ts
+import { useState } from 'react';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { useMutation } from '@tanstack/react-query';
 
 export const useJoinCommunity = ({
   onSuccess,
@@ -9,12 +8,23 @@ export const useJoinCommunity = ({
   onSuccess?: () => void;
   onError?: (error: Error) => void;
 } = {}) => {
-  const { mutate: joinCommunity, isPending } = useMutation({
-    mutationFn: (communityId: string) =>
-      CommunityRepository.joinCommunity(communityId),
-    onSuccess,
-    onError,
-  });
+  const [isPending, setIsPending] = useState(false);
+
+  const joinCommunity = async (communityId: string) => {
+    setIsPending(true);
+    try {
+      await CommunityRepository.joinCommunity(communityId);
+      setIsPending(false);
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      setIsPending(false);
+      if (onError) {
+        onError(error as Error);
+      }
+    }
+  };
 
   return {
     joinCommunity,

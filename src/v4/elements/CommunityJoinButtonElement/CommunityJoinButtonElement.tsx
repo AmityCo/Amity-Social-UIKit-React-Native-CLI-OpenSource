@@ -10,6 +10,7 @@ type CommunityJoinButtonType = {
   pageId?: PageID;
   componentId?: ComponentID;
   communityId?: string;
+  onJoinSuccess?: () => void;
 } & TouchableOpacityProps;
 
 const CommunityJoinButton: FC<CommunityJoinButtonType> = ({

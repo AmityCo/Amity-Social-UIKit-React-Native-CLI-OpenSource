@@ -10,6 +10,7 @@ import { validateConfigColor } from '../util/colorUtil';
 import useValidateConfig from '../v4/hook/useValidateConfig';
 import fallBackConfig from '../../uikit.config.json';
 import { BehaviourProvider } from '../v4/providers/BehaviourProvider';
+import { ExploreProvider } from '../v4/providers/ExploreProvider';
 import { IBehaviour } from '../v4/types/behaviour.interface';
 import { lighten, parseToHsl, hslToColorString } from 'polished';
 import { AdEngineProvider } from '../v4/providers/AdEngineProvider';
@@ -126,10 +127,12 @@ export default function AmityUiKitProvider({
         <AdEngineProvider>
           <ConfigProvider configs={configData}>
             <BehaviourProvider behaviour={behaviour}>
-              <PaperProvider theme={globalTheme}>
-                {children}
-                <BottomSheetComponent />
-              </PaperProvider>
+              <ExploreProvider>
+                <PaperProvider theme={globalTheme}>
+                  {children}
+                  <BottomSheetComponent />
+                </PaperProvider>
+              </ExploreProvider>
             </BehaviourProvider>
           </ConfigProvider>
         </AdEngineProvider>

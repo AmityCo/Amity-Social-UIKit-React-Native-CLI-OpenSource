@@ -2,12 +2,12 @@ import React, { FC, memo } from 'react';
 import { FlatList, View } from 'react-native';
 import { arrowRight } from '../../../assets/icons';
 import { CategoryChip } from '../../../component/CategoryChip/CategoryChip';
-import { useCategories } from '../../../hook/useCategories';
 import { ComponentID, PageID } from '../../../enum';
 import { useStyles } from './styles';
 import { Typography } from '../../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { useAmityComponent } from '../../../hook';
+import { useExplore } from '../../../providers/ExploreProvider';
 
 type AmityCommunityCategoriesComponentProps = {
   pageId?: PageID;
@@ -16,7 +16,7 @@ type AmityCommunityCategoriesComponentProps = {
 const AmityCommunityCategoriesComponent: FC<
   AmityCommunityCategoriesComponentProps
 > = ({ pageId = PageID.WildCardPage }) => {
-  const { categories, hasMore } = useCategories();
+  const { categories, hasMoreCategories } = useExplore();
   const componentId = ComponentID.explore_community_categories;
   const { isExcluded, accessibilityId, themeStyles } = useAmityComponent({
     pageId,
@@ -37,7 +37,7 @@ const AmityCommunityCategoriesComponent: FC<
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.categoryChipsContentContainer}
       ListFooterComponent={
-        hasMore ? (
+        hasMoreCategories ? (
           <View style={styles.seeMoreCategoryButton}>
             <Typography.BodyBold style={styles.seeMoreCategoryText}>
               {'See more'}

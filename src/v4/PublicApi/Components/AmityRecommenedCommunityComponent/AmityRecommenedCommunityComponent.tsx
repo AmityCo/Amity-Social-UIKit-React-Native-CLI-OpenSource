@@ -1,10 +1,10 @@
 import React, { FC, memo } from 'react';
 import { Text, FlatList, View } from 'react-native';
 import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedCommunityItems';
-
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../../enum';
-import { useAmityElement, useRecommendedCommunities } from '../../../hook';
+import { useAmityElement } from '../../../hook';
+import { useExplore } from '../../../providers/ExploreProvider';
 
 type AmityRecommendedCommunityComponentProps = {
   pageId?: PageID;
@@ -26,14 +26,14 @@ const AmityRecommendedCommunityComponent: FC<
   });
 
   const styles = useStyles();
-  const { communities } = useRecommendedCommunities();
+  const { recommendedCommunities } = useExplore();
 
   return (
     <View testID={accessibilityId}>
       <Text style={styles.headerText}>{config.text as string}</Text>
       <FlatList
         horizontal={true}
-        data={communities}
+        data={recommendedCommunities}
         renderItem={({ item }) => (
           <RecommendedCommunityItem pageId={pageId} community={item} />
         )}

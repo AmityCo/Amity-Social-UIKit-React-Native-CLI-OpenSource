@@ -23,3 +23,4 @@ export * from './useJoinCommunity';
 export * from './useLeaveCommunity';
 export * from './useRecommenedCommunities';
 export * from './useTrendingCommunities';
+export * from './useCategories';

@@ -2,9 +2,10 @@ import React, { FC, memo } from 'react';
 import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum';
 import { useStyles } from './styles';
-import { useAmityComponent, useTrendingCommunities } from '../../../hook';
+import { useAmityComponent } from '../../../hook';
 import TrendingCommunityTitleComponent from './TrendingCommunityTitle/TrendingCommunityTitle';
 import TrendingCommunityItem from './TrendingCommunityItem/TrendingCommunityItem';
+import { useExplore } from '../../../providers/ExploreProvider';
 
 type AmityTrendingCommunitiesCommunityProps = {
   pageId?: PageID;
@@ -19,17 +20,17 @@ const AmityTrendingCommunitiesCommunity: FC<
     componentId,
   });
 
-  const { communities } = useTrendingCommunities();
+  const { trendingCommunities } = useExplore();
 
   const styles = useStyles();
 
-  if (isExcluded || communities?.length === 0) return null;
+  if (isExcluded || trendingCommunities?.length === 0) return null;
 
   return (
     <View testID={accessibilityId}>
       <TrendingCommunityTitleComponent pageId={pageId} />
       <View style={styles.container}>
-        {communities?.map((community, index) => {
+        {trendingCommunities?.map((community, index) => {
           return (
             <TrendingCommunityItem
               key={community.communityId}

@@ -7,10 +7,10 @@ import { PageID } from '../../../enum';
 import AmityRecommendedCommunityComponent from '../AmityRecommenedCommunityComponent/AmityRecommenedCommunityComponent';
 import AmityCommunityCategoriesComponent from '../AmityCommunityCategoriesComponent/AmityCommunityCategoriesComponent';
 import AmityTrendingCommunitiesComponent from '../AmityTrendingCommunitiesComponent/AmityTrendingCommunitiesComponent';
-import { useCommunities } from '../../../hook';
 import AmityExploreCommunityEmptyComponent from '../AmityExploreCommunityEmptyComponent/AmityExploreCommunityEmptyComponent';
 import AmityExploreEmptyComponent from '../AmityExploreEmptyComponent/AmityExploreEmptyComponent';
-import { useCategories } from '~/v4/hook/useCategories';
+import { useExplore } from '../../../providers/ExploreProvider';
+import { Text } from 'react-native';
 
 type AmityExploreComponentProps = {
   pageId?: PageID;
@@ -20,16 +20,28 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
   pageId = PageID.WildCardPage,
 }) => {
   const styles = useStyles();
-  const { communities, loading } = useCommunities();
-  const { categories, loading: loadingCategories } = useCategories();
+  const {
+    isLoading,
+    isCategoryEmpty,
+    isRecommendedCommunitiesEmpty,
+    isTrendingCommunitiesEmpty,
+  } = useExplore();
 
   const isNothingToShow =
-    !loadingCategories &&
-    !loading &&
-    communities?.length === 0 &&
-    categories?.length === 0;
+    !isLoading &&
+    (isCategoryEmpty ||
+      isRecommendedCommunitiesEmpty ||
+      isTrendingCommunitiesEmpty);
 
-  const isNoCommunities = !loading && communities?.length === 0;
+  const isNoCommunities =
+    !isLoading && (isRecommendedCommunitiesEmpty || isTrendingCommunitiesEmpty);
+
+  if (isLoading)
+    return (
+      <View>
+        <Text>Loading.....</Text>
+      </View>
+    );
 
   return (
     <ScrollView style={styles.container}>
