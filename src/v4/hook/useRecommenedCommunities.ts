@@ -23,7 +23,6 @@ export const useRecommendedCommunities = (
         if (error) setError(error);
         if (!loading) {
           setLoading(loading);
-          console.log('Recommended communities: => joined', data[0].isJoined);
           setCommunities(data.filter((community) => !community.isJoined));
         }
       }
