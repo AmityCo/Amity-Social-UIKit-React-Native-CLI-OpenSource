@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Image, View } from 'react-native';
 import { ComponentID, ImageSizeState, PageID } from '../../../../enum';
 import { useFile } from '../../../../hook';
@@ -13,7 +13,6 @@ import {
   lock,
   verifiedBadge,
 } from '../../../../assets/icons';
-import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityCategory';
 import CommunityMemeberCount from '../../../../elements/CommunityMemeberCount/CommunityMemeberCount';
 
@@ -29,10 +28,6 @@ export const RecommendedCommunityItem: React.FC<
   const componentId = ComponentID.recommended_communities;
   const styles = useStyles();
   const [imageUrl, setImageUrl] = React.useState<string | undefined>(undefined);
-
-  const onJoinCommunity = useCallback(() => {
-    CommunityRepository.joinCommunity(community.communityId);
-  }, [community.communityId]);
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -87,11 +82,7 @@ export const RecommendedCommunityItem: React.FC<
           {community.isJoined ? (
             <CommunityJoinedButton pageId={pageId} componentId={componentId} />
           ) : (
-            <CommunityJoinButton
-              pageId={pageId}
-              componentId={componentId}
-              onPress={() => onJoinCommunity()}
-            />
+            <CommunityJoinButton pageId={pageId} componentId={componentId} />
           )}
         </View>
       </View>

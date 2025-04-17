@@ -217,6 +217,7 @@
     "@devvie/bottom-sheet": "^0.3.0",
     "@fawazahmed/react-native-read-more": "^3.0.4",
     "@reduxjs/toolkit": "^1.9.7",
+    "@tanstack/react-query": "^5.74.3",
     "@types/react-dom": "^18.2.15",
     "dayjs": "^1.11.10",
     "html-entities": "^2.5.2",
