@@ -2,8 +2,7 @@ import React, { FC, memo } from 'react';
 import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum';
 import { useStyles } from './styles';
-import { useAmityComponent } from '../../../hook';
-import { useTrendingCommunities } from '../../../hook/useTrendingCommunities';
+import { useAmityComponent, useTrendingCommunities } from '../../../hook';
 import TrendingCommunityTitleComponent from './TrendingCommunityTitle/TrendingCommunityTitle';
 import TrendingCommunityItem from './TrendingCommunityItem/TrendingCommunityItem';
 

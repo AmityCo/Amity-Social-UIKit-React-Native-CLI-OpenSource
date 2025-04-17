@@ -4,8 +4,7 @@ import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedC
 
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../../enum';
-import { useAmityElement } from '../../../hook';
-import { useRecommendedCommunities } from '../../../hook/useRecommenedCommunities';
+import { useAmityElement, useRecommendedCommunities } from '../../../hook';
 
 type AmityRecommendedCommunityComponentProps = {
   pageId?: PageID;
