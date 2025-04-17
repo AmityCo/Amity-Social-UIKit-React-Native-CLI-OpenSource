@@ -3,17 +3,21 @@ import { Typography } from '../../component/Typography/Typography';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import { useAmityElement } from '../../hook';
 import { useStyles } from './styles';
+import { View, ViewProps } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import { lock, verifiedBadge } from '../../assets/icons';
 
 type CommunityDisplaynameProps = {
-  displayName: string;
+  community: Amity.Community;
   pageId?: PageID;
   componentId?: ComponentID;
-};
+} & ViewProps;
 
 export const CommunityDisplayname: FC<CommunityDisplaynameProps> = ({
-  displayName,
+  community,
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
+  ...props
 }) => {
   const elementId = ElementID.community_display_name;
   const { isExcluded, accessibilityId, themeStyles } = useAmityElement({
@@ -27,12 +31,16 @@ export const CommunityDisplayname: FC<CommunityDisplaynameProps> = ({
   if (isExcluded) return null;
 
   return (
-    <Typography.TitleBold
-      testID={accessibilityId}
-      style={styles.displayName}
-      numberOfLines={1}
-    >
-      {displayName}
-    </Typography.TitleBold>
+    <View {...props}>
+      {!community.isPublic && <SvgXml xml={lock()} />}
+      <Typography.TitleBold
+        testID={accessibilityId}
+        style={styles.displayName}
+        numberOfLines={1}
+      >
+        {community.displayName}
+      </Typography.TitleBold>
+      {community.isOfficial && <SvgXml xml={verifiedBadge()} />}
+    </View>
   );
 };

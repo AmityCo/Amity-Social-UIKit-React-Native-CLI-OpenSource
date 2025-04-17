@@ -6,15 +6,11 @@ import { useStyles } from './styles';
 
 import CommunityJoinedButton from '../../../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
 import CommunityJoinButton from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
-import { Typography } from '../../../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
-import {
-  community as communityIcon,
-  lock,
-  verifiedBadge,
-} from '../../../../assets/icons';
+import { community as communityIcon } from '../../../../assets/icons';
 import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityCategory';
 import CommunityMemeberCount from '../../../../elements/CommunityMemeberCount/CommunityMemeberCount';
+import { CommunityDisplayname } from '~/v4/elements/CommunityDisplayname/CommunityDisplayname';
 
 type RecommendedCommunityItemProps = {
   pageId?: PageID;
@@ -58,13 +54,12 @@ export const RecommendedCommunityItem: React.FC<
       )}
 
       <View style={styles.detailWrap}>
-        <View style={styles.communityNameWarp}>
-          {!community.isPublic && <SvgXml xml={lock()} />}
-          <Typography.BodyBold style={styles.communityName} numberOfLines={1}>
-            {community.displayName}
-          </Typography.BodyBold>
-          {community.isOfficial && <SvgXml xml={verifiedBadge()} />}
-        </View>
+        <CommunityDisplayname
+          pageId={pageId}
+          componentId={componentId}
+          style={styles.communityNameWarp}
+          community={community}
+        />
         <View style={styles.detailBottomWrap}>
           <View style={styles.detailBottomWrapLeft}>
             <CommunityCategory

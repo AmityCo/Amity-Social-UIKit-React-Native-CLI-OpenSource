@@ -35,7 +35,7 @@ const TrendingCommunityItem: FC<TrendingCommunityItemProps> = ({
       />
       <View style={styles.detailWrap}>
         <CommunityDisplayname
-          displayName={community.displayName}
+          community={community}
           pageId={pageId}
           componentId={componentId}
         />
