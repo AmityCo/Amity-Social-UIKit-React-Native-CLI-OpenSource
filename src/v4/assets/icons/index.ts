@@ -6,3 +6,4 @@ export { default as check } from './check';
 export { default as category } from './category';
 export { default as arrowRight } from './arrowRight';
 export { default as emptyCommunity } from './emptyCommunity';
+export { default as errorPage } from './errorPage';
