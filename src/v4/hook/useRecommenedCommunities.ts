@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
+import useAuth from '../../hooks/useAuth';
 
 type UseRecommendedCommunitiesOptions = {
   limit?: number;
@@ -9,7 +10,7 @@ export const useRecommendedCommunities = (
   options?: UseRecommendedCommunitiesOptions
 ) => {
   const { limit = 4 } = options || {};
-
+  const { isConnected } = useAuth();
   const [communities, setCommunities] = useState<Amity.Community[]>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,7 +23,7 @@ export const useRecommendedCommunities = (
         if (error) setError(error);
         if (!loading) {
           setLoading(loading);
-          console.log('Recommended communities:', data.length);
+          console.log('Recommended communities: => joined', data[0].isJoined);
           setCommunities(data.filter((community) => !community.isJoined));
         }
       }
@@ -30,14 +31,15 @@ export const useRecommendedCommunities = (
   };
 
   useEffect(() => {
+    if (!isConnected) return;
+
     const unsubscribe = fetchRecommendedCommunities();
     return unsubscribe;
-  }, []);
+  }, [isConnected]);
 
   return {
     communities: communities?.slice(0, limit),
     loading,
     error,
-    refresh: () => fetchRecommendedCommunities,
   };
 };

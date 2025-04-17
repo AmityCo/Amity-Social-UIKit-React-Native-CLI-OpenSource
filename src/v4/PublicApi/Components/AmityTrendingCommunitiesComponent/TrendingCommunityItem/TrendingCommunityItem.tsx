@@ -56,11 +56,13 @@ const TrendingCommunityItem: FC<TrendingCommunityItemProps> = ({
             <CommunityJoinedButtonElement
               pageId={pageId}
               componentId={componentId}
+              communityId={community.communityId}
             />
           ) : (
             <CommunityJoinButtonElement
               pageId={pageId}
               componentId={componentId}
+              communityId={community.communityId}
             />
           )}
         </View>

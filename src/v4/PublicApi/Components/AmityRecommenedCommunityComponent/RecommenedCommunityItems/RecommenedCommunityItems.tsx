@@ -75,9 +75,17 @@ export const RecommendedCommunityItem: React.FC<
           </View>
           {/* TODO: if join community it should be disappeared */}
           {community.isJoined ? (
-            <CommunityJoinedButton pageId={pageId} componentId={componentId} />
+            <CommunityJoinedButton
+              pageId={pageId}
+              componentId={componentId}
+              communityId={community.communityId}
+            />
           ) : (
-            <CommunityJoinButton pageId={pageId} componentId={componentId} />
+            <CommunityJoinButton
+              pageId={pageId}
+              componentId={componentId}
+              communityId={community.communityId}
+            />
           )}
         </View>
       </View>
