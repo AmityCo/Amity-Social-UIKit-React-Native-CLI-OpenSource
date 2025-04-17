@@ -10,7 +10,8 @@ import AmityTrendingCommunitiesComponent from '../AmityTrendingCommunitiesCompon
 import AmityExploreCommunityEmptyComponent from '../AmityExploreCommunityEmptyComponent/AmityExploreCommunityEmptyComponent';
 import AmityExploreEmptyComponent from '../AmityExploreEmptyComponent/AmityExploreEmptyComponent';
 import { useExplore } from '../../../providers/ExploreProvider';
-import { Text } from 'react-native';
+import ExploreLoadingSkeleton from './ExploreLoadingSkeleton/ExploreLoadingSkeleton';
+import { useAmityPage } from '../../../hook';
 
 type AmityExploreComponentProps = {
   pageId?: PageID;
@@ -20,6 +21,7 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
   pageId = PageID.WildCardPage,
 }) => {
   const styles = useStyles();
+  const { themeStyles } = useAmityPage({ pageId });
   const {
     isLoading,
     isCategoryEmpty,
@@ -36,12 +38,7 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
   const isNoCommunities =
     !isLoading && (isRecommendedCommunitiesEmpty || isTrendingCommunitiesEmpty);
 
-  if (isLoading)
-    return (
-      <View>
-        <Text>Loading.....</Text>
-      </View>
-    );
+  if (isLoading) return <ExploreLoadingSkeleton themeStyles={themeStyles} />;
 
   return (
     <ScrollView style={styles.container}>
