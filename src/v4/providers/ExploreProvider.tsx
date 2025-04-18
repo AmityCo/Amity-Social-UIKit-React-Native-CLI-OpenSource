@@ -15,6 +15,8 @@ interface ExploreContextType {
   isRecommendedCommunitiesEmpty: boolean;
   isTrendingCommunitiesEmpty: boolean;
   isLoading: boolean;
+  isAllError: boolean;
+  isAllCommunitiesError: boolean;
   hasMoreCategories: boolean;
 }
 
@@ -26,17 +28,20 @@ export const ExploreProvider: React.FC<{ children: ReactNode }> = ({
   const {
     communities: recommendedCommunities,
     loading: isLoadingRecommendedCommunities,
+    error: recommendedCommunitiesError,
   } = useRecommendedCommunities();
 
   const {
     communities: trendingCommunities,
     loading: isLoadingTrendingCommunities,
+    error: trendingCommunitiesError,
   } = useTrendingCommunities();
 
   const {
     categories,
     loading: isLoadingCategories,
     hasMore: hasMoreCategories,
+    error: categoriesError,
   } = useCategories();
 
   return (
@@ -56,6 +61,12 @@ export const ExploreProvider: React.FC<{ children: ReactNode }> = ({
         isTrendingCommunitiesEmpty:
           !isLoadingTrendingCommunities && trendingCommunities?.length === 0,
         hasMoreCategories,
+        isAllError:
+          !!categoriesError ||
+          !!recommendedCommunitiesError ||
+          !!trendingCommunitiesError,
+        isAllCommunitiesError:
+          !!recommendedCommunitiesError || !!trendingCommunitiesError,
       }}
     >
       {children}

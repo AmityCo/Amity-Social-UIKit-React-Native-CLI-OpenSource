@@ -351,9 +351,14 @@
     "*/*/community_joined_button": {
       "text": "Joined"
     },
-    "communities_by_category_page/*/community_empty_image": {},
+    "communities_by_category_page/*/community_empty_image": {
+      "icon": "empty_list_icon"
+    },
     "communities_by_category_page/*/community_empty_title": {
       "text": "No community yet"
+    },
+    "communities_by_category_page/*/back_button": {
+      "icon": "backButtonIcon"
     }
   }
 }

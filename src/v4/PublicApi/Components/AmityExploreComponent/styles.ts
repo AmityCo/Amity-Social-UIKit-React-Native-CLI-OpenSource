@@ -19,6 +19,9 @@ export const useStyles = () => {
       paddingHorizontal: 16,
       marginTop: 20,
     },
+    sectionErrorContainer: {
+      minHeight: 400,
+    },
   });
   return styles;
 };

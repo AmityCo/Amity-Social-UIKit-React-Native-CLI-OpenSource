@@ -12,6 +12,7 @@ import AmityExploreEmptyComponent from '../AmityExploreEmptyComponent/AmityExplo
 import { useExplore } from '../../../providers/ExploreProvider';
 import ExploreLoadingSkeleton from './ExploreLoadingSkeleton/ExploreLoadingSkeleton';
 import { useAmityPage } from '../../../hook';
+import ErrorComponent from '../../../component/ErrorComponent/ErrorComponent';
 
 type AmityExploreComponentProps = {
   pageId?: PageID;
@@ -27,6 +28,8 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
     isCategoryEmpty,
     isRecommendedCommunitiesEmpty,
     isTrendingCommunitiesEmpty,
+    isAllError,
+    isAllCommunitiesError,
   } = useExplore();
 
   const isNothingToShow =
@@ -37,6 +40,20 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
 
   const isNoCommunities =
     !isLoading && (isRecommendedCommunitiesEmpty || isTrendingCommunitiesEmpty);
+
+  const renderError = React.useCallback(() => {
+    return (
+      <ErrorComponent
+        themeStyle={themeStyles}
+        title="Something went wrong"
+        description="Please try again."
+      />
+    );
+  }, [themeStyles]);
+
+  if (isAllError) {
+    return renderError();
+  }
 
   if (isLoading) return <ExploreLoadingSkeleton themeStyles={themeStyles} />;
 
@@ -52,7 +69,9 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
             </View>
           )}
           <View style={styles.communitiesSection}>
-            {isNoCommunities ? (
+            {isAllCommunitiesError ? (
+              <View style={styles.sectionErrorContainer}>{renderError()}</View>
+            ) : isNoCommunities ? (
               <AmityExploreCommunityEmptyComponent pageId={pageId} />
             ) : (
               <>

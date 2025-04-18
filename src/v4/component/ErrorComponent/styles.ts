@@ -7,15 +7,16 @@ export const useStyle = (theme: MyMD3Theme) => {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: theme.colors.background,
       gap: 16,
       flexDirection: 'column',
     },
     title: {
       color: theme.colors.baseShade3,
+      textAlign: 'center',
     },
     description: {
       color: theme.colors.baseShade3,
+      textAlign: 'center',
     },
   });
 };

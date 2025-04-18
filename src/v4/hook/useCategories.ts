@@ -11,6 +11,7 @@ export const useCategories = ({
   const [categories, setCategories] = useState<Amity.Category[]>();
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
   const [onNextCategoryPage, setOnNextCategoryPage] =
     useState<() => void | null>(null);
 
@@ -21,7 +22,11 @@ export const useCategories = ({
       { limit },
       ({ error, loading, data, hasNextPage, onNextPage }) => {
         setLoading(loading);
-        if (error) return;
+        if (error) {
+          setError(error);
+          setLoading(false);
+          return;
+        }
         if (!loading) {
           setCategories(data);
           setHasMore(hasNextPage);
@@ -37,5 +42,5 @@ export const useCategories = ({
     };
   }, [isConnected, limit]);
 
-  return { categories, hasMore, onNextCategoryPage, loading };
+  return { categories, hasMore, onNextCategoryPage, loading, error };
 };
