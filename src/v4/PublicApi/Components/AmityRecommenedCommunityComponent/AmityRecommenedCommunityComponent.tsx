@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useCallback } from 'react';
 import { Text, FlatList, View, Pressable } from 'react-native';
 import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedCommunityItems';
 import { useStyles } from './styles';
@@ -32,12 +32,15 @@ const AmityRecommendedCommunityComponent: FC<
   const styles = useStyles();
   const { recommendedCommunities } = useExplore();
 
-  const onPressCommunity = (communityId: string) => {
-    navigation.navigate('CommunityHome', {
-      communityId,
-      communityName: communityId,
-    });
-  };
+  const onPressCommunity = useCallback(
+    ({ communityId, communityName }: { communityId; communityName }) => {
+      navigation.navigate('CommunityHome', {
+        communityId,
+        communityName,
+      });
+    },
+    [navigation]
+  );
 
   return (
     <View testID={accessibilityId}>
@@ -46,7 +49,14 @@ const AmityRecommendedCommunityComponent: FC<
         horizontal={true}
         data={recommendedCommunities}
         renderItem={({ item }) => (
-          <Pressable onPress={() => onPressCommunity(item.communityId)}>
+          <Pressable
+            onPress={() =>
+              onPressCommunity({
+                communityId: item.communityId,
+                communityName: item.displayName,
+              })
+            }
+          >
             <RecommendedCommunityItem pageId={pageId} community={item} />
           </Pressable>
         )}

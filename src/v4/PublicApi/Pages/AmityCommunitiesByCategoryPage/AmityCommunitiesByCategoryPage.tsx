@@ -4,8 +4,9 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
 import { useAmityPage, useCommunities } from '../../../hook';
@@ -13,6 +14,8 @@ import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButt
 import CategoryTitle from '../../../elements/CategoryTitle/CategoryTitle';
 import CommunityRowItem from './CommunityRowItem/CommunityRowItem';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../routes/RouteParamList';
 
 const AmityCommunitiesByCategoryPage = ({ route }: any) => {
   const pageId = PageID.all_categories_page;
@@ -26,7 +29,18 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
   });
 
   const styles = useStyles(themeStyles);
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const onPressCommunity = useCallback(
+    ({ communityId, communityName }: { communityId; communityName }) => {
+      navigation.navigate('CommunityHome', {
+        communityId,
+        communityName,
+      });
+    },
+    [navigation]
+  );
 
   // TODO: Add loading state
   if (loading) return null;
@@ -47,7 +61,16 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
         <FlatList
           data={communities}
           renderItem={({ item }) => (
-            <CommunityRowItem community={item} pageId={pageId} />
+            <Pressable
+              onPress={() =>
+                onPressCommunity({
+                  communityId: item.communityId,
+                  communityName: item.displayName,
+                })
+              }
+            >
+              <CommunityRowItem community={item} pageId={pageId} />
+            </Pressable>
           )}
           keyExtractor={(item) => item.communityId}
           contentContainerStyle={styles.listContent}

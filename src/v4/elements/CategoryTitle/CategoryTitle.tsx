@@ -5,13 +5,13 @@ import { Typography } from '../../component/Typography/Typography';
 import { useAmityElement } from '../../hook';
 import { PageID, ComponentID, ElementID } from '../../enum';
 
-type CategoryEmptyTitleProps = {
+type CategoryTitleProps = {
   title: string;
   pageId?: PageID;
   componentId?: ComponentID;
 };
 
-const CategoryEmptyTitle: FC<CategoryEmptyTitleProps> = ({
+const CategoryTitle: FC<CategoryTitleProps> = ({
   title,
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
@@ -27,6 +27,7 @@ const CategoryEmptyTitle: FC<CategoryEmptyTitleProps> = ({
     title: {
       flex: 1,
       color: themeStyles?.colors.base,
+      textAlign: 'center',
     },
   });
 
@@ -36,4 +37,4 @@ const CategoryEmptyTitle: FC<CategoryEmptyTitleProps> = ({
     </Typography.TitleBold>
   );
 };
-export default memo(CategoryEmptyTitle);
+export default memo(CategoryTitle);

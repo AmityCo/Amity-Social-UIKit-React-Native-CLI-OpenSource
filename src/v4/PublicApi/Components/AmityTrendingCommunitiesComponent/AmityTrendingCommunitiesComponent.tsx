@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum';
 import { useStyles } from './styles';
@@ -28,12 +28,15 @@ const AmityTrendingCommunitiesCommunity: FC<
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const onPressCommunity = (communityId: string) => {
-    navigation.navigate('CommunityHome', {
-      communityId,
-      communityName: communityId,
-    });
-  };
+  const onPressCommunity = useCallback(
+    ({ communityId, communityName }: { communityId; communityName }) => {
+      navigation.navigate('CommunityHome', {
+        communityId,
+        communityName,
+      });
+    },
+    [navigation]
+  );
 
   if (isExcluded || trendingCommunities?.length === 0) return null;
 
@@ -43,7 +46,14 @@ const AmityTrendingCommunitiesCommunity: FC<
       <View style={styles.container}>
         {trendingCommunities?.map((community, index) => {
           return (
-            <Pressable onPress={() => onPressCommunity(community.communityId)}>
+            <Pressable
+              onPress={() =>
+                onPressCommunity({
+                  communityId: community.communityId,
+                  communityName: community.displayName,
+                })
+              }
+            >
               <TrendingCommunityItem
                 pageId={pageId}
                 community={community}
