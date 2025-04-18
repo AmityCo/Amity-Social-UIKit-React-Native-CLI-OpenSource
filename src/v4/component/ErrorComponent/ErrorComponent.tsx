@@ -7,7 +7,7 @@ import { SvgXml } from 'react-native-svg';
 import { errorPage } from '../../assets/icons';
 
 type ErrorComponentProps = {
-  title?: string;
+  title: string;
   description?: string;
   themeStyle?: MyMD3Theme;
   // icon is a function that returns a svg string
@@ -15,8 +15,8 @@ type ErrorComponentProps = {
 };
 
 const ErrorComponent: FC<ErrorComponentProps> = ({
-  title = 'Something went wrong',
-  description = 'Please try again.',
+  title,
+  description,
   themeStyle,
   icon = errorPage,
 }) => {
@@ -29,9 +29,11 @@ const ErrorComponent: FC<ErrorComponentProps> = ({
         <Typography.TitleBold style={styles.title}>
           {title}
         </Typography.TitleBold>
-        <Typography.Caption style={styles.description}>
-          {description}
-        </Typography.Caption>
+        {description && (
+          <Typography.Caption style={styles.description}>
+            {description}
+          </Typography.Caption>
+        )}
       </View>
     </View>
   );
