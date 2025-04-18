@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useCallback } from 'react';
 import { useAmityComponent } from '../../../hook';
 import { PageID, ComponentID } from '../../../enum';
 import { emptyCommunity } from '../../../assets/icons';
@@ -8,6 +8,9 @@ import { View } from 'react-native';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import ExploreCreateCommunity from '../../../elements/ExploreCreateCommunity/ExploreCreateCommunity';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../routes/RouteParamList';
 
 type AmityExploreEmptyComponentProps = {
   pageId?: PageID;
@@ -23,6 +26,12 @@ const AmityExploreEmptyComponent: FC<AmityExploreEmptyComponentProps> = ({
   });
 
   const styles = useStyles();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const onPressCreateCommunity = useCallback(() => {
+    navigation.navigate('CreateCommunity');
+  }, [navigation]);
 
   if (isExcluded) return null;
 
@@ -43,7 +52,7 @@ const AmityExploreEmptyComponent: FC<AmityExploreEmptyComponentProps> = ({
         pageId={pageId}
         componentId={componentId}
         style={styles.createCommunityButton}
-        // TODO: add onPress handler
+        onPress={onPressCreateCommunity}
       />
     </View>
   );

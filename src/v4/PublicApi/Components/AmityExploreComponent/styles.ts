@@ -22,6 +22,9 @@ export const useStyles = () => {
     sectionErrorContainer: {
       minHeight: 400,
     },
+    emptyContainer: {
+      minHeight: 400,
+    },
   });
   return styles;
 };

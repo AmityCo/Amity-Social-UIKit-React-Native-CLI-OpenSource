@@ -60,7 +60,9 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
   return (
     <ScrollView style={styles.container}>
       {isNothingToShow ? (
-        <AmityExploreEmptyComponent pageId={pageId} />
+        <View style={styles.emptyContainer}>
+          <AmityExploreEmptyComponent pageId={pageId} />
+        </View>
       ) : (
         <>
           {!isCategoryEmpty && (
@@ -72,7 +74,9 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
             {isAllCommunitiesError ? (
               <View style={styles.sectionErrorContainer}>{renderError()}</View>
             ) : isNoCommunities ? (
-              <AmityExploreCommunityEmptyComponent pageId={pageId} />
+              <View style={styles.emptyContainer}>
+                <AmityExploreCommunityEmptyComponent pageId={pageId} />
+              </View>
             ) : (
               <>
                 {!isRecommendedCommunitiesEmpty && (
