@@ -17,6 +17,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import CommunityEmptyTitle from '../../../elements/CommunityEmptyTitle/CommunityEmptyTitle';
 import CommunityEmptyImage from '../../../elements/CommunityEmptyImage/CommunityEmptyImage';
+import CommunityListSkeleton from '~/v4/elements/CommunityListSkeleton/CommunityListSkeleton';
 
 const AmityCommunitiesByCategoryPage = ({ route }: any) => {
   const pageId = PageID.communities_by_category_page;
@@ -25,7 +26,7 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
     pageId,
   });
 
-  const { communities, loading } = useCommunities({
+  const { communities, loading, onNextCommunityPage } = useCommunities({
     categoryId: category.categoryId,
   });
 
@@ -43,9 +44,6 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
     [navigation]
   );
 
-  // TODO: Add loading state
-  if (loading) return null;
-
   return (
     <SafeAreaView testID={accessibilityId} style={styles.safeArea}>
       <View style={styles.header}>
@@ -56,7 +54,6 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
         <View style={styles.empty} />
       </View>
       {!loading && communities.length === 0 ? (
-        // TODO: add empty state
         <View style={styles.emptyMessage}>
           <CommunityEmptyImage pageId={pageId} />
           <CommunityEmptyTitle pageId={pageId} />
@@ -79,6 +76,16 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
           keyExtractor={(item) => item.communityId}
           contentContainerStyle={styles.listContent}
           style={styles.list}
+          onEndReached={() => onNextCommunityPage?.()}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            loading ? (
+              <CommunityListSkeleton
+                themeStyle={themeStyles}
+                amount={!communities ? 12 : 4}
+              />
+            ) : null
+          }
         />
       )}
     </SafeAreaView>

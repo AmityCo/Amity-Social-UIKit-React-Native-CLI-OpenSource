@@ -5,6 +5,7 @@ import { useStyles } from './styles';
 import { View } from 'react-native';
 import { getSkeletonBackgrounColor } from '../../../../../util/colorUtil';
 import { Path } from 'react-native-svg';
+import CommunityListSkeleton from '~/v4/elements/CommunityListSkeleton/CommunityListSkeleton';
 
 type ExploreLoadingSkeletonProps = {
   themeStyles: MyMD3Theme;
@@ -140,50 +141,9 @@ const ExploreLoadingSkeleton: FC<ExploreLoadingSkeletonProps> = ({
   };
 
   const renderTrendingCommunitiesSkeleton = () => {
-    const titleHeight = 36;
-    const gap = 16;
-    const marginTop = 23;
-    const height = 80;
-    const width = 80;
     return (
       <View style={styles.trendingCommunitiesContainer}>
-        <ContentLoader
-          backgroundColor={backgroundColor}
-          foregroundColor={foregroundColor}
-        >
-          <Rect x="0" y="0" width="156" height="12" rx="6" ry="6" />
-          {Array.from({ length: 4 }, (_, index) => {
-            return (
-              <React.Fragment key={index}>
-                <Rect
-                  key={index}
-                  x="0"
-                  y={index * (height + gap) + titleHeight}
-                  width={width}
-                  height={height}
-                  rx="8"
-                  ry="8"
-                />
-                <Rect
-                  x="100"
-                  y={index * (height + gap) + titleHeight + marginTop}
-                  width="196"
-                  height="12"
-                  rx="6"
-                  ry="6"
-                />
-                <Rect
-                  x="100"
-                  y={index * (height + gap) + 24 + titleHeight + marginTop}
-                  width="90"
-                  height="10"
-                  rx="6"
-                  ry="6"
-                />
-              </React.Fragment>
-            );
-          })}
-        </ContentLoader>
+        <CommunityListSkeleton themeStyle={themeStyles} />
       </View>
     );
   };
