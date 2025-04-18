@@ -40,7 +40,9 @@ export const CommunityDisplayname: FC<CommunityDisplaynameProps> = ({
       >
         {community.displayName}
       </Typography.TitleBold>
-      {community.isOfficial && <SvgXml xml={verifiedBadge()} />}
+      {community.isOfficial && (
+        <SvgXml xml={verifiedBadge()} width={20} height={20} />
+      )}
     </View>
   );
 };
