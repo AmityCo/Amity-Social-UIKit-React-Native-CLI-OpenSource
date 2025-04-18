@@ -341,6 +341,9 @@
     },
     "social_home_page/trending_communities/*": {},
     "all_categories_page/*/*": {},
+    "all_categories_page/*/back_button": {
+      "icon": "backButtonIcon"
+    },
     "communities_by_category_page/*/*": {},
     "*/*/community_join_button": {
       "text": "Join"
