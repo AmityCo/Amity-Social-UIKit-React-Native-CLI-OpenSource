@@ -31,6 +31,9 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 import { closeIcon } from '../../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
+import { usePaginatorApi } from '../../../hook/usePaginator';
+import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
+import CommentAdComponent from '../../CommentAdComponent/CommentAdComponent';
 
 interface ICommentListProp {
   postId: string;
@@ -56,6 +59,8 @@ interface IComment {
   childrenNumber: number;
 }
 
+const commentListLimit = 8;
+
 const CommentList: FC<ICommentListProp> = ({
   postId,
   postType,
@@ -75,13 +80,20 @@ const CommentList: FC<ICommentListProp> = ({
     []
   );
 
+  const { itemWithAds } = usePaginatorApi<IComment>({
+    items: commentList,
+    placement: 'comment' as Amity.AdPlacement,
+    pageSize: commentListLimit,
+    getItemId: (item) => item.commentId,
+  });
+
   useEffect(() => {
     CommentRepository.getComments(
       {
         dataTypes: { matchType: 'any', values: ['text', 'image'] },
         referenceId: postId,
         referenceType: postType,
-        limit: 8,
+        limit: commentListLimit,
       },
       async ({ error, loading, data, hasNextPage, onNextPage }) => {
         if (error) return;
@@ -282,8 +294,11 @@ const CommentList: FC<ICommentListProp> = ({
     <View style={{ height: '100%', paddingBottom: 40 }}>
       <FlatList
         keyboardShouldPersistTaps="handled"
-        data={commentList}
+        data={itemWithAds}
         renderItem={({ item }) => {
+          if (isAmityAd(item)) {
+            return <CommentAdComponent ad={item} />;
+          }
           return (
             <CommentListItem
               onDelete={onDeleteComment}
@@ -295,7 +310,9 @@ const CommentList: FC<ICommentListProp> = ({
             />
           );
         }}
-        keyExtractor={(item, index) => item.commentId + index}
+        keyExtractor={(item, index) =>
+          (isAmityAd(item) ? item.adId : item.commentId) + index
+        }
         onEndReachedThreshold={0.8}
         onEndReached={() => onNextPageRef.current && onNextPageRef.current()}
       />
