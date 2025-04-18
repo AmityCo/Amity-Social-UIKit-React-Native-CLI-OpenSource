@@ -1,4 +1,10 @@
-import { View, FlatList } from 'react-native';
+import {
+  View,
+  FlatList,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
 import React, { memo } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
@@ -6,39 +12,49 @@ import { useAmityPage, useCommunities } from '../../../hook';
 import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButtonIconElement';
 import CategoryTitle from '../../../elements/CategoryTitle/CategoryTitle';
 import CommunityRowItem from './CommunityRowItem/CommunityRowItem';
+import { useNavigation } from '@react-navigation/native';
 
 const AmityCommunitiesByCategoryPage = ({ route }: any) => {
   const pageId = PageID.all_categories_page;
-  const { categoryId } = route.params;
-  const { accessibilityId } = useAmityPage({
+  const { category } = route.params;
+  const { accessibilityId, themeStyles } = useAmityPage({
     pageId,
   });
 
   const { communities, loading } = useCommunities({
-    categoryId: categoryId,
+    categoryId: category.categoryId,
   });
 
-  const styles = useStyles();
+  const styles = useStyles(themeStyles);
+  const navigation = useNavigation();
 
   // TODO: Add loading state
   if (loading) return null;
 
   return (
-    <View testID={accessibilityId} style={styles.container}>
+    <SafeAreaView testID={accessibilityId} style={styles.safeArea}>
       <View style={styles.header}>
-        <BackButtonIconElement pageID={pageId} />
-        <CategoryTitle title={'All Categories'} pageId={pageId} />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <BackButtonIconElement pageID={pageId} style={styles.headerIcon} />
+        </TouchableOpacity>
+        <CategoryTitle title={category.name} pageId={pageId} />
         <View style={styles.empty} />
       </View>
-      <FlatList
-        data={communities}
-        renderItem={({ item }) => (
-          <CommunityRowItem community={item} pageId={pageId} />
-        )}
-        keyExtractor={(item) => item.communityId}
-        contentContainerStyle={styles.listContainer}
-      />
-    </View>
+      {!loading && communities.length === 0 ? (
+        // TODO: add empty state
+        <Text>No community</Text>
+      ) : (
+        <FlatList
+          data={communities}
+          renderItem={({ item }) => (
+            <CommunityRowItem community={item} pageId={pageId} />
+          )}
+          keyExtractor={(item) => item.communityId}
+          contentContainerStyle={styles.listContent}
+          style={styles.list}
+        />
+      )}
+    </SafeAreaView>
   );
 };
 

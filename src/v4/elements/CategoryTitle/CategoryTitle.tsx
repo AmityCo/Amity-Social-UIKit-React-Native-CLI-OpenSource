@@ -25,6 +25,7 @@ const CategoryEmptyTitle: FC<CategoryEmptyTitleProps> = ({
 
   const styles = StyleSheet.create({
     title: {
+      flex: 1,
       color: themeStyles?.colors.base,
     },
   });

@@ -57,7 +57,6 @@ export const RecommendedCommunityItem: React.FC<
         <CommunityDisplayname
           pageId={pageId}
           componentId={componentId}
-          style={styles.communityNameWarp}
           community={community}
         />
         <View style={styles.detailBottomWrap}>

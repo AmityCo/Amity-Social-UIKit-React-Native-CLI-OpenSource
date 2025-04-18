@@ -33,18 +33,16 @@ const CommunityRowItem: FC<CommunityRowItemProps> = ({
           pageId={pageId}
           componentId={componentId}
         />
-        <View style={styles.detailBottomWrap}>
-          <CommunityCategory
-            categoryIds={community.categoryIds}
-            pageId={pageId}
-            componentId={componentId}
-          />
-          <CommunityMemeberCount
-            counts={community.membersCount}
-            pageId={pageId}
-            componentId={componentId}
-          />
-        </View>
+        <CommunityCategory
+          categoryIds={community.categoryIds}
+          pageId={pageId}
+          componentId={componentId}
+        />
+        <CommunityMemeberCount
+          counts={community.membersCount}
+          pageId={pageId}
+          componentId={componentId}
+        />
       </View>
     </View>
   );

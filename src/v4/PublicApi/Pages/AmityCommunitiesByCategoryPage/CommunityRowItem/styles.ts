@@ -5,16 +5,10 @@ export const useStyles = () => {
     container: {
       flexDirection: 'row',
       gap: 12,
+      alignItems: 'center',
     },
     detailWrap: {
-      paddingVertical: 8,
       flex: 1,
-    },
-    detailBottomWrap: {
-      justifyContent: 'space-between',
-      flexDirection: 'row',
-      marginTop: 4,
-      gap: 8,
     },
   });
 

@@ -31,7 +31,7 @@ export const CommunityDisplayname: FC<CommunityDisplaynameProps> = ({
   if (isExcluded) return null;
 
   return (
-    <View {...props}>
+    <View {...props} style={[styles.container, props.style]}>
       {!community.isPublic && <SvgXml xml={lock()} />}
       <Typography.TitleBold
         testID={accessibilityId}

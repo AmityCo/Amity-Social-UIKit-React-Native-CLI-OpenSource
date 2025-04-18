@@ -1,5 +1,5 @@
-import React, { FC, memo } from 'react';
-import { FlatList, View } from 'react-native';
+import React, { FC, memo, useCallback } from 'react';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 import { arrowRight } from '../../../assets/icons';
 import { CategoryChip } from '../../../component/CategoryChip/CategoryChip';
 import { ComponentID, PageID } from '../../../enum';
@@ -8,6 +8,9 @@ import { Typography } from '../../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { useAmityComponent } from '../../../hook';
 import { useExplore } from '../../../providers/ExploreProvider';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../routes/RouteParamList';
 
 type AmityCommunityCategoriesComponentProps = {
   pageId?: PageID;
@@ -24,6 +27,17 @@ const AmityCommunityCategoriesComponent: FC<
   });
 
   const styles = useStyles(themeStyles);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const goToCommunitiesByCategoryPage = useCallback(
+    (category: Amity.Category) => {
+      navigation.navigate('CommunitiesByCategoryPage', {
+        category,
+      });
+    },
+    [navigation]
+  );
 
   if (isExcluded && categories.length === 0) return null;
 
@@ -31,7 +45,11 @@ const AmityCommunityCategoriesComponent: FC<
     <FlatList
       testID={accessibilityId}
       data={categories}
-      renderItem={({ item }) => <CategoryChip category={item} />}
+      renderItem={({ item }) => (
+        <TouchableOpacity onPress={() => goToCommunitiesByCategoryPage(item)}>
+          <CategoryChip category={item} />
+        </TouchableOpacity>
+      )}
       keyExtractor={(item) => item.categoryId}
       horizontal
       showsHorizontalScrollIndicator={false}

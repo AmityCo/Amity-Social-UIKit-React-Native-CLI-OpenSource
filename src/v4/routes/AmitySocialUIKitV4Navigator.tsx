@@ -45,6 +45,8 @@ import AmityMyCommunitiesSearchPage from '../PublicApi/Pages/AmityMyCommunitiesS
 import CreateLivestream from '../../screens/CreateLivestream/CreateLivestream';
 import PostTargetSelection from '../screen/PostTargetSelection';
 import StoryTargetSelection from '../PublicApi/Pages/AmityStoryTargetSelectionPage/AmityStoryTargetSelectionPage';
+import AmityAllCategoriesPage from '../PublicApi/Pages/AmityAllCategoriesPage/AmityAllCategoriesPage';
+import AmityCommunitiesByCategoryPage from '../PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
 import EditPost from '../screen/EditPost/EditPost';
 
 export default function AmitySocialUIKitV4Navigator() {
@@ -261,6 +263,20 @@ export default function AmitySocialUIKitV4Navigator() {
               title: displayName,
               headerLeft: () => <BackButton />,
             })}
+          />
+          <Stack.Screen
+            name="AllCategoriesPage"
+            component={AmityAllCategoriesPage}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="CommunitiesByCategoryPage"
+            component={AmityCommunitiesByCategoryPage}
+            options={{
+              headerShown: false,
+            }}
           />
           <Stack.Group
             screenOptions={{
