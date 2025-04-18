@@ -1,10 +1,13 @@
 import React, { FC, memo } from 'react';
-import { Text, FlatList, View } from 'react-native';
+import { Text, FlatList, View, Pressable } from 'react-native';
 import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedCommunityItems';
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../../enum';
 import { useAmityElement } from '../../../hook';
 import { useExplore } from '../../../providers/ExploreProvider';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../routes/RouteParamList';
+import { useNavigation } from '@react-navigation/native';
 
 type AmityRecommendedCommunityComponentProps = {
   pageId?: PageID;
@@ -19,14 +22,22 @@ const AmityRecommendedCommunityComponent: FC<
 }) => {
   const elementId = ElementID.explore_recommended_title;
 
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { config, accessibilityId } = useAmityElement({
     pageId,
     componentId,
     elementId,
   });
-
   const styles = useStyles();
   const { recommendedCommunities } = useExplore();
+
+  const onPressCommunity = (communityId: string) => {
+    navigation.navigate('CommunityHome', {
+      communityId,
+      communityName: communityId,
+    });
+  };
 
   return (
     <View testID={accessibilityId}>
@@ -35,7 +46,9 @@ const AmityRecommendedCommunityComponent: FC<
         horizontal={true}
         data={recommendedCommunities}
         renderItem={({ item }) => (
-          <RecommendedCommunityItem pageId={pageId} community={item} />
+          <Pressable onPress={() => onPressCommunity(item.communityId)}>
+            <RecommendedCommunityItem pageId={pageId} community={item} />
+          </Pressable>
         )}
         keyExtractor={(item) => item.communityId}
         contentContainerStyle={styles.listContainer}

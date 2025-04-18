@@ -1,5 +1,5 @@
 import React, { FC, memo, useCallback } from 'react';
-import { FlatList, TouchableOpacity, View } from 'react-native';
+import { FlatList, Pressable, View } from 'react-native';
 import { arrowRight } from '../../../assets/icons';
 import { CategoryChip } from '../../../component/CategoryChip/CategoryChip';
 import { ComponentID, PageID } from '../../../enum';
@@ -39,6 +39,10 @@ const AmityCommunityCategoriesComponent: FC<
     [navigation]
   );
 
+  const onPressSeeMore = useCallback(() => {
+    navigation.navigate('AllCategoriesPage');
+  }, [navigation]);
+
   if (isExcluded && categories.length === 0) return null;
 
   return (
@@ -46,9 +50,9 @@ const AmityCommunityCategoriesComponent: FC<
       testID={accessibilityId}
       data={categories}
       renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => goToCommunitiesByCategoryPage(item)}>
+        <Pressable onPress={() => goToCommunitiesByCategoryPage(item)}>
           <CategoryChip category={item} />
-        </TouchableOpacity>
+        </Pressable>
       )}
       keyExtractor={(item) => item.categoryId}
       horizontal
@@ -56,12 +60,14 @@ const AmityCommunityCategoriesComponent: FC<
       contentContainerStyle={styles.categoryChipsContentContainer}
       ListFooterComponent={
         hasMoreCategories ? (
-          <View style={styles.seeMoreCategoryButton}>
-            <Typography.BodyBold style={styles.seeMoreCategoryText}>
-              {'See more'}
-            </Typography.BodyBold>
-            <SvgXml xml={arrowRight()} />
-          </View>
+          <Pressable onPress={onPressSeeMore}>
+            <View style={styles.seeMoreCategoryButton}>
+              <Typography.BodyBold style={styles.seeMoreCategoryText}>
+                {'See more'}
+              </Typography.BodyBold>
+              <SvgXml xml={arrowRight()} />
+            </View>
+          </Pressable>
         ) : null
       }
     />
