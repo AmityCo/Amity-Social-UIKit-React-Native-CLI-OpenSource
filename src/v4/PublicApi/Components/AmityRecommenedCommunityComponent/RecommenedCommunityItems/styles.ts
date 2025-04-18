@@ -8,7 +8,7 @@ export const useStyles = () => {
     container: {
       flexDirection: 'column',
       width: 268,
-      height: 222,
+      minHeight: 222,
       borderRadius: 8,
       borderWidth: 1,
       borderColor: theme.colors.baseShade4,

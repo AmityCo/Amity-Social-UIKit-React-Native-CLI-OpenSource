@@ -13,7 +13,6 @@ export const useStyles = () => {
     detailBottomWrap: {
       justifyContent: 'space-between',
       flexDirection: 'row',
-      marginTop: 4,
       gap: 8,
     },
     detailBottomWrapLeft: {
