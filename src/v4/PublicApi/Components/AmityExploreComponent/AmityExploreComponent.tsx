@@ -46,20 +46,26 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
         <AmityExploreEmptyComponent pageId={pageId} />
       ) : (
         <>
-          <View style={styles.categoriesContainer}>
-            <AmityCommunityCategoriesComponent pageId={pageId} />
-          </View>
+          {!isCategoryEmpty && (
+            <View style={styles.categoriesContainer}>
+              <AmityCommunityCategoriesComponent pageId={pageId} />
+            </View>
+          )}
           <View style={styles.communitiesSection}>
             {isNoCommunities ? (
               <AmityExploreCommunityEmptyComponent pageId={pageId} />
             ) : (
               <>
-                <View style={styles.recommendContainer}>
-                  <AmityRecommendedCommunityComponent pageId={pageId} />
-                </View>
-                <View style={styles.trendingContainer}>
-                  <AmityTrendingCommunitiesComponent pageId={pageId} />
-                </View>
+                {!isRecommendedCommunitiesEmpty && (
+                  <View style={styles.recommendContainer}>
+                    <AmityRecommendedCommunityComponent pageId={pageId} />
+                  </View>
+                )}
+                {!isTrendingCommunitiesEmpty && (
+                  <View style={styles.trendingContainer}>
+                    <AmityTrendingCommunitiesComponent pageId={pageId} />
+                  </View>
+                )}
               </>
             )}
           </View>
