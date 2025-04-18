@@ -6,18 +6,16 @@ import { useAmityElement } from '../../hook';
 import { PageID, ComponentID, ElementID } from '../../enum';
 
 type CommunityEmptyTitleProps = {
-  title: string;
   pageId?: PageID;
   componentId?: ComponentID;
 };
 
 const CommunityEmptyTitle: FC<CommunityEmptyTitleProps> = ({
-  title,
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
 }) => {
   const elementId = ElementID.community_empty_title;
-  const { themeStyles } = useAmityElement({
+  const { themeStyles, config } = useAmityElement({
     pageId,
     componentId,
     elementId,
@@ -31,7 +29,7 @@ const CommunityEmptyTitle: FC<CommunityEmptyTitleProps> = ({
 
   return (
     <Typography.TitleBold style={styles.title} numberOfLines={1}>
-      {title}
+      {config.text as string}
     </Typography.TitleBold>
   );
 };

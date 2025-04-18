@@ -106,6 +106,9 @@ export const useConfigImageUri = ({
     if (fileUri === 'file_button') {
       image = require('../configAssets/icons/file_button.png');
     }
+    if (fileUri === 'empty_list_icon') {
+      image = require('../configAssets/icons/empty_list_icon.png');
+    }
     if (typeof image === 'number') {
       return Image.resolveAssetSource(image)?.uri ?? defaultAvatarUri;
     }

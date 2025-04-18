@@ -1,7 +1,6 @@
 import {
   View,
   FlatList,
-  Text,
   SafeAreaView,
   TouchableOpacity,
   Pressable,
@@ -16,9 +15,11 @@ import CommunityRowItem from './CommunityRowItem/CommunityRowItem';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
+import CommunityEmptyTitle from '../../../elements/CommunityEmptyTitle/CommunityEmptyTitle';
+import CommunityEmptyImage from '../../../elements/CommunityEmptyImage/CommunityEmptyImage';
 
 const AmityCommunitiesByCategoryPage = ({ route }: any) => {
-  const pageId = PageID.all_categories_page;
+  const pageId = PageID.communities_by_category_page;
   const { category } = route.params;
   const { accessibilityId, themeStyles } = useAmityPage({
     pageId,
@@ -56,7 +57,10 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
       </View>
       {!loading && communities.length === 0 ? (
         // TODO: add empty state
-        <Text>No community</Text>
+        <View style={styles.emptyMessage}>
+          <CommunityEmptyImage pageId={pageId} />
+          <CommunityEmptyTitle pageId={pageId} />
+        </View>
       ) : (
         <FlatList
           data={communities}

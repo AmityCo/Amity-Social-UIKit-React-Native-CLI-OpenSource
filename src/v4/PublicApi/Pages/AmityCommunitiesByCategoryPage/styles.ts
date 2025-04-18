@@ -36,6 +36,13 @@ export const useStyles = (theme: MyMD3Theme) => {
       paddingHorizontal: 16,
       gap: 16,
     },
+    emptyMessage: {
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+    },
   });
 
   return styles;

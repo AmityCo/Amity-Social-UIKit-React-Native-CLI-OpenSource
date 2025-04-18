@@ -113,6 +113,7 @@ export enum ElementID {
   category_row_name = 'category_row_name',
   category_title = 'category_title',
   community_empty_title = 'community_empty_title',
+  community_empty_image = 'community_empty_image',
 }
 
 export interface UiKitConfigKeys {
