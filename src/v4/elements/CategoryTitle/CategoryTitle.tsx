@@ -1,0 +1,38 @@
+import React, { FC, memo } from 'react';
+import { StyleSheet } from 'react-native';
+import { Typography } from '../../component/Typography/Typography';
+
+import { useAmityElement } from '../../hook';
+import { PageID, ComponentID, ElementID } from '../../enum';
+
+type CategoryEmptyTitleProps = {
+  title: string;
+  pageId?: PageID;
+  componentId?: ComponentID;
+};
+
+const CategoryEmptyTitle: FC<CategoryEmptyTitleProps> = ({
+  title,
+  pageId = PageID.WildCardPage,
+  componentId = ComponentID.WildCardComponent,
+}) => {
+  const elementId = ElementID.category_title;
+  const { themeStyles } = useAmityElement({
+    pageId,
+    componentId,
+    elementId,
+  });
+
+  const styles = StyleSheet.create({
+    title: {
+      color: themeStyles?.colors.base,
+    },
+  });
+
+  return (
+    <Typography.TitleBold style={styles.title} numberOfLines={1}>
+      {title}
+    </Typography.TitleBold>
+  );
+};
+export default memo(CategoryEmptyTitle);

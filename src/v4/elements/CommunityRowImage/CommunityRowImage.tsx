@@ -12,7 +12,7 @@ type CommunityRowImageyProps = {
   fileId?: string;
   pageId?: PageID;
   componentId?: ComponentID;
-  label: string;
+  label?: string;
 };
 
 const CommunityRowImagey: FC<CommunityRowImageyProps> = ({
@@ -70,13 +70,19 @@ const CommunityRowImagey: FC<CommunityRowImageyProps> = ({
           <SvgXml xml={communityIcon()} width={36} height={22} />
         </View>
       )}
-      <LinearGradient
-        colors={['rgba(0, 0, 0, 0.4)', 'rgba(0, 0, 0, 0)', 'transparent']}
-        style={styles.gradientLayer}
-        start={{ x: 0, y: 1 }}
-        end={{ x: 0, y: 0 }}
-      />
-      <Typography.BodyBold style={styles.label}>{label}</Typography.BodyBold>
+      {label && (
+        <>
+          <LinearGradient
+            colors={['rgba(0, 0, 0, 0.4)', 'rgba(0, 0, 0, 0)', 'transparent']}
+            style={styles.gradientLayer}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 0, y: 0 }}
+          />
+          <Typography.BodyBold style={styles.label}>
+            {label}
+          </Typography.BodyBold>
+        </>
+      )}
     </View>
   );
 };
