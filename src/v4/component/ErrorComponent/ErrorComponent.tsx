@@ -10,18 +10,21 @@ type ErrorComponentProps = {
   title?: string;
   description?: string;
   themeStyle?: MyMD3Theme;
+  // icon is a function that returns a svg string
+  icon?: () => string;
 };
 
 const ErrorComponent: FC<ErrorComponentProps> = ({
   title = 'Something went wrong',
   description = 'Please try again.',
   themeStyle,
+  icon = errorPage,
 }) => {
   const styles = useStyle(themeStyle);
 
   return (
     <View style={styles.container}>
-      <SvgXml xml={errorPage()} />
+      <SvgXml xml={icon()} />
       <View>
         <Typography.TitleBold style={styles.title}>
           {title}
