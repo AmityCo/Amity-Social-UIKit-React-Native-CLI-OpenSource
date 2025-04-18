@@ -1,47 +1,56 @@
-import { View } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import React, { FC, memo } from 'react';
 import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
-import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
-import { getSkeletonBackgrounColor } from '~/util/colorUtil';
+import { MyMD3Theme } from '../../../../../providers/amity-ui-kit-provider';
+import { getSkeletonBackgrounColor } from '../../../../../util/colorUtil';
 
 type CategoryListSkeletonProps = {
   themeStyle?: MyMD3Theme;
+  amount?: number;
 };
-
-// TODO: fix style
 
 const CategoryListSkeleton: FC<CategoryListSkeletonProps> = ({
   themeStyle,
+  amount = 4,
 }) => {
   const { backgroundColor, foregroundColor } =
     getSkeletonBackgrounColor(themeStyle);
 
+  const itemHeight = 60; // Height for each item (circle + rect)
+  const circleSize = 40; // Circle diameter
+
   return (
-    <View style={{ padding: 16 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <ContentLoader
-        height={36}
+        height={400}
         width={400}
         speed={1}
-        viewBox="0 0 400 36"
+        viewBox="0 0 400 400"
         backgroundColor={backgroundColor}
         foregroundColor={foregroundColor}
       >
-        <Circle cx="20" cy="20" r="20" />
-        {Array.from({ length: 4 }, (_, index) => {
+        {Array.from({ length: amount }, (_, index) => {
+          const yPosition = index * itemHeight;
           return (
-            <Rect
-              key={index}
-              x={index !== 0 ? index * (90 + 8) : 0}
-              y="0"
-              rx="12"
-              ry="12"
-              width="140"
-              height="10"
-            />
+            <>
+              <Circle
+                cx={15}
+                cy={yPosition + circleSize / 2}
+                r={circleSize / 2}
+              />
+              <Rect
+                x={60}
+                y={yPosition + (circleSize - 10) / 2} // Center vertically with circle
+                rx="4"
+                ry="4"
+                width="140"
+                height="10"
+              />
+            </>
           );
         })}
       </ContentLoader>
-    </View>
+    </SafeAreaView>
   );
 };
 

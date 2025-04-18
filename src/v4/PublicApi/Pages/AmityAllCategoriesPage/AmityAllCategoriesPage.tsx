@@ -1,4 +1,4 @@
-import { View, FlatList, SafeAreaView, Pressable, Text } from 'react-native';
+import { View, FlatList, SafeAreaView, Pressable } from 'react-native';
 import React, { memo, useCallback } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
@@ -9,6 +9,7 @@ import CategoryRowItem from './CategoryRowItem/CategoryRowItem';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
+import CategoryListSkeleton from './CategoryListSkeleton/CategoryListSkeleton';
 
 const AmityAllCategoriesPage = () => {
   const pageId = PageID.all_categories_page;
@@ -33,8 +34,6 @@ const AmityAllCategoriesPage = () => {
     [navigation]
   );
 
-  // TODO: Add loading state
-
   return (
     <SafeAreaView testID={accessibilityId} style={styles.container}>
       <View style={styles.header}>
@@ -58,7 +57,14 @@ const AmityAllCategoriesPage = () => {
           onNextCategoryPage?.();
         }}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={loading ? <Text>Loading</Text> : null}
+        ListFooterComponent={
+          loading ? (
+            <CategoryListSkeleton
+              themeStyle={themeStyles}
+              amount={!categories ? 20 : 4}
+            />
+          ) : null
+        }
       />
     </SafeAreaView>
   );
