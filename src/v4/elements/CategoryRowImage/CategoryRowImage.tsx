@@ -37,8 +37,10 @@ const CategoryRowImage: FC<CategoryRowImageProps> = ({
       width: '100%',
       height: '100%',
       borderRadius: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
       // TODO: fix color
-      backgroundColor: themeStyles?.colors.base,
+      backgroundColor: themeStyles.colors.primaryShade2,
     },
     image: {
       overflow: 'hidden',

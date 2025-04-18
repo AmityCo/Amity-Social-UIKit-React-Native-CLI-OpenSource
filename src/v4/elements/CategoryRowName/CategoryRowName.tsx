@@ -26,6 +26,8 @@ const CategoryRowName: FC<CategoryRowNameProps> = ({
   const styles = StyleSheet.create({
     name: {
       color: themeStyles?.colors.base,
+      flex: 1,
+      textAlign: 'left',
     },
   });
 

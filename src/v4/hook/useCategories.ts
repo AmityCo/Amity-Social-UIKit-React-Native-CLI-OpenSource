@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import useAuth from '../../hooks/useAuth';
 
-export const useCategories = () => {
+export const useCategories = ({
+  limit = 5,
+}: {
+  limit?: number;
+} = {}) => {
   const { isConnected } = useAuth();
   const [categories, setCategories] = useState<Amity.Category[]>();
   const [loading, setLoading] = useState(true);
@@ -14,7 +18,7 @@ export const useCategories = () => {
     if (!isConnected) return;
 
     const unsubscribe = CategoryRepository.getCategories(
-      { limit: 5 },
+      { limit },
       ({ error, loading, data, hasNextPage, onNextPage }) => {
         setLoading(loading);
         if (error) return;
@@ -29,9 +33,9 @@ export const useCategories = () => {
       }
     );
     return () => {
-      console.log('unsubscribe');
       unsubscribe();
     };
-  }, [isConnected]);
+  }, [isConnected, limit]);
+
   return { categories, hasMore, onNextCategoryPage, loading };
 };

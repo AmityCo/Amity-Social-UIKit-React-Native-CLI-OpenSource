@@ -30,7 +30,7 @@ const AmityCommunityCategoriesComponent: FC<
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const goToCommunitiesByCategoryPage = useCallback(
+  const onPressCategory = useCallback(
     (category: Amity.Category) => {
       navigation.navigate('CommunitiesByCategoryPage', {
         category,
@@ -50,7 +50,7 @@ const AmityCommunityCategoriesComponent: FC<
       testID={accessibilityId}
       data={categories}
       renderItem={({ item }) => (
-        <Pressable onPress={() => goToCommunitiesByCategoryPage(item)}>
+        <Pressable onPress={() => onPressCategory(item)}>
           <CategoryChip category={item} />
         </Pressable>
       )}

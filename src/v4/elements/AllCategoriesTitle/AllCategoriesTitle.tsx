@@ -26,6 +26,8 @@ const AllCategoriesTitle: FC<AllCategoriesTitleProps> = ({
   const styles = StyleSheet.create({
     title: {
       color: themeStyles?.colors.base,
+      flex: 1,
+      textAlign: 'center',
     },
   });
 
