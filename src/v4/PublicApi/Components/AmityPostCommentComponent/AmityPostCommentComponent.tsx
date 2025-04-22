@@ -21,6 +21,7 @@ import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
 import CommentAdComponent from '../../../component/CommentAdComponent/CommentAdComponent';
 import { usePaginatorApi } from '../../../hook/usePaginator';
 import { useCommentAdImpression } from '../../../hook/useCommentAdImpression';
+import { useStyles } from './styles';
 
 export interface IComment {
   commentId: string;
@@ -67,6 +68,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
     pageId,
     componentId,
   });
+  const styles = useStyles();
   const dispatch = useDispatch();
   const { showToastMessage } = uiSlice.actions;
   const onNextPageRef = useRef<() => void | null>(null);
@@ -214,7 +216,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
 
   if (isExcluded) return null;
   return (
-    <View style={{ flex: 1, paddingBottom: 40 }}>
+    <View style={styles.commentListContainer}>
       <FlatList
         ListHeaderComponent={ListHeaderComponent}
         keyboardShouldPersistTaps="handled"
