@@ -294,19 +294,20 @@ export class AdEngine {
     if (communityId) {
       // First try to find ads targeted at this community
       const targetedAds = readyAds.filter((ad) =>
-        ad.targets?.communityIds?.includes(communityId)
+        ad.target?.communityIds?.includes(communityId)
       );
 
       // If none found, fall back to non-targeted ads
       applicableAds =
         targetedAds.length > 0
           ? targetedAds
-          : readyAds.filter((ad) => ad.targets?.communityIds?.length === 0);
+          : readyAds.filter((ad) => ad.target?.communityIds?.length === 0);
     } else {
       // No community ID provided, only use non-targeted ads
-      applicableAds = readyAds.filter(
-        (ad) => !ad.targets || ad.targets?.communityIds.length === 0
-      );
+
+      applicableAds = readyAds.filter((ad) => {
+        return !ad.target || ad.target?.communityIds.length === 0;
+      });
     }
 
     return applicableAds;
