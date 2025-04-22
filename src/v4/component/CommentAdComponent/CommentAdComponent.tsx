@@ -45,6 +45,7 @@ const CommentAdComponent: FC<CommnetAdComponentType> = ({
         pageID={pageId}
         elementID={ElementID.WildCardElement}
         componentID={componentId}
+        // TODO: change default avatar to be SVG with background color
         defaultAvatar={defaultAdAvatarUri}
       />
       <View style={styles.bubble}>
@@ -86,9 +87,9 @@ const CommentAdComponent: FC<CommnetAdComponentType> = ({
           {ad?.image1_1?.fileUrl && (
             <Image
               source={{
-                uri: AssetDownloader.instance.getFilePath(
+                uri: `file://${AssetDownloader.instance.getFilePath(
                   ad?.image1_1?.fileUrl + '?size=large'
-                ),
+                )}`,
               }}
               style={styles.callToActionCardImage}
               resizeMode="cover"
