@@ -28,7 +28,7 @@ export class AdSupplier {
     // calculate score for all ads
     const scores = new Map<string, number>();
     ads.forEach((ad) => {
-      const relevancy = (ad.targets?.communityIds || []).includes(
+      const relevancy = (ad.target?.communityIds || []).includes(
         communityId || ''
       )
         ? 1

@@ -42,6 +42,7 @@ export interface IComment {
 type AmityPostCommentComponentType = {
   pageId?: PageID;
   postId: string;
+  communityId?: string;
   postType: Amity.CommentReferenceType;
   disabledInteraction?: boolean;
   setReplyUserName?: (arg: string) => void;
@@ -54,6 +55,7 @@ const commentListLimit = 10;
 const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
   pageId = PageID.WildCardPage,
   postId,
+  communityId,
   postType,
   disabledInteraction,
   setReplyUserName,
@@ -76,6 +78,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
   const { itemWithAds } = usePaginatorApi<IComment>({
     items: commentList,
     placement: 'comment' as Amity.AdPlacement,
+    communityId,
     pageSize: commentListLimit,
     getItemId: (item) => item.commentId,
   });
