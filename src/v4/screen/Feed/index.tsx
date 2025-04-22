@@ -44,6 +44,7 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
   const { itemWithAds } = usePaginatorApi<Amity.Post | Amity.Ad>({
     items: postData as Amity.Post[],
     placement: 'feed' as Amity.AdPlacement,
+    communityId: targetType === 'community' ? targetId : undefined,
     pageSize: pageLimit,
     getItemId: (item) =>
       isAmityAd(item) ? item?.adId.toString() : item?.postId.toString(),
