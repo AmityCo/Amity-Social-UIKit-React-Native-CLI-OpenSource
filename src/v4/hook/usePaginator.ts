@@ -147,11 +147,14 @@ export const usePaginatorCore = <T>({
         if (newItems.length === 0) {
           return newItems;
         }
-        return [
+
+        const result = [
           ...newItems.slice(0, 1),
-          recommendedAdsRef[0],
+          recommendedAdsRef.current[0],
           ...newItems.slice(1),
         ].filter(Boolean);
+
+        return result;
       }
       return newItems;
     },
