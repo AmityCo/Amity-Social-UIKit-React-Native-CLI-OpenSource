@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enum';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import { useStyles } from './styles';
 import { useAmityComponent } from '../../hook';
 import { star } from '../../../svg/svg-xml-list';
@@ -49,7 +49,7 @@ const CommentAdComponent: FC<CommnetAdComponentType> = ({
         defaultAvatar={defaultAdAvatarUri}
       />
       <View style={styles.bubble}>
-        <TouchableOpacity
+        <Pressable
           style={styles.infoIcon}
           onPress={() => {
             ad?.advertiser?.companyName &&
@@ -67,7 +67,7 @@ const CommentAdComponent: FC<CommnetAdComponentType> = ({
           }}
         >
           <SvgXml xml={infoIcon()} width="16" height="16" />
-        </TouchableOpacity>
+        </Pressable>
         <View style={styles.header}>
           <Text numberOfLines={1} style={styles.headerText}>
             {ad?.advertiser?.name}
@@ -83,7 +83,14 @@ const CommentAdComponent: FC<CommnetAdComponentType> = ({
           </View>
         </View>
         {ad.body && <Text style={styles.textContent}>{ad.body}</Text>}
-        <View style={styles.callToActionCard}>
+        <Pressable
+          style={styles.callToActionCard}
+          onPress={() => {
+            if (!ad?.callToActionUrl) return;
+            AdEngine.instance.markClicked(ad, 'comment' as Amity.AdPlacement);
+            Linking.openURL(ad?.callToActionUrl);
+          }}
+        >
           {ad?.image1_1?.fileUrl && (
             <Image
               source={{
@@ -104,23 +111,14 @@ const CommentAdComponent: FC<CommnetAdComponentType> = ({
             </Text>
 
             {ad?.callToActionUrl && (
-              <TouchableOpacity
-                style={styles.callToActionButton}
-                onPress={() => {
-                  AdEngine.instance.markClicked(
-                    ad,
-                    'comment' as Amity.AdPlacement
-                  );
-                  Linking.openURL(ad?.callToActionUrl);
-                }}
-              >
+              <View style={styles.callToActionButton}>
                 <Text numberOfLines={1} style={styles.callToActionText}>
                   {ad.callToAction}
                 </Text>
-              </TouchableOpacity>
+              </View>
             )}
           </View>
-        </View>
+        </Pressable>
       </View>
     </View>
   );
