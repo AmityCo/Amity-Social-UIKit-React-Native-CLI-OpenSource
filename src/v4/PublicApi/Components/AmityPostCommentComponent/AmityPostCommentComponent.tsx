@@ -101,11 +101,9 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
           return;
         }
         if (!loading) {
-          console.log('comment data change => ', data.length);
           data && data.length > 0 && (await queryComment(data));
           onNextPageRef.current = hasNextPage ? onNextPage : null;
           setTimeout(() => {
-            console.log('setIsLoading => ', loading);
             setIsLoading(false);
           }, 1000);
         }
