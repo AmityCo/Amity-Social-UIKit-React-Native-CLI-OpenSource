@@ -17,7 +17,7 @@ export const useStyles = () => {
       paddingTop: 4,
     },
     headerSection: {
-      paddingVertical: 12,
+      paddingVertical: 4,
       flexDirection: 'row',
     },
     replyHeaderSection: {
@@ -33,7 +33,6 @@ export const useStyles = () => {
     headerTextTime: {
       fontSize: 13,
       fontWeight: '400',
-      marginVertical: 4,
       color: theme.colors.baseShade1,
     },
     avatar: {
@@ -49,7 +48,6 @@ export const useStyles = () => {
       width: '90%',
     },
     commentBubble: {
-      marginBottom: 4,
       padding: 12,
       backgroundColor: theme.colors.baseShade4,
       borderRadius: 12,
@@ -63,10 +61,10 @@ export const useStyles = () => {
       backgroundColor: theme.colors.baseShade4,
       paddingVertical: 5,
       paddingHorizontal: 8,
-      marginTop: 12,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+      marginBottom: 16,
     },
     viewMoreText: {
       fontWeight: '600',
@@ -87,6 +85,8 @@ export const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+      paddingTop: 8,
+      paddingBottom: 12,
     },
     rowContainer: {
       flexDirection: 'row',
