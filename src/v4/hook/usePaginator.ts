@@ -67,6 +67,33 @@ export const usePaginatorCore = <T>({
       .filter(Boolean) as Array<ItemWithAd<T>>;
   };
 
+  const calculateTopIndex = (
+    startItem: ItemWithAd<T> | undefined,
+    newItems: T[]
+  ): number => {
+    if (!startItem) return 0;
+
+    const foundedIndex = newItems.findIndex(
+      (newItem) => getItemId(newItem) === getItemId(startItem[0])
+    );
+
+    return foundedIndex === -1 ? 0 : foundedIndex;
+  };
+
+  const filterNewItems = (
+    newItems: T[],
+    topIndex: number,
+    prevItems: Array<ItemWithAd<T>>
+  ): T[] => {
+    return newItems.slice(topIndex).filter((newItem) => {
+      const itemId = getItemId(newItem);
+      return !prevItems.some(
+        (prevItem) =>
+          prevItem && prevItem[0] && getItemId(prevItem[0]) === itemId
+      );
+    });
+  };
+
   const frequency = AdEngine.instance.getAdFrequencyByPlacement(placement);
 
   const count = (() => {
@@ -100,48 +127,15 @@ export const usePaginatorCore = <T>({
     }
     if (frequency?.type === 'fixed') {
       const newItemIds = new Set(newItems.map((item) => getItemId(item)));
-      const prevItemWithAds: Array<[T] | [T, Amity.Ad]> = (
-        itemWithAdsRef.current || []
-      )
-        .map((itemWithAd) => {
-          const itemId = getItemId(itemWithAd[0]);
-
-          if (!newItemIds.has(itemId)) {
-            return null;
-          }
-
-          const updatedItem = newItems.find(
-            (newItem) => getItemId(newItem) === itemId
-          );
-
-          if (updatedItem) {
-            if (itemWithAd.length === 1) {
-              return [updatedItem] as [T];
-            }
-            return [updatedItem, itemWithAd[1]] as [T, Amity.Ad];
-          }
-
-          return itemWithAd;
-        })
-        .filter((item) => item != null) as Array<[T] | [T, Amity.Ad]>;
+      const prevItemWithAds: Array<ItemWithAd<T>> = updateExistingItems(
+        newItems,
+        newItemIds
+      );
 
       const startItem = prevItemWithAds[0];
-
       // Find the index of the first item in newItems that matches the first item in prevItemWithAds
       // The prepending items are not count as the neweset items.
-
-      const topIndex = (() => {
-        if (startItem) {
-          const foundedIndex = newItems.findIndex(
-            (newItem) => getItemId(newItem) === getItemId(startItem[0])
-          );
-          if (foundedIndex === -1) {
-            return 0;
-          }
-          return foundedIndex;
-        }
-        return 0;
-      })();
+      const topIndex = calculateTopIndex(startItem, newItems);
 
       const newestItems: Array<[T]> = (newItems || [])
         .slice(0, topIndex)
@@ -150,15 +144,12 @@ export const usePaginatorCore = <T>({
       const prevItems = [...newestItems, ...prevItemWithAds];
 
       // filteredNewItems is the newest items in the next page that are not in prevItems
-      const filteredNewItems = newItems.slice(topIndex).filter((newItem) => {
-        const itemId = getItemId(newItem);
-        return !prevItems.some((prevItem) => getItemId(prevItem[0]) === itemId);
-      });
+      const filteredNewItems = filterNewItems(newItems, topIndex, prevItems);
 
       let runningAdIndex = currentAdIndex;
       let runningIndex = currentIndex;
 
-      const suffixItems: Array<[T] | [T, Amity.Ad]> = filteredNewItems.map(
+      const suffixItems: Array<ItemWithAd<T>> = filteredNewItems.map(
         (newItem) => {
           runningIndex = runningIndex + 1; // 1
           const shouldPlaceAd = runningIndex % frequency.value === 0;
@@ -191,61 +182,16 @@ export const usePaginatorCore = <T>({
       return result;
     } else if (frequency?.type === 'time-window') {
       const newItemIds = new Set(newItems.map((item) => getItemId(item)));
-
-      const prevItemWithAds: Array<[T] | [T, Amity.Ad]> = (
-        itemWithAdsRef.current || []
-      )
-        .map((itemWithAd) => {
-          const itemId = getItemId(itemWithAd[0]);
-
-          if (!newItemIds.has(itemId)) {
-            return null;
-          }
-
-          const updatedItem = newItems.find(
-            (newItem) => getItemId(newItem) === itemId
-          );
-
-          if (updatedItem) {
-            if (itemWithAd.length === 1) {
-              return [updatedItem] as [T];
-            }
-            return [updatedItem, itemWithAd[1]] as [T, Amity.Ad];
-          }
-
-          return itemWithAd;
-        })
-        .filter((item) => item != null) as Array<[T] | [T, Amity.Ad]>;
-
+      const prevItemWithAds = updateExistingItems(newItems, newItemIds);
       const startItem = prevItemWithAds[0];
-      const topIndex = (() => {
-        if (startItem) {
-          const foundedIndex = newItems.findIndex(
-            (newItem) => getItemId(newItem) === getItemId(startItem[0])
-          );
-          if (foundedIndex === -1) {
-            return 0;
-          }
-          return foundedIndex;
-        }
-        return 0;
-      })();
-
+      const topIndex = calculateTopIndex(startItem, newItems);
       const newestItems: Array<[T]> = (newItems || [])
         .slice(0, topIndex)
         .map((item) => [item]);
 
       const prevItems = [...newestItems, ...prevItemWithAds];
-
-      const filteredNewItems = newItems.slice(topIndex).filter((newItem) => {
-        const itemId = getItemId(newItem);
-        return !prevItems.some(
-          (prevItem) =>
-            prevItem && prevItem[0] && getItemId(prevItem[0]) === itemId
-        );
-      });
-
-      const suffixItems: Array<[T] | [T, Amity.Ad]> = filteredNewItems.map(
+      const filteredNewItems = filterNewItems(newItems, topIndex, prevItems);
+      const suffixItems: Array<ItemWithAd<T>> = filteredNewItems.map(
         (newItem, index) => {
           if (hasAppenedTimeWindowAds) {
             return [newItem];
@@ -263,12 +209,12 @@ export const usePaginatorCore = <T>({
       );
 
       setHasAppenedTimeWindowAds(true);
+
       const newItemsWithAds = [...prevItems, ...suffixItems];
 
       updateItemWithAds(newItemsWithAds);
 
       const result = newItemsWithAds.flatMap((item) => item).filter(Boolean);
-
       return result;
     }
     return newItems;
