@@ -13,11 +13,12 @@ export const useCommentAdImpression = () => {
   useEffect(() => {
     if (commentsView.length > 0) {
       for (const viewableComment of commentsView) {
-        if (!isAmityAd(viewableComment.item)) return;
-        AdEngine.instance.markSeen(
-          viewableComment.item,
-          'comment' as Amity.AdPlacement
-        );
+        if (isAmityAd(viewableComment.item)) {
+          AdEngine.instance.markSeen(
+            viewableComment.item,
+            'comment' as Amity.AdPlacement
+          );
+        }
       }
     }
   }, [commentsView]);
