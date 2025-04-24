@@ -1,5 +1,5 @@
 import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,7 @@ export const useCustomRankingGlobalFeed = () => {
 
   const { itemWithAds, reset } = usePaginatorApi<IPost | Amity.Ad>({
     items: postList as (IPost | Amity.Ad)[],
+    isLoading: fetching,
     placement: 'feed' as Amity.AdPlacement,
     pageSize: globalFeedPageLimit,
     getItemId: (item) => (item as IPost).postId.toString(),
@@ -84,7 +85,6 @@ export const useCustomRankingGlobalFeed = () => {
     });
 
     if (data) {
-      setFetching(false);
       dispatch(setPaginationData({ next, previous }));
       const processedPosts = await processPosts(data);
       if (!queryToken) {
@@ -92,6 +92,8 @@ export const useCustomRankingGlobalFeed = () => {
       } else {
         dispatch(updateGlobalFeed(processedPosts));
       }
+
+      setFetching(false);
     }
   };
 

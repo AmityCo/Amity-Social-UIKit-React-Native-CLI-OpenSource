@@ -1,16 +1,17 @@
 import { StyleSheet } from 'react-native';
 import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import { hexToRgba } from '../../../util/colorUtil';
 
 export const useStyles = (theme: MyMD3Theme) => {
   const styles = StyleSheet.create({
     container: {
       backgroundColor: theme.colors.background,
-      marginTop: 8,
       paddingHorizontal: 16,
       paddingTop: 4,
       width: '100%',
       flexDirection: 'row',
       gap: 8,
+      paddingBottom: 16,
     },
     avatar: {
       height: 32,
@@ -42,12 +43,11 @@ export const useStyles = (theme: MyMD3Theme) => {
     adBadge: {
       flexDirection: 'row',
       gap: 2,
-      backgroundColor: theme.colors.baseShade1,
       fontSize: 11,
       borderRadius: 20,
       paddingLeft: 4,
       paddingRight: 6,
-      opacity: 0.5,
+      backgroundColor: hexToRgba(theme.colors.baseShade1, 0.5),
       alignItems: 'center',
       alignSelf: 'flex-start',
     },
@@ -106,7 +106,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       paddingHorizontal: 8,
       paddingVertical: 5,
       backgroundColor: theme.colors.primary,
-      borderRadius: 4,
+      borderRadius: 6,
       alignSelf: 'flex-start',
     },
     callToActionText: {

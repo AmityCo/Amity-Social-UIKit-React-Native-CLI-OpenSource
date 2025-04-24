@@ -47,6 +47,11 @@ export const useStyles = () => {
       marginHorizontal: 12,
       marginBottom: 4,
     },
+    commentListContainer: {
+      flex: 1,
+      paddingBottom: 40,
+      marginTop: 8,
+    },
     commentItem: {
       padding: 16,
       borderBottomWidth: 1,
