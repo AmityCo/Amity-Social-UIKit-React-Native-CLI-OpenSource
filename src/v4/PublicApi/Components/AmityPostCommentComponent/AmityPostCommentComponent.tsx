@@ -223,7 +223,9 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         keyboardShouldPersistTaps="handled"
         data={itemWithAds}
         renderItem={renderCommentListItem}
-        keyExtractor={(item) => (isAmityAd(item) ? item.adId : item.commentId)}
+        keyExtractor={(item, index) =>
+          (isAmityAd(item) ? item.adId : item.commentId) + `_${index}`
+        }
         onEndReachedThreshold={0.8}
         viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
         onEndReached={() => {
