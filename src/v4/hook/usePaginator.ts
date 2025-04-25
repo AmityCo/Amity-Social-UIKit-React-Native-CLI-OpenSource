@@ -12,13 +12,13 @@ export const usePaginatorCore = <T>({
   pageSize,
   communityId,
   getItemId,
-  hasAppenedTimeWindowAdsState,
+  hasAppenedFirstRoundAdsState,
 }: {
   placement: Amity.AdPlacement;
   pageSize: number;
   communityId?: string;
   getItemId: (item: T) => string;
-  hasAppenedTimeWindowAdsState: [boolean, (value: boolean) => void]; // Pass state as a tuple
+  hasAppenedFirstRoundAdsState: [boolean, (value: boolean) => void]; // Pass state as a tuple
 }) => {
   const adSettings = useAdSettings();
 
@@ -28,8 +28,8 @@ export const usePaginatorCore = <T>({
 
   // Add this ref to track items
   const itemWithAdsRef = useRef<Array<[T] | [T, Amity.Ad]>>([]);
-  const [hasAppenedTimeWindowAds, setHasAppenedTimeWindowAds] =
-    hasAppenedTimeWindowAdsState;
+  const [hasAppenedFirstRoundAds, setHasAppenedFirstRoundAds] =
+    hasAppenedFirstRoundAdsState;
 
   // Modify your state update
   const updateItemWithAds = (items: Array<[T] | [T, Amity.Ad]>) => {
@@ -69,8 +69,11 @@ export const usePaginatorCore = <T>({
 
   const calculateTopIndex = (
     startItem: ItemWithAd<T> | undefined,
-    newItems: T[]
+    newItems: T[],
+    hasAppenedAds = false
   ): number => {
+    if (hasAppenedAds) return 1;
+
     if (!startItem) return 0;
 
     const foundedIndex = newItems.findIndex(
@@ -135,7 +138,11 @@ export const usePaginatorCore = <T>({
       const startItem = prevItemWithAds[0];
       // Find the index of the first item in newItems that matches the first item in prevItemWithAds
       // The prepending items are not count as the neweset items.
-      const topIndex = calculateTopIndex(startItem, newItems);
+      const topIndex = calculateTopIndex(
+        startItem,
+        newItems,
+        hasAppenedFirstRoundAds
+      );
 
       const newestItems: Array<[T]> = (newItems || [])
         .slice(0, topIndex)
@@ -166,6 +173,8 @@ export const usePaginatorCore = <T>({
         }
       );
 
+      setHasAppenedFirstRoundAds(true);
+
       setCurrentAdIndex(runningAdIndex);
       setCurrentIndex(runningIndex);
 
@@ -193,7 +202,7 @@ export const usePaginatorCore = <T>({
       const filteredNewItems = filterNewItems(newItems, topIndex, prevItems);
       const suffixItems: Array<ItemWithAd<T>> = filteredNewItems.map(
         (newItem, index) => {
-          if (hasAppenedTimeWindowAds) {
+          if (hasAppenedFirstRoundAds) {
             return [newItem];
           }
 
@@ -208,7 +217,7 @@ export const usePaginatorCore = <T>({
         }
       );
 
-      setHasAppenedTimeWindowAds(true);
+      setHasAppenedFirstRoundAds(true);
 
       const newItemsWithAds = [...prevItems, ...suffixItems];
 
@@ -233,7 +242,7 @@ export const usePaginatorCore = <T>({
     setAdsLoaded(false);
     resetRecommendedAds();
     setCurrentIndex(0);
-    setHasAppenedTimeWindowAds(false);
+    setHasAppenedFirstRoundAds(false);
     itemWithAdsRef.current = [];
     recommendedAdsRef.current = [];
   };
@@ -249,7 +258,7 @@ export const usePaginatorApi = <T>(params: {
   getItemId: (item: T) => string;
   isLoading?: boolean;
 }) => {
-  const [hasAppenedTimeWindowAds, setHasAppenedTimeWindowAds] = useState(false);
+  const [hasAppenedFirstRoundAds, setHasAppenedFirstRoundAds] = useState(false);
 
   const { items, ...rest } = params;
   const {
@@ -258,15 +267,15 @@ export const usePaginatorApi = <T>(params: {
     reset: coreReset,
   } = usePaginatorCore({
     ...rest,
-    hasAppenedTimeWindowAdsState: [
-      hasAppenedTimeWindowAds,
-      setHasAppenedTimeWindowAds,
+    hasAppenedFirstRoundAdsState: [
+      hasAppenedFirstRoundAds,
+      setHasAppenedFirstRoundAds,
     ],
   });
 
   const reset = useCallback(() => {
     coreReset();
-    setHasAppenedTimeWindowAds(false);
+    setHasAppenedFirstRoundAds(false);
   }, [coreReset]);
 
   const itemWithAds = useMemo(() => {

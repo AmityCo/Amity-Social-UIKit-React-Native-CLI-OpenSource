@@ -311,7 +311,7 @@ const CommentList: FC<ICommentListProp> = ({
           );
         }}
         keyExtractor={(item, index) =>
-          (isAmityAd(item) ? item.adId : item.commentId) + index
+          (isAmityAd(item) ? item.adId : item.commentId) + `_${index}`
         }
         onEndReachedThreshold={0.8}
         onEndReached={() => onNextPageRef.current && onNextPageRef.current()}
