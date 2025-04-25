@@ -17,9 +17,20 @@ export const useStyles = () => {
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
+    headerRowLeft: {
+      flexDirection: 'column',
+      flex: 0,
+      flexShrink: 1,
+    },
+    displayNameContainer: {
+      flex: 1,
+    },
     communityNameContainer: {
       flex: 1,
       flexDirection: 'row',
+    },
+    communityNameButton: {
+      flex: 1,
     },
     fillSpace: {
       flex: 1,
@@ -107,7 +118,6 @@ export const useStyles = () => {
     },
     headerRow: {
       flexDirection: 'row',
-      flex: 1,
     },
     arrow: {
       marginHorizontal: 4,
@@ -211,7 +221,14 @@ export const useStyles = () => {
       minHeight: 375,
     },
     threeDots: {
-      padding: 5,
+      width: 24,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    threeDotsIcon: {
+      width: 20,
+      height: 20,
     },
     modalContainer: {
       flex: 1,

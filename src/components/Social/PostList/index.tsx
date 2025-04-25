@@ -418,9 +418,25 @@ export default function PostList({
 
           <View style={styles.fillSpace}>
             <View style={styles.headerRow}>
-              <TouchableOpacity onPress={handleDisplayNamePress}>
-                <Text style={styles.headerText}>{user?.displayName}</Text>
-              </TouchableOpacity>
+              <View style={styles.headerRowLeft}>
+                <TouchableOpacity
+                  onPress={handleDisplayNamePress}
+                  style={styles.displayNameContainer}
+                >
+                  <Text style={styles.headerText} numberOfLines={1}>
+                    {user?.displayName}
+                  </Text>
+                </TouchableOpacity>
+                <View style={styles.timeRow}>
+                  <Text style={styles.headerTextTime}>{timeDifference}</Text>
+                  {(editedAt !== createdAt || isEdit) && (
+                    <Text style={styles.dot}>·</Text>
+                  )}
+                  {(editedAt !== createdAt || isEdit) && (
+                    <Text style={styles.headerTextTime}>Edited</Text>
+                  )}
+                </View>
+              </View>
 
               {communityName && (
                 <View style={styles.communityNameContainer}>
@@ -430,8 +446,10 @@ export default function PostList({
                     width="8"
                     height="8"
                   />
-
-                  <TouchableOpacity onPress={handleCommunityNamePress}>
+                  <TouchableOpacity
+                    onPress={handleCommunityNamePress}
+                    style={styles.communityNameButton}
+                  >
                     <Text
                       ellipsizeMode="tail"
                       numberOfLines={3}
@@ -442,21 +460,15 @@ export default function PostList({
                   </TouchableOpacity>
                 </View>
               )}
-            </View>
-            <View style={styles.timeRow}>
-              <Text style={styles.headerTextTime}>{timeDifference}</Text>
-              {(editedAt !== createdAt || isEdit) && (
-                <Text style={styles.dot}>·</Text>
-              )}
-              {(editedAt !== createdAt || isEdit) && (
-                <Text style={styles.headerTextTime}>Edited</Text>
-              )}
+              <TouchableOpacity onPress={openModal} style={styles.threeDots}>
+                <SvgXml
+                  xml={threeDots(theme.colors.base)}
+                  style={styles.threeDotsIcon}
+                />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
-        <TouchableOpacity onPress={openModal} style={styles.threeDots}>
-          <SvgXml xml={threeDots(theme.colors.base)} width="20" height="16" />
-        </TouchableOpacity>
       </View>
       <View>
         <View style={styles.bodySection}>
