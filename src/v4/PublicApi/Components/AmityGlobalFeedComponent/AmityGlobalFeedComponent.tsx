@@ -106,7 +106,8 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
         );
       }}
       keyExtractor={(item, index) =>
-        isAmityAd(item) ? item.adId.toString() + index : item.postId.toString()
+        (isAmityAd(item) ? item.adId.toString() : item.postId.toString()) +
+        `_${index}`
       }
       onEndReachedThreshold={0.5}
       onEndReached={handleLoadMore}

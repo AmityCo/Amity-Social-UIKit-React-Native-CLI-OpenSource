@@ -17,8 +17,13 @@ import { useAmityComponent } from '../../../hook';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 import { useDispatch } from 'react-redux';
 import uiSlice from '../../../../redux/slices/uiSlice';
+import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
+import CommentAdComponent from '../../../component/CommentAdComponent/CommentAdComponent';
+import { usePaginatorApi } from '../../../hook/usePaginator';
+import { useCommentAdImpression } from '../../../hook/useCommentAdImpression';
+import { useStyles } from './styles';
 
-interface IComment {
+export interface IComment {
   commentId: string;
   data: Record<string, any>;
   dataType: string | undefined;
@@ -38,6 +43,7 @@ interface IComment {
 type AmityPostCommentComponentType = {
   pageId?: PageID;
   postId: string;
+  communityId?: string;
   postType: Amity.CommentReferenceType;
   disabledInteraction?: boolean;
   setReplyUserName?: (arg: string) => void;
@@ -45,9 +51,12 @@ type AmityPostCommentComponentType = {
   ListHeaderComponent?: JSX.Element;
 };
 
+const commentListLimit = 10;
+
 const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
   pageId = PageID.WildCardPage,
   postId,
+  communityId,
   postType,
   disabledInteraction,
   setReplyUserName,
@@ -59,11 +68,24 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
     pageId,
     componentId,
   });
+  const styles = useStyles();
   const dispatch = useDispatch();
   const { showToastMessage } = uiSlice.actions;
   const onNextPageRef = useRef<() => void | null>(null);
   const [commentList, setCommentList] = useState<IComment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { handleViewChange } = useCommentAdImpression();
+
+  const { itemWithAds } = usePaginatorApi<IComment>({
+    items: commentList,
+    isLoading,
+    placement: 'comment' as Amity.AdPlacement,
+    communityId,
+    pageSize: commentListLimit,
+    getItemId: (item) => item.commentId,
+  });
+
   useEffect(() => {
     if (!postId) return () => {};
     const unsubComment = CommentRepository.getComments(
@@ -71,7 +93,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         dataTypes: { matchType: 'any', values: ['text', 'image'] },
         referenceId: postId,
         referenceType: postType,
-        limit: 10,
+        limit: commentListLimit,
       },
       async ({ error, loading, data, hasNextPage, onNextPage }) => {
         if (error) {
@@ -167,6 +189,10 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         );
       }
 
+      if (isAmityAd(item)) {
+        return <CommentAdComponent ad={item} pageId={pageId} />;
+      }
+
       return (
         <CommentListItem
           onDelete={onDeleteComment}
@@ -185,22 +211,27 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
       postType,
       themeStyles.colors.baseShade2,
       themeStyles.colors.baseShade4,
+      pageId,
     ]
   );
 
   if (isExcluded) return null;
   return (
-    <View style={{ flex: 1, paddingBottom: 40 }}>
+    <View style={styles.commentListContainer}>
       <FlatList
         ListHeaderComponent={ListHeaderComponent}
         keyboardShouldPersistTaps="handled"
-        data={commentList}
+        data={itemWithAds}
         renderItem={renderCommentListItem}
-        keyExtractor={(item) => item.commentId}
+        keyExtractor={(item, index) =>
+          (isAmityAd(item) ? item.adId : item.commentId) + `_${index}`
+        }
         onEndReachedThreshold={0.8}
+        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
         onEndReached={() => {
           onNextPageRef.current && onNextPageRef.current();
         }}
+        onViewableItemsChanged={handleViewChange}
       />
     </View>
   );

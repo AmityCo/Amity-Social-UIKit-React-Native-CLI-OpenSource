@@ -552,6 +552,9 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId }) => {
           setReplyUserName={setReplyUserName}
           setReplyCommentId={setReplyCommentId}
           postId={postId}
+          communityId={
+            postData?.targetType === 'community' && postData?.targetId
+          }
           postType="post"
           disabledInteraction={false}
           ListHeaderComponent={

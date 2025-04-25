@@ -38,12 +38,15 @@ const pageLimit = 10;
 function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
   const styles = useStyles();
   const [postData, setPostData] = useState<Amity.Post>([]);
+  const [loading, setLoading] = useState(false);
   const [onNextPage, setOnNextPage] = useState(null);
   const disposers: Amity.Unsubscriber[] = useMemo(() => [], []);
 
   const { itemWithAds } = usePaginatorApi<Amity.Post | Amity.Ad>({
     items: postData as Amity.Post[],
+    isLoading: loading,
     placement: 'feed' as Amity.AdPlacement,
+    communityId: targetType === 'community' ? targetId : undefined,
     pageSize: pageLimit,
     getItemId: (item) =>
       isAmityAd(item) ? item?.adId.toString() : item?.postId.toString(),
@@ -119,6 +122,7 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
             setOnNextPage(hasNextPage ? () => nextPage : null);
             const formattedPostList = await amityPostsFormatter(filterData);
             setPostData(formattedPostList);
+            setLoading(false);
             subscribePostTopic(targetType, targetId);
           }
         }
