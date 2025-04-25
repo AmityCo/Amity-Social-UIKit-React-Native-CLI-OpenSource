@@ -1,5 +1,5 @@
 import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import { useDispatch, useSelector } from 'react-redux';
