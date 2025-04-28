@@ -165,10 +165,10 @@
     "social_home_page/my_communities/community_avatar": {},
     "social_home_page/my_communities/community_display_name": {},
     "social_home_page/my_communities/community_private_badge": {
-      "icon": "lockIcon"
+      "image": "lockIcon"
     },
     "social_home_page/my_communities/community_official_badge": {
-      "icon": "officialBadgeIcon"
+      "image": "officialBadgeIcon"
     },
     "social_home_page/my_communities/community_category_name": {},
     "social_home_page/my_communities/community_members_count": {},
@@ -216,10 +216,10 @@
     "social_global_search_page/community_search_result/community_avatar": {},
     "social_global_search_page/community_search_result/community_display_name": {},
     "social_global_search_page/community_search_result/community_private_badge": {
-      "icon": "lockIcon"
+      "image": "lockIcon"
     },
     "social_global_search_page/community_search_result/community_official_badge": {
-      "icon": "officialBadgeIcon"
+      "image": "officialBadgeIcon"
     },
     "social_global_search_page/community_search_result/community_category_name": {},
     "social_global_search_page/community_search_result/community_members_count": {},

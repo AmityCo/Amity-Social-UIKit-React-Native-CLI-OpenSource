@@ -20,6 +20,12 @@ export const useStyles = () => {
       gap: 4,
       flex: 1,
     },
+    displayName: {
+      flexDirection: 'row',
+      gap: 2,
+      alignItems: 'center',
+      marginBottom: 4,
+    },
   });
   return styles;
 };

@@ -8,9 +8,11 @@ import CommunityJoinedButton from '../../../../elements/CommunityJoinedButtonEle
 import CommunityJoinButton from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import { SvgXml } from 'react-native-svg';
 import { community as communityIcon } from '../../../../assets/icons';
+import CommunityPrivateBadge from '../../../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
+import CommunityOfficialBadge from '../../../../elements/CommunityOfficialBadge/CommunityOfficialBadge';
 import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityCategory';
 import CommunityMemeberCount from '../../../../elements/CommunityMemeberCount/CommunityMemeberCount';
-import { CommunityDisplayname } from '../../../../elements/CommunityDisplayname/CommunityDisplayname';
+import CommunityDisplayname from '../../../../elements/CommunityDisplayname/CommunityDisplayname';
 
 type RecommendedCommunityItemProps = {
   pageId?: PageID;
@@ -54,11 +56,20 @@ export const RecommendedCommunityItem: React.FC<
       )}
 
       <View style={styles.detailWrap}>
-        <CommunityDisplayname
-          pageId={pageId}
-          componentId={componentId}
-          community={community}
-        />
+        <View style={styles.displayName}>
+          {!community.isPublic && (
+            <CommunityPrivateBadge pageId={pageId} componentId={componentId} />
+          )}
+          <CommunityDisplayname
+            communityName={community.displayName}
+            pageId={pageId}
+            componentId={componentId}
+          />
+
+          {community.isOfficial && (
+            <CommunityOfficialBadge pageId={pageId} componentId={componentId} />
+          )}
+        </View>
         <View style={styles.detailBottomWrap}>
           <View style={styles.detailBottomWrapLeft}>
             <CommunityCategory

@@ -5,10 +5,12 @@ import { ComponentID, PageID } from '../../enum';
 import { View } from 'react-native';
 import CommunityJoinedButtonElement from '../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
 import CommunityJoinButtonElement from '../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
-import { CommunityDisplayname } from '../../elements/CommunityDisplayname/CommunityDisplayname';
+import CommunityDisplayname from '../../elements/CommunityDisplayname/CommunityDisplayname';
 import CommunityCategory from '../../elements/CommunityCatetory/CommunityCategory';
 import CommunityMemeberCount from '../../elements/CommunityMemeberCount/CommunityMemeberCount';
 import { useStyles } from './styles';
+import CommunityPrivateBadge from '../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
+import CommunityOfficialBadge from '../../elements/CommunityOfficialBadge/CommunityOfficialBadge';
 
 type CommunityRowItemProps = {
   pageId?: PageID;
@@ -36,11 +38,20 @@ const CommunityRowItem: FC<CommunityRowItemProps> = ({
         label={label}
       />
       <View style={styles.detailWrap}>
-        <CommunityDisplayname
-          community={community}
-          pageId={pageId}
-          componentId={componentId}
-        />
+        <View style={styles.displayName}>
+          {!community.isPublic && (
+            <CommunityPrivateBadge pageId={pageId} componentId={componentId} />
+          )}
+          <CommunityDisplayname
+            communityName={community.displayName}
+            pageId={pageId}
+            componentId={componentId}
+          />
+
+          {community.isOfficial && (
+            <CommunityOfficialBadge pageId={pageId} componentId={componentId} />
+          )}
+        </View>
         <View style={styles.detailBottomWrap}>
           <View style={styles.detailBottomWrapLeft}>
             <CommunityCategory
