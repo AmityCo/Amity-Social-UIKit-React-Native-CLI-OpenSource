@@ -227,6 +227,7 @@
     "react-i18next": "12.1.5",
     "react-native-controlled-mentions": "^2.2.5",
     "react-native-insta-story": "^1.1.9",
+    "react-native-linear-gradient": "^2.8.3",
     "react-native-modal-selector": "^2.1.2",
     "react-native-orientation-locker": "^1.5.0",
     "react-native-paper": "^5.10.6",

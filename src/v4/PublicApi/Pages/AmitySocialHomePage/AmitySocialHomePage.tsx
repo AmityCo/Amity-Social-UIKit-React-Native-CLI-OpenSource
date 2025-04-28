@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { LogBox, SafeAreaView } from 'react-native';
-import Explore from '../../../../screens/Explore';
 import CustomSocialTab from '../../../component/CustomSocialTab/CustomSocialTab';
-import { useUiKitConfig } from '../../../hook';
+import { useAmityPage, useUiKitConfig } from '../../../hook';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
 import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
@@ -13,11 +12,15 @@ import AmityEmptyNewsFeedComponent from '../../Components/AmityEmptyNewsFeedComp
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import AmityMyCommunitiesComponent from '../../Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
 import AmityNewsFeedComponent from '../../Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
+import AmityExploreComponent from '../../Components/AmityExploreComponent/AmityExploreComponent';
 import NewsFeedLoadingComponent from '../../../component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
+import Divider from '../../../component/Divider';
+
 LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {
   const theme = useTheme() as MyMD3Theme;
   const { AmitySocialHomePageBehaviour } = useBehaviour();
+  const { themeStyles } = useAmityPage({ pageId: PageID.social_home_page });
   const [newsFeedTab] = useUiKitConfig({
     page: PageID.social_home_page,
     component: ComponentID.WildCardComponent,
@@ -67,7 +70,8 @@ const AmitySocialHomePage = () => {
 
   const renderNewsFeed = () => {
     if (pageLoading) return <NewsFeedLoadingComponent />;
-    if (activeTab === exploreTab) return <Explore />;
+    if (activeTab === exploreTab)
+      return <AmityExploreComponent pageId={PageID.social_home_page} />;
     if (!myCommunities?.length)
       return (
         <AmityEmptyNewsFeedComponent
@@ -104,6 +108,7 @@ const AmitySocialHomePage = () => {
         onTabChange={onTabChange}
         activeTab={activeTab}
       />
+      <Divider themeStyles={themeStyles} />
       {renderNewsFeed()}
     </SafeAreaView>
   );

@@ -114,7 +114,7 @@ export default function UserProfile({ route }: any) {
           }}
         >
           <Image
-            source={require('../../assets/icon/threeDot.png')}
+            source={require('../../assets/images/threeDot.png')}
             style={styles.dotIcon}
           />
         </TouchableOpacity>
@@ -194,7 +194,7 @@ export default function UserProfile({ route }: any) {
     return (
       <TouchableOpacity style={styles.followButton} onPress={onFollowTap}>
         <Image
-          source={require('../../assets/icon/followPlus.png')}
+          source={require('../../assets/images/followPlus.png')}
           style={styles.followIcon}
         />
         <Text style={styles.followText}>Follow</Text>

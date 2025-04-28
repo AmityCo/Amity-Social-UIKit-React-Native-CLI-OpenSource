@@ -31,6 +31,7 @@ const BackButtonIconElement: FC<BackButtonIconElementType> = ({
     },
     configKey: configKey,
   });
+
   if (excludes.includes(configId)) return null;
 
   return (
