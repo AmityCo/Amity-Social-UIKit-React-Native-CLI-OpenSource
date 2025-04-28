@@ -1,4 +1,4 @@
-import { FlatList, Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import React, { FC, memo, useCallback } from 'react';
 import { useStyles } from './styles';
 import { useAmityComponent, useCommunities } from '../../../hook/';
@@ -7,8 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
-import CommunityRowItem from '../../../component/CommunityRowItem/CommunityRowItem';
-import CommunityListSkeleton from '../../../component/CommunityListSkeleton/CommunityListSkeleton';
+import CommunitySearchResult from '../../../component/CommunitySearchResult/CommunitySearchResult';
 
 type AmityMyCommunitiesComponentType = {
   pageId?: PageID;
@@ -19,7 +18,7 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
 }) => {
-  const { isExcluded, accessibilityId, themeStyles } = useAmityComponent({
+  const { isExcluded, accessibilityId } = useAmityComponent({
     pageId,
     componentId,
   });
@@ -41,18 +40,6 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
     [navigation, AmityMyCommunitiesComponentBehaviour]
   );
 
-  const renderLoading = useCallback(() => {
-    return (
-      <View style={styles.listSkeleton}>
-        <CommunityListSkeleton
-          themeStyle={themeStyles}
-          amount={12}
-          hasTitle={false}
-        />
-      </View>
-    );
-  }, [themeStyles, styles.listSkeleton]);
-
   if (isExcluded) return null;
 
   return (
@@ -61,38 +48,14 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
     >
-      {loading && !communities && renderLoading()}
-      <FlatList
-        onEndReached={() => {
-          onNextCommunityPage && onNextCommunityPage();
-        }}
-        data={communities}
-        renderItem={({ item }) => (
-          <Pressable
-            onPress={() =>
-              onPressCommunity({
-                communityId: item.communityId,
-                communityName: item.displayName,
-              })
-            }
-          >
-            <CommunityRowItem
-              community={item}
-              pageId={pageId}
-              componentId={componentId}
-              showJoinButton={false}
-            />
-          </Pressable>
-        )}
-        keyExtractor={(item, index) => item.communityId + index}
-        onEndReachedThreshold={0.5}
-        style={styles.list}
-        contentContainerStyle={styles.listContent}
-        ListFooterComponent={
-          loading && communities ? (
-            <CommunityListSkeleton themeStyle={themeStyles} amount={4} />
-          ) : null
-        }
+      <CommunitySearchResult
+        pageId={pageId}
+        componentId={componentId}
+        isFirstTimeLoading={loading && !communities}
+        isLoading={loading}
+        communities={communities}
+        onPressCommunity={onPressCommunity}
+        onNextPage={onNextCommunityPage}
       />
     </View>
   );
