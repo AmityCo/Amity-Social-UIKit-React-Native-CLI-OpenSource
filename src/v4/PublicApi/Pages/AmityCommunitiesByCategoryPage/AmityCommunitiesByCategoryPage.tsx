@@ -17,7 +17,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import CommunityEmptyTitle from '../../../elements/CommunityEmptyTitle/CommunityEmptyTitle';
 import CommunityEmptyImage from '../../../elements/CommunityEmptyImage/CommunityEmptyImage';
-import CommunityListSkeleton from '../../../elements/CommunityListSkeleton/CommunityListSkeleton';
+import CommunityListSkeleton from '../../../component/CommunityListSkeleton/CommunityListSkeleton';
 
 const AmityCommunitiesByCategoryPage = ({ route }: any) => {
   const pageId = PageID.communities_by_category_page;
