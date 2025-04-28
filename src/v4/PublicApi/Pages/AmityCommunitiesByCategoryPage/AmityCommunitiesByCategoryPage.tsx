@@ -80,7 +80,7 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
           )}
           keyExtractor={(item) => item.communityId}
           contentContainerStyle={styles.listContent}
-          style={styles.list}
+          // style={styles.list}
           onEndReached={() => onNextCommunityPage?.()}
           onEndReachedThreshold={0.5}
           ListFooterComponent={
