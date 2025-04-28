@@ -22,6 +22,7 @@ import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabCompo
 import { AmityStoryTabComponentEnum } from '../../types';
 import { usePostImpression } from '../../../../v4/hook/usePostImpression';
 import useAuth from '../../../../hooks/useAuth';
+import { useStyle } from './styles';
 import {
   isAmityAd,
   useCustomRankingGlobalFeed,
@@ -48,6 +49,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   const [refreshing, setRefreshing] = useState(false);
   const { clearFeed } = globalFeedSlice.actions;
   const dispatch = useDispatch();
+  const styles = useStyle();
   const { isConnected } = useAuth();
   const flatListRef = useRef(null);
   const nextPage = useSelector(
