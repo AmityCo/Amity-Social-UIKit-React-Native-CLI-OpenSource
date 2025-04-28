@@ -1,26 +1,28 @@
 import React, { memo, FC } from 'react';
 import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
-import CommunityRowImage from '../../../../elements/CommunityRowImage/CommunityRowImage';
-import { ComponentID, PageID } from '../../../../enum';
+import CommunityRowImage from '../../elements/CommunityRowImage/CommunityRowImage';
+import { ComponentID, PageID } from '../../enum';
 import { View } from 'react-native';
-import CommunityJoinedButtonElement from '../../../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
-import CommunityJoinButtonElement from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
-import { CommunityDisplayname } from '../../../../elements/CommunityDisplayname/CommunityDisplayname';
-import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityCategory';
-import CommunityMemeberCount from '../../../../elements/CommunityMemeberCount/CommunityMemeberCount';
+import CommunityJoinedButtonElement from '../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
+import CommunityJoinButtonElement from '../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
+import { CommunityDisplayname } from '../../elements/CommunityDisplayname/CommunityDisplayname';
+import CommunityCategory from '../../elements/CommunityCatetory/CommunityCategory';
+import CommunityMemeberCount from '../../elements/CommunityMemeberCount/CommunityMemeberCount';
 import { useStyles } from './styles';
 
-type TrendingCommunityItemProps = {
+type CommunityRowItemProps = {
   pageId?: PageID;
   componentId?: ComponentID;
   themeStyles?: MyMD3Theme;
   community: Amity.Community;
-  label: string;
+  showJoinButton?: boolean;
+  label?: string;
 };
 
-const TrendingCommunityItem: FC<TrendingCommunityItemProps> = ({
+const CommunityRowItem: FC<CommunityRowItemProps> = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.trending_communities,
+  showJoinButton = true,
   community,
   label,
 }) => {
@@ -52,23 +54,24 @@ const TrendingCommunityItem: FC<TrendingCommunityItemProps> = ({
               componentId={componentId}
             />
           </View>
-          {community.isJoined ? (
-            <CommunityJoinedButtonElement
-              pageId={pageId}
-              componentId={componentId}
-              communityId={community.communityId}
-            />
-          ) : (
-            <CommunityJoinButtonElement
-              pageId={pageId}
-              componentId={componentId}
-              communityId={community.communityId}
-            />
-          )}
+          {showJoinButton &&
+            (community.isJoined ? (
+              <CommunityJoinedButtonElement
+                pageId={pageId}
+                componentId={componentId}
+                communityId={community.communityId}
+              />
+            ) : (
+              <CommunityJoinButtonElement
+                pageId={pageId}
+                componentId={componentId}
+                communityId={community.communityId}
+              />
+            ))}
         </View>
       </View>
     </View>
   );
 };
 
-export default memo(TrendingCommunityItem);
+export default memo(CommunityRowItem);

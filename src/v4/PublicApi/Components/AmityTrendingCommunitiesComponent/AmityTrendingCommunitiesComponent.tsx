@@ -4,7 +4,7 @@ import { ComponentID, PageID } from '../../../enum';
 import { useStyles } from './styles';
 import { useAmityComponent } from '../../../hook';
 import TrendingCommunityTitleComponent from './TrendingCommunityTitle/TrendingCommunityTitle';
-import TrendingCommunityItem from './TrendingCommunityItem/TrendingCommunityItem';
+import CommunityRowItem from '../../../component/CommunityRowItem/CommunityRowItem';
 import { useExplore } from '../../../providers/ExploreProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
@@ -54,10 +54,11 @@ const AmityTrendingCommunitiesCommunity: FC<
                 })
               }
             >
-              <TrendingCommunityItem
+              <CommunityRowItem
                 pageId={pageId}
                 community={community}
                 label={`0${index + 1}`}
+                componentId={componentId}
               />
             </Pressable>
           );
