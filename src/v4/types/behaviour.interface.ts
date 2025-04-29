@@ -87,4 +87,12 @@ export interface IBehaviour {
       targetType: 'community' | 'user';
     }) => void;
   };
+  AmityCommunityProfilePageBehavior?: {
+    goToPendingPostPage?: () => void;
+    goToCommunitySettingPage?: () => void;
+    goToPostComposerPage?: () => void;
+    goToCreateStoryPage?: () => void;
+    goToMemberListPage?: () => void;
+    goToPostDetailPage?: (arg?: string) => void;
+  };
 }
