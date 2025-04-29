@@ -20,11 +20,12 @@ export const useAmityGlobalSearchViewModel = (
   );
 
   const [searchResult, setSearchResult] = useState(null);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (searchValue?.length < 3) return setSearchResult(null);
+    if (!searchValue || searchValue?.length < 1) return setSearchResult(null);
+
     if (searchType === TabName.MyCommunities) {
-      setSearchResult(null);
       const unsubscribeCommunity = CommunityRepository.searchCommunities(
         {
           displayName: searchValue,
@@ -33,6 +34,8 @@ export const useAmityGlobalSearchViewModel = (
           sortBy: 'displayName',
         },
         ({ error, loading, data, hasNextPage, onNextPage }) => {
+          console.log('loading', loading);
+          setLoading(loading);
           if (error) return setSearchResult(null);
           if (!loading) {
             setMyOnNextCommunityPage(() => (hasNextPage ? onNextPage : null));
@@ -42,7 +45,6 @@ export const useAmityGlobalSearchViewModel = (
       );
       return () => unsubscribeCommunity();
     } else if (searchType === TabName.Communities) {
-      setSearchResult(null);
       const unsubscribeCommunity = CommunityRepository.searchCommunities(
         {
           displayName: searchValue,
@@ -51,6 +53,8 @@ export const useAmityGlobalSearchViewModel = (
           sortBy: 'displayName',
         },
         ({ error, loading, data, hasNextPage, onNextPage }) => {
+          setLoading(loading);
+
           if (error) return setSearchResult(null);
           if (!loading) {
             setOnNextCommunityPage(() => (hasNextPage ? onNextPage : null));
@@ -59,7 +63,7 @@ export const useAmityGlobalSearchViewModel = (
         }
       );
       return () => unsubscribeCommunity();
-    } else if (searchType === TabName.Users) {
+    } else if (searchType === TabName.Users && searchValue?.length >= 3) {
       setSearchResult(null);
       const unsubscribeUser = UserRepository.searchUserByDisplayName(
         { displayName: searchValue, limit: 20 },
@@ -79,6 +83,7 @@ export const useAmityGlobalSearchViewModel = (
 
   return {
     searchResult,
+    isLoading,
     onNextCommunityPage,
     onNextUserPage,
     onNextMyCommunityPage,

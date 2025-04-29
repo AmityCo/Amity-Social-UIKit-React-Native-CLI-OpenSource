@@ -1,10 +1,13 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { View, FlatList, Pressable } from 'react-native';
 import CommunityRowItem from '../CommunityRowItem/CommunityRowItem';
 import CommunityListSkeleton from '../CommunityListSkeleton/CommunityListSkeleton';
 import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import { ComponentID, PageID } from '../../enum';
 import { useAmityComponent } from '../../hook';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../routes/RouteParamList';
+import { useNavigation } from '@react-navigation/native';
 
 type CommunitySearchResultProps = {
   pageId?: PageID;
@@ -14,7 +17,7 @@ type CommunitySearchResultProps = {
   isFirstTimeLoading?: boolean;
   themeStyles?: MyMD3Theme;
   onNextPage?: () => void;
-  onPressCommunity: ({
+  onPressCommunity?: ({
     communityId,
     communityName,
   }: {
@@ -25,13 +28,16 @@ type CommunitySearchResultProps = {
 
 const CommunitySearchResult: FC<CommunitySearchResultProps> = ({
   pageId = PageID.WildCardPage,
-  componentId = ComponentID.community_search_result,
+  componentId = ComponentID.WildCardComponent,
   communities,
-  isFirstTimeLoading,
-  isLoading,
+  isFirstTimeLoading = false,
+  isLoading = false,
   onNextPage,
   onPressCommunity,
 }) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const { themeStyles } = useAmityComponent({
     pageId,
     componentId,
@@ -40,23 +46,33 @@ const CommunitySearchResult: FC<CommunitySearchResultProps> = ({
   const styles = {
     container: {
       flex: 1,
-      marginTop: 16,
     },
     listSkeleton: {
-      marginTop: 16,
+      paddingTop: 16,
       paddingHorizontal: 16,
     },
     list: {
       flex: 1,
-      marginTop: 16,
+      paddingTop: 16,
     },
     listContent: {
       paddingHorizontal: 16,
       gap: 16,
     },
   };
+
+  const onNavigateCommunity = useCallback(
+    ({ communityId, communityName }: { communityId; communityName }) => {
+      navigation.navigate('CommunityHome', {
+        communityId,
+        communityName,
+      });
+    },
+    [navigation]
+  );
+
   return (
-    <>
+    <View style={styles.container}>
       {isFirstTimeLoading && (
         <View style={styles.listSkeleton}>
           <CommunityListSkeleton
@@ -73,12 +89,18 @@ const CommunitySearchResult: FC<CommunitySearchResultProps> = ({
         data={communities}
         renderItem={({ item }) => (
           <Pressable
-            onPress={() =>
-              onPressCommunity({
-                communityId: item.communityId,
-                communityName: item.displayName,
-              })
-            }
+            onPress={() => {
+              if (onPressCommunity)
+                onPressCommunity?.({
+                  communityId: item.communityId,
+                  communityName: item.displayName,
+                });
+              else
+                onNavigateCommunity({
+                  communityId: item.communityId,
+                  communityName: item.displayName,
+                });
+            }}
           >
             <CommunityRowItem
               community={item}
@@ -94,11 +116,15 @@ const CommunitySearchResult: FC<CommunitySearchResultProps> = ({
         contentContainerStyle={styles.listContent}
         ListFooterComponent={
           isLoading && communities ? (
-            <CommunityListSkeleton themeStyle={themeStyles} amount={4} />
+            <CommunityListSkeleton
+              themeStyle={themeStyles}
+              amount={4}
+              hasTitle={false}
+            />
           ) : null
         }
       />
-    </>
+    </View>
   );
 };
 
