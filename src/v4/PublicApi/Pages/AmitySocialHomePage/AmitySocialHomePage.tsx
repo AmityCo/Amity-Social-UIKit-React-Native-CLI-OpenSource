@@ -72,14 +72,14 @@ const AmitySocialHomePage = () => {
     if (pageLoading) return <NewsFeedLoadingComponent />;
     if (activeTab === exploreTab)
       return <AmityExploreComponent pageId={PageID.social_home_page} />;
-    if (!myCommunities?.length)
-      return (
-        <AmityEmptyNewsFeedComponent
-          pageId={PageID.social_home_page}
-          onPressExploreCommunity={onPressExploreCommunity}
-        />
-      );
     if (activeTab === newsFeedTab) {
+      if (!myCommunities?.length)
+        return (
+          <AmityEmptyNewsFeedComponent
+            pageId={PageID.social_home_page}
+            onPressExploreCommunity={onPressExploreCommunity}
+          />
+        );
       return <AmityNewsFeedComponent pageId={PageID.social_home_page} />;
     }
     if (activeTab === myCommunitiesTab)

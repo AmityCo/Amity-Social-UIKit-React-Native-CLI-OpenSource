@@ -34,7 +34,6 @@ export const useAmityGlobalSearchViewModel = (
           sortBy: 'displayName',
         },
         ({ error, loading, data, hasNextPage, onNextPage }) => {
-          console.log('loading', loading);
           setLoading(loading);
           if (error) return setSearchResult(null);
           if (!loading) {
