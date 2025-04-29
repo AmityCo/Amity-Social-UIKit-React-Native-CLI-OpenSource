@@ -39,6 +39,8 @@ export enum ComponentID {
   community_header = 'community_header',
   community_feed = 'community_feed',
   community_pin = 'community_pin',
+  community_image_feed = 'community_image_feed',
+  community_video_feed = 'community_video_feed',
 }
 export enum ElementID {
   CloseBtn = 'close_button',

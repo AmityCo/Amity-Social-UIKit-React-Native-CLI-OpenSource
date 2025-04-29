@@ -389,6 +389,8 @@
       "image": "value"
     },
     "*/post_content/non_member_section": {},
-    "community_profile_page/post_content/*": {}
+    "community_profile_page/post_content/*": {},
+    "community_profile_page/community_image_feed/*": {},
+    "community_profile_page/community_video_feed/*": {}
   }
 }
