@@ -36,7 +36,7 @@ const CommunityName: FC<CommunityNameProps> = ({
     <Typography.Headline
       testID={accessibilityId}
       style={styles.displayName}
-      numberOfLines={1}
+      numberOfLines={2}
       {...props}
     >
       {communityName}
