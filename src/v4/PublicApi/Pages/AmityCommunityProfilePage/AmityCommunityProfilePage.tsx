@@ -4,6 +4,8 @@ import { useStyles } from './styles';
 import { PageID } from '../../../enum';
 import { useAmityPage } from '../../../hook';
 import AmityCommunityHeaderComponent from '../../Components/AmityCommunityHeaderComponent/AmityCommunityHeaderComponent';
+import { AmityStoryTabComponentEnum } from '../../types';
+import AmityStoryTabComponent from '../../Components/AmityStoryTabComponent/AmityStoryTabComponent';
 
 const AmityCommunitieProfilePage = ({ route }: any) => {
   const pageId = PageID.community_profile_page;
@@ -23,6 +25,10 @@ const AmityCommunitieProfilePage = ({ route }: any) => {
       <AmityCommunityHeaderComponent
         pageId={pageId}
         communityId={communityId}
+      />
+      <AmityStoryTabComponent
+        type={AmityStoryTabComponentEnum.communityFeed}
+        targetId={communityId}
       />
     </View>
   );
