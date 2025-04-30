@@ -9,6 +9,7 @@ import CommunityName from '../../../elements/CommunityName/CommunityName';
 import CommunityVerifyBadge from '../../../elements/CommunityVerifyBadge/CommunityVerifyBadge';
 import CommunityCategory from '../../../elements/CommunityCatetory/CommunityCategory';
 import CommunityDescription from '../../../elements/CommunityDescription/CommunityDescription';
+import CommunityInfo from '../../../elements/CommunityInfo/CommunityInfo';
 
 type AmityCommunityHeaderComponentProps = {
   pageId?: PageID;
@@ -62,6 +63,12 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
         componentId={componentId}
         description={community.description}
         style={styles.descriptionWrap}
+      />
+      <CommunityInfo
+        pageId={pageId}
+        componentId={componentId}
+        community={community}
+        style={styles.infoWrap}
       />
     </View>
   );

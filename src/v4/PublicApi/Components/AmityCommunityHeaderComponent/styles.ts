@@ -16,6 +16,10 @@ export const useStyles = () => {
       paddingHorizontal: 16,
       paddingVertical: 8,
     },
+    infoWrap: {
+      paddingHorizontal: 16,
+      paddingVertical: 4,
+    },
   });
   return styles;
 };
