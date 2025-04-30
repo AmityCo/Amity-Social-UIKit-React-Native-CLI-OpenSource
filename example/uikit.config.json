@@ -364,6 +364,9 @@
     "community_profile_page/community_header/*": {},
     "community_profile_page/community_header/community_cover": {},
     "community_profile_page/community_header/community_name": {},
+    "community_profile_page/community_header/community_private_badge": {
+      "image": "lockIcon"
+    },
     "community_profile_page/community_header/community_verify_badge": {
       "image": "value"
     },
