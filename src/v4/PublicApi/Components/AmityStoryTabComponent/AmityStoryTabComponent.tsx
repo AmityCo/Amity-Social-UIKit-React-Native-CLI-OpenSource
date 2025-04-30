@@ -35,7 +35,6 @@ const AmityStoryTabComponent: FC<AmityStoryTabComponentType> = ({
     return (
       <CommunityStories
         communityId={targetId}
-        displayName={CommunityData?.displayName}
         avatarFileId={CommunityData?.avatarFileId}
       />
     );

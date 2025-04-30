@@ -50,9 +50,8 @@ const SearchResultItem: FC<SearchResultItemType> = ({
           targetType: TabName.Communities,
         });
       }
-      return navigation.navigate('CommunityHome', {
+      return navigation.navigate('CommunityProfilePage', {
         communityId: item.communityId,
-        communityName: item.displayName,
       });
     }
     if (AmityCommunitySearchResultComponent.goToUserProfilePage)
@@ -67,7 +66,6 @@ const SearchResultItem: FC<SearchResultItemType> = ({
     AmityCommunitySearchResultComponent,
     isCommunity,
     item.communityId,
-    item.displayName,
     item.userId,
     navigation,
   ]);

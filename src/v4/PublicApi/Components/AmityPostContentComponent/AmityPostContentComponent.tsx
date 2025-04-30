@@ -176,9 +176,8 @@ const AmityPostContentComponent = ({
         communityName: communityData?.displayName,
       });
     }
-    return navigation.navigate('CommunityHome', {
+    return navigation.navigate('CommunityProfilePage', {
       communityId: targetId,
-      communityName: communityData?.displayName,
     });
   };
 

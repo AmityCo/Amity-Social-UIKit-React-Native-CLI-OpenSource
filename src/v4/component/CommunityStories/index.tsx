@@ -20,15 +20,10 @@ import AmityViewStoryPage from '../../PublicApi/Pages/AmityViewStoryPage/AmityVi
 
 interface ICommunityStories {
   communityId: string;
-  displayName: string;
   avatarFileId: string;
 }
 
-const CommunityStories = ({
-  communityId,
-  displayName,
-  avatarFileId,
-}: ICommunityStories) => {
+const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
   const navigation =
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
   const styles = useStyles();
@@ -85,11 +80,10 @@ const CommunityStories = ({
   }, [onPressCreateStory]);
   const onPressCommunityName = useCallback(() => {
     setViewStory(false);
-    navigation.navigate('CommunityHome', {
+    navigation.navigate('CommunityProfilePage', {
       communityId: communityId,
-      communityName: displayName,
     });
-  }, [communityId, displayName, navigation]);
+  }, [communityId, navigation]);
 
   const renderCommunityStory = () => {
     if (storyTarget?.lastStoryExpiresAt) {

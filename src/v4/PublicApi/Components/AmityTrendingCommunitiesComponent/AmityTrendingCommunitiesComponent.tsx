@@ -29,10 +29,9 @@ const AmityTrendingCommunitiesCommunity: FC<
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const onPressCommunity = useCallback(
-    ({ communityId, communityName }: { communityId; communityName }) => {
-      navigation.navigate('CommunityHome', {
+    ({ communityId }: { communityId: string }) => {
+      navigation.navigate('CommunityProfilePage', {
         communityId,
-        communityName,
       });
     },
     [navigation]
@@ -50,7 +49,6 @@ const AmityTrendingCommunitiesCommunity: FC<
               onPress={() =>
                 onPressCommunity({
                   communityId: community.communityId,
-                  communityName: community.displayName,
                 })
               }
             >

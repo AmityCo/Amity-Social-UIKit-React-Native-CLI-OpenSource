@@ -33,12 +33,11 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
   const { communities, onNextCommunityPage, loading } = useCommunities();
 
   const onPressCommunity = useCallback(
-    ({ communityId, communityName }: { communityId; communityName }) => {
+    ({ communityId }: { communityId: string }) => {
       if (AmityMyCommunitiesComponentBehaviour.onPressCommunity)
         return AmityMyCommunitiesComponentBehaviour.onPressCommunity();
-      navigation.navigate('CommunityHome', {
+      navigation.navigate('CommunityProfilePage', {
         communityId,
-        communityName,
       });
     },
     [navigation, AmityMyCommunitiesComponentBehaviour]
