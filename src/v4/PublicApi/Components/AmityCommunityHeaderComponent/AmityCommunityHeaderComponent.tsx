@@ -11,6 +11,8 @@ import CommunityCategory from '../../../elements/CommunityCatetory/CommunityCate
 import CommunityDescription from '../../../elements/CommunityDescription/CommunityDescription';
 import CommunityInfo from '../../../elements/CommunityInfo/CommunityInfo';
 import CommunityJoinButtonElement from '../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
+import { AmityStoryTabComponentEnum } from '../../types';
+import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 
 type AmityCommunityHeaderComponentProps = {
   pageId?: PageID;
@@ -80,6 +82,10 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
           />
         </View>
       )}
+      <AmityStoryTabComponent
+        type={AmityStoryTabComponentEnum.communityFeed}
+        targetId={communityId}
+      />
     </View>
   );
 };

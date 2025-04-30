@@ -17,6 +17,7 @@ import useConfig from '../../hook/useConfig';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import Modal from 'react-native-modalbox';
 import AmityViewStoryPage from '../../PublicApi/Pages/AmityViewStoryPage/AmityViewStoryPage';
+import { Typography } from '../Typography/Typography';
 
 interface ICommunityStories {
   communityId: string;
@@ -159,7 +160,10 @@ const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
 
   return (
     <View style={styles.container}>
-      {renderCommunityStory()}
+      <View style={styles.storyItemWrap}>
+        {renderCommunityStory()}
+        <Typography.Body>{'Story'}</Typography.Body>
+      </View>
       <Modal
         style={styles.modal}
         isOpen={viewStory}
