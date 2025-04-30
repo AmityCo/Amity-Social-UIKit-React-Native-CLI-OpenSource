@@ -12,6 +12,10 @@ export const useStyles = () => {
       paddingLeft: 16,
       paddingVertical: 8,
     },
+    descriptionWrap: {
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+    },
   });
   return styles;
 };

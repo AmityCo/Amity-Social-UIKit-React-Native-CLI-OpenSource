@@ -8,6 +8,7 @@ import CommunityPrivateBadge from '../../../elements/CommunityPrivateBadge/Commu
 import CommunityName from '../../../elements/CommunityName/CommunityName';
 import CommunityVerifyBadge from '../../../elements/CommunityVerifyBadge/CommunityVerifyBadge';
 import CommunityCategory from '../../../elements/CommunityCatetory/CommunityCategory';
+import CommunityDescription from '../../../elements/CommunityDescription/CommunityDescription';
 
 type AmityCommunityHeaderComponentProps = {
   pageId?: PageID;
@@ -55,6 +56,12 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
         categoryIds={community.categoryIds}
         allVisible={true}
         style={styles.categoryWrap}
+      />
+      <CommunityDescription
+        pageId={pageId}
+        componentId={componentId}
+        description={community.description}
+        style={styles.descriptionWrap}
       />
     </View>
   );
