@@ -26,7 +26,7 @@ const CommunityName: FC<CommunityNameProps> = ({
   const styles = StyleSheet.create({
     displayName: {
       color: themeStyles.colors.base,
-      flex: 1,
+      flexShrink: 1,
     },
   });
 

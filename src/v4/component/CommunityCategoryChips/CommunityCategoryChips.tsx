@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, ViewProps } from 'react-native';
+import { Text, View, ViewProps, ScrollView } from 'react-native';
 import { CommunityCategoryChip } from './CommunityCategoryChip/CommunityCategoryChip';
 import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
 import { useStyles } from './styles';
@@ -7,6 +7,7 @@ import { useStyles } from './styles';
 type CommunityCategoryChipsProps = ViewProps & {
   themeStyles: MyMD3Theme;
   categoryIds: string[];
+  allVisible?: boolean;
 };
 
 const MAX_VISIBLE_CATEGORIES = 2;
@@ -14,6 +15,7 @@ const MAX_VISIBLE_CATEGORIES = 2;
 export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
   categoryIds,
   themeStyles,
+  allVisible,
   ...props
 }) => {
   const styles = useStyles(themeStyles);
@@ -25,6 +27,11 @@ export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
 
   // Dynamic maxWidth based on number of visible categories
   const getMaxWidthForItem = (totalVisibleItems: number) => {
+    // If allVisible is true, return 100% for all items
+    if (allVisible) {
+      return '100%';
+    }
+
     // If only 1 visible category, let it use more space (but still have some limit)
     if (totalVisibleItems === 1 && !showMore) {
       return '100%'; // Use percentage for flexibility
@@ -43,20 +50,44 @@ export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
     return '40%';
   };
 
+  // Choose all categories or just the visible ones based on allVisible
+  const displayCategories = allVisible ? categoryIds : visibleCategories;
+  // Only show more indicator if not showing all categories
+  const displayShowMore = !allVisible && showMore;
+
   return (
     <View style={styles.container} {...props}>
-      {visibleCategories.map((id, index) => (
-        <CommunityCategoryChip
-          key={index}
-          categoryId={id}
-          maxWidth={getMaxWidthForItem(visibleCategories.length)}
-          themeStyles={themeStyles}
-        />
-      ))}
-      {showMore && (
-        <View style={styles.chipContainer}>
-          <Text style={styles.chipText}>{showMoreText}</Text>
-        </View>
+      {allVisible ? (
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollableContainer}
+        >
+          {displayCategories.map((id, index) => (
+            <CommunityCategoryChip
+              key={index}
+              categoryId={id}
+              maxWidth={getMaxWidthForItem(displayCategories.length)}
+              themeStyles={themeStyles}
+            />
+          ))}
+        </ScrollView>
+      ) : (
+        <>
+          {displayCategories.map((id, index) => (
+            <CommunityCategoryChip
+              key={index}
+              categoryId={id}
+              maxWidth={getMaxWidthForItem(displayCategories.length)}
+              themeStyles={themeStyles}
+            />
+          ))}
+          {displayShowMore && (
+            <View style={styles.chipContainer}>
+              <Text style={styles.chipText}>{showMoreText}</Text>
+            </View>
+          )}
+        </>
       )}
     </View>
   );

@@ -8,6 +8,10 @@ export const useStyles = () => {
       padding: 16,
       gap: 2,
     },
+    categoryWrap: {
+      paddingLeft: 16,
+      paddingVertical: 8,
+    },
   });
   return styles;
 };
