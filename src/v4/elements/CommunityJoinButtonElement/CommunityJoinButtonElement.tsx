@@ -44,7 +44,7 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
       disabled={isPending}
       {...props}
     >
-      {config.text as string}
+      {(config.text as string) ?? 'Join'}
     </Button>
   );
 };

@@ -20,6 +20,9 @@ export const useStyles = () => {
       paddingHorizontal: 16,
       paddingVertical: 4,
     },
+    joinButtonWrap: {
+      margin: 16,
+    },
   });
   return styles;
 };

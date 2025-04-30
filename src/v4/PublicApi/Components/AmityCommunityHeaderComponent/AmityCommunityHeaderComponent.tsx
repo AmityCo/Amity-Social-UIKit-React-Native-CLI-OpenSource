@@ -10,6 +10,7 @@ import CommunityVerifyBadge from '../../../elements/CommunityVerifyBadge/Communi
 import CommunityCategory from '../../../elements/CommunityCatetory/CommunityCategory';
 import CommunityDescription from '../../../elements/CommunityDescription/CommunityDescription';
 import CommunityInfo from '../../../elements/CommunityInfo/CommunityInfo';
+import CommunityJoinButtonElement from '../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 
 type AmityCommunityHeaderComponentProps = {
   pageId?: PageID;
@@ -70,6 +71,15 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
         community={community}
         style={styles.infoWrap}
       />
+      {!community.isJoined && (
+        <View style={styles.joinButtonWrap}>
+          <CommunityJoinButtonElement
+            pageId={pageId}
+            componentId={componentId}
+            communityId={community.communityId}
+          />
+        </View>
+      )}
     </View>
   );
 };

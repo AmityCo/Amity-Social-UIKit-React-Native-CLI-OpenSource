@@ -6,7 +6,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 import { View } from 'react-native';
 
 type CommunityDescriptionProps = ViewProps & {
-  description: string;
+  description?: string;
   pageId?: PageID;
   componentId?: ComponentID;
 };
@@ -39,7 +39,7 @@ const CommunityDescription: FC<CommunityDescriptionProps> = ({
     },
   });
 
-  if (isExcluded) return null;
+  if (isExcluded || !description) return null;
 
   return (
     <View testID={accessibilityId} {...props}>

@@ -5,7 +5,7 @@ import { useAmityElement } from '../../hook';
 import { View, ViewProps } from 'react-native';
 
 type CommunityCategoryProps = ViewProps & {
-  categoryIds: Amity.Category['categoryId'][];
+  categoryIds?: Amity.Category['categoryId'][];
   pageId?: PageID;
   componentId?: ComponentID;
   allVisible?: boolean;
@@ -24,7 +24,7 @@ const CommunityCategory: FC<CommunityCategoryProps> = ({
     elementId: ElementID.community_category,
   });
 
-  if (isExcluded) return null;
+  if (isExcluded || !categoryIds || categoryIds.length === 0) return null;
 
   return (
     <View {...props}>
