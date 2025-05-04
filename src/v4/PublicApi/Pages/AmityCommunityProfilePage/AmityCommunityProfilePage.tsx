@@ -1,11 +1,14 @@
-import { View } from 'react-native';
-import React, { memo } from 'react';
+import { View, Animated, Text } from 'react-native';
+import React, { memo, useRef, useState } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
 import { useAmityPage } from '../../../hook';
-import AmityCommunityHeaderComponent from '../../Components/AmityCommunityHeaderComponent/AmityCommunityHeaderComponent';
+import AmityCommunityHeaderComponent, {
+  AmityCommunityHeaderRef,
+} from '../../Components/AmityCommunityHeaderComponent/AmityCommunityHeaderComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
 import AmityStoryTabComponent from '../../Components/AmityStoryTabComponent/AmityStoryTabComponent';
+import AmityCommunityFeedComponent from '../../Components/AmityCommunityFeedComponent/AmityCommunityFeedComponent';
 
 const AmityCommunitieProfilePage = ({ route }: any) => {
   const pageId = PageID.community_profile_page;
@@ -14,7 +17,22 @@ const AmityCommunitieProfilePage = ({ route }: any) => {
     pageId,
   });
 
+  // Create a ref for the header component
+  const headerRef = useRef<AmityCommunityHeaderRef>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
   const styles = useStyles(themeStyles);
+
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollYRef = useRef(scrollY);
+
+  // // Update header height when it changes
+  // useEffect(() => {
+  //   console.log('headerRef.current?.height', headerRef.current);
+  //   if (headerRef.current) {
+  //     setHeaderHeight(headerRef.current.height);
+  //   }
+  // }, [headerRef.current?.height]);
 
   return (
     <View
@@ -22,14 +40,48 @@ const AmityCommunitieProfilePage = ({ route }: any) => {
       style={styles.container}
       accessibilityLabel={accessibilityId}
     >
+      {/* Main scrollable content */}
       <AmityCommunityHeaderComponent
+        ref={headerRef}
         pageId={pageId}
         communityId={communityId}
+        scrollYRef={scrollYRef}
+        isFloating={true} // Add this prop to indicate it's floating above content
+        onHeightChange={setHeaderHeight}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 10,
+          pointerEvents: 'box-none', // Important! Allows touches to pass through when needed
+        }}
       />
-      <AmityStoryTabComponent
-        type={AmityStoryTabComponentEnum.communityFeed}
-        targetId={communityId}
-      />
+      <Animated.ScrollView
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      >
+        {/* Placeholder with same height as header */}
+        <View style={{ height: headerHeight }} />
+        <AmityStoryTabComponent
+          type={AmityStoryTabComponentEnum.communityFeed}
+          targetId={communityId}
+        />
+
+        <View>
+          <Text>Tab</Text>
+        </View>
+
+        {/* Modified to render feed inline in ScrollView */}
+        <AmityCommunityFeedComponent
+          pageId={pageId}
+          communityId={communityId}
+        />
+      </Animated.ScrollView>
     </View>
   );
 };
