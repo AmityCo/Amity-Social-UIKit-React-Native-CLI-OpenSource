@@ -1,4 +1,4 @@
-import { View, Animated, Text } from 'react-native';
+import { View, Animated } from 'react-native';
 import React, { memo, useRef, useState } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
@@ -9,13 +9,20 @@ import AmityCommunityHeaderComponent, {
 import { AmityStoryTabComponentEnum } from '../../types';
 import AmityStoryTabComponent from '../../Components/AmityStoryTabComponent/AmityStoryTabComponent';
 import AmityCommunityFeedComponent from '../../Components/AmityCommunityFeedComponent/AmityCommunityFeedComponent';
+import AmityCommunityProfileTabComponent, {
+  CommunityProfileTab,
+} from '../../Components/AmityCommunityProfileTabComponent/AmityCommunityProfileTabComponent';
 
-const AmityCommunitieProfilePage = ({ route }: any) => {
+const AmityCommunityProfilePage = ({ route }: any) => {
   const pageId = PageID.community_profile_page;
   const { communityId } = route.params;
   const { accessibilityId, themeStyles } = useAmityPage({
     pageId,
   });
+
+  const [currentTab, setCurrentTab] = useState(
+    CommunityProfileTab.community_feed
+  );
 
   // Create a ref for the header component
   const headerRef = useRef<AmityCommunityHeaderRef>(null);
@@ -72,10 +79,13 @@ const AmityCommunitieProfilePage = ({ route }: any) => {
           targetId={communityId}
         />
 
-        <View>
-          <Text>Tab</Text>
-        </View>
-
+        <AmityCommunityProfileTabComponent
+          pageId={pageId}
+          currentTab={currentTab}
+          onTabChange={(tab: CommunityProfileTab) => {
+            setCurrentTab(tab);
+          }}
+        />
         {/* Modified to render feed inline in ScrollView */}
         <AmityCommunityFeedComponent
           pageId={pageId}
@@ -86,4 +96,4 @@ const AmityCommunitieProfilePage = ({ route }: any) => {
   );
 };
 
-export default memo(AmityCommunitieProfilePage);
+export default memo(AmityCommunityProfilePage);

@@ -89,33 +89,36 @@ const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
   const renderCommunityStory = () => {
     if (storyTarget?.lastStoryExpiresAt) {
       return (
-        <TouchableOpacity
-          style={styles.avatarContainer}
-          onPress={onPressStoryView}
-        >
-          <Image
-            source={
-              avatarUrl
-                ? {
-                    uri: avatarUrl,
-                  }
-                : require('../../assets/images/Placeholder.png')
-            }
-            style={styles.communityAvatar}
-          />
-          <SvgXml
-            style={styles.storyRing}
-            width={48}
-            height={48}
-            xml={storyRing(storyRingColor[0], storyRingColor[1])}
-          />
-          {hasStoryPermission && (
-            <SvgXml
-              style={styles.storyCreateIcon}
-              xml={storyCircleCreatePlusIcon()}
+        <>
+          <TouchableOpacity
+            style={styles.avatarContainer}
+            onPress={onPressStoryView}
+          >
+            <Image
+              source={
+                avatarUrl
+                  ? {
+                      uri: avatarUrl,
+                    }
+                  : require('../../assets/images/Placeholder.png')
+              }
+              style={styles.communityAvatar}
             />
-          )}
-        </TouchableOpacity>
+            <SvgXml
+              style={styles.storyRing}
+              width={48}
+              height={48}
+              xml={storyRing(storyRingColor[0], storyRingColor[1])}
+            />
+            {hasStoryPermission && (
+              <SvgXml
+                style={styles.storyCreateIcon}
+                xml={storyCircleCreatePlusIcon()}
+              />
+            )}
+          </TouchableOpacity>
+          <Typography.Body>{'Story'}</Typography.Body>
+        </>
       );
     }
     if (hasStoryPermission) {
@@ -160,10 +163,7 @@ const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.storyItemWrap}>
-        {renderCommunityStory()}
-        <Typography.Body>{'Story'}</Typography.Body>
-      </View>
+      <View style={styles.storyItemWrap}>{renderCommunityStory()}</View>
       <Modal
         style={styles.modal}
         isOpen={viewStory}

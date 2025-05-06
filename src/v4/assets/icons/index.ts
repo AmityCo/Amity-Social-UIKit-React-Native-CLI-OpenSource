@@ -8,3 +8,7 @@ export { default as arrowRight } from './arrowRight';
 export { default as emptyCommunity } from './emptyCommunity';
 export { default as errorPage } from './errorPage';
 export { default as list } from './list';
+export { default as feed } from './feed';
+export { default as pin } from './pin';
+export { default as video } from './video';
+export { default as image } from './image';
