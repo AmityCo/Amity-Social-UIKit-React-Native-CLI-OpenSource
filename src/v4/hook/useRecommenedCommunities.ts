@@ -30,7 +30,7 @@ export const useRecommendedCommunities = (
   };
 
   useEffect(() => {
-    if (!isConnected) return;
+    if (!isConnected) return () => {};
 
     const unsubscribe = fetchRecommendedCommunities();
     return unsubscribe;
