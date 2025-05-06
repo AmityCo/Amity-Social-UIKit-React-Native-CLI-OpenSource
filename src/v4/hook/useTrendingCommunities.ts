@@ -9,7 +9,7 @@ export const useTrendingCommunities = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!isConnected) return;
+    if (!isConnected) return () => {};
 
     const unsubscribe = CommunityRepository.getTrendingCommunities(
       { limit: 5 },
