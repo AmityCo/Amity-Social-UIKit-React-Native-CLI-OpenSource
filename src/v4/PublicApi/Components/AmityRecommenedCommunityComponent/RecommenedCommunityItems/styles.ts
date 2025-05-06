@@ -50,11 +50,6 @@ export const useStyles = () => {
     detailBottomWrapLeft: {
       flex: 1,
     },
-    detailBottomWrapRight: {
-      height: '100%',
-      alignItems: 'flex-end',
-      flexDirection: 'row',
-    },
     displayName: {
       flexDirection: 'row',
       gap: 2,

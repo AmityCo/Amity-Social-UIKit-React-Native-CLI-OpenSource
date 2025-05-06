@@ -62,9 +62,10 @@ const CommunitySearchResult: FC<CommunitySearchResultProps> = ({
   };
 
   const onNavigateCommunity = useCallback(
-    ({ communityId }: { communityId: string }) => {
-      navigation.navigate('CommunityProfilePage', {
+    ({ communityId, communityName }: { communityId; communityName }) => {
+      navigation.navigate('CommunityHome', {
         communityId,
+        communityName,
       });
     },
     [navigation]
@@ -97,6 +98,7 @@ const CommunitySearchResult: FC<CommunitySearchResultProps> = ({
               else
                 onNavigateCommunity({
                   communityId: item.communityId,
+                  communityName: item.displayName,
                 });
             }}
           >

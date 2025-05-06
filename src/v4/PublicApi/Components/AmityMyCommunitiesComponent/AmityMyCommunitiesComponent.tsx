@@ -12,7 +12,6 @@ import { emptyCommunity, plus } from '../../../assets/icons';
 import { Typography } from '../../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { Button } from '../../../component/Button/Button';
-import Divider from '../../../component/Divider';
 
 type AmityMyCommunitiesComponentType = {
   pageId?: PageID;
@@ -34,11 +33,12 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
   const { communities, onNextCommunityPage, loading } = useCommunities();
 
   const onPressCommunity = useCallback(
-    ({ communityId }: { communityId: string }) => {
+    ({ communityId, communityName }: { communityId; communityName }) => {
       if (AmityMyCommunitiesComponentBehaviour.onPressCommunity)
         return AmityMyCommunitiesComponentBehaviour.onPressCommunity();
-      navigation.navigate('CommunityProfilePage', {
+      navigation.navigate('CommunityHome', {
         communityId,
+        communityName,
       });
     },
     [navigation, AmityMyCommunitiesComponentBehaviour]
@@ -77,7 +77,6 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
     >
-      <Divider themeStyles={themeStyles} />
       {!loading && communities?.length === 0 ? (
         renderEmptyState()
       ) : (
