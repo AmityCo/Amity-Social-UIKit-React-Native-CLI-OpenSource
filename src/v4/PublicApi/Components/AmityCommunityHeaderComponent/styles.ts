@@ -43,6 +43,10 @@ export const useStyles = (theme: MyMD3Theme) => {
     joinButtonWrap: {
       margin: 16,
     },
+    pendingPostWrap: {
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+    },
   });
   return styles;
 };

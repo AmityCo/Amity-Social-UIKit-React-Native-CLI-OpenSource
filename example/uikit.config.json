@@ -388,8 +388,8 @@
     "community_profile_page/*/community_profile_tab": {},
     "community_profile_page/community_feed/*": {},
     "community_profile_page/community_pin/*": {},
-    "community_profile_page/community_pin/community_create_post_button": {
-      "image": "value"
+    "community_profile_page/*/community_create_post_button": {
+      "image": "plus"
     },
     "*/post_content/non_member_section": {},
     "community_profile_page/post_content/*": {},

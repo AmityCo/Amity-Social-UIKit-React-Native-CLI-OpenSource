@@ -19,6 +19,10 @@ import CommunityDescription from '../../../elements/CommunityDescription/Communi
 import CommunityInfo from '../../../elements/CommunityInfo/CommunityInfo';
 import CommunityJoinButtonElement from '../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import { Animated } from 'react-native';
+import CommunityPendingPost from '../../../elements/CommunityPendingPost/CommunityPendingPost';
+import { usePosts } from '../../../hook/usePosts';
+import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
+import { AmityStoryTabComponentEnum } from '../../types';
 
 export interface AmityCommunityHeaderRef {
   height: number;
@@ -50,6 +54,10 @@ const AmityCommunityHeaderComponent = forwardRef<
   ) => {
     const componentId = ComponentID.community_header;
     const { community } = useCommunity(communityId);
+    const { posts: pendingPosts } = usePosts({
+      targetType: 'community',
+      targetId: communityId,
+    });
     const { accessibilityId, themeStyles } = useAmityComponent({
       pageId,
       componentId,
@@ -213,6 +221,18 @@ const AmityCommunityHeaderComponent = forwardRef<
                 />
               </View>
             )}
+            {pendingPosts?.length > 0 && (
+              <CommunityPendingPost
+                number={pendingPosts.length}
+                pageId={pageId}
+                componentId={componentId}
+                style={styles.pendingPostWrap}
+              />
+            )}
+            <AmityStoryTabComponent
+              type={AmityStoryTabComponentEnum.communityFeed}
+              targetId={communityId}
+            />
           </View>
         </Animated.View>
       </>

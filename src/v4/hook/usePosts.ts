@@ -4,10 +4,12 @@ import { PostRepository } from '@amityco/ts-sdk-react-native';
 export const usePosts = ({
   targetType,
   targetId,
+  feedType,
   limit = 20,
 }: {
   targetType: Amity.PostTargetType;
   targetId: string;
+  feedType?: Amity.QueryPosts['feedType'];
   limit?: number;
 }) => {
   const [items, setItems] = useState<Amity.Post[]>();
@@ -15,7 +17,7 @@ export const usePosts = ({
   const [onNextPage, setOnNextPage] = useState<() => void | null>(null);
   useEffect(() => {
     const unsubscribe = PostRepository.getPosts(
-      { targetType, limit, targetId },
+      { targetType, limit, targetId, feedType },
       ({ error, loading, data, hasNextPage, onNextPage }) => {
         if (error) return;
         if (!loading) {
@@ -30,6 +32,6 @@ export const usePosts = ({
       }
     );
     return unsubscribe;
-  }, [targetType, targetId, limit]);
+  }, [targetType, targetId, limit, feedType]);
   return { posts: items, onNextPage, loading };
 };

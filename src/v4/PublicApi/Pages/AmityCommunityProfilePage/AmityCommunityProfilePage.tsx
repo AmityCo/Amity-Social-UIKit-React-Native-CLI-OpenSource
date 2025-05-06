@@ -6,8 +6,6 @@ import { useAmityPage } from '../../../hook';
 import AmityCommunityHeaderComponent, {
   AmityCommunityHeaderRef,
 } from '../../Components/AmityCommunityHeaderComponent/AmityCommunityHeaderComponent';
-import { AmityStoryTabComponentEnum } from '../../types';
-import AmityStoryTabComponent from '../../Components/AmityStoryTabComponent/AmityStoryTabComponent';
 import AmityCommunityFeedComponent from '../../Components/AmityCommunityFeedComponent/AmityCommunityFeedComponent';
 import AmityCommunityProfileTabComponent, {
   CommunityProfileTab,
@@ -74,10 +72,6 @@ const AmityCommunityProfilePage = ({ route }: any) => {
       >
         {/* Placeholder with same height as header */}
         <View style={{ height: headerHeight }} />
-        <AmityStoryTabComponent
-          type={AmityStoryTabComponentEnum.communityFeed}
-          targetId={communityId}
-        />
 
         <AmityCommunityProfileTabComponent
           pageId={pageId}
