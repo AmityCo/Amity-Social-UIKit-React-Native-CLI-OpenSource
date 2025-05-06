@@ -18,6 +18,10 @@ export const useStyles = (theme: MyMD3Theme) => {
       textAlign: 'center',
       color: theme.colors.baseShade3,
     },
+    communityListSkeleton: {
+      paddingTop: 16,
+      paddingHorizontal: 16,
+    },
   });
 
   return styles;

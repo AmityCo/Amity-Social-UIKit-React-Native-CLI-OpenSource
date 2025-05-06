@@ -4,18 +4,20 @@ import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import { getSkeletonBackgrounColor } from '../../../util/colorUtil';
 
 type CommunityListSkeletonProps = {
+  hasTitle?: boolean;
   themeStyle?: MyMD3Theme;
   amount?: number;
 };
 
 const CommunityListSkeleton: FC<CommunityListSkeletonProps> = ({
+  hasTitle = true,
   themeStyle,
   amount = 4,
 }) => {
   const { backgroundColor, foregroundColor } =
     getSkeletonBackgrounColor(themeStyle);
 
-  const titleHeight = 36;
+  const titleHeight = hasTitle ? 36 : 0;
   const gap = 16;
   const marginTop = 23;
   const height = 80;
@@ -25,7 +27,7 @@ const CommunityListSkeleton: FC<CommunityListSkeletonProps> = ({
       backgroundColor={backgroundColor}
       foregroundColor={foregroundColor}
     >
-      <Rect x="0" y="0" width="156" height="12" rx="6" ry="6" />
+      {hasTitle && <Rect x="0" y="0" width="156" height="12" rx="6" ry="6" />}
       {Array.from({ length: amount }, (_, index) => {
         return (
           <React.Fragment key={index}>

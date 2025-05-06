@@ -4,10 +4,10 @@ import AmityTopSearchBarComponent from '../../Components/AmityTopSearchBarCompon
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAmityGlobalSearchViewModel } from '../../../hook';
 import { TabName } from '../../../enum/enumTabName';
-import AmityCommunitySearchResultComponent from '../../Components/AmityCommunitySearchResultComponent/AmityCommunitySearchResultComponent';
 import { PageID } from '../../../enum';
 import { useAmityPage } from '../../../hook';
 import NoSearchResult from '../../../component/NoSearchResult/NoSearchResult';
+import CommunitySearchResult from '../../../component/CommunitySearchResult/CommunitySearchResult';
 
 const AmityMyCommunitiesSearchPage = () => {
   const pageId = PageID.social_global_search_page;
@@ -15,10 +15,8 @@ const AmityMyCommunitiesSearchPage = () => {
   const styles = useStyles(themeStyles);
   const [searchValue, setSearchValue] = useState<null | string>(null);
   const searchType = TabName.MyCommunities;
-  const { searchResult, onNextMyCommunityPage } = useAmityGlobalSearchViewModel(
-    searchValue,
-    searchType
-  );
+  const { searchResult, onNextMyCommunityPage, isLoading } =
+    useAmityGlobalSearchViewModel(searchValue, searchType);
 
   if (isExcluded) return null;
   return (
@@ -27,13 +25,14 @@ const AmityMyCommunitiesSearchPage = () => {
         searchType={searchType}
         setSearchValue={setSearchValue}
       />
-      {searchValue && searchResult?.length === 0 ? (
+      {!isLoading && searchResult?.length === 0 ? (
         <NoSearchResult />
       ) : (
-        <AmityCommunitySearchResultComponent
+        <CommunitySearchResult
           pageId={pageId}
-          searchType={searchType}
-          searchResult={searchResult}
+          isFirstTimeLoading={isLoading && !searchResult}
+          isLoading={isLoading}
+          communities={searchResult}
           onNextPage={onNextMyCommunityPage}
         />
       )}

@@ -11,13 +11,13 @@ import { PageID } from '../../../enum';
 import { useAmityPage, useCommunities } from '../../../hook';
 import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButtonIconElement';
 import CategoryTitle from '../../../elements/CategoryTitle/CategoryTitle';
-import CommunityRowItem from './CommunityRowItem/CommunityRowItem';
+import CommunityRowItem from '../../../component/CommunityRowItem/CommunityRowItem';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import CommunityEmptyTitle from '../../../elements/CommunityEmptyTitle/CommunityEmptyTitle';
 import CommunityEmptyImage from '../../../elements/CommunityEmptyImage/CommunityEmptyImage';
-import CommunityListSkeleton from '../../../elements/CommunityListSkeleton/CommunityListSkeleton';
+import CommunityListSkeleton from '../../../component/CommunityListSkeleton/CommunityListSkeleton';
 
 const AmityCommunitiesByCategoryPage = ({ route }: any) => {
   const pageId = PageID.communities_by_category_page;
@@ -71,12 +71,15 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
                 })
               }
             >
-              <CommunityRowItem community={item} pageId={pageId} />
+              <CommunityRowItem
+                community={item}
+                pageId={pageId}
+                showJoinButton={false}
+              />
             </Pressable>
           )}
           keyExtractor={(item) => item.communityId}
           contentContainerStyle={styles.listContent}
-          style={styles.list}
           onEndReached={() => onNextCommunityPage?.()}
           onEndReachedThreshold={0.5}
           ListFooterComponent={
