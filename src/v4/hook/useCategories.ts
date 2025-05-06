@@ -16,7 +16,7 @@ export const useCategories = ({
     useState<() => void | null>(null);
 
   useEffect(() => {
-    if (!isConnected) return;
+    if (!isConnected) return () => {};
 
     const unsubscribe = CategoryRepository.getCategories(
       { limit },
