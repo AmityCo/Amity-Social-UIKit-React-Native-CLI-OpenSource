@@ -34,12 +34,15 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
 
   const isNothingToShow =
     !isLoading &&
-    (isCategoryEmpty ||
-      isRecommendedCommunitiesEmpty ||
-      isTrendingCommunitiesEmpty);
+    isCategoryEmpty &&
+    isRecommendedCommunitiesEmpty &&
+    isTrendingCommunitiesEmpty;
 
   const isNoCommunities =
-    !isLoading && (isRecommendedCommunitiesEmpty || isTrendingCommunitiesEmpty);
+    !isLoading &&
+    isRecommendedCommunitiesEmpty &&
+    isTrendingCommunitiesEmpty &&
+    !isCategoryEmpty;
 
   const renderError = React.useCallback(() => {
     return (
