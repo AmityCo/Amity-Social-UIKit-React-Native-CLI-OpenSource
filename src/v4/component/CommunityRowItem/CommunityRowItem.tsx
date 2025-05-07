@@ -65,20 +65,22 @@ const CommunityRowItem: FC<CommunityRowItemProps> = ({
               componentId={componentId}
             />
           </View>
-          {showJoinButton &&
-            (community.isJoined ? (
-              <CommunityJoinedButtonElement
-                pageId={pageId}
-                componentId={componentId}
-                communityId={community.communityId}
-              />
-            ) : (
-              <CommunityJoinButtonElement
-                pageId={pageId}
-                componentId={componentId}
-                communityId={community.communityId}
-              />
-            ))}
+          <View style={styles.detailBottomWrapRight}>
+            {showJoinButton &&
+              (community.isJoined ? (
+                <CommunityJoinedButtonElement
+                  pageId={pageId}
+                  componentId={componentId}
+                  communityId={community.communityId}
+                />
+              ) : (
+                <CommunityJoinButtonElement
+                  pageId={pageId}
+                  componentId={componentId}
+                  communityId={community.communityId}
+                />
+              ))}
+          </View>
         </View>
       </View>
     </View>

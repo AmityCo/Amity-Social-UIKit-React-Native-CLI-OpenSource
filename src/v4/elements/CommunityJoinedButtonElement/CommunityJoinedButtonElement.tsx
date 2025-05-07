@@ -40,6 +40,7 @@ const CommunityJoinedButton: FC<CommunityJoinedButtonType> = ({
       themeStyle={themeStyles}
       onPress={handleLeaveCommunity}
       disabled={isPending}
+      size="small"
       {...props}
     >
       {config.text as string}
