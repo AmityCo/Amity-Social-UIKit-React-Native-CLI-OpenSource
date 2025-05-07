@@ -72,7 +72,7 @@ export const useCustomRankingGlobalFeed = () => {
   }: {
     queryToken?: string;
     limit?: number;
-  }) => {
+  } = {}) => {
     // if load first page, reset all the running index in paginator
     setFetching(true);
     if (!queryToken) reset();

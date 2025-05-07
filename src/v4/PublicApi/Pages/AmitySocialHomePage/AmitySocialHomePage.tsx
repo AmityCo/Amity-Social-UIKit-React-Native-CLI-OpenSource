@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { LogBox, SafeAreaView } from 'react-native';
+import { LogBox, SafeAreaView, StyleSheet } from 'react-native';
 import CustomSocialTab from '../../../component/CustomSocialTab/CustomSocialTab';
 import { useAmityPage, useUiKitConfig } from '../../../hook';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
@@ -9,17 +9,29 @@ import { useTheme } from 'react-native-paper';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import AmitySocialHomeTopNavigationComponent from '../../Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
 import AmityEmptyNewsFeedComponent from '../../Components/AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
-import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import AmityMyCommunitiesComponent from '../../Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
 import AmityNewsFeedComponent from '../../Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
 import AmityExploreComponent from '../../Components/AmityExploreComponent/AmityExploreComponent';
 import NewsFeedLoadingComponent from '../../../component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
 import Divider from '../../../component/Divider';
+import { useCustomRankingGlobalFeed } from '../../../hook/useCustomRankingGlobalFeed';
 
 LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {
   const theme = useTheme() as MyMD3Theme;
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+  });
+
   const { AmitySocialHomePageBehaviour } = useBehaviour();
+  const {
+    fetch,
+    itemWithAds: globalFeedPosts,
+    loading,
+  } = useCustomRankingGlobalFeed();
   const { themeStyles } = useAmityPage({ pageId: PageID.social_home_page });
   const [newsFeedTab] = useUiKitConfig({
     page: PageID.social_home_page,
@@ -27,12 +39,14 @@ const AmitySocialHomePage = () => {
     element: ElementID.newsfeed_button,
     keys: ['text'],
   }) as string[];
+
   const [exploreTab] = useUiKitConfig({
     page: PageID.social_home_page,
     component: ComponentID.WildCardComponent,
     element: ElementID.explore_button,
     keys: ['text'],
   }) as string[];
+
   const [myCommunitiesTab] = useUiKitConfig({
     page: PageID.social_home_page,
     component: ComponentID.WildCardComponent,
@@ -41,20 +55,11 @@ const AmitySocialHomePage = () => {
   }) as string[];
 
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
-  const [myCommunities, setMyCommunities] = useState<Amity.Community[]>(null);
-  const [pageLoading, setPageLoading] = useState(true);
-  useEffect(() => {
-    const unsubscribe = CommunityRepository.getCommunities(
-      { membership: 'member', limit: 20 },
-      ({ data, error, loading }) => {
-        if (error) return;
-        setPageLoading(loading);
-        if (!loading) setMyCommunities(data);
-      }
-    );
-    return () => unsubscribe();
-  }, []);
 
+  useEffect(() => {
+    fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const onTabChange = useCallback(
     (tabName: string) => {
       if (AmitySocialHomePageBehaviour.onChooseTab)
@@ -69,11 +74,12 @@ const AmitySocialHomePage = () => {
   }, [exploreTab, onTabChange]);
 
   const renderNewsFeed = () => {
-    if (pageLoading) return <NewsFeedLoadingComponent />;
+    if (loading) return <NewsFeedLoadingComponent />;
     if (activeTab === exploreTab)
       return <AmityExploreComponent pageId={PageID.social_home_page} />;
+
     if (activeTab === newsFeedTab) {
-      if (!myCommunities?.length)
+      if (!loading && globalFeedPosts?.length === 0)
         return (
           <AmityEmptyNewsFeedComponent
             pageId={PageID.social_home_page}
@@ -97,10 +103,7 @@ const AmitySocialHomePage = () => {
       testID="social_home_page"
       accessibilityLabel="social_home_page"
       id="social_home_page"
-      style={{
-        flex: 1,
-        backgroundColor: theme.colors.background,
-      }}
+      style={styles.container}
     >
       <AmitySocialHomeTopNavigationComponent activeTab={activeTab} />
       <CustomSocialTab
