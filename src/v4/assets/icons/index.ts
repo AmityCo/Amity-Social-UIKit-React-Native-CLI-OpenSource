@@ -13,3 +13,6 @@ export { default as pin } from './pin';
 export { default as video } from './video';
 export { default as image } from './image';
 export { default as dot } from './dot';
+export { default as emptyPost } from './emptyPost';
+export { default as emptyImagePost } from './emptyImagePost';
+export { default as emptyVideoPost } from './emptyVideoPost';

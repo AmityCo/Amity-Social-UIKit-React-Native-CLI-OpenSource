@@ -11,6 +11,8 @@ import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent'
 import { usePaginatorApi } from '../../../hook/usePaginator';
 import { usePostImpression } from '../../../hook/usePostImpression';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
+import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
+import { emptyPost } from '../../../assets/icons';
 
 type AmityCommunityFeedComponentProps = {
   pageId?: PageID;
@@ -61,6 +63,9 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
       onNextPage?.();
     }
   };
+
+  if (posts.length === 0)
+    return <EmptyComponent title="No posts yet" icon={emptyPost} />;
 
   return (
     <FlatList
