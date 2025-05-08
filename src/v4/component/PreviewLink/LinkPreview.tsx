@@ -47,7 +47,7 @@ export const LinkPreview = React.memo(
       (image: PreviewDataImage) => {
         const imageUrl = image?.url
           ? { uri: image.url }
-          : require('../../assets/icon/previewLinkDefaultBackground.png');
+          : require('../../assets/images/previewLinkDefaultBackground.png');
 
         return (
           <Image

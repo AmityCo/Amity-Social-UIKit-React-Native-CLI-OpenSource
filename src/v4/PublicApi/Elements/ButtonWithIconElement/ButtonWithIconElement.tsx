@@ -6,16 +6,16 @@ import { useAmityElement, useConfigImageUri } from '../../../hook';
 import { PageID, ComponentID, ElementID } from '../../../enum';
 
 interface ButtonWithIconElementProps {
-  pageId: PageID;
-  componentId: ComponentID;
+  pageId?: PageID;
+  componentId?: ComponentID;
   elementId: ElementID;
   configTheme?: MyMD3Theme;
   onClick?: () => void;
 }
 
 const ButtonWithIconElement = ({
-  pageId,
-  componentId,
+  pageId = PageID.WildCardPage,
+  componentId = ComponentID.WildCardComponent,
   elementId,
   onClick,
 }: ButtonWithIconElementProps) => {

@@ -7,7 +7,6 @@ import React, {
   useState,
 } from 'react';
 import { FlatList } from 'react-native';
-import { useStyle } from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
 import { RootState } from '../../../../redux/store';
@@ -23,11 +22,13 @@ import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabCompo
 import { AmityStoryTabComponentEnum } from '../../types';
 import { usePostImpression } from '../../../../v4/hook/usePostImpression';
 import useAuth from '../../../../hooks/useAuth';
+import { useStyle } from './styles';
 import {
   isAmityAd,
   useCustomRankingGlobalFeed,
-} from '../../../../v4/hook/useCustomRankingGlobalFeed';
+} from '../../../hook/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
+import Divider from '../../../component/Divider';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
@@ -48,7 +49,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   const [refreshing, setRefreshing] = useState(false);
   const { clearFeed } = globalFeedSlice.actions;
   const dispatch = useDispatch();
-  const styles = useStyle(themeStyles);
+  const styles = useStyle();
   const { isConnected } = useAuth();
   const flatListRef = useRef(null);
   const nextPage = useSelector(
@@ -82,7 +83,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
         limit: globalFeedPageLimit,
       });
     }
-  }, [isConnected]);
+  }, [isConnected, fetch]);
 
   if (isExcluded) return null;
 
@@ -93,16 +94,21 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       accessibilityLabel={accessibilityId}
       style={styles.feedWrap}
       data={itemWithAds}
-      renderItem={({ item }) => {
-        if (isAmityAd(item)) return <PostAdComponent ad={item as Amity.Ad} />;
-
+      renderItem={({ item, index }) => {
         return (
-          <AmityPostContentComponent
-            post={item as IPost}
-            AmityPostContentComponentStyle={
-              AmityPostContentComponentStyleEnum.feed
-            }
-          />
+          <>
+            {index !== 0 && <Divider themeStyles={themeStyles} />}
+            {isAmityAd(item) ? (
+              <PostAdComponent ad={item as Amity.Ad} />
+            ) : (
+              <AmityPostContentComponent
+                post={item as IPost}
+                AmityPostContentComponentStyle={
+                  AmityPostContentComponentStyleEnum.feed
+                }
+              />
+            )}
+          </>
         );
       }}
       keyExtractor={(item, index) =>

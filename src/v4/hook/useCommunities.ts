@@ -1,13 +1,22 @@
 import { useEffect, useState } from 'react';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 
-export const useCommunities = () => {
+export const useCommunities = ({
+  categoryId,
+  membership = 'member',
+  limit = 20,
+}: {
+  membership?: 'all' | 'member' | 'notMember';
+  categoryId?: string;
+  limit?: number;
+} = {}) => {
   const [communities, setCommunities] = useState<Amity.Community[]>();
+  const [loading, setLoading] = useState(true);
   const [onNextCommunityPage, setOnNextCommunityPage] =
     useState<() => void | null>(null);
   useEffect(() => {
     const unsubscribe = CommunityRepository.getCommunities(
-      { membership: 'member', limit: 20 },
+      { membership, limit, categoryId },
       ({ error, loading, data, hasNextPage, onNextPage }) => {
         if (error) return;
         if (!loading) {
@@ -17,9 +26,11 @@ export const useCommunities = () => {
             return null;
           });
         }
+
+        setLoading(loading);
       }
     );
     return unsubscribe;
-  }, []);
-  return { communities, onNextCommunityPage };
+  }, [categoryId, membership, limit]);
+  return { communities, onNextCommunityPage, loading };
 };
