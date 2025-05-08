@@ -141,7 +141,7 @@ export default function AmitySocialUIKitV4Navigator() {
                     }}
                   >
                     <Image
-                      source={require('../assets/images/threeDot.png')}
+                      source={require('../assets/icon/threeDot.png')}
                       style={styles.dotIcon}
                     />
                   </TouchableOpacity>
@@ -269,27 +269,6 @@ export default function AmitySocialUIKitV4Navigator() {
                 title: displayName,
                 headerLeft: () => <BackButton />,
               })}
-            />
-            <Stack.Screen
-              name="AllCategoriesPage"
-              component={AmityAllCategoriesPage}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="CommunitiesByCategoryPage"
-              component={AmityCommunitiesByCategoryPage}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="CommunityProfilePage"
-              component={AmityCommunityProfilePage}
-              options={{
-                headerShown: false,
-              }}
             />
             <Stack.Group
               screenOptions={{
