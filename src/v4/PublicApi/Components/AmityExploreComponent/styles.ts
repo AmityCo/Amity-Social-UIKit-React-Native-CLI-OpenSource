@@ -18,6 +18,7 @@ export const useStyles = () => {
     trendingContainer: {
       paddingHorizontal: 16,
       marginTop: 20,
+      marginBottom: 20,
     },
     sectionErrorContainer: {
       minHeight: 400,
