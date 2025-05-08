@@ -8,6 +8,7 @@ import {
 } from '../hook';
 
 interface ExploreContextType {
+  refresh: () => void;
   recommendedCommunities: Amity.Community[];
   trendingCommunities: Amity.Community[];
   categories: Amity.Category[];
@@ -26,27 +27,37 @@ export const ExploreProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const {
+    refresh: refreshRecommendedCommunities,
     communities: recommendedCommunities,
     loading: isLoadingRecommendedCommunities,
     error: recommendedCommunitiesError,
   } = useRecommendedCommunities();
 
   const {
+    refresh: refreshTrendingCommunities,
     communities: trendingCommunities,
     loading: isLoadingTrendingCommunities,
     error: trendingCommunitiesError,
   } = useTrendingCommunities();
 
   const {
+    refresh: refreshCategories,
     categories,
     loading: isLoadingCategories,
     hasMore: hasMoreCategories,
     error: categoriesError,
   } = useCategories();
 
+  const refresh = () => {
+    refreshRecommendedCommunities();
+    refreshTrendingCommunities();
+    refreshCategories();
+  };
+
   return (
     <ExploreContext.Provider
       value={{
+        refresh,
         recommendedCommunities,
         trendingCommunities,
         categories,

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, RefreshControl } from 'react-native';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
 
@@ -23,7 +23,9 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
 }) => {
   const styles = useStyles();
   const { themeStyles } = useAmityPage({ pageId });
+  const [refreshing, setRefreshing] = useState(false);
   const {
+    refresh,
     isLoading,
     isCategoryEmpty,
     isRecommendedCommunitiesEmpty,
@@ -31,6 +33,12 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
     isAllError,
     isAllCommunitiesError,
   } = useExplore();
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    refresh();
+    setRefreshing(false);
+  };
 
   const isNothingToShow =
     !isLoading &&
@@ -61,7 +69,17 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
   if (isLoading) return <ExploreLoadingSkeleton themeStyles={themeStyles} />;
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['lightblue']}
+          tintColor="lightblue"
+        />
+      }
+    >
       {isNothingToShow ? (
         <View style={styles.emptyContainer}>
           <AmityExploreEmptyComponent pageId={pageId} />

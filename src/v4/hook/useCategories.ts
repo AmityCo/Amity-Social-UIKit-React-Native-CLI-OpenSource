@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import useAuth from '../../hooks/useAuth';
 
@@ -15,19 +15,16 @@ export const useCategories = ({
   const [onNextCategoryPage, setOnNextCategoryPage] =
     useState<() => void | null>(null);
 
-  useEffect(() => {
-    if (!isConnected) return () => {};
+  const unsubscribersRef = useRef<(() => void)[]>([]);
 
-    const unsubscribe = CategoryRepository.getCategories(
+  const fetchCategories = () => {
+    setLoading(true);
+    return CategoryRepository.getCategories(
       { limit },
       ({ error, loading, data, hasNextPage, onNextPage }) => {
-        setLoading(loading);
-        if (error) {
-          setError(error);
-          setLoading(false);
-          return;
-        }
+        if (error) setError(error);
         if (!loading) {
+          setLoading(loading);
           setCategories(data);
           setHasMore(hasNextPage);
           setOnNextCategoryPage(() => {
@@ -37,10 +34,29 @@ export const useCategories = ({
         }
       }
     );
-    return () => {
-      unsubscribe();
-    };
-  }, [isConnected, limit]);
+  };
 
-  return { categories, hasMore, onNextCategoryPage, loading, error };
+  const unsubscribeListener = () => {
+    unsubscribersRef.current.forEach((unsubscriber) => unsubscriber());
+    unsubscribersRef.current = [];
+  };
+
+  const refresh = () => {
+    unsubscribeListener();
+    setError(null);
+    const unsubscribe = fetchCategories();
+    unsubscribersRef.current.push(unsubscribe);
+  };
+
+  useEffect(() => {
+    if (!isConnected) return () => {};
+
+    const unsubscribe = fetchCategories();
+    unsubscribersRef.current.push(unsubscribe);
+
+    return () => unsubscribeListener();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected]);
+
+  return { refresh, categories, hasMore, onNextCategoryPage, loading, error };
 };
