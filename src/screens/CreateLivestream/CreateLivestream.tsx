@@ -292,7 +292,9 @@ const CreateLivestream = ({ navigation, route }) => {
             <View style={styles.idleWrap}>
               <View style={styles.idleWraplInner}>
                 <View style={styles.optionTopWrap}>
-                  {renderOptionIcon(closeIcon(), () => navigation.goBack())}
+                  {renderOptionIcon(closeIcon('white'), () =>
+                    navigation.goBack()
+                  )}
                   <View style={styles.optionTopRightWrap}>
                     {renderOptionIcon(syncIcon(), onSwitchCamera)}
                     <TouchableOpacity
@@ -332,14 +334,14 @@ const CreateLivestream = ({ navigation, route }) => {
                   <TextInput
                     style={styles.title}
                     placeholder="Title"
-                    placeholderTextColor={'rgba(255, 255, 255, 0.2)'}
+                    placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
                     onChangeText={(text) => setTitle(text)}
                     value={title}
                   />
                   <TextInput
                     style={styles.description}
                     placeholder="Tap to add post description..."
-                    placeholderTextColor={'rgba(255, 255, 255, 0.2)'}
+                    placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
                     onChangeText={(text) => setDescription(text)}
                     value={description}
                   />
