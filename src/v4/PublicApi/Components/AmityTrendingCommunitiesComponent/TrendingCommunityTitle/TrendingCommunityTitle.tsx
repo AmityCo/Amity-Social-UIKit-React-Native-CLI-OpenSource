@@ -25,7 +25,7 @@ const TrendingCommunityTitleComponent: FC<TrendingCommunityTitleProps> = ({
   return (
     <View style={styles.titleContainer}>
       <Typography.TitleBold testID={accessibilityId} style={styles.titleText}>
-        {config.text as string}
+        {(config?.text as string) || 'Trending now'}
       </Typography.TitleBold>
     </View>
   );

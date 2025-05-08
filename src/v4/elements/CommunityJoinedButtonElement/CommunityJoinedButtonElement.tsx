@@ -43,7 +43,7 @@ const CommunityJoinedButton: FC<CommunityJoinedButtonType> = ({
       size="small"
       {...props}
     >
-      {config.text as string}
+      {(config?.text as string) || 'Joined'}
     </Button>
   );
 };
