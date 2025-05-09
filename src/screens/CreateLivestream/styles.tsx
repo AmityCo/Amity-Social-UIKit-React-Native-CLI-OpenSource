@@ -156,7 +156,7 @@ export const useStyles = () => {
       fontSize: 15,
       lineHeight: 20,
       fontWeight: '600',
-      color: theme.colors.base,
+      color: 'white',
     },
     goLiveButton: {
       marginTop: 15,
