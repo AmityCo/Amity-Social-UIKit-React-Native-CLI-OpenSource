@@ -205,7 +205,7 @@
     "social_global_search_page/*/*": {},
     "social_global_search_page/top_search_bar/*": {},
     "social_global_search_page/top_search_bar/search_icon": {
-      "icon": "search"
+      "image": "search_light"
     },
     "social_global_search_page/top_search_bar/clear_button": {
       "icon": "clear"

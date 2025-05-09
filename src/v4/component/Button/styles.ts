@@ -11,12 +11,27 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     // Size styles
     buttonSmall: {
-      paddingVertical: 6,
-      paddingHorizontal: 8,
+      paddingVertical: 5,
+    },
+    smallWithIcon: {
+      gap: 4,
+      paddingLeft: 8,
+      paddingRight: 12,
+    },
+    smallOnlyIcon: {
+      padding: 4,
     },
     buttonLarge: {
       paddingVertical: 10,
       paddingHorizontal: 16,
+    },
+    largeWithIcon: {
+      gap: 8,
+      paddingLeft: 12,
+      paddingRight: 16,
+    },
+    largeOnlyIcon: {
+      padding: 10,
     },
     // Colors styles
     buttonPrimary: {
@@ -44,7 +59,6 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     // Icon styles
     icon: {
-      marginRight: 8,
       width: 20,
       height: 20,
     },

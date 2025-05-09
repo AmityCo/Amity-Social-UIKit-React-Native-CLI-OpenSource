@@ -1,9 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  typography: {
-    fontFamily: 'System', // Use your app's default font family
-  },
   typography__headline: {
     fontSize: 20,
     fontWeight: '700',

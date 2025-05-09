@@ -44,7 +44,7 @@ const ButtonWithIconElement = ({
     >
       <View style={styles.container}>
         <Image source={icon} style={styles.icon} />
-        <Text style={styles.label}>{(config.text as string) || ''}</Text>
+        <Text style={styles.label}>{(config?.text as string) || ''}</Text>
       </View>
     </TouchableOpacity>
   );

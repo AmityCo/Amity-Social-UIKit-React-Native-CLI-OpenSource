@@ -83,19 +83,21 @@ export const RecommendedCommunityItem: React.FC<
               componentId={componentId}
             />
           </View>
-          {community.isJoined ? (
-            <CommunityJoinedButton
-              pageId={pageId}
-              componentId={componentId}
-              communityId={community.communityId}
-            />
-          ) : (
-            <CommunityJoinButton
-              pageId={pageId}
-              componentId={componentId}
-              communityId={community.communityId}
-            />
-          )}
+          <View style={styles.detailBottomWrapRight}>
+            {community.isJoined ? (
+              <CommunityJoinedButton
+                pageId={pageId}
+                componentId={componentId}
+                communityId={community.communityId}
+              />
+            ) : (
+              <CommunityJoinButton
+                pageId={pageId}
+                componentId={componentId}
+                communityId={community.communityId}
+              />
+            )}
+          </View>
         </View>
       </View>
     </View>

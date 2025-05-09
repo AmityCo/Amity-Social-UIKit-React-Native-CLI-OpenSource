@@ -53,43 +53,48 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
         <CategoryTitle title={category.name} pageId={pageId} />
         <View style={styles.empty} />
       </View>
-      {!loading && communities.length === 0 ? (
+      {!loading && communities.length === 0 && (
         <View style={styles.emptyMessage}>
           <CommunityEmptyImage pageId={pageId} />
           <CommunityEmptyTitle pageId={pageId} />
         </View>
-      ) : (
-        <FlatList
-          data={communities}
-          renderItem={({ item }) => (
-            <Pressable
-              onPress={() =>
-                onPressCommunity({
-                  communityId: item.communityId,
-                })
-              }
-            >
-              <CommunityRowItem
-                community={item}
-                pageId={pageId}
-                showJoinButton={false}
-              />
-            </Pressable>
-          )}
-          keyExtractor={(item) => item.communityId}
-          contentContainerStyle={styles.listContent}
-          onEndReached={() => onNextCommunityPage?.()}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={
-            loading ? (
-              <CommunityListSkeleton
-                themeStyle={themeStyles}
-                amount={!communities ? 12 : 4}
-              />
-            ) : null
-          }
-        />
       )}
+      {loading && !communities && (
+        <View style={styles.loadingContainer}>
+          <CommunityListSkeleton
+            themeStyle={themeStyles}
+            amount={12}
+            hasTitle={false}
+          />
+        </View>
+      )}
+      <FlatList
+        data={communities}
+        renderItem={({ item }) => (
+          <Pressable
+            onPress={() =>
+              onPressCommunity({
+                communityId: item.communityId,
+              })
+            }
+          >
+            <CommunityRowItem
+              community={item}
+              pageId={pageId}
+              showJoinButton={false}
+            />
+          </Pressable>
+        )}
+        keyExtractor={(item) => item.communityId}
+        contentContainerStyle={styles.listContent}
+        onEndReached={() => onNextCommunityPage?.()}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          loading ? (
+            <CommunityListSkeleton themeStyle={themeStyles} amount={4} />
+          ) : null
+        }
+      />
     </SafeAreaView>
   );
 };

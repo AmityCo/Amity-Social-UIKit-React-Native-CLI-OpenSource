@@ -39,6 +39,8 @@ export const Button = ({
     styles.button,
     styles[`button${capitalize(type)}`],
     styles[`button${capitalize(size)}`],
+    icon && children ? styles[`${size}WithIcon`] : null,
+    icon && !children ? styles[`${size}OnlyIcon`] : null,
     style,
   ];
 
@@ -48,7 +50,11 @@ export const Button = ({
     [type, textStyle, styles]
   );
 
-  const renderText = useCallback(() => {
+  const renderChildren = useCallback(() => {
+    if (!children) return null;
+
+    if (typeof children !== 'string') return children;
+
     if (size === 'small') {
       return (
         <Typography.CaptionBold style={textStyles}>
@@ -78,7 +84,7 @@ export const Button = ({
           } as React.ReactElement['props'])
         : null}
 
-      {children && typeof children === 'string' ? renderText() : children}
+      {renderChildren()}
     </TouchableOpacity>
   );
 };
