@@ -270,6 +270,20 @@ export default function AmitySocialUIKitV4Navigator() {
                 headerLeft: () => <BackButton />,
               })}
             />
+            <Stack.Screen
+              name="AllCategoriesPage"
+              component={AmityAllCategoriesPage}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="CommunitiesByCategoryPage"
+              component={AmityCommunitiesByCategoryPage}
+              options={{
+                headerShown: false,
+              }}
+            />
             <Stack.Group
               screenOptions={{
                 headerShown: false,
