@@ -120,13 +120,7 @@ export default function AmitySocialUIKitV4Navigator() {
                   params: { communityName, communityId, isModerator },
                 },
               }: any) => ({
-                headerLeft: () => (
-                  <BackButton
-                    onPress={() => {
-                      navigation.navigate('Home');
-                    }}
-                  />
-                ),
+                headerLeft: () => <BackButton goBack={true} />,
                 title: communityName,
                 headerRight: () => (
                   <TouchableOpacity
