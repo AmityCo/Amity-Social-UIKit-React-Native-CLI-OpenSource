@@ -8,6 +8,8 @@ export { default as AmityPostTargetSelectionPage } from './PublicApi/Pages/Amity
 export { default as AmityStoryTargetSelectionPage } from './PublicApi/Pages/AmityStoryTargetSelectionPage/AmityStoryTargetSelectionPage';
 export { default as AmityPostComposerPage } from './PublicApi/Pages/AmityPostComposerPage/AmityPostComposerPage';
 export { default as AmityMyCommunitiesSearchPage } from './PublicApi/Pages/AmityMyCommunitiesSearchPage/AmityMyCommunitiesSearchPage';
+export { default as AmityAllCategoriesPage } from './PublicApi/Pages/AmityAllCategoriesPage/AmityAllCategoriesPage';
+export { default as AmityCommunitiesByCategoryPage } from './PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
 
 export { default as AmityStoryTabComponent } from './PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 export { default as AmitySocialHomeTopNavigationComponent } from './PublicApi/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
@@ -25,5 +27,6 @@ export { default as AmityPostCommentComponent } from './PublicApi/Components/Ami
 export { default as AmityPostEngagementActionsComponent } from './PublicApi/Components/AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
 export { default as AmityUserSearchResultComponent } from './PublicApi/Components/AmityUserSearchResultComponent/AmityUserSearchResultComponent';
 export { default as AmityReactionListComponent } from './PublicApi/Components/AmityReactionListComponent/AmityReactionListComponent';
+export { default as AmityExploreComponent } from './PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 
 export { AmityPostTargetSelectionPageType } from './enum/post';

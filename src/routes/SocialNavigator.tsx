@@ -1,5 +1,8 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  NavigationIndependentTree,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {
   NativeStackNavigationProp,
@@ -50,257 +53,260 @@ export default function SocialNavigator() {
 
   const styles = useStyles();
   return (
-    <NavigationContainer independent={true}>
-      {isConnected && (
-        <Stack.Navigator
-          initialRouteName="AmitySocialUIKitV4Navigator"
-          screenOptions={{
-            headerShadowVisible: false,
-            contentStyle: {
-              backgroundColor: 'white',
-            },
-            headerStyle: {
-              backgroundColor: theme.colors.background,
-            },
-            headerTitleStyle: {
-              color: theme.colors.base,
-            },
-          }}
-        >
-          <Stack.Screen
-            name="AmitySocialUIKitV4Navigator"
-            component={AmitySocialUIKitV4Navigator}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Explore" component={Explore} />
-          <Stack.Screen
-            name="PostDetail"
-            component={PostDetail}
-            options={({
-              navigation,
-            }: {
-              navigation: NativeStackNavigationProp<any>;
-            }) => ({
-              headerLeft: () => {
-                const routes = navigation.getState().routes;
-                const previousRoute = routes[routes.length - 2];
-                if (previousRoute?.name === 'CreateLivestream')
-                  return <CloseButton onPress={() => navigation.pop(2)} />;
-                return <BackButton />;
-              },
-              title: '',
-              headerTitleAlign: 'center',
-            })}
-          />
-          <Stack.Screen
-            name="CategoryList"
-            component={CategoryList}
-            options={({}) => ({
-              title: 'Category',
-            })}
-          />
-          <Stack.Screen
-            name="CommunityHome"
-            component={CommunityHome}
-            options={({
-              navigation,
-              route: {
-                params: { communityName, communityId, isModerator },
-              },
-            }: any) => ({
-              headerLeft: () => (
-                <BackButton
-                  onPress={() => {
-                    navigation.navigate('Home');
-                  }}
-                />
-              ),
-              title: communityName,
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('CommunitySetting', {
-                      communityId: communityId,
-                      communityName: communityName,
-                      isModerator: isModerator,
-                    });
-                  }}
-                >
-                  <Image
-                    source={require('../../assets/icon/threeDot.png')}
-                    style={styles.dotIcon}
-                  />
-                </TouchableOpacity>
-              ),
-            })}
-          />
-          <Stack.Screen
-            name="PendingPosts"
-            component={PendingPosts}
-            options={({
-              navigation,
-              route: {
-                params: { communityName, communityId, isModerator },
-              },
-            }: any) => ({
-              title: 'Pending Posts',
-              headerLeft: () => (
-                <BackButton
-                  goBack={false}
-                  onPress={() =>
-                    navigation.navigate('CommunityHome', {
-                      communityName,
-                      communityId,
-                      isModerator,
-                    })
-                  }
-                />
-              ),
-            })}
-          />
-          <Stack.Screen
-            name="CommunitySearch"
-            component={CommunitySearch}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="CommunityMemberDetail"
-            component={CommunityMemberDetail}
-            options={{
-              headerLeft: () => <BackButton />,
-              headerTitleAlign: 'center',
-              title: 'Member',
-            }}
-          />
-          <Stack.Screen
-            name="CommunitySetting"
-            component={CommunitySetting}
-            options={({
-              route: {
-                params: { communityName },
-              },
-            }: any) => ({
-              title: communityName,
-              headerTitleAlign: 'center',
-              headerLeft: () => <BackButton />,
-            })}
-          />
-          <Stack.Screen name="CreateCommunity" component={CreateCommunity} />
-          <Stack.Screen name="CommunityList" component={CommunityList} />
-          <Stack.Screen
-            name="AllMyCommunity"
-            component={AllMyCommunity}
-            options={({
-              navigation,
-            }: {
-              navigation: NativeStackNavigationProp<any>;
-            }) => ({
-              headerLeft: () => (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.goBack();
-                  }}
-                  style={styles.btnWrap}
-                >
-                  <SvgXml
-                    xml={closeIcon(theme.colors.base)}
-                    width="15"
-                    height="15"
-                  />
-                </TouchableOpacity>
-              ),
-            })}
-          />
-          <Stack.Screen
-            name="CreatePost"
-            component={CreatePost}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CreatePoll"
-            component={CreatePoll}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CreateLivestream"
-            component={CreateLivestream}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="UserProfile"
-            component={UserProfile}
-            options={{
-              title: '',
-              headerLeft: () => <BackButton />,
-            }}
-          />
-          <Stack.Screen name="EditProfile" component={EditProfile} />
-          <Stack.Screen
-            name="EditCommunity"
-            component={EditCommunity}
-            options={() => ({
-              headerLeft: () => <CancelButton />,
-              title: 'Edit Profile',
-              headerTitleAlign: 'center',
-            })}
-          />
-          <Stack.Screen
-            name="UserProfileSetting"
-            component={UserProfileSetting}
-          />
-          <Stack.Screen
-            name="VideoPlayer"
-            component={VideoPlayerFull}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="UserPendingRequest"
-            component={UserPendingRequest}
-            options={{
-              title: 'Follow Requests',
-              headerLeft: () => <BackButton />,
-            }}
-          />
-          <Stack.Screen
-            name="FollowerList"
-            component={FollowerList}
-            options={({
-              route: {
-                params: { displayName },
-              },
-            }: any) => ({
-              title: displayName,
-              headerLeft: () => <BackButton />,
-            })}
-          />
-
-          <Stack.Group
+    <NavigationIndependentTree>
+      <NavigationContainer>
+        {isConnected && (
+          <Stack.Navigator
+            id={undefined}
+            initialRouteName="AmitySocialUIKitV4Navigator"
             screenOptions={{
-              headerShown: false,
-              animation: 'slide_from_bottom',
+              headerShadowVisible: false,
+              contentStyle: {
+                backgroundColor: 'white',
+              },
+              headerStyle: {
+                backgroundColor: theme.colors.background,
+              },
+              headerTitleStyle: {
+                color: theme.colors.base,
+              },
             }}
           >
             <Stack.Screen
-              name="ReactionList"
-              component={ReactionListScreen}
+              name="AmitySocialUIKitV4Navigator"
+              component={AmitySocialUIKitV4Navigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Explore" component={Explore} />
+            <Stack.Screen
+              name="PostDetail"
+              component={PostDetail}
+              options={({
+                navigation,
+              }: {
+                navigation: NativeStackNavigationProp<any>;
+              }) => ({
+                headerLeft: () => {
+                  const routes = navigation.getState().routes;
+                  const previousRoute = routes[routes.length - 2];
+                  if (previousRoute?.name === 'CreateLivestream')
+                    return <CloseButton onPress={() => navigation.pop(2)} />;
+                  return <BackButton />;
+                },
+                title: '',
+                headerTitleAlign: 'center',
+              })}
+            />
+            <Stack.Screen
+              name="CategoryList"
+              component={CategoryList}
+              options={({}) => ({
+                title: 'Category',
+              })}
+            />
+            <Stack.Screen
+              name="CommunityHome"
+              component={CommunityHome}
+              options={({
+                navigation,
+                route: {
+                  params: { communityName, communityId, isModerator },
+                },
+              }: any) => ({
+                headerLeft: () => (
+                  <BackButton
+                    onPress={() => {
+                      navigation.navigate('Home');
+                    }}
+                  />
+                ),
+                title: communityName,
+                headerRight: () => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('CommunitySetting', {
+                        communityId: communityId,
+                        communityName: communityName,
+                        isModerator: isModerator,
+                      });
+                    }}
+                  >
+                    <Image
+                      source={require('../../assets/icon/threeDot.png')}
+                      style={styles.dotIcon}
+                    />
+                  </TouchableOpacity>
+                ),
+              })}
+            />
+            <Stack.Screen
+              name="PendingPosts"
+              component={PendingPosts}
+              options={({
+                navigation,
+                route: {
+                  params: { communityName, communityId, isModerator },
+                },
+              }: any) => ({
+                title: 'Pending Posts',
+                headerLeft: () => (
+                  <BackButton
+                    goBack={false}
+                    onPress={() =>
+                      navigation.navigate('CommunityHome', {
+                        communityName,
+                        communityId,
+                        isModerator,
+                      })
+                    }
+                  />
+                ),
+              })}
+            />
+            <Stack.Screen
+              name="CommunitySearch"
+              component={CommunitySearch}
               options={{
-                headerShown: true,
-                title: 'Reactions',
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="CommunityMemberDetail"
+              component={CommunityMemberDetail}
+              options={{
+                headerLeft: () => <BackButton />,
+                headerTitleAlign: 'center',
+                title: 'Member',
+              }}
+            />
+            <Stack.Screen
+              name="CommunitySetting"
+              component={CommunitySetting}
+              options={({
+                route: {
+                  params: { communityName },
+                },
+              }: any) => ({
+                title: communityName,
+                headerTitleAlign: 'center',
+                headerLeft: () => <BackButton />,
+              })}
+            />
+            <Stack.Screen name="CreateCommunity" component={CreateCommunity} />
+            <Stack.Screen name="CommunityList" component={CommunityList} />
+            <Stack.Screen
+              name="AllMyCommunity"
+              component={AllMyCommunity}
+              options={({
+                navigation,
+              }: {
+                navigation: NativeStackNavigationProp<any>;
+              }) => ({
+                headerLeft: () => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                    style={styles.btnWrap}
+                  >
+                    <SvgXml
+                      xml={closeIcon(theme.colors.base)}
+                      width="15"
+                      height="15"
+                    />
+                  </TouchableOpacity>
+                ),
+              })}
+            />
+            <Stack.Screen
+              name="CreatePost"
+              component={CreatePost}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="CreatePoll"
+              component={CreatePoll}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="CreateLivestream"
+              component={CreateLivestream}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="UserProfile"
+              component={UserProfile}
+              options={{
+                title: '',
                 headerLeft: () => <BackButton />,
               }}
             />
-            <Stack.Screen name="CreateStory" component={CreateStoryScreen} />
+            <Stack.Screen name="EditProfile" component={EditProfile} />
             <Stack.Screen
-              name="LivestreamPlayer"
-              component={LivestreamPlayer}
+              name="EditCommunity"
+              component={EditCommunity}
+              options={() => ({
+                headerLeft: () => <CancelButton />,
+                title: 'Edit Profile',
+                headerTitleAlign: 'center',
+              })}
+            />
+            <Stack.Screen
+              name="UserProfileSetting"
+              component={UserProfileSetting}
+            />
+            <Stack.Screen
+              name="VideoPlayer"
+              component={VideoPlayerFull}
               options={{ headerShown: false }}
             />
-          </Stack.Group>
-        </Stack.Navigator>
-      )}
-    </NavigationContainer>
+            <Stack.Screen
+              name="UserPendingRequest"
+              component={UserPendingRequest}
+              options={{
+                title: 'Follow Requests',
+                headerLeft: () => <BackButton />,
+              }}
+            />
+            <Stack.Screen
+              name="FollowerList"
+              component={FollowerList}
+              options={({
+                route: {
+                  params: { displayName },
+                },
+              }: any) => ({
+                title: displayName,
+                headerLeft: () => <BackButton />,
+              })}
+            />
+
+            <Stack.Group
+              screenOptions={{
+                headerShown: false,
+                animation: 'slide_from_bottom',
+              }}
+            >
+              <Stack.Screen
+                name="ReactionList"
+                component={ReactionListScreen}
+                options={{
+                  headerShown: true,
+                  title: 'Reactions',
+                  headerLeft: () => <BackButton />,
+                }}
+              />
+              <Stack.Screen name="CreateStory" component={CreateStoryScreen} />
+              <Stack.Screen
+                name="LivestreamPlayer"
+                component={LivestreamPlayer}
+                options={{ headerShown: false }}
+              />
+            </Stack.Group>
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
+    </NavigationIndependentTree>
   );
 }

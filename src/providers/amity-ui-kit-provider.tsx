@@ -10,8 +10,9 @@ import { validateConfigColor } from '../util/colorUtil';
 import useValidateConfig from '../v4/hook/useValidateConfig';
 import fallBackConfig from '../../uikit.config.json';
 import { BehaviourProvider } from '../v4/providers/BehaviourProvider';
+import { ExploreProvider } from '../v4/providers/ExploreProvider';
 import { IBehaviour } from '../v4/types/behaviour.interface';
-import { lighten, parseToHsl, hslToColorString } from 'polished';
+import { lighten, darken, parseToHsl, hslToColorString } from 'polished';
 import { AdEngineProvider } from '../v4/providers/AdEngineProvider';
 import BottomSheetComponent from '../v4/component/BottomSheetComponent/BottomSheetComponent';
 
@@ -67,24 +68,44 @@ export default function AmityUiKitProvider({
   const colorScheme = useColorScheme();
   const SHADE_PERCENTAGES = [0.25, 0.4, 0.45, 0.6];
 
-  const generateShades = (hexColor?: string): string[] => {
+  const generateShades = (hexColor?: string, isDarkTheme = false): string[] => {
+    // if the base color is the same as our design system colors, we need to return the shades of the design system colors
+    // primary color
+    if (hexColor.toLowerCase() === '#1054de')
+      return ['#4A82F2', '#A9C4F9', '#D9E5FC', '#FFFFFF'];
+    // secondary color
+    if (hexColor.toLowerCase() === '#292b32' && !isDarkTheme)
+      return ['#636878', '#898E9E', '#A5A9B5', '#EBECEF'];
+    if (hexColor.toLowerCase() === '#ebecef' && isDarkTheme)
+      return ['#A5A9B5', '#898E9E', '#40434E', '#292B32'];
+
     if (!hexColor) return Array(SHADE_PERCENTAGES.length).fill('');
+
     const hslColor = parseToHsl(hexColor);
     const shades = SHADE_PERCENTAGES.map((percentage) => {
-      return lighten(percentage, hslToColorString(hslColor));
+      return isDarkTheme
+        ? darken(percentage, hslToColorString(hslColor))
+        : lighten(percentage, hslToColorString(hslColor));
     });
     return shades;
   };
   const isValidConfig = useValidateConfig(configs);
   const configData = isValidConfig ? configs : (fallBackConfig as IConfigRaw);
+
   const isDarkTheme =
     configData?.preferred_theme === 'dark' ||
     (configData?.preferred_theme === 'default' && colorScheme === 'dark');
+
   const themeColor = isDarkTheme
     ? configData.theme.dark
     : configData.theme.light;
-  const primaryShades = generateShades(themeColor.primary_color);
-  const secondaryShades = generateShades(themeColor.secondary_color);
+
+  const primaryShades = generateShades(themeColor.primary_color, isDarkTheme);
+  const secondaryShades = generateShades(
+    themeColor.secondary_color,
+    isDarkTheme
+  );
+
   const globalTheme: MyMD3Theme = {
     ...DefaultTheme,
     colors: {
@@ -126,10 +147,12 @@ export default function AmityUiKitProvider({
         <AdEngineProvider>
           <ConfigProvider configs={configData}>
             <BehaviourProvider behaviour={behaviour}>
-              <PaperProvider theme={globalTheme}>
-                {children}
-                <BottomSheetComponent />
-              </PaperProvider>
+              <ExploreProvider>
+                <PaperProvider theme={globalTheme}>
+                  {children}
+                  <BottomSheetComponent />
+                </PaperProvider>
+              </ExploreProvider>
             </BehaviourProvider>
           </ConfigProvider>
         </AdEngineProvider>

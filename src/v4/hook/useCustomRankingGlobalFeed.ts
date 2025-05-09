@@ -15,7 +15,7 @@ export const isAmityAd = (item: Amity.Post | Amity.Ad): item is Amity.Ad => {
 export const useCustomRankingGlobalFeed = () => {
   const dispatch = useDispatch();
 
-  const { updateGlobalFeed, clearFeed, setPaginationData, setNewGlobalFeed } =
+  const { updateGlobalFeed, setPaginationData, setNewGlobalFeed } =
     globalFeedSlice.actions;
 
   const [fetching, setFetching] = useState(false);
@@ -72,7 +72,7 @@ export const useCustomRankingGlobalFeed = () => {
   }: {
     queryToken?: string;
     limit?: number;
-  }) => {
+  } = {}) => {
     // if load first page, reset all the running index in paginator
     setFetching(true);
     if (!queryToken) reset();
@@ -98,7 +98,7 @@ export const useCustomRankingGlobalFeed = () => {
   };
 
   const refresh = async () => {
-    dispatch(clearFeed());
+    // dispatch(clearFeed());
     await fetch({ limit: globalFeedPageLimit });
     return true;
   };

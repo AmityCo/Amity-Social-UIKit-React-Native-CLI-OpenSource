@@ -104,7 +104,7 @@ const CommunityStories = ({
                 ? {
                     uri: avatarUrl,
                   }
-                : require('../../assets/icon/Placeholder.png')
+                : require('../../assets/images/Placeholder.png')
             }
             style={styles.communityAvatar}
           />
@@ -135,7 +135,7 @@ const CommunityStories = ({
                 ? {
                     uri: avatarUrl,
                   }
-                : require('../../assets/icon/Placeholder.png')
+                : require('../../assets/images/Placeholder.png')
             }
             style={styles.communityAvatar}
           />

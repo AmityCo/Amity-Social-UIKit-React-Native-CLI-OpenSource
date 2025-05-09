@@ -253,3 +253,32 @@ Please refer to our online documentation at https://docs.amity.co or contact a U
 
 
 ```
+
+## Migration Guide to React Navigation v7
+
+1. Upgrade the following dependencies to the exact versions specified in the `package.json` of UIKit:
+
+   - `@react-navigation/native`: `x.x.x`
+   - `@react-navigation/native-stack`: `x.x.x`
+   - `@react-navigation/stack`: `x.x.x`
+   - `react-native-screens`: `x.x.x`
+
+2. Replace `independent={true}` in `NavigationContainer` with `NavigationIndependentTree`. This ensures proper navigation context isolation for nested navigators.
+
+**Before:**
+
+```tsx
+<NavigationContainer independent={true}>
+  {/* Your navigators */}
+</NavigationContainer>
+```
+
+**After:**
+
+```tsx
+<NavigationIndependentTree>
+  <NavigationContainer>{/* Your navigators */}</NavigationContainer>
+</NavigationIndependentTree>
+```
+
+Please refer to [full migration guide from official website](https://reactnavigation.org/docs/upgrading-from-6.x) for other breaking changes in your application

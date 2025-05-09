@@ -27,7 +27,7 @@ const NoSearchResult = () => {
     <View style={styles.container}>
       <Image
         style={styles.img}
-        source={require('../../assets/icon/noSearchResult.png')}
+        source={require('../../assets/images/noSearchResult.png')}
       />
       <Text style={styles.noResultText}>No results found</Text>
     </View>

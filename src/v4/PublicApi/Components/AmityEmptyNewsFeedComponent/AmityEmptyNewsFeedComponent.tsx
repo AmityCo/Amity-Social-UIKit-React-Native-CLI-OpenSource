@@ -8,8 +8,9 @@ import {
   ExploreCommunityButton,
   CreateCommunityButton,
 } from './Elements';
-import useConfig from '../../../hook/useConfig';
+import Divider from '../../../component/Divider';
 import { ComponentID, PageID } from '../../../enum';
+import { useAmityComponent } from '../../../hook';
 
 type AmityEmptyNewsFeedComponentType = {
   pageId?: PageID;
@@ -18,27 +19,35 @@ type AmityEmptyNewsFeedComponentType = {
 
 const AmityEmptyNewsFeedComponent: FC<AmityEmptyNewsFeedComponentType> = ({
   onPressExploreCommunity,
-  pageId = '*',
+  pageId = PageID.WildCardPage,
 }) => {
-  const { excludes } = useConfig();
   const styles = useStyles();
   const componentId = ComponentID.empty_newsfeed;
-  const uiReference = `${pageId}/${componentId}/*}`;
-  if (excludes.includes(uiReference)) return null;
+
+  const { themeStyles, accessibilityId, isExcluded } = useAmityComponent({
+    pageId,
+    componentId,
+  });
+
+  if (isExcluded) return null;
+
   return (
-    <View
-      style={styles.container}
-      testID={uiReference}
-      accessibilityLabel={uiReference}
-    >
-      <Illustration />
-      <Title />
-      <Description />
-      <ExploreCommunityButton
-        onPressExploreCommunity={onPressExploreCommunity}
-      />
-      <CreateCommunityButton />
-    </View>
+    <>
+      <Divider themeStyles={themeStyles} />
+      <View
+        style={styles.container}
+        testID={accessibilityId}
+        accessibilityLabel={accessibilityId}
+      >
+        <Illustration />
+        <Title />
+        <Description />
+        <ExploreCommunityButton
+          onPressExploreCommunity={onPressExploreCommunity}
+        />
+        <CreateCommunityButton />
+      </View>
+    </>
   );
 };
 

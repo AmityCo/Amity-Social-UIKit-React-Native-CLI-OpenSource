@@ -6,16 +6,16 @@ import { useAmityElement, useConfigImageUri } from '../../../hook';
 import { PageID, ComponentID, ElementID } from '../../../enum';
 
 interface ButtonWithIconElementProps {
-  pageId: PageID;
-  componentId: ComponentID;
+  pageId?: PageID;
+  componentId?: ComponentID;
   elementId: ElementID;
   configTheme?: MyMD3Theme;
   onClick?: () => void;
 }
 
 const ButtonWithIconElement = ({
-  pageId,
-  componentId,
+  pageId = PageID.WildCardPage,
+  componentId = ComponentID.WildCardComponent,
   elementId,
   onClick,
 }: ButtonWithIconElementProps) => {
@@ -44,7 +44,7 @@ const ButtonWithIconElement = ({
     >
       <View style={styles.container}>
         <Image source={icon} style={styles.icon} />
-        <Text style={styles.label}>{(config.text as string) || ''}</Text>
+        <Text style={styles.label}>{(config?.text as string) || ''}</Text>
       </View>
     </TouchableOpacity>
   );

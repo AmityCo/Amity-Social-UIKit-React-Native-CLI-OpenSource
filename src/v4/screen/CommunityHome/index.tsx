@@ -121,7 +121,7 @@ export default function CommunityHome({ route }: any) {
           );
           setCommunityData(data);
         }
-        setIsJoin(data.isJoined || false); // Set isJoin to communityData?.data.isJoined value
+        setIsJoin(data?.isJoined || false); // Set isJoin to communityData?.data.isJoined value
       }
     );
     return () => {
@@ -272,7 +272,7 @@ export default function CommunityHome({ route }: any) {
                 ? {
                     uri: avatarUrl,
                   }
-                : require('../../assets/icon/Placeholder.png')
+                : require('../../assets/images/Placeholder.png')
             }
           />
           <View style={styles.darkOverlay} />

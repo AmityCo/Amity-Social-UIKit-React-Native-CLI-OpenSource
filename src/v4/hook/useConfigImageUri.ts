@@ -1,4 +1,4 @@
-import { Image, ImageSourcePropType } from 'react-native';
+import { Image, ImageURISource } from 'react-native';
 import { defaultAvatarUri } from '../assets';
 import { useMemo } from 'react';
 import useConfig from './useConfig';
@@ -12,7 +12,7 @@ export const useConfigImageUri = ({
 }: {
   configPath: IUIKitConfigOptions;
   configKey: keyof UiKitConfigKeys;
-}): ImageSourcePropType => {
+}): ImageURISource => {
   const { getUiKitConfig } = useConfig();
   const { isDarkTheme } = useDarkMode();
   const configImageUri = useMemo(() => {
@@ -105,6 +105,12 @@ export const useConfigImageUri = ({
     }
     if (fileUri === 'file_button') {
       image = require('../configAssets/icons/file_button.png');
+    }
+    if (fileUri === 'empty_list_icon') {
+      image = require('../configAssets/icons/empty_list_icon.png');
+    }
+    if (fileUri === 'search_light') {
+      image = require('../configAssets/icons/search_light.png');
     }
     if (typeof image === 'number') {
       return Image.resolveAssetSource(image)?.uri ?? defaultAvatarUri;
