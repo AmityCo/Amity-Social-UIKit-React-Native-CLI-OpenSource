@@ -147,10 +147,12 @@ export default function AmityUiKitProvider({
         <AdEngineProvider>
           <ConfigProvider configs={configData}>
             <BehaviourProvider behaviour={behaviour}>
-              <PaperProvider theme={globalTheme}>
-                {children}
-                <BottomSheetComponent />
-              </PaperProvider>
+              <ExploreProvider>
+                <PaperProvider theme={globalTheme}>
+                  {children}
+                  <BottomSheetComponent />
+                </PaperProvider>
+              </ExploreProvider>
             </BehaviourProvider>
           </ConfigProvider>
         </AdEngineProvider>

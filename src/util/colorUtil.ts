@@ -15,3 +15,12 @@ export const hexToRgba = (hex: string, alpha: number): string => {
 
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
+
+export const getSkeletonBackgrounColor = (themeColor: MyMD3Theme) => {
+  const backgroundColor = lighten(0.2, themeColor.colors.baseShade3);
+  const foregroundColor = themeColor.colors.baseShade4;
+  return {
+    backgroundColor,
+    foregroundColor,
+  };
+};

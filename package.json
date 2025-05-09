@@ -100,6 +100,7 @@
     "react-native-video-controls": "^2.8.1",
     "react-native-vision-camera": "^3.9.1",
     "react-native-vlc-media-player": "^1.0.67",
+    "react-native-linear-gradient": "^2.8.3",
     "release-it": "^15.0.0",
     "turbo": "^1.10.7",
     "typescript": "^5.2.2"
@@ -112,6 +113,7 @@
     "@types/react": "17.0.21"
   },
   "peerDependencies": {
+    "react-native-linear-gradient": "^2.8.3",
     "@api.video/react-native-livestream": "^2.0.0",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/netinfo": "^11.3.1",

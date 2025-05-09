@@ -19,12 +19,12 @@ import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabCompo
 import { AmityStoryTabComponentEnum } from '../../types';
 import { usePostImpression } from '../../../../v4/hook/usePostImpression';
 import useAuth from '../../../../hooks/useAuth';
+import { useStyle } from './styles';
 import {
   isAmityAd,
   useCustomRankingGlobalFeed,
-} from '../../../../v4/hook/useCustomRankingGlobalFeed';
+} from '../../../hook/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
-import { useStyle } from './styles';
 import Divider from '../../../component/Divider';
 
 type AmityGlobalFeedComponentType = {
@@ -77,8 +77,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
         limit: globalFeedPageLimit,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected]);
+  }, [isConnected, fetch]);
 
   if (isExcluded) return null;
 
