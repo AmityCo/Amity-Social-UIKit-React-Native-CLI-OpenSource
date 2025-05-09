@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, RefreshControl } from 'react-native';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
 
@@ -13,6 +13,7 @@ import { useExplore } from '../../../providers/ExploreProvider';
 import ExploreLoadingSkeleton from './ExploreLoadingSkeleton/ExploreLoadingSkeleton';
 import { useAmityPage } from '../../../hook';
 import ErrorComponent from '../../../component/ErrorComponent/ErrorComponent';
+import Divider from '../../../component/Divider';
 
 type AmityExploreComponentProps = {
   pageId?: PageID;
@@ -23,7 +24,9 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
 }) => {
   const styles = useStyles();
   const { themeStyles } = useAmityPage({ pageId });
+  const [refreshing, setRefreshing] = useState(false);
   const {
+    refresh,
     isLoading,
     isCategoryEmpty,
     isRecommendedCommunitiesEmpty,
@@ -32,14 +35,23 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
     isAllCommunitiesError,
   } = useExplore();
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    refresh();
+    setRefreshing(false);
+  };
+
   const isNothingToShow =
     !isLoading &&
-    (isCategoryEmpty ||
-      isRecommendedCommunitiesEmpty ||
-      isTrendingCommunitiesEmpty);
+    isCategoryEmpty &&
+    isRecommendedCommunitiesEmpty &&
+    isTrendingCommunitiesEmpty;
 
   const isNoCommunities =
-    !isLoading && (isRecommendedCommunitiesEmpty || isTrendingCommunitiesEmpty);
+    !isLoading &&
+    isRecommendedCommunitiesEmpty &&
+    isTrendingCommunitiesEmpty &&
+    !isCategoryEmpty;
 
   const renderError = React.useCallback(() => {
     return (
@@ -55,10 +67,20 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
     return renderError();
   }
 
-  if (isLoading) return <ExploreLoadingSkeleton themeStyles={themeStyles} />;
-
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['lightblue']}
+          tintColor="lightblue"
+        />
+      }
+    >
+      <Divider themeStyles={themeStyles} />
+      {isLoading && <ExploreLoadingSkeleton themeStyles={themeStyles} />}
       {isNothingToShow ? (
         <View style={styles.emptyContainer}>
           <AmityExploreEmptyComponent pageId={pageId} />

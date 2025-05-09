@@ -38,7 +38,9 @@ export const CategoryChip: FC<CategoryChipProps> = ({ category }) => {
         </View>
       )}
 
-      <Typography.BodyBold>{category.name}</Typography.BodyBold>
+      <Typography.BodyBold style={styles.categoryName}>
+        {category.name}
+      </Typography.BodyBold>
     </View>
   );
 };

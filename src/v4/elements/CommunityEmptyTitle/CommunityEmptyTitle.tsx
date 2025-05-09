@@ -29,7 +29,7 @@ const CommunityEmptyTitle: FC<CommunityEmptyTitleProps> = ({
 
   return (
     <Typography.TitleBold style={styles.title} numberOfLines={1}>
-      {config.text as string}
+      {(config?.text as string) || 'No community yet'}
     </Typography.TitleBold>
   );
 };

@@ -23,7 +23,7 @@ const AmityTopSearchBarComponent = ({
       component: ComponentID.top_search_bar,
       element: ElementID.search_icon,
     },
-    configKey: 'icon',
+    configKey: 'image',
   });
   const clearIcon = useConfigImageUri({
     configPath: {
