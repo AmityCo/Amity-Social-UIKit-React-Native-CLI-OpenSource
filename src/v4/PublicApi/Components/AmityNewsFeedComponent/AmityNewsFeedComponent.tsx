@@ -3,6 +3,8 @@ import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum/enumUIKitID';
 import AmityGlobalFeedComponent from '../AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import { useStyles } from './styles';
+import Divider from '../../../component/Divider';
+import { useAmityComponent } from '../../../hook';
 
 type AmityNewsFeedComponentType = {
   pageId?: PageID;
@@ -12,16 +14,21 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
   pageId = PageID.WildCardPage,
 }) => {
   const componentId = ComponentID.newsfeed_component;
-  const uiReference = `${pageId}/${componentId}/*`;
+  const { themeStyles, accessibilityId, isExcluded } = useAmityComponent({
+    pageId,
+    componentId,
+  });
+
   const styles = useStyles();
-  if (excludes.includes(uiReference)) return null;
+  if (isExcluded) return null;
 
   return (
     <View
       style={styles.container}
-      testID={uiReference}
-      accessibilityLabel={uiReference}
+      testID={accessibilityId}
+      accessibilityLabel={accessibilityId}
     >
+      <Divider themeStyles={themeStyles} />
       <AmityGlobalFeedComponent pageId={pageId} />
     </View>
   );

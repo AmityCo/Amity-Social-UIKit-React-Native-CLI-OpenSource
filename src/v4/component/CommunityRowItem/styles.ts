@@ -21,6 +21,11 @@ export const useStyles = () => {
       gap: 4,
       flex: 1,
     },
+    detailBottomWrapRight: {
+      height: '100%',
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+    },
     displayName: {
       flexDirection: 'row',
       gap: 2,

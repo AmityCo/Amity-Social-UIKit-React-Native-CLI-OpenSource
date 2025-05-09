@@ -7,9 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { FlatList } from 'react-native';
-import { useStyle } from './styles';
-import { useDispatch, useSelector } from 'react-redux';
-import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
 
 import { RefreshControl } from 'react-native';
@@ -26,6 +24,7 @@ import {
   useCustomRankingGlobalFeed,
 } from '../../../../v4/hook/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
+import { useStyle } from './styles';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
@@ -38,15 +37,13 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 }) => {
   const { fetch, itemWithAds, refresh, loading } = useCustomRankingGlobalFeed();
   const componentId = ComponentID.global_feed_component;
-  const { isExcluded, themeStyles, accessibilityId } = useAmityComponent({
+  const { isExcluded, accessibilityId } = useAmityComponent({
     pageId,
     componentId,
   });
 
   const [refreshing, setRefreshing] = useState(false);
-  const { clearFeed } = globalFeedSlice.actions;
-  const dispatch = useDispatch();
-  const styles = useStyle(themeStyles);
+  const styles = useStyle();
   const { isConnected } = useAuth();
   const flatListRef = useRef(null);
   const nextPage = useSelector(
@@ -63,13 +60,12 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    dispatch(clearFeed());
     await refresh();
     setRefreshing(false);
-  }, [clearFeed, dispatch, refresh]);
+  }, [refresh]);
 
   const { handleViewChange } = usePostImpression(
-    itemWithAds.filter((item: IPost | Amity.Ad) =>
+    itemWithAds.filter((item: Amity.Post | Amity.Ad) =>
       isAmityAd(item) ? item?.adId : item?.postId
     )
   );
@@ -80,6 +76,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
         limit: globalFeedPageLimit,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
 
   if (isExcluded) return null;
@@ -96,7 +93,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 
         return (
           <AmityPostContentComponent
-            post={item as IPost}
+            post={item as Amity.Post}
             AmityPostContentComponentStyle={
               AmityPostContentComponentStyleEnum.feed
             }

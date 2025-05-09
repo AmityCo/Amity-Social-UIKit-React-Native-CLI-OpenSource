@@ -12,6 +12,7 @@ import { emptyCommunity, plus } from '../../../assets/icons';
 import { Typography } from '../../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { Button } from '../../../component/Button/Button';
+import Divider from '../../../component/Divider';
 
 type AmityMyCommunitiesComponentType = {
   pageId?: PageID;
@@ -77,6 +78,7 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
     >
+      <Divider themeStyles={themeStyles} />
       {!loading && communities?.length === 0 ? (
         renderEmptyState()
       ) : (

@@ -12,7 +12,7 @@ import fallBackConfig from '../../uikit.config.json';
 import { BehaviourProvider } from '../v4/providers/BehaviourProvider';
 import { ExploreProvider } from '../v4/providers/ExploreProvider';
 import { IBehaviour } from '../v4/types/behaviour.interface';
-import { lighten, parseToHsl, hslToColorString } from 'polished';
+import { lighten, darken, parseToHsl, hslToColorString } from 'polished';
 import { AdEngineProvider } from '../v4/providers/AdEngineProvider';
 import BottomSheetComponent from '../v4/component/BottomSheetComponent/BottomSheetComponent';
 
