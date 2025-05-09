@@ -11,7 +11,7 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     displayName: {
       color: theme.colors.base,
-      flex: 1,
+      flexShrink: 1,
     },
   });
   return styles;

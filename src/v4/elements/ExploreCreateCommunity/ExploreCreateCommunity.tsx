@@ -32,7 +32,7 @@ const ExploreCreateCommunity: FC<ExploreCreateCommunityType> = ({
       themeStyle={themeStyles}
       {...props}
     >
-      {config.text as string}
+      {(config?.text as string) || 'Create community'}
     </Button>
   );
 };

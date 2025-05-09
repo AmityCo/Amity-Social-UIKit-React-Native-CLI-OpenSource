@@ -7,8 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { FlatList } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
 
 import { RefreshControl } from 'react-native';
@@ -47,8 +46,6 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   });
 
   const [refreshing, setRefreshing] = useState(false);
-  const { clearFeed } = globalFeedSlice.actions;
-  const dispatch = useDispatch();
   const styles = useStyle();
   const { isConnected } = useAuth();
   const flatListRef = useRef(null);
@@ -66,10 +63,9 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    dispatch(clearFeed());
     await refresh();
     setRefreshing(false);
-  }, [clearFeed, dispatch, refresh]);
+  }, [refresh]);
 
   const { handleViewChange } = usePostImpression(
     itemWithAds.filter((item: IPost | Amity.Ad) =>

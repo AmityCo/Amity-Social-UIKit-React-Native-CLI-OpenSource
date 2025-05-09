@@ -28,7 +28,7 @@ export const useStyles = () => {
       marginRight: 16,
       color: theme.colors.primary,
     },
-    searchIcon: { width: 20, height: 20, tintColor: theme.colors.base },
+    searchIcon: { width: 20, height: 20, tintColor: theme.colors.baseShade3 },
   });
 
   return styles;

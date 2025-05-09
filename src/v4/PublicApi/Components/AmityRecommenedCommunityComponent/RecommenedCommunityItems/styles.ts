@@ -42,12 +42,18 @@ export const useStyles = () => {
       color: theme.colors.base,
     },
     detailBottomWrap: {
+      alignItems: 'flex-start',
       justifyContent: 'space-between',
       flexDirection: 'row',
       gap: 8,
     },
     detailBottomWrapLeft: {
       flex: 1,
+    },
+    detailBottomWrapRight: {
+      height: '100%',
+      alignItems: 'flex-end',
+      flexDirection: 'row',
     },
     displayName: {
       flexDirection: 'row',

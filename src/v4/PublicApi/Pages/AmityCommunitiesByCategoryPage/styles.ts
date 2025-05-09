@@ -43,6 +43,9 @@ export const useStyles = (theme: MyMD3Theme) => {
       justifyContent: 'center',
       gap: 8,
     },
+    loadingContainer: {
+      paddingHorizontal: 16,
+    },
   });
 
   return styles;
