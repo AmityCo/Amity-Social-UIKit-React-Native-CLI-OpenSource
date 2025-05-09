@@ -13,6 +13,7 @@ import { useExplore } from '../../../providers/ExploreProvider';
 import ExploreLoadingSkeleton from './ExploreLoadingSkeleton/ExploreLoadingSkeleton';
 import { useAmityPage } from '../../../hook';
 import ErrorComponent from '../../../component/ErrorComponent/ErrorComponent';
+import Divider from '../../../component/Divider';
 
 type AmityExploreComponentProps = {
   pageId?: PageID;
@@ -66,8 +67,6 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
     return renderError();
   }
 
-  if (isLoading) return <ExploreLoadingSkeleton themeStyles={themeStyles} />;
-
   return (
     <ScrollView
       style={styles.container}
@@ -80,6 +79,8 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
         />
       }
     >
+      <Divider themeStyles={themeStyles} />
+      {isLoading && <ExploreLoadingSkeleton themeStyles={themeStyles} />}
       {isNothingToShow ? (
         <View style={styles.emptyContainer}>
           <AmityExploreEmptyComponent pageId={pageId} />

@@ -73,11 +73,11 @@ export const ExploreProvider: React.FC<{ children: ReactNode }> = ({
           !isLoadingTrendingCommunities && trendingCommunities?.length === 0,
         hasMoreCategories,
         isAllError:
-          !!categoriesError ||
-          !!recommendedCommunitiesError ||
-          !!trendingCommunitiesError,
+          categoriesError &&
+          recommendedCommunitiesError &&
+          trendingCommunitiesError,
         isAllCommunitiesError:
-          !!recommendedCommunitiesError || !!trendingCommunitiesError,
+          recommendedCommunitiesError && trendingCommunitiesError,
       }}
     >
       {children}
