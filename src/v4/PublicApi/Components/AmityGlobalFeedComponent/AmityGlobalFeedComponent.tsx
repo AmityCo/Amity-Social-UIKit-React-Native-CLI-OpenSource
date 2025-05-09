@@ -79,8 +79,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
         limit: globalFeedPageLimit,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected]);
+  }, [isConnected, fetch]);
 
   if (isExcluded) return null;
 
