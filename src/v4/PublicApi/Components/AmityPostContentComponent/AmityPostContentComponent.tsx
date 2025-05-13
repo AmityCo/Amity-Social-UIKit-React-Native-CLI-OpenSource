@@ -121,7 +121,7 @@ const AmityPostContentComponent = ({
     creator,
     targetType,
     targetId,
-    childrenPosts = [],
+    children = [],
     editedAt,
     mentionPosition,
   } = post ?? {};
@@ -445,22 +445,20 @@ const AmityPostContentComponent = ({
       <View>
         <View style={styles.bodySection}>
           <Pressable onPress={onPressPost}>
-            {textPost && childrenPosts?.length === 0 && (
+            {textPost && children?.length === 0 && (
               <LinkPreview
                 text={textPost}
                 mentionPositionArr={[...mentionPositionArr]}
               />
             )}
-            {textPost && childrenPosts?.length > 0 && (
+            {textPost && children?.length > 0 && (
               <RenderTextWithMention
                 textPost={textPost}
                 mentionPositionArr={[...mentionPositionArr]}
               />
             )}
           </Pressable>
-          {childrenPosts?.length > 0 && (
-            <MediaSection childrenPosts={childrenPosts} />
-          )}
+          {children?.length > 0 && <MediaSection childrenPosts={children} />}
         </View>
         <AmityPostEngagementActionsComponent
           pageId={pageId}
