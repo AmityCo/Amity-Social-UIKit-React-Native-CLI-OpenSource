@@ -1,4 +1,4 @@
-import { FeedRepository } from '@amityco/ts-sdk-react-native';
+import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { useCallback, useState } from 'react';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFe
 import { RootState } from '../../redux/store';
 import { IPost } from '../../v4/PublicApi/Components/AmityPostContentComponent/AmityPostContentComponent';
 import { usePaginatorApi } from '../../v4/hook/usePaginator';
+// import { amityPostsFormatter } from '~/util/postDataFormatter';
 
 export const isAmityAd = (item: Amity.Post | Amity.Ad): item is Amity.Ad => {
   return (item as Amity.Ad)?.adId !== undefined;
@@ -29,15 +30,37 @@ export const useCustomRankingGlobalFeed = () => {
   });
 
   const processPosts = async (posts: Amity.Post[]) => {
-    return posts.filter((post) => {
-      if (post?.children.length > 0) {
-        const isImageOrVideo =
-          post?.children[0].dataType === 'image' ||
-          post?.children[0].dataType === 'video';
-        return isImageOrVideo;
-      }
-      return true;
-    });
+    const results = await Promise.all(
+      posts.map((post) => {
+        if (post?.children.length > 0) {
+          return new Promise((resolve) => {
+            const unsubscribe = PostRepository.getPost(
+              post?.children[0],
+              ({ error, loading, data }) => {
+                if (!error && !loading) {
+                  if (
+                    data?.dataType === 'image' ||
+                    data?.dataType === 'video'
+                  ) {
+                    resolve(post);
+                  } else {
+                    resolve(null);
+                  }
+                } else {
+                  resolve(null);
+                }
+              }
+            );
+
+            unsubscribe();
+          });
+        } else {
+          return post;
+        }
+      })
+    );
+
+    return results.filter((result) => result !== null);
   };
 
   const fetch = useCallback(
