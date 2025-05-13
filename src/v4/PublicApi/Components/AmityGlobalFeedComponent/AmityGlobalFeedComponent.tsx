@@ -98,7 +98,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
               <PostAdComponent ad={item as Amity.Ad} />
             ) : (
               <AmityPostContentComponent
-                post={item as IPost}
+                post={item as Amity.Post}
                 AmityPostContentComponentStyle={
                   AmityPostContentComponentStyleEnum.feed
                 }

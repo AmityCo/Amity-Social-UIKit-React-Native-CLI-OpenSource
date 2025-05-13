@@ -67,7 +67,7 @@ export interface IPost {
   analytics: Amity.Post<'analytics'>;
 }
 export interface IPostList {
-  post: IPost;
+  post: Amity.Post;
   pageId?: PageID;
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;
 }
@@ -118,7 +118,7 @@ const AmityPostContentComponent = ({
     myReactions = [],
     reactionCount,
     createdAt,
-    user,
+    creator,
     targetType,
     targetId,
     childrenPosts = [],
@@ -127,7 +127,7 @@ const AmityPostContentComponent = ({
   } = post ?? {};
   const { isCommunityModerator } = useIsCommunityModerator({
     communityId: targetType === 'community' && targetId,
-    userId: user.userId,
+    userId: creator?.userId,
   });
   const myId = (client as Amity.Client).userId;
   const { isCommunityModerator: isIAmModerator } = useIsCommunityModerator({
@@ -157,14 +157,14 @@ const AmityPostContentComponent = ({
   }
 
   const handleDisplayNamePress = () => {
-    if (!user?.userId) return null;
+    if (!creator?.userId) return null;
     if (AmityPostContentComponentBehavior?.goToUserProfilePage) {
       return AmityPostContentComponentBehavior.goToUserProfilePage({
-        userId: user.userId,
+        userId: creator.userId,
       });
     }
     return navigation.navigate('UserProfile', {
-      userId: user.userId,
+      userId: creator.userId,
     });
   };
 
@@ -360,7 +360,7 @@ const AmityPostContentComponent = ({
         <View style={styles.user}>
           <AvatarElement
             style={styles.avatar}
-            avatarId={user?.avatarFileId}
+            avatarId={creator?.avatarFileId}
             pageID={pageId}
             elementID={ElementID.WildCardElement}
             componentID={componentId}
@@ -377,7 +377,7 @@ const AmityPostContentComponent = ({
                   numberOfLines={1}
                   style={styles.headerText}
                 >
-                  {user?.displayName}
+                  {creator?.displayName}
                 </Text>
               </TouchableOpacity>
 
@@ -409,7 +409,7 @@ const AmityPostContentComponent = ({
                     pageID={pageId}
                     componentID={componentId}
                     communityId={targetType === 'community' && targetId}
-                    userId={user?.userId}
+                    userId={creator?.userId}
                   />
                   <Text style={styles.dot}>·</Text>
                 </View>

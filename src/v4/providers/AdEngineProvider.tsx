@@ -4,6 +4,7 @@ import React, {
   useState,
   createContext,
   PropsWithChildren,
+  useCallback,
 } from 'react';
 import { AdEngine } from '../engine/AdEngine';
 import { TimeWindowTracker } from '../engine/TimeWindowTracker';
@@ -145,7 +146,7 @@ export const useRecommendAds = ({
   >();
   const adSettings = useAdSettings();
   const adFrequency = AdEngine.instance.getAdFrequencyByPlacement(placement);
-  const getRecommendedAds = () => {
+  const getRecommendedAds = useCallback(() => {
     AdEngine.instance
       .getRecommendedAds({
         placement,
@@ -155,7 +156,7 @@ export const useRecommendAds = ({
       .then((ads) => {
         setRecommendedAds(ads);
       });
-  };
+  }, [count, placement, communityId]);
 
   useEffect(() => {
     if (!adSettings?.enabled || ads.length === 0) {
@@ -169,13 +170,23 @@ export const useRecommendAds = ({
     }
 
     getRecommendedAds();
-  }, [ads, count, placement, communityId, adFrequency, adSettings]);
+  }, [
+    ads,
+    count,
+    placement,
+    communityId,
+    adFrequency,
+    adSettings,
+    getRecommendedAds,
+  ]);
+
+  const resetRecommendedAds = useCallback(() => {
+    setRecommendedAds(undefined);
+    getRecommendedAds();
+  }, [getRecommendedAds]);
 
   return {
-    resetRecommendedAds: () => {
-      setRecommendedAds(undefined);
-      getRecommendedAds();
-    },
+    resetRecommendedAds,
     recommendedAds,
   };
 };

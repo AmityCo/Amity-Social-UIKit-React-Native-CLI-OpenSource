@@ -9,6 +9,7 @@ import {
 
 interface ExploreContextType {
   refresh: () => void;
+  onJoinRecommendedCommunity: (communityId: string) => void;
   recommendedCommunities: Amity.Community[];
   trendingCommunities: Amity.Community[];
   categories: Amity.Category[];
@@ -27,6 +28,7 @@ export const ExploreProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const {
+    onJoinCommunity: onJoinRecommendedCommunity,
     refresh: refreshRecommendedCommunities,
     communities: recommendedCommunities,
     loading: isLoadingRecommendedCommunities,
@@ -78,6 +80,7 @@ export const ExploreProvider: React.FC<{ children: ReactNode }> = ({
           trendingCommunitiesError,
         isAllCommunitiesError:
           recommendedCommunitiesError && trendingCommunitiesError,
+        onJoinRecommendedCommunity,
       }}
     >
       {children}

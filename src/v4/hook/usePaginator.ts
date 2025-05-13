@@ -237,7 +237,7 @@ export const usePaginatorCore = <T>({
     return _processCombineItems(newItems);
   };
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setCurrentAdIndex(0);
     setAdsLoaded(false);
     resetRecommendedAds();
@@ -245,7 +245,7 @@ export const usePaginatorCore = <T>({
     setHasAppenedFirstRoundAds(false);
     itemWithAdsRef.current = [];
     recommendedAdsRef.current = [];
-  };
+  }, [resetRecommendedAds, setHasAppenedFirstRoundAds]);
 
   return { combineItemsWithAds, reset, adsLoaded };
 };
