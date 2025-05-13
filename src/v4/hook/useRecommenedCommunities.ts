@@ -19,11 +19,12 @@ export const useRecommendedCommunities = (
   const fetchRecommendedCommunities = () => {
     setLoading(true);
     return CommunityRepository.getRecommendedCommunities(
-      { limit },
+      { limit: 100 },
       ({ error, loading, data }) => {
         setLoading(loading);
         if (error) setError(error);
         if (!loading) {
+          console.log('fetchRecommendedCommunities', data.length);
           setCommunities(data.filter((community) => !community.isJoined));
         }
       }
@@ -42,6 +43,24 @@ export const useRecommendedCommunities = (
     unsubscribersRef.current.push(unsubscribe);
   };
 
+  const onJoinCommunity = (communityId: string) => {
+    setCommunities((prev) => [
+      ...prev?.filter((community) => {
+        if (community.communityId === communityId) {
+          return {
+            ...community,
+            isJoined: true,
+          };
+        }
+        return community;
+      }),
+    ]);
+  };
+
+  useEffect(() => {
+    console.log('Recommended communities:', communities?.length);
+  }, [communities]);
+
   useEffect(() => {
     if (!isConnected) return () => {};
 
@@ -49,11 +68,11 @@ export const useRecommendedCommunities = (
     unsubscribersRef.current.push(unsubscribe);
 
     return () => unsubscribeListener();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
 
   return {
     refresh,
+    onJoinCommunity,
     communities: communities?.slice(0, limit),
     loading,
     error,
