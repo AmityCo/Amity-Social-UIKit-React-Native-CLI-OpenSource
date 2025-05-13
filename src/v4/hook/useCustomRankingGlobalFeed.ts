@@ -5,7 +5,6 @@ import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import { RootState } from '../../redux/store';
-import { IPost } from '../../v4/PublicApi/Components/AmityPostContentComponent/AmityPostContentComponent';
 import { usePaginatorApi } from '../../v4/hook/usePaginator';
 
 export const isAmityAd = (item: Amity.Post | Amity.Ad): item is Amity.Ad => {
@@ -21,12 +20,12 @@ export const useCustomRankingGlobalFeed = () => {
   const [fetching, setFetching] = useState(false);
   const postList = useSelector((state: RootState) => state.globalFeed.postList);
 
-  const { itemWithAds, reset } = usePaginatorApi<IPost | Amity.Ad>({
-    items: postList as (IPost | Amity.Ad)[],
+  const { itemWithAds, reset } = usePaginatorApi<Amity.Post | Amity.Ad>({
+    items: postList as (Amity.Post | Amity.Ad)[],
     isLoading: fetching,
     placement: 'feed' as Amity.AdPlacement,
     pageSize: globalFeedPageLimit,
-    getItemId: (item) => (item as IPost).postId.toString(),
+    getItemId: (item) => (item as Amity.Post).postId.toString(),
   });
 
   const processPosts = async (posts: Amity.Post[]) => {

@@ -178,7 +178,7 @@ export class AdEngine {
             }
           );
         } catch (e) {
-          console.log('error: 3', e);
+          console.log('error: ', e);
         }
       } else if (asset.downloadStatus !== DownloadStatus.COMPLETED) {
         AdAssetCache.instance.updateDownloadStatus(
