@@ -24,7 +24,6 @@ export const useRecommendedCommunities = (
         setLoading(loading);
         if (error) setError(error);
         if (!loading) {
-          console.log('fetchRecommendedCommunities', data.length);
           setCommunities(data.filter((community) => !community.isJoined));
         }
       }
@@ -56,10 +55,6 @@ export const useRecommendedCommunities = (
       }),
     ]);
   };
-
-  useEffect(() => {
-    console.log('Recommended communities:', communities?.length);
-  }, [communities]);
 
   useEffect(() => {
     if (!isConnected) return () => {};
