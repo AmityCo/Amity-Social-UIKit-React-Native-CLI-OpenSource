@@ -28,6 +28,7 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
 
   const { communities, loading, onNextCommunityPage } = useCommunities({
     categoryId: category.categoryId,
+    membership: 'all',
   });
 
   const styles = useStyles(themeStyles);

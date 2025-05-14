@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { ComponentID, PageID } from '../../../enum';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent, useCommunity } from '../../../hook';
 // import { useStyles } from './styles';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
 import { usePosts } from '../../../hook/usePosts';
@@ -12,7 +12,7 @@ import { usePaginatorApi } from '../../../hook/usePaginator';
 import { usePostImpression } from '../../../hook/usePostImpression';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
-import { emptyPost } from '../../../assets/icons';
+import { emptyPost, privateFeed } from '../../../assets/icons';
 import { useStyles } from './styles';
 
 type AmityCommunityFeedComponentProps = {
@@ -27,6 +27,7 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
   communityId,
 }) => {
   const componentId = ComponentID.community_feed;
+  const { community } = useCommunity(communityId);
   const { accessibilityId, themeStyles } = useAmityComponent({
     pageId,
     componentId,
@@ -65,10 +66,29 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
     }
   };
 
-  // if (posts.length === 0)
-  //   return (
+  if (!community.isJoined && !community.isPublic) {
+    return (
+      <View style={styles.listContainer}>
+        <EmptyComponent
+          title="You need to join this community to see the posts"
+          icon={emptyPost}
+          themeStyle={themeStyles}
+        />
+      </View>
+    );
+  }
 
-  //   );
+  if (!loading && itemWithAds?.length === 0) {
+    return (
+      <View style={styles.listContainer}>
+        <EmptyComponent
+          title="No posts yet"
+          icon={privateFeed}
+          themeStyle={themeStyles}
+        />
+      </View>
+    );
+  }
 
   return (
     <FlatList
@@ -98,21 +118,8 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
       keyExtractor={(item, index) =>
         isAmityAd(item) ? item.adId.toString() + index : item.postId.toString()
       }
-      contentContainerStyle={
-        itemWithAds?.length === 0 ? { flex: 1, flexShrink: 0 } : undefined
-      }
       onEndReached={handleEndReached}
-      style={styles.listContainer}
       onEndReachedThreshold={0.5}
-      ListEmptyComponent={
-        // <View style={styles.listContainer}>
-        <EmptyComponent
-          title="No posts yet"
-          icon={emptyPost}
-          themeStyle={themeStyles}
-        />
-        // </View>
-      }
     />
   );
 };

@@ -5,9 +5,8 @@ export const useStyles = (theme: MyMD3Theme) => {
   const styles = StyleSheet.create({
     postWrap: {
       backgroundColor: theme.colors.background,
-      marginTop: 8,
-      paddingHorizontal: 16,
       paddingTop: 4,
+      paddingHorizontal: 16,
     },
     headerSection: {
       paddingVertical: 8,

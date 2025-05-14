@@ -41,6 +41,7 @@ const AmityPostEngagementActionsComponent: FC<
   )
     return (
       <AmityPostEngagementActionsSubComponent.FeedStyle
+        community={communityData}
         pageId={pageId}
         componentId={componentId}
         postId={postId}

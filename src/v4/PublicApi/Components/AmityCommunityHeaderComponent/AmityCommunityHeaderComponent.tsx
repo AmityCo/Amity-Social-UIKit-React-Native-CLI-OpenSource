@@ -23,6 +23,7 @@ import CommunityPendingPost from '../../../elements/CommunityPendingPost/Communi
 import { usePosts } from '../../../hook/usePosts';
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
+import { BUTTON_SIZE } from '../../../component/Button/Button';
 
 export interface AmityCommunityHeaderRef {
   height: number;
@@ -218,6 +219,7 @@ const AmityCommunityHeaderComponent = forwardRef<
                   pageId={pageId}
                   componentId={componentId}
                   communityId={community.communityId}
+                  size={BUTTON_SIZE.LARGE}
                 />
               </View>
             )}

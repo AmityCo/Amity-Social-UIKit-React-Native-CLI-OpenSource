@@ -3,8 +3,7 @@ import { StyleSheet } from 'react-native';
 export const useStyles = () => {
   const styles = StyleSheet.create({
     listContainer: {
-      flex: 1,
-      height: '100%',
+      paddingTop: 48,
     },
     communityNameWrap: {
       flexDirection: 'row',

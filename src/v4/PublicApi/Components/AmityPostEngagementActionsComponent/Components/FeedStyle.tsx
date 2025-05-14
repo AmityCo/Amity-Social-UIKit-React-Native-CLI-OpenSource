@@ -32,6 +32,7 @@ import { useBehaviour } from '../../../../providers/BehaviourProvider';
 import { formatNumber } from '../../../../../util/numberUtil';
 
 const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
+  community,
   postId,
   pageId,
   componentId,
@@ -86,6 +87,16 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
       postId: postId,
     });
   }, [AmityGlobalFeedComponentBehavior, navigation, postId]);
+
+  if (community && community.isJoined === false) {
+    return (
+      <View style={styles.actionSection}>
+        <Text style={styles.btnText}>
+          Join community to interact with all posts
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.actionSection}>
