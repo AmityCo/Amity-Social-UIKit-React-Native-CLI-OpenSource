@@ -108,9 +108,8 @@ const CommunityCover: FC<CommunityCoverProps> = ({
         <Pressable
           style={styles.button}
           onPress={() =>
-            // TODO: fix EditCommunity params
             navigation.navigate('EditCommunity', {
-              communityId: community.communityId,
+              communityData: community,
             })
           }
         >

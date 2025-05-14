@@ -82,7 +82,7 @@ export type RootStackParamList = {
     user: Amity.User;
   };
   EditCommunity: {
-    communityId: string;
+    communityData: Amity.Community;
   };
   AllMyCommunity: undefined;
   CreateCommunity: undefined;
