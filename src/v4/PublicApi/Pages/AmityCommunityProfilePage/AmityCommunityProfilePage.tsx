@@ -39,6 +39,19 @@ const AmityCommunityProfilePage = ({ route }: any) => {
   //   }
   // }, [headerRef.current?.height]);
 
+  // Define sticky header component
+  const StickyHeaderComponent = React.useCallback(() => {
+    return (
+      <AmityCommunityProfileTabComponent
+        pageId={pageId}
+        currentTab={currentTab}
+        onTabChange={(tab: CommunityProfileTab) => {
+          setCurrentTab(tab);
+        }}
+      />
+    );
+  }, [pageId, currentTab]);
+
   return (
     <View
       testID={accessibilityId}
@@ -63,6 +76,7 @@ const AmityCommunityProfilePage = ({ route }: any) => {
         }}
       />
       <Animated.ScrollView
+        StickyHeaderComponent={StickyHeaderComponent}
         scrollEventThrottle={16}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
@@ -72,14 +86,7 @@ const AmityCommunityProfilePage = ({ route }: any) => {
       >
         {/* Placeholder with same height as header */}
         <View style={{ height: headerHeight }} />
-
-        <AmityCommunityProfileTabComponent
-          pageId={pageId}
-          currentTab={currentTab}
-          onTabChange={(tab: CommunityProfileTab) => {
-            setCurrentTab(tab);
-          }}
-        />
+        {StickyHeaderComponent()}
         {/* Modified to render feed inline in ScrollView */}
         <AmityCommunityFeedComponent
           pageId={pageId}

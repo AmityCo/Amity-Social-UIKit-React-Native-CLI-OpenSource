@@ -13,6 +13,7 @@ import { usePostImpression } from '../../../hook/usePostImpression';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
 import { emptyPost } from '../../../assets/icons';
+import { useStyles } from './styles';
 
 type AmityCommunityFeedComponentProps = {
   pageId?: PageID;
@@ -47,7 +48,7 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
       isAmityAd(item) ? item?.adId.toString() : item?.postId.toString(),
   });
 
-  // const styles = useStyles();
+  const styles = useStyles();
 
   const { handleViewChange } = usePostImpression(
     itemWithAds?.filter(
@@ -64,8 +65,10 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
     }
   };
 
-  if (posts.length === 0)
-    return <EmptyComponent title="No posts yet" icon={emptyPost} />;
+  // if (posts.length === 0)
+  //   return (
+
+  //   );
 
   return (
     <FlatList
@@ -95,8 +98,21 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
       keyExtractor={(item, index) =>
         isAmityAd(item) ? item.adId.toString() + index : item.postId.toString()
       }
+      contentContainerStyle={
+        itemWithAds?.length === 0 ? { flex: 1, flexShrink: 0 } : undefined
+      }
       onEndReached={handleEndReached}
+      style={styles.listContainer}
       onEndReachedThreshold={0.5}
+      ListEmptyComponent={
+        // <View style={styles.listContainer}>
+        <EmptyComponent
+          title="No posts yet"
+          icon={emptyPost}
+          themeStyle={themeStyles}
+        />
+        // </View>
+      }
     />
   );
 };

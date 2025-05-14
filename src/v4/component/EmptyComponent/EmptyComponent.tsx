@@ -6,7 +6,7 @@ import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import { SvgXml } from 'react-native-svg';
 import { errorPage } from '../../assets/icons';
 
-type ErrorComponentProps = {
+type EmptyComponentProps = {
   title: string;
   description?: string;
   themeStyle?: MyMD3Theme;
@@ -14,7 +14,7 @@ type ErrorComponentProps = {
   icon?: () => string;
 };
 
-const ErrorComponent: FC<ErrorComponentProps> = ({
+const EmptyComponent: FC<EmptyComponentProps> = ({
   title,
   description,
   themeStyle,
@@ -39,4 +39,4 @@ const ErrorComponent: FC<ErrorComponentProps> = ({
   );
 };
 
-export default memo(ErrorComponent);
+export default memo(EmptyComponent);

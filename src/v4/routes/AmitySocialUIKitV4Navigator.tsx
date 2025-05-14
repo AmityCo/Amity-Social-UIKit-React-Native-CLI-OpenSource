@@ -141,7 +141,7 @@ export default function AmitySocialUIKitV4Navigator() {
                     }}
                   >
                     <Image
-                      source={require('../assets/icon/threeDot.png')}
+                      source={require('../assets/images/threeDot.png')}
                       style={styles.dotIcon}
                     />
                   </TouchableOpacity>
