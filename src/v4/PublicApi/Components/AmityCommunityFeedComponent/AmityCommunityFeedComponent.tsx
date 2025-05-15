@@ -66,7 +66,7 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
     }
   };
 
-  if (!community.isJoined && !community.isPublic) {
+  if (!community?.isJoined && !community?.isPublic) {
     return (
       <View style={styles.listContainer}>
         <EmptyComponent

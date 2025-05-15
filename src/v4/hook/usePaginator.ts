@@ -129,7 +129,7 @@ export const usePaginatorCore = <T>({
       return newItems;
     }
     if (frequency?.type === 'fixed') {
-      const newItemIds = new Set(newItems.map((item) => getItemId(item)));
+      const newItemIds = new Set(newItems?.map((item) => getItemId(item)));
       const prevItemWithAds: Array<ItemWithAd<T>> = updateExistingItems(
         newItems,
         newItemIds
@@ -279,7 +279,8 @@ export const usePaginatorApi = <T>(params: {
   }, [coreReset]);
 
   const itemWithAds = useMemo(() => {
-    if (adsLoaded && !params.isLoading) return combineItemsWithAds(items);
+    if (adsLoaded && !params.isLoading && items)
+      return combineItemsWithAds(items);
     return items;
   }, [items, adsLoaded, params.isLoading]);
 

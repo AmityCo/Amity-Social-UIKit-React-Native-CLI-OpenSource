@@ -1,4 +1,4 @@
-import { View, Animated } from 'react-native';
+import { View, Animated, Text } from 'react-native';
 import React, { memo, useRef, useState } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
@@ -10,6 +10,7 @@ import AmityCommunityFeedComponent from '../../Components/AmityCommunityFeedComp
 import AmityCommunityProfileTabComponent, {
   CommunityProfileTab,
 } from '../../Components/AmityCommunityProfileTabComponent/AmityCommunityProfileTabComponent';
+import AmityCommunityImageFeedComponent from '../../Components/AmityCommunityImageFeedComponent/AmityCommunityImageFeedComponent';
 
 const AmityCommunityProfilePage = ({ route }: any) => {
   const pageId = PageID.community_profile_page;
@@ -52,6 +53,27 @@ const AmityCommunityProfilePage = ({ route }: any) => {
     );
   }, [pageId, currentTab]);
 
+  const renderTabComponent = React.useCallback(() => {
+    switch (currentTab) {
+      case CommunityProfileTab.community_feed:
+        return (
+          <AmityCommunityFeedComponent
+            pageId={pageId}
+            communityId={communityId}
+          />
+        );
+      case CommunityProfileTab.community_image_feed:
+        return (
+          <AmityCommunityImageFeedComponent
+            pageId={pageId}
+            communityId={communityId}
+          />
+        );
+      default:
+        return null;
+    }
+  }, [currentTab, pageId, communityId]);
+
   return (
     <View
       testID={accessibilityId}
@@ -88,10 +110,7 @@ const AmityCommunityProfilePage = ({ route }: any) => {
         <View style={{ height: headerHeight }} />
         {StickyHeaderComponent()}
         {/* Modified to render feed inline in ScrollView */}
-        <AmityCommunityFeedComponent
-          pageId={pageId}
-          communityId={communityId}
-        />
+        {renderTabComponent()}
       </Animated.ScrollView>
     </View>
   );

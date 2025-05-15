@@ -5,20 +5,24 @@ export const usePosts = ({
   targetType,
   targetId,
   feedType,
+  dataTypes,
   limit = 20,
 }: {
   targetType: Amity.PostTargetType;
   targetId: string;
   feedType?: Amity.QueryPosts['feedType'];
+  dataTypes?: Amity.PostContentType[];
   limit?: number;
 }) => {
   const [items, setItems] = useState<Amity.Post[]>();
   const [loading, setLoading] = useState(true);
   const [onNextPage, setOnNextPage] = useState<() => void | null>(null);
+
   useEffect(() => {
     const unsubscribe = PostRepository.getPosts(
-      { targetType, limit, targetId, feedType },
+      { targetType, limit, targetId, feedType, dataTypes },
       ({ error, loading, data, hasNextPage, onNextPage }) => {
+        setLoading(loading);
         if (error) return;
         if (!loading) {
           setItems(data);
@@ -27,11 +31,10 @@ export const usePosts = ({
             return null;
           });
         }
-
-        setLoading(loading);
       }
     );
     return unsubscribe;
-  }, [targetType, targetId, limit, feedType]);
+  }, [targetType, targetId, limit, feedType, dataTypes]);
+
   return { posts: items, onNextPage, loading };
 };
