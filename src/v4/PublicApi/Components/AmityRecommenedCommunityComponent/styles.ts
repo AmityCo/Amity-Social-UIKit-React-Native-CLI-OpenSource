@@ -14,6 +14,7 @@ export const useStyles = () => {
     },
     listContainer: {
       gap: 16,
+      paddingRight: 16,
     },
   });
   return styles;
