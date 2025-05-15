@@ -75,7 +75,7 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
       const response = await Promise.all(
         childrenPosts.map(async (id) => {
           const { data: post } = await getPostById(id);
-          return { dataType: post.dataType, data: post.data };
+          return { dataType: post?.dataType, data: post?.data };
         })
       );
       response.forEach((item) => {

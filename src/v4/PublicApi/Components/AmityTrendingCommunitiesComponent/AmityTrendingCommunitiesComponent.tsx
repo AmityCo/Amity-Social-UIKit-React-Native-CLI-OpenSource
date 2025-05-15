@@ -46,6 +46,7 @@ const AmityTrendingCommunitiesCommunity: FC<
         {trendingCommunities?.map((community, index) => {
           return (
             <Pressable
+              key={community.communityId}
               onPress={() =>
                 onPressCommunity({
                   communityId: community.communityId,

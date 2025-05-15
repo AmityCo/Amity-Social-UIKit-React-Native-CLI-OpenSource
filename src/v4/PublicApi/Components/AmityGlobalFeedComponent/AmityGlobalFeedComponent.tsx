@@ -25,6 +25,7 @@ import {
 } from '../../../../v4/hook/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
 import { useStyle } from './styles';
+import Divider from '../../../component/Divider';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
@@ -37,7 +38,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 }) => {
   const { fetch, itemWithAds, refresh, loading } = useCustomRankingGlobalFeed();
   const componentId = ComponentID.global_feed_component;
-  const { isExcluded, accessibilityId } = useAmityComponent({
+  const { isExcluded, accessibilityId, themeStyles } = useAmityComponent({
     pageId,
     componentId,
   });
@@ -88,16 +89,21 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       accessibilityLabel={accessibilityId}
       style={styles.feedWrap}
       data={itemWithAds}
-      renderItem={({ item }) => {
-        if (isAmityAd(item)) return <PostAdComponent ad={item as Amity.Ad} />;
-
+      renderItem={({ item, index }) => {
         return (
-          <AmityPostContentComponent
-            post={item as Amity.Post}
-            AmityPostContentComponentStyle={
-              AmityPostContentComponentStyleEnum.feed
-            }
-          />
+          <>
+            {index !== 0 && <Divider themeStyles={themeStyles} />}
+            {isAmityAd(item) ? (
+              <PostAdComponent ad={item as Amity.Ad} />
+            ) : (
+              <AmityPostContentComponent
+                post={item as Amity.Post}
+                AmityPostContentComponentStyle={
+                  AmityPostContentComponentStyleEnum.feed
+                }
+              />
+            )}
+          </>
         );
       }}
       keyExtractor={(item, index) =>
