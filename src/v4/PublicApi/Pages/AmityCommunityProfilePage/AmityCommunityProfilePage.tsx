@@ -3,8 +3,9 @@ import {
   Animated,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Easing,
 } from 'react-native';
-import React, { memo, useCallback, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useStyles } from './styles';
 import { ComponentID, PageID } from '../../../enum';
 import { useAmityPage } from '../../../hook';
@@ -31,21 +32,37 @@ const AmityCommunityProfilePage = ({ route }: any) => {
   const [isScrolledPastHeader, setIsScrolledPastHeader] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
 
+  const animatedOpacity = useRef(new Animated.Value(0)).current;
+  const animatedTranslateY = useRef(new Animated.Value(15)).current;
+
   const scrollY = useRef(new Animated.Value(0)).current;
-  const headerOpacity = scrollY.interpolate({
-    inputRange: [
-      // Start fade when we're 150px from triggering header
-      headerHeight - 120,
-      // Complete fade right when the header becomes "sticky"
-      headerHeight - 100,
-    ],
-    outputRange: [0.5, 1],
-    extrapolate: 'clamp', // Prevents values from exceeding 0-1 range
-  });
+
+  useEffect(() => {
+    if (isScrolledPastHeader) {
+      // Reset animation values
+      animatedOpacity.setValue(0);
+      animatedTranslateY.setValue(15);
+
+      // Run entrance animation
+      Animated.parallel([
+        Animated.timing(animatedOpacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(animatedTranslateY, {
+          toValue: 0,
+          duration: 250,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [isScrolledPastHeader, animatedOpacity, animatedTranslateY]);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const yOffset = event.nativeEvent.contentOffset.y;
-    const isPastHeader = yOffset >= headerHeight - 120;
+    const isPastHeader = yOffset >= headerHeight - 100;
 
     if (isPastHeader !== isScrolledPastHeader) {
       setIsScrolledPastHeader(isPastHeader);
@@ -113,7 +130,13 @@ const AmityCommunityProfilePage = ({ route }: any) => {
       )}
       {isScrolledPastHeader && (
         <Animated.View
-          style={[styles.stickyHeaderContainer, { opacity: headerOpacity }]}
+          style={[
+            styles.stickyHeaderContainer,
+            {
+              opacity: animatedOpacity, // Use the animated value
+              transform: [{ translateY: animatedTranslateY }], // Add transform
+            },
+          ]}
         >
           <AmityCommunityHeaderComponent
             pageId={pageId}
