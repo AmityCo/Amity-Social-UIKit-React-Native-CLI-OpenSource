@@ -1,4 +1,4 @@
-import { View, Animated, Text } from 'react-native';
+import { View, Animated } from 'react-native';
 import React, { memo, useRef, useState } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
@@ -11,6 +11,7 @@ import AmityCommunityProfileTabComponent, {
   CommunityProfileTab,
 } from '../../Components/AmityCommunityProfileTabComponent/AmityCommunityProfileTabComponent';
 import AmityCommunityImageFeedComponent from '../../Components/AmityCommunityImageFeedComponent/AmityCommunityImageFeedComponent';
+import AmityCommunityVideoFeedComponent from '../../Components/AmityCommunityVideoFeedComponent/AmityCommunityVideoFeedComponent';
 
 const AmityCommunityProfilePage = ({ route }: any) => {
   const pageId = PageID.community_profile_page;
@@ -65,6 +66,13 @@ const AmityCommunityProfilePage = ({ route }: any) => {
       case CommunityProfileTab.community_image_feed:
         return (
           <AmityCommunityImageFeedComponent
+            pageId={pageId}
+            communityId={communityId}
+          />
+        );
+      case CommunityProfileTab.community_video_feed:
+        return (
+          <AmityCommunityVideoFeedComponent
             pageId={pageId}
             communityId={communityId}
           />
