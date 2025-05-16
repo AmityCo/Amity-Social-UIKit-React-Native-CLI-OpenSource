@@ -1,30 +1,27 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useCallback } from 'react';
 import { PageID, ComponentID, ElementID } from '../../enum';
-import { useFile } from '../../hook/useFile';
 import { useAmityElement } from '../../hook';
 import LinearGradient from 'react-native-linear-gradient';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
-import BackButtonIconElement from '../../PublicApi/Elements/BackButtonIconElement/BackButtonIconElement';
-import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElement/MenuButtonIconElement';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
-import { hexToRgba } from '../../../util/colorUtil';
+import { Image, StyleSheet, View } from 'react-native';
+import CommunityCoverNavigator from './CommunityCoverNavigator';
+import useAuth from '../../../hooks/useAuth';
 
 type CommunityCoverProps = {
   pageId?: PageID;
   componentId?: ComponentID;
   community: Amity.Community;
+  smallHeader?: boolean;
+  hideButtons?: boolean;
 };
 
 const CommunityCover: FC<CommunityCoverProps> = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   community,
+  smallHeader = false,
+  hideButtons = false,
 }) => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const { getImage } = useFile();
+  const { apiRegion } = useAuth();
   const elementId = ElementID.community_cover;
   const { accessibilityId, themeStyles } = useAmityElement({
     pageId,
@@ -32,9 +29,10 @@ const CommunityCover: FC<CommunityCoverProps> = ({
     elementId,
   });
 
-  const [image, setImage] = React.useState<string | null>(null);
-
   const styles = StyleSheet.create({
+    smallContainer: {
+      height: 100,
+    },
     placehoder: {
       width: '100%',
       height: 187.5,
@@ -43,83 +41,44 @@ const CommunityCover: FC<CommunityCoverProps> = ({
       width: '100%',
       height: 187.5,
     },
-    buttonWrap: {
-      position: 'absolute',
-      top: 44,
-      width: '100%',
-      paddingHorizontal: 16,
-      paddingVertical: 13,
-      justifyContent: 'space-between',
-      flexDirection: 'row',
-    },
-    button: {
-      width: 32,
-      height: 32,
-      borderRadius: 99,
-      backgroundColor: hexToRgba('#000000', 0.5),
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    buttonIcon: {
-      width: 24,
-      height: 24,
-      tintColor: 'white',
-    },
   });
 
-  useEffect(() => {
-    if (!community.avatarFileId) return;
-
-    const fetchImage = async () => {
-      const imageUrl = await getImage({ fileId: community.avatarFileId });
-      setImage(imageUrl);
-    };
-
-    fetchImage();
-  }, [community.avatarFileId, getImage]);
-
-  return (
-    <View testID={accessibilityId}>
-      {image ? (
+  const renderImage = useCallback(() => {
+    if (community.avatarFileId) {
+      return (
         <Image
-          source={{ uri: image }}
-          style={styles.coverImage}
-          resizeMode="cover"
+          source={{
+            uri: `https://api.${apiRegion}.amity.co/api/v3/files/${community.avatarFileId}/download?size=medium`,
+          }}
+          style={[styles.coverImage, smallHeader ? styles.smallContainer : {}]}
+          blurRadius={smallHeader ? 10 : 0}
         />
-      ) : (
+      );
+    } else {
+      return (
         <LinearGradient
           colors={[
             themeStyles.colors.baseShade3,
             themeStyles.colors.baseShade2,
           ]}
-          style={styles.placehoder}
+          style={[styles.placehoder, smallHeader ? styles.smallContainer : {}]}
           start={{ x: 0, y: 1 }}
           end={{ x: 0, y: 0 }}
         />
+      );
+    }
+  }, [community.avatarFileId, smallHeader, styles, themeStyles, apiRegion]);
+
+  return (
+    <View testID={accessibilityId}>
+      {renderImage()}
+      {!hideButtons && (
+        <CommunityCoverNavigator
+          pageId={pageId}
+          componentId={componentId}
+          communityId={community.communityId}
+        />
       )}
-      <View style={styles.buttonWrap}>
-        <Pressable style={styles.button} onPress={() => navigation.goBack()}>
-          <BackButtonIconElement
-            pageID={pageId}
-            componentID={componentId}
-            style={styles.buttonIcon}
-          />
-        </Pressable>
-        <Pressable
-          style={styles.button}
-          onPress={() =>
-            navigation.navigate('EditCommunity', {
-              communityData: community,
-            })
-          }
-        >
-          <MenuButtonIconElement
-            pageID={pageId}
-            componentID={componentId}
-            style={styles.buttonIcon}
-          />
-        </Pressable>
-      </View>
     </View>
   );
 };

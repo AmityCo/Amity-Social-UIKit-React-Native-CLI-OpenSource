@@ -38,6 +38,7 @@ const AmityCommunityProfileTabComponent: FC<
 
   const styles = StyleSheet.create({
     container: {
+      backgroundColor: themeStyles?.colors.background,
       flexDirection: 'row',
       width: '100%',
       paddingHorizontal: 16,

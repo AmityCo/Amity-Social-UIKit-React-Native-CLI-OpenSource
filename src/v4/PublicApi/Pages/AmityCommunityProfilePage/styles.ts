@@ -7,6 +7,28 @@ export const useStyles = (theme: MyMD3Theme) => {
       flex: 1,
       backgroundColor: theme.colors.background,
     },
+    stickyHeaderContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    smallHeaderNavigationWrap: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 1,
+    },
+    smallHeaderCommunityTabWrap: {
+      position: 'absolute',
+      top: 100,
+      left: 0,
+      right: 0,
+      zIndex: 1,
+    },
   });
 
   return styles;

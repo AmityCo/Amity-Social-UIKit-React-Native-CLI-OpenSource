@@ -161,6 +161,8 @@ const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
     });
   }, [communityId, getStoryTarget]);
 
+  if (!storyTarget?.lastStoryExpiresAt) return null;
+
   return (
     <View style={styles.container}>
       <View style={styles.storyItemWrap}>{renderCommunityStory()}</View>
