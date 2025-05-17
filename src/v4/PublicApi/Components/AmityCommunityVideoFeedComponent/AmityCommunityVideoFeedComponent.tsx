@@ -1,4 +1,4 @@
-import React, { FC, memo, useMemo } from 'react';
+import React, { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
 import { ComponentID, PageID } from '../../../enum';
 import { useAmityComponent, useCommunity } from '../../../hook';
 import { usePosts } from '../../../hook/usePosts';
@@ -7,6 +7,7 @@ import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
 import { emptyVideoPost, privateFeed } from '../../../assets/icons';
 import VideoGallery from '../../../elements/VideoGallery/VideoGallery';
 import { useStyles } from './styles';
+import { AmityCommunityFeedRef } from '../AmityCommunityFeedComponent/AmityCommunityFeedComponent';
 
 type AmityCommunityVideoFeedComponentProps = {
   pageId?: PageID;
@@ -15,9 +16,10 @@ type AmityCommunityVideoFeedComponentProps = {
 
 const pageLimit = 10;
 
-const AmityCommunityVideoFeedComponent: FC<
+const AmityCommunityVideoFeedComponent = forwardRef<
+  AmityCommunityFeedRef,
   AmityCommunityVideoFeedComponentProps
-> = ({ pageId = PageID.WildCardPage, communityId }) => {
+>(({ pageId = PageID.WildCardPage, communityId }, ref) => {
   const componentId = ComponentID.community_video_feed;
   const { community } = useCommunity(communityId);
   const { accessibilityId, themeStyles } = useAmityComponent({
@@ -35,6 +37,16 @@ const AmityCommunityVideoFeedComponent: FC<
   });
 
   const styles = useStyles();
+
+  const handleLoadMore = () => {
+    if (onNextPage) {
+      onNextPage();
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    handleLoadMore,
+  }));
 
   if (!community?.isJoined && !community?.isPublic) {
     return (
@@ -69,6 +81,6 @@ const AmityCommunityVideoFeedComponent: FC<
       themeStyles={themeStyles}
     />
   );
-};
+});
 
 export default memo(AmityCommunityVideoFeedComponent);

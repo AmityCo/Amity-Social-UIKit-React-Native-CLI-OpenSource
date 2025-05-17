@@ -131,6 +131,7 @@ const AmityCommunityProfilePage = ({
           <AmityCommunityImageFeedComponent
             pageId={pageId}
             communityId={communityId}
+            ref={feedRef}
           />
         );
       case CommunityProfileTab.community_video_feed:
@@ -138,6 +139,7 @@ const AmityCommunityProfilePage = ({
           <AmityCommunityVideoFeedComponent
             pageId={pageId}
             communityId={communityId}
+            ref={feedRef}
           />
         );
       default:

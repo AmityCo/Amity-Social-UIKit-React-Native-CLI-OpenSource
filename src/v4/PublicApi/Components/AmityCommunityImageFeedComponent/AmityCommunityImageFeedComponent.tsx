@@ -1,4 +1,4 @@
-import React, { FC, memo, useMemo } from 'react';
+import React, { memo, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { ComponentID, PageID } from '../../../enum';
 import { useAmityComponent, useCommunity } from '../../../hook';
 import { usePosts } from '../../../hook/usePosts';
@@ -7,6 +7,7 @@ import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
 import { emptyImagePost, privateFeed } from '../../../assets/icons';
 import { useStyles } from './styles';
 import ImageGallery from '../../../elements/ImageGallery/ImageGallery';
+import { AmityCommunityFeedRef } from '../AmityCommunityFeedComponent/AmityCommunityFeedComponent';
 
 type AmityCommunityImageFeedComponentProps = {
   pageId?: PageID;
@@ -15,9 +16,10 @@ type AmityCommunityImageFeedComponentProps = {
 
 const pageLimit = 10;
 
-const AmityCommunityImageFeedComponent: FC<
+const AmityCommunityImageFeedComponent = forwardRef<
+  AmityCommunityFeedRef,
   AmityCommunityImageFeedComponentProps
-> = ({ pageId = PageID.WildCardPage, communityId }) => {
+>(({ pageId = PageID.WildCardPage, communityId }, ref) => {
   const componentId = ComponentID.community_image_feed;
   const { community } = useCommunity(communityId);
   const { accessibilityId, themeStyles } = useAmityComponent({
@@ -33,6 +35,16 @@ const AmityCommunityImageFeedComponent: FC<
     dataTypes: imageDataTypes,
     limit: pageLimit,
   });
+
+  const handleLoadMore = () => {
+    if (onNextPage) {
+      onNextPage();
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    handleLoadMore,
+  }));
 
   const styles = useStyles();
 
@@ -69,6 +81,6 @@ const AmityCommunityImageFeedComponent: FC<
       themeStyles={themeStyles}
     />
   );
-};
+});
 
 export default memo(AmityCommunityImageFeedComponent);
