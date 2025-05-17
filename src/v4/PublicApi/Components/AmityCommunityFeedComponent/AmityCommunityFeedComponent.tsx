@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { ComponentID, PageID } from '../../../enum';
 import { useAmityComponent, useCommunity } from '../../../hook';
 // import { useStyles } from './styles';
@@ -9,10 +9,15 @@ import { View, FlatList } from 'react-native';
 import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
 import { usePaginatorApi } from '../../../hook/usePaginator';
-import { usePostImpression } from '../../../hook/usePostImpression';
+// import { usePostImpression } from '../../../hook/usePostImpression';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
 import { emptyPost, privateFeed } from '../../../assets/icons';
+
+export interface AmityCommunityFeedRef {
+  handleLoadMore: () => void;
+}
+
 import { useStyles } from './styles';
 
 type AmityCommunityFeedComponentProps = {
@@ -22,10 +27,10 @@ type AmityCommunityFeedComponentProps = {
 
 const pageLimit = 10;
 
-const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
-  pageId = PageID.WildCardPage,
-  communityId,
-}) => {
+const AmityCommunityFeedComponent = forwardRef<
+  AmityCommunityFeedRef,
+  AmityCommunityFeedComponentProps
+>(({ pageId = PageID.WildCardPage, communityId }, ref) => {
   const componentId = ComponentID.community_feed;
   const { community } = useCommunity(communityId);
   const { accessibilityId, themeStyles } = useAmityComponent({
@@ -51,20 +56,24 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
 
   const styles = useStyles();
 
-  const { handleViewChange } = usePostImpression(
-    itemWithAds?.filter(
-      (item: Amity.Post | Amity.Ad) =>
-        !!(isAmityAd(item) ? item?.adId : item?.postId)
-    ) as (Amity.Post | Amity.Ad)[]
-  );
+  // const { handleViewChange } = usePostImpression(
+  //   itemWithAds?.filter(
+  //     (item: Amity.Post | Amity.Ad) =>
+  //       !!(isAmityAd(item) ? item?.adId : item?.postId)
+  //   ) as (Amity.Post | Amity.Ad)[]
+  // );
 
-  if (!posts) return null;
-
-  const handleEndReached = () => {
-    if (!loading) {
-      onNextPage?.();
+  const handleLoadMore = () => {
+    if (onNextPage) {
+      onNextPage();
     }
   };
+
+  useImperativeHandle(ref, () => ({
+    handleLoadMore,
+  }));
+
+  if (!posts) return null;
 
   if (!community?.isJoined && !community?.isPublic) {
     return (
@@ -95,7 +104,7 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
       data={itemWithAds}
-      scrollEnabled={true}
+      scrollEnabled={false}
       renderItem={({ item, index }) => {
         return (
           <View>
@@ -114,14 +123,14 @@ const AmityCommunityFeedComponent: FC<AmityCommunityFeedComponentProps> = ({
         );
       }}
       viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
-      onViewableItemsChanged={handleViewChange}
+      // onViewableItemsChanged={handleViewChange}
       keyExtractor={(item, index) =>
-        isAmityAd(item) ? item.adId.toString() + index : item.postId.toString()
+        isAmityAd(item)
+          ? item.adId.toString() + index
+          : item.postId.toString() + '_' + index
       }
-      onEndReached={handleEndReached}
-      onEndReachedThreshold={0.5}
     />
   );
-};
+});
 
-export default memo(AmityCommunityFeedComponent);
+export default AmityCommunityFeedComponent;

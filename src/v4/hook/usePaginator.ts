@@ -25,6 +25,78 @@ export const usePaginatorCore = <T>({
   );
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
+  // Add this ref to track items
+  const itemWithAdsRef = useRef<Array<[T] | [T, Amity.Ad]>>([]);
+  const [hasAppenedFirstRoundAds, setHasAppenedFirstRoundAds] =
+    hasAppenedFirstRoundAdsState;
+
+  // Modify your state update
+  const updateItemWithAds = (items: Array<[T] | [T, Amity.Ad]>) => {
+    itemWithAdsRef.current = items;
+  };
+
+  const updateExistingItems = (
+    newItems: T[],
+    newItemIds: Set<string>
+  ): Array<ItemWithAd<T>> => {
+    return (itemWithAdsRef.current || [])
+      .map((itemWithAd) => {
+        const itemId = getItemId(itemWithAd[0]);
+
+        // Skip items not in new items list
+        if (!newItemIds.has(itemId)) {
+          return null;
+        }
+
+        // Find the updated version of this item
+        const updatedItem = newItems.find(
+          (newItem) => getItemId(newItem) === itemId
+        );
+
+        // Update the item while preserving its ad (if any)
+        if (updatedItem) {
+          if (itemWithAd.length === 1) {
+            return [updatedItem] as [T];
+          }
+          return [updatedItem, itemWithAd[1]] as [T, Amity.Ad];
+        }
+
+        return itemWithAd;
+      })
+      .filter(Boolean) as Array<ItemWithAd<T>>;
+  };
+
+  const calculateTopIndex = (
+    startItem: ItemWithAd<T> | undefined,
+    newItems: T[],
+    hasAppenedAds = false
+  ): number => {
+    // TODO: check if it is needed, when ad frequency is time-window for fixed for every 1 item
+    // if (hasAppenedAds) return 1;
+
+    if (!startItem) return 0;
+
+    const foundedIndex = newItems.findIndex(
+      (newItem) => getItemId(newItem) === getItemId(startItem[0])
+    );
+
+    return foundedIndex === -1 ? 0 : foundedIndex;
+  };
+
+  const filterNewItems = (
+    newItems: T[],
+    topIndex: number,
+    prevItems: Array<ItemWithAd<T>>
+  ): T[] => {
+    return newItems.slice(topIndex).filter((newItem) => {
+      const itemId = getItemId(newItem);
+      return !prevItems.some(
+        (prevItem) =>
+          prevItem && prevItem[0] && getItemId(prevItem[0]) === itemId
+      );
+    });
+  };
+
   const frequency = AdEngine.instance.getAdFrequencyByPlacement(placement);
 
   const count = (() => {

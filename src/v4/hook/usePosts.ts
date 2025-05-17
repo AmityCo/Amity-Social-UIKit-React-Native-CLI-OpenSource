@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { PostRepository } from '@amityco/ts-sdk-react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const usePosts = ({
   targetType,
@@ -18,23 +19,31 @@ export const usePosts = ({
   const [loading, setLoading] = useState(true);
   const [onNextPage, setOnNextPage] = useState<() => void | null>(null);
 
-  useEffect(() => {
-    const unsubscribe = PostRepository.getPosts(
-      { targetType, limit, targetId, feedType, dataTypes },
-      ({ error, loading, data, hasNextPage, onNextPage }) => {
-        setLoading(loading);
-        if (error) return;
-        if (!loading) {
-          setItems(data);
-          setOnNextPage(() => {
-            if (hasNextPage) return onNextPage;
-            return null;
-          });
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = PostRepository.getPosts(
+        { targetType, limit, targetId, feedType, dataTypes },
+        ({
+          error,
+          loading: isLoading,
+          data,
+          hasNextPage,
+          onNextPage: loadNextPage,
+        }) => {
+          if (error) return;
+          if (!isLoading) {
+            setItems(data);
+            setOnNextPage(() => {
+              if (hasNextPage) return loadNextPage;
+              return null;
+            });
+          }
+          setLoading(isLoading);
         }
-      }
-    );
-    return unsubscribe;
-  }, [targetType, targetId, limit, feedType, dataTypes]);
+      );
+      return unsubscribe;
+    }, [targetType, targetId, limit, feedType, dataTypes])
+  );
 
   return { posts: items, onNextPage, loading };
 };
