@@ -5,6 +5,9 @@ PODS:
   - ApiVideoLiveStream (1.4.1):
     - HaishinKit (= 1.7.3)
   - boost (1.76.0)
+  - BVLinearGradient (2.8.3):
+    - React-Core
+  - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
   - DVAssetLoaderDelegate (0.3.3)
   - FBLazyVector (0.72.9)
@@ -884,6 +887,8 @@ SPEC CHECKSUMS:
   amity-react-native-social-ui-kit: eaba1a8c19f8823573528e168c7b9077a9db71af
   ApiVideoLiveStream: 8f9dce7f6d15d5e4bb3c7a25e406bf2a36337a5a
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
+  BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   DVAssetLoaderDelegate: 0caec20e4e08b8560b691131539e9180024d4bce
   FBLazyVector: dc178b8748748c036ef9493a5d59d6d1f91a36ce

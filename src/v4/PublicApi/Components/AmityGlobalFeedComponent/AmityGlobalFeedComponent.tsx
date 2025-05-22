@@ -38,7 +38,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 }) => {
   const { fetch, itemWithAds, refresh, loading } = useCustomRankingGlobalFeed();
   const componentId = ComponentID.global_feed_component;
-  const { isExcluded, accessibilityId, themeStyles } = useAmityComponent({
+  const { isExcluded, themeStyles, accessibilityId } = useAmityComponent({
     pageId,
     componentId,
   });
@@ -106,7 +106,8 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
         );
       }}
       keyExtractor={(item, index) =>
-        isAmityAd(item) ? item.adId.toString() + index : item.postId.toString()
+        (isAmityAd(item) ? item.adId.toString() : item.postId.toString()) +
+        `_${index}`
       }
       onEndReachedThreshold={0.5}
       onEndReached={handleLoadMore}
