@@ -78,4 +78,7 @@ export type RootStackParamList = {
   CommunitiesByCategoryPage: {
     category: Amity.Category;
   };
+  CommunityProfilePage: {
+    communityId: string;
+  };
 };
