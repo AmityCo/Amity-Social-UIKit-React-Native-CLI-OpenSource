@@ -69,11 +69,10 @@ export const usePaginatorCore = <T>({
 
   const calculateTopIndex = (
     startItem: ItemWithAd<T> | undefined,
-    newItems: T[]
+    newItems: T[],
     hasAppenedAds = false
   ): number => {
-    // TODO: check if we need to use hasAppenedAds
-    // if (hasAppenedAds) return 1;
+    if (hasAppenedAds) return 1;
 
     if (!startItem) return 0;
 
