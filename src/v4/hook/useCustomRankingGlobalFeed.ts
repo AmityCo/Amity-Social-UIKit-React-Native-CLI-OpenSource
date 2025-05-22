@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import { RootState } from '../../redux/store';
 import { usePaginatorApi } from '../../v4/hook/usePaginator';
+// import { amityPostsFormatter } from '~/util/postDataFormatter';
 
 export const isAmityAd = (item: Amity.Post | Amity.Ad): item is Amity.Ad => {
   return (item as Amity.Ad)?.adId !== undefined;

@@ -121,13 +121,7 @@ export default function AmitySocialUIKitV4Navigator() {
                   params: { communityName, communityId, isModerator },
                 },
               }: any) => ({
-                headerLeft: () => (
-                  <BackButton
-                    onPress={() => {
-                      navigation.navigate('Home');
-                    }}
-                  />
-                ),
+                headerLeft: () => <BackButton goBack={true} />,
                 title: communityName,
                 headerRight: () => (
                   <TouchableOpacity
@@ -141,7 +135,7 @@ export default function AmitySocialUIKitV4Navigator() {
                     }}
                   >
                     <Image
-                      source={require('../assets/icon/threeDot.png')}
+                      source={require('../assets/images/threeDot.png')}
                       style={styles.dotIcon}
                     />
                   </TouchableOpacity>
@@ -229,6 +223,8 @@ export default function AmitySocialUIKitV4Navigator() {
               options={{
                 title: '',
                 headerLeft: () => <BackButton />,
+                headerTitleAlign: 'center',
+                title: 'Member',
               }}
             />
             <Stack.Screen name="EditProfile" component={EditProfile} />
