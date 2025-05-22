@@ -70,7 +70,7 @@ export const usePaginatorCore = <T>({
   const calculateTopIndex = (
     startItem: ItemWithAd<T> | undefined,
     newItems: T[]
-    // hasAppenedAds = false
+    hasAppenedAds = false
   ): number => {
     // TODO: check if we need to use hasAppenedAds
     // if (hasAppenedAds) return 1;
@@ -150,8 +150,6 @@ export const usePaginatorCore = <T>({
         .map((item) => [item]);
 
       const prevItems = [...newestItems, ...prevItemWithAds];
-
-      console.log('prevItems', prevItems.length);
 
       // filteredNewItems is the newest items in the next page that are not in prevItems
       const filteredNewItems = filterNewItems(newItems, topIndex, prevItems);
