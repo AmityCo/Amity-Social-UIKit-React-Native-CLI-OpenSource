@@ -267,18 +267,26 @@ export class AdEngine {
     )
       return [];
 
-    // Filter for ready ads that match placement, not expired, and have downloaded assets
-    const readyAds = this.ads.filter(async (ad) => {
-      const url = this.getUrlByPlacement(ad, placement);
-      return (
-        ad.placements.includes(placement) &&
-        (!ad.endAt || new Date(ad.endAt).getTime() > Date.now()) &&
-        url &&
-        (await AdAssetCache.instance.getAdAsset(url)).downloadStatus ===
-          DownloadStatus.COMPLETED &&
-        ad.advertiser?.advertiserId !== communityId // Exclude self-ads
-      );
-    });
+    // Step 1: Map each ad to a promise that resolves to {ad, isReady}
+    const readyAdsPromises = await Promise.all(
+      this.ads.map(async (ad) => {
+        const url = this.getUrlByPlacement(ad, placement);
+        const isReady =
+          ad.placements.includes(placement) &&
+          (!ad.endAt || new Date(ad.endAt).getTime() > Date.now()) &&
+          url &&
+          (await AdAssetCache.instance.getAdAsset(url)).downloadStatus ===
+            DownloadStatus.COMPLETED &&
+          ad.advertiser?.advertiserId !== communityId;
+
+        return { ad, isReady };
+      })
+    );
+
+    // Step 2: Filter and extract the ads
+    const readyAds = readyAdsPromises
+      .filter(({ isReady }) => isReady)
+      .map(({ ad }) => ad);
 
     // Handle targeting logic
     let applicableAds: Amity.Ad[];
@@ -296,9 +304,10 @@ export class AdEngine {
           : readyAds.filter((ad) => ad.target?.communityIds?.length === 0);
     } else {
       // No community ID provided, only use non-targeted ads
-      applicableAds = readyAds.filter(
-        (ad) => !ad.target || ad.target?.communityIds.length === 0
-      );
+
+      applicableAds = readyAds.filter((ad) => {
+        return !ad.target || ad.target?.communityIds.length === 0;
+      });
     }
 
     return applicableAds;
