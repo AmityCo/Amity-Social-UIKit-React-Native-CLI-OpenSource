@@ -1,7 +1,6 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { ComponentID, PageID } from '../../../enum';
 import { useAmityComponent, useCommunity } from '../../../hook';
-// import { useStyles } from './styles';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
 import { usePosts } from '../../../hook/usePosts';
 import Divider from '../../../component/Divider';
@@ -9,7 +8,7 @@ import { View, FlatList } from 'react-native';
 import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
 import { usePaginatorApi } from '../../../hook/usePaginator';
-// import { usePostImpression } from '../../../hook/usePostImpression';
+import { usePostImpression } from '../../../hook/usePostImpression';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
 import { emptyPost, privateFeed } from '../../../assets/icons';
@@ -56,12 +55,12 @@ const AmityCommunityFeedComponent = forwardRef<
 
   const styles = useStyles();
 
-  // const { handleViewChange } = usePostImpression(
-  //   itemWithAds?.filter(
-  //     (item: Amity.Post | Amity.Ad) =>
-  //       !!(isAmityAd(item) ? item?.adId : item?.postId)
-  //   ) as (Amity.Post | Amity.Ad)[]
-  // );
+  const { handleViewChange } = usePostImpression(
+    itemWithAds?.filter(
+      (item: Amity.Post | Amity.Ad) =>
+        !!(isAmityAd(item) ? item?.adId : item?.postId)
+    ) as (Amity.Post | Amity.Ad)[]
+  );
 
   const handleLoadMore = () => {
     if (onNextPage) {
@@ -123,7 +122,7 @@ const AmityCommunityFeedComponent = forwardRef<
         );
       }}
       viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
-      // onViewableItemsChanged={handleViewChange}
+      onViewableItemsChanged={handleViewChange}
       keyExtractor={(item, index) =>
         isAmityAd(item)
           ? item.adId.toString() + index
