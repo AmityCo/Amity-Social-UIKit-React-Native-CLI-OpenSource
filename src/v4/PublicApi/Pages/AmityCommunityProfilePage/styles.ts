@@ -29,6 +29,39 @@ export const useStyles = (theme: MyMD3Theme) => {
       right: 0,
       zIndex: 1,
     },
+
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'flex-end',
+    },
+    modalContent: {
+      backgroundColor: theme.colors.background,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      padding: 10,
+      minHeight: 200,
+    },
+    dragHandle: {
+      width: 36,
+      height: 4,
+      borderRadius: 12,
+      marginVertical: 10,
+      alignSelf: 'center',
+      backgroundColor: theme.colors.baseShade3,
+    },
+    bottomSheetOption: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 16,
+      paddingHorizontal: 16,
+    },
+    bottomSheetOptionText: {
+      fontSize: 16,
+      color: theme.colors.onSurface,
+      marginLeft: 12,
+      fontWeight: '500',
+    },
   });
 
   return styles;

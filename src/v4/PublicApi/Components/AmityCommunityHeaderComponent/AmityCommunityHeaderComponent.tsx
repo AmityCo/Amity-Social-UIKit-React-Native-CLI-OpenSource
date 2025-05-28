@@ -1,7 +1,11 @@
 import React, { memo, useState, FC } from 'react';
 import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum';
-import { useAmityComponent, useCommunity } from '../../../hook';
+import {
+  useAmityComponent,
+  useCommunity,
+  useIsCommunityModerator,
+} from '../../../hook';
 import { useStyles } from './styles';
 import CommunityCover from '../../../elements/CommunityCover/CommunityCover';
 import CommunityPrivateBadge from '../../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
@@ -16,6 +20,10 @@ import { usePosts } from '../../../hook/usePosts';
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
 import { BUTTON_SIZE } from '../../../component/Button/Button';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { Client } from '@amityco/ts-sdk-react-native';
 
 export interface AmityCommunityHeaderRef {
   height: number;
@@ -36,6 +44,9 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
   isScrolled,
   onHeightChange,
 }) => {
+  const client = Client.getActiveClient();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const componentId = ComponentID.community_header;
   const { community } = useCommunity(communityId);
   const { posts: pendingPosts } = usePosts({
@@ -45,6 +56,11 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
   const { accessibilityId, themeStyles } = useAmityComponent({
     pageId,
     componentId,
+  });
+
+  const { isCommunityModerator } = useIsCommunityModerator({
+    communityId: community?.communityId,
+    userId: client?.userId,
   });
 
   const styles = useStyles(themeStyles);
@@ -132,6 +148,11 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
             componentId={componentId}
             community={community}
             style={styles.infoWrap}
+            onPress={() => {
+              navigation.navigate('CommunityMemberDetail', {
+                communityId: community.communityId,
+              });
+            }}
           />
           {!community.isJoined && (
             <View style={styles.joinButtonWrap}>
@@ -143,12 +164,18 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
               />
             </View>
           )}
-          {pendingPosts?.length > 0 && (
+          {isCommunityModerator && pendingPosts?.length > 0 && (
             <CommunityPendingPost
               number={pendingPosts.length}
               pageId={pageId}
               componentId={componentId}
               style={styles.pendingPostWrap}
+              onPress={() => {
+                navigation.navigate('PendingPosts', {
+                  communityId: community.communityId,
+                  isModerator: !!isCommunityModerator,
+                });
+              }}
             />
           )}
           <AmityStoryTabComponent

@@ -8,6 +8,7 @@ import { emptyVideoPost, privateFeed } from '../../../assets/icons';
 import VideoGallery from '../../../elements/VideoGallery/VideoGallery';
 import { useStyles } from './styles';
 import { AmityCommunityFeedRef } from '../AmityCommunityFeedComponent/AmityCommunityFeedComponent';
+import ImageFeedSkeleton from '../../../component/ImageFeedSkeleton/ImageFeedSkeleton';
 
 type AmityCommunityVideoFeedComponentProps = {
   pageId?: PageID;
@@ -58,6 +59,10 @@ const AmityCommunityVideoFeedComponent = forwardRef<
         />
       </View>
     );
+  }
+
+  if (loading && (!posts || posts?.length === 0)) {
+    return <ImageFeedSkeleton themeStyles={themeStyles} />;
   }
 
   if (!loading && posts?.length === 0) {

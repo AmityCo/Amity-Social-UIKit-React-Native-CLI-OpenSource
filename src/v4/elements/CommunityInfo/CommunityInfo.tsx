@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import { useAmityElement } from '../../hook';
-import { StyleSheet, ViewProps } from 'react-native';
+import { StyleSheet, TouchableOpacity, ViewProps } from 'react-native';
 import { View } from 'react-native';
 import { Typography } from '../../component/Typography/Typography';
 
@@ -9,12 +9,14 @@ type CommunityInfoProps = ViewProps & {
   community: Amity.Community;
   pageId?: PageID;
   componentId?: ComponentID;
+  onPress?: () => void;
 };
 
 const CommunityInfo: FC<CommunityInfoProps> = ({
   community,
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
+  onPress,
   ...props
 }) => {
   const elementId = ElementID.community_description;
@@ -63,14 +65,16 @@ const CommunityInfo: FC<CommunityInfoProps> = ({
         </Typography.Caption>
       </View>
       <View style={styles.line} />
-      <View style={styles.statItem}>
-        <Typography.BodyBold style={styles.number}>
-          {community.membersCount}
-        </Typography.BodyBold>
-        <Typography.Caption style={styles.label}>
-          {community.postsCount > 1 ? 'members' : 'member'}
-        </Typography.Caption>
-      </View>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.7} hitSlop={0.8}>
+        <View style={styles.statItem}>
+          <Typography.BodyBold style={styles.number}>
+            {community.membersCount}
+          </Typography.BodyBold>
+          <Typography.Caption style={styles.label}>
+            {community.postsCount > 1 ? 'members' : 'member'}
+          </Typography.Caption>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };

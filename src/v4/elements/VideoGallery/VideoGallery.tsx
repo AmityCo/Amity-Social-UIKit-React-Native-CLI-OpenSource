@@ -12,6 +12,7 @@ import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
 import { formatDuration } from '../../../util/timeUtil';
 import { Typography } from '../../component/Typography/Typography';
 import VideoPlayer from 'react-native-video-controls';
+import ImageFeedSkeleton from '../../component/ImageFeedSkeleton/ImageFeedSkeleton';
 
 type VideoGalleryProps = {
   themeStyles?: MyMD3Theme;
@@ -24,8 +25,8 @@ type VideoGalleryProps = {
 const VideoGallery: FC<VideoGalleryProps> = ({
   posts,
   accessibilityId,
-  // isLoading,
-  // themeStyles,
+  isLoading,
+  themeStyles,
   onNextPage,
 }) => {
   const { width } = Dimensions.get('window');
@@ -109,6 +110,9 @@ const VideoGallery: FC<VideoGalleryProps> = ({
         onEndReached={() => {
           onNextPage?.();
         }}
+        ListEmptyComponent={
+          isLoading ? <ImageFeedSkeleton themeStyles={themeStyles} /> : null
+        }
         style={styles.container}
       />
       {openVideoViewer && (

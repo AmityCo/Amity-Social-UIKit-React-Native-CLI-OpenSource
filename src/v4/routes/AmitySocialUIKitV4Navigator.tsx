@@ -190,7 +190,6 @@ export default function AmitySocialUIKitV4Navigator() {
               name="UserProfile"
               component={UserProfile}
               options={{
-                title: '',
                 headerLeft: () => <BackButton />,
                 headerTitleAlign: 'center',
                 title: 'Member',

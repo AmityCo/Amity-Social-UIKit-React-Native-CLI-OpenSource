@@ -4,11 +4,22 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Easing,
+  Modal,
+  Pressable,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  Fragment,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useStyles } from './styles';
 import { ComponentID, PageID } from '../../../enum';
-import { useAmityPage } from '../../../hook';
+import { useAmityPage, useCommunity } from '../../../hook';
 import AmityCommunityHeaderComponent from '../../Components/AmityCommunityHeaderComponent/AmityCommunityHeaderComponent';
 import AmityCommunityFeedComponent, {
   AmityCommunityFeedRef,
@@ -19,8 +30,16 @@ import AmityCommunityProfileTabComponent, {
 import AmityCommunityImageFeedComponent from '../../Components/AmityCommunityImageFeedComponent/AmityCommunityImageFeedComponent';
 import AmityCommunityVideoFeedComponent from '../../Components/AmityCommunityVideoFeedComponent/AmityCommunityVideoFeedComponent';
 import CommunityCoverNavigator from '../../../elements/CommunityCover/CommunityCoverNavigator';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
+import CommunityCreatePostButton from '../../../elements/CommunityCreatePostButton/CommunityCreatePostButton';
+import { SvgXml } from 'react-native-svg';
+import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
+import { useNavigation } from '@react-navigation/native';
+import { post, story } from '../../../../v4/assets/icons';
 
 const AmityCommunityProfilePage = ({
   route,
@@ -44,6 +63,8 @@ const AmityCommunityProfilePage = ({
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const feedRef = useRef<AmityCommunityFeedRef>(null);
+
+  const styles = useStyles(themeStyles);
 
   useEffect(() => {
     if (isScrolledPastHeader) {
@@ -101,8 +122,6 @@ const AmityCommunityProfilePage = ({
       handleLoadMore();
     }
   };
-
-  const styles = useStyles(themeStyles);
 
   const renderCommunityProfileTab = useCallback(() => {
     return (
@@ -201,8 +220,97 @@ const AmityCommunityProfilePage = ({
         {renderCommunityProfileTab()}
         {renderTabComponent()}
       </Animated.ScrollView>
+      <CommunityProfileActions
+        pageId={pageId}
+        styles={styles}
+        communityId={communityId}
+      />
     </View>
   );
 };
 
 export default memo(AmityCommunityProfilePage);
+
+function CommunityProfileActions({ pageId, communityId, styles }) {
+  const { community } = useCommunity(communityId);
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const {
+    AmityPostTargetSelectionPageBehavior,
+    AmityStoryTargetSelectionPageBehavior,
+  } = useBehaviour();
+  const navigation =
+    useNavigation<
+      NativeStackNavigationProp<RootStackParamList, 'CreatePost'>
+    >();
+
+  const openBottomSheet = () => setIsBottomSheetVisible(true);
+
+  const closeBottomSheet = () => setIsBottomSheetVisible(false);
+
+  const handleCreatePost = () => {
+    closeBottomSheet();
+
+    if (AmityPostTargetSelectionPageBehavior.goToPostComposerPage) {
+      return AmityPostTargetSelectionPageBehavior.goToPostComposerPage({
+        community,
+        targetId: communityId,
+        targetType: 'community',
+      });
+    }
+
+    return navigation.navigate('CreatePost', {
+      community,
+      targetId: communityId,
+      targetType: 'community',
+    });
+  };
+
+  const handleCreateStory = () => {
+    closeBottomSheet();
+
+    if (AmityStoryTargetSelectionPageBehavior.goToStoryComposerPage) {
+      return AmityStoryTargetSelectionPageBehavior.goToStoryComposerPage({
+        targetId: communityId,
+        targetType: 'community',
+      });
+    }
+    navigation.navigate('CreateStory', {
+      targetId: communityId,
+      targetType: 'community',
+    });
+  };
+
+  if (!community?.isJoined) return null;
+
+  return (
+    <Fragment>
+      <CommunityCreatePostButton pageId={pageId} onPress={openBottomSheet} />
+      <Modal
+        transparent
+        animationType="fade"
+        visible={isBottomSheetVisible}
+        onRequestClose={closeBottomSheet}
+      >
+        <Pressable onPress={closeBottomSheet} style={styles.modalOverlay}>
+          <Animated.View style={styles.modalContent}>
+            <View style={styles.dragHandle} />
+            <TouchableOpacity
+              onPress={handleCreatePost}
+              style={styles.bottomSheetOption}
+            >
+              <SvgXml xml={post()} width={24} height={24} />
+              <Text style={styles.bottomSheetOptionText}>Post</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleCreateStory}
+              style={styles.bottomSheetOption}
+            >
+              <SvgXml width={24} height={24} xml={story()} />
+              <Text style={styles.bottomSheetOptionText}>Story</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </Pressable>
+      </Modal>
+    </Fragment>
+  );
+}

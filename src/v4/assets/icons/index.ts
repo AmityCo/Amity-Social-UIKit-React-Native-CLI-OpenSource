@@ -18,3 +18,5 @@ export { default as emptyImagePost } from './emptyImagePost';
 export { default as emptyVideoPost } from './emptyVideoPost';
 export { default as privateFeed } from './privateFeed';
 export { default as cross } from './cross';
+export { default as story } from './story';
+export { default as post } from './post';

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
 import ImageViewer from '../ImageViewer/ImageViewer';
+import ImageFeedSkeleton from '../../component/ImageFeedSkeleton/ImageFeedSkeleton';
 
 type ImageGalleryProps = {
   themeStyles?: MyMD3Theme;
@@ -21,7 +22,7 @@ type ImageGalleryProps = {
 const ImageGallery: FC<ImageGalleryProps> = ({
   posts,
   accessibilityId,
-  // isLoading,
+  isLoading,
   themeStyles,
   onNextPage,
 }) => {
@@ -83,6 +84,9 @@ const ImageGallery: FC<ImageGalleryProps> = ({
         onEndReached={() => {
           onNextPage?.();
         }}
+        ListEmptyComponent={
+          isLoading ? <ImageFeedSkeleton themeStyles={themeStyles} /> : null
+        }
         style={styles.container}
       />
       {openImageViewer && (

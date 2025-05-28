@@ -1,3 +1,4 @@
+import { useStyles } from './styles';
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { ComponentID, PageID } from '../../../enum';
 import { useAmityComponent, useCommunity } from '../../../hook';
@@ -12,12 +13,11 @@ import { usePostImpression } from '../../../hook/usePostImpression';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
 import { emptyPost, privateFeed } from '../../../assets/icons';
+import CommunityFeedSkeleton from '../../../component/CommunityFeedSkeleton/CommunityFeedSkeleton';
 
 export interface AmityCommunityFeedRef {
   handleLoadMore: () => void;
 }
-
-import { useStyles } from './styles';
 
 type AmityCommunityFeedComponentProps = {
   pageId?: PageID;
@@ -72,8 +72,6 @@ const AmityCommunityFeedComponent = forwardRef<
     handleLoadMore,
   }));
 
-  if (!posts) return null;
-
   if (!community?.isJoined && !community?.isPublic) {
     return (
       <View style={styles.listContainer}>
@@ -84,6 +82,10 @@ const AmityCommunityFeedComponent = forwardRef<
         />
       </View>
     );
+  }
+
+  if (loading && (!posts || posts.length === 0)) {
+    return <CommunityFeedSkeleton themeStyles={themeStyles} />;
   }
 
   if (!loading && itemWithAds?.length === 0) {
@@ -121,6 +123,11 @@ const AmityCommunityFeedComponent = forwardRef<
           </View>
         );
       }}
+      ListFooterComponent={
+        loading && itemWithAds && itemWithAds.length > 0 ? (
+          <CommunityFeedSkeleton themeStyles={themeStyles} />
+        ) : null
+      }
       viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
       onViewableItemsChanged={handleViewChange}
       keyExtractor={(item, index) =>

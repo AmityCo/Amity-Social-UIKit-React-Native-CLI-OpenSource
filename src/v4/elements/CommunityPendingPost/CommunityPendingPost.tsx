@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import { useAmityElement } from '../../hook';
-import { StyleSheet, ViewProps } from 'react-native';
+import { StyleSheet, TouchableOpacity, ViewProps } from 'react-native';
 import { View } from 'react-native';
 import { Typography } from '../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
@@ -11,6 +11,7 @@ type CommunityPendingPostProps = ViewProps & {
   number: number;
   pageId?: PageID;
   componentId?: ComponentID;
+  onPress: () => void;
 };
 
 const CommunityPendingPost: FC<CommunityPendingPostProps> = ({
@@ -20,6 +21,7 @@ const CommunityPendingPost: FC<CommunityPendingPostProps> = ({
   ...props
 }) => {
   const elementId = ElementID.community_pending_post;
+
   const { isExcluded, accessibilityId, themeStyles } = useAmityElement({
     pageId,
     componentId,
@@ -50,7 +52,12 @@ const CommunityPendingPost: FC<CommunityPendingPostProps> = ({
   if (isExcluded || number === 0) return null;
 
   return (
-    <View testID={accessibilityId} {...props}>
+    <TouchableOpacity
+      hitSlop={0.8}
+      activeOpacity={0.7}
+      testID={accessibilityId}
+      {...props}
+    >
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <SvgXml xml={dot()} />
@@ -62,7 +69,7 @@ const CommunityPendingPost: FC<CommunityPendingPostProps> = ({
           number > 1 ? 's' : ''
         } need approval`}</Typography.Caption>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
