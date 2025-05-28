@@ -2,11 +2,16 @@ import * as React from 'react';
 import {
   AmityUiKitProvider,
   AmityUiKitSocial,
+  AmityPageRenderer,
+  AmityExploreComponent,
+  PostDetail,
+
 } from 'amity-react-native-social-ui-kit';
 import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
+
 
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
@@ -98,14 +103,17 @@ export default function App() {
   return (
     <AmityUiKitProvider
       configs={config} //put your config json object
-      apiKey="YOUR_API_KEY" // Put your apiKey
-      apiRegion="API_REGION" // Put your apiRegion
-      userId="USER_ID" // Put your UserId
-      displayName="DISPLAYNAME" // Put your displayName
-      apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
+      apiKey="b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f"
+      apiRegion="sg"
+      userId="topAmity"
+      displayName="topAmity"
+      apiEndpoint="https://api.sg.amity.co"
       fcmToken={fcmToken} // android:fcm iOS:APN
     >
-      <AmityUiKitSocial />
+      {/* <AmityUiKitSocial /> */}
+      <AmityPageRenderer>
+        <PostDetail defaultPostId='682b29cc5277f367939226bc'/>
+      </AmityPageRenderer>
     </AmityUiKitProvider>
   );
 }

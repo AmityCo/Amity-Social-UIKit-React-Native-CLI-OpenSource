@@ -1,6 +1,8 @@
 import { NativeModules, Platform } from 'react-native';
 import AmityUiKitProvider from './providers/amity-ui-kit-provider';
 import AmityUiKitSocial from './routes/SocialNavigator';
+import AmityPageRenderer from './v4/routes/AmityPageRenderer'
+import PostDetail from './v4/screen/PostDetail';
 import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
@@ -29,6 +31,7 @@ import {
   AmityStoryTargetSelectionPage,
   AmityUserSearchResultComponent,
   AmityMyCommunitiesSearchPage,
+  AmityExploreComponent
 } from './v4';
 import {
   AmityStoryTabComponentEnum,
@@ -89,4 +92,7 @@ export {
   AmityMyCommunitiesSearchPage,
   AmityPostComposerMode,
   mediaAttachment,
+  AmityExploreComponent,
+  AmityPageRenderer,
+  PostDetail
 };

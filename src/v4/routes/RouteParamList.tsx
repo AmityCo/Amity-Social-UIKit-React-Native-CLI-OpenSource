@@ -22,7 +22,7 @@ export type RootStackParamList = {
   };
   MemberDetail: undefined;
   Community: undefined;
-  Explore: undefined;
+  AmityExploreComponent: undefined;
   CategoryList: undefined;
   CreatePost: AmityPostComposerPageType;
   EditPost: AmityPostComposerPageType;
