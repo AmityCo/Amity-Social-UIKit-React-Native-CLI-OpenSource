@@ -12,6 +12,7 @@ export enum PageID {
   select_story_target_page = 'select_story_target_page',
   all_categories_page = 'all_categories_page',
   communities_by_category_page = 'communities_by_category_page',
+  livestream_post_target_selection_page = 'livestream_post_target_selection_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',

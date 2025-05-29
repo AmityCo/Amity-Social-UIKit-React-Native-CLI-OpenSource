@@ -45,6 +45,7 @@ export interface IBehaviour {
       postType: 'post' | 'story' | 'poll' | 'livestream';
     }) => void;
     goToSelectStoryTargetPage?: () => void;
+    goToLivestreamTargetSelectionPage?: () => void;
   };
   AmityPostTargetSelectionPageBehavior?: {
     goToPostComposerPage?: (arg?: {
@@ -85,6 +86,22 @@ export interface IBehaviour {
     goToStoryComposerPage?: (arg?: {
       targetId: string;
       targetType: 'community' | 'user';
+    }) => void;
+  };
+  AmityLivestreamPostTargetSelectionPageBehavior?: {
+    goToLivestreamComposerPage?: (arg?: {
+      targetId: string;
+      targetType: 'community' | 'user';
+      targetName?: string;
+      postSetting?: ValueOf<
+        Readonly<{
+          ONLY_ADMIN_CAN_POST: 'ONLY_ADMIN_CAN_POST';
+          ADMIN_REVIEW_POST_REQUIRED: 'ADMIN_REVIEW_POST_REQUIRED';
+          ANYONE_CAN_POST: 'ANYONE_CAN_POST';
+        }>
+      >;
+      needApprovalOnPostCreation?: boolean;
+      isPublic?: boolean;
     }) => void;
   };
 }

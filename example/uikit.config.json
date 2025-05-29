@@ -359,6 +359,21 @@
     },
     "communities_by_category_page/*/back_button": {
       "icon": "backButtonIcon"
+    },
+    "livestream_post_target_selection_page/*/*": {
+      "theme": {}
+    },
+    "livestream_post_target_selection_page/*/close_button": {
+      "theme": {},
+      "image": "close_button"
+    },
+    "livestream_post_target_selection_page/*/title": {
+      "text": "Live on"
+    },
+    "livestream_post_target_selection_page/*/my_timeline_avatar": {},
+    "livestream_post_target_selection_page/*/my_timeline_text": {
+      "theme": {},
+      "text": "My timeline"
     }
   }
 }

@@ -72,6 +72,14 @@ const TargetItem = ({
         elementID={avatarElementId}
         avatarId={avatarFileId}
       />
+      {isPrivate && (
+        <ImageElement
+          componentID={componentId}
+          elementID={ElementID.community_private_badge}
+          style={styles.lockIcon}
+          configKey="image"
+        />
+      )}
       {displayNameElementId ? (
         <TextKeyElement
           pageID={pageId}
@@ -94,14 +102,6 @@ const TargetItem = ({
           componentID={componentId}
           elementID={ElementID.community_official_badge}
           style={styles.badgeIcon}
-          configKey="image"
-        />
-      )}
-      {isPrivate && (
-        <ImageElement
-          componentID={componentId}
-          elementID={ElementID.community_private_badge}
-          style={styles.lockIcon}
           configKey="image"
         />
       )}
