@@ -12,6 +12,7 @@ import React, {
   useCallback,
   useMemo,
   useEffect,
+  useLayoutEffect,
 } from 'react';
 import {
   View,
@@ -34,7 +35,7 @@ import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import { IPost } from '../../../components/Social/PostList';
 import { amityPostsFormatter } from '../../../util/postDataFormatter';
 import { checkCommunityPermission } from '../../../providers/Social/communities-sdk';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { CommonActions, RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import FloatingButton from '../../../components/FloatingButton';
 import { useDispatch } from 'react-redux';
@@ -47,23 +48,37 @@ import { ComponentID } from '../../enum/enumUIKitID';
 import AmityStoryTabComponent from '../../PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../PublicApi/types/index';
 import GalleryComponent from '../../component/Gallery/GalleryComponent';
+import { RootStackParamList } from '../../../v4/routes/RouteParamList';
+import BackButton from '../../../components/BackButton';
+
+
 
 export type FeedRefType = {
   handleLoadMore: () => void;
 };
+type CommunityHomePageType = {
+  defaultCommunityId: string;
+};
+export default function CommunityHome({ defaultCommunityId }: CommunityHomePageType) {
+  console.log('defaultCommunityId: ', defaultCommunityId);
 
-export default function CommunityHome({ route }: any) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'CommunityHome'>>();
+
   const theme = useTheme() as MyMD3Theme;
   const { excludes } = useConfig();
   const styles = useStyles();
   const dispatch = useDispatch();
   const { openPostTypeChoiceModal } = uiSlice.actions;
   const { apiRegion, client } = useAuth();
-  const { communityId, communityName } = route.params as {
+  const { communityId: communityIdParam, communityName: communityNameParam, isModerator } = route?.params as {
     communityId: string;
     communityName: string;
-  };
+    isModerator?: boolean;
+  } ?? {};
+  const [communityId, setCommunityId] = useState<string>()
+  const [communityName, setCommunityName] = useState<string>()
+  console.log('communityId: ', communityId);
   const [isJoin, setIsJoin] = useState(true);
   const [currentTab, setCurrentTab] = useState<TabName>(TabName.Timeline);
   const [communityData, setCommunityData] = useState<Amity.Community>();
@@ -81,6 +96,61 @@ export default function CommunityHome({ route }: any) {
     useState<boolean>(false);
   const disposers: Amity.Unsubscriber[] = useMemo(() => [], []);
   const unsubCommunity = useRef(null);
+
+  useEffect(() => {
+    if (communityIdParam) {
+      setCommunityId(communityIdParam)
+    }
+    else if (defaultCommunityId && !communityIdParam) {
+      setCommunityId(defaultCommunityId)
+    }
+    if (communityNameParam) {
+      setCommunityName(communityNameParam)
+    }
+  }, [communityIdParam, communityNameParam])
+
+  const onClickBack = () => {
+    const routes = navigation.getState().routes;
+    if (routes.length === 1) {
+      navigation.navigate('Home');
+      setCommunityName('')
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        })
+      );
+      setCommunityId('')
+      setCommunityName('')
+      setCommunityId('')
+    } else {
+      navigation.goBack();
+
+    }
+
+  }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => <BackButton onPress={onClickBack} goBack={false} />,
+      title: communityName,
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('CommunitySetting', {
+              communityId,
+              communityName,
+              isModerator,
+            });
+          }}
+        >
+          <Image
+            source={require('../../assets/images/threeDot.png')}
+            style={styles.dotIcon}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, communityName, communityId, isModerator]);
 
   const getPendingPosts = useCallback(async () => {
     const unsubscribe = PostRepository.getPosts(
@@ -120,6 +190,9 @@ export default function CommunityHome({ route }: any) {
             getCommunityTopic(data, SubscriptionLevels.COMMUNITY)
           );
           setCommunityData(data);
+          if (!communityName) {
+            setCommunityName(data.displayName)
+          }
         }
         setIsJoin(data?.isJoined || false); // Set isJoin to communityData?.data.isJoined value
       }
@@ -209,8 +282,8 @@ export default function CommunityHome({ route }: any) {
             <Text style={styles.pendingDescriptionText}>
               {isUserHasPermission
                 ? (pendingPosts.length > 30 && 'More than ') +
-                  pendingPosts.length +
-                  ' posts need approval'
+                pendingPosts.length +
+                ' posts need approval'
                 : 'Your posts are pending for review'}
             </Text>
           </View>
@@ -270,8 +343,8 @@ export default function CommunityHome({ route }: any) {
             source={
               avatarUrl
                 ? {
-                    uri: avatarUrl,
-                  }
+                  uri: avatarUrl,
+                }
                 : require('../../assets/images/Placeholder.png')
             }
           />

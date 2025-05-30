@@ -5,6 +5,7 @@ import {
   AmityPageRenderer,
   AmityExploreComponent,
   PostDetail,
+  CommunityHome
 
 } from 'amity-react-native-social-ui-kit';
 import config from '../uikit.config.json';
@@ -105,15 +106,15 @@ export default function App() {
       configs={config} //put your config json object
       apiKey="b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f"
       apiRegion="sg"
-      userId="topAmity"
-      displayName="topAmity"
+      userId="topAmity2"
+      displayName="topAmity2"
       apiEndpoint="https://api.sg.amity.co"
       fcmToken={fcmToken} // android:fcm iOS:APN
-    >
-      {/* <AmityUiKitSocial /> */}
-      <AmityPageRenderer>
-        <PostDetail defaultPostId='682b29cc5277f367939226bc'/>
-      </AmityPageRenderer>
+     >
+   <AmityUiKitSocial />
+      {/* <AmityPageRenderer>
+        <CommunityHome defaultCommunityId={'660d65f307e4b063afe45305'}/>
+      </AmityPageRenderer> */}
     </AmityUiKitProvider>
   );
 }

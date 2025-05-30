@@ -85,6 +85,7 @@ const AmityPostContentComponent = ({
   post,
   AmityPostContentComponentStyle = AmityPostContentComponentStyleEnum.detail,
 }: IPostList) => {
+
   const theme = useTheme() as MyMD3Theme;
   const {
     AmityPostContentComponentBehavior,
@@ -125,6 +126,7 @@ const AmityPostContentComponent = ({
     editedAt,
     mentionPosition,
   } = post ?? {};
+
   const { isCommunityModerator } = useIsCommunityModerator({
     communityId: targetType === 'community' && targetId,
     userId: creator?.userId,

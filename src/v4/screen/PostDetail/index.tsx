@@ -14,7 +14,9 @@ const PostDetail: React.FC<IPostDetailPage> = ({ defaultPostId }) => {
   console.log('postId: ', postIdFromRoute);
 
   return (
-    <AmityPostDetailPage postId={defaultPostId ?? postIdFromRoute} />
+    <AmityPostDetailPage  
+    isFromComponent={!!defaultPostId}
+    postId={defaultPostId || postIdFromRoute} />
   );
 };
 

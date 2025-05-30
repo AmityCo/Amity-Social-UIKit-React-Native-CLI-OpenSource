@@ -52,6 +52,7 @@ import AmityAllCategoriesPage from '../PublicApi/Pages/AmityAllCategoriesPage/Am
 import AmityCommunitiesByCategoryPage from '../PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
 import EditPost from '../screen/EditPost/EditPost';
 import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
+import LivestreamPlayer from '../../screens/LivestreamPlayer';
 
 interface PageRendererProps {
   children: React.ReactElement
@@ -122,33 +123,8 @@ export default function PageRenderer({ children }: PageRendererProps) {
             />
             <Stack.Screen
               name="CommunityHome"
-              component={CommunityHome}
-              options={({
-                navigation,
-                route: {
-                  params: { communityName, communityId, isModerator },
-                },
-              }: any) => ({
-                headerLeft: () => <BackButton goBack={true} />,
-                title: communityName,
-                headerRight: () => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      // Handle button press here
-                      navigation.navigate('CommunitySetting', {
-                        communityId: communityId,
-                        communityName: communityName,
-                        isModerator: isModerator,
-                      });
-                    }}
-                  >
-                    <Image
-                      source={require('../assets/images/threeDot.png')}
-                      style={styles.dotIcon}
-                    />
-                  </TouchableOpacity>
-                ),
-              })}
+              children={() => <CommunityHome {...children.props} />}
+
             />
             <Stack.Screen
               name="PendingPosts"
@@ -313,6 +289,11 @@ export default function PageRenderer({ children }: PageRendererProps) {
               <Stack.Screen
                 name="CreateLivestream"
                 component={CreateLivestream}
+                options={{ headerShown: false }}
+              />
+                 <Stack.Screen
+                name="LivestreamPlayer"
+                component={LivestreamPlayer}
                 options={{ headerShown: false }}
               />
             </Stack.Group>

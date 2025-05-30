@@ -3,6 +3,7 @@ import AmityUiKitProvider from './providers/amity-ui-kit-provider';
 import AmityUiKitSocial from './routes/SocialNavigator';
 import AmityPageRenderer from './v4/routes/AmityPageRenderer'
 import PostDetail from './v4/screen/PostDetail';
+import CommunityHome from './v4/screen/CommunityHome';
 import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
@@ -94,5 +95,6 @@ export {
   mediaAttachment,
   AmityExploreComponent,
   AmityPageRenderer,
-  PostDetail
+  PostDetail,
+  CommunityHome
 };

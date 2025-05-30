@@ -19,6 +19,7 @@ export type RootStackParamList = {
   CommunityHome: {
     communityId: string;
     communityName: string;
+    isModerator?: boolean;
   };
   MemberDetail: undefined;
   Community: undefined;
@@ -78,4 +79,5 @@ export type RootStackParamList = {
   CommunitiesByCategoryPage: {
     category: Amity.Category;
   };
+  LivestreamPlayer: { streamId: string };
 };
