@@ -45,7 +45,9 @@ yarn
 - Copy and paste to /example/android/app/google-services.json and /example/ios/GoogleService-Info.plist.
 - More detail about push notification - https://docs.amity.co/amity-uikit/uikit-v4-beta/installation-guide/react-native#push-notification
 
-3. Configure your apiKey,apiRegion,apiEndpoint,userId,displayName,fcmToken in /example/src/App.tsx file(https://github.com/AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource/blob/main/example/src/App.tsx) first before run the sample app
+3. Configure your apiKey,apiRegion,apiEndpoint,userId,displayName,fcmToken in /example/src/App.tsx file(https://github.com/AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource/blob/main/example/src/App.tsx) first before run the sample app.
+
+
    <img width="658" alt="Screenshot 2567-06-12 at 01 52 46" src="https://github.com/AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource/assets/155952277/a312a7db-d790-4af6-9db7-bf085888cd01">
 
 4. Go back to your root folder (`cd ..`) and Choose to run between iOS or Android
