@@ -11,7 +11,6 @@ const PostDetail: React.FC<IPostDetailPage> = ({ defaultPostId }) => {
   const route = useRoute<RouteProp<RootStackParamList, 'PostDetail'>>();
   const postIdFromRoute = route?.params?.postId;
 
-  console.log('postId: ', postIdFromRoute);
 
   return (
     <AmityPostDetailPage  
