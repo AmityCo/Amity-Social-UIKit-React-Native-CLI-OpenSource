@@ -168,6 +168,52 @@ export default function App() {
   );
 }
 ```
+## Using Specific Screens from UIKit
+
+UIKit now supports importing and rendering individual screens. This gives you more control over how each screen is used in your app, making it easier to customize user flows and place screens exactly where you need them.
+
+#### 📦 Supported Screens
+
+You can now import and use the following screens individually:
+
+- [`CommunityHome`](#)
+- [`PostDetail`](#)
+-  [`AmityExploreComponent`](#)
+
+> ✅ Make sure your screen component is wrapped with `AmityPageRenderer` at the root level.
+> 
+> ✅  `AmityPageRenderer` is only required when using screen components. It is not needed for the `AmityUiKitSocial` component.
+
+
+### Usage
+
+```js
+import * as React from 'react';
+
+import {
+  AmityUiKitProvider,
+  AmityUiKitSocial,
+  AmityPageRenderer,
+  AmityExploreComponent,
+  PostDetail,
+  CommunityHome
+} from 'amity-react-native-social-ui-kit';
+
+export default function App() {
+  return (
+    <AmityUiKitProvider
+      apiKey="API_KEY"
+      apiRegion="sg"
+      userId="userId"
+      displayName="displayName"
+    >
+      <AmityPageRenderer>
+        <CommunityHome defaultCommunityId={'communityID'}/>
+      </AmityPageRenderer>
+    </AmityUiKitProvider>
+  );
+}
+```
 
 ### Customization
 
