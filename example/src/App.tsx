@@ -108,13 +108,10 @@ export default function App() {
       apiRegion="API_REGION" // Put your apiRegion
       userId="USER_ID" // Put your UserId
       displayName="DISPLAYNAME" // Put your displayName
-      apiEndpoint="API_ENDPOINT" 
+      apiEndpoint="API_ENDPOINT"
       fcmToken={fcmToken} // android:fcm iOS:APN
-     >
-   {/* <AmityUiKitSocial /> */}
-      <AmityPageRenderer>
-        <CommunityHome defaultCommunityId={'660d65f307e4b063afe45305'}/>
-      </AmityPageRenderer>
+    >
+      <AmityUiKitSocial />
     </AmityUiKitProvider>
   );
 }
