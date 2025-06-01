@@ -104,17 +104,17 @@ export default function App() {
   return (
     <AmityUiKitProvider
       configs={config} //put your config json object
-      apiKey="b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f"
-      apiRegion="sg"
-      userId="topAmity2"
-      displayName="topAmity2"
-      apiEndpoint="https://api.sg.amity.co"
+      apiKey="YOUR_API_KEY" // Put your apiKey
+      apiRegion="API_REGION" // Put your apiRegion
+      userId="USER_ID" // Put your UserId
+      displayName="DISPLAYNAME" // Put your displayName
+      apiEndpoint="API_ENDPOINT" 
       fcmToken={fcmToken} // android:fcm iOS:APN
      >
-   <AmityUiKitSocial />
-      {/* <AmityPageRenderer>
+   {/* <AmityUiKitSocial /> */}
+      <AmityPageRenderer>
         <CommunityHome defaultCommunityId={'660d65f307e4b063afe45305'}/>
-      </AmityPageRenderer> */}
+      </AmityPageRenderer>
     </AmityUiKitProvider>
   );
 }

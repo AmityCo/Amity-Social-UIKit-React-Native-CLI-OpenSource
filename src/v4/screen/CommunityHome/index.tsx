@@ -60,7 +60,6 @@ type CommunityHomePageType = {
   defaultCommunityId: string;
 };
 export default function CommunityHome({ defaultCommunityId }: CommunityHomePageType) {
-  console.log('defaultCommunityId: ', defaultCommunityId);
 
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const route = useRoute<RouteProp<RootStackParamList, 'CommunityHome'>>();
@@ -78,7 +77,6 @@ export default function CommunityHome({ defaultCommunityId }: CommunityHomePageT
   } ?? {};
   const [communityId, setCommunityId] = useState<string>()
   const [communityName, setCommunityName] = useState<string>()
-  console.log('communityId: ', communityId);
   const [isJoin, setIsJoin] = useState(true);
   const [currentTab, setCurrentTab] = useState<TabName>(TabName.Timeline);
   const [communityData, setCommunityData] = useState<Amity.Community>();

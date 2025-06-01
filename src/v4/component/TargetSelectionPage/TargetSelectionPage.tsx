@@ -146,7 +146,6 @@ const TargetSelectionPage = ({
         <TouchableOpacity
           style={styles.closeButton}
           onPress={() => {
-            console.log('navigation');
             navigation.goBack();
           }}
         >
