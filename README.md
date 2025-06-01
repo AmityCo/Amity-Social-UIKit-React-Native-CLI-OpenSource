@@ -189,7 +189,7 @@ You can now import and use the following screens individually:
 
 ```js
 import * as React from 'react';
-
+import config from './uikit.config.json';
 import {
   AmityUiKitProvider,
   AmityUiKitSocial,
@@ -202,8 +202,9 @@ import {
 export default function App() {
   return (
     <AmityUiKitProvider
+      configs={config}
       apiKey="API_KEY"
-      apiRegion="sg"
+      apiRegion="API_REGION"
       userId="userId"
       displayName="displayName"
     >
