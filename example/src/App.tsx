@@ -98,11 +98,11 @@ export default function App() {
   return (
     <AmityUiKitProvider
       configs={config} //put your config json object
-      apiKey="b0efe90c3bdda2304d628918520c1688845889e4bc363d2c" // Put your apiKey
-      apiRegion="staging" // Put your apiRegion
-      userId="Web-Test" // Put your UserId
-      displayName="Web-Test" // Put your displayName
-      apiEndpoint="https://apix.staging.amity.co" //"https://api.{apiRegion}.amity.co"
+      apiKey="YOUR_API_KEY" // Put your apiKey
+      apiRegion="API_REGION" // Put your apiRegion
+      userId="USER_ID" // Put your UserId
+      displayName="DISPLAYNAME" // Put your displayName
+      apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
       fcmToken={fcmToken} // android:fcm iOS:APN
     >
       <AmityUiKitSocial />

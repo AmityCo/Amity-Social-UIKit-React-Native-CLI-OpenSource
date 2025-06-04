@@ -66,7 +66,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   }, [refresh]);
 
   const { handleViewChange } = usePostImpression(
-    itemWithAds.filter((item: Amity.Post | Amity.Ad) =>
+    itemWithAds?.filter((item: Amity.Post | Amity.Ad) =>
       isAmityAd(item) ? item?.adId : item?.postId
     )
   );

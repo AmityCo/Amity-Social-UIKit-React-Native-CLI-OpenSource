@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AdEngine } from '../engine/AdEngine';
 import {
   useAdSettings,
   useRecommendAds,
 } from '../../v4/providers/AdEngineProvider';
+import { useFocusEffect } from '@react-navigation/native';
 
 type ItemWithAd<T> = [T] | [T, Amity.Ad];
 
@@ -69,11 +70,8 @@ export const usePaginatorCore = <T>({
 
   const calculateTopIndex = (
     startItem: ItemWithAd<T> | undefined,
-    newItems: T[],
-    hasAppenedAds = false
+    newItems: T[]
   ): number => {
-    if (hasAppenedAds) return 1;
-
     if (!startItem) return 0;
 
     const foundedIndex = newItems.findIndex(
@@ -138,11 +136,7 @@ export const usePaginatorCore = <T>({
       const startItem = prevItemWithAds[0];
       // Find the index of the first item in newItems that matches the first item in prevItemWithAds
       // The prepending items are not count as the neweset items.
-      const topIndex = calculateTopIndex(
-        startItem,
-        newItems,
-        hasAppenedFirstRoundAds
-      );
+      const topIndex = calculateTopIndex(startItem, newItems);
 
       const newestItems: Array<[T]> = (newItems || [])
         .slice(0, topIndex)
@@ -259,8 +253,11 @@ export const usePaginatorApi = <T>(params: {
   isLoading?: boolean;
 }) => {
   const [hasAppenedFirstRoundAds, setHasAppenedFirstRoundAds] = useState(false);
+  const [itemWithAds, setItemWithAds] = useState<
+    (Amity.Ad | T)[] | undefined
+  >();
 
-  const { items, ...rest } = params;
+  const { items, isLoading, ...rest } = params;
   const {
     combineItemsWithAds,
     adsLoaded,
@@ -278,12 +275,16 @@ export const usePaginatorApi = <T>(params: {
     setHasAppenedFirstRoundAds(false);
   }, [coreReset]);
 
-  const itemWithAds = useMemo(() => {
-    if (adsLoaded && !params.isLoading) return combineItemsWithAds(items);
+  useFocusEffect(
+    useCallback(() => {
+      if (!adsLoaded || isLoading) return;
 
-    return items;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, adsLoaded, params.isLoading]);
+      const newItems = combineItemsWithAds(items);
+
+      setItemWithAds(newItems);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [adsLoaded, items, isLoading])
+  );
 
   return { itemWithAds, reset };
 };

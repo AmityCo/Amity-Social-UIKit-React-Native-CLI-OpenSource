@@ -84,7 +84,7 @@ const AmityCommunityFeedComponent = forwardRef<
     );
   }
 
-  if (loading && (!posts || posts.length === 0)) {
+  if (loading && !itemWithAds) {
     return <CommunityFeedSkeleton themeStyles={themeStyles} />;
   }
 
@@ -135,6 +135,7 @@ const AmityCommunityFeedComponent = forwardRef<
           ? item.adId.toString() + index
           : item.postId.toString() + '_' + index
       }
+      extraData={itemWithAds}
     />
   );
 });
