@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import React, {
   FC,
   memo,
@@ -88,7 +88,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   }, [AmityGlobalFeedComponentBehavior, navigation, postId]);
 
   return (
-    <View style={styles.actionSection}>
+    <Pressable onPress={onPressComment} style={styles.actionSection}>
       <View style={styles.row}>
         <TouchableOpacity onPress={addReactionToPost} style={styles.likeBtn}>
           {isLike ? (
@@ -133,7 +133,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
         />
         <Text style={styles.btnText}>Share</Text>
       </TouchableOpacity> */}
-    </View>
+    </Pressable>
   );
 };
 

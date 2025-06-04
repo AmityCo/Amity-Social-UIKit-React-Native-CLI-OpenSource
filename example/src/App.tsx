@@ -3,7 +3,6 @@ import {
   AmityUiKitProvider,
   AmityUiKitSocial,
   AmityPageRenderer,
-  AmityExploreComponent,
   PostDetail,
   CommunityHome
 
