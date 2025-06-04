@@ -85,6 +85,7 @@ const AmityPostContentComponent = ({
   post,
   AmityPostContentComponentStyle = AmityPostContentComponentStyleEnum.detail,
 }: IPostList) => {
+
   const theme = useTheme() as MyMD3Theme;
   const {
     AmityPostContentComponentBehavior,
@@ -125,6 +126,7 @@ const AmityPostContentComponent = ({
     editedAt,
     mentionPosition,
   } = post ?? {};
+
   const { isCommunityModerator } = useIsCommunityModerator({
     communityId: targetType === 'community' && targetId,
     userId: creator?.userId,
@@ -290,7 +292,7 @@ const AmityPostContentComponent = ({
               styles.modalContent,
               modalStyle,
               (post?.user?.userId === myId || isIAmModerator) &&
-                styles.twoOptions,
+              styles.twoOptions,
             ]}
           >
             <View style={styles.handleBar} />
@@ -369,7 +371,7 @@ const AmityPostContentComponent = ({
           <View style={styles.fillSpace}>
             <View style={styles.headerRow}>
               <TouchableOpacity
-                style={styles.headerTextContainer}
+                style={targetType === 'community' ? styles.headerTextContainer : {}}
                 onPress={handleDisplayNamePress}
               >
                 <Text
@@ -430,7 +432,7 @@ const AmityPostContentComponent = ({
           </View>
         </View>
         {AmityPostContentComponentStyle ===
-        AmityPostContentComponentStyleEnum.feed ? (
+          AmityPostContentComponentStyleEnum.feed ? (
           <Pressable onPress={openModal} hitSlop={12}>
             <MenuButtonIconElement
               pageID={pageId}

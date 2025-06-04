@@ -2,11 +2,16 @@ import * as React from 'react';
 import {
   AmityUiKitProvider,
   AmityUiKitSocial,
+  AmityPageRenderer,
+  PostDetail,
+  CommunityHome
+
 } from 'amity-react-native-social-ui-kit';
 import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
+
 
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);

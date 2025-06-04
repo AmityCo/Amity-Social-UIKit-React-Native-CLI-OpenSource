@@ -10,7 +10,7 @@ import {
 } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
 import useAuth from '../../hooks/useAuth';
-import Explore from '../../screens/Explore';
+
 import CategoryList from '../../screens/CategorytList';
 import CommunityList from '../../screens/CommunityList';
 import CommunityHome from '../screen/CommunityHome';
@@ -28,7 +28,7 @@ import CreateCommunity from '../../screens/CreateCommunity';
 import PendingPosts from '../../screens/PendingPosts';
 import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
-import { Image, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../svg/svg-xml-list';
 import { useStyles } from '../../routes/style';
@@ -52,8 +52,12 @@ import AmityAllCategoriesPage from '../PublicApi/Pages/AmityAllCategoriesPage/Am
 import AmityCommunitiesByCategoryPage from '../PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
 import EditPost from '../screen/EditPost/EditPost';
 import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
+import LivestreamPlayer from '../../screens/LivestreamPlayer';
 
-export default function AmitySocialUIKitV4Navigator() {
+interface PageRendererProps {
+  children: React.ReactElement
+}
+export default function PageRenderer({ children }: PageRendererProps) {
   const Stack = createNativeStackNavigator<RootStackParamList>();
   const { isConnected } = useAuth();
   const theme = useTheme() as MyMD3Theme;
@@ -77,6 +81,7 @@ export default function AmitySocialUIKitV4Navigator() {
                 color: theme.colors.base,
               },
             }}
+            initialRouteName={children.type?.displayName || children.type?.name as keyof RootStackParamList}
           >
             <Stack.Screen
               name="Home"
@@ -97,50 +102,29 @@ export default function AmitySocialUIKitV4Navigator() {
                 headerShown: false,
               }}
             />
-            <Stack.Screen name="AmityExploreComponent" component={AmityExploreComponent} />
+            <Stack.Screen name="AmityExploreComponent" component={AmityExploreComponent}
+              options={{
+                headerShown: false,
+              }} />
             <Stack.Screen
               name="PostDetail"
-              component={PostDetail}
               options={{
                 headerShown: false,
               }}
-            />
+              children={() => <PostDetail {...children.props} />}
+             />
+  
             <Stack.Screen
               name="CategoryList"
               component={CategoryList}
-              options={({}) => ({
+              options={({ }) => ({
                 title: 'Category',
               })}
             />
             <Stack.Screen
               name="CommunityHome"
-              component={CommunityHome}
-              options={({
-                navigation,
-                route: {
-                  params: { communityName, communityId, isModerator },
-                },
-              }: any) => ({
-                headerLeft: () => <BackButton goBack={true} />,
-                title: communityName,
-                headerRight: () => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      // Handle button press here
-                      navigation.navigate('CommunitySetting', {
-                        communityId: communityId,
-                        communityName: communityName,
-                        isModerator: isModerator,
-                      });
-                    }}
-                  >
-                    <Image
-                      source={require('../assets/images/threeDot.png')}
-                      style={styles.dotIcon}
-                    />
-                  </TouchableOpacity>
-                ),
-              })}
+              children={() => <CommunityHome {...children.props} />}
+
             />
             <Stack.Screen
               name="PendingPosts"
@@ -305,6 +289,11 @@ export default function AmitySocialUIKitV4Navigator() {
               <Stack.Screen
                 name="CreateLivestream"
                 component={CreateLivestream}
+                options={{ headerShown: false }}
+              />
+                 <Stack.Screen
+                name="LivestreamPlayer"
+                component={LivestreamPlayer}
                 options={{ headerShown: false }}
               />
             </Stack.Group>

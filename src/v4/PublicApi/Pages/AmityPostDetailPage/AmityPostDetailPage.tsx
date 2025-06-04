@@ -41,7 +41,6 @@ import {
   getPostTopic,
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
-import { amityPostsFormatter } from '../../../../util/postDataFormatter';
 import AmityPostContentComponent from '../../Components/AmityPostContentComponent/AmityPostContentComponent';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
 import AmityPostCommentComponent from '../../Components/AmityPostCommentComponent/AmityPostCommentComponent';
@@ -80,9 +79,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type AmityPostDetailPageType = {
   postId: Amity.Post['postId'];
+  isFromComponent?: boolean;
 };
 
-const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId }) => {
+const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromComponent }) => {
+  
   const { top, bottom } = useSafeAreaInsets();
   const { height } = useWindowDimensions();
 
@@ -97,6 +98,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId }) => {
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
   const styles = useStyles(themeStyles);
   const [postData, setPostData] = useState<Amity.Post>(null);
+
   const [replyUserName, setReplyUserName] = useState<string>('');
   const [replyCommentId, setReplyCommentId] = useState<string>('');
   const [inputMessage, setInputMessage] = useState('');
@@ -281,7 +283,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId }) => {
               styles.modalContent,
               modalStyle,
               (postData?.user?.userId === myId || isIAmModerator) &&
-                styles.twoOptions,
+              styles.twoOptions,
             ]}
           >
             <View style={styles.handleBar} />
@@ -336,7 +338,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId }) => {
   };
 
   useLayoutEffect(() => {
-    if (!postId) return () => {};
+    if (!postId) return () => { };
     let unsub: () => void;
     let hasSubscribed = false;
     const postUnsub = PostRepository.getPost(
@@ -349,8 +351,8 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId }) => {
             );
             hasSubscribed = true;
           }
-          const posts = await amityPostsFormatter([data]);
-          setPostData(posts[0]);
+
+          setPostData(data);
         }
       }
     );
@@ -374,11 +376,17 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId }) => {
   }, [inputMessage]);
 
   const onPressBack = useCallback(() => {
-    // if the previous screen is CreateLivestream, skip createLivestream and selectTarget screen
     const routes = navigation.getState().routes;
-    if (routes[routes.length - 2]?.name === 'CreateLivestream')
-      return navigation.pop(3);
-    navigation.goBack();
+    if (isFromComponent && routes.length === 1) {
+      navigation.navigate('Home');
+    } else {
+   
+      if (routes[routes.length - 2]?.name === 'CreateLivestream')
+        return navigation.pop(3);
+      navigation.goBack();
+    }
+    // if the previous screen is CreateLivestream, skip createLivestream and selectTarget screen
+
   }, [navigation]);
 
   const onCloseReply = () => {
@@ -540,9 +548,9 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId }) => {
             paddingTop: topBarHeigh,
             paddingBottom: isKeyboardVisible
               ? (Platform.OS !== 'android' ? keyboardHeight : 0) +
-                footerHeight -
-                topBarHeigh -
-                bottom
+              footerHeight -
+              topBarHeigh -
+              bottom
               : footerHeight - topBarHeigh,
             height: adjustedHeight,
           },

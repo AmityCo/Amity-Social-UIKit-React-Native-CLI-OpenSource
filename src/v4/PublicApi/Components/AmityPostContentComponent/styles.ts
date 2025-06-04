@@ -24,7 +24,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       flex: 1,
     },
     headerTextContainer: {
-      flex: 1,
+      maxWidth: '60%'
     },
     headerText: {
       fontWeight: '600',
