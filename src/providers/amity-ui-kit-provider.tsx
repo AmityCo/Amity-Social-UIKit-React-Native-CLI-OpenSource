@@ -49,6 +49,7 @@ export interface CustomColors {
   baseShade3?: string;
   baseShade4?: string;
   alert?: string;
+  live?: string;
 }
 export interface MyMD3Theme extends MD3Theme {
   colors: MD3Theme['colors'] & CustomColors;
@@ -130,6 +131,7 @@ export default function AmityUiKitProvider({
       baseShade3: validateConfigColor(themeColor?.base_shade3_color),
       baseShade4: validateConfigColor(themeColor?.base_shade4_color),
       alert: validateConfigColor(themeColor?.alert_color),
+      live: validateConfigColor(themeColor?.live_color),
     },
   };
 

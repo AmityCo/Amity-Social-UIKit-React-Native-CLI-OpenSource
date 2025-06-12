@@ -13,18 +13,27 @@ const AmityLivestreamPostTargetSelectionPage = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const onSelectFeed = ({ targetId, targetType }: FeedParams) => {
+  const onSelectFeed = ({
+    targetId,
+    targetType,
+    targetName,
+    community,
+  }: FeedParams) => {
+    const context = {
+      targetId,
+      targetType,
+      targetName:
+        targetType === 'community' ? community?.displayName : targetName,
+    };
+
     if (
       AmityLivestreamPostTargetSelectionPageBehavior.goToLivestreamComposerPage
     ) {
       return AmityLivestreamPostTargetSelectionPageBehavior.goToLivestreamComposerPage(
-        {
-          targetId,
-          targetType,
-        }
+        context
       );
     }
-    navigation.navigate('LivestreamPostTargetSelection');
+    navigation.navigate('CreateLivestream', context);
   };
 
   return (

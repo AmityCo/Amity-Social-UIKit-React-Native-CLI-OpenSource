@@ -22,16 +22,17 @@
     socket.io-client "2.2.0"
     ts-jest "^28.0.3"
 
-"@amityco/video-broadcaster-react-native@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@amityco/video-broadcaster-react-native/-/video-broadcaster-react-native-1.0.0.tgz#3a883673d236e5c793d2037561eabab6a89ceba3"
-  integrity sha512-vVCRIMWK/AckM5g8FKu4tOVAJsA3Gybh9JJL1gD8/x1E33E7EW6aEX+JsSDhMxjirsDlpfKVBIh2o2Z2/YOCOg==
+"@amityco/video-broadcaster-react-native@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@amityco/video-broadcaster-react-native/-/video-broadcaster-react-native-1.1.0.tgz#e7a385322cc599d0675de9d8fe2fdefea6157040"
+  integrity sha512-osF0dQWCZjUwmmOfrJplrwGx6dK4DDAnYWNjNggHTcp/ncteZwo27o8HYVizDSz0oT10VGtNQivCRJRnc1m43Q==
 
-"@amityco/video-player-react-native@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@amityco/video-player-react-native/-/video-player-react-native-1.0.0.tgz#85b58a3f2c3226a100a2b9c622083f937aa963b1"
-  integrity sha512-uqdX359letSrcKT5PrL3I/FsdVI3RDgkSYmDmEbbEq//T1WqC8CEUjO6u7FNOvHIk/2aXm6YA+BznYeDv9QfHg==
+"@amityco/video-player-react-native@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@amityco/video-player-react-native/-/video-player-react-native-1.2.0.tgz#0cd8e51356cb3f253588f75b0c8e2868e3cb4345"
+  integrity sha512-/+BE2n8wkLz7wM3qKsfKqzf7eiqzW3hNOX8avDx41M6yhoou9xqRkJ8NAufA9MQGjrFJ1J/gjhLzo7jbiLiTxA==
   dependencies:
+    react-native-video-controls "^2.8.1"
     uuid "^9.0.1"
 
 "@ampproject/remapping@^2.2.0":
@@ -7846,7 +7847,7 @@ lodash.upperfirst@^4.3.1:
   resolved "https://registry.yarnpkg.com/lodash.upperfirst/-/lodash.upperfirst-4.3.1.tgz#1365edf431480481ef0d1c68957a5ed99d49f7ce"
   integrity sha512-sReKOYJIJf74dhJONhU4e0/shzi1trVbSWDOhKYE5XV2O+H7Sb2Dihwuc7xWxVl+DgFPyTqIN3zMfT9cq5iWDg==
 
-lodash@4.17.21, lodash@^4.17.15, lodash@^4.17.21:
+lodash@4.17.21, lodash@^4.16.4, lodash@^4.17.15, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -9769,6 +9770,13 @@ react-native-vector-icons@^9.2.0:
   dependencies:
     prop-types "^15.7.2"
     yargs "^16.1.1"
+
+react-native-video-controls@^2.8.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/react-native-video-controls/-/react-native-video-controls-2.8.1.tgz#30ae707d8d218fed34bba3fc027b3943c5f438d9"
+  integrity sha512-dBmrE3TAKaR1gYMfbukjAM6Xo8OMZyRrxPzZtnaUgWcvGo11PQwzaI/j8HPD5fLgO+rlweP2pDpEJyIBsJvJkw==
+  dependencies:
+    lodash "^4.16.4"
 
 react-native-vision-camera@^3.9.1:
   version "3.9.2"

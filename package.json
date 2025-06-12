@@ -214,8 +214,8 @@
   },
   "dependencies": {
     "@amityco/ts-sdk-react-native": "^7.4.0",
-    "@amityco/video-broadcaster-react-native": "^1.0.0",
-    "@amityco/video-player-react-native": "^1.0.0",
+    "@amityco/video-broadcaster-react-native": "^1.1.0",
+    "@amityco/video-player-react-native": "^1.2.0",
     "@devvie/bottom-sheet": "^0.3.0",
     "@fawazahmed/react-native-read-more": "^3.0.4",
     "@reduxjs/toolkit": "^1.9.7",

@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  FlatList,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import { FlatList, View, TouchableOpacity } from 'react-native';
 import {
   useAmityElement,
   useAmityPage,
@@ -21,6 +15,8 @@ import { PageID, ComponentID, ElementID } from '../../../v4/enum';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import TextKeyElement from '../../PublicApi/Elements/TextKeyElement/TextKeyElement';
+import { Typography } from '../Typography/Typography';
+import { useStyles } from './styles';
 
 export type FeedParams = {
   targetId: string;
@@ -59,61 +55,20 @@ const TargetSelectionPage = ({
   onSelectFeed,
 }: ITargetSelectionPage) => {
   const { client } = useAuth();
-  const user = useUser((client as Amity.Client).userId);
   const navigation = useNavigation();
-
-  const { communities, onNextCommunityPage } = useCommunities();
-
-  const { themeStyles, accessibilityId } = useAmityPage({ pageId });
   const defaultTheme = useTheme() as MyMD3Theme;
 
+  const user = useUser((client as Amity.Client).userId);
+  const { communities, onNextCommunityPage } = useCommunities();
+  const { themeStyles, accessibilityId } = useAmityPage({ pageId });
+
   const theme = themeStyles || defaultTheme;
+  const styles = useStyles(theme);
 
   const { config: myTimelineConfig } = useAmityElement({
     pageId,
     componentId: ComponentID.WildCardComponent,
     elementId: ElementID.my_timeline_text,
-  });
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: theme.colors.background,
-    },
-    header: {
-      paddingVertical: 18,
-      alignItems: 'center',
-    },
-    closeIcon: {
-      width: 12,
-      height: 12,
-      tintColor: theme.colors.base,
-    },
-    closeButton: {
-      position: 'absolute',
-      left: 18,
-      top: 25,
-      width: 24,
-      height: 24,
-    },
-    title: {
-      fontSize: 17,
-      fontWeight: '600',
-      lineHeight: 22,
-      color: theme.colors.base,
-    },
-    communityHeader: {
-      color: theme.colors.baseShade1,
-      fontSize: 15,
-      lineHeight: 20,
-      marginBottom: 8,
-      marginHorizontal: 16,
-    },
-    divider: {
-      marginTop: 8,
-      marginBottom: 26,
-      paddingHorizontal: 16,
-    },
   });
 
   const renderItem = ({ item }: { item: Amity.Community }) => {
@@ -161,12 +116,12 @@ const TargetSelectionPage = ({
           <TargetItem
             pageId={pageId}
             displayNameElementId={ElementID.my_timeline_text}
-            displayName={(myTimelineConfig?.text as string) || 'My Timeline'}
+            displayName={(myTimelineConfig?.text as string) || 'My timeline'}
             avatarElementId={ElementID.my_timeline_avatar}
             onSelect={() =>
               onSelectFeed({
                 targetId: user.userId,
-                targetName: (myTimelineConfig?.text as string) || 'My Timeline',
+                targetName: (myTimelineConfig?.text as string) || 'My timeline',
                 targetType: 'user',
               })
             }
@@ -177,10 +132,11 @@ const TargetSelectionPage = ({
               theme={{ colors: { outlineVariant: theme.colors.baseShade4 } }}
             />
           </View>
-          <Text style={styles.communityHeader}>My Communities</Text>
+          <Typography.Body style={styles.communityHeader}>
+            My communities
+          </Typography.Body>
         </>
       )}
-
       <FlatList
         data={communities}
         renderItem={renderItem}
