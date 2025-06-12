@@ -125,6 +125,7 @@ const AmityPostContentComponent = ({
     editedAt,
     mentionPosition,
   } = post ?? {};
+
   const { isCommunityModerator } = useIsCommunityModerator({
     communityId: targetType === 'community' && targetId,
     userId: creator?.userId,
@@ -369,7 +370,9 @@ const AmityPostContentComponent = ({
           <View style={styles.fillSpace}>
             <View style={styles.headerRow}>
               <TouchableOpacity
-                style={styles.headerTextContainer}
+                style={
+                  targetType === 'community' ? styles.headerTextContainer : {}
+                }
                 onPress={handleDisplayNamePress}
               >
                 <Text

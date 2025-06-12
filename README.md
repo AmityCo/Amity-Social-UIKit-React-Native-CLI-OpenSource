@@ -45,7 +45,8 @@ yarn
 - Copy and paste to /example/android/app/google-services.json and /example/ios/GoogleService-Info.plist.
 - More detail about push notification - https://docs.amity.co/amity-uikit/uikit-v4-beta/installation-guide/react-native#push-notification
 
-3. Configure your apiKey,apiRegion,apiEndpoint,userId,displayName,fcmToken in /example/src/App.tsx file(https://github.com/AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource/blob/main/example/src/App.tsx) first before run the sample app
+3. Configure your apiKey,apiRegion,apiEndpoint,userId,displayName,fcmToken in /example/src/App.tsx file(https://github.com/AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource/blob/main/example/src/App.tsx) first before run the sample app.
+
    <img width="658" alt="Screenshot 2567-06-12 at 01 52 46" src="https://github.com/AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource/assets/155952277/a312a7db-d790-4af6-9db7-bf085888cd01">
 
 4. Go back to your root folder (`cd ..`) and Choose to run between iOS or Android
@@ -164,6 +165,52 @@ export default function App() {
       apiEndpoint="https://api.{API_REGION}.amity.co"
     >
       <AmityUiKitSocial />
+    </AmityUiKitProvider>
+  );
+}
+```
+
+## Using Specific Screens from UIKit
+
+UIKit now supports importing and rendering individual screens. This gives you more control over how each screen is used in your app, making it easier to customize user flows and place screens exactly where you need them.
+
+#### 📦 Supported Screens
+
+You can now import and use the following screens individually:
+
+- [`CommunityHome`](#)
+- [`PostDetail`](#)
+
+> ✅ Make sure your screen component is wrapped with `AmityPageRenderer` at the root level.
+>
+> ✅ `AmityPageRenderer` is only required when using screen components. It is not needed for the `AmityUiKitSocial` component.
+
+### Usage
+
+```js
+import * as React from 'react';
+import config from './uikit.config.json';
+import {
+  AmityUiKitProvider,
+  AmityUiKitSocial,
+  AmityPageRenderer,
+  AmityExploreComponent,
+  PostDetail,
+  CommunityHome,
+} from 'amity-react-native-social-ui-kit';
+
+export default function App() {
+  return (
+    <AmityUiKitProvider
+      configs={config}
+      apiKey="API_KEY"
+      apiRegion="API_REGION"
+      userId="userId"
+      displayName="displayName"
+    >
+      <AmityPageRenderer>
+        <CommunityHome defaultCommunityId={'communityID'} />
+      </AmityPageRenderer>
     </AmityUiKitProvider>
   );
 }
