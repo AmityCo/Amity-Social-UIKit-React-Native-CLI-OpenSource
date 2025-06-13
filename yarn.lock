@@ -9778,6 +9778,11 @@ react-native-video-controls@^2.8.1:
   dependencies:
     lodash "^4.16.4"
 
+react-native-video@^6.14.0:
+  version "6.14.0"
+  resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-6.14.0.tgz#f8fb1e9cbaad824ce5413987d7c25970badec46e"
+  integrity sha512-a6hUlKr5KPZ3DBvNK95P917Sre1TH4Nvh4dVKLtKud26tHOWgYBDxBB2+vwsbLyy4fDfzQB5gac9QWaRs88Sug==
+
 react-native-vision-camera@^3.9.1:
   version "3.9.2"
   resolved "https://registry.yarnpkg.com/react-native-vision-camera/-/react-native-vision-camera-3.9.2.tgz#d6656a4c0af929916d5e6b57af5adfe94ff8c65a"

@@ -1,45 +1,35 @@
 import React from 'react';
-import { useStyle } from './styles';
+import { useStyles } from './styles';
+import { SvgXml } from 'react-native-svg';
 import { useAmityElement } from '../../hook';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
-import { PageID, ComponentID, ElementID } from '../../enum';
-import { Typography } from '../../component/Typography/Typography';
-import { livestream } from '../../assets/icons';
-import { IconElement } from '../../PublicApi/Elements/IconElement';
+import { ComponentID, ElementID, PageID } from '../../enum';
+import { plus } from '../../../v4/assets/icons';
 
-type CreateLivestreamButtonProps = TouchableOpacityProps & {
+type CommunityCreatePostButtonProps = TouchableOpacityProps & {
   pageId?: PageID;
   componentId?: ComponentID;
 };
 
-const CreateLivestreamButton = ({
+function CommunityCreatePostButton({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   ...props
-}: CreateLivestreamButtonProps) => {
-  const styles = useStyle();
-  const { config, accessibilityId } = useAmityElement({
-    pageId,
-    componentId,
-    elementId: ElementID.create_livestream_button,
-  });
+}: CommunityCreatePostButtonProps) {
+  const elementId = ElementID.community_create_post_button;
+  const { themeStyles } = useAmityElement({ pageId, componentId, elementId });
+  const styles = useStyles(themeStyles);
 
   return (
     <TouchableOpacity
+      hitSlop={0.8}
+      style={styles.fab}
+      activeOpacity={0.8}
       {...props}
-      testID={accessibilityId}
-      accessibilityLabel={accessibilityId}
-      style={[styles.container, props.style]}
     >
-      <IconElement
-        configIcon={config.image as string}
-        configIconStyle={styles.icon}
-        defaultIcon={livestream()}
-        defaultIconStyle={styles.icon}
-      />
-      <Typography.BodyBold>{(config.text as string) ?? ''}</Typography.BodyBold>
+      <SvgXml xml={plus()} width={32} height={32} />
     </TouchableOpacity>
   );
-};
+}
 
-export default CreateLivestreamButton;
+export default CommunityCreatePostButton;

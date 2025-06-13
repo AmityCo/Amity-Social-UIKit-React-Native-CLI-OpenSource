@@ -1,4 +1,11 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   Text,
@@ -16,7 +23,6 @@ import {
   storyDraftDeletHyperLink,
 } from '../../../../svg/svg-xml-list';
 import { useStyles } from './styles';
-import type { UserInterface } from '../../../../types/user.interface';
 import { getCommunityById } from '../../../../providers/Social/communities-sdk';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -31,7 +37,6 @@ import { useAmityComponent, useIsCommunityModerator } from '../../../hook';
 import ModeratorBadgeElement from '../../Elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
-import { PostTargetType } from '../../../../enum/postTargetType';
 import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
 import { LinkPreview } from '../../../component/PreviewLink';
 import RenderTextWithMention from '../../../component/RenderTextWithMention/RenderTextWithMention';
@@ -48,29 +53,11 @@ import { useDispatch } from 'react-redux';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import uiSlice from '../../../../redux/slices/uiSlice';
 
-export interface IPost {
-  postId: string;
-  data: Record<string, any>;
-  dataType: string | undefined;
-  myReactions: string[];
-  reactionCount: Record<string, number>;
-  commentsCount: number;
-  user: UserInterface | undefined;
-  updatedAt: string | undefined;
-  editedAt: string | undefined;
-  createdAt: string;
-  targetType: PostTargetType;
-  targetId: string;
-  childrenPosts: string[];
-  mentionees: string[];
-  mentionPosition?: IMentionPosition[];
-  analytics: Amity.Post<'analytics'>;
-}
-export interface IPostList {
+type AmityPostContentComponentProps = {
   post: Amity.Post;
   pageId?: PageID;
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;
-}
+};
 export interface MediaUri {
   uri: string;
 }
@@ -80,11 +67,11 @@ export interface IVideoPost {
     original: string;
   };
 }
-const AmityPostContentComponent = ({
-  pageId,
+const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
+  pageId = PageID.WildCardPage,
   post,
   AmityPostContentComponentStyle = AmityPostContentComponentStyleEnum.detail,
-}: IPostList) => {
+}) => {
   const theme = useTheme() as MyMD3Theme;
   const {
     AmityPostContentComponentBehavior,
@@ -130,11 +117,13 @@ const AmityPostContentComponent = ({
     communityId: targetType === 'community' && targetId,
     userId: creator?.userId,
   });
+
   const myId = (client as Amity.Client).userId;
   const { isCommunityModerator: isIAmModerator } = useIsCommunityModerator({
     communityId: targetType === 'community' && targetId,
     userId: myId,
   });
+
   useEffect(() => {
     if (mentionPosition) {
       setMentionsPositionArr(mentionPosition);
@@ -177,9 +166,8 @@ const AmityPostContentComponent = ({
         communityName: communityData?.displayName,
       });
     }
-    return navigation.navigate('CommunityHome', {
+    return navigation.navigate('CommunityProfilePage', {
       communityId: targetId,
-      communityName: communityData?.displayName,
     });
   };
 

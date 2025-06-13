@@ -12,7 +12,6 @@ import type { RootStackParamList } from './RouteParamList';
 import useAuth from '../../hooks/useAuth';
 import CategoryList from '../../screens/CategorytList';
 import CommunityList from '../../screens/CommunityList';
-import CommunityHome from '../screen/CommunityHome';
 import { CommunitySetting } from '../../screens/CommunitySetting/index';
 import CommunityMemberDetail from '../../screens/CommunityMemberDetail/CommunityMemberDetail';
 import AmitySocialHomePage from '../PublicApi/Pages/AmitySocialHomePage/AmitySocialHomePage';
@@ -27,7 +26,7 @@ import CreateCommunity from '../../screens/CreateCommunity';
 import PendingPosts from '../../screens/PendingPosts';
 import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
-import { Image, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../svg/svg-xml-list';
 import { useStyles } from '../../routes/style';
@@ -51,6 +50,7 @@ import StoryTargetSelection from '../PublicApi/Pages/AmityStoryTargetSelectionPa
 import LivestreamPostTargetSelection from '../screen/LivestreamPostTargetSelection';
 import AmityAllCategoriesPage from '../PublicApi/Pages/AmityAllCategoriesPage/AmityAllCategoriesPage';
 import AmityCommunitiesByCategoryPage from '../PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
+import AmityCommunityProfilePage from '../PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
 import EditPost from '../screen/EditPost/EditPost';
 import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 
@@ -114,36 +114,6 @@ export default function AmitySocialUIKitV4Navigator() {
               component={CategoryList}
               options={({}) => ({
                 title: 'Category',
-              })}
-            />
-            <Stack.Screen
-              name="CommunityHome"
-              component={CommunityHome}
-              options={({
-                navigation,
-                route: {
-                  params: { communityName, communityId, isModerator },
-                },
-              }: any) => ({
-                headerLeft: () => <BackButton goBack={true} />,
-                title: communityName,
-                headerRight: () => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      // Handle button press here
-                      navigation.navigate('CommunitySetting', {
-                        communityId: communityId,
-                        communityName: communityName,
-                        isModerator: isModerator,
-                      });
-                    }}
-                  >
-                    <Image
-                      source={require('../assets/images/threeDot.png')}
-                      style={styles.dotIcon}
-                    />
-                  </TouchableOpacity>
-                ),
               })}
             />
             <Stack.Screen
@@ -225,8 +195,9 @@ export default function AmitySocialUIKitV4Navigator() {
               name="UserProfile"
               component={UserProfile}
               options={{
-                title: '',
                 headerLeft: () => <BackButton />,
+                headerTitleAlign: 'center',
+                title: 'Member',
               }}
             />
             <Stack.Screen name="EditProfile" component={EditProfile} />
@@ -278,6 +249,13 @@ export default function AmitySocialUIKitV4Navigator() {
             <Stack.Screen
               name="CommunitiesByCategoryPage"
               component={AmityCommunitiesByCategoryPage}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="CommunityProfilePage"
+              component={AmityCommunityProfilePage}
               options={{
                 headerShown: false,
               }}

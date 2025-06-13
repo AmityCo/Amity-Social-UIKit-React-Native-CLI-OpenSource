@@ -103,5 +103,13 @@ export interface IBehaviour {
       needApprovalOnPostCreation?: boolean;
       isPublic?: boolean;
     }) => void;
+    AmityCommunityProfilePageBehavior?: {
+      goToPendingPostPage?: () => void;
+      goToCommunitySettingPage?: () => void;
+      goToPostComposerPage?: () => void;
+      goToCreateStoryPage?: () => void;
+      goToMemberListPage?: () => void;
+      goToPostDetailPage?: (arg?: string) => void;
+    };
   };
 }

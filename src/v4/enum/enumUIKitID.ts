@@ -13,6 +13,7 @@ export enum PageID {
   all_categories_page = 'all_categories_page',
   communities_by_category_page = 'communities_by_category_page',
   livestream_post_target_selection_page = 'livestream_post_target_selection_page',
+  community_profile_page = 'community_profile_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',
@@ -36,6 +37,11 @@ export enum ComponentID {
   explore_community_categories = 'explore_community_categories',
   recommended_communities = 'recommended_communities',
   trending_communities = 'trending_communities',
+  community_header = 'community_header',
+  community_feed = 'community_feed',
+  community_pin = 'community_pin',
+  community_image_feed = 'community_image_feed',
+  community_video_feed = 'community_video_feed',
 }
 export enum ElementID {
   CloseBtn = 'close_button',
@@ -115,6 +121,15 @@ export enum ElementID {
   category_title = 'category_title',
   community_empty_title = 'community_empty_title',
   community_empty_image = 'community_empty_image',
+  community_cover = 'community_cover',
+  community_name = 'community_name',
+  community_verify_badge = 'community_verify_badge',
+  community_description = 'community_description',
+  community_info = 'community_info',
+  community_pending_post = 'community_pending_post',
+  community_profile_tab = 'community_profile_tab',
+  community_create_post_button = 'community_create_post_button',
+  non_member_section = 'non_member_section',
 }
 
 export interface UiKitConfigKeys {

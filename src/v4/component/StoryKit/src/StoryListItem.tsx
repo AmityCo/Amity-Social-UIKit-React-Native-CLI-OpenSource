@@ -339,9 +339,8 @@ export const StoryListItem = ({
 
   const onPressProfileName = useCallback(() => {
     onClosePress();
-    navigation.navigate('CommunityHome', {
+    navigation.navigate('CommunityProfilePage', {
       communityId: userId,
-      communityName: profileName,
     });
   }, [userId, profileName]);
 

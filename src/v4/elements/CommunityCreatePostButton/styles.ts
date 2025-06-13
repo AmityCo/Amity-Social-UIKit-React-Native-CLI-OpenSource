@@ -1,23 +1,20 @@
 import { StyleSheet } from 'react-native';
-import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 
-export const useStyle = () => {
-  const theme = useTheme<MyMD3Theme>();
-
-  const styles = StyleSheet.create({
-    container: {
-      gap: 12,
-      flex: 1,
-      paddingVertical: 12,
-      paddingHorizontal: 16,
-      flexDirection: 'row',
-    },
-    icon: {
-      width: 24,
-      height: 24,
-      color: theme.colors.base,
+export const useStyles = (theme: MyMD3Theme) => {
+  return StyleSheet.create({
+    fab: {
+      right: 16,
+      width: 64,
+      height: 64,
+      bottom: 35,
+      padding: 16,
+      zIndex: 1000,
+      borderRadius: 100,
+      position: 'absolute',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.colors.primary,
     },
   });
-  return styles;
 };

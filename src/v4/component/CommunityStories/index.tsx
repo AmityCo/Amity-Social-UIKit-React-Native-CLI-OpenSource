@@ -17,18 +17,14 @@ import useConfig from '../../hook/useConfig';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import Modal from 'react-native-modalbox';
 import AmityViewStoryPage from '../../PublicApi/Pages/AmityViewStoryPage/AmityViewStoryPage';
+import { Typography } from '../Typography/Typography';
 
 interface ICommunityStories {
   communityId: string;
-  displayName: string;
   avatarFileId: string;
 }
 
-const CommunityStories = ({
-  communityId,
-  displayName,
-  avatarFileId,
-}: ICommunityStories) => {
+const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
   const navigation =
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
   const styles = useStyles();
@@ -85,42 +81,44 @@ const CommunityStories = ({
   }, [onPressCreateStory]);
   const onPressCommunityName = useCallback(() => {
     setViewStory(false);
-    navigation.navigate('CommunityHome', {
+    navigation.navigate('CommunityProfilePage', {
       communityId: communityId,
-      communityName: displayName,
     });
-  }, [communityId, displayName, navigation]);
+  }, [communityId, navigation]);
 
   const renderCommunityStory = () => {
     if (storyTarget?.lastStoryExpiresAt) {
       return (
-        <TouchableOpacity
-          style={styles.avatarContainer}
-          onPress={onPressStoryView}
-        >
-          <Image
-            source={
-              avatarUrl
-                ? {
-                    uri: avatarUrl,
-                  }
-                : require('../../assets/images/Placeholder.png')
-            }
-            style={styles.communityAvatar}
-          />
-          <SvgXml
-            style={styles.storyRing}
-            width={48}
-            height={48}
-            xml={storyRing(storyRingColor[0], storyRingColor[1])}
-          />
-          {hasStoryPermission && (
-            <SvgXml
-              style={styles.storyCreateIcon}
-              xml={storyCircleCreatePlusIcon()}
+        <>
+          <TouchableOpacity
+            style={styles.avatarContainer}
+            onPress={onPressStoryView}
+          >
+            <Image
+              source={
+                avatarUrl
+                  ? {
+                      uri: avatarUrl,
+                    }
+                  : require('../../assets/images/Placeholder.png')
+              }
+              style={styles.communityAvatar}
             />
-          )}
-        </TouchableOpacity>
+            <SvgXml
+              style={styles.storyRing}
+              width={48}
+              height={48}
+              xml={storyRing(storyRingColor[0], storyRingColor[1])}
+            />
+            {hasStoryPermission && (
+              <SvgXml
+                style={styles.storyCreateIcon}
+                xml={storyCircleCreatePlusIcon()}
+              />
+            )}
+          </TouchableOpacity>
+          <Typography.Body>{'Story'}</Typography.Body>
+        </>
       );
     }
     if (hasStoryPermission) {
@@ -163,9 +161,11 @@ const CommunityStories = ({
     });
   }, [communityId, getStoryTarget]);
 
+  if (!storyTarget?.lastStoryExpiresAt) return null;
+
   return (
     <View style={styles.container}>
-      {renderCommunityStory()}
+      <View style={styles.storyItemWrap}>{renderCommunityStory()}</View>
       <Modal
         style={styles.modal}
         isOpen={viewStory}

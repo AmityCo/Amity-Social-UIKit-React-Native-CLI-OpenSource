@@ -168,8 +168,6 @@ PODS:
   - nanopb/encode (2.30910.0)
   - OpenSSL-Universal (1.1.1100)
   - PromisesObjC (2.4.0)
-  - PromisesSwift (2.4.0):
-    - PromisesObjC (= 2.4.0)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -487,12 +485,13 @@ PODS:
     - React
   - react-native-safe-area-context (4.14.1):
     - React-Core
-  - react-native-video (6.0.0-beta.6):
+  - react-native-video (6.14.0):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
-    - react-native-video/Video (= 6.0.0-beta.6)
-  - react-native-video/Video (6.0.0-beta.6):
+    - react-native-video/Video (= 6.14.0)
+  - react-native-video/Video (6.14.0):
     - DVAssetLoaderDelegate (~> 0.3.1)
-    - PromisesSwift
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - SPTPersistentCache (~> 1.1.0)
   - react-native-vlc-media-player (1.0.38):
@@ -760,7 +759,6 @@ SPEC REPOS:
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
-    - PromisesSwift
     - SocketRocket
     - SPTPersistentCache
     - YogaKit
@@ -921,7 +919,6 @@ SPEC CHECKSUMS:
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   RCT-Folly: 8dc08ca5a393b48b1c523ab6220dfdcc0fe000ad
   RCTRequired: f30c3213569b1dc43659ecc549a6536e1e11139e
   RCTTypeSafety: e1ed3137728804fa98bce30b70e3da0b8e23054e
@@ -943,8 +940,8 @@ SPEC CHECKSUMS:
   react-native-livestream: 1f311798511d7f46b910b0ed821ed070e23d12c4
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-rsa-native: a7931cdda1f73a8576a46d7f431378c5550f0c38
-  react-native-safe-area-context: 758e894ca5a9bd1868d2a9cfbca7326a2b6bf9dc
-  react-native-video: b263bda4a563d9731d73e9e5f11f2890db29eb7f
+  react-native-safe-area-context: df9763c5de6fa38883028e243a0b60123acb8858
+  react-native-video: 0ef0c2f831aa6db9ea7c1864e872a6dbee6cadf6
   react-native-vlc-media-player: da3308dda896d4ff7abfacadb8f981752bf9b425
   React-NativeModulesApple: 6cc32bf0a8dc0a9de48878ccca14788bbe5e4fc6
   React-perflogger: cb433f318c6667060fc1f62e26eb58d6eb30a627
