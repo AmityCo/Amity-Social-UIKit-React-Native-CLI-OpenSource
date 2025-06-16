@@ -44,7 +44,6 @@ import FollowerList from '../screen/FollowerList/FollowerList';
 import CancelButton from '../component/CancelButton';
 import AmityMyCommunitiesSearchPage from '../PublicApi/Pages/AmityMyCommunitiesSearchPage/AmityMyCommunitiesSearchPage';
 import CreateLivestream from '../screen/CreateLivestream';
-// import V3CreateLivestream from '../../screens/CreateLivestream/CreateLivestream';
 import PostTargetSelection from '../screen/PostTargetSelection';
 import StoryTargetSelection from '../PublicApi/Pages/AmityStoryTargetSelectionPage/AmityStoryTargetSelectionPage';
 import LivestreamPostTargetSelection from '../screen/LivestreamPostTargetSelection';
@@ -53,7 +52,8 @@ import AmityCommunitiesByCategoryPage from '../PublicApi/Pages/AmityCommunitiesB
 import AmityCommunityProfilePage from '../PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
 import EditPost from '../screen/EditPost/EditPost';
 import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
-import LiveStreamPlayer from '../screen/LivestreamPlayer';
+import LivestreamPlayer from '../screen/LivestreamPlayer';
+import LivestreamTerminated from '../screen/LivestreamTerminated';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -296,7 +296,12 @@ export default function AmitySocialUIKitV4Navigator() {
               />
               <Stack.Screen
                 name="LivestreamPlayer"
-                component={LiveStreamPlayer}
+                component={LivestreamPlayer}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="LivestreamTerminated"
+                component={LivestreamTerminated}
                 options={{ headerShown: false }}
               />
             </Stack.Group>

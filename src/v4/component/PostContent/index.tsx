@@ -25,16 +25,18 @@ import RenderTextWithMention from '../../component/RenderTextWithMention/RenderT
 import { IMentionPosition } from '../../../types';
 
 interface IPostContent {
-  childrenPosts: string[];
+  post: Amity.Post;
   textPost?: string;
-  mentionPositionArr?: IMentionPosition[];
+  childrenPosts: string[];
   onPressPost?: () => void;
+  mentionPositionArr?: IMentionPosition[];
 }
 const PostContent: React.FC<IPostContent> = ({
-  childrenPosts,
+  post,
   textPost,
-  mentionPositionArr,
   onPressPost,
+  childrenPosts,
+  mentionPositionArr,
 }) => {
   const { apiRegion } = useAuth();
   const [imagePosts, setImagePosts] = useState<string[]>([]);
@@ -86,8 +88,8 @@ const PostContent: React.FC<IPostContent> = ({
     try {
       const response = await Promise.all(
         childrenPosts.map(async (id) => {
-          const { data: post } = await getPostById(id);
-          return { dataType: post?.dataType, data: post?.data };
+          const { data: childrenPost } = await getPostById(id);
+          return { dataType: childrenPost?.dataType, data: childrenPost?.data };
         })
       );
       response.forEach((item) => {
@@ -319,8 +321,9 @@ const PostContent: React.FC<IPostContent> = ({
           <PollSection pollId={pollIds[0].pollId} />
         ) : livestreamId.length > 0 ? (
           <LivestreamContent
-            streamId={livestreamId[0]}
+            post={post}
             onPressPost={onPressPost}
+            streamId={livestreamId[0]}
           />
         ) : (
           renderMediaPosts()

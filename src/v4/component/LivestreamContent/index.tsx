@@ -9,7 +9,6 @@ import React, { useEffect, useState, useCallback, Fragment } from 'react';
 import { FileRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../../routes/RouteParamList';
 import { SvgXml } from 'react-native-svg';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { play } from '../../assets/icons';
@@ -18,13 +17,17 @@ import { LivestreamStatus } from '../../enum/livestreamStatus';
 import LiveStreamEndThumbnail from './LivestreamEndedThumbnail';
 import LiveStreamIdleThumbnail from './LivestreamIdleThumbnail';
 import RenderTextWithMention from '../../component/RenderTextWithMention/RenderTextWithMention';
+import { RootStackParamList } from '../../routes/RouteParamList';
+import LiveStreamTerminatedThumbnail from './LivestreamTerminatedThumbnail';
 
 interface ILivestreamContent {
   streamId: Amity.Stream['streamId'];
   onPressPost: () => void;
+  post: Amity.Post;
 }
 
 const LivestreamContent: React.FC<ILivestreamContent> = ({
+  post,
   streamId,
   onPressPost,
 }) => {
@@ -40,8 +43,11 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
   const [isUpcoming, setIsUpcoming] = useState<boolean>(false);
 
   const onPlayLivestream = useCallback(() => {
-    navigation.navigate('LivestreamPlayer', { streamId: livestream.streamId });
-  }, [livestream, navigation]);
+    navigation.navigate('LivestreamPlayer', {
+      post,
+      streamId: livestream.streamId,
+    });
+  }, [livestream, navigation, post]);
 
   const getLivestreamThumbnail = async (currentStream: Amity.Stream) => {
     const defaultThumbnail = require('../../assets/images/livestream.png');
@@ -101,7 +107,7 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
   if (isTerminated && isLiveOrEnded) {
     return (
       <View key={livestream.streamId} style={styles.container}>
-        <LiveStreamIdleThumbnail />
+        <LiveStreamTerminatedThumbnail />
       </View>
     );
   }
@@ -110,18 +116,18 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
     <Fragment>
       <Pressable onPress={onPressPost} style={styles.info}>
         <RenderTextWithMention
-          textPost={livestream.title}
           isTitle
           mentionPositionArr={[]}
+          textPost={livestream.title}
         />
         {livestream.description && (
           <RenderTextWithMention
-            textPost={livestream.description}
             mentionPositionArr={[]}
+            textPost={livestream.description}
           />
         )}
       </Pressable>
-      <View key={livestream.streamId} style={styles.container}>
+      <View style={styles.container}>
         {(livestream.status === LivestreamStatus.idle || isUpcoming) &&
           thumbnailUrl && (
             <View style={styles.content}>

@@ -29,3 +29,8 @@ export { default as story } from './story';
 export { default as post } from './post';
 export { default as play } from './play';
 export { default as exclamation } from './exclamation';
+export { default as pause } from './pause';
+export { default as resume } from './resume';
+export { default as terminated } from './terminated';
+export { default as warning } from './warning';
+export { default as ban } from './ban';

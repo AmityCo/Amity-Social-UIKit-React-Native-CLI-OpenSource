@@ -69,19 +69,26 @@ export type RootStackParamList = {
   UserPendingRequest: undefined;
   FollowerList: Amity.User;
   PostTargetSelection: { postType: AmityPostTargetSelectionPageType };
-  LivestreamPostTargetSelection: undefined;
   StoryTargetSelection: undefined;
+
+  AllCategoriesPage: undefined;
+  CommunitiesByCategoryPage: {
+    category: Amity.Category;
+  };
+  LivestreamPostTargetSelection: undefined;
   CreateLivestream: {
     pop?: number;
     targetId: string;
     targetName: string;
     targetType: string;
   };
-  AllCategoriesPage: undefined;
-  CommunitiesByCategoryPage: {
-    category: Amity.Category;
+  LivestreamPlayer: {
+    streamId: string;
+    post: Amity.Post;
   };
-  LivestreamPlayer: { streamId: string };
+  LivestreamTerminated: {
+    type: 'streamer' | 'viewer';
+  };
   CommunityProfilePage: {
     communityId: string;
   };

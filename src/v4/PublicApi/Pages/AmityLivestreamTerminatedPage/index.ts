@@ -1,0 +1,1 @@
+export { AmityLivestreamTerminatedPage } from './AmityLivestreamTerminatedPage';

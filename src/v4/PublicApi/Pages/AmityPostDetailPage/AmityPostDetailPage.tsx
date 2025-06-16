@@ -76,6 +76,7 @@ import {
 } from '../../../../constants';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ErrorComponent from '../../../component/ErrorComponent/ErrorComponent';
 
 type AmityPostDetailPageType = {
   postId: Amity.Post['postId'];
@@ -538,6 +539,17 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   ]);
 
   if (isExcluded) return null;
+
+  if (postData?.isDeleted) {
+    return (
+      <ErrorComponent
+        themeStyle={themeStyles}
+        onPress={() => navigation.goBack()}
+        title="Something went wrong"
+        description="The content you're looking for is unavailable."
+      />
+    );
+  }
 
   return (
     <SafeAreaView testID={accessibilityId} style={styles.container}>

@@ -293,7 +293,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
                   width="20"
                   height="20"
                 />
-                <Text style={styles.editText}> Edit Post</Text>
+                <Text style={styles.editText}>Edit Post</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -320,7 +320,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
                   width="20"
                   height="20"
                 />
-                <Text style={styles.deleteText}> Delete Post</Text>
+                <Text style={styles.deleteText}>Delete Post</Text>
               </TouchableOpacity>
             )}
           </Animated.View>
@@ -436,8 +436,9 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
       <View>
         <View style={styles.bodySection}>
           <PostContent
-            childrenPosts={children}
+            post={post}
             textPost={textPost}
+            childrenPosts={children}
             onPressPost={onPressPost}
             mentionPositionArr={mentionPositionArr}
           />

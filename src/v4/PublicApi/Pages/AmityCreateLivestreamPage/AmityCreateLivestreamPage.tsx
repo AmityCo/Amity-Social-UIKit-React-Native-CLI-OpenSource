@@ -38,6 +38,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Button from '../../../../v4/component/Button/Button';
 import { useRequestPermission } from '../../../../v4/hook/useCamera';
 import NetInfo from '@react-native-community/netinfo';
+import { LivestreamStatus } from '../../../enum/livestreamStatus';
 
 const calculateTime = (time: number) => {
   const hours = Math.floor(time / 3600000);
@@ -76,6 +77,7 @@ function AmityCreateLivestreamPage() {
   const [reconnecting, setReconnecting] = useState<boolean>(false);
   const [reconnectTimeoutRef, setReconnectTimeoutRef] =
     useState<NodeJS.Timeout | null>(null);
+  const unsubscribeRef = useRef<Amity.Unsubscriber>(null);
 
   const {
     imageUri,
@@ -92,7 +94,7 @@ function AmityCreateLivestreamPage() {
 
   const { targetId, targetType, targetName, pop } = route.params;
   const { closeBottomSheet, openBottomSheet } = bottomSheetSlice.actions;
-  const disabled = !title?.trim() || isConnecting;
+  const disabled = !title?.trim() || isConnecting || isLoading;
   const hasPermission =
     (Platform.OS === 'android' && androidPermission) ||
     (Platform.OS === 'ios' && iOSPermission);
@@ -174,10 +176,14 @@ function AmityCreateLivestreamPage() {
 
         const newPost = await PostRepository.createPost(params);
 
-        setStream(newStream);
-        setPost(newPost);
-
-        streamRef?.current?.startPublish(newStream.streamId);
+        streamRef.current = StreamRepository.getStreamById(
+          newStream.streamId,
+          ({ data }) => {
+            setStream(data);
+            setPost(newPost);
+            streamRef?.current?.startPublish(newStream.streamId);
+          }
+        );
       }
     } catch (error) {
       setIsLive(false);
@@ -304,6 +310,27 @@ function AmityCreateLivestreamPage() {
     });
     return () => unsubscribe();
   }, [endLiveStream, isLive, reconnectTimeoutRef]);
+
+  useEffect(() => {
+    const isTerminated =
+      stream?.moderation?.terminateLabels &&
+      stream?.moderation?.terminateLabels?.length > 0;
+    const isLiveOrEnded =
+      stream?.status === LivestreamStatus.live ||
+      stream?.status === LivestreamStatus.ended;
+
+    if (isLiveOrEnded && isTerminated) {
+      navigation.replace('LivestreamTerminated', { type: 'streamer' });
+    }
+  }, [stream?.moderation?.terminateLabels, stream?.status, navigation]);
+
+  useEffect(() => {
+    const unsubscribe = unsubscribeRef.current;
+
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
