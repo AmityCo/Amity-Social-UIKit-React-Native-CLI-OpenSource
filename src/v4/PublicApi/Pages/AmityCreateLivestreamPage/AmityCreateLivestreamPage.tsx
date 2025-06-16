@@ -75,8 +75,6 @@ function AmityCreateLivestreamPage() {
   const [androidPermission, setAndroidPermission] = useState<boolean>(false);
   const [iOSPermission, setIOSPermission] = useState<boolean>(true);
   const [reconnecting, setReconnecting] = useState<boolean>(false);
-  const [reconnectTimeoutRef, setReconnectTimeoutRef] =
-    useState<NodeJS.Timeout | null>(null);
   const unsubscribeRef = useRef<Amity.Unsubscriber>(null);
 
   const {
@@ -208,35 +206,6 @@ function AmityCreateLivestreamPage() {
         setTime((prev) => prev + 1000);
       }, 1000);
       setTimer(intervalId);
-
-      if (reconnectTimeoutRef) {
-        clearTimeout(reconnectTimeoutRef);
-        setReconnectTimeoutRef(null);
-      }
-    }
-    if (
-      isLive &&
-      !isConnecting &&
-      state === AmityStreamBroadcasterState.CONNECTING
-    ) {
-      setReconnecting(true);
-
-      const timeout = setTimeout(() => {
-        endLiveStream();
-      }, 180000);
-
-      setReconnectTimeoutRef(timeout);
-    }
-    if (
-      isLive &&
-      !isConnecting &&
-      state === AmityStreamBroadcasterState.DISCONNECTED
-    ) {
-      setReconnecting(true);
-      const timeout = setTimeout(() => {
-        endLiveStream();
-      }, 180000);
-      setReconnectTimeoutRef(timeout);
     }
   };
 
@@ -277,6 +246,7 @@ function AmityCreateLivestreamPage() {
         setTime(0);
         clearInterval(timer);
         setIsEnding(false);
+        setReconnecting(false);
 
         navigation.navigate('PostDetail', { postId: post?.data?.postId });
       }
@@ -289,27 +259,10 @@ function AmityCreateLivestreamPage() {
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
-      const connected = state.isConnected ?? false;
-
-      if (isLive) {
-        if (!connected) {
-          setReconnecting(true);
-
-          const timeout = setTimeout(() => {
-            endLiveStream();
-          }, 180000);
-          setReconnectTimeoutRef(timeout);
-        } else {
-          if (reconnectTimeoutRef) {
-            clearTimeout(reconnectTimeoutRef);
-            setReconnectTimeoutRef(null);
-          }
-          setReconnecting(false);
-        }
-      }
+      setReconnecting(!state.isConnected);
     });
     return () => unsubscribe();
-  }, [endLiveStream, isLive, reconnectTimeoutRef]);
+  }, []);
 
   useEffect(() => {
     const isTerminated =

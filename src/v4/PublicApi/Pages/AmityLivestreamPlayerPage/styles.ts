@@ -56,6 +56,25 @@ export const useStyles = () => {
       top: insets.top + 20,
       position: 'absolute',
     },
+    connecting: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: 'center',
+      gap: 12,
+      zIndex: 100,
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    reconnectingText: {
+      textAlign: 'center',
+      color: theme.colors.background,
+    },
+    text: {
+      color: theme.colors.background,
+    },
   });
 
   return {

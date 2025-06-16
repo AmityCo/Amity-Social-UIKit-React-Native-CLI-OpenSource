@@ -24,7 +24,8 @@ import { LivestreamStatus } from '../../../enum/livestreamStatus';
 import LiveStreamIdleThumbnail from '../../../component/LivestreamContent/LivestreamIdleThumbnail';
 import { Typography } from '../../../component/Typography/Typography';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import NetInfo from '@react-native-community/netinfo';
+import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
 const usePostSubscription = (postId: string) => {
   const [subscribedPost, setSubscribedPost] = useState<Amity.Post>(null);
 
@@ -63,6 +64,7 @@ export function AmityLiveStreamPlayerPage() {
 
   const [error, setError] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [reconnecting, setReconnecting] = useState(false);
   const [livestream, setLivestream] = useState<Amity.Stream>();
 
   const { streamId, post } = route.params;
@@ -124,6 +126,13 @@ export function AmityLiveStreamPlayerPage() {
     }
   }, [livestream?.moderation?.terminateLabels, livestream?.status, navigation]);
 
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setReconnecting(!state.isConnected);
+    });
+    return () => unsubscribe();
+  }, []);
+
   if (!livestream || error)
     return (
       <SafeAreaView style={styles.container}>
@@ -157,6 +166,18 @@ export function AmityLiveStreamPlayerPage() {
           onBack={navigation.goBack}
           status={livestream.status === 'live' ? 'live' : 'recorded'}
         />
+      )}
+      {livestream.status === LivestreamStatus.live && reconnecting && (
+        <View style={styles.connecting}>
+          <CircularProgressIndicator size={40} strokeWidth={2} />
+          <Typography.TitleBold style={styles.text}>
+            Reconnecting
+          </Typography.TitleBold>
+          <Typography.Caption style={styles.reconnectingText}>
+            Due to poor connection, this live stream has been {'\n'} paused. It
+            will resume automatically {'\n'} once the connection is stable.
+          </Typography.Caption>
+        </View>
       )}
       {livestream.status === LivestreamStatus.live && (
         <>
