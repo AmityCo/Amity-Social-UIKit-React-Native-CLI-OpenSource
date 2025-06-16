@@ -70,7 +70,7 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
             ? {
                 uri: avatarUrl,
               }
-            : require('../../assets/images/Placeholder.png')
+            : require('../../assets/images/userAvatar.png')
         }
         style={styles.communityAvatar}
       />

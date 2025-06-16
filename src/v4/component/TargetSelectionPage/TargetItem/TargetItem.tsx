@@ -71,6 +71,7 @@ const TargetItem = ({
         componentID={componentId}
         elementID={avatarElementId}
         avatarId={avatarFileId}
+        targetType="community"
       />
       {isPrivate && (
         <ImageElement

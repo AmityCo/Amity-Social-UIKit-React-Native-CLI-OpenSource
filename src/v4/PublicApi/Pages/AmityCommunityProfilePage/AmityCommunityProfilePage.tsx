@@ -39,7 +39,9 @@ import CommunityCreatePostButton from '../../../elements/CommunityCreatePostButt
 import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
-import { post, story } from '../../../../v4/assets/icons';
+import { livestream, post, story } from '../../../../v4/assets/icons';
+import { useTheme } from 'react-native-paper';
+import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 
 const AmityCommunityProfilePage = ({
   route,
@@ -233,10 +235,12 @@ export default memo(AmityCommunityProfilePage);
 
 function CommunityProfileActions({ pageId, communityId, styles }) {
   const { community } = useCommunity(communityId);
+  const { colors } = useTheme<MyMD3Theme>();
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const {
     AmityPostTargetSelectionPageBehavior,
     AmityStoryTargetSelectionPageBehavior,
+    AmityLivestreamPostTargetSelectionPageBehavior,
   } = useBehaviour();
   const navigation =
     useNavigation<
@@ -280,6 +284,27 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
+  const handleCreateLivestream = () => {
+    closeBottomSheet();
+
+    if (
+      AmityLivestreamPostTargetSelectionPageBehavior.goToLivestreamComposerPage
+    ) {
+      return AmityLivestreamPostTargetSelectionPageBehavior.goToLivestreamComposerPage(
+        {
+          targetId: communityId,
+          targetType: 'community',
+          targetName: community?.displayName,
+        }
+      );
+    }
+    navigation.navigate('CreateLivestream', {
+      targetId: communityId,
+      targetType: 'community',
+      targetName: community?.displayName,
+    });
+  };
+
   if (!community?.isJoined) return null;
 
   return (
@@ -307,6 +332,18 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
             >
               <SvgXml width={24} height={24} xml={story()} />
               <Text style={styles.bottomSheetOptionText}>Story</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleCreateLivestream}
+              style={styles.bottomSheetOption}
+            >
+              <SvgXml
+                width={24}
+                height={24}
+                xml={livestream()}
+                color={colors.base}
+              />
+              <Text style={styles.bottomSheetOptionText}>Livestream</Text>
             </TouchableOpacity>
           </Animated.View>
         </Pressable>

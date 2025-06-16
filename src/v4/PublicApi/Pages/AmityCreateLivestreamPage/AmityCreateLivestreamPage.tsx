@@ -37,6 +37,7 @@ import { PostRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Button from '../../../../v4/component/Button/Button';
 import { useRequestPermission } from '../../../../v4/hook/useCamera';
+import NetInfo from '@react-native-community/netinfo';
 
 const calculateTime = (time: number) => {
   const hours = Math.floor(time / 3600000);
@@ -89,7 +90,7 @@ function AmityCreateLivestreamPage() {
     includeBase64: false,
   });
 
-  const { targetId, targetType, targetName } = route.params;
+  const { targetId, targetType, targetName, pop } = route.params;
   const { closeBottomSheet, openBottomSheet } = bottomSheetSlice.actions;
   const disabled = !title?.trim() || isConnecting;
   const hasPermission =
@@ -194,8 +195,6 @@ function AmityCreateLivestreamPage() {
   };
 
   const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
-    console.log(state);
-
     if (state === AmityStreamBroadcasterState.CONNECTED) {
       setIsConnecting(false);
       setReconnecting(false);
@@ -255,7 +254,7 @@ function AmityCreateLivestreamPage() {
     );
   };
 
-  const endLiveStream = async () => {
+  const endLiveStream = useCallback(async () => {
     if (stream) {
       setIsEnding(true);
       try {
@@ -273,14 +272,38 @@ function AmityCreateLivestreamPage() {
         clearInterval(timer);
         setIsEnding(false);
 
-        navigation.navigate('PostDetail', { postId: post.postId });
+        navigation.navigate('PostDetail', { postId: post?.data?.postId });
       }
     }
-  };
+  }, [post, stream, timer, navigation]);
 
   useEffect(() => {
     if (Platform.OS === 'android') checkPermissionAndroid();
   }, [checkPermissionAndroid]);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      const connected = state.isConnected ?? false;
+
+      if (isLive) {
+        if (!connected) {
+          setReconnecting(true);
+
+          const timeout = setTimeout(() => {
+            endLiveStream();
+          }, 180000);
+          setReconnectTimeoutRef(timeout);
+        } else {
+          if (reconnectTimeoutRef) {
+            clearTimeout(reconnectTimeoutRef);
+            setReconnectTimeoutRef(null);
+          }
+          setReconnecting(false);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [endLiveStream, isLive, reconnectTimeoutRef]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -313,7 +336,6 @@ function AmityCreateLivestreamPage() {
           </Typography.Body>
           <Button
             type="primary"
-            size="large"
             themeStyle={theme}
             onPress={() => {
               Linking.openSettings();
@@ -381,13 +403,13 @@ function AmityCreateLivestreamPage() {
                           style: 'destructive',
                           onPress: () => {
                             navigation.goBack();
-                            navigation.goBack();
+                            if (pop === 2) navigation.goBack();
                           },
                         },
                       ]
                     );
                   navigation.goBack();
-                  navigation.goBack();
+                  if (pop === 2) navigation.goBack();
                 }}
                 activeOpacity={0.7}
               >

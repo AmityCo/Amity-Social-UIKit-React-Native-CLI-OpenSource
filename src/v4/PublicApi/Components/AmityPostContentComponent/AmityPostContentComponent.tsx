@@ -28,7 +28,6 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
-import MediaSection from '../../../../components/MediaSection';
 import { IMentionPosition } from '../../../types/type';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { ComponentID, ElementID, PageID } from '../../../enum';
@@ -38,8 +37,6 @@ import ModeratorBadgeElement from '../../Elements/ModeratorBadgeElement/Moderato
 import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
 import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
-import { LinkPreview } from '../../../component/PreviewLink';
-import RenderTextWithMention from '../../../component/RenderTextWithMention/RenderTextWithMention';
 import MenuButtonIconElement from '../../Elements/MenuButtonIconElement/MenuButtonIconElement';
 import {
   deletePostById,
@@ -52,11 +49,13 @@ import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
 import { useDispatch } from 'react-redux';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import uiSlice from '../../../../redux/slices/uiSlice';
+import PostContent from '../../../../v4/component/PostContent';
 
 type AmityPostContentComponentProps = {
   post: Amity.Post;
   pageId?: PageID;
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;
+  isCommunityNameShown?: boolean;
 };
 export interface MediaUri {
   uri: string;
@@ -71,6 +70,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
   pageId = PageID.WildCardPage,
   post,
   AmityPostContentComponentStyle = AmityPostContentComponentStyleEnum.detail,
+  isCommunityNameShown = true,
 }) => {
   const theme = useTheme() as MyMD3Theme;
   const {
@@ -372,7 +372,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
                 </Text>
               </TouchableOpacity>
 
-              {communityData?.displayName && (
+              {communityData?.displayName && isCommunityNameShown && (
                 <View style={styles.communityNameContainer}>
                   <SvgXml
                     style={styles.arrow}
@@ -435,21 +435,12 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
       </Pressable>
       <View>
         <View style={styles.bodySection}>
-          <Pressable onPress={onPressPost}>
-            {textPost && children?.length === 0 && (
-              <LinkPreview
-                text={textPost}
-                mentionPositionArr={[...mentionPositionArr]}
-              />
-            )}
-            {textPost && children?.length > 0 && (
-              <RenderTextWithMention
-                textPost={textPost}
-                mentionPositionArr={[...mentionPositionArr]}
-              />
-            )}
-          </Pressable>
-          {children?.length > 0 && <MediaSection childrenPosts={children} />}
+          <PostContent
+            childrenPosts={children}
+            textPost={textPost}
+            onPressPost={onPressPost}
+            mentionPositionArr={mentionPositionArr}
+          />
         </View>
         <AmityPostEngagementActionsComponent
           pageId={pageId}

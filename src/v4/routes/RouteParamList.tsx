@@ -72,6 +72,7 @@ export type RootStackParamList = {
   LivestreamPostTargetSelection: undefined;
   StoryTargetSelection: undefined;
   CreateLivestream: {
+    pop?: number;
     targetId: string;
     targetName: string;
     targetType: string;

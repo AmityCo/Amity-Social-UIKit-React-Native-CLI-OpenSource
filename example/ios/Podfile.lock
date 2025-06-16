@@ -2,8 +2,8 @@ PODS:
   - amity-react-native-social-ui-kit (4.0.0-beta-23):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - ApiVideoLiveStream (1.4.6):
-    - HaishinKit (= 1.9.3)
+  - ApiVideoLiveStream (1.4.1):
+    - HaishinKit (= 1.7.3)
   - boost (1.76.0)
   - BVLinearGradient (2.8.3):
     - React-Core
@@ -153,13 +153,13 @@ PODS:
   - GoogleUtilities/UserDefaults (7.13.3):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
-  - HaishinKit (1.9.3):
-    - Logboard (~> 2.5.0)
+  - HaishinKit (1.7.3):
+    - Logboard (~> 2.4.1)
   - hermes-engine (0.72.9):
     - hermes-engine/Pre-built (= 0.72.9)
   - hermes-engine/Pre-built (0.72.9)
   - libevent (2.1.12)
-  - Logboard (2.5.0)
+  - Logboard (2.4.1)
   - MobileVLCKit (3.5.1)
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
@@ -472,11 +472,11 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.11.0):
     - React-Core
-  - react-native-image-picker (7.2.3):
+  - react-native-image-picker (7.1.2):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-livestream (2.0.2):
-    - ApiVideoLiveStream (= 1.4.6)
+  - react-native-livestream (2.0.0):
+    - ApiVideoLiveStream (= 1.4.1)
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-netinfo (11.4.1):
@@ -622,7 +622,7 @@ PODS:
     - RNFBApp
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.25.0):
+  - RNGestureHandler (2.17.1):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - RNScreens (4.1.0):
@@ -885,7 +885,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   amity-react-native-social-ui-kit: 2849e881d4da428e445b791ec288a671bb11443a
-  ApiVideoLiveStream: 82c2877eb24a18fdf1ba381e840bba4514774bcb
+  ApiVideoLiveStream: 8f9dce7f6d15d5e4bb3c7a25e406bf2a36337a5a
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
@@ -911,10 +911,10 @@ SPEC CHECKSUMS:
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
-  HaishinKit: 14d2b1913144ec0dc0b6a8d8ddc75684b4852670
+  HaishinKit: 326e27c4d06427ba53bffc68e516a92033293051
   hermes-engine: 9b9bb14184a11b8ceb4131b09abf634880f0f46d
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  Logboard: 4674a3d86681539a0ad1fca528d888b90871e268
+  Logboard: b78984e3f9fa5075d5bfd9308d51b453992aad0e
   MobileVLCKit: 144d5f565512d1147d63b0fa1379231b3fd66535
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -936,11 +936,11 @@ SPEC CHECKSUMS:
   React-logger: 81785c91d2fcc517657ff456c106c6d8e9ec4110
   react-native-create-thumbnail: 733160dca9a548262e1030e7fcdae90a93d203ca
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
-  react-native-image-picker: cba6dcdcae82084cf3865b871f3e5d161e6b0333
-  react-native-livestream: 1f311798511d7f46b910b0ed821ed070e23d12c4
+  react-native-image-picker: f02b573847436881b851f74b7afbf26a0b0107aa
+  react-native-livestream: 8a496cc7ff3e296455c41f4bc8cf9f88996c7f48
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-rsa-native: a7931cdda1f73a8576a46d7f431378c5550f0c38
-  react-native-safe-area-context: df9763c5de6fa38883028e243a0b60123acb8858
+  react-native-safe-area-context: 758e894ca5a9bd1868d2a9cfbca7326a2b6bf9dc
   react-native-video: 0ef0c2f831aa6db9ea7c1864e872a6dbee6cadf6
   react-native-vlc-media-player: da3308dda896d4ff7abfacadb8f981752bf9b425
   React-NativeModulesApple: 6cc32bf0a8dc0a9de48878ccca14788bbe5e4fc6
@@ -965,7 +965,7 @@ SPEC CHECKSUMS:
   RNFBApp: 4097f75673f8b42a7cd1ba17e6ea85a94b45e4d1
   RNFBMessaging: 92325b0d5619ac90ef023a23cfd16fd3b91d0a88
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
-  RNGestureHandler: c2358951aa4fe5a9ee2085b3c2880c1af98af269
+  RNGestureHandler: 64a1c26bedd667c61b00827bf00aabdce3ed95ab
   RNScreens: 05cb72f192ff7a3a27a06479f0fcc477e77ec5ae
   RNSVG: 043f603fc70d48d289bc3f2ceedbb05ce2636f5c
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17

@@ -44,9 +44,10 @@ export const useStyles = () => {
     },
     footer: {
       position: 'absolute',
-      bottom: insets.bottom,
+      bottom: 0,
       left: 0,
       right: 0,
+      paddingBottom: insets.bottom,
       minHeight: 80,
       paddingHorizontal: 16,
       paddingVertical: 20,
@@ -80,7 +81,7 @@ export const useStyles = () => {
       position: 'absolute',
       top: '50%',
       left: '50%',
-      transform: [{ translateX: -15 }, { translateY: -12 }],
+      transform: [{ translateX: -12 }, { translateY: -12 }],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -162,7 +163,6 @@ export const useStyles = () => {
       justifyContent: 'flex-end',
       color: theme.colors.background,
     },
-
     connecting: {
       position: 'absolute',
       top: 0,
@@ -213,6 +213,7 @@ export const useStyles = () => {
       position: 'absolute',
       justifyContent: 'center',
       alignItems: 'center',
+      paddingBottom: 80 + insets.top,
       backgroundColor: 'rgba(0, 0, 0, .7)',
     },
     permissionTitle: {

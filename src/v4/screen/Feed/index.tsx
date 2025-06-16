@@ -53,7 +53,7 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
   const feedItems = shouldShowAds ? itemWithAds : postData;
 
   const { handleViewChange } = usePostImpression(
-    itemWithAds.filter(
+    itemWithAds?.filter(
       (item: Amity.Post | Amity.Ad) =>
         !!(isAmityAd(item) ? item?.adId : item?.postId)
     ) as (Amity.Post | Amity.Ad)[]
@@ -119,7 +119,6 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
             setOnNextPage(hasNextPage ? () => nextPage : null);
             const formattedPostList = await amityPostsFormatter(filterData);
             setPostData(formattedPostList);
-            setLoading(false);
             subscribePostTopic(targetType, targetId);
           }
         }

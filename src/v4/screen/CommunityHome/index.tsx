@@ -357,7 +357,7 @@ export default function CommunityHome({
                 ? {
                     uri: avatarUrl,
                   }
-                : require('../../assets/images/Placeholder.png')
+                : require('../../assets/images/userAvatar.png')
             }
           />
           <View style={styles.darkOverlay} />

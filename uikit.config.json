@@ -312,20 +312,16 @@
     "*/*/community_private_badge": {
       "image": "lockIcon"
     },
-    "livestream_post_target_selection_page/*/*": {
-      "theme": {}
-    },
+    "livestream_post_target_selection_page/*/*": {},
     "livestream_post_target_selection_page/*/close_button": {
-      "theme": {},
-      "image": "value"
-    },
-    "livestream_post_target_selection_page/*/my_timeline_avatar": {},
-    "livestream_post_target_selection_page/*/my_timeline_text": {
-      "theme": {},
-      "text": "value"
+      "image": "close_button"
     },
     "livestream_post_target_selection_page/*/title": {
       "text": "Live on"
+    },
+    "livestream_post_target_selection_page/*/my_timeline_avatar": {},
+    "livestream_post_target_selection_page/*/my_timeline_text": {
+      "text": "My timeline"
     }
   }
 }

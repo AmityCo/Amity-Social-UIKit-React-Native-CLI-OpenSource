@@ -115,6 +115,7 @@ const AmityCommunityFeedComponent = forwardRef<
             ) : (
               <AmityPostContentComponent
                 post={item}
+                isCommunityNameShown={false}
                 AmityPostContentComponentStyle={
                   AmityPostContentComponentStyleEnum.feed
                 }

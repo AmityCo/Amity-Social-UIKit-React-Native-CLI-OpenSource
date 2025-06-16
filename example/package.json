@@ -9,7 +9,7 @@
     "pods": "pod-install --quiet"
   },
   "dependencies": {
-    "@api.video/react-native-livestream": "^2.0.0",
+    "@api.video/react-native-livestream": "2.0.0",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/netinfo": "^11.3.1",
     "@react-native-community/push-notification-ios": "^1.11.0",
@@ -22,9 +22,9 @@
     "react-native": "0.72.9",
     "react-native-create-thumbnail": "^2.0.0",
     "react-native-fs": "^2.20.0",
-    "react-native-gesture-handler": "^2.15.0",
+    "react-native-gesture-handler": "2.17.1",
     "react-native-get-random-values": "^1.11.0",
-    "react-native-image-picker": "^7.0.0",
+    "react-native-image-picker": "7.1.2",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-netinfo": "^1.1.0",
     "react-native-push-notification": "^8.1.1",

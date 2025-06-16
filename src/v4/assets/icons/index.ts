@@ -27,3 +27,5 @@ export { default as privateFeed } from './privateFeed';
 export { default as cross } from './cross';
 export { default as story } from './story';
 export { default as post } from './post';
+export { default as play } from './play';
+export { default as exclamation } from './exclamation';

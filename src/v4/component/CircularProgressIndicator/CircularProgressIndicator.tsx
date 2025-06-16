@@ -19,9 +19,9 @@ export const CircularProgressIndicator: React.FC<
   progress,
   size = 50,
   strokeWidth = 4,
-  backgroundColor = 'rgba(255, 255, 255, 0.3)',
+  backgroundColor = 'rgba(255, 255, 255, 0.5)',
   progressColor = 'white',
-  backgroundOpacity = 0.3,
+  backgroundOpacity = 1,
   duration = 1000,
 }) => {
   const styles = useStyles();

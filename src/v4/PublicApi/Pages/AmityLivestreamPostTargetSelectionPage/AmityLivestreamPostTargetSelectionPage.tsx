@@ -20,6 +20,7 @@ const AmityLivestreamPostTargetSelectionPage = () => {
     community,
   }: FeedParams) => {
     const context = {
+      pop: 2,
       targetId,
       targetType,
       targetName:

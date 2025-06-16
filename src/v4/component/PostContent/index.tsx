@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import {
   Image,
   ImageStyle,
+  Pressable,
   StyleProp,
   Text,
   TouchableOpacity,
@@ -10,20 +11,31 @@ import {
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
-import useAuth from '../../hooks/useAuth';
-import { IVideoPost, MediaUri } from '../Social/PostList';
-import { getPostById } from '../../providers/Social/feed-sdk';
+import useAuth from '../../../hooks/useAuth';
+import { IVideoPost, MediaUri } from '../../../components/Social/PostList';
+import { getPostById } from '../../../providers/Social/feed-sdk';
 import { useSelector } from 'react-redux';
-import ImageView from '../../components/react-native-image-viewing/dist';
-import { RootState } from '../../redux/store';
-import { playBtn } from '../../svg/svg-xml-list';
-import PollSection from '../PollSection/PollSection';
-import LivestreamContent from '../../v4/component/LivestreamContent';
+import ImageView from '../../../components/react-native-image-viewing/dist';
+import { RootState } from '../../../redux/store';
+import { playBtn } from '../../../svg/svg-xml-list';
+import PollSection from '../../../components/PollSection/PollSection';
+import LivestreamContent from '../LivestreamContent';
+import { LinkPreview } from '../../component/PreviewLink';
+import RenderTextWithMention from '../../component/RenderTextWithMention/RenderTextWithMention';
+import { IMentionPosition } from '../../../types';
 
-interface IMediaSection {
+interface IPostContent {
   childrenPosts: string[];
+  textPost?: string;
+  mentionPositionArr?: IMentionPosition[];
+  onPressPost?: () => void;
 }
-const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
+const PostContent: React.FC<IPostContent> = ({
+  childrenPosts,
+  textPost,
+  mentionPositionArr,
+  onPressPost,
+}) => {
   const { apiRegion } = useAuth();
   const [imagePosts, setImagePosts] = useState<string[]>([]);
   const [videoPosts, setVideoPosts] = useState<IVideoPost[]>([]);
@@ -262,49 +274,74 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
     );
   }
 
-  return (
-    <View>
-      {pollIds.length > 0 ? (
-        <PollSection pollId={pollIds[0].pollId} />
-      ) : livestreamId.length > 0 ? (
-        <LivestreamContent streamId={livestreamId[0]} />
-      ) : (
-        renderMediaPosts()
-      )}
+  function renderImageHeader({ imageIndex: imgIndex }) {
+    return (
+      <View style={styles.headerContainer}>
+        <View style={styles.flexWidth}>
+          <TouchableOpacity
+            style={styles.closebtnIcon}
+            onPress={() => setIsVisibleFullImage(false)}
+          >
+            <Text style={styles.closeBtn}>X</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.flexWidth}>
+          <Text style={styles.header}>
+            {imgIndex + 1}/
+            {imagePostsFullSize.length || videoPostsFullSize.length}
+          </Text>
+        </View>
+        <View style={styles.flexWidth} />
+      </View>
+    );
+  }
 
-      <ImageView
-        images={
-          imagePostsFullSize.length > 0
-            ? imagePostsFullSize
-            : videoPostsFullSize
-        }
-        imageIndex={imageIndex}
-        visible={visibleFullImage}
-        onRequestClose={() => setIsVisibleFullImage(false)}
-        isVideoButton={videoPosts.length > 0 ? true : false}
-        videoPosts={videoPosts}
-        HeaderComponent={({ imageIndex: imgIndex }) => (
-          <View style={styles.headerContainer}>
-            <View style={styles.flexWidth}>
-              <TouchableOpacity
-                style={styles.closebtnIcon}
-                onPress={() => setIsVisibleFullImage(false)}
-              >
-                <Text style={styles.closeBtn}>X</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.flexWidth}>
-              <Text style={styles.header}>
-                {imgIndex + 1}/
-                {imagePostsFullSize.length || videoPostsFullSize.length}
-              </Text>
-            </View>
-            <View style={styles.flexWidth} />
-          </View>
+  return (
+    <Fragment>
+      {livestreamId.length <= 0 && (
+        <Pressable onPress={onPressPost}>
+          {textPost && childrenPosts?.length === 0 && (
+            <LinkPreview
+              text={textPost}
+              mentionPositionArr={[...mentionPositionArr]}
+            />
+          )}
+          {textPost && childrenPosts?.length > 0 && (
+            <RenderTextWithMention
+              textPost={textPost}
+              mentionPositionArr={[...mentionPositionArr]}
+            />
+          )}
+        </Pressable>
+      )}
+      <View>
+        {pollIds.length > 0 ? (
+          <PollSection pollId={pollIds[0].pollId} />
+        ) : livestreamId.length > 0 ? (
+          <LivestreamContent
+            streamId={livestreamId[0]}
+            onPressPost={onPressPost}
+          />
+        ) : (
+          renderMediaPosts()
         )}
-      />
-    </View>
+
+        <ImageView
+          images={
+            imagePostsFullSize.length > 0
+              ? imagePostsFullSize
+              : videoPostsFullSize
+          }
+          imageIndex={imageIndex}
+          visible={visibleFullImage}
+          onRequestClose={() => setIsVisibleFullImage(false)}
+          isVideoButton={videoPosts.length > 0 ? true : false}
+          videoPosts={videoPosts}
+          HeaderComponent={renderImageHeader}
+        />
+      </View>
+    </Fragment>
   );
 };
 
-export default React.memo(MediaSection);
+export default React.memo(PostContent);

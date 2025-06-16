@@ -1,7 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const useStyles = (theme: MyMD3Theme) => {
+  const insets = useSafeAreaInsets();
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -41,6 +43,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       borderTopRightRadius: 20,
       padding: 10,
       minHeight: 200,
+      paddingBottom: insets.bottom + 10,
     },
     dragHandle: {
       width: 36,

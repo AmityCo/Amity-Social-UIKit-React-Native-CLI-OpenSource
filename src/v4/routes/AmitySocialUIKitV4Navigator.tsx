@@ -53,6 +53,7 @@ import AmityCommunitiesByCategoryPage from '../PublicApi/Pages/AmityCommunitiesB
 import AmityCommunityProfilePage from '../PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
 import EditPost from '../screen/EditPost/EditPost';
 import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
+import LiveStreamPlayer from '../screen/LivestreamPlayer';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -291,6 +292,11 @@ export default function AmitySocialUIKitV4Navigator() {
               <Stack.Screen
                 name="CreateLivestream"
                 component={CreateLivestream}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="LivestreamPlayer"
+                component={LiveStreamPlayer}
                 options={{ headerShown: false }}
               />
             </Stack.Group>

@@ -9,11 +9,12 @@ import { useStyles } from './styles';
 
 import { AmityStreamPlayer } from '@amityco/video-player-react-native';
 
-import LivestreamEndedView from '../../v4/component/LivestreamContent/LivestreamEndedThumbnail';
+import LivestreamEndedView from '../../component/LivestreamContent/LivestreamEndedThumbnail';
 import { Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon, playIcon, stopIcon } from '../../svg/svg-xml-list';
+import { closeIcon, playIcon, stopIcon } from '../../../svg/svg-xml-list';
 import { StreamRepository } from '@amityco/ts-sdk-react-native';
+import { close } from '../../assets/icons';
 
 const LiveStreamPlayer = ({ navigation, route }) => {
   const ref = useRef<any>(null);
@@ -76,6 +77,8 @@ const LiveStreamPlayer = ({ navigation, route }) => {
     };
   }, [streamId]);
 
+  console.log('livestream', livestream);
+
   return (
     <View style={styles.container}>
       <>
@@ -94,6 +97,7 @@ const LiveStreamPlayer = ({ navigation, route }) => {
             ) : (
               <>
                 <AmityStreamPlayer
+                  onBack={navigation.goBack}
                   stream={livestream}
                   status={livestream.status === 'live' ? 'live' : 'recorded'}
                   ref={ref}
@@ -105,10 +109,23 @@ const LiveStreamPlayer = ({ navigation, route }) => {
                         <Text style={styles.statusText}>LIVE</Text>
                       </View>
                     </View>
-                    <TouchableWithoutFeedback onPress={onToggleControl}>
+                    <TouchableWithoutFeedback
+                      onPress={onToggleControl}
+                      style={{
+                        opacity: 1,
+                        flex: 1,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'red',
+                      }}
+                    >
                       <Animated.View
                         style={{
-                          opacity: showControlAnim,
+                          opacity: 1,
+                          flex: 1,
+                          width: '100%',
+                          height: '100%',
+                          backgroundColor: 'red',
                         }}
                       >
                         <TouchableOpacity
@@ -116,13 +133,22 @@ const LiveStreamPlayer = ({ navigation, route }) => {
                           onPress={navigation.goBack}
                         >
                           <SvgXml
-                            xml={closeIcon('#FFFFFF')}
+                            xml={close()}
                             width="16"
                             height="16"
+                            color="white"
                           />
                         </TouchableOpacity>
 
                         <View style={styles.controller}>
+                          <TouchableOpacity onPress={navigation.goBack}>
+                            <SvgXml
+                              xml={close()}
+                              width="16"
+                              height="16"
+                              color="white"
+                            />
+                          </TouchableOpacity>
                           <TouchableOpacity
                             onPress={onPressControlButton}
                             style={styles.controllerButton}

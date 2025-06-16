@@ -44,7 +44,7 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     bodySection: {
       justifyContent: 'center',
-      paddingVertical: 10,
+      paddingVertical: 4,
       minHeight: 45,
     },
     countSection: {
@@ -261,7 +261,6 @@ export const useStyles = (theme: MyMD3Theme) => {
       flexDirection: 'row',
       alignItems: 'center',
     },
-
     dot: {
       color: theme.colors.baseShade1,
       fontWeight: '900',

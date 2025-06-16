@@ -100,7 +100,7 @@ const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
                   ? {
                       uri: avatarUrl,
                     }
-                  : require('../../assets/images/Placeholder.png')
+                  : require('../../assets/images/userAvatar.png')
               }
               style={styles.communityAvatar}
             />
@@ -133,7 +133,7 @@ const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
                 ? {
                     uri: avatarUrl,
                   }
-                : require('../../assets/images/Placeholder.png')
+                : require('../../assets/images/userAvatar.png')
             }
             style={styles.communityAvatar}
           />

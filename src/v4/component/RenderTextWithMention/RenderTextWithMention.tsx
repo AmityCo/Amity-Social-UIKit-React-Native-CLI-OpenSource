@@ -10,6 +10,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 interface IrenderTextWithMention {
   mentionPositionArr: IMentionPosition[];
   textPost: string;
+  isTitle?: boolean;
 }
 
 interface LinkInfo {
@@ -21,6 +22,7 @@ interface LinkInfo {
 const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
   mentionPositionArr,
   textPost,
+  isTitle,
 }) => {
   const styles = useStyles();
   const navigation =
@@ -70,7 +72,7 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
         key={textPost}
         numberOfLines={8}
         seeMoreStyle={styles.moreLessButton}
-        style={styles.inputText}
+        style={[styles.inputText, isTitle && styles.bold]}
         seeLessStyle={styles.moreLessButton}
       >
         {textPost}
@@ -106,14 +108,18 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
   // Add any remaining non-highlighted text after the mentions
   const remainingText = textPost.slice(currentPosition);
   result.push([
-    <Text selectable key="nonHighlighted-last" style={styles.inputText}>
+    <Text
+      selectable
+      key="nonHighlighted-last"
+      style={[styles.inputText, isTitle && styles.bold]}
+    >
       {remainingText}
     </Text>,
   ]);
 
   // Flatten the array and render
   return (
-    <Text selectable style={styles.inputText}>
+    <Text selectable style={[styles.inputText, isTitle && styles.bold]}>
       {result.flat()}
     </Text>
   );
