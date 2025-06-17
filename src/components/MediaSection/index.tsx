@@ -267,7 +267,11 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
       {pollIds.length > 0 ? (
         <PollSection pollId={pollIds[0].pollId} />
       ) : livestreamId.length > 0 ? (
-        <LivestreamContent streamId={livestreamId[0]} />
+        <LivestreamContent
+          streamId={livestreamId[0]}
+          post={null}
+          onPressPost={() => {}}
+        />
       ) : (
         renderMediaPosts()
       )}

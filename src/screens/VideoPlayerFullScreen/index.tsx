@@ -75,9 +75,9 @@ const VideoPlayerFull = () => {
         onError={() => {
           Alert.alert('Error while playing video');
         }}
-        onVideoError={() => {
-          Alert.alert('Error while playing video');
-        }}
+        // onVideoError={() => {
+        //   Alert.alert('Error while playing video');
+        // }}
       />
       <TouchableOpacity style={styles.closeButton} onPress={onClose}>
         <SvgXml xml={closeIcon(theme.colors.backdrop)} width="16" height="16" />

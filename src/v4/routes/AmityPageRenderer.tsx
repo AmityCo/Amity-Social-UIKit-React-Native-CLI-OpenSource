@@ -55,7 +55,7 @@ import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent
 import LivestreamPlayer from '../../screens/LivestreamPlayer';
 
 interface PageRendererProps {
-  children: React.ReactElement;
+  children: React.JSX.Element;
 }
 export default function PageRenderer({ children }: PageRendererProps) {
   const Stack = createNativeStackNavigator<RootStackParamList>();

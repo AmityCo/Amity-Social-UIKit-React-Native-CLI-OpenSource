@@ -19,12 +19,12 @@ export const useCustomRankingGlobalFeed = () => {
   const [fetching, setFetching] = useState(false);
   const postList = useSelector((state: RootState) => state.globalFeed.postList);
 
-  const { itemWithAds, reset } = usePaginatorApi<IPost | Amity.Ad>({
-    items: postList as (IPost | Amity.Ad)[],
+  const { itemWithAds, reset } = usePaginatorApi<Amity.Post | Amity.Ad>({
+    items: postList as (Amity.Post | Amity.Ad)[],
     isLoading: fetching,
     placement: 'feed' as Amity.AdPlacement,
     pageSize: globalFeedPageLimit,
-    getItemId: (item) => (item as IPost).postId.toString(),
+    getItemId: (item) => (item as Amity.Post).postId.toString(),
   });
 
   const processPosts = async (posts: Amity.Post[]) => {
