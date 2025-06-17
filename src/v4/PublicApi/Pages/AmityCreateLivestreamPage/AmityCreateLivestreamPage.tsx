@@ -23,7 +23,6 @@ import {
   rotate,
   startLivestream,
   thumbnail,
-  trash,
 } from '../../../../v4/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import { Typography } from '../../../../v4/component/Typography/Typography';
@@ -39,6 +38,7 @@ import Button from '../../../../v4/component/Button/Button';
 import { useRequestPermission } from '../../../../v4/hook/useCamera';
 import NetInfo from '@react-native-community/netinfo';
 import { LivestreamStatus } from '../../../enum/livestreamStatus';
+import { AmityThumbnailActionComponent } from '../../Components/AmityThumbnailActionComponent';
 
 const calculateTime = (time: number) => {
   const hours = Math.floor(time / 3600000);
@@ -511,44 +511,16 @@ function AmityCreateLivestreamPage() {
                   openBottomSheet({
                     height: 200,
                     content: (
-                      <View style={styles.bottomSheetContainer}>
-                        <TouchableOpacity
-                          activeOpacity={0.7}
-                          style={styles.bottomSheetButton}
-                          onPress={() => {
-                            dispatch(closeBottomSheet());
-                            openImageGallery();
-                          }}
-                        >
-                          <SvgXml
-                            width={24}
-                            height={24}
-                            xml={thumbnail()}
-                            color={theme.colors.base}
-                          />
-                          <Typography.BodyBold style={styles.changeThumbnail}>
-                            Change thumbnail
-                          </Typography.BodyBold>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          activeOpacity={0.7}
-                          style={styles.bottomSheetButton}
-                          onPress={() => {
-                            dispatch(closeBottomSheet());
-                            removeSelectedImage();
-                          }}
-                        >
-                          <SvgXml
-                            width={24}
-                            height={24}
-                            xml={trash()}
-                            color={theme.colors.alert}
-                          />
-                          <Typography.BodyBold style={styles.deleteThumbnail}>
-                            Delete thumbnail
-                          </Typography.BodyBold>
-                        </TouchableOpacity>
-                      </View>
+                      <AmityThumbnailActionComponent
+                        onChangeThumbnail={() => {
+                          dispatch(closeBottomSheet());
+                          openImageGallery();
+                        }}
+                        onDeleteThumbnail={() => {
+                          dispatch(closeBottomSheet());
+                          removeSelectedImage();
+                        }}
+                      />
                     ),
                   })
                 );

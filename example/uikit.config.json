@@ -407,6 +407,51 @@
     "livestream_post_target_selection_page/*/my_timeline_avatar": {},
     "livestream_post_target_selection_page/*/my_timeline_text": {
       "text": "My timeline"
+    },
+    "create_livestream_page/*/*": {
+      "theme": {}
+    },
+    "create_livestream_page/*/start_livestream_button": {
+      "image": "value"
+    },
+    "create_livestream_page/*/add_thumbnail_button": {
+      "image": "value"
+    },
+    "create_livestream_page/*/switch_camera_button": {
+      "image": "value"
+    },
+    "create_livestream_page/*/end_live_stream_button": {
+      "theme": {}
+    },
+    "create_livestream_page/*/live_timer_status": {
+      "theme": {}
+    },
+    "create_livestream_page/*/total_view": {
+      "theme": {},
+      "image": "value"
+    },
+    "create_livestream_page/*/cancel_create_livestream_button": {
+      "theme": {}
+    },
+    "livestream_terminated_page/*/*": {
+      "theme": {}
+    },
+    "livestream_terminated_page/*/livestream_terminated_action_button": {
+      "theme": {}
+    },
+    "livestream_player_page/*/*": {
+      "theme": {}
+    },
+    "*/thumbnail_action/*": {
+      "theme": {}
+    },
+    "*/thumbnail_action/change_thumbnail_button": {
+      "image": "value",
+      "text": "Change thumbnail"
+    },
+    "*/thumbnail_action/delete_thumbnail_button": {
+      "image": "value",
+      "text": "Delete thumbnail"
     }
   }
 }

@@ -53,9 +53,9 @@ const AmityCreatePostMenuComponent = ({
 
         [AmityPostTargetSelectionPageType.livestream]: () => {
           if (
-            AmityCreatePostMenuComponentBehavior.goToLivestreamTargetSelectionPage
+            AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage
           ) {
-            AmityCreatePostMenuComponentBehavior.goToLivestreamTargetSelectionPage();
+            AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage();
           }
           navigation.navigate('LivestreamPostTargetSelection');
         },

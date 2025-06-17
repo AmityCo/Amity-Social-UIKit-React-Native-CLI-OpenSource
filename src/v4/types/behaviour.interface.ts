@@ -45,7 +45,7 @@ export interface IBehaviour {
       postType: 'post' | 'story' | 'poll' | 'livestream';
     }) => void;
     goToSelectStoryTargetPage?: () => void;
-    goToLivestreamTargetSelectionPage?: () => void;
+    goToSelectLivestreamPostTargetPage?: () => void;
   };
   AmityPostTargetSelectionPageBehavior?: {
     goToPostComposerPage?: (arg?: {
@@ -67,7 +67,7 @@ export interface IBehaviour {
       needApprovalOnPostCreation?: boolean;
       isPublic?: boolean;
     }) => void;
-    goToLivestreamComposerPage?: (arg?: {
+    goToCreateLivestreamPage?: (arg?: {
       targetId: string;
       targetType: 'community' | 'user';
       targetName?: string;
@@ -89,7 +89,7 @@ export interface IBehaviour {
     }) => void;
   };
   AmityLivestreamPostTargetSelectionPageBehavior?: {
-    goToLivestreamComposerPage?: (arg?: {
+    goToCreateLivestreamPage?: (arg?: {
       targetId: string;
       targetType: 'community' | 'user';
       targetName?: string;

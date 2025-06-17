@@ -1,19 +1,18 @@
 import React from 'react';
 import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { Typography } from '../../../component/Typography/Typography';
 import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { ban, terminated, trash, warning } from '../../../assets/icons';
-import Button, { BUTTON_SIZE } from '../../../component/Button/Button';
+import { LivestreamTerminatedActionButton } from '../../../elements/LivestreamTerminatedActionButton';
+import { PageID } from '../../../enum';
 
 export function AmityLivestreamTerminatedPage() {
   const { styles, theme } = useStyles();
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const route =
     useRoute<RouteProp<RootStackParamList, 'LivestreamTerminated'>>();
 
@@ -81,14 +80,9 @@ export function AmityLivestreamTerminatedPage() {
         </View>
       </View>
       <View style={styles.footer}>
-        <Button
-          type="primary"
-          themeStyle={theme}
-          size={BUTTON_SIZE.LARGE}
-          onPress={() => navigation.goBack()}
-        >
-          OK
-        </Button>
+        <LivestreamTerminatedActionButton
+          pageId={PageID.livestream_terminated_page}
+        />
       </View>
     </SafeAreaView>
   );

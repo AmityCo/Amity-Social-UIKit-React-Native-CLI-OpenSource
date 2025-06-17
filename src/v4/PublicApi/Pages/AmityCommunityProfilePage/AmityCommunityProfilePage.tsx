@@ -288,9 +288,9 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     closeBottomSheet();
 
     if (
-      AmityLivestreamPostTargetSelectionPageBehavior.goToLivestreamComposerPage
+      AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage
     ) {
-      return AmityLivestreamPostTargetSelectionPageBehavior.goToLivestreamComposerPage(
+      return AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage(
         {
           targetId: communityId,
           targetType: 'community',

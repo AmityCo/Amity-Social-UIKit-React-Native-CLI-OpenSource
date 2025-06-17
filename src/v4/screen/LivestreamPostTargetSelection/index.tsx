@@ -8,7 +8,7 @@ type LivestreamPostTargetSelectionProps = NativeStackScreenProps<
   'LivestreamPostTargetSelection'
 >;
 
-function LivestreamPostTargetSelection({}: LivestreamPostTargetSelectionProps) {
+function LivestreamPostTargetSelection(_: LivestreamPostTargetSelectionProps) {
   return <AmityLivestreamPostTargetSelectionPage />;
 }
 

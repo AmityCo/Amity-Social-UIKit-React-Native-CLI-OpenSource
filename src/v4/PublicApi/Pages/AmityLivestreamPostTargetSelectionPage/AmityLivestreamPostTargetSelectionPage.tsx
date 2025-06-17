@@ -28,9 +28,9 @@ const AmityLivestreamPostTargetSelectionPage = () => {
     };
 
     if (
-      AmityLivestreamPostTargetSelectionPageBehavior.goToLivestreamComposerPage
+      AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage
     ) {
-      return AmityLivestreamPostTargetSelectionPageBehavior.goToLivestreamComposerPage(
+      return AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage(
         context
       );
     }
