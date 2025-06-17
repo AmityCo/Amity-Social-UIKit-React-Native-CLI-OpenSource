@@ -258,11 +258,39 @@ function AmityCreateLivestreamPage() {
   }, [checkPermissionAndroid]);
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
+    NetInfo.fetch().then((state) => {
+      setReconnecting(!state.isConnected);
+    });
+
+    let unsubscribe = NetInfo.addEventListener((state) => {
       setReconnecting(!state.isConnected);
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    let threeMinutesTimeout: NodeJS.Timeout | null = null;
+
+    if (reconnecting && stream && stream?.status === 'live') {
+      threeMinutesTimeout = setTimeout(() => {
+        endLiveStream();
+      }, 1000 * 60 * 3);
+    }
+
+    if (
+      !reconnecting &&
+      stream &&
+      stream?.status === 'live' &&
+      streamRef?.current
+    ) {
+      streamRef?.current?.startPublish(stream?.streamId);
+
+      if (threeMinutesTimeout) {
+        clearTimeout(threeMinutesTimeout);
+        threeMinutesTimeout = null;
+      }
+    }
+  }, [reconnecting, endLiveStream, stream]);
 
   useEffect(() => {
     const isTerminated =
