@@ -17,13 +17,7 @@ import {
 } from '@amityco/video-broadcaster-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
-import {
-  arrowDown,
-  close,
-  rotate,
-  startLivestream,
-  thumbnail,
-} from '../../../../v4/assets/icons';
+import { arrowDown } from '../../../../v4/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import { Typography } from '../../../../v4/component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
@@ -39,6 +33,13 @@ import { useRequestPermission } from '../../../../v4/hook/useCamera';
 import NetInfo from '@react-native-community/netinfo';
 import { LivestreamStatus } from '../../../enum/livestreamStatus';
 import { AmityThumbnailActionComponent } from '../../Components/AmityThumbnailActionComponent';
+import { StartLivestreamButton } from '../../../elements/StartLivestreamButton';
+import { PageID } from '../../../enum';
+import { LiveTimerStatus } from '../../../elements/LiveTimerStatus';
+import { CancelCreateLivestreamButton } from '../../../elements/CancelCreateLivestreamButton';
+import { EndLiveStreamButton } from '../../../elements/EndLiveStreamButton';
+import { AddThumbnailButton } from '../../../elements/AddThumbnailButton';
+import { SwitchCameraButton } from '../../../elements/SwitchCameraButton';
 
 const calculateTime = (time: number) => {
   const hours = Math.floor(time / 3600000);
@@ -387,9 +388,10 @@ function AmityCreateLivestreamPage() {
               </View>
             )}
             <View style={styles.timer}>
-              <Typography.CaptionBold style={styles.text}>
-                LIVE {calculateTime(time)}
-              </Typography.CaptionBold>
+              <LiveTimerStatus
+                time={calculateTime(time)}
+                pageId={PageID.create_livestream_page}
+              />
             </View>
           </>
         )
@@ -397,8 +399,8 @@ function AmityCreateLivestreamPage() {
         <View style={styles.content}>
           <View>
             <View style={styles.header}>
-              <TouchableOpacity
-                style={styles.closeButton}
+              <CancelCreateLivestreamButton
+                pageId={PageID.create_livestream_page}
                 onPress={() => {
                   if (title?.trim())
                     return Alert.alert(
@@ -419,15 +421,7 @@ function AmityCreateLivestreamPage() {
                   navigation.goBack();
                   if (pop === 2) navigation.goBack();
                 }}
-                activeOpacity={0.7}
-              >
-                <SvgXml
-                  xml={close()}
-                  width={24}
-                  height={24}
-                  color={theme.colors.background}
-                />
-              </TouchableOpacity>
+              />
               <TouchableOpacity
                 style={styles.communityButton}
                 onPress={() => navigation.goBack()}
@@ -475,102 +469,78 @@ function AmityCreateLivestreamPage() {
             )}
           </View>
           <View style={styles.goLiveContainer}>
-            <TouchableOpacity
-              activeOpacity={0.7}
+            <StartLivestreamButton
+              onPress={onGoLive}
               disabled={disabled}
-              onPress={() => {
-                onGoLive();
-              }}
-              style={[disabled && styles.goLiveButtonDisabled]}
-            >
-              <SvgXml xml={startLivestream()} />
-            </TouchableOpacity>
+              pageId={PageID.create_livestream_page}
+            />
           </View>
         </View>
       )}
       <View style={styles.footer}>
         {isLive && !isConnecting && (
-          <TouchableOpacity
-            style={styles.endLiveButton}
-            activeOpacity={0.7}
+          <EndLiveStreamButton
             onPress={confirmEndStreamAlert}
-          >
-            <Typography.BodyBold style={styles.text}>
-              End live
-            </Typography.BodyBold>
-          </TouchableOpacity>
+            pageId={PageID.create_livestream_page}
+          />
         )}
         {isLive && isConnecting && <View />}
         {!isLive && (
-          <TouchableOpacity
-            style={styles.thumbnailButton}
-            activeOpacity={0.7}
-            onPress={() => {
-              if (imageUri || uploadedImage) {
-                dispatch(
-                  openBottomSheet({
-                    height: 200,
-                    content: (
-                      <AmityThumbnailActionComponent
-                        onChangeThumbnail={() => {
-                          dispatch(closeBottomSheet());
-                          openImageGallery();
-                        }}
-                        onDeleteThumbnail={() => {
-                          dispatch(closeBottomSheet());
-                          removeSelectedImage();
-                        }}
-                      />
-                    ),
-                  })
-                );
-              } else openImageGallery();
-            }}
-          >
+          <>
             {imageUri || uploadedImage ? (
-              <View style={styles.thumbnailImageContainer}>
-                <Image
-                  source={{ uri: uploadedImage?.fileUrl || imageUri }}
-                  style={styles.thumbnailImage}
-                />
-                {isLoading && (
-                  <View style={styles.thumbnailLoader}>
-                    <CircularProgressIndicator
-                      size={24}
-                      strokeWidth={2}
-                      progress={progress}
-                    />
-                  </View>
-                )}
-              </View>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.thumbnailButton}
+                onPress={() => {
+                  dispatch(
+                    openBottomSheet({
+                      height: 200,
+                      content: (
+                        <AmityThumbnailActionComponent
+                          onChangeThumbnail={() => {
+                            dispatch(closeBottomSheet());
+                            openImageGallery();
+                          }}
+                          onDeleteThumbnail={() => {
+                            dispatch(closeBottomSheet());
+                            removeSelectedImage();
+                          }}
+                        />
+                      ),
+                    })
+                  );
+                }}
+              >
+                <View style={styles.thumbnailImageContainer}>
+                  <Image
+                    source={{ uri: uploadedImage?.fileUrl || imageUri }}
+                    style={styles.thumbnailImage}
+                  />
+                  {isLoading && (
+                    <View style={styles.thumbnailLoader}>
+                      <CircularProgressIndicator
+                        size={24}
+                        strokeWidth={2}
+                        progress={progress}
+                      />
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
             ) : (
-              <>
-                <SvgXml
-                  xml={thumbnail()}
-                  width={30}
-                  height={30}
-                  color="white"
-                />
-                <Typography.CaptionBold style={styles.text}>
-                  Add thumbnail
-                </Typography.CaptionBold>
-              </>
+              <AddThumbnailButton
+                onPress={openImageGallery}
+                pageId={PageID.create_livestream_page}
+              />
             )}
-          </TouchableOpacity>
+          </>
         )}
-        <TouchableOpacity
-          activeOpacity={0.7}
+        <SwitchCameraButton
+          pageId={PageID.create_livestream_page}
           onPress={() => {
             streamRef.current && streamRef.current.switchCamera();
           }}
-        >
-          <SvgXml
-            xml={rotate()}
-            width={30}
-            height={30}
-            color={theme.colors.background}
-          />
-        </TouchableOpacity>
+        />
       </View>
     </SafeAreaView>
   );

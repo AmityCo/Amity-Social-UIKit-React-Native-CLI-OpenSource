@@ -85,23 +85,6 @@ export const useStyles = () => {
       justifyContent: 'center',
       alignItems: 'center',
     },
-
-    bottomSheetContainer: {
-      paddingBottom: 32,
-      color: theme.colors.background,
-    },
-    bottomSheetButton: {
-      padding: 16,
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: 12,
-    },
-    changeThumbnail: {
-      color: theme.colors.base,
-    },
-    deleteThumbnail: {
-      color: theme.colors.alert,
-    },
     content: {
       position: 'absolute',
       top: insets.top,
@@ -144,17 +127,6 @@ export const useStyles = () => {
       justifyContent: 'center',
       alignItems: 'center',
     },
-    goLiveButtonDisabled: {
-      opacity: 0.2,
-    },
-    closeButton: {
-      width: 32,
-      height: 32,
-      borderRadius: 100,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
     communityButton: {
       flex: 1,
       alignItems: 'center',
@@ -182,26 +154,10 @@ export const useStyles = () => {
       color: theme.colors.background,
     },
     timer: {
-      position: 'absolute',
-      top: 20 + insets.top,
       left: 16,
       zIndex: 100,
-      backgroundColor: theme.colors.live,
-      paddingHorizontal: 8,
-      paddingVertical: 4,
-      borderRadius: 4,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    endLiveButton: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: 16,
-      paddingVertical: 10,
-      borderWidth: 1,
-      borderColor: theme.colors.secondaryShade4,
-      borderRadius: 8,
+      position: 'absolute',
+      top: 20 + insets.top,
     },
     permission: {
       flex: 1,
