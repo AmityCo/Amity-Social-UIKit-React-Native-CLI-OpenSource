@@ -38,7 +38,8 @@ export const useCustomRankingGlobalFeed = () => {
                 if (!error && !loading) {
                   if (
                     data?.dataType === 'image' ||
-                    data?.dataType === 'video'
+                    data?.dataType === 'video' ||
+                    data?.dataType === 'liveStream'
                   ) {
                     resolve(post);
                   } else {

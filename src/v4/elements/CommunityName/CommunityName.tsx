@@ -39,7 +39,7 @@ const CommunityName: FC<CommunityNameProps> = ({
       numberOfLines={2}
       {...props}
     >
-      {communityName}
+      {communityName?.trim()}
     </Typography.Headline>
   );
 };

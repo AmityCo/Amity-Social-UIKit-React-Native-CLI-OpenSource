@@ -164,20 +164,22 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
               />
             </View>
           )}
-          {isCommunityModerator && pendingPosts?.length > 0 && (
-            <CommunityPendingPost
-              number={pendingPosts.length}
-              pageId={pageId}
-              componentId={componentId}
-              style={styles.pendingPostWrap}
-              onPress={() => {
-                navigation.navigate('PendingPosts', {
-                  communityId: community.communityId,
-                  isModerator: !!isCommunityModerator,
-                });
-              }}
-            />
-          )}
+          {isCommunityModerator &&
+            pendingPosts?.length > 0 &&
+            community?.postSetting === 'ADMIN_REVIEW_POST_REQUIRED' && (
+              <CommunityPendingPost
+                number={pendingPosts.length}
+                pageId={pageId}
+                componentId={componentId}
+                style={styles.pendingPostWrap}
+                onPress={() => {
+                  navigation.navigate('PendingPosts', {
+                    communityId: community.communityId,
+                    isModerator: !!isCommunityModerator,
+                  });
+                }}
+              />
+            )}
           <AmityStoryTabComponent
             type={AmityStoryTabComponentEnum.communityFeed}
             targetId={communityId}
