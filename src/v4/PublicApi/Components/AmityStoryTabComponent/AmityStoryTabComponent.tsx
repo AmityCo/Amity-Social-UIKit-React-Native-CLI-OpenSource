@@ -13,7 +13,7 @@ const AmityStoryTabComponent: FC<AmityStoryTabComponentType> = ({
   type,
   targetId,
 }) => {
-  const [CommunityData, setCommunityData] = useState<Amity.Community>(null);
+  const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const { excludes } = useConfig();
   useEffect(() => {
     if (type === AmityStoryTabComponentEnum.communityFeed && targetId) {
@@ -33,10 +33,7 @@ const AmityStoryTabComponent: FC<AmityStoryTabComponentType> = ({
   }
   if (type === AmityStoryTabComponentEnum.communityFeed) {
     return (
-      <CommunityStories
-        communityId={targetId}
-        avatarFileId={CommunityData?.avatarFileId}
-      />
+      <CommunityStories community={communityData} communityId={targetId} />
     );
   }
   return null;

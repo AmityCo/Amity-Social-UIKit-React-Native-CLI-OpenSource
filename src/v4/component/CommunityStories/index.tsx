@@ -21,16 +21,16 @@ import { Typography } from '../Typography/Typography';
 
 interface ICommunityStories {
   communityId: string;
-  avatarFileId: string;
+  community: Amity.Community;
 }
 
-const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
+const CommunityStories = ({ communityId, community }: ICommunityStories) => {
   const navigation =
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
   const styles = useStyles();
   const { getUiKitConfig } = useConfig();
   const hasStoryPermission = useStoryPermission(communityId);
-  const { getStoryTarget, storyTarget } = useStory();
+  const { getStoryTarget, storyTarget, stories } = useStory();
   const { getImage } = useFile();
   const [avatarUrl, setAvatarUrl] = useState(undefined);
   const [viewStory, setViewStory] = useState(false);
@@ -47,12 +47,12 @@ const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
   useEffect(() => {
     (async () => {
       const avatarImage = await getImage({
-        fileId: avatarFileId,
+        fileId: community?.avatarFileId,
         imageSize: ImageSizeState.small,
       });
       setAvatarUrl(avatarImage);
     })();
-  }, [avatarFileId, getImage]);
+  }, [community?.avatarFileId, getImage]);
 
   useFocusEffect(
     useCallback(() => {
@@ -87,7 +87,38 @@ const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
   }, [communityId, navigation]);
 
   const renderCommunityStory = () => {
-    if (storyTarget?.lastStoryExpiresAt) {
+    if (community?.isJoined) {
+      return (
+        <TouchableOpacity
+          style={styles.avatarContainer}
+          onPress={onPressCreateStory}
+        >
+          <Image
+            source={
+              avatarUrl
+                ? {
+                    uri: avatarUrl,
+                  }
+                : require('../../assets/images/userAvatar.png')
+            }
+            style={styles.communityAvatar}
+          />
+          <SvgXml
+            style={styles.storyRing}
+            width={48}
+            height={48}
+            xml={storyRing('#EBECEF', '#EBECEF')}
+          />
+          {hasStoryPermission && (
+            <SvgXml
+              style={styles.storyCreateIcon}
+              xml={storyCircleCreatePlusIcon()}
+            />
+          )}
+        </TouchableOpacity>
+      );
+    }
+    if (community?.isPublic && !community?.isJoined && stories.length > 0) {
       return (
         <>
           <TouchableOpacity
@@ -110,46 +141,12 @@ const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
               height={48}
               xml={storyRing(storyRingColor[0], storyRingColor[1])}
             />
-            {hasStoryPermission && (
-              <SvgXml
-                style={styles.storyCreateIcon}
-                xml={storyCircleCreatePlusIcon()}
-              />
-            )}
           </TouchableOpacity>
           <Typography.Body>{'Story'}</Typography.Body>
         </>
       );
     }
-    if (hasStoryPermission) {
-      return (
-        <TouchableOpacity
-          style={styles.avatarContainer}
-          onPress={onPressCreateStory}
-        >
-          <Image
-            source={
-              avatarUrl
-                ? {
-                    uri: avatarUrl,
-                  }
-                : require('../../assets/images/userAvatar.png')
-            }
-            style={styles.communityAvatar}
-          />
-          <SvgXml
-            style={styles.storyRing}
-            width={48}
-            height={48}
-            xml={storyRing('#EBECEF', '#EBECEF')}
-          />
-          <SvgXml
-            style={styles.storyCreateIcon}
-            xml={storyCircleCreatePlusIcon()}
-          />
-        </TouchableOpacity>
-      );
-    }
+
     return null;
   };
 
@@ -161,7 +158,9 @@ const CommunityStories = ({ communityId, avatarFileId }: ICommunityStories) => {
     });
   }, [communityId, getStoryTarget]);
 
-  if (!storyTarget?.lastStoryExpiresAt) return null;
+  if (community?.isPublic && !community?.isJoined && stories.length <= 0) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>

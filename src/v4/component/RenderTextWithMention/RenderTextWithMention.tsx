@@ -74,6 +74,7 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
         seeMoreStyle={styles.moreLessButton}
         style={[styles.inputText, isTitle && styles.bold]}
         seeLessStyle={styles.moreLessButton}
+        seeLessText=""
       >
         {textPost}
       </ReadMore>
