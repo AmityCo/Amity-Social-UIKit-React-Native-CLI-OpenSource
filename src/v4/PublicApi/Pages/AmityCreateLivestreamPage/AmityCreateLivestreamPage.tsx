@@ -460,6 +460,7 @@ function AmityCreateLivestreamPage() {
                   style={styles.descriptionInput}
                   multiline
                   scrollEnabled
+                  blurOnSubmit={true}
                   placeholder="Add description (optional)"
                   placeholderTextColor={'rgba(255, 255, 255, 0.8)'}
                   onChangeText={(text) => setDescription(text)}

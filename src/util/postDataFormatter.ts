@@ -9,6 +9,7 @@ export const amityPostsFormatter = async (
     posts.map(async (item: Amity.Post<any>) => {
       const { userObject } = await getAmityUser(item.postedUserId);
       return {
+        ...item,
         postId: item.postId,
         data: item.data as Record<string, any>,
         dataType: item?.dataType ?? 'text',
