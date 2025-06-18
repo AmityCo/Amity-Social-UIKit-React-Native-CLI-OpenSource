@@ -15,6 +15,14 @@ export const useStyles = (theme: MyMD3Theme) => {
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: theme.colors.primary,
+      elevation: 4,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
     },
   });
 };

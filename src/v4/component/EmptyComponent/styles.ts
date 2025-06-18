@@ -7,7 +7,7 @@ export const useStyle = (theme: MyMD3Theme) => {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 16,
+      gap: 4,
       flexDirection: 'column',
     },
     title: {

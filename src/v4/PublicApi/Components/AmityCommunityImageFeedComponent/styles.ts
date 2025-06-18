@@ -1,9 +1,12 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 
 export const useStyles = () => {
+  const { height: screenHeight } = Dimensions.get('window');
+
   const styles = StyleSheet.create({
     otherStatesContainer: {
-      paddingTop: 48,
+      height: screenHeight * 0.5,
+      paddingHorizontal: 24,
     },
     communityNameWrap: {
       flexDirection: 'row',

@@ -76,8 +76,9 @@ const AmityCommunityFeedComponent = forwardRef<
     return (
       <View style={styles.listContainer}>
         <EmptyComponent
-          title="You need to join this community to see the posts"
-          icon={emptyPost}
+          title="This community is private"
+          description="Join this community to see its content and members."
+          icon={privateFeed}
           themeStyle={themeStyles}
         />
       </View>
@@ -93,7 +94,7 @@ const AmityCommunityFeedComponent = forwardRef<
       <View style={styles.listContainer}>
         <EmptyComponent
           title="No posts yet"
-          icon={privateFeed}
+          icon={emptyPost}
           themeStyle={themeStyles}
         />
       </View>

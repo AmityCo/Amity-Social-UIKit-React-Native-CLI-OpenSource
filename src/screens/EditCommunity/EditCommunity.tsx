@@ -76,7 +76,7 @@ const EditCommunity = ({ navigation, route }) => {
       } finally {
         setLoading(false);
         navigation.navigate({
-          name: 'CommunityHome',
+          name: 'CommunityProfilePage',
           params: {
             communityId: data.communityId,
             communityName: communityDetail.displayName,

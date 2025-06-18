@@ -3,6 +3,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Modal,
   Pressable,
   StyleSheet,
   View,
@@ -116,16 +117,23 @@ const VideoGallery: FC<VideoGalleryProps> = ({
         style={styles.container}
       />
       {openVideoViewer && (
-        <VideoPlayer
-          onBack={() => setOpenVideoViewer(false)}
-          fullscreen={true}
-          playWhenInactive={false}
-          playInBackground={false}
-          source={{
-            uri: posts[currentImageIndex].getVideoInfo().fileUrl,
-          }}
-          fullscreenOrientation="all"
-        />
+        <Modal
+          visible={openVideoViewer}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setOpenVideoViewer(false)}
+        >
+          <VideoPlayer
+            onBack={() => setOpenVideoViewer(false)}
+            fullscreen={true}
+            playWhenInactive={false}
+            playInBackground={false}
+            source={{
+              uri: posts[currentImageIndex].getVideoInfo().fileUrl,
+            }}
+            fullscreenOrientation="all"
+          />
+        </Modal>
       )}
     </>
   );

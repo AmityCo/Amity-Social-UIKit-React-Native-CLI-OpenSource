@@ -53,7 +53,8 @@ const AmityCommunityVideoFeedComponent = forwardRef<
     return (
       <View style={styles.otherStatesContainer}>
         <EmptyComponent
-          title="You need to join this community to see the posts"
+          title="This community is private"
+          description="Join this community to see its content and members."
           icon={privateFeed}
           themeStyle={themeStyles}
         />
