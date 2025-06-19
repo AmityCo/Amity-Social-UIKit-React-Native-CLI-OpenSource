@@ -73,7 +73,7 @@ const VideoGallery: FC<VideoGalleryProps> = ({
         testID={accessibilityId}
         data={posts}
         scrollEnabled={false}
-        keyExtractor={(item) => item.data.fileId}
+        keyExtractor={(item, index) => item.data.fileId + index.toString()}
         renderItem={({
           item,
           index,
