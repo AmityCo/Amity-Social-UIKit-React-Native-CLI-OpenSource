@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   Alert,
   Image,
@@ -15,12 +21,7 @@ import {
   AmityStreamBroadcasterState,
   AmityVideoBroadcaster,
 } from '@amityco/video-broadcaster-react-native';
-import {
-  RouteProp,
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
 import { arrowDown } from '../../../../v4/assets/icons';
 import { SvgXml } from 'react-native-svg';
@@ -274,13 +275,11 @@ function AmityCreateLivestreamPage() {
     return () => unsubscribe();
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      setTimeout(() => {
-        streamRef.current && streamRef.current.switchCamera();
-      }, 100);
-    }, [streamRef])
-  );
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      streamRef.current && streamRef.current.switchCamera();
+    }, 300);
+  }, [streamRef]);
 
   useEffect(() => {
     let threeMinutesTimeout: NodeJS.Timeout | null = null;
