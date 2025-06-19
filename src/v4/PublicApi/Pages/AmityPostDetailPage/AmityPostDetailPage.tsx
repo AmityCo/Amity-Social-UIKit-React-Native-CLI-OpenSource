@@ -77,6 +77,8 @@ import {
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ErrorComponent from '../../../component/ErrorComponent/ErrorComponent';
+import { getSkeletonBackgrounColor } from '../../../../util/colorUtil';
+import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 
 type AmityPostDetailPageType = {
   postId: Amity.Post['postId'];
@@ -101,6 +103,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
   const styles = useStyles(themeStyles);
   const [postData, setPostData] = useState<Amity.Post>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [replyUserName, setReplyUserName] = useState<string>('');
   const [replyCommentId, setReplyCommentId] = useState<string>('');
@@ -285,12 +288,12 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
             style={[
               styles.modalContent,
               modalStyle,
-              (postData?.user?.userId === myId || isIAmModerator) &&
+              (postData?.creator?.userId === myId || isIAmModerator) &&
                 styles.twoOptions,
             ]}
           >
             <View style={styles.handleBar} />
-            {postData?.user?.userId === myId ? (
+            {postData?.creator?.userId === myId ? (
               <TouchableOpacity
                 onPress={openEditPostModal}
                 style={styles.modalRow}
@@ -300,7 +303,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
                   width="20"
                   height="20"
                 />
-                <Text style={styles.deleteText}> Edit Post</Text>
+                <Text style={styles.optionText}> Edit Post</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -312,12 +315,12 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
                   width="20"
                   height="20"
                 />
-                <Text style={styles.deleteText}>
+                <Text style={styles.optionText}>
                   {isReportByMe ? 'Unreport post' : 'Report post'}
                 </Text>
               </TouchableOpacity>
             )}
-            {(postData?.user?.userId === myId || isIAmModerator) && (
+            {(postData?.creator?.userId === myId || isIAmModerator) && (
               <TouchableOpacity
                 onPress={deletePostObject}
                 style={styles.modalRow}
@@ -342,12 +345,13 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
 
   useLayoutEffect(() => {
     if (!postId) return () => {};
+    setLoading(true);
     let unsub: () => void;
     let hasSubscribed = false;
     const postUnsub = PostRepository.getPost(
       postId,
-      async ({ error, loading, data }) => {
-        if (!error && !loading) {
+      async ({ error, loading: postLoading, data }) => {
+        if (!error && !postLoading) {
           if (!hasSubscribed) {
             unsub = subscribeTopic(
               getPostTopic(data, SubscriptionLevels.COMMENT)
@@ -357,6 +361,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
 
           setPostData(data);
         }
+        setLoading(postLoading);
       }
     );
 
@@ -544,7 +549,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     return (
       <ErrorComponent
         themeStyle={themeStyles}
-        onPress={() => navigation.goBack()}
+        onPress={onPressBack}
         title="Something went wrong"
         description="The content you're looking for is unavailable."
       />
@@ -568,27 +573,43 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
           },
         ]}
       >
-        <AmityPostCommentComponent
-          setReplyUserName={setReplyUserName}
-          setReplyCommentId={setReplyCommentId}
-          postId={postId}
-          communityId={
-            postData?.targetType === 'community' && postData?.targetId
-          }
-          postType="post"
-          disabledInteraction={false}
-          ListHeaderComponent={
-            postData && (
-              <AmityPostContentComponent
-                post={postData}
-                AmityPostContentComponentStyle={
-                  AmityPostContentComponentStyleEnum.detail
-                }
-                pageId={pageId}
-              />
-            )
-          }
-        />
+        {loading ? (
+          <View style={styles.skeletonContainer}>
+            <ContentLoader
+              speed={1}
+              {...getSkeletonBackgrounColor(themeStyles)}
+            >
+              <Circle cx="16" cy="16" r="16" />
+              <Rect x="40" y="4" width="180" height="8" rx="3" />
+              <Rect x="40" y="20" width="64" height="8" rx="3" />
+              <Rect x="0" y="56" width="240" height="8" rx="3" />
+              <Rect x="0" y="76" width="180" height="8" rx="3" />
+              <Rect x="0" y="96" width="300" height="8" rx="3" />
+            </ContentLoader>
+          </View>
+        ) : (
+          <AmityPostCommentComponent
+            setReplyUserName={setReplyUserName}
+            setReplyCommentId={setReplyCommentId}
+            postId={postId}
+            communityId={
+              postData?.targetType === 'community' && postData?.targetId
+            }
+            postType="post"
+            disabledInteraction={false}
+            ListHeaderComponent={
+              postData && (
+                <AmityPostContentComponent
+                  post={postData}
+                  AmityPostContentComponentStyle={
+                    AmityPostContentComponentStyleEnum.detail
+                  }
+                  pageId={pageId}
+                />
+              )
+            }
+          />
+        )}
       </View>
       <View
         style={styles.header}
