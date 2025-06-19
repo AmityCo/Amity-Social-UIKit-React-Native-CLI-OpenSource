@@ -138,6 +138,7 @@ export const useStyles = () => {
     communityName: {
       color: theme.colors.background,
       flex: 1,
+      textAlign: 'right',
     },
     connecting: {
       position: 'absolute',
