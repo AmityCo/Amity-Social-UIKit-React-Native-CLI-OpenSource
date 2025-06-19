@@ -15,7 +15,12 @@ import {
   AmityStreamBroadcasterState,
   AmityVideoBroadcaster,
 } from '@amityco/video-broadcaster-react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
 import { arrowDown } from '../../../../v4/assets/icons';
 import { SvgXml } from 'react-native-svg';
@@ -269,6 +274,14 @@ function AmityCreateLivestreamPage() {
     return () => unsubscribe();
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      setTimeout(() => {
+        streamRef.current && streamRef.current.switchCamera();
+      }, 100);
+    }, [streamRef])
+  );
+
   useEffect(() => {
     let threeMinutesTimeout: NodeJS.Timeout | null = null;
 
@@ -428,12 +441,14 @@ function AmityCreateLivestreamPage() {
                 activeOpacity={0.7}
               >
                 <Typography.Body
-                  style={styles.text}
+                  style={styles.communityName}
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
                   Live on{' '}
-                  <Typography.BodyBold>{targetName}</Typography.BodyBold>
+                  <Typography.BodyBold numberOfLines={1} ellipsizeMode="tail">
+                    {targetName}
+                  </Typography.BodyBold>
                 </Typography.Body>
                 <View>
                   <SvgXml

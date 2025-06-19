@@ -100,7 +100,7 @@ export const useStyles = () => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      gap: 16,
+      gap: 36,
     },
     inputContainer: {
       gap: 8,
@@ -134,6 +134,10 @@ export const useStyles = () => {
       gap: 8,
       justifyContent: 'flex-end',
       color: theme.colors.background,
+    },
+    communityName: {
+      color: theme.colors.background,
+      flex: 1,
     },
     connecting: {
       position: 'absolute',

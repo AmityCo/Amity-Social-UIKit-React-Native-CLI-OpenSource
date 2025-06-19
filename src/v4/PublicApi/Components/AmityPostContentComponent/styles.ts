@@ -212,8 +212,8 @@ export const useStyles = (theme: MyMD3Theme) => {
       minHeight: 375,
     },
     threeDots: {
-      width: 18,
-      height: 18,
+      width: 24,
+      height: 24,
       tintColor: theme.colors.base,
       resizeMode: 'contain',
     },

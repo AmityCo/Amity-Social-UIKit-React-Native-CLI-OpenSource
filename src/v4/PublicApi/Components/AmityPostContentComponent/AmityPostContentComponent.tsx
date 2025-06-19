@@ -278,12 +278,12 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
             style={[
               styles.modalContent,
               modalStyle,
-              (post?.user?.userId === myId || isIAmModerator) &&
+              (post?.creator?.userId === myId || isIAmModerator) &&
                 styles.twoOptions,
             ]}
           >
             <View style={styles.handleBar} />
-            {post?.user?.userId === (client as Amity.Client).userId ? (
+            {post?.creator?.userId === myId ? (
               <TouchableOpacity
                 onPress={openEditPostModal}
                 style={styles.modalRow}
@@ -310,7 +310,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
                 </Text>
               </TouchableOpacity>
             )}
-            {(post?.user?.userId === myId || isIAmModerator) && (
+            {(post?.creator?.userId === myId || isIAmModerator) && (
               <TouchableOpacity
                 onPress={deletePostObject}
                 style={styles.modalRow}
