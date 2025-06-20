@@ -1,11 +1,10 @@
 import React, { FC, memo } from 'react';
-import { Image, View, TouchableOpacity, Linking } from 'react-native';
+import { Image, View, TouchableOpacity, Linking, Text } from 'react-native';
 
 import { ComponentID, PageID } from '../../enum';
 import { useStyles } from './styles';
 import PostAdHeader from './PostAdHeader';
 import { useAmityComponent } from '../../hook';
-import { Text } from 'react-native-paper';
 import { infoIcon } from '../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import AdInformation from '../AdInformation/AdInformation';
