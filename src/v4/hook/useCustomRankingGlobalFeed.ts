@@ -4,9 +4,7 @@ import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import { RootState } from '../../redux/store';
-import { IPost } from '../../v4/PublicApi/Components/AmityPostContentComponent/AmityPostContentComponent';
 import { usePaginatorApi } from '../../v4/hook/usePaginator';
-// import { amityPostsFormatter } from '~/util/postDataFormatter';
 
 export const isAmityAd = (item: Amity.Post | Amity.Ad): item is Amity.Ad => {
   return (item as Amity.Ad)?.adId !== undefined;
@@ -21,12 +19,12 @@ export const useCustomRankingGlobalFeed = () => {
   const [fetching, setFetching] = useState(false);
   const postList = useSelector((state: RootState) => state.globalFeed.postList);
 
-  const { itemWithAds, reset } = usePaginatorApi<IPost | Amity.Ad>({
-    items: postList as (IPost | Amity.Ad)[],
+  const { itemWithAds, reset } = usePaginatorApi<Amity.Post | Amity.Ad>({
+    items: postList as (Amity.Post | Amity.Ad)[],
     isLoading: fetching,
     placement: 'feed' as Amity.AdPlacement,
     pageSize: globalFeedPageLimit,
-    getItemId: (item) => (item as IPost).postId.toString(),
+    getItemId: (item) => (item as Amity.Post).postId.toString(),
   });
 
   const processPosts = async (posts: Amity.Post[]) => {
@@ -40,7 +38,8 @@ export const useCustomRankingGlobalFeed = () => {
                 if (!error && !loading) {
                   if (
                     data?.dataType === 'image' ||
-                    data?.dataType === 'video'
+                    data?.dataType === 'video' ||
+                    data?.dataType === 'liveStream'
                   ) {
                     resolve(post);
                   } else {
@@ -105,7 +104,6 @@ export const useCustomRankingGlobalFeed = () => {
   );
 
   const refresh = async () => {
-    // dispatch(clearFeed());
     await fetch({ limit: globalFeedPageLimit });
     return true;
   };

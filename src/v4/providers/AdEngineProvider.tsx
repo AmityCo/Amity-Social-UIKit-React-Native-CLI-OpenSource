@@ -160,12 +160,14 @@ export const useRecommendAds = ({
 
   useEffect(() => {
     if (!adSettings?.enabled || ads.length === 0) {
+      setRecommendedAds([]);
       return;
     }
     if (
       adFrequency?.type === 'time-window' &&
       TimeWindowTracker.instance.hasReachedLimit(placement)
     ) {
+      setRecommendedAds([]);
       return;
     }
 

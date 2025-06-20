@@ -9,7 +9,7 @@ import { useStyles } from './styles';
 
 import { AmityStreamPlayer } from '@amityco/video-player-react-native';
 
-import LivestreamEndedView from '../../components/LivestreamSection/LivestreamEndedView';
+import LivestreamEndedView from '../../v4/component/LivestreamContent/LivestreamEndedThumbnail';
 import { Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon, playIcon, stopIcon } from '../../svg/svg-xml-list';

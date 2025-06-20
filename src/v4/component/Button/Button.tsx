@@ -11,9 +11,14 @@ import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
 import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
 
+export const enum BUTTON_SIZE {
+  SMALL = 'small',
+  LARGE = 'large',
+}
+
 export type ButtonProps = TouchableOpacityProps & {
   iconStyle?: StyleProp<ViewStyle>;
-  size?: 'small' | 'large';
+  size?: BUTTON_SIZE;
   type?: 'primary' | 'secondary' | 'inverse';
   icon?: React.ReactNode;
   children?: React.ReactNode;
@@ -27,7 +32,7 @@ export const Button = ({
   children,
   style,
   iconStyle,
-  size = 'large',
+  size = BUTTON_SIZE.LARGE,
   type = 'primary',
   textStyle,
   themeStyle,

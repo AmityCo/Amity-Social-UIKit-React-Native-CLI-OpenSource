@@ -36,7 +36,7 @@ export async function uploadFile(
 export async function uploadImageFile(
   filePath: string,
   perCentCallback?: (percent: number) => void
-): Promise<Amity.File<any>[]> {
+): Promise<Amity.File<'image'>[]> {
   return await new Promise(async (resolve, reject) => {
     const formData = new FormData();
     const parts = filePath.split('/');

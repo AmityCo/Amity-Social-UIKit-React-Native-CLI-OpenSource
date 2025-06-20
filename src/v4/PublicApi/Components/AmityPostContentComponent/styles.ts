@@ -5,9 +5,8 @@ export const useStyles = (theme: MyMD3Theme) => {
   const styles = StyleSheet.create({
     postWrap: {
       backgroundColor: theme.colors.background,
-      marginTop: 8,
-      paddingHorizontal: 16,
       paddingTop: 4,
+      paddingHorizontal: 16,
     },
     headerSection: {
       paddingVertical: 8,
@@ -24,7 +23,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       flex: 1,
     },
     headerTextContainer: {
-      maxWidth: '60%'
+      maxWidth: '60%',
     },
     headerText: {
       fontWeight: '600',
@@ -45,7 +44,7 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     bodySection: {
       justifyContent: 'center',
-      paddingVertical: 10,
+      paddingVertical: 4,
       minHeight: 45,
     },
     countSection: {
@@ -213,8 +212,8 @@ export const useStyles = (theme: MyMD3Theme) => {
       minHeight: 375,
     },
     threeDots: {
-      width: 18,
-      height: 18,
+      width: 24,
+      height: 24,
       tintColor: theme.colors.base,
       resizeMode: 'contain',
     },
@@ -262,7 +261,6 @@ export const useStyles = (theme: MyMD3Theme) => {
       flexDirection: 'row',
       alignItems: 'center',
     },
-
     dot: {
       color: theme.colors.baseShade1,
       fontWeight: '900',

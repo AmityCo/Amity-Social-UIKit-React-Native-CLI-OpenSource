@@ -33,10 +33,9 @@ const AmityRecommendedCommunityComponent: FC<
   const { recommendedCommunities } = useExplore();
 
   const onPressCommunity = useCallback(
-    ({ communityId, communityName }: { communityId; communityName }) => {
-      navigation.navigate('CommunityHome', {
+    ({ communityId }: { communityId: string }) => {
+      navigation.navigate('CommunityProfilePage', {
         communityId,
-        communityName,
       });
     },
     [navigation]
@@ -55,7 +54,6 @@ const AmityRecommendedCommunityComponent: FC<
             onPress={() =>
               onPressCommunity({
                 communityId: item.communityId,
-                communityName: item.displayName,
               })
             }
           >

@@ -12,6 +12,11 @@ export enum PageID {
   select_story_target_page = 'select_story_target_page',
   all_categories_page = 'all_categories_page',
   communities_by_category_page = 'communities_by_category_page',
+  community_profile_page = 'community_profile_page',
+  livestream_post_target_selection_page = 'livestream_post_target_selection_page',
+  create_livestream_page = 'create_livestream_page',
+  livestream_player_page = 'livestream_player_page',
+  livestream_terminated_page = 'livestream_terminated_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',
@@ -35,6 +40,12 @@ export enum ComponentID {
   explore_community_categories = 'explore_community_categories',
   recommended_communities = 'recommended_communities',
   trending_communities = 'trending_communities',
+  community_header = 'community_header',
+  community_feed = 'community_feed',
+  community_pin = 'community_pin',
+  community_image_feed = 'community_image_feed',
+  community_video_feed = 'community_video_feed',
+  thumbnail_action = 'thumbnail_action',
 }
 export enum ElementID {
   CloseBtn = 'close_button',
@@ -114,6 +125,25 @@ export enum ElementID {
   category_title = 'category_title',
   community_empty_title = 'community_empty_title',
   community_empty_image = 'community_empty_image',
+  community_cover = 'community_cover',
+  community_name = 'community_name',
+  community_verify_badge = 'community_verify_badge',
+  community_description = 'community_description',
+  community_info = 'community_info',
+  community_pending_post = 'community_pending_post',
+  community_profile_tab = 'community_profile_tab',
+  community_create_post_button = 'community_create_post_button',
+  non_member_section = 'non_member_section',
+  start_livestream_button = 'start_livestream_button',
+  add_thumbnail_button = 'add_thumbnail_button',
+  switch_camera_button = 'switch_camera_button',
+  end_live_stream_button = 'end_live_stream_button',
+  live_timer_status = 'live_timer_status',
+  total_view = 'total_view',
+  cancel_create_livestream_button = 'cancel_create_livestream_button',
+  livestream_terminated_action_button = 'livestream_terminated_action_button',
+  change_thumbnail_button = 'change_thumbnail_button',
+  delete_thumbnail_button = 'delete_thumbnail_button',
 }
 
 export interface UiKitConfigKeys {

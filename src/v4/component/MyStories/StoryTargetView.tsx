@@ -51,9 +51,8 @@ const StoryTargetView: FC<IStorytargetView> = ({
 
   const onPressCommunityName = useCallback(() => {
     setViewStory(false);
-    navigation.navigate('CommunityHome', {
+    navigation.navigate('CommunityProfilePage', {
       communityId: communityId,
-      communityName: '',
     });
   }, [communityId, navigation, setViewStory]);
 

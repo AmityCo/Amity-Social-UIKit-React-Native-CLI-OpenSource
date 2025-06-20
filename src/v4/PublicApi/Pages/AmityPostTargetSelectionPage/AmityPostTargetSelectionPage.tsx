@@ -65,8 +65,8 @@ const AmityPostTargetSelectionPage = ({
     }
 
     if (postType === AmityPostTargetSelectionPageType.livestream) {
-      if (AmityPostTargetSelectionPageBehavior.goToLivestreamComposerPage) {
-        return AmityPostTargetSelectionPageBehavior.goToLivestreamComposerPage({
+      if (AmityPostTargetSelectionPageBehavior.goToCreateLivestreamPage) {
+        return AmityPostTargetSelectionPageBehavior.goToCreateLivestreamPage({
           targetId,
           targetType,
           targetName,

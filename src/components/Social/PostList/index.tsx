@@ -33,7 +33,6 @@ import useAuth from '../../../hooks/useAuth';
 import EditPostModal from '../../../components/EditPostModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
-import MediaSection from '../../../components/MediaSection';
 import postDetailSlice from '../../../redux/slices/postDetailSlice';
 import { useDispatch } from 'react-redux';
 import globalFeedSlice from '../../../redux/slices/globalfeedSlice';
@@ -42,8 +41,7 @@ import feedSlice from '../../../redux/slices/feedSlice';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { useTimeDifference } from '../../../hooks/useTimeDifference';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { LinkPreview } from '../../../v4/component/PreviewLink/LinkPreview';
-import RenderTextWithMention from '../../../v4/component/RenderTextWithMention/RenderTextWithMention';
+import PostContent from '../../../v4/component/PostContent';
 
 export interface IPost {
   postId: string;
@@ -174,12 +172,12 @@ export default function PostList({
     if (targetType === 'community' && targetId) {
       unsubCommunity = CommunityRepository.getCommunity(
         targetId,
-        ({ error, loading, data }) => {
+        ({ error, loading, data: community }) => {
           if (error) return;
           if (!loading) {
-            setCommunityName(data.displayName);
-            setIsJoined(data.isJoined);
-            !data.isPublic && setPrivateCommunityId(data.communityId);
+            setCommunityName(community.displayName);
+            setIsJoined(community.isJoined);
+            !community.isPublic && setPrivateCommunityId(community.communityId);
           }
         }
       );
@@ -401,6 +399,14 @@ export default function PostList({
     });
   }, [navigation, postId]);
 
+  const onPressPost = () => {
+    navigation.navigate('PostDetail', {
+      postId: postDetail.postId,
+      postIndex: postIndex,
+      isFromGlobalfeed: isGlobalfeed,
+    });
+  };
+
   return (
     <View key={postId} style={styles.postWrap}>
       <View style={styles.headerSection}>
@@ -462,21 +468,13 @@ export default function PostList({
       </View>
       <View>
         <View style={styles.bodySection}>
-          {textPost && childrenPosts?.length === 0 && (
-            <LinkPreview
-              text={textPost}
-              mentionPositionArr={[...mentionPositionArr]}
-            />
-          )}
-          {textPost && childrenPosts?.length > 0 && (
-            <RenderTextWithMention
-              textPost={textPost}
-              mentionPositionArr={[...mentionPositionArr]}
-            />
-          )}
-          {childrenPosts?.length > 0 && !editPostModalVisible && (
-            <MediaSection childrenPosts={childrenPosts} />
-          )}
+          <PostContent
+            post={postDetail}
+            childrenPosts={childrenPosts}
+            textPost={textPost}
+            onPressPost={onPressPost}
+            mentionPositionArr={mentionPositionArr}
+          />
         </View>
 
         {likeReaction === 0 && commentsCount === 0 ? (

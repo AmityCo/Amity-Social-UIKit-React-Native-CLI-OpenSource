@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
 import { useAmityElement, useLeaveCommunity } from '../../hook';
-import { Button } from '../../component/Button/Button';
+import { Button, BUTTON_SIZE } from '../../component/Button/Button';
 import { SvgXml } from 'react-native-svg';
 import { check } from '../../assets/icons';
 
@@ -40,7 +40,7 @@ const CommunityJoinedButton: FC<CommunityJoinedButtonType> = ({
       themeStyle={themeStyles}
       onPress={handleLeaveCommunity}
       disabled={isPending}
-      size="small"
+      size={BUTTON_SIZE.SMALL}
       {...props}
     >
       {(config?.text as string) || 'Joined'}

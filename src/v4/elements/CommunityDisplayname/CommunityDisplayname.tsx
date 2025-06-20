@@ -35,7 +35,7 @@ const CommunityDisplayname: FC<CommunityDisplaynameProps> = ({
       numberOfLines={1}
       {...props}
     >
-      {communityName}
+      {communityName?.trim()}
     </Typography.TitleBold>
   );
 };

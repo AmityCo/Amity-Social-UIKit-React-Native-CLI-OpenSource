@@ -21,7 +21,7 @@ import config from '../../uikit.config.json';
   behaviour={{
     AmityPostTargetSelectionPageBehavior: {
       goToPostComposerPage: () => {},
-      goToLivestreamComposerPage: () => {},
+      goToCreateLivestreamPage: () => {},
       goToPollComposerPage: () => {},
     },
   }}

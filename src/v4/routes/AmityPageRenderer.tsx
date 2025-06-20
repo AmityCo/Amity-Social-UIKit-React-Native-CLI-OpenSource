@@ -28,7 +28,7 @@ import CreateCommunity from '../../screens/CreateCommunity';
 import PendingPosts from '../../screens/PendingPosts';
 import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
-import { Image, Text, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../svg/svg-xml-list';
 import { useStyles } from '../../routes/style';
@@ -55,7 +55,7 @@ import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent
 import LivestreamPlayer from '../../screens/LivestreamPlayer';
 
 interface PageRendererProps {
-  children: React.ReactElement
+  children: React.JSX.Element;
 }
 export default function PageRenderer({ children }: PageRendererProps) {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -81,7 +81,10 @@ export default function PageRenderer({ children }: PageRendererProps) {
                 color: theme.colors.base,
               },
             }}
-            initialRouteName={children.type?.displayName || children.type?.name as keyof RootStackParamList}
+            initialRouteName={
+              children.type?.displayName ||
+              (children.type?.name as keyof RootStackParamList)
+            }
           >
             <Stack.Screen
               name="Home"
@@ -102,29 +105,31 @@ export default function PageRenderer({ children }: PageRendererProps) {
                 headerShown: false,
               }}
             />
-            <Stack.Screen name="AmityExploreComponent" component={AmityExploreComponent}
+            <Stack.Screen
+              name="AmityExploreComponent"
+              component={AmityExploreComponent}
               options={{
                 headerShown: false,
-              }} />
+              }}
+            />
             <Stack.Screen
               name="PostDetail"
               options={{
                 headerShown: false,
               }}
               children={() => <PostDetail {...children.props} />}
-             />
-  
+            />
+
             <Stack.Screen
               name="CategoryList"
               component={CategoryList}
-              options={({ }) => ({
+              options={({}) => ({
                 title: 'Category',
               })}
             />
             <Stack.Screen
               name="CommunityHome"
               children={() => <CommunityHome {...children.props} />}
-
             />
             <Stack.Screen
               name="PendingPosts"
@@ -291,7 +296,7 @@ export default function PageRenderer({ children }: PageRendererProps) {
                 component={CreateLivestream}
                 options={{ headerShown: false }}
               />
-                 <Stack.Screen
+              <Stack.Screen
                 name="LivestreamPlayer"
                 component={LivestreamPlayer}
                 options={{ headerShown: false }}

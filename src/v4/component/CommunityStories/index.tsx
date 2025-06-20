@@ -17,24 +17,20 @@ import useConfig from '../../hook/useConfig';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import Modal from 'react-native-modalbox';
 import AmityViewStoryPage from '../../PublicApi/Pages/AmityViewStoryPage/AmityViewStoryPage';
+import { Typography } from '../Typography/Typography';
 
 interface ICommunityStories {
   communityId: string;
-  displayName: string;
-  avatarFileId: string;
+  community: Amity.Community;
 }
 
-const CommunityStories = ({
-  communityId,
-  displayName,
-  avatarFileId,
-}: ICommunityStories) => {
+const CommunityStories = ({ communityId, community }: ICommunityStories) => {
   const navigation =
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
   const styles = useStyles();
   const { getUiKitConfig } = useConfig();
   const hasStoryPermission = useStoryPermission(communityId);
-  const { getStoryTarget, storyTarget } = useStory();
+  const { getStoryTarget, storyTarget, stories, getStories } = useStory();
   const { getImage } = useFile();
   const [avatarUrl, setAvatarUrl] = useState(undefined);
   const [viewStory, setViewStory] = useState(false);
@@ -46,17 +42,20 @@ const CommunityStories = ({
       })?.progress_color as string[]) ?? ['#e2e2e2', '#e2e2e2']
     : storyTarget?.failedStoriesCount > 0
     ? ['#DE1029', '#DE1029']
-    : ['#e2e2e2', '#e2e2e2'];
+    : stories.length > 0
+    ? ['#e2e2e2', '#ffffff']
+    : ['#ffffff', '#ffffff'];
 
   useEffect(() => {
     (async () => {
       const avatarImage = await getImage({
-        fileId: avatarFileId,
+        fileId: community?.avatarFileId,
         imageSize: ImageSizeState.small,
+        type: 'community',
       });
       setAvatarUrl(avatarImage);
     })();
-  }, [avatarFileId, getImage]);
+  }, [community?.avatarFileId, getImage]);
 
   useFocusEffect(
     useCallback(() => {
@@ -64,7 +63,11 @@ const CommunityStories = ({
         targetId: communityId,
         targetType: 'community',
       });
-    }, [communityId, getStoryTarget])
+      getStories({
+        targetId: communityId,
+        targetType: 'community',
+      });
+    }, [communityId, getStoryTarget, getStories])
   );
 
   const onPressCreateStory = useCallback(() => {
@@ -85,73 +88,79 @@ const CommunityStories = ({
   }, [onPressCreateStory]);
   const onPressCommunityName = useCallback(() => {
     setViewStory(false);
-    navigation.navigate('CommunityHome', {
+    navigation.navigate('CommunityProfilePage', {
       communityId: communityId,
-      communityName: displayName,
     });
-  }, [communityId, displayName, navigation]);
+  }, [communityId, navigation]);
 
   const renderCommunityStory = () => {
-    if (storyTarget?.lastStoryExpiresAt) {
+    if (community?.isJoined) {
       return (
-        <TouchableOpacity
-          style={styles.avatarContainer}
-          onPress={onPressStoryView}
-        >
-          <Image
-            source={
-              avatarUrl
-                ? {
-                    uri: avatarUrl,
-                  }
-                : require('../../assets/images/Placeholder.png')
+        <>
+          <TouchableOpacity
+            style={styles.avatarContainer}
+            onPress={
+              storyTarget?.hasUnseen || stories.length > 0
+                ? onPressStoryView
+                : onPressCreateStory
             }
-            style={styles.communityAvatar}
-          />
-          <SvgXml
-            style={styles.storyRing}
-            width={48}
-            height={48}
-            xml={storyRing(storyRingColor[0], storyRingColor[1])}
-          />
-          {hasStoryPermission && (
-            <SvgXml
-              style={styles.storyCreateIcon}
-              xml={storyCircleCreatePlusIcon()}
+          >
+            <Image
+              source={
+                avatarUrl
+                  ? {
+                      uri: avatarUrl,
+                    }
+                  : require('../../assets/images/communityAvatar.png')
+              }
+              style={styles.communityAvatar}
             />
-          )}
-        </TouchableOpacity>
+            <SvgXml
+              style={styles.storyRing}
+              width={48}
+              height={48}
+              xml={storyRing(storyRingColor[0], storyRingColor[1])}
+            />
+            {hasStoryPermission && (
+              <SvgXml
+                style={styles.storyCreateIcon}
+                xml={storyCircleCreatePlusIcon()}
+              />
+            )}
+          </TouchableOpacity>
+          <Typography.Caption style={styles.base}>Story</Typography.Caption>
+        </>
       );
     }
-    if (hasStoryPermission) {
+    if (community?.isPublic && !community?.isJoined && stories.length > 0) {
       return (
-        <TouchableOpacity
-          style={styles.avatarContainer}
-          onPress={onPressCreateStory}
-        >
-          <Image
-            source={
-              avatarUrl
-                ? {
-                    uri: avatarUrl,
-                  }
-                : require('../../assets/images/Placeholder.png')
-            }
-            style={styles.communityAvatar}
-          />
-          <SvgXml
-            style={styles.storyRing}
-            width={48}
-            height={48}
-            xml={storyRing('#EBECEF', '#EBECEF')}
-          />
-          <SvgXml
-            style={styles.storyCreateIcon}
-            xml={storyCircleCreatePlusIcon()}
-          />
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity
+            style={styles.avatarContainer}
+            onPress={onPressStoryView}
+          >
+            <Image
+              source={
+                avatarUrl
+                  ? {
+                      uri: avatarUrl,
+                    }
+                  : require('../../assets/images/communityAvatar.png')
+              }
+              style={styles.communityAvatar}
+            />
+            <SvgXml
+              style={styles.storyRing}
+              width={48}
+              height={48}
+              xml={storyRing(storyRingColor[0], storyRingColor[1])}
+            />
+          </TouchableOpacity>
+          <Typography.Caption style={styles.base}>Story</Typography.Caption>
+        </>
       );
     }
+
     return null;
   };
 
@@ -163,9 +172,13 @@ const CommunityStories = ({
     });
   }, [communityId, getStoryTarget]);
 
+  if (community?.isPublic && !community?.isJoined && stories.length <= 0) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
-      {renderCommunityStory()}
+      <View style={styles.storyItemWrap}>{renderCommunityStory()}</View>
       <Modal
         style={styles.modal}
         isOpen={viewStory}

@@ -50,7 +50,7 @@ export default function MyCommunity() {
   );
 
   const onClickItem = (communityId: string, displayName: string) => {
-    navigation.navigate('CommunityHome', {
+    navigation.navigate('CommunityProfilePage', {
       communityId: communityId,
       communityName: displayName,
     });

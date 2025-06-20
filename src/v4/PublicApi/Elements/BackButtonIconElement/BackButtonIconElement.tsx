@@ -21,7 +21,7 @@ const BackButtonIconElement: FC<BackButtonIconElementType> = ({
 }) => {
   const { excludes } = useConfig();
   const elementID = ElementID.back_button;
-  const configKey: keyof UiKitConfigKeys = 'icon';
+  const configKey: keyof UiKitConfigKeys = 'image';
   const configId = `${pageID}/${componentID}/${elementID}`;
   const imageSource = useConfigImageUri({
     configPath: {

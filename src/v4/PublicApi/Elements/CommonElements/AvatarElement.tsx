@@ -62,9 +62,7 @@ const AvatarElement: FC<AvatarElementType> = ({
       source={{
         uri: avatarUrl,
         headers: {
-          Authorization: `Bearer ${
-            (client as Amity.Client)?.token?.accessToken
-          }`,
+          Authorization: `Bearer ${(client as Amity.Client).token.accessToken}`,
         },
       }}
       {...props}

@@ -10,6 +10,10 @@ export const useStyles = (theme: MyMD3Theme) => {
       flex: 1,
       backgroundColor: theme.colors.background,
     },
+    skeletonContainer: {
+      paddingVertical: 20,
+      paddingHorizontal: 16,
+    },
     header: {
       top: top,
       width: '100%',
@@ -192,10 +196,15 @@ export const useStyles = (theme: MyMD3Theme) => {
       marginVertical: 10,
       borderRadius: 10,
     },
-    deleteText: {
+    optionText: {
       paddingLeft: 12,
       fontWeight: '600',
       color: theme.colors.base,
+    },
+    deleteText: {
+      paddingLeft: 12,
+      fontWeight: '600',
+      color: theme.colors.alert,
     },
   });
 

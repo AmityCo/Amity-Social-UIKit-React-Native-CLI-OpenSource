@@ -163,9 +163,10 @@ export default function CreateCommunity() {
       };
       const isCreated = await createCommunity(communityParam);
       if (isCreated) {
-        navigation.navigate('CommunityHome', {
+        navigation.navigate('CommunityProfilePage', {
           communityId: isCreated.communityId,
           communityName: isCreated.displayName,
+          pop: 2,
         });
       }
     }

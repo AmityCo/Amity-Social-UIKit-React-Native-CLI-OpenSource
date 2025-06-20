@@ -1,4 +1,11 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   Text,
@@ -16,13 +23,11 @@ import {
   storyDraftDeletHyperLink,
 } from '../../../../svg/svg-xml-list';
 import { useStyles } from './styles';
-import type { UserInterface } from '../../../../types/user.interface';
 import { getCommunityById } from '../../../../providers/Social/communities-sdk';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
-import MediaSection from '../../../../components/MediaSection';
 import { IMentionPosition } from '../../../types/type';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { ComponentID, ElementID, PageID } from '../../../enum';
@@ -31,10 +36,7 @@ import { useAmityComponent, useIsCommunityModerator } from '../../../hook';
 import ModeratorBadgeElement from '../../Elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
-import { PostTargetType } from '../../../../enum/postTargetType';
 import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
-import { LinkPreview } from '../../../component/PreviewLink';
-import RenderTextWithMention from '../../../component/RenderTextWithMention/RenderTextWithMention';
 import MenuButtonIconElement from '../../Elements/MenuButtonIconElement/MenuButtonIconElement';
 import {
   deletePostById,
@@ -47,30 +49,14 @@ import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
 import { useDispatch } from 'react-redux';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import uiSlice from '../../../../redux/slices/uiSlice';
+import PostContent from '../../../../v4/component/PostContent';
 
-export interface IPost {
-  postId: string;
-  data: Record<string, any>;
-  dataType: string | undefined;
-  myReactions: string[];
-  reactionCount: Record<string, number>;
-  commentsCount: number;
-  user: UserInterface | undefined;
-  updatedAt: string | undefined;
-  editedAt: string | undefined;
-  createdAt: string;
-  targetType: PostTargetType;
-  targetId: string;
-  childrenPosts: string[];
-  mentionees: string[];
-  mentionPosition?: IMentionPosition[];
-  analytics: Amity.Post<'analytics'>;
-}
-export interface IPostList {
+type AmityPostContentComponentProps = {
   post: Amity.Post;
   pageId?: PageID;
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;
-}
+  isCommunityNameShown?: boolean;
+};
 export interface MediaUri {
   uri: string;
 }
@@ -80,12 +66,12 @@ export interface IVideoPost {
     original: string;
   };
 }
-const AmityPostContentComponent = ({
-  pageId,
+const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
+  pageId = PageID.WildCardPage,
   post,
   AmityPostContentComponentStyle = AmityPostContentComponentStyleEnum.detail,
-}: IPostList) => {
-
+  isCommunityNameShown = true,
+}) => {
   const theme = useTheme() as MyMD3Theme;
   const {
     AmityPostContentComponentBehavior,
@@ -110,6 +96,7 @@ const AmityPostContentComponent = ({
   const [mentionPositionArr, setMentionsPositionArr] = useState<
     IMentionPosition[]
   >([]);
+  const [postDataType, setPostDataType] = useState<'liveStream' | ''>('');
 
   const slideAnimation = useRef(new Animated.Value(0)).current;
 
@@ -131,11 +118,13 @@ const AmityPostContentComponent = ({
     communityId: targetType === 'community' && targetId,
     userId: creator?.userId,
   });
+
   const myId = (client as Amity.Client).userId;
   const { isCommunityModerator: isIAmModerator } = useIsCommunityModerator({
     communityId: targetType === 'community' && targetId,
     userId: myId,
   });
+
   useEffect(() => {
     if (mentionPosition) {
       setMentionsPositionArr(mentionPosition);
@@ -178,9 +167,8 @@ const AmityPostContentComponent = ({
         communityName: communityData?.displayName,
       });
     }
-    return navigation.navigate('CommunityHome', {
+    return navigation.navigate('CommunityProfilePage', {
       communityId: targetId,
-      communityName: communityData?.displayName,
     });
   };
 
@@ -291,23 +279,26 @@ const AmityPostContentComponent = ({
             style={[
               styles.modalContent,
               modalStyle,
-              (post?.user?.userId === myId || isIAmModerator) &&
-              styles.twoOptions,
+              (post?.creator?.userId === myId || isIAmModerator) &&
+                postDataType !== 'liveStream' &&
+                styles.twoOptions,
             ]}
           >
             <View style={styles.handleBar} />
-            {post?.user?.userId === (client as Amity.Client).userId ? (
-              <TouchableOpacity
-                onPress={openEditPostModal}
-                style={styles.modalRow}
-              >
-                <SvgXml
-                  xml={editIcon(themeStyles.colors.base)}
-                  width="20"
-                  height="20"
-                />
-                <Text style={styles.editText}> Edit Post</Text>
-              </TouchableOpacity>
+            {post?.creator?.userId === myId ? (
+              postDataType !== 'liveStream' && (
+                <TouchableOpacity
+                  onPress={openEditPostModal}
+                  style={styles.modalRow}
+                >
+                  <SvgXml
+                    xml={editIcon(themeStyles.colors.base)}
+                    width="20"
+                    height="20"
+                  />
+                  <Text style={styles.editText}>Edit Post</Text>
+                </TouchableOpacity>
+              )
             ) : (
               <TouchableOpacity
                 onPress={reportPostObject}
@@ -323,7 +314,7 @@ const AmityPostContentComponent = ({
                 </Text>
               </TouchableOpacity>
             )}
-            {(post?.user?.userId === myId || isIAmModerator) && (
+            {(post?.creator?.userId === myId || isIAmModerator) && (
               <TouchableOpacity
                 onPress={deletePostObject}
                 style={styles.modalRow}
@@ -333,7 +324,7 @@ const AmityPostContentComponent = ({
                   width="20"
                   height="20"
                 />
-                <Text style={styles.deleteText}> Delete Post</Text>
+                <Text style={styles.deleteText}>Delete Post</Text>
               </TouchableOpacity>
             )}
           </Animated.View>
@@ -371,7 +362,9 @@ const AmityPostContentComponent = ({
           <View style={styles.fillSpace}>
             <View style={styles.headerRow}>
               <TouchableOpacity
-                style={targetType === 'community' ? styles.headerTextContainer : {}}
+                style={
+                  targetType === 'community' ? styles.headerTextContainer : {}
+                }
                 onPress={handleDisplayNamePress}
               >
                 <Text
@@ -383,7 +376,7 @@ const AmityPostContentComponent = ({
                 </Text>
               </TouchableOpacity>
 
-              {communityData?.displayName && (
+              {communityData?.displayName && isCommunityNameShown && (
                 <View style={styles.communityNameContainer}>
                   <SvgXml
                     style={styles.arrow}
@@ -432,7 +425,7 @@ const AmityPostContentComponent = ({
           </View>
         </View>
         {AmityPostContentComponentStyle ===
-          AmityPostContentComponentStyleEnum.feed ? (
+        AmityPostContentComponentStyleEnum.feed ? (
           <Pressable onPress={openModal} hitSlop={12}>
             <MenuButtonIconElement
               pageID={pageId}
@@ -446,21 +439,14 @@ const AmityPostContentComponent = ({
       </Pressable>
       <View>
         <View style={styles.bodySection}>
-          <Pressable onPress={onPressPost}>
-            {textPost && children?.length === 0 && (
-              <LinkPreview
-                text={textPost}
-                mentionPositionArr={[...mentionPositionArr]}
-              />
-            )}
-            {textPost && children?.length > 0 && (
-              <RenderTextWithMention
-                textPost={textPost}
-                mentionPositionArr={[...mentionPositionArr]}
-              />
-            )}
-          </Pressable>
-          {children?.length > 0 && <MediaSection childrenPosts={children} />}
+          <PostContent
+            post={post}
+            textPost={textPost}
+            childrenPosts={children}
+            onPressPost={onPressPost}
+            setPostDataType={setPostDataType}
+            mentionPositionArr={mentionPositionArr}
+          />
         </View>
         <AmityPostEngagementActionsComponent
           pageId={pageId}

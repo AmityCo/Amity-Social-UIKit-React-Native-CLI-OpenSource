@@ -10,10 +10,8 @@ import {
 } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
 import useAuth from '../../hooks/useAuth';
-import Explore from '../../screens/Explore';
 import CategoryList from '../../screens/CategorytList';
 import CommunityList from '../../screens/CommunityList';
-import CommunityHome from '../screen/CommunityHome';
 import { CommunitySetting } from '../../screens/CommunitySetting/index';
 import CommunityMemberDetail from '../../screens/CommunityMemberDetail/CommunityMemberDetail';
 import AmitySocialHomePage from '../PublicApi/Pages/AmitySocialHomePage/AmitySocialHomePage';
@@ -28,7 +26,7 @@ import CreateCommunity from '../../screens/CreateCommunity';
 import PendingPosts from '../../screens/PendingPosts';
 import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
-import { Image, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../svg/svg-xml-list';
 import { useStyles } from '../../routes/style';
@@ -45,13 +43,17 @@ import UserPendingRequest from '../screen/UserPendingRequest/UserPendingRequest'
 import FollowerList from '../screen/FollowerList/FollowerList';
 import CancelButton from '../component/CancelButton';
 import AmityMyCommunitiesSearchPage from '../PublicApi/Pages/AmityMyCommunitiesSearchPage/AmityMyCommunitiesSearchPage';
-import CreateLivestream from '../../screens/CreateLivestream/CreateLivestream';
+import CreateLivestream from '../screen/CreateLivestream';
 import PostTargetSelection from '../screen/PostTargetSelection';
 import StoryTargetSelection from '../PublicApi/Pages/AmityStoryTargetSelectionPage/AmityStoryTargetSelectionPage';
+import LivestreamPostTargetSelection from '../screen/LivestreamPostTargetSelection';
 import AmityAllCategoriesPage from '../PublicApi/Pages/AmityAllCategoriesPage/AmityAllCategoriesPage';
 import AmityCommunitiesByCategoryPage from '../PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
+import AmityCommunityProfilePage from '../PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
 import EditPost from '../screen/EditPost/EditPost';
 import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
+import LivestreamPlayer from '../screen/LivestreamPlayer';
+import LivestreamTerminated from '../screen/LivestreamTerminated';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -97,7 +99,10 @@ export default function AmitySocialUIKitV4Navigator() {
                 headerShown: false,
               }}
             />
-            <Stack.Screen name="AmityExploreComponent" component={AmityExploreComponent} />
+            <Stack.Screen
+              name="AmityExploreComponent"
+              component={AmityExploreComponent}
+            />
             <Stack.Screen
               name="PostDetail"
               component={PostDetail}
@@ -110,36 +115,6 @@ export default function AmitySocialUIKitV4Navigator() {
               component={CategoryList}
               options={({}) => ({
                 title: 'Category',
-              })}
-            />
-            <Stack.Screen
-              name="CommunityHome"
-              component={CommunityHome}
-              options={({
-                navigation,
-                route: {
-                  params: { communityName, communityId, isModerator },
-                },
-              }: any) => ({
-                headerLeft: () => <BackButton goBack={true} />,
-                title: communityName,
-                headerRight: () => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      // Handle button press here
-                      navigation.navigate('CommunitySetting', {
-                        communityId: communityId,
-                        communityName: communityName,
-                        isModerator: isModerator,
-                      });
-                    }}
-                  >
-                    <Image
-                      source={require('../assets/images/threeDot.png')}
-                      style={styles.dotIcon}
-                    />
-                  </TouchableOpacity>
-                ),
               })}
             />
             <Stack.Screen
@@ -221,8 +196,9 @@ export default function AmitySocialUIKitV4Navigator() {
               name="UserProfile"
               component={UserProfile}
               options={{
-                title: '',
                 headerLeft: () => <BackButton />,
+                headerTitleAlign: 'center',
+                title: 'Member',
               }}
             />
             <Stack.Screen name="EditProfile" component={EditProfile} />
@@ -278,6 +254,13 @@ export default function AmitySocialUIKitV4Navigator() {
                 headerShown: false,
               }}
             />
+            <Stack.Screen
+              name="CommunityProfilePage"
+              component={AmityCommunityProfilePage}
+              options={{
+                headerShown: false,
+              }}
+            />
             <Stack.Group
               screenOptions={{
                 headerShown: false,
@@ -303,8 +286,22 @@ export default function AmitySocialUIKitV4Navigator() {
                 component={StoryTargetSelection}
               />
               <Stack.Screen
+                name="LivestreamPostTargetSelection"
+                component={LivestreamPostTargetSelection}
+              />
+              <Stack.Screen
                 name="CreateLivestream"
                 component={CreateLivestream}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="LivestreamPlayer"
+                component={LivestreamPlayer}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="LivestreamTerminated"
+                component={LivestreamTerminated}
                 options={{ headerShown: false }}
               />
             </Stack.Group>

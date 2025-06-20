@@ -34,23 +34,33 @@ const AmityCreatePostMenuComponent = ({
 
   const onPressCreatePost = useCallback(
     (postType: AmityPostTargetSelectionPageType) => {
-      if (postType !== AmityPostTargetSelectionPageType.story) {
-        if (AmityCreatePostMenuComponentBehavior.goToSelectPostTargetPage) {
-          return AmityCreatePostMenuComponentBehavior.goToSelectPostTargetPage({
-            postType,
-          });
-        }
+      const postTypeHandlers = {
+        [AmityPostTargetSelectionPageType.post]: () => {
+          if (AmityCreatePostMenuComponentBehavior.goToSelectPostTargetPage) {
+            AmityCreatePostMenuComponentBehavior.goToSelectPostTargetPage({
+              postType,
+            });
+          }
+          navigation.navigate('PostTargetSelection', { postType });
+        },
 
-        return navigation.navigate('PostTargetSelection', {
-          postType,
-        });
-      }
+        [AmityPostTargetSelectionPageType.story]: () => {
+          if (AmityCreatePostMenuComponentBehavior.goToSelectStoryTargetPage) {
+            AmityCreatePostMenuComponentBehavior.goToSelectStoryTargetPage();
+          }
+          navigation.navigate('StoryTargetSelection');
+        },
 
-      if (AmityCreatePostMenuComponentBehavior.goToSelectStoryTargetPage) {
-        return AmityCreatePostMenuComponentBehavior.goToSelectStoryTargetPage();
-      }
-
-      navigation.navigate('StoryTargetSelection');
+        [AmityPostTargetSelectionPageType.livestream]: () => {
+          if (
+            AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage
+          ) {
+            AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage();
+          }
+          navigation.navigate('LivestreamPostTargetSelection');
+        },
+      };
+      postTypeHandlers[postType]?.();
     },
     [AmityCreatePostMenuComponentBehavior, navigation]
   );
@@ -76,7 +86,7 @@ const AmityCreatePostMenuComponent = ({
         componentId={componentId}
         elementId={ElementID.create_poll_button}
         onClick={() => onPressCreatePost(AmityPostTargetSelectionPageType.poll)}
-      />
+      /> */}
       <ButtonWithIconElement
         pageId={pageId}
         componentId={componentId}
@@ -84,7 +94,7 @@ const AmityCreatePostMenuComponent = ({
         onClick={() =>
           onPressCreatePost(AmityPostTargetSelectionPageType.livestream)
         }
-      /> */}
+      />
     </View>
   );
 };

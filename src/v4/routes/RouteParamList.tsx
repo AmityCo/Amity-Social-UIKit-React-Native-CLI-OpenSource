@@ -43,6 +43,7 @@ export type RootStackParamList = {
   };
   PostDetail: {
     postId: string;
+    showEndPopup?: boolean;
   };
   UserProfile: {
     userId: string;
@@ -55,7 +56,7 @@ export type RootStackParamList = {
     user: Amity.User;
   };
   EditCommunity: {
-    communityId: string;
+    communityData: Amity.Community;
   };
   AllMyCommunity: undefined;
   CreateCommunity: undefined;
@@ -70,14 +71,27 @@ export type RootStackParamList = {
   FollowerList: Amity.User;
   PostTargetSelection: { postType: AmityPostTargetSelectionPageType };
   StoryTargetSelection: undefined;
-  CreateLivestream: {
-    targetId: string;
-    targetName: string;
-    targetType: string;
-  };
+
   AllCategoriesPage: undefined;
   CommunitiesByCategoryPage: {
     category: Amity.Category;
   };
-  LivestreamPlayer: { streamId: string };
+  LivestreamPostTargetSelection: undefined;
+  CreateLivestream: {
+    pop?: number;
+    targetId: string;
+    targetName: string;
+    targetType: string;
+  };
+  LivestreamPlayer: {
+    streamId: string;
+    post: Amity.Post;
+  };
+  LivestreamTerminated: {
+    type: 'streamer' | 'viewer';
+  };
+  CommunityProfilePage: {
+    communityId: string;
+    pop?: number;
+  };
 };
