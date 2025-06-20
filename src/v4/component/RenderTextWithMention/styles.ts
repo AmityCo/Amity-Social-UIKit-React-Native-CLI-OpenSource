@@ -14,6 +14,9 @@ export const useStyles = () => {
       color: theme.colors.base,
       fontSize: 15,
     },
+    bold: {
+      fontWeight: '600',
+    },
     moreLessButton: {
       fontWeight: 'normal',
       color: theme.colors.primary,

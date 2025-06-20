@@ -76,14 +76,21 @@ import {
 } from '../../../../constants';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ErrorComponent from '../../../component/ErrorComponent/ErrorComponent';
+import { getSkeletonBackgrounColor } from '../../../../util/colorUtil';
+import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 
 type AmityPostDetailPageType = {
   postId: Amity.Post['postId'];
   isFromComponent?: boolean;
+  showEndPopup?: boolean;
 };
 
-const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromComponent }) => {
-  
+const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
+  postId,
+  isFromComponent,
+  showEndPopup,
+}) => {
   const { top, bottom } = useSafeAreaInsets();
   const { height } = useWindowDimensions();
 
@@ -98,6 +105,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromCompon
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
   const styles = useStyles(themeStyles);
   const [postData, setPostData] = useState<Amity.Post>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [replyUserName, setReplyUserName] = useState<string>('');
   const [replyCommentId, setReplyCommentId] = useState<string>('');
@@ -117,6 +125,9 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromCompon
   const [footerHeight, setFooterHeight] = useState(0);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [showLivestreamEndPopup, setShowLivestreamEndPopup] = useState<boolean>(
+    showEndPopup || false
+  );
 
   const adjustedHeight =
     height -
@@ -282,12 +293,12 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromCompon
             style={[
               styles.modalContent,
               modalStyle,
-              (postData?.user?.userId === myId || isIAmModerator) &&
-              styles.twoOptions,
+              (postData?.creator?.userId === myId || isIAmModerator) &&
+                styles.twoOptions,
             ]}
           >
             <View style={styles.handleBar} />
-            {postData?.user?.userId === myId ? (
+            {postData?.creator?.userId === myId ? (
               <TouchableOpacity
                 onPress={openEditPostModal}
                 style={styles.modalRow}
@@ -297,7 +308,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromCompon
                   width="20"
                   height="20"
                 />
-                <Text style={styles.deleteText}> Edit Post</Text>
+                <Text style={styles.optionText}> Edit Post</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -309,12 +320,12 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromCompon
                   width="20"
                   height="20"
                 />
-                <Text style={styles.deleteText}>
+                <Text style={styles.optionText}>
                   {isReportByMe ? 'Unreport post' : 'Report post'}
                 </Text>
               </TouchableOpacity>
             )}
-            {(postData?.user?.userId === myId || isIAmModerator) && (
+            {(postData?.creator?.userId === myId || isIAmModerator) && (
               <TouchableOpacity
                 onPress={deletePostObject}
                 style={styles.modalRow}
@@ -338,13 +349,14 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromCompon
   };
 
   useLayoutEffect(() => {
-    if (!postId) return () => { };
+    if (!postId) return () => {};
+    setLoading(true);
     let unsub: () => void;
     let hasSubscribed = false;
     const postUnsub = PostRepository.getPost(
       postId,
-      async ({ error, loading, data }) => {
-        if (!error && !loading) {
+      async ({ error, loading: postLoading, data }) => {
+        if (!error && !postLoading) {
           if (!hasSubscribed) {
             unsub = subscribeTopic(
               getPostTopic(data, SubscriptionLevels.COMMENT)
@@ -354,6 +366,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromCompon
 
           setPostData(data);
         }
+        setLoading(postLoading);
       }
     );
 
@@ -380,14 +393,12 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromCompon
     if (isFromComponent && routes.length === 1) {
       navigation.navigate('Home');
     } else {
-   
       if (routes[routes.length - 2]?.name === 'CreateLivestream')
         return navigation.pop(3);
       navigation.goBack();
     }
     // if the previous screen is CreateLivestream, skip createLivestream and selectTarget screen
-
-  }, [navigation]);
+  }, [navigation, isFromComponent]);
 
   const onCloseReply = () => {
     setReplyUserName('');
@@ -537,7 +548,37 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromCompon
     themeStyles,
   ]);
 
+  const renderLivestreamEndPopup = () => {
+    Alert.alert(
+      'Live stream ended',
+      'Your live stream has been automatically terminated since you reached 4-hour limit.',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            setShowLivestreamEndPopup(false);
+          },
+        },
+      ]
+    );
+  };
+
+  useEffect(() => {
+    showLivestreamEndPopup && renderLivestreamEndPopup();
+  }, [showLivestreamEndPopup]);
+
   if (isExcluded) return null;
+
+  if (postData?.isDeleted) {
+    return (
+      <ErrorComponent
+        themeStyle={themeStyles}
+        onPress={onPressBack}
+        title="Something went wrong"
+        description="The content you're looking for is unavailable."
+      />
+    );
+  }
 
   return (
     <SafeAreaView testID={accessibilityId} style={styles.container}>
@@ -548,35 +589,51 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({ postId, isFromCompon
             paddingTop: topBarHeigh,
             paddingBottom: isKeyboardVisible
               ? (Platform.OS !== 'android' ? keyboardHeight : 0) +
-              footerHeight -
-              topBarHeigh -
-              bottom
+                footerHeight -
+                topBarHeigh -
+                bottom
               : footerHeight - topBarHeigh,
             height: adjustedHeight,
           },
         ]}
       >
-        <AmityPostCommentComponent
-          setReplyUserName={setReplyUserName}
-          setReplyCommentId={setReplyCommentId}
-          postId={postId}
-          communityId={
-            postData?.targetType === 'community' && postData?.targetId
-          }
-          postType="post"
-          disabledInteraction={false}
-          ListHeaderComponent={
-            postData && (
-              <AmityPostContentComponent
-                post={postData}
-                AmityPostContentComponentStyle={
-                  AmityPostContentComponentStyleEnum.detail
-                }
-                pageId={pageId}
-              />
-            )
-          }
-        />
+        {loading ? (
+          <View style={styles.skeletonContainer}>
+            <ContentLoader
+              speed={1}
+              {...getSkeletonBackgrounColor(themeStyles)}
+            >
+              <Circle cx="16" cy="16" r="16" />
+              <Rect x="40" y="4" width="180" height="8" rx="3" />
+              <Rect x="40" y="20" width="64" height="8" rx="3" />
+              <Rect x="0" y="56" width="240" height="8" rx="3" />
+              <Rect x="0" y="76" width="180" height="8" rx="3" />
+              <Rect x="0" y="96" width="300" height="8" rx="3" />
+            </ContentLoader>
+          </View>
+        ) : (
+          <AmityPostCommentComponent
+            setReplyUserName={setReplyUserName}
+            setReplyCommentId={setReplyCommentId}
+            postId={postId}
+            communityId={
+              postData?.targetType === 'community' && postData?.targetId
+            }
+            postType="post"
+            disabledInteraction={false}
+            ListHeaderComponent={
+              postData && (
+                <AmityPostContentComponent
+                  post={postData}
+                  AmityPostContentComponentStyle={
+                    AmityPostContentComponentStyleEnum.detail
+                  }
+                  pageId={pageId}
+                />
+              )
+            }
+          />
+        )}
       </View>
       <View
         style={styles.header}

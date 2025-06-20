@@ -6,6 +6,15 @@ export const useStyles = (theme: MyMD3Theme) => {
     container: {
       flexDirection: 'row',
       gap: 4,
+      width: '100%',
+    },
+    scrollableContainer: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    allVisible: {
+      flexWrap: 'nowrap',
+      overflow: 'scroll',
     },
     chipContainer: {
       backgroundColor: theme.colors.baseShade4,

@@ -18,7 +18,7 @@ import ImageView from '../../components/react-native-image-viewing/dist';
 import { RootState } from '../../redux/store';
 import { playBtn } from '../../svg/svg-xml-list';
 import PollSection from '../PollSection/PollSection';
-import LivestreamSection from '../LivestreamSection';
+import LivestreamContent from '../../v4/component/LivestreamContent';
 
 interface IMediaSection {
   childrenPosts: string[];
@@ -267,7 +267,11 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
       {pollIds.length > 0 ? (
         <PollSection pollId={pollIds[0].pollId} />
       ) : livestreamId.length > 0 ? (
-        <LivestreamSection streamId={livestreamId[0]} />
+        <LivestreamContent
+          streamId={livestreamId[0]}
+          post={null}
+          onPressPost={() => {}}
+        />
       ) : (
         renderMediaPosts()
       )}

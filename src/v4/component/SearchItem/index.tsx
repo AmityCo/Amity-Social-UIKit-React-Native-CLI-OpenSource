@@ -38,9 +38,8 @@ export default function SearchItem({
     }
     if (userProfileNavigateEnabled) {
       if (target.targetType === 'community') {
-        navigation.navigate('CommunityHome', {
+        navigation.navigate('CommunityProfilePage', {
           communityId: target.targetId,
-          communityName: target.displayName,
         });
       } else {
         navigation.navigate('UserProfile', {

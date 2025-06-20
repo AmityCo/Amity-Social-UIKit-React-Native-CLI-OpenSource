@@ -31,8 +31,8 @@ const CommunityPrivateBadge: FC<CommunityPrivateBadgeProps> = ({
 
   const styles = StyleSheet.create({
     image: {
-      width: 20,
-      height: 20,
+      width: 24,
+      height: 24,
       tintColor: themeStyles.colors.base,
     },
   });

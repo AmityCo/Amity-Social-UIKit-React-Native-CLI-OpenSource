@@ -18,5 +18,8 @@ export const useStyle = (theme: MyMD3Theme) => {
       color: theme.colors.baseShade3,
       textAlign: 'center',
     },
+    button: {
+      alignSelf: 'center',
+    },
   });
 };

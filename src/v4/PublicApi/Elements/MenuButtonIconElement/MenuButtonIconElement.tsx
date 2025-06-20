@@ -21,7 +21,7 @@ const MenuButtonIconElement: FC<MenuButtonIconElementType> = ({
 }) => {
   const { excludes } = useConfig();
   const elementID = ElementID.menu_button;
-  const configKey: keyof UiKitConfigKeys = 'icon';
+  const configKey: keyof UiKitConfigKeys = 'image';
   const configId = `${pageID}/${componentID}/${elementID}`;
   const imageSource = useConfigImageUri({
     configPath: {
@@ -31,6 +31,7 @@ const MenuButtonIconElement: FC<MenuButtonIconElementType> = ({
     },
     configKey: configKey,
   });
+
   if (excludes.includes(configId)) return null;
 
   return (

@@ -1,0 +1,353 @@
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import {
+  Image,
+  ImageStyle,
+  Pressable,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import { useStyles } from './styles';
+import useAuth from '../../../hooks/useAuth';
+import { IVideoPost, MediaUri } from '../../../components/Social/PostList';
+import { getPostById } from '../../../providers/Social/feed-sdk';
+import { useSelector } from 'react-redux';
+import ImageView from '../../../components/react-native-image-viewing/dist';
+import { RootState } from '../../../redux/store';
+import { playBtn } from '../../../svg/svg-xml-list';
+import PollSection from '../../../components/PollSection/PollSection';
+import LivestreamContent from '../LivestreamContent';
+import { LinkPreview } from '../../component/PreviewLink';
+import RenderTextWithMention from '../../component/RenderTextWithMention/RenderTextWithMention';
+import { IMentionPosition } from '../../../types';
+
+interface IPostContent {
+  post: Amity.Post;
+  textPost?: string;
+  childrenPosts: string[];
+  onPressPost?: () => void;
+  mentionPositionArr?: IMentionPosition[];
+  setPostDataType?: (type: 'liveStream' | '') => void;
+}
+const PostContent: React.FC<IPostContent> = ({
+  post,
+  textPost,
+  onPressPost,
+  childrenPosts,
+  mentionPositionArr,
+  setPostDataType,
+}) => {
+  const { apiRegion } = useAuth();
+  const [imagePosts, setImagePosts] = useState<string[]>([]);
+  const [videoPosts, setVideoPosts] = useState<IVideoPost[]>([]);
+  const [pollIds, setPollIds] = useState<{ pollId: string }[]>([]);
+  const [livestreamId, setLivestreamId] = useState<Amity.Stream['streamId'][]>(
+    []
+  );
+
+  const [imagePostsFullSize, setImagePostsFullSize] = useState<MediaUri[]>([]);
+  const [videoPostsFullSize, setVideoPostsFullSize] = useState<MediaUri[]>([]);
+  const [visibleFullImage, setIsVisibleFullImage] = useState<boolean>(false);
+  const [imageIndex, setImageIndex] = useState<number>(0);
+
+  const styles = useStyles();
+  let imageStyle: StyleProp<ImageStyle> | StyleProp<ImageStyle>[] =
+    styles.imageLargePost;
+  let colStyle: StyleProp<ImageStyle> = styles.col2;
+  const { currentPostdetail } = useSelector(
+    (state: RootState) => state.postDetail
+  );
+  const { postList: postListGlobal } = useSelector(
+    (state: RootState) => state.globalFeed
+  );
+  const { postList } = useSelector((state: RootState) => state.feed);
+
+  useEffect(() => {
+    setImagePostsFullSize([]);
+    setVideoPostsFullSize([]);
+    if (imagePosts.length > 0) {
+      const updatedUrls: MediaUri[] = imagePosts.map((url: string) => {
+        return {
+          uri: url.replace('size=medium', 'size=large'),
+        };
+      });
+      setImagePostsFullSize(updatedUrls);
+    }
+    if (videoPosts.length > 0) {
+      const updatedUrls: MediaUri[] = videoPosts.map((item: IVideoPost) => {
+        return {
+          uri: `https://api.${apiRegion}.amity.co/api/v3/files/${item?.thumbnailFileId}/download?size=large`,
+        };
+      });
+      setVideoPostsFullSize(updatedUrls);
+    }
+  }, [imagePosts, videoPosts, apiRegion]);
+
+  const getPostInfo = useCallback(async () => {
+    try {
+      const response = await Promise.all(
+        childrenPosts.map(async (id) => {
+          const { data: childrenPost } = await getPostById(id);
+          setPostDataType(childrenPost?.dataType);
+          return { dataType: childrenPost?.dataType, data: childrenPost?.data };
+        })
+      );
+      response.forEach((item) => {
+        if (item?.dataType === 'image' && item?.data?.fileId) {
+          const url: string = `https://api.${apiRegion}.amity.co/api/v3/files/${item?.data.fileId}/download?size=medium`;
+          setImagePosts((prev) => {
+            return !prev.includes(url) ? [...prev, url] : [...prev];
+          });
+        } else if (
+          item?.dataType === 'video' &&
+          item?.data?.videoFileId.original
+        ) {
+          setVideoPosts((prev) => {
+            const isExisted = prev.some(
+              (video) =>
+                video.videoFileId.original === item.data.videoFileId.original
+            );
+            return !isExisted ? [...prev, item.data] : [...prev];
+          });
+        } else if (item?.dataType === 'poll') {
+          setPollIds((prev) => {
+            return !prev.includes(item.data) ? [...prev, item.data] : [...prev];
+          });
+        } else if (item?.dataType === 'liveStream') {
+          setLivestreamId((prev) => {
+            return !prev.includes(item.data)
+              ? [...prev, item.data.streamId]
+              : [...prev];
+          });
+        }
+      });
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  }, [apiRegion, childrenPosts, setPostDataType]);
+
+  useEffect(() => {
+    setVideoPosts([]);
+    setImagePosts([]);
+    getPostInfo();
+  }, [childrenPosts, currentPostdetail, postList, postListGlobal, getPostInfo]);
+
+  function onClickImage(index: number): void {
+    setIsVisibleFullImage(true);
+    setImageIndex(index);
+  }
+
+  function renderMediaPosts() {
+    const thumbnailFileIds: string[] =
+      videoPosts.length > 0
+        ? videoPosts.map((item) => {
+            return `https://api.${apiRegion}.amity.co/api/v3/files/${item?.thumbnailFileId}/download?size=medium`;
+          })
+        : [];
+    const mediaPosts =
+      [...imagePosts].length > 0 ? [...imagePosts] : [...thumbnailFileIds];
+    const imageElement = mediaPosts.map((item: string, index: number) => {
+      if (mediaPosts.length === 1) {
+        imageStyle = styles.imageLargePost;
+        colStyle = styles.col6;
+      } else if (mediaPosts.length === 2) {
+        colStyle = styles.col3;
+        if (index === 0) {
+          imageStyle = [styles.imageLargePost, styles.imageMarginRight];
+        } else {
+          imageStyle = [styles.imageLargePost, styles.imageMarginLeft];
+        }
+      } else if (mediaPosts.length === 3) {
+        switch (index) {
+          case 0:
+            colStyle = styles.col6;
+            imageStyle = [styles.imageMediumPost, styles.imageMarginBottom];
+            break;
+          case 1:
+            colStyle = styles.col3;
+            imageStyle = [
+              styles.imageMediumPost,
+              styles.imageMarginTop,
+              styles.imageMarginRight,
+            ];
+            break;
+          case 2:
+            colStyle = styles.col3;
+            imageStyle = [
+              styles.imageMediumPost,
+              styles.imageMarginTop,
+              styles.imageMarginLeft,
+            ];
+            break;
+
+          default:
+            break;
+        }
+      } else {
+        switch (index) {
+          case 0:
+            colStyle = styles.col6;
+            imageStyle = [
+              styles.imageMediumLargePost,
+              styles.imageMarginBottom,
+            ];
+            break;
+          case 1:
+            colStyle = styles.col2;
+            imageStyle = [
+              styles.imageSmallPost,
+              styles.imageMarginTop,
+              styles.imageMarginRight,
+            ];
+            break;
+          case 2:
+            colStyle = styles.col2;
+            imageStyle = [
+              styles.imageSmallPost,
+              styles.imageMarginTop,
+              styles.imageMarginLeft,
+              styles.imageMarginRight,
+            ];
+            break;
+          case 3:
+            colStyle = styles.col2;
+            imageStyle = [
+              styles.imageSmallPost,
+              styles.imageMarginTop,
+              styles.imageMarginLeft,
+            ];
+            break;
+          default:
+            break;
+        }
+      }
+
+      return (
+        <View style={colStyle} key={item}>
+          <TouchableWithoutFeedback onPress={() => onClickImage(index)}>
+            <View>
+              {videoPosts.length > 0 && renderPlayButton()}
+              <Image
+                style={imageStyle}
+                source={{
+                  uri: item,
+                }}
+              />
+              {index === 3 && imagePosts.length > 4 && (
+                <View style={styles.overlay}>
+                  <Text style={styles.overlayText}>{`+ ${
+                    imagePosts.length - 3
+                  }`}</Text>
+                </View>
+              )}
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      );
+    });
+    if (imageElement.length < 3) {
+      return (
+        <View style={styles.imagesWrap}>
+          <View style={styles.row}>{imageElement}</View>
+        </View>
+      );
+    } else if (imageElement.length === 3) {
+      return (
+        <View style={[styles.imagesWrap]}>
+          <View style={styles.row}>{imageElement.slice(0, 1)}</View>
+          <View style={styles.row}>{imageElement.slice(1, 3)}</View>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.imagesWrap}>
+          <View style={styles.row}>{imageElement.slice(0, 1)}</View>
+          <View style={styles.row}>{imageElement.slice(1, 4)}</View>
+        </View>
+      );
+    }
+  }
+
+  function renderPlayButton() {
+    return (
+      <View style={styles.playButton}>
+        <SvgXml xml={playBtn} width="50" height="50" />
+      </View>
+    );
+  }
+
+  function renderImageHeader({ imageIndex: imgIndex }) {
+    return (
+      <View style={styles.headerContainer}>
+        <View style={styles.flexWidth}>
+          <TouchableOpacity
+            style={styles.closebtnIcon}
+            onPress={() => setIsVisibleFullImage(false)}
+          >
+            <Text style={styles.closeBtn}>X</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.flexWidth}>
+          <Text style={styles.header}>
+            {imgIndex + 1}/
+            {imagePostsFullSize.length || videoPostsFullSize.length}
+          </Text>
+        </View>
+        <View style={styles.flexWidth} />
+      </View>
+    );
+  }
+
+  return (
+    <Fragment>
+      {livestreamId.length <= 0 && (
+        <Pressable onPress={onPressPost}>
+          {textPost && childrenPosts?.length === 0 && (
+            <LinkPreview
+              text={textPost}
+              mentionPositionArr={[...mentionPositionArr]}
+            />
+          )}
+          {textPost && childrenPosts?.length > 0 && (
+            <RenderTextWithMention
+              textPost={textPost}
+              mentionPositionArr={[...mentionPositionArr]}
+            />
+          )}
+        </Pressable>
+      )}
+      <View>
+        {pollIds.length > 0 ? (
+          <PollSection pollId={pollIds[0].pollId} />
+        ) : livestreamId.length > 0 ? (
+          <LivestreamContent
+            post={post}
+            onPressPost={onPressPost}
+            streamId={livestreamId[0]}
+          />
+        ) : (
+          renderMediaPosts()
+        )}
+
+        <ImageView
+          images={
+            imagePostsFullSize.length > 0
+              ? imagePostsFullSize
+              : videoPostsFullSize
+          }
+          imageIndex={imageIndex}
+          visible={visibleFullImage}
+          onRequestClose={() => setIsVisibleFullImage(false)}
+          isVideoButton={videoPosts.length > 0 ? true : false}
+          videoPosts={videoPosts}
+          HeaderComponent={renderImageHeader}
+        />
+      </View>
+    </Fragment>
+  );
+};
+
+export default React.memo(PostContent);

@@ -36,10 +36,9 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const onPressCommunity = useCallback(
-    ({ communityId, communityName }: { communityId; communityName }) => {
-      navigation.navigate('CommunityHome', {
+    ({ communityId }: { communityId: string }) => {
+      navigation.navigate('CommunityProfilePage', {
         communityId,
-        communityName,
       });
     },
     [navigation]
@@ -77,7 +76,6 @@ const AmityCommunitiesByCategoryPage = ({ route }: any) => {
               onPress={() =>
                 onPressCommunity({
                   communityId: item.communityId,
-                  communityName: item.displayName,
                 })
               }
             >

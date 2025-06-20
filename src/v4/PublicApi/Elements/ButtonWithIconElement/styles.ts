@@ -10,7 +10,7 @@ export const useStyle = (themeStyle: MyMD3Theme) => {
       paddingTop: 12,
       paddingBottom: 12,
       paddingLeft: 16,
-      gap: 8,
+      gap: 12,
     },
     icon: {
       width: 20,

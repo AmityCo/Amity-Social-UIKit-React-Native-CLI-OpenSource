@@ -21,6 +21,7 @@ import config from '../../uikit.config.json';
     AmityCreatePostMenuComponentBehavior: {
       goToSelectStoryTargetPage: () => {},
       goToSelectPostTargetPage: ({ postType }) => console.log(postType),
+      goToSelectLivestreamPostTargetPage: () => {},
     },
   }}
 >

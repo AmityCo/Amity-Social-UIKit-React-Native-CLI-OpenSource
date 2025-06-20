@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react';
 import { TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
 import { useAmityElement, useJoinCommunity } from '../../hook';
-import { Button } from '../../component/Button/Button';
+import { Button, BUTTON_SIZE } from '../../component/Button/Button';
 import { plus } from '../../assets/icons';
 import { SvgXml } from 'react-native-svg';
 
@@ -10,6 +10,7 @@ type CommunityJoinButtonType = {
   pageId?: PageID;
   componentId?: ComponentID;
   communityId?: string;
+  size?: BUTTON_SIZE;
   onJoinSuccess?: () => void;
 } & TouchableOpacityProps;
 
@@ -17,6 +18,7 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   communityId,
+  size = BUTTON_SIZE.SMALL,
   ...props
 }) => {
   const { config, accessibilityId, isExcluded, themeStyles } = useAmityElement({
@@ -42,7 +44,7 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
       themeStyle={themeStyles}
       onPress={handleJoinCommunity}
       disabled={isPending}
-      size="small"
+      size={size}
       {...props}
     >
       {(config?.text as string) || 'Join'}

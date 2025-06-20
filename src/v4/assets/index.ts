@@ -1,6 +1,6 @@
 import { Image } from 'react-native';
 
-const defaultAvatar = require('./images/Placeholder.png');
+const defaultAvatar = require('./images/userAvatar.png');
 const defaultCommunityAvatar = require('./images/communityAvatar.png');
 const defaultAdAvatar = require('./images/adAvatar.png');
 

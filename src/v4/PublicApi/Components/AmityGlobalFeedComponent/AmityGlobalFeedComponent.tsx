@@ -11,9 +11,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
 
 import { RefreshControl } from 'react-native';
-import AmityPostContentComponent, {
-  IPost,
-} from '../AmityPostContentComponent/AmityPostContentComponent';
+import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
 import { ComponentID, PageID } from '../../../enum/enumUIKitID';
 import { useAmityComponent } from '../../../hook/useUiKitReference';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
@@ -68,7 +66,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   }, [refresh]);
 
   const { handleViewChange } = usePostImpression(
-    itemWithAds.filter((item: IPost | Amity.Ad) =>
+    itemWithAds?.filter((item: Amity.Post | Amity.Ad) =>
       isAmityAd(item) ? item?.adId : item?.postId
     )
   );

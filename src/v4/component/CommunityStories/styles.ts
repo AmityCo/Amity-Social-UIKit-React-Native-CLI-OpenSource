@@ -8,8 +8,12 @@ export const useStyles = () => {
     container: {
       backgroundColor: theme.colors.background,
       paddingVertical: 16,
-      borderBottomColor: theme.colors.baseShade4,
-      borderBottomWidth: 1,
+    },
+    storyItemWrap: {
+      width: 68,
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     modal: {
       flex: 1,
@@ -91,6 +95,9 @@ export const useStyles = () => {
       position: 'absolute',
       left: 42,
       top: 30,
+    },
+    base: {
+      color: theme.colors.base,
     },
   });
 
