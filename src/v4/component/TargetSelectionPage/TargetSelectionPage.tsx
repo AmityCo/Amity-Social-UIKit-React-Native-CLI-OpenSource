@@ -100,7 +100,9 @@ const TargetSelectionPage = ({
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.closeButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            navigation.goBack();
+          }}
         >
           <CloseButtonIconElement style={styles.closeIcon} pageID={pageId} />
         </TouchableOpacity>
