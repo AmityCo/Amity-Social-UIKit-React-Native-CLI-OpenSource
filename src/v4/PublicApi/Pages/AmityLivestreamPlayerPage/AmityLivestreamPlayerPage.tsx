@@ -54,7 +54,7 @@ const usePostSubscription = (postId: string) => {
   return { subscribedPost };
 };
 
-export function AmityLiveStreamPlayerPage() {
+function AmityLiveStreamPlayerPage() {
   const ref = useRef<any>(null);
   const { styles, theme } = useStyles();
   const controlOpacity = useAnimatedValue(0);
@@ -230,3 +230,5 @@ export function AmityLiveStreamPlayerPage() {
     </SafeAreaView>
   );
 }
+
+export default AmityLiveStreamPlayerPage;
