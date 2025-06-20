@@ -96,6 +96,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
   const [mentionPositionArr, setMentionsPositionArr] = useState<
     IMentionPosition[]
   >([]);
+  const [postDataType, setPostDataType] = useState<'liveStream' | ''>('');
 
   const slideAnimation = useRef(new Animated.Value(0)).current;
 
@@ -279,22 +280,25 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
               styles.modalContent,
               modalStyle,
               (post?.creator?.userId === myId || isIAmModerator) &&
+                postDataType !== 'liveStream' &&
                 styles.twoOptions,
             ]}
           >
             <View style={styles.handleBar} />
             {post?.creator?.userId === myId ? (
-              <TouchableOpacity
-                onPress={openEditPostModal}
-                style={styles.modalRow}
-              >
-                <SvgXml
-                  xml={editIcon(themeStyles.colors.base)}
-                  width="20"
-                  height="20"
-                />
-                <Text style={styles.editText}>Edit Post</Text>
-              </TouchableOpacity>
+              postDataType !== 'liveStream' && (
+                <TouchableOpacity
+                  onPress={openEditPostModal}
+                  style={styles.modalRow}
+                >
+                  <SvgXml
+                    xml={editIcon(themeStyles.colors.base)}
+                    width="20"
+                    height="20"
+                  />
+                  <Text style={styles.editText}>Edit Post</Text>
+                </TouchableOpacity>
+              )
             ) : (
               <TouchableOpacity
                 onPress={reportPostObject}
@@ -440,6 +444,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
             textPost={textPost}
             childrenPosts={children}
             onPressPost={onPressPost}
+            setPostDataType={setPostDataType}
             mentionPositionArr={mentionPositionArr}
           />
         </View>
