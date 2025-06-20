@@ -10,6 +10,11 @@ export { default as AmityPostComposerPage } from './PublicApi/Pages/AmityPostCom
 export { default as AmityMyCommunitiesSearchPage } from './PublicApi/Pages/AmityMyCommunitiesSearchPage/AmityMyCommunitiesSearchPage';
 export { default as AmityAllCategoriesPage } from './PublicApi/Pages/AmityAllCategoriesPage/AmityAllCategoriesPage';
 export { default as AmityCommunitiesByCategoryPage } from './PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
+export { default as AmityCommunityProfilePage } from './PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
+export { default as AmityCreateLivestreamPage } from './PublicApi/Pages/AmityCreateLivestreamPage';
+export { default as AmityLivestreamPostTargetSelectionPage } from './PublicApi/Pages/AmityLivestreamPostTargetSelectionPage';
+export { default as AmityLivestreamTerminatedPage } from './PublicApi/Pages/AmityLivestreamTerminatedPage';
+export { default as AmityLivestreamPlayerPage } from './PublicApi/Pages/AmityLivestreamPlayerPage';
 
 export { default as AmityStoryTabComponent } from './PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 export { default as AmitySocialHomeTopNavigationComponent } from './PublicApi/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
@@ -27,6 +32,12 @@ export { default as AmityPostCommentComponent } from './PublicApi/Components/Ami
 export { default as AmityPostEngagementActionsComponent } from './PublicApi/Components/AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
 export { default as AmityUserSearchResultComponent } from './PublicApi/Components/AmityUserSearchResultComponent/AmityUserSearchResultComponent';
 export { default as AmityReactionListComponent } from './PublicApi/Components/AmityReactionListComponent/AmityReactionListComponent';
+export { default as AmityCommunityFeedComponent } from './PublicApi/Components/AmityCommunityFeedComponent/AmityCommunityFeedComponent';
+export { default as AmityCommunityHeaderComponent } from './PublicApi/Components/AmityCommunityHeaderComponent/AmityCommunityHeaderComponent';
+export { default as AmityCommunityImageFeedComponent } from './PublicApi/Components/AmityCommunityImageFeedComponent/AmityCommunityImageFeedComponent';
+export { default as AmityCommunityVideoFeedComponent } from './PublicApi/Components/AmityCommunityVideoFeedComponent/AmityCommunityVideoFeedComponent';
+export { AmityThumbnailActionComponent } from './PublicApi/Components/AmityThumbnailActionComponent';
+
 export { default as AmityExploreComponent } from './PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 
 export { AmityPostTargetSelectionPageType } from './enum/post';

@@ -1,1 +1,1 @@
-export { AmityLiveStreamPlayerPage } from './AmityLivestreamPlayerPage';
+export { default } from './AmityLivestreamPlayerPage';

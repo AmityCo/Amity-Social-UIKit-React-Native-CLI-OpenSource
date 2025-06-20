@@ -1,7 +1,7 @@
 import React from 'react';
 import { RootStackParamList } from '../../routes/RouteParamList';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { AmityLivestreamTerminatedPage } from '../../PublicApi/Pages/AmityLivestreamTerminatedPage';
+import AmityLivestreamTerminatedPage from '../../PublicApi/Pages/AmityLivestreamTerminatedPage';
 
 type LivestreamTerminatedProps = NativeStackScreenProps<
   RootStackParamList,

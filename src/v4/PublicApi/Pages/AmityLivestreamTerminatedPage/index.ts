@@ -1,1 +1,1 @@
-export { AmityLivestreamTerminatedPage } from './AmityLivestreamTerminatedPage';
+export { default } from './AmityLivestreamTerminatedPage';
