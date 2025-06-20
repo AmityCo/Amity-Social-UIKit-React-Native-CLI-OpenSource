@@ -35,8 +35,6 @@ function IconElement({
     checkImage();
   }, [configIcon]);
 
-  console.log(imageUri);
-
   if (imageUri) {
     return <Image source={imageUri} style={configIconStyle} />;
   }
