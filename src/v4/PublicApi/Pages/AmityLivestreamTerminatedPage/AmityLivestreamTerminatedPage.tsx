@@ -10,7 +10,7 @@ import { ban, terminated, trash, warning } from '../../../assets/icons';
 import { LivestreamTerminatedActionButton } from '../../../elements/LivestreamTerminatedActionButton';
 import { PageID } from '../../../enum';
 
-export function AmityLivestreamTerminatedPage() {
+function AmityLivestreamTerminatedPage() {
   const { styles, theme } = useStyles();
 
   const route =
@@ -87,3 +87,5 @@ export function AmityLivestreamTerminatedPage() {
     </SafeAreaView>
   );
 }
+
+export default AmityLivestreamTerminatedPage;
