@@ -91,5 +91,6 @@ export type RootStackParamList = {
   };
   CommunityProfilePage: {
     communityId: string;
+    pop?: number;
   };
 };

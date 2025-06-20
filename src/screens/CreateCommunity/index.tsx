@@ -166,6 +166,7 @@ export default function CreateCommunity() {
         navigation.navigate('CommunityProfilePage', {
           communityId: isCreated.communityId,
           communityName: isCreated.displayName,
+          pop: 2,
         });
       }
     }
