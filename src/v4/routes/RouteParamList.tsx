@@ -43,6 +43,7 @@ export type RootStackParamList = {
   };
   PostDetail: {
     postId: string;
+    showEndPopup?: boolean;
   };
   UserProfile: {
     userId: string;

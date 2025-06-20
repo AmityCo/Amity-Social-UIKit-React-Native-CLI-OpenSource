@@ -83,11 +83,13 @@ import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 type AmityPostDetailPageType = {
   postId: Amity.Post['postId'];
   isFromComponent?: boolean;
+  showEndPopup?: boolean;
 };
 
 const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   postId,
   isFromComponent,
+  showEndPopup,
 }) => {
   const { top, bottom } = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -123,6 +125,9 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const [footerHeight, setFooterHeight] = useState(0);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [showLivestreamEndPopup, setShowLivestreamEndPopup] = useState<boolean>(
+    showEndPopup || false
+  );
 
   const adjustedHeight =
     height -
@@ -542,6 +547,25 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     styles,
     themeStyles,
   ]);
+
+  const renderLivestreamEndPopup = () => {
+    Alert.alert(
+      'Live stream ended',
+      'Your live stream has been automatically terminated since you reached 4-hour limit.',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            setShowLivestreamEndPopup(false);
+          },
+        },
+      ]
+    );
+  };
+
+  useEffect(() => {
+    showLivestreamEndPopup && renderLivestreamEndPopup();
+  }, [showLivestreamEndPopup]);
 
   if (isExcluded) return null;
 

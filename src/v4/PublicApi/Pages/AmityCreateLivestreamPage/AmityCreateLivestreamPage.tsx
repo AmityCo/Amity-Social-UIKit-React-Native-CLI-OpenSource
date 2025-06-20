@@ -236,29 +236,42 @@ function AmityCreateLivestreamPage() {
     );
   };
 
-  const endLiveStream = useCallback(async () => {
-    if (stream) {
-      setIsEnding(true);
-      try {
-        await StreamRepository.disposeStream(stream.streamId);
-      } catch (e) {
-        console.log('disposeStream error', e);
-      } finally {
-        streamRef?.current.stopPublish();
+  const endLiveStream = useCallback(
+    async (showEndPopup = false) => {
+      if (stream) {
+        setIsEnding(true);
+        try {
+          await StreamRepository.disposeStream(stream.streamId);
+        } catch (e) {
+          console.log('disposeStream error', e);
+        } finally {
+          streamRef?.current.stopPublish();
 
-        setIsLive(false);
-        setStream(null);
-        setTitle('');
-        setDescription('');
-        setTime(0);
-        clearInterval(timer);
-        setIsEnding(false);
-        setReconnecting(false);
+          setIsLive(false);
+          setStream(null);
+          setTitle('');
+          setDescription('');
+          setTime(0);
+          clearInterval(timer);
+          setIsEnding(false);
+          setReconnecting(false);
 
-        navigation.navigate('PostDetail', { postId: post?.data?.postId });
+          navigation.navigate('PostDetail', {
+            postId: post?.data?.postId,
+            showEndPopup,
+          });
+        }
       }
+    },
+    [post, stream, timer, navigation]
+  );
+
+  useEffect(() => {
+    const fourHours = 4 * 60 * 60 * 1000;
+    if (streamRef.current && stream && time >= fourHours) {
+      endLiveStream(true);
     }
-  }, [post, stream, timer, navigation]);
+  }, [endLiveStream, stream, time]);
 
   useEffect(() => {
     if (Platform.OS === 'android') checkPermissionAndroid();
