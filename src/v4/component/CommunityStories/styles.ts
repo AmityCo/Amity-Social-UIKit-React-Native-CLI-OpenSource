@@ -96,6 +96,9 @@ export const useStyles = () => {
       left: 42,
       top: 30,
     },
+    base: {
+      color: theme.colors.base,
+    },
   });
 
   return styles;

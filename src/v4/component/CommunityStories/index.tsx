@@ -30,7 +30,7 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
   const styles = useStyles();
   const { getUiKitConfig } = useConfig();
   const hasStoryPermission = useStoryPermission(communityId);
-  const { getStoryTarget, storyTarget, stories } = useStory();
+  const { getStoryTarget, storyTarget, stories, getStories } = useStory();
   const { getImage } = useFile();
   const [avatarUrl, setAvatarUrl] = useState(undefined);
   const [viewStory, setViewStory] = useState(false);
@@ -42,13 +42,16 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
       })?.progress_color as string[]) ?? ['#e2e2e2', '#e2e2e2']
     : storyTarget?.failedStoriesCount > 0
     ? ['#DE1029', '#DE1029']
-    : ['#e2e2e2', '#e2e2e2'];
+    : stories.length > 0
+    ? ['#e2e2e2', '#ffffff']
+    : ['#ffffff', '#ffffff'];
 
   useEffect(() => {
     (async () => {
       const avatarImage = await getImage({
         fileId: community?.avatarFileId,
         imageSize: ImageSizeState.small,
+        type: 'community',
       });
       setAvatarUrl(avatarImage);
     })();
@@ -60,7 +63,11 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
         targetId: communityId,
         targetType: 'community',
       });
-    }, [communityId, getStoryTarget])
+      getStories({
+        targetId: communityId,
+        targetType: 'community',
+      });
+    }, [communityId, getStoryTarget, getStories])
   );
 
   const onPressCreateStory = useCallback(() => {
@@ -89,33 +96,40 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
   const renderCommunityStory = () => {
     if (community?.isJoined) {
       return (
-        <TouchableOpacity
-          style={styles.avatarContainer}
-          onPress={onPressCreateStory}
-        >
-          <Image
-            source={
-              avatarUrl
-                ? {
-                    uri: avatarUrl,
-                  }
-                : require('../../assets/images/userAvatar.png')
+        <>
+          <TouchableOpacity
+            style={styles.avatarContainer}
+            onPress={
+              storyTarget?.hasUnseen || stories.length > 0
+                ? onPressStoryView
+                : onPressCreateStory
             }
-            style={styles.communityAvatar}
-          />
-          <SvgXml
-            style={styles.storyRing}
-            width={48}
-            height={48}
-            xml={storyRing('#EBECEF', '#EBECEF')}
-          />
-          {hasStoryPermission && (
-            <SvgXml
-              style={styles.storyCreateIcon}
-              xml={storyCircleCreatePlusIcon()}
+          >
+            <Image
+              source={
+                avatarUrl
+                  ? {
+                      uri: avatarUrl,
+                    }
+                  : require('../../assets/images/communityAvatar.png')
+              }
+              style={styles.communityAvatar}
             />
-          )}
-        </TouchableOpacity>
+            <SvgXml
+              style={styles.storyRing}
+              width={48}
+              height={48}
+              xml={storyRing(storyRingColor[0], storyRingColor[1])}
+            />
+            {hasStoryPermission && (
+              <SvgXml
+                style={styles.storyCreateIcon}
+                xml={storyCircleCreatePlusIcon()}
+              />
+            )}
+          </TouchableOpacity>
+          <Typography.Caption style={styles.base}>Story</Typography.Caption>
+        </>
       );
     }
     if (community?.isPublic && !community?.isJoined && stories.length > 0) {
@@ -131,7 +145,7 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
                   ? {
                       uri: avatarUrl,
                     }
-                  : require('../../assets/images/userAvatar.png')
+                  : require('../../assets/images/communityAvatar.png')
               }
               style={styles.communityAvatar}
             />
@@ -142,7 +156,7 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
               xml={storyRing(storyRingColor[0], storyRingColor[1])}
             />
           </TouchableOpacity>
-          <Typography.Body>{'Story'}</Typography.Body>
+          <Typography.Caption style={styles.base}>Story</Typography.Caption>
         </>
       );
     }
