@@ -54,6 +54,7 @@ import EditPost from '../screen/EditPost/EditPost';
 import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 import LivestreamPlayer from '../screen/LivestreamPlayer';
 import LivestreamTerminated from '../screen/LivestreamTerminated';
+import PollTargetSelection from '../screen/PollTargetSelection';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -303,6 +304,10 @@ export default function AmitySocialUIKitV4Navigator() {
                 name="LivestreamTerminated"
                 component={LivestreamTerminated}
                 options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PollTargetSelection"
+                component={PollTargetSelection}
               />
             </Stack.Group>
           </Stack.Navigator>

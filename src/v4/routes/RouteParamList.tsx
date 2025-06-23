@@ -94,4 +94,5 @@ export type RootStackParamList = {
     communityId: string;
     pop?: number;
   };
+  PollTargetSelection: undefined;
 };

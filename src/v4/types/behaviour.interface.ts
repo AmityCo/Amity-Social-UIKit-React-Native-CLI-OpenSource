@@ -46,6 +46,7 @@ export interface IBehaviour {
     }) => void;
     goToSelectStoryTargetPage?: () => void;
     goToSelectLivestreamPostTargetPage?: () => void;
+    goToSelectPollPostTargetPage?: () => void;
   };
   AmityPostTargetSelectionPageBehavior?: {
     goToPostComposerPage?: (arg?: {
@@ -104,13 +105,30 @@ export interface IBehaviour {
       needApprovalOnPostCreation?: boolean;
       isPublic?: boolean;
     }) => void;
-    AmityCommunityProfilePageBehavior?: {
-      goToPendingPostPage?: () => void;
-      goToCommunitySettingPage?: () => void;
-      goToPostComposerPage?: () => void;
-      goToCreateStoryPage?: () => void;
-      goToMemberListPage?: () => void;
-      goToPostDetailPage?: (arg?: string) => void;
-    };
+  };
+  AmityCommunityProfilePageBehavior?: {
+    goToPendingPostPage?: () => void;
+    goToCommunitySettingPage?: () => void;
+    goToPostComposerPage?: () => void;
+    goToCreateStoryPage?: () => void;
+    goToMemberListPage?: () => void;
+    goToPostDetailPage?: (arg?: string) => void;
+  };
+  AmityPollTargetSelectionPageBehavior?: {
+    goToPollPostComposerPage?: (arg?: {
+      targetId: string;
+      targetType: 'community' | 'user';
+      targetName?: string;
+      pop?: number;
+      postSetting?: ValueOf<
+        Readonly<{
+          ONLY_ADMIN_CAN_POST: 'ONLY_ADMIN_CAN_POST';
+          ADMIN_REVIEW_POST_REQUIRED: 'ADMIN_REVIEW_POST_REQUIRED';
+          ANYONE_CAN_POST: 'ANYONE_CAN_POST';
+        }>
+      >;
+      needApprovalOnPostCreation?: boolean;
+      isPublic?: boolean;
+    }) => void;
   };
 }
