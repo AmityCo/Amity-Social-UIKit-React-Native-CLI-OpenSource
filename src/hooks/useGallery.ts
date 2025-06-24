@@ -1,6 +1,7 @@
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import useAuth from './useAuth';
+import { isImagePost, isVideoPost } from '../util/postTypeChecker';
 
 type ElementOf<T> = T extends Array<infer U> ? U : never;
 
@@ -44,14 +45,16 @@ export const useGallery = ({
           onNextPageRef.current = hasNextPage ? onNextPage : null;
           const mappedMediaFiles = data.map((mediaData) => {
             const uri =
-              dataType === 'image'
+              dataType === 'image' && isImagePost(mediaData)
                 ? getFile(mediaData.data.fileId)
-                : dataType === 'video'
+                : dataType === 'video' && isVideoPost(mediaData)
                 ? getFile(mediaData.data.thumbnailFileId)
                 : null;
             return {
               dataType,
-              ...mediaData.data,
+              ...(mediaData.data as
+                | Amity.ContentDataImage
+                | Amity.ContentDataVideo),
               uri,
             };
           });

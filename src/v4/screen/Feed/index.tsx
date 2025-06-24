@@ -37,7 +37,7 @@ const pageLimit = 10;
 
 function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
   const styles = useStyles();
-  const [postData, setPostData] = useState<Amity.Post>([]);
+  const [postData, setPostData] = useState<Amity.Post<any>[]>([]);
   const [onNextPage, setOnNextPage] = useState(null);
   const disposers: Amity.Unsubscriber[] = useMemo(() => [], []);
 
@@ -112,8 +112,8 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
         },
         async ({ data, error, loading, hasNextPage, onNextPage: nextPage }) => {
           if (!error && !loading) {
-            const filterData: any[] = data.map((item) => {
-              if (item.dataType === 'text') return item;
+            const filterData: any[] = data.filter((item) => {
+              return item.dataType === 'text';
             });
 
             setOnNextPage(hasNextPage ? () => nextPage : null);

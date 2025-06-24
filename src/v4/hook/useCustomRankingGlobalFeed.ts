@@ -5,8 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import { RootState } from '../../redux/store';
 import { usePaginatorApi } from '../../v4/hook/usePaginator';
+import { IComment } from '../../components/Social/CommentList';
 
-export const isAmityAd = (item: Amity.Post | Amity.Ad): item is Amity.Ad => {
+export const isAmityAd = (
+  item: Amity.Post<any> | Amity.Ad | IComment
+): item is Amity.Ad => {
   return (item as Amity.Ad)?.adId !== undefined;
 };
 
@@ -59,7 +62,7 @@ export const useCustomRankingGlobalFeed = () => {
       })
     );
 
-    return results.filter((result) => result !== null);
+    return results.filter((result) => result !== null) as Amity.Post<any>[];
   };
 
   const fetch = useCallback(
