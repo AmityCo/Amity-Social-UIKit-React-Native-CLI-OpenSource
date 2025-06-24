@@ -17,7 +17,7 @@ import type { IDisplayImage, IMentionPosition } from '../../screens/CreatePost';
 import { editPost, getPostById } from '../../providers/Social/feed-sdk';
 import LoadingImage from '../LoadingImage';
 import LoadingVideo from '../LoadingVideo';
-import type { IPost, IVideoPost } from '../Social/PostList';
+import type { IVideoPost } from '../Social/PostList';
 import useAuth from '../../hooks/useAuth';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
@@ -37,7 +37,7 @@ interface IModal {
     postData: { text: string; mediaUrls: string[] | IVideoPost[] },
     type: string
   ) => void;
-  postDetail: IPost;
+  postDetail: Amity.Post<any> & { data?: { text?: string } };
   videoPostsArr?: IVideoPost[];
   imagePostsArr?: string[];
   privateCommunityId: string | null;
@@ -166,9 +166,9 @@ const EditPostModal = ({
     if (postDetail?.mentionees?.length > 0) {
       const mentionPositions = getMentionPositions(
         postDetail?.data?.text ?? '',
-        postDetail.mentionees ?? []
+        postDetail.mentionees?.[0].userIds ?? []
       );
-      getMentionUsers(postDetail.mentionees ?? []);
+      getMentionUsers(postDetail.mentionees?.[0].userIds ?? []);
       setMentionPosition(mentionPositions);
     } else {
       setInitialText(postDetail?.data?.text ?? '');
@@ -200,9 +200,9 @@ const EditPostModal = ({
         : displayVideos.length > 0
         ? 'video'
         : 'text';
-    if (type === 'text' && postDetail?.childrenPosts.length > 0) {
+    if (type === 'text' && postDetail?.children.length > 0) {
       await Promise.allSettled(
-        postDetail?.childrenPosts.map((postId) => {
+        postDetail?.children.map((postId) => {
           PostRepository.deletePost(postId, true);
         })
       );
@@ -237,7 +237,7 @@ const EditPostModal = ({
         onFinishEdit(
           {
             text: inputMessage,
-            mediaUrls: formattedPost[0].childrenPosts,
+            mediaUrls: formattedPost[0].children,
           },
           type
         );

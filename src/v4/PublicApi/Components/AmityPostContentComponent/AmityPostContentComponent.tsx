@@ -104,15 +104,16 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     postId,
     data,
     myReactions = [],
-    reactionCount,
+    reactions: reactionCount,
     createdAt,
     creator,
     targetType,
     targetId,
     children = [],
     editedAt,
-    mentionPosition,
+    metadata,
   } = post ?? {};
+  const mentionPosition = metadata?.mentioned;
 
   const { isCommunityModerator } = useIsCommunityModerator({
     communityId: targetType === 'community' && targetId,
@@ -132,11 +133,11 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
   }, [mentionPosition]);
 
   useEffect(() => {
-    setTextPost(data?.text);
+    setTextPost((data as Amity.ContentDataText)?.text);
     if (targetType === 'community' && targetId) {
       getCommunityInfo(targetId);
     }
-  }, [data?.text, myReactions, reactionCount?.like, targetId, targetType]);
+  }, [data, myReactions, reactionCount?.like, targetId, targetType]);
 
   async function getCommunityInfo(id: string) {
     const { data: community }: { data: Amity.LiveObject<Amity.Community> } =

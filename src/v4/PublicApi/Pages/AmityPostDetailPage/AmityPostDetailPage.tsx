@@ -104,7 +104,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
   const styles = useStyles(themeStyles);
-  const [postData, setPostData] = useState<Amity.Post>(null);
+  const [postData, setPostData] = useState<Amity.Post<any>>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [replyUserName, setReplyUserName] = useState<string>('');
@@ -195,7 +195,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     if (postData?.targetType === 'community' && postData?.targetId) {
       getCommunityInfo(postData?.targetId);
     }
-  }, [postData?.targetId, postData?.targetType, postData?.text]);
+  }, [postData?.targetId, postData?.targetType]);
 
   async function getCommunityInfo(id: string) {
     const { data: community }: { data: Amity.LiveObject<Amity.Community> } =

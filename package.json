@@ -1,6 +1,6 @@
 {
   "name": "amity-react-native-social-ui-kit",
-  "version": "4.0.0-beta-24",
+  "version": "4.0.0-beta-25",
   "description": "Social UIKit",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -61,7 +61,9 @@
     "@api.video/react-native-livestream": "2.0.0",
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.2.2",
+    "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-community/eslint-config": "^3.0.2",
+    "@react-native-community/netinfo": "^11.4.1",
     "@react-native-community/push-notification-ios": "^1.11.0",
     "@react-native-firebase/app": "^19.0.0",
     "@react-native-firebase/messaging": "^19.0.0",
@@ -111,7 +113,7 @@
     "*.{json,md}": "prettier --write"
   },
   "resolutions": {
-    "@types/react": "17.0.21"
+    "@types/react": "18.2.37"
   },
   "peerDependencies": {
     "@amityco/ts-sdk-react-native": "^7.6.0",

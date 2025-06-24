@@ -77,7 +77,7 @@ export const getPreviewData = async (text: string, requestTimeout = 5000) => {
       url = 'https://' + url;
     }
 
-    let abortControllerTimeout: NodeJS.Timeout;
+    let abortControllerTimeout: number;
     const abortController = new AbortController();
 
     const request = fetch(url, {

@@ -51,6 +51,7 @@ export interface IPost {
   reactionCount: Record<string, number>;
   commentsCount: number;
   user: UserInterface | undefined;
+  creator: Amity.User;
   updatedAt: string | undefined;
   editedAt: string | undefined;
   createdAt: string;
@@ -64,8 +65,8 @@ export interface IPost {
 }
 export interface IPostList {
   onDelete?: (postId: string) => void;
-  onChange?: (postDetail: IPost) => void;
-  postDetail: IPost;
+  onChange?: (postDetail: Amity.Post<any>) => void;
+  postDetail: Amity.Post<any>;
   postIndex?: number;
   isGlobalfeed?: boolean;
 }
@@ -113,16 +114,18 @@ export default function PostList({
     postId,
     data,
     myReactions = [],
-    reactionCount,
+    reactions: reactionCount,
     commentsCount,
     createdAt,
-    user,
+    creator: user,
     targetType,
     targetId,
-    childrenPosts = [],
+    children: childrenPosts = [],
     editedAt,
-    mentionPosition,
+    metadata,
   } = postDetail ?? {};
+  const mentionPosition = metadata?.mentioned;
+
   const timeDifference = useTimeDifference(createdAt);
 
   useEffect(() => {
@@ -186,14 +189,14 @@ export default function PostList({
   }, [targetId, targetType]);
 
   useEffect(() => {
-    setTextPost(data?.text);
+    setTextPost((data as Amity.ContentDataText)?.text);
     if (myReactions.length > 0 && myReactions.includes('like')) {
       setIsLike(true);
     }
     if (reactionCount?.like) {
       setLikeReaction(reactionCount?.like);
     }
-  }, [data?.text, myReactions, reactionCount?.like, targetId, targetType]);
+  }, [data, myReactions, reactionCount?.like, targetId, targetType]);
 
   const renderLikeText = useCallback(
     (likeNumber: number | undefined): string => {
@@ -256,7 +259,7 @@ export default function PostList({
       updatePostDetail({
         ...postDetail,
         myReactions: isLike ? ['like'] : [],
-        reactionCount: { like: likeReaction },
+        reactions: { like: likeReaction },
         commentsCount: commentsCount,
       })
     );
@@ -541,7 +544,13 @@ export default function PostList({
           privateCommunityId={privateCommunityId}
           visible={editPostModalVisible}
           onClose={closeEditPostModal}
-          postDetail={{ ...postDetail, data: { ...data, text: textPost } }}
+          postDetail={{
+            ...postDetail,
+            data: {
+              ...(typeof data === 'object' && data !== null ? data : {}),
+              text: textPost,
+            },
+          }}
           onFinishEdit={handleOnFinishEdit}
         />
       )}

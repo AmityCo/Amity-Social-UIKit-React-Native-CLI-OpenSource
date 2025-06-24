@@ -56,7 +56,7 @@ const CreateLivestream = ({ navigation, route }) => {
   const [description, setDescription] = useState<string>('');
   const [stream, setStream] = useState<Amity.Stream | null>(null);
   const [isLive, setIsLive] = useState<boolean>(false);
-  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const [timer, setTimer] = useState<number | null>(null);
 
   const [time, setTime] = useState<number>(0);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);

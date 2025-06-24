@@ -81,7 +81,7 @@ const AmityCommunityImageFeedComponent = forwardRef<
   return (
     <ImageGallery
       isLoading={loading}
-      posts={posts}
+      posts={posts as Amity.Post<'image'>[]}
       onNextPage={onNextPage}
       accessibilityId={accessibilityId}
       themeStyles={themeStyles}
