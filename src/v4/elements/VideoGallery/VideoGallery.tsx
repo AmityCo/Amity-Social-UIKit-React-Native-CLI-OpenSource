@@ -73,12 +73,12 @@ const VideoGallery: FC<VideoGalleryProps> = ({
         testID={accessibilityId}
         data={posts}
         scrollEnabled={false}
-        keyExtractor={(item, index) => item.data.fileId + index.toString()}
+        keyExtractor={(item, index) => item.data.videoFileId + index.toString()}
         renderItem={({
           item,
           index,
         }: {
-          item: Amity.Post<'image'>;
+          item: Amity.Post<'video'>;
           index: number;
         }) => {
           const uri = item.getVideoThumbnailInfo().fileUrl + '?size=medium';

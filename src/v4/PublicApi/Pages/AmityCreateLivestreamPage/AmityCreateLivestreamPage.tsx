@@ -185,7 +185,7 @@ function AmityCreateLivestreamPage() {
           newStream.streamId,
           ({ data }) => {
             setStream(data);
-            setPost(newPost);
+            setPost(newPost.data);
             streamRef?.current?.startPublish(newStream.streamId);
           }
         );
@@ -257,7 +257,7 @@ function AmityCreateLivestreamPage() {
           setReconnecting(false);
 
           navigation.navigate('PostDetail', {
-            postId: post?.data?.postId,
+            postId: post?.postId,
             showEndPopup,
           });
         }

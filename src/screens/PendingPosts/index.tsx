@@ -7,13 +7,12 @@ import useAuth from '../../hooks/useAuth';
 import { RootStackParamList } from '../../routes/RouteParamList';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
-import { IPost } from '../../components/Social/PostList';
 import PendingPostList from '../../components/Social/PendingPostList';
 export default function PendingPosts() {
   const route = useRoute<RouteProp<RootStackParamList, 'PendingPosts'>>();
 
   const { communityId, isModerator } = route.params;
-  const [postList, setPostList] = useState<IPost[]>([]);
+  const [postList, setPostList] = useState<Amity.Post<any>[]>([]);
   const { client } = useAuth();
 
   const styles = useStyles();
@@ -30,7 +29,7 @@ export default function PendingPosts() {
         let pendingPost = await amityPostsFormatter(posts);
         if (!isModerator && client) {
           pendingPost = pendingPost.filter(
-            (item) => item.user.userId === (client as Amity.Client).userId
+            (item) => item.creator.userId === (client as Amity.Client).userId
           );
         }
         setPostList(pendingPost);
@@ -44,8 +43,8 @@ export default function PendingPosts() {
   }, [communityId]);
 
   const removePostfromList = (postId: string) => {
-    const prevPostList: IPost[] = [...postList];
-    const updatedPostList: IPost[] = prevPostList.filter(
+    const prevPostList = [...postList];
+    const updatedPostList = prevPostList.filter(
       (item) => item.postId !== postId
     );
     setPostList(updatedPostList);

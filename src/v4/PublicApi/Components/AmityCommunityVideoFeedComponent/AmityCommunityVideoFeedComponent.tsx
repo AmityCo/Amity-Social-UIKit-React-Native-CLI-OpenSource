@@ -81,7 +81,7 @@ const AmityCommunityVideoFeedComponent = forwardRef<
   return (
     <VideoGallery
       isLoading={loading}
-      posts={posts}
+      posts={posts as Amity.Post<'video'>[]}
       onNextPage={onNextPage}
       accessibilityId={accessibilityId}
       themeStyles={themeStyles}

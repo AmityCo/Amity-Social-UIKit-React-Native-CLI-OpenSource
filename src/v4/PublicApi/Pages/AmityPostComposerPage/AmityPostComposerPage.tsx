@@ -97,7 +97,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const [displayVideos, setDisplayVideos] = useState<IDisplayImage[]>([]);
   const [mentionUsers, setMentionUsers] = useState<TSearchItem[]>([]);
   const [isShowingSuggestion, setIsShowingSuggestion] = useState(false);
-  const [initialText, setInitialText] = useState(post?.data.text ?? '');
+  const [initialText, setInitialText] = useState(
+    (post?.data as Amity.ContentDataText)?.text ?? ''
+  );
   const [isSwipeup, setIsSwipeup] = useState(true);
   const [deletedPostIds, setDeletedPostIds] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -114,12 +116,13 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       displayVideos.length > 0) &&
     (displayImages.length <= 10 || displayVideos.length <= 10);
 
-  const checkIsEditValid = useCallback(() => {
+  const checkIsEditValid = () => {
     return (
       isInputValid &&
-      (inputMessage !== post?.data?.text || hasChangedAttachment)
+      (inputMessage !== (post?.data as Amity.ContentDataText)?.text ||
+        hasChangedAttachment)
     );
-  }, [hasChangedAttachment, inputMessage, isInputValid, post?.data?.text]);
+  };
 
   const parsePostText = useCallback(
     (text: string, mentionUsersArr: TSearchItem[]) => {
@@ -201,8 +204,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   }, []);
 
   useEffect(() => {
-    post?.childrenPosts && getPostInfo(post.childrenPosts);
-  }, [getPostInfo, post?.childrenPosts]);
+    post?.children && getPostInfo(post?.children);
+  }, [getPostInfo, post?.children]);
 
   const getMentionPositions = useCallback(
     (text: string, mentioneeIds: string[]) => {
@@ -241,23 +244,26 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       }) as TSearchItem[];
 
       setMentionUsers(users);
-      const parsedText = parsePostText(post?.data?.text ?? '', users);
+      const parsedText = parsePostText(
+        (post?.data as Amity.ContentDataText)?.text ?? '',
+        users
+      );
       setInitialText(parsedText);
       return users;
     },
-    [parsePostText, post?.data?.text]
+    [parsePostText, post?.data]
   );
 
   useEffect(() => {
     if (post?.mentionees?.length > 0) {
       const mentionPositions = getMentionPositions(
-        post?.data?.text ?? '',
-        post.mentionees ?? []
+        (post?.data as Amity.ContentDataText)?.text ?? '',
+        post.mentionees?.[0]?.userIds ?? []
       );
-      getMentionUsers(post.mentionees ?? []);
+      getMentionUsers(post.mentionees?.[0]?.userIds ?? []);
       setMentionsPosition(mentionPositions);
     } else {
-      setInitialText(post?.data?.text ?? '');
+      setInitialText((post?.data as Amity.ContentDataText)?.text ?? '');
     }
   }, [getMentionPositions, getMentionUsers, post]);
 

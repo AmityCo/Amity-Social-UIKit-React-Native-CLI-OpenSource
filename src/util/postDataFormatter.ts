@@ -1,33 +1,28 @@
-import { getAmityUser } from '../providers/user-provider';
-import { IPost } from '../components/Social/PostList';
-import { UserInterface } from '../types/user.interface';
-
 export const amityPostsFormatter = async (
   posts: Amity.Post<any>[]
-): Promise<IPost[]> => {
+): Promise<Amity.Post<any>[]> => {
   const formattedPostList = await Promise.all(
     posts.map(async (item: Amity.Post<any>) => {
-      const { userObject } = await getAmityUser(item.postedUserId);
       return {
         ...item,
-        postId: item.postId,
-        data: item.data as Record<string, any>,
-        dataType: item?.dataType ?? 'text',
-        myReactions: item.myReactions as string[],
-        reactionCount: item.reactions as Record<string, number>,
-        commentsCount: item.commentsCount,
-        user: userObject.data as UserInterface,
-        editedAt: item.editedAt,
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt,
-        targetType: item.targetType,
-        targetId: item.targetId,
-        childrenPosts: item.children,
-        mentionees: item.mentionees[0]?.userIds,
-        mentionPosition: item?.metadata?.mentioned || undefined,
-        path: item.path,
-        analytics: item.analytics,
-      } as IPost;
+        // postId: item.postId,
+        // data: item.data as Record<string, any>,
+        // dataType: item?.dataType ?? 'text',
+        // myReactions: item.myReactions as string[],
+        // reactionCount: item.reactions as Record<string, number>,
+        // commentsCount: item.commentsCount,
+        // user: userObject.data as UserInterface,
+        // editedAt: item.editedAt,
+        // createdAt: item.createdAt,
+        // updatedAt: item.updatedAt,
+        // targetType: item.targetType,
+        // targetId: item.targetId,
+        // childrenPosts: item.children,
+        // mentionees: item.mentionees[0]?.userIds,
+        // mentionPosition: item?.metadata?.mentioned || undefined,
+        // path: item.path,
+        // analytics: item.analytics,
+      };
     })
   );
   return formattedPostList;

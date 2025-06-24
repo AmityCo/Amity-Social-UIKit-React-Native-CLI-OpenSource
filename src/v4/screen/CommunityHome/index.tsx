@@ -32,7 +32,6 @@ import { SvgXml } from 'react-native-svg';
 import { editIcon, plusIcon, primaryDot } from '../../../svg/svg-xml-list';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
-import { IPost } from '../../../components/Social/PostList';
 import { amityPostsFormatter } from '../../../util/postDataFormatter';
 import { checkCommunityPermission } from '../../../providers/Social/communities-sdk';
 import {
@@ -98,7 +97,7 @@ export default function CommunityHome({
   const feedRef: MutableRefObject<FeedRefType | null> =
     useRef<FeedRefType | null>(null);
   const scrollViewRef = useRef(null);
-  const [pendingPosts, setPendingPosts] = useState<IPost[]>([]);
+  const [pendingPosts, setPendingPosts] = useState<Amity.Post<any>[]>([]);
   const [isUserHasPermission, setIsUserHasPermission] =
     useState<boolean>(false);
   const disposers: Amity.Unsubscriber[] = useMemo(() => [], []);
