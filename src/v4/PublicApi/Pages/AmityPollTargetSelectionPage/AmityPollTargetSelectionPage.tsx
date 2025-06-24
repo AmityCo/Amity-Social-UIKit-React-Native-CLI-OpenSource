@@ -32,7 +32,7 @@ const AmityPollTargetSelectionPage = () => {
         context
       );
     }
-    navigation.navigate('CreateLivestream', context);
+    navigation.navigate('PollPostComposer', context);
   };
 
   return (

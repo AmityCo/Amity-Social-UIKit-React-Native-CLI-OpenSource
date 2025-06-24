@@ -1,4 +1,9 @@
-import { View, TextInputProps, FlatList, TextInput } from 'react-native';
+import {
+  TextInputProps,
+  FlatList,
+  TextInput,
+  KeyboardAvoidingView,
+} from 'react-native';
 import React, { FC, Ref, memo, useCallback, useEffect, useState } from 'react';
 import { useStyles } from './styles';
 import SearchItem from '../SearchItem';
@@ -38,108 +43,89 @@ const AmityMentionInput: FC<IMentionInput> = ({
   setIsShowingSuggestion,
   ...rest
 }) => {
-  const styles = useStyles();
+  const { styles } = useStyles();
   const [cursorIndex, setCursorIndex] = useState(0);
+  const [value, setValue] = useState<string>(initialValue);
   const [currentSearchUserName, setCurrentSearchUserName] = useState('');
   const { searchResult, getNextPage } = useSearch(
     currentSearchUserName,
     privateCommunityId
   );
-  const [value, setValue] = useState<string>(initialValue);
 
-  const handleSelectionChange = (event) => {
-    setCursorIndex(event.nativeEvent.selection.start);
+  const onSelectUserMention = (user: TSearchItem) => {
+    const position: IMentionPosition = {
+      type: 'user',
+      userId: user.id,
+      displayName: user.displayName,
+      length: user.displayName.length + 1,
+      index: cursorIndex - 1 - currentSearchUserName.length,
+    };
+    const newMentionUsers = [...mentionUsers, user];
+    const newMentionPosition = [...mentionsPosition, position];
+    setMentionUsers(newMentionUsers);
+    setMentionsPosition(newMentionPosition);
+    setCurrentSearchUserName(null);
   };
-
-  const onSelectUserMention = useCallback(
-    (user: TSearchItem) => {
-      const position: IMentionPosition = {
-        type: 'user',
-        length: user.displayName.length + 1,
-        index: cursorIndex - 1 - currentSearchUserName.length,
-        userId: user.id,
-        displayName: user.displayName,
-      };
-      const newMentionUsers = [...mentionUsers, user];
-      const newMentionPosition = [...mentionsPosition, position];
-      setMentionUsers(newMentionUsers);
-      setMentionsPosition(newMentionPosition);
-      setCurrentSearchUserName(null);
-    },
-    [
-      currentSearchUserName,
-      cursorIndex,
-      mentionUsers,
-      mentionsPosition,
-      setMentionUsers,
-      setMentionsPosition,
-    ]
-  );
 
   const onChangeInput = useCallback(
     (text: string) => {
       setValue(text);
-      const data = replaceMentionValues(text, ({ name }) => `@${name}`);
-      setInputMessage(data);
+      setInputMessage(replaceMentionValues(text, ({ name }) => `@${name}`));
     },
     [setInputMessage]
   );
+
   useEffect(() => {
-    if (resetValue) {
-      return onChangeInput('');
-    }
-    onChangeInput(initialValue);
+    onChangeInput(resetValue ? '' : initialValue);
   }, [initialValue, onChangeInput, resetValue]);
 
-  const renderSuggestions: FC<MentionSuggestionsProps> = useCallback(
-    ({ keyword, onSuggestionPress }) => {
-      setCurrentSearchUserName(keyword || '');
-      setIsShowingSuggestion && setIsShowingSuggestion(keyword?.length > 0);
-      if (keyword == null || !searchResult || searchResult?.length === 0) {
-        return null;
-      }
-      return (
-        <View style={styles.mentionListContainer}>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-            onEndReached={() => getNextPage && getNextPage()}
-            nestedScrollEnabled={true}
-            data={searchResult}
-            renderItem={({ item }: { item: TSearchItem }) => {
-              return (
-                <SearchItem
-                  target={item}
-                  onPress={() => {
-                    onSelectUserMention(item);
-                    onSuggestionPress(item);
-                  }}
-                  userProfileNavigateEnabled={false}
-                />
-              );
-            }}
-            keyExtractor={(item) => item.id}
-          />
-        </View>
-      );
-    },
-    [
-      getNextPage,
-      onSelectUserMention,
-      searchResult,
-      setIsShowingSuggestion,
-      styles,
-    ]
-  );
+  const renderSuggestions: FC<MentionSuggestionsProps> = ({
+    keyword,
+    onSuggestionPress,
+  }) => {
+    setCurrentSearchUserName(keyword || '');
+    setIsShowingSuggestion && setIsShowingSuggestion(keyword?.length > 0);
+
+    if (keyword == null || !searchResult || searchResult?.length === 0) {
+      return null;
+    }
+
+    return (
+      <KeyboardAvoidingView style={styles.mentionListContainer}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          onEndReached={() => getNextPage && getNextPage()}
+          nestedScrollEnabled={true}
+          data={searchResult}
+          renderItem={({ item }: { item: TSearchItem }) => {
+            return (
+              <SearchItem
+                target={item}
+                onPress={() => {
+                  onSelectUserMention(item);
+                  onSuggestionPress(item);
+                }}
+                userProfileNavigateEnabled={false}
+              />
+            );
+          }}
+          keyExtractor={(item) => item.id}
+        />
+      </KeyboardAvoidingView>
+    );
+  };
+
   return (
     <MentionTextInput
-      inputRef={inputRef}
-      containerStyle={styles.inputContainer}
       {...rest}
-      style={styles.inputText}
       value={value}
+      inputRef={inputRef}
+      style={styles.inputText}
       onChange={onChangeInput}
-      onSelectionChange={handleSelectionChange}
+      onSelectionChange={(event) =>
+        setCursorIndex(event.nativeEvent.selection.start)
+      }
       partTypes={[
         {
           isBottomMentionSuggestionsRender,

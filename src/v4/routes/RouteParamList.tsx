@@ -27,20 +27,6 @@ export type RootStackParamList = {
   CategoryList: undefined;
   CreatePost: AmityPostComposerPageType;
   EditPost: AmityPostComposerPageType;
-  CreatePoll: {
-    targetId: string;
-    targetName: string;
-    targetType: string;
-    isPublic?: boolean;
-    postSetting?: ValueOf<
-      Readonly<{
-        ONLY_ADMIN_CAN_POST: 'ONLY_ADMIN_CAN_POST';
-        ADMIN_REVIEW_POST_REQUIRED: 'ADMIN_REVIEW_POST_REQUIRED';
-        ANYONE_CAN_POST: 'ANYONE_CAN_POST';
-      }>
-    >;
-    needApprovalOnPostCreation: boolean;
-  };
   PostDetail: {
     postId: string;
     showEndPopup?: boolean;
@@ -95,4 +81,19 @@ export type RootStackParamList = {
     pop?: number;
   };
   PollTargetSelection: undefined;
+  PollPostComposer: {
+    targetId: string;
+    targetType: 'community' | 'user';
+    targetName?: string;
+    pop?: number;
+    postSetting?: ValueOf<
+      Readonly<{
+        ONLY_ADMIN_CAN_POST: 'ONLY_ADMIN_CAN_POST';
+        ADMIN_REVIEW_POST_REQUIRED: 'ADMIN_REVIEW_POST_REQUIRED';
+        ANYONE_CAN_POST: 'ANYONE_CAN_POST';
+      }>
+    >;
+    needApprovalOnPostCreation?: boolean;
+    isPublic?: boolean;
+  };
 };
