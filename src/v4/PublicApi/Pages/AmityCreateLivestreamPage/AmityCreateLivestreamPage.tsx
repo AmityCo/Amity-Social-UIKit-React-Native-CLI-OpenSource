@@ -77,7 +77,7 @@ function AmityCreateLivestreamPage() {
   const [isEnding, setIsEnding] = useState<boolean>(false);
   const [post, setPost] = useState<Amity.Post | null>(null);
   const [stream, setStream] = useState<Amity.Stream | null>(null);
-  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const [timer, setTimer] = useState<number | null>(null);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [androidPermission, setAndroidPermission] = useState<boolean>(false);
   const [iOSPermission, setIOSPermission] = useState<boolean>(true);
@@ -295,7 +295,7 @@ function AmityCreateLivestreamPage() {
   }, [streamRef]);
 
   useEffect(() => {
-    let threeMinutesTimeout: NodeJS.Timeout | null = null;
+    let threeMinutesTimeout: number;
 
     if (reconnecting && stream && stream?.status === 'live') {
       threeMinutesTimeout = setTimeout(() => {

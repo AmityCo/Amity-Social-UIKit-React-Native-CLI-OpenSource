@@ -179,7 +179,7 @@ class AdAssetCache {
     }
   }
 
-  private _saveTimeout: NodeJS.Timeout | null = null;
+  private _saveTimeout: number | null = null;
   private _saveToStorage(): void {
     if (this._saveTimeout) {
       clearTimeout(this._saveTimeout);
