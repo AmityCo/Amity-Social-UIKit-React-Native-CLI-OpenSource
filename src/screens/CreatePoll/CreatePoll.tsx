@@ -84,7 +84,7 @@ const CreatePoll = ({ navigation, route }) => {
       closedIn: closedIn,
     });
     if (!pollId) return;
-    const mentionees = [
+    const mentionees: Amity.UserMention[] = [
       {
         type: 'user',
         userIds: mentionUsers.map((user) => user.id),

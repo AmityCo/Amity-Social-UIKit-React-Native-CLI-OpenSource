@@ -1,9 +1,8 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-// import { Amity.Post } from '../../components/Social/PostList';
 import { isAmityAd } from '../../v4/hook/useCustomRankingGlobalFeed';
 
 interface GlobalFeedState {
-  postList: (Amity.Post | Amity.Ad)[];
+  postList: (Amity.Post<any> | Amity.Ad)[];
   paginationData: {
     next: string | null;
     previous: string | null;
@@ -21,11 +20,11 @@ const globalFeedSlice = createSlice({
   name: 'globalFeed',
   initialState,
   reducers: {
-    setNewGlobalFeed: (state, action: PayloadAction<Amity.Post[]>) => {
+    setNewGlobalFeed: (state, action: PayloadAction<Amity.Post<any>[]>) => {
       state.postList = [...action.payload];
     },
-    updateGlobalFeed: (state, action: PayloadAction<Amity.Post[]>) => {
-      const getUniqueArrayById = (arr: (Amity.Post | Amity.Ad)[]) => {
+    updateGlobalFeed: (state, action: PayloadAction<Amity.Post<any>[]>) => {
+      const getUniqueArrayById = (arr: (Amity.Post<any> | Amity.Ad)[]) => {
         const uniqueIds = new Set(
           state.postList.map((post) =>
             isAmityAd(post) ? post.adId : post.postId
@@ -46,12 +45,12 @@ const globalFeedSlice = createSlice({
     ) => {
       state.paginationData = action.payload;
     },
-    addPostToGlobalFeed: (state, action: PayloadAction<Amity.Post>) => {
+    addPostToGlobalFeed: (state, action: PayloadAction<Amity.Post<any>>) => {
       state.postList = [action.payload, ...state.postList];
     },
     updateByPostId: (
       state,
-      action: PayloadAction<{ postId: string; postDetail: Amity.Post }>
+      action: PayloadAction<{ postId: string; postDetail: Amity.Post<any> }>
     ) => {
       const { postId, postDetail } = action.payload;
       const index = state.postList.findIndex(
@@ -61,10 +60,11 @@ const globalFeedSlice = createSlice({
     },
     deleteByPostId: (state, action: PayloadAction<{ postId: string }>) => {
       const { postId } = action.payload;
-      const prevPostList: (Amity.Post | Amity.Ad)[] = [...state.postList];
-      const updatedPostList: (Amity.Post | Amity.Ad)[] = prevPostList.filter(
-        (item) => !isAmityAd(item) && item.postId !== postId
-      );
+      const prevPostList: (Amity.Post<any> | Amity.Ad)[] = [...state.postList];
+      const updatedPostList: (Amity.Post<any> | Amity.Ad)[] =
+        prevPostList.filter(
+          (item) => !isAmityAd(item) && item.postId !== postId
+        );
 
       state.postList = updatedPostList;
     },

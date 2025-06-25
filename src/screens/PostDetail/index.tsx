@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 
 import type { RootStackParamList } from '../../routes/RouteParamList';
-import PostList, { IPost } from '../../components/Social/PostList';
+import PostList from '../../components/Social/PostList';
 import { useStyles } from './styles';
 import type { IComment } from '../../components/Social/CommentList';
 import type { UserInterface } from '../../types/user.interface';
@@ -108,7 +108,7 @@ const PostDetail = () => {
   const [replyUserName, setReplyUserName] = useState<string>('');
   const [replyCommentId, setReplyCommentId] = useState<string>('');
 
-  const [currentPost, setCurrentPost] = useState<IPost>();
+  const [currentPost, setCurrentPost] = useState<Amity.Post<any>>();
 
   useEffect(() => {
     const checkMentionNames = mentionNames.filter((item) => {
@@ -375,7 +375,7 @@ const PostDetail = () => {
       <ScrollView onScroll={handleScroll} style={styles.container}>
         <PostList
           onDelete={onDeletePost}
-          postDetail={currentPost as IPost}
+          postDetail={currentPost}
           isGlobalfeed={isFromGlobalfeed}
         />
 

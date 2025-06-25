@@ -1,9 +1,8 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IPost } from '../../components/Social/PostList';
 
 interface PostDetailState {
   currentIndex: number;
-  currentPostdetail: IPost | {};
+  currentPostdetail: Amity.Post<any> | {};
 }
 const initialState: PostDetailState = {
   currentIndex: 0,
@@ -17,7 +16,7 @@ const postDetailSlice = createSlice({
     updateCurrentIndex: (state, action: PayloadAction<number>) => {
       state.currentIndex = action.payload;
     },
-    updatePostDetail: (state, action: PayloadAction<IPost>) => {
+    updatePostDetail: (state, action: PayloadAction<Amity.Post<any>>) => {
       state.currentPostdetail = action.payload;
     },
   },

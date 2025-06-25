@@ -38,7 +38,7 @@ export interface IPost {
 }
 export interface IPendingPostList {
   onAcceptDecline?: (postId: string) => void;
-  postDetail: IPost;
+  postDetail: Amity.Post<any>;
   isModerator?: boolean;
 }
 export interface MediaUri {
@@ -55,7 +55,7 @@ export default function PendingPostList({
   onAcceptDecline,
   isModerator = false,
 }: IPendingPostList) {
-  const [postData, setPostData] = useState<IPost>(postDetail);
+  const [postData, setPostData] = useState<Amity.Post<any>>(postDetail);
 
   const { apiRegion } = useAuth();
   const styles = useStyles();
@@ -71,10 +71,12 @@ export default function PendingPostList({
     data,
     postId,
     createdAt,
-    user,
-    childrenPosts = [],
-    mentionPosition,
+    creator: user,
+    children: childrenPosts = [],
+    metadata,
   } = postData ?? {};
+
+  const mentionPosition = metadata?.mentioned;
 
   useEffect(() => {
     if (mentionPosition) {
@@ -90,7 +92,7 @@ export default function PendingPostList({
   }, [postDetail]);
 
   useEffect(() => {
-    setTextPost(data?.text);
+    setTextPost((data as Amity.ContentDataText)?.text);
   }, [postDetail]);
 
   function getTimeDifference(timestamp: string): string {
