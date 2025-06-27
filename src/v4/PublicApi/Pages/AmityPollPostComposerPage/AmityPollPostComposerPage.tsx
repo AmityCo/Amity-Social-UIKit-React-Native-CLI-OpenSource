@@ -508,10 +508,9 @@ function PollOptions({
             pollOption.data.length > MAX_POLL_ANSWER_LENGTH;
 
           return (
-            <View>
+            <View key={`Option ${index + 1}`}>
               <View style={styles.pollOptionContainer}>
                 <View
-                  key={index}
                   style={[
                     styles.pollOptionInputContainer,
                     onReachMaxChar && styles.pollOptionInputContainerError,
