@@ -15,6 +15,7 @@ import { IBehaviour } from '../v4/types/behaviour.interface';
 import { lighten, darken, parseToHsl, hslToColorString } from 'polished';
 import { AdEngineProvider } from '../v4/providers/AdEngineProvider';
 import BottomSheetComponent from '../v4/component/BottomSheetComponent/BottomSheetComponent';
+import Toast from '../v4/component/Toast';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
@@ -153,6 +154,7 @@ export default function AmityUiKitProvider({
                 <PaperProvider theme={globalTheme}>
                   {children}
                   <BottomSheetComponent />
+                  <Toast />
                 </PaperProvider>
               </ExploreProvider>
             </BehaviourProvider>

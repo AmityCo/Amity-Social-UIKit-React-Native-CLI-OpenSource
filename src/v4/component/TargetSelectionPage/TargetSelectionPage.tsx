@@ -81,6 +81,7 @@ const TargetSelectionPage = ({
         onSelect={() =>
           onSelectFeed({
             targetId: item.communityId,
+            targetName: item.displayName,
             targetType: 'community',
             community: item,
           })

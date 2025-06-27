@@ -1,10 +1,12 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const useStyles = () => {
   const theme = useTheme() as MyMD3Theme;
   const { width } = Dimensions.get('window');
+  const { bottom } = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     container: {
@@ -33,7 +35,8 @@ export const useStyles = () => {
       color: theme.colors.primaryShade2,
     },
     form: {
-      flex: 1,
+      flexGrow: 1,
+      paddingBottom: bottom + 24,
     },
     fieldContainer: {
       paddingTop: 24,
@@ -110,49 +113,47 @@ export const useStyles = () => {
     },
     durationButton: {
       paddingTop: 24,
+      marginBottom: 4,
       paddingBottom: 8,
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.baseShade4,
     },
+    pickDateTimeButton: {
+      padding: 16,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
     fillSpace: {
       flex: 1,
     },
-    scheduleOptionContainer: {
-      maxHeight: 200,
+    bottomSheet: {
       backgroundColor: theme.colors.background,
     },
-    scheduleOptionText: {
-      color: theme.colors.base,
+    androidDateTimeContainer: {
+      gap: 12,
+      paddingTop: 6,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
-    scheduleSelectorSelectStyle: {
-      alignItems: 'flex-start',
-      marginTop: 16,
-      borderWidth: 0,
-    },
-    selectedTimeFrame: {
-      color: theme.colors.base,
-    },
-    scheduleTitleStyle: {
-      fontWeight: 'bold',
-      fontSize: 18,
-      alignSelf: 'flex-start',
-      marginBottom: 20,
-      color: theme.colors.base,
-    },
-    scheduleInitValueTextStyle: {
-      color: theme.colors.base,
-    },
-    scheduleOptionStyle: {
-      borderBottomWidth: 0,
-      marginVertical: 5,
+    androidDateTimeButton: {
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      borderRadius: 8,
       backgroundColor: theme.colors.baseShade4,
-      borderRadius: 2,
     },
-    scheduleSectionStyle: {
-      borderBottomWidth: 0,
+    iOSDateTimePicker: {
+      height: 600,
     },
-    scheduleSelectedItemText: {
-      color: theme.colors.primary,
+    iOSDateTimeHeader: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderBottomColor: theme.colors.baseShade4,
+      borderBottomWidth: 1,
     },
   });
 

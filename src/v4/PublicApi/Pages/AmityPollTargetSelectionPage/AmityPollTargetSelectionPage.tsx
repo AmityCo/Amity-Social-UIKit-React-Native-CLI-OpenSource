@@ -19,13 +19,7 @@ const AmityPollTargetSelectionPage = () => {
     targetName,
     community,
   }: FeedParams) => {
-    const context = {
-      pop: 2,
-      targetId,
-      targetType,
-      targetName:
-        targetType === 'community' ? community?.displayName : targetName,
-    };
+    const context = { pop: 2, targetId, targetType, community, targetName };
 
     if (AmityPollTargetSelectionPageBehavior.goToPollPostComposerPage) {
       return AmityPollTargetSelectionPageBehavior.goToPollPostComposerPage(
