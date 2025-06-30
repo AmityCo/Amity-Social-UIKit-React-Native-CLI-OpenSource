@@ -37,15 +37,16 @@ import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
 import { useDispatch } from 'react-redux';
 import { useToast } from '../../../stores/slices/toast';
+import {
+  DAY,
+  MAX_POLL_ANSWER_LENGTH,
+  MAX_POLL_QUESTION_LENGTH,
+} from '../../../constants';
 
 type PollDurationValue = {
   value: number;
   label: string;
 };
-
-const MAX_POLL_QUESTION_LENGTH = 500;
-const MAX_POLL_ANSWER_LENGTH = 60;
-const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
 
 const durationOptions: PollDurationValue[] = [
   { value: 1, label: '1 day' },
@@ -237,7 +238,7 @@ const PollPostComposer = () => {
                 .millisecond(0)
                 .diff(dayjs(), 'milliseconds')
             : dayjs(selectedDate).diff(dayjs(), 'milliseconds')
-          : duration.value * MILLISECONDS_IN_DAY;
+          : duration.value * DAY;
 
       const answerType = isMultipleOption ? 'multiple' : 'single';
 
