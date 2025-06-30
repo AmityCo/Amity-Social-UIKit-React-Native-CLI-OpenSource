@@ -30,7 +30,6 @@ interface IPostContent {
   childrenPosts: string[];
   onPressPost?: () => void;
   mentionPositionArr?: IMentionPosition[];
-  setPostDataType?: (type: 'liveStream' | '') => void;
 }
 const PostContent: React.FC<IPostContent> = ({
   post,
@@ -38,7 +37,6 @@ const PostContent: React.FC<IPostContent> = ({
   onPressPost,
   childrenPosts,
   mentionPositionArr,
-  setPostDataType,
 }) => {
   const { apiRegion } = useAuth();
   const [imagePosts, setImagePosts] = useState<string[]>([]);
@@ -91,7 +89,6 @@ const PostContent: React.FC<IPostContent> = ({
       const response = await Promise.all(
         childrenPosts.map(async (id) => {
           const { data: childrenPost } = await getPostById(id);
-          setPostDataType(childrenPost?.dataType);
           return { dataType: childrenPost?.dataType, data: childrenPost?.data };
         })
       );
@@ -127,7 +124,7 @@ const PostContent: React.FC<IPostContent> = ({
     } catch (error) {
       console.log('error: ', error);
     }
-  }, [apiRegion, childrenPosts, setPostDataType]);
+  }, [apiRegion, childrenPosts]);
 
   useEffect(() => {
     setVideoPosts([]);

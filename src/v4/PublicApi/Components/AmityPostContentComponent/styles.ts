@@ -208,54 +208,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       width: 320,
       height: 200,
     },
-    mediaWrap: {
-      minHeight: 375,
-    },
-    threeDots: {
-      width: 24,
-      height: 24,
-      tintColor: theme.colors.base,
-      resizeMode: 'contain',
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: 'flex-end',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-      backgroundColor: theme.colors.background,
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      padding: 10,
-      minHeight: 700,
-    },
-    twoOptions: {
-      minHeight: 750,
-    },
-    modalRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 5,
-      marginVertical: 8,
-    },
-    handleBar: {
-      alignSelf: 'center',
-      width: 36,
-      backgroundColor: theme.colors.baseShade4,
-      height: 5,
-      marginVertical: 10,
-      borderRadius: 10,
-    },
-    editText: {
-      paddingLeft: 12,
-      fontWeight: '600',
-      color: theme.colors.base,
-    },
-    deleteText: {
-      paddingLeft: 12,
-      fontWeight: '600',
-      color: theme.colors.alert,
-    },
+
     timeRow: {
       marginTop: 4,
       flexDirection: 'row',

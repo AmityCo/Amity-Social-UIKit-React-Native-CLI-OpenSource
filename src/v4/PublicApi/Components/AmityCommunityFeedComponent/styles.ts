@@ -1,12 +1,17 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const useStyles = () => {
   const { height: screenHeight } = Dimensions.get('window');
+  const { bottom } = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     listContainer: {
       height: screenHeight * 0.5,
       paddingHorizontal: 24,
+    },
+    container: {
+      paddingBottom: bottom + 4,
     },
     communityNameWrap: {
       flexDirection: 'row',
