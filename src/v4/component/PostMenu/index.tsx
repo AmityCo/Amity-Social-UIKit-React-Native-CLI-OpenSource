@@ -31,11 +31,11 @@ import { useDispatch } from 'react-redux';
 import { Typography } from '../../component/Typography/Typography';
 import { pen, poll, report, trash, unreport } from '../../assets/icons';
 import { useToast } from '../../stores/slices/toast';
-import { usePoll } from '../../../components/PollSection/usePoll';
 import { RootStackParamList } from '../../routes/RouteParamList';
 import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElement/MenuButtonIconElement';
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { ComponentID, PageID } from '../../enum';
+import { usePoll } from '../../hook/usePoll';
 
 type PostMenuProps = {
   pageId?: PageID;
@@ -59,9 +59,8 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
     null
   );
 
-  const { data: pollData } = usePoll(
-    (childrenPost as Amity.Post<'poll'>)?.data?.pollId,
-    childrenPost?.dataType === 'poll'
+  const { poll: pollData } = usePoll(
+    (childrenPost as Amity.Post<'poll'>)?.data?.pollId
   );
 
   const slideAnimation = useRef(new Animated.Value(0)).current;

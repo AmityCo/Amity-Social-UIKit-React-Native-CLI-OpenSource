@@ -41,3 +41,4 @@ export { default as report } from './report';
 export { default as unreport } from './unreport';
 export * from './radio';
 export * from './toast';
+export * from './checkbox';

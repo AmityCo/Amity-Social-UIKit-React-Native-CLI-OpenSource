@@ -9,28 +9,29 @@ import {
 } from 'react-native';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import {
-  radioChecked,
-  radioUnchecked,
-  radioCheckedDisabled,
-  radioUncheckedDisabled,
+  checkboxChecked,
+  checkboxUnchecked,
+  checkboxCheckedDisabled,
+  checkboxUncheckedDisabled,
 } from '../../assets/icons';
 import { useStyles } from './styles';
 
-type RadioContextType<T extends any = string | number> = {
+type CheckBoxContextType<T extends any = string | number> = {
+  value: T[];
   disabled?: boolean;
-  value: T;
-  onChange: (value: T) => void;
-  select?: (value: T, option: T) => boolean;
+  onChange: (value: T[]) => void;
+  select?: (value: T[], option: T) => boolean;
+  extractKey?: (value: T) => string | number;
 };
 
-const RadioContext = createContext<RadioContextType<any> | null>(null);
+const CheckBoxContext = createContext<CheckBoxContextType<any> | null>(null);
 
-const useRadioContext = () => {
-  const context = useContext(RadioContext);
+const useCheckBoxContext = () => {
+  const context = useContext(CheckBoxContext);
   return context;
 };
 
-type GroupProps<T> = RadioContextType<T> & PropsWithChildren<ViewProps>;
+type GroupProps<T> = CheckBoxContextType<T> & PropsWithChildren<ViewProps>;
 
 function Group<T>({
   value,
@@ -40,11 +41,9 @@ function Group<T>({
   ...props
 }: GroupProps<T>) {
   return (
-    <RadioContext.Provider value={{ value, onChange, disabled }}>
-      <View {...props} accessibilityRole="radiogroup">
-        {children}
-      </View>
-    </RadioContext.Provider>
+    <CheckBoxContext.Provider value={{ value, onChange, disabled }}>
+      <View {...props}>{children}</View>
+    </CheckBoxContext.Provider>
   );
 }
 
@@ -81,24 +80,35 @@ function Option<T extends any = string | number>({
   const {
     select,
     onChange,
+    extractKey,
     value: selectedValue,
     disabled: groupDisabled,
-  } = useRadioContext();
+  } = useCheckBoxContext();
   const { styles } = useStyles();
 
   const selected = select
     ? select(selectedValue, value)
-    : selectedValue === value;
+    : selectedValue.includes(value);
 
   const isDisabled = disabled || groupDisabled;
+
+  const handlePress = () => {
+    if (isDisabled) return;
+    const newValue = selected
+      ? selectedValue.filter((v) =>
+          extractKey ? extractKey(v) !== extractKey(value) : v !== value
+        )
+      : [...selectedValue, value];
+    onChange(newValue);
+  };
 
   return (
     <OptionContext.Provider value={{ value, disabled: isDisabled }}>
       <Pressable
         {...props}
         disabled={isDisabled}
-        accessibilityRole="radio"
-        onPress={() => !isDisabled && onChange(value)}
+        onPress={handlePress}
+        accessibilityRole="checkbox"
         accessibilityLabel={accessibilityLabel || `Option ${value}`}
         accessibilityState={{ checked: selected, disabled: isDisabled }}
         accessibilityHint={
@@ -123,11 +133,11 @@ type IconProps = Omit<XmlProps, 'xml'> & {
 const Icon = ({ width = 24, height = 24, style, ...props }: IconProps) => {
   const { theme } = useStyles();
   const option = useOptionContext();
-  const { value, select } = useRadioContext();
+  const { value, select } = useCheckBoxContext();
 
   const isSelected = select
     ? select(value, option.value)
-    : value === option?.value;
+    : value.includes(option?.value);
 
   const color = isSelected
     ? option?.disabled
@@ -139,11 +149,11 @@ const Icon = ({ width = 24, height = 24, style, ...props }: IconProps) => {
 
   const icon = isSelected
     ? option?.disabled
-      ? radioCheckedDisabled()
-      : radioChecked()
+      ? checkboxCheckedDisabled()
+      : checkboxChecked()
     : option?.disabled
-    ? radioUncheckedDisabled()
-    : radioUnchecked();
+    ? checkboxUncheckedDisabled()
+    : checkboxUnchecked();
 
   return (
     <View style={style}>
@@ -164,4 +174,4 @@ const Label = ({ children, ...props }: LabelProps) => {
   return <View {...props}>{children}</View>;
 };
 
-export const Radio = { Group, Option, Icon, Label };
+export const CheckBox = { Group, Option, Icon, Label };

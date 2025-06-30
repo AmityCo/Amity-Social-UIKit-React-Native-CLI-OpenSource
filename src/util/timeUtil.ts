@@ -20,3 +20,20 @@ export const formatDuration = (seconds: number) => {
 
   return `${formattedHours}${formattedMinutes}${formattedSeconds}`;
 };
+
+export const formatTimeLeft = (milliseconds: number): string => {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  const totalHours = Math.floor(totalMinutes / 60);
+  const totalDays = Math.floor(totalHours / 24);
+
+  if (totalDays > 0) {
+    return `${totalDays}d`;
+  } else if (totalHours > 0) {
+    return `${totalHours}h`;
+  } else if (totalMinutes > 0) {
+    return `${totalMinutes}m`;
+  } else {
+    return `1m`;
+  }
+};

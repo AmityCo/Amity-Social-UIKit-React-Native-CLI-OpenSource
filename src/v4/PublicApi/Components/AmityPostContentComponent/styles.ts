@@ -9,7 +9,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       paddingHorizontal: 16,
     },
     headerSection: {
-      paddingVertical: 8,
+      paddingTop: 8,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
