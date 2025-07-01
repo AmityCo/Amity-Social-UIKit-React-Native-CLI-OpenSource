@@ -46,6 +46,7 @@ export interface IBehaviour {
     }) => void;
     goToSelectStoryTargetPage?: () => void;
     goToSelectLivestreamPostTargetPage?: () => void;
+    goToSelectPollPostTargetPage?: () => void;
   };
   AmityPostTargetSelectionPageBehavior?: {
     goToPostComposerPage?: (arg?: {
@@ -104,13 +105,22 @@ export interface IBehaviour {
       needApprovalOnPostCreation?: boolean;
       isPublic?: boolean;
     }) => void;
-    AmityCommunityProfilePageBehavior?: {
-      goToPendingPostPage?: () => void;
-      goToCommunitySettingPage?: () => void;
-      goToPostComposerPage?: () => void;
-      goToCreateStoryPage?: () => void;
-      goToMemberListPage?: () => void;
-      goToPostDetailPage?: (arg?: string) => void;
-    };
+  };
+  AmityCommunityProfilePageBehavior?: {
+    goToPendingPostPage?: () => void;
+    goToCommunitySettingPage?: () => void;
+    goToPostComposerPage?: () => void;
+    goToCreateStoryPage?: () => void;
+    goToMemberListPage?: () => void;
+    goToPostDetailPage?: (arg?: string) => void;
+  };
+  AmityPollTargetSelectionPageBehavior?: {
+    goToPollPostComposerPage?: (arg?: {
+      targetId: string;
+      targetType: 'community' | 'user';
+      targetName?: string;
+      pop?: number;
+      community?: Amity.Community;
+    }) => void;
   };
 }

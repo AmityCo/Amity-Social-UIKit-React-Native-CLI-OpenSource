@@ -17,6 +17,8 @@ export enum PageID {
   create_livestream_page = 'create_livestream_page',
   livestream_player_page = 'livestream_player_page',
   livestream_terminated_page = 'livestream_terminated_page',
+  select_poll_target_page = 'select_poll_target_page',
+  poll_post_composer_page = 'poll_post_composer_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',

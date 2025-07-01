@@ -51,6 +51,15 @@ const AmityCreatePostMenuComponent = ({
           navigation.navigate('StoryTargetSelection');
         },
 
+        [AmityPostTargetSelectionPageType.poll]: () => {
+          if (
+            AmityCreatePostMenuComponentBehavior.goToSelectPollPostTargetPage
+          ) {
+            AmityCreatePostMenuComponentBehavior.goToSelectPollPostTargetPage();
+          }
+          navigation.navigate('PollTargetSelection');
+        },
+
         [AmityPostTargetSelectionPageType.livestream]: () => {
           if (
             AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage
@@ -81,12 +90,12 @@ const AmityCreatePostMenuComponent = ({
           onPressCreatePost(AmityPostTargetSelectionPageType.story)
         }
       />
-      {/* <ButtonWithIconElement
+      <ButtonWithIconElement
         pageId={pageId}
         componentId={componentId}
         elementId={ElementID.create_poll_button}
         onClick={() => onPressCreatePost(AmityPostTargetSelectionPageType.poll)}
-      /> */}
+      />
       <ButtonWithIconElement
         pageId={pageId}
         componentId={componentId}

@@ -36,7 +36,6 @@ import BackButton from '../../components/BackButton';
 import EditCommunity from '../../screens/EditCommunity/EditCommunity';
 import VideoPlayerFull from '../../screens/VideoPlayerFullScreen';
 import PostTypeChoiceModal from '../../components/PostTypeChoiceModal/PostTypeChoiceModal';
-import CreatePoll from '../../screens/CreatePoll/CreatePoll';
 import ReactionListScreen from '../../screens/ReactionListScreen/ReactionListScreen';
 import CreateStoryScreen from '../screen/CreateStory/CreateStoryScreen';
 import Toast from '../../components/Toast/Toast';
@@ -53,6 +52,7 @@ import AmityCommunitiesByCategoryPage from '../PublicApi/Pages/AmityCommunitiesB
 import EditPost from '../screen/EditPost/EditPost';
 import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 import LivestreamPlayer from '../../screens/LivestreamPlayer';
+import PollPostComposer from '../screen/PollPostComposer';
 
 interface PageRendererProps {
   children: React.JSX.Element;
@@ -70,6 +70,7 @@ export default function PageRenderer({ children }: PageRendererProps) {
           <Stack.Navigator
             id={undefined}
             screenOptions={{
+              headerShown: false,
               headerShadowVisible: false,
               contentStyle: {
                 backgroundColor: 'white',
@@ -202,9 +203,8 @@ export default function PageRenderer({ children }: PageRendererProps) {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="CreatePoll"
-              component={CreatePoll}
-              options={{ headerShown: false }}
+              name="PollPostComposer"
+              component={PollPostComposer}
             />
             <Stack.Screen
               name="UserProfile"
