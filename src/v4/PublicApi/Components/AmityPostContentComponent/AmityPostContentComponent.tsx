@@ -26,6 +26,7 @@ type AmityPostContentComponentProps = {
   pageId?: PageID;
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;
   isCommunityNameShown?: boolean;
+  showedAllOptions?: boolean;
 };
 export interface MediaUri {
   uri: string;
@@ -39,6 +40,7 @@ export interface IVideoPost {
 const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
   pageId = PageID.WildCardPage,
   post,
+  showedAllOptions,
   AmityPostContentComponentStyle = AmityPostContentComponentStyleEnum.detail,
   isCommunityNameShown = true,
 }) => {
@@ -231,7 +233,9 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
             textPost={textPost}
             childrenPosts={children}
             onPressPost={onPressPost}
+            showedAllOptions={showedAllOptions}
             mentionPositionArr={mentionPositionArr}
+            disabledPoll={communityData?.isPublic && !communityData?.isJoined}
           />
         </View>
         <AmityPostEngagementActionsComponent

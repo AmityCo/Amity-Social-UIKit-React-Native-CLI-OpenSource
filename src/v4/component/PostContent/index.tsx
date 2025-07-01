@@ -27,15 +27,19 @@ import PollContent from '../PollContent';
 interface IPostContent {
   post: Amity.Post;
   textPost?: string;
+  disabledPoll?: boolean;
   childrenPosts: string[];
   onPressPost?: () => void;
+  showedAllOptions?: boolean;
   mentionPositionArr?: IMentionPosition[];
 }
 const PostContent: React.FC<IPostContent> = ({
   post,
   textPost,
   onPressPost,
+  disabledPoll,
   childrenPosts,
+  showedAllOptions,
   mentionPositionArr,
 }) => {
   const { apiRegion } = useAuth();
@@ -318,7 +322,12 @@ const PostContent: React.FC<IPostContent> = ({
       )}
       <View>
         {pollIds.length > 0 ? (
-          <PollContent pollId={pollIds[0].pollId} post={post} />
+          <PollContent
+            post={post}
+            pollId={pollIds[0].pollId}
+            disabledPoll={disabledPoll}
+            showedAllOptions={showedAllOptions}
+          />
         ) : livestreamId.length > 0 ? (
           <LivestreamContent
             post={post}

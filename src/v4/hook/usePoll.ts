@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { PollRepository } from '@amityco/ts-sdk-react-native';
+import { useToast } from '../stores/slices/toast';
 
 export const usePoll = (pollId: string) => {
   const [poll, setPoll] = useState<Amity.Poll | undefined>(undefined);
   const [isAuthorSeeingResults, setIsAuthorSeeingResults] = useState(false);
+  const { showToast } = useToast();
 
   const isPollClosed = useMemo(() => {
     return poll?.status === 'closed';
@@ -25,7 +27,11 @@ export const usePoll = (pollId: string) => {
   }, [pollId]);
 
   const votePoll = async (answerIds: string[]) => {
-    await PollRepository.votePoll(pollId, answerIds);
+    try {
+      await PollRepository.votePoll(pollId, answerIds);
+    } catch (error) {
+      showToast({ type: 'failed', message: 'Oops, something went wrong.' });
+    }
   };
 
   return {

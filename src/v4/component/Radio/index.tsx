@@ -54,6 +54,7 @@ type OptionProps<T extends any = string | number> = PropsWithChildren<
   style?: (state: {
     pressed: boolean;
     selected: boolean;
+    disabled: boolean;
   }) => StyleProp<ViewStyle>;
   disabled?: boolean;
   value: T;
@@ -107,7 +108,7 @@ function Option<T extends any = string | number>({
         style={({ pressed }) => [
           styles.option,
           pressed && styles.optionPressed,
-          style && style({ pressed, selected }),
+          style && style({ pressed, selected, disabled: isDisabled }),
         ]}
       >
         {children}

@@ -32,11 +32,24 @@ export const useStyles = () => {
     optionLabel: {
       flex: 1,
     },
+    optionLabelDisabled: {
+      color: theme.colors.baseShade3,
+    },
     seeMoreOptionsBtn: {
       marginTop: 16,
     },
     voteBtn: {
       marginTop: 12,
+      backgroundColor: theme.colors.primary,
+      paddingVertical: 10,
+      paddingHorizontal: 16,
+      borderRadius: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    voteBtnDisabled: {
+      backgroundColor: theme.colors.primaryShade3,
     },
     voteBtnLabel: {
       color: theme.colors.background,
@@ -77,6 +90,7 @@ export const useStyles = () => {
       justifyContent: 'space-between',
     },
     optionResultLabel: {
+      flex: 1,
       color: theme.colors.base,
     },
     optionResultPercentage: {

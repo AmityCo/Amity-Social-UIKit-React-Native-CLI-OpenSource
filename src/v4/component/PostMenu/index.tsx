@@ -131,12 +131,13 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
       const deleted = await deletePostById(postId);
       if (deleted) {
         dispatch(deleteByPostId({ postId }));
+        showToast({ type: 'success', message: 'Post deleted.' });
         pageId === PageID.post_detail_page && navigation.pop();
       }
     } catch (error) {
       showToast({
-        message: 'Failed to delete post. Please try again.',
         type: 'failed',
+        message: 'Failed to delete post. Please try again.',
       });
     }
   };
@@ -175,22 +176,19 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
           onPress: () => {
             closePoll({
               pollId: (childrenPost as Amity.Post<'poll'>)?.data?.pollId,
-              onSuccess: () => {
-                showToast({ message: 'Post closed.', type: 'success' });
-                setIsVisible(false);
-              },
+              onSuccess: () => setIsVisible(false),
               onError: () => {
                 showToast({
-                  message: 'Oops, something went wrong.',
                   type: 'failed',
+                  message: 'Oops, something went wrong.',
                 });
-                setIsVisible(false);
               },
             });
           },
         },
       ]
     );
+    setIsVisible(false);
   };
 
   const reportPostObject = async () => {

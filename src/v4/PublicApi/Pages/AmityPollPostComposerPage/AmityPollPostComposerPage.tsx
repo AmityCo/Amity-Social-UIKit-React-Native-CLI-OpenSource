@@ -233,7 +233,7 @@ const PollPostComposer = () => {
       } = await PollRepository.createPoll({
         question: pollQuestion,
         answerType: answerType,
-        answers: pollOptions,
+        answers: pollOptions.filter((option) => option.data.trim().length > 0),
         closedIn,
       });
 
