@@ -1,15 +1,11 @@
 import React, { createContext, useContext, useRef, useState } from 'react';
 import {
-  TouchableOpacity,
   View,
-  TextInput,
-  Switch,
   ScrollView,
   Alert,
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
-import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
 import { PollRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { checkCommunityPermission } from '../../../../providers/Social/communities-sdk';
@@ -20,35 +16,25 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
-import {
-  arrowDown,
-  arrowLeft,
-  arrowRight,
-  close,
-  plus,
-  trash,
-} from '../../../assets/icons';
-import { Typography } from '../../../component/Typography/Typography';
-import AmityMentionInput from '../../../component/MentionInput/AmityMentionInput';
-import { Radio } from '../../../component/Radio';
 import dayjs from 'dayjs';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
 import { useDispatch } from 'react-redux';
 import { useToast } from '../../../stores/slices/toast';
-import {
-  DAY,
-  MAX_POLL_ANSWER_LENGTH,
-  MAX_POLL_QUESTION_LENGTH,
-} from '../../../constants';
+import { DAY, MAX_POLL_ANSWER_LENGTH } from '../../../constants';
+import { PollHeader } from './PollHeader';
+import { PollQuestion } from './PollQuestion';
+import { PollOptions } from './PollOptions';
+import { PollSelection } from './PollSelection';
+import { PollDuration } from './PollDuration';
+import { AndroidBottomSheet, IOSBottomSheet } from './PollDurationBottomSheet';
 
 type PollDurationValue = {
   value: number;
   label: string;
 };
 
-const durationOptions: PollDurationValue[] = [
+export const durationOptions: PollDurationValue[] = [
   { value: 1, label: '1 day' },
   { value: 3, label: '3 days' },
   { value: 7, label: '7 days' },
@@ -56,12 +42,12 @@ const durationOptions: PollDurationValue[] = [
   { value: 30, label: '30 days' },
 ];
 
-const androidDurationOptions: PollDurationValue[] = [
+export const androidDurationOptions: PollDurationValue[] = [
   ...durationOptions,
   { value: 0, label: 'Custom end date' },
 ];
 
-type PollPostComposerContextType = {
+export type PollPostComposerContextType = {
   loading: boolean;
   setLoading: (loading: boolean) => void;
   isMultipleOption: boolean;
@@ -94,7 +80,7 @@ type PollPostComposerContextType = {
 const PollPostComposerContext =
   createContext<PollPostComposerContextType | null>(null);
 
-const usePollPostComposerContext = () => {
+export const usePollPostComposerContext = () => {
   const context = useContext(PollPostComposerContext);
   return context;
 };
@@ -381,482 +367,3 @@ const PollPostComposer = () => {
     </SafeAreaView>
   );
 };
-
-type PollHeaderProps = {
-  goBack: () => void;
-  targetName: string;
-  isBtnDisable: boolean;
-  handleCreatePost: () => void;
-};
-
-function PollHeader({
-  goBack,
-  targetName,
-  isBtnDisable,
-  handleCreatePost,
-}: PollHeaderProps) {
-  const { styles, theme } = useStyles();
-
-  return (
-    <View style={styles.header}>
-      <TouchableOpacity onPress={goBack}>
-        <SvgXml
-          width="24"
-          height="24"
-          xml={close()}
-          color={theme.colors.base}
-        />
-      </TouchableOpacity>
-      <View style={styles.title}>
-        <Typography.TitleBold style={styles.base}>
-          {targetName}
-        </Typography.TitleBold>
-      </View>
-      <TouchableOpacity disabled={isBtnDisable} onPress={handleCreatePost}>
-        <Typography.Body style={[styles.cta, isBtnDisable && styles.disabled]}>
-          Post
-        </Typography.Body>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-type PollQuestionProps = Pick<
-  PollPostComposerContextType,
-  | 'mentionUsers'
-  | 'setMentionUsers'
-  | 'mentionPosition'
-  | 'setMentionPosition'
-  | 'setIsScrollEnabled'
-> & {
-  privateCommunityId?: string;
-};
-
-function PollQuestion({
-  privateCommunityId,
-  mentionUsers,
-  setMentionUsers,
-  mentionPosition,
-  setMentionPosition,
-  setIsScrollEnabled,
-}: PollQuestionProps) {
-  const { styles, theme } = useStyles();
-  const { pollQuestion, setPollQuestion } = usePollPostComposerContext();
-  return (
-    <View style={styles.fieldContainer}>
-      <View
-        style={[
-          styles.inputContainer,
-          pollQuestion.length > MAX_POLL_QUESTION_LENGTH &&
-            styles.inputContainerError,
-        ]}
-      >
-        <View style={styles.rowContainer}>
-          <Typography.TitleBold style={styles.base}>
-            Poll question
-          </Typography.TitleBold>
-          <Typography.Caption style={styles.baseShade1}>
-            {pollQuestion.length}/{MAX_POLL_QUESTION_LENGTH}
-          </Typography.Caption>
-        </View>
-        <AmityMentionInput
-          multiline
-          privateCommunityId={privateCommunityId}
-          isBottomMentionSuggestionsRender={true}
-          onFocus={() => setIsScrollEnabled(false)}
-          onBlur={() => setIsScrollEnabled(true)}
-          placeholder="What's your poll question?"
-          placeholderTextColor={theme.colors.baseShade3}
-          setInputMessage={setPollQuestion}
-          mentionUsers={mentionUsers}
-          setMentionUsers={setMentionUsers}
-          mentionsPosition={mentionPosition}
-          setMentionsPosition={setMentionPosition}
-        />
-      </View>
-      {pollQuestion.length > MAX_POLL_QUESTION_LENGTH && (
-        <Typography.Caption style={styles.errorText}>
-          Poll question cannot exceed {MAX_POLL_QUESTION_LENGTH} characters.
-        </Typography.Caption>
-      )}
-    </View>
-  );
-}
-
-type PollOptionsProps = {
-  onPressAddOption: () => void;
-  onPressRemoveOption: (index: number) => void;
-  onChangeOptionText: (text: string, index: number) => void;
-};
-
-function PollOptions({
-  onPressAddOption,
-  onPressRemoveOption,
-  onChangeOptionText,
-}: PollOptionsProps) {
-  const { styles, theme } = useStyles();
-  const { pollOptions } = usePollPostComposerContext();
-
-  return (
-    <View style={styles.fieldContainer}>
-      <Typography.TitleBold style={styles.base}>Options</Typography.TitleBold>
-      <Typography.Caption style={styles.baseShade1}>
-        Poll must contain at least 2 options.
-      </Typography.Caption>
-      <View style={styles.optionsContainer}>
-        {pollOptions.map((pollOption, index) => {
-          const onReachMaxChar =
-            pollOption.data.length > MAX_POLL_ANSWER_LENGTH;
-
-          return (
-            <View key={`Option ${index + 1}`}>
-              <View style={styles.pollOptionContainer}>
-                <View
-                  style={[
-                    styles.pollOptionInputContainer,
-                    onReachMaxChar && styles.pollOptionInputContainerError,
-                  ]}
-                >
-                  <TextInput
-                    multiline
-                    style={styles.pollOptionInput}
-                    value={pollOptions[index].data}
-                    placeholder={`Option ${index + 1}`}
-                    placeholderTextColor={theme.colors.baseShade3}
-                    onChangeText={(text) => onChangeOptionText(text, index)}
-                  />
-                </View>
-                <View>
-                  <SvgXml
-                    width="20"
-                    height="20"
-                    xml={trash()}
-                    color={theme.colors.base}
-                    onPress={() => onPressRemoveOption(index)}
-                  />
-                </View>
-              </View>
-              {onReachMaxChar && (
-                <Typography.Caption style={styles.errorText}>
-                  Poll option cannot exceed {MAX_POLL_ANSWER_LENGTH} characters.
-                </Typography.Caption>
-              )}
-            </View>
-          );
-        })}
-        {pollOptions.length < 10 && (
-          <TouchableOpacity
-            style={styles.addOptionBtn}
-            onPress={onPressAddOption}
-          >
-            <SvgXml xml={plus(theme.colors.base)} width="20" height="20" />
-            <Typography.BodyBold style={styles.addOptionText}>
-              Add option
-            </Typography.BodyBold>
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  );
-}
-
-function PollSelection() {
-  const { styles, theme } = useStyles();
-  const { isMultipleOption, setIsMultipleOption } =
-    usePollPostComposerContext();
-
-  return (
-    <View style={styles.fieldContainer}>
-      <View style={styles.rowContainer}>
-        <View style={styles.fillSpace}>
-          <Typography.TitleBold style={styles.base}>
-            Multiple selection
-          </Typography.TitleBold>
-          <Typography.Caption style={styles.baseShade1}>
-            Let participants vote more than one option.
-          </Typography.Caption>
-        </View>
-        <Switch
-          ios_backgroundColor={theme.colors.baseShade3}
-          thumbColor={theme.colors.background}
-          trackColor={{
-            false: theme.colors.baseShade3,
-            true: theme.colors.primary,
-          }}
-          value={isMultipleOption}
-          onValueChange={setIsMultipleOption}
-        />
-      </View>
-    </View>
-  );
-}
-
-function PollDuration() {
-  const { styles, theme } = useStyles();
-  const { duration, bottomSheetRef } = usePollPostComposerContext();
-
-  return (
-    <View style={styles.fieldContainer}>
-      <Typography.TitleBold style={styles.base}>
-        Poll duration
-      </Typography.TitleBold>
-      <Typography.Caption style={styles.baseShade1}>
-        You can always close the poll before the set duration.
-      </Typography.Caption>
-      <View>
-        <TouchableOpacity
-          style={styles.durationButton}
-          onPress={() => bottomSheetRef.current?.open()}
-        >
-          <View style={styles.rowContainer}>
-            <Typography.Body style={styles.base}>
-              {duration.label}
-            </Typography.Body>
-            <SvgXml
-              width="24"
-              height="24"
-              xml={arrowDown()}
-              color={theme.colors.baseShade2}
-            />
-          </View>
-        </TouchableOpacity>
-        {Platform.OS === 'ios' && duration.value > 0 && (
-          <Typography.Caption style={styles.base}>
-            Ends on {dayjs().add(duration.value, 'day').format('DD MMM')} at{' '}
-            {dayjs().add(duration.value, 'day').format('HH:mm A')}
-          </Typography.Caption>
-        )}
-        {Platform.OS === 'android' && <AndroidPollDurationPicker />}
-      </View>
-    </View>
-  );
-}
-
-function AndroidBottomSheet() {
-  const { styles } = useStyles();
-  const { duration, setDuration, bottomSheetRef } =
-    usePollPostComposerContext();
-
-  return (
-    <Radio.Group
-      value={duration.value}
-      onChange={(value) => {
-        setDuration(
-          androidDurationOptions.find((option) => option.value === value)
-        );
-        bottomSheetRef.current?.close();
-      }}
-    >
-      {androidDurationOptions.map((option) => (
-        <Radio.Option value={option.value} accessibilityLabel={option.label}>
-          <Radio.Label>
-            <Typography.BodyBold style={styles.base}>
-              {option.label}
-            </Typography.BodyBold>
-          </Radio.Label>
-          <Radio.Icon />
-        </Radio.Option>
-      ))}
-    </Radio.Group>
-  );
-}
-
-function AndroidPollDurationPicker() {
-  const { styles, theme } = useStyles();
-  const {
-    duration,
-    selectedDate,
-    setSelectedTime,
-    selectedTime,
-    setSelectedDate,
-    setIsShowingDatePicker,
-    setIsTimePickerShown,
-    isShowingDatePicker,
-    isTimePickerShown,
-  } = usePollPostComposerContext();
-  const endOn = dayjs().add(duration.value, 'day');
-
-  return (
-    <View>
-      {duration.label !==
-      androidDurationOptions[androidDurationOptions.length - 1].label ? (
-        <Typography.Caption style={styles.base}>
-          Ends on {endOn.format('DD MMM')} at {endOn.format('HH:mm A')}
-        </Typography.Caption>
-      ) : (
-        <View style={styles.androidDateTimeContainer}>
-          <Typography.Body style={styles.base}>Ends on</Typography.Body>
-          <View style={styles.androidDateTimeContainer}>
-            <TouchableOpacity
-              style={styles.androidDateTimeButton}
-              onPress={() => setIsShowingDatePicker(true)}
-            >
-              <Typography.Body style={styles.base}>
-                {dayjs(selectedDate).format('DD MMM YYYY')}
-              </Typography.Body>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.androidDateTimeButton}
-              onPress={() => setIsTimePickerShown(true)}
-            >
-              <Typography.Body style={styles.base}>
-                {dayjs(selectedTime).format('HH:mm A')}
-              </Typography.Body>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
-      {isShowingDatePicker && (
-        <DateTimePicker
-          mode="date"
-          locale="en_US"
-          display="compact"
-          value={selectedDate}
-          minimumDate={dayjs().toDate()}
-          accentColor={theme.colors.primary}
-          maximumDate={dayjs().add(1, 'month').toDate()}
-          onChange={(event, date) => {
-            setIsShowingDatePicker(false);
-            if (event.type === 'set') {
-              setSelectedDate(date);
-            }
-          }}
-        />
-      )}
-      {isTimePickerShown && (
-        <DateTimePicker
-          mode="time"
-          display="clock"
-          value={selectedTime}
-          onChange={(event, time) => {
-            setIsTimePickerShown(false);
-            if (event.type === 'set') {
-              setSelectedTime(time);
-            }
-          }}
-        />
-      )}
-    </View>
-  );
-}
-
-function IOSBottomSheet() {
-  const { styles, theme } = useStyles();
-  const {
-    duration,
-    setDuration,
-    bottomSheetRef,
-    isShowingDatePicker,
-    setIsShowingDatePicker,
-  } = usePollPostComposerContext();
-
-  return (
-    <View>
-      {isShowingDatePicker ? (
-        <IOSPollDurationPicker />
-      ) : (
-        <View>
-          <Radio.Group
-            value={duration.value}
-            onChange={(value) => {
-              setDuration(
-                durationOptions.find((option) => option.value === value)
-              );
-              bottomSheetRef.current?.close();
-            }}
-          >
-            {durationOptions.map((option) => (
-              <Radio.Option
-                value={option.value}
-                accessibilityLabel={option.label}
-              >
-                <Radio.Label>
-                  <Typography.BodyBold style={styles.base}>
-                    {option.label}
-                  </Typography.BodyBold>
-                </Radio.Label>
-                <Radio.Icon />
-              </Radio.Option>
-            ))}
-          </Radio.Group>
-          <TouchableOpacity
-            style={styles.pickDateTimeButton}
-            onPress={() => setIsShowingDatePicker(true)}
-          >
-            <Typography.BodyBold style={styles.base}>
-              Pick date and time
-            </Typography.BodyBold>
-            <SvgXml
-              width="24"
-              height="24"
-              xml={arrowRight()}
-              color={theme.colors.base}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
-  );
-}
-
-function IOSPollDurationPicker() {
-  const { styles, theme } = useStyles();
-  const {
-    setDuration,
-    selectedDate,
-    bottomSheetRef,
-    setSelectedDate,
-    setIsShowingDatePicker,
-  } = usePollPostComposerContext();
-
-  return (
-    <View>
-      <View style={styles.iOSDateTimeHeader}>
-        <TouchableOpacity onPress={() => setIsShowingDatePicker(false)}>
-          <View>
-            <SvgXml
-              width="24"
-              height="24"
-              xml={arrowLeft()}
-              color={theme.colors.base}
-            />
-          </View>
-        </TouchableOpacity>
-        <Typography.TitleBold style={styles.base}>Ends on</Typography.TitleBold>
-        <TouchableOpacity
-          disabled={!selectedDate}
-          onPress={() => {
-            bottomSheetRef.current?.close();
-            setDuration({
-              value: 0,
-              label: `End on ${dayjs(selectedDate).format('DD MMM')} at ${dayjs(
-                selectedDate
-              ).format('HH:mm A')}`,
-            });
-          }}
-        >
-          <Typography.Body
-            style={[styles.cta, !selectedDate && styles.disabled]}
-          >
-            Done
-          </Typography.Body>
-        </TouchableOpacity>
-      </View>
-      <DateTimePicker
-        locale="en_US"
-        mode="datetime"
-        display="inline"
-        value={selectedDate}
-        minimumDate={dayjs().toDate()}
-        style={styles.iOSDateTimePicker}
-        accentColor={theme.colors.primary}
-        maximumDate={dayjs().add(1, 'month').toDate()}
-        onChange={(event, date) => {
-          if (event.type === 'set') {
-            setSelectedDate(date);
-          }
-        }}
-      />
-    </View>
-  );
-}
