@@ -20,7 +20,6 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useIsCommunityModerator } from '../../hook';
 import {
-  closePoll,
   deletePostById,
   reportTargetById,
   unReportTargetById,
@@ -36,6 +35,7 @@ import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElemen
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { ComponentID, PageID } from '../../enum';
 import { usePoll } from '../../hook/usePoll';
+import { useClosePoll } from '../../../v4/hook/poll';
 
 type PostMenuProps = {
   pageId?: PageID;
@@ -46,6 +46,7 @@ type PostMenuProps = {
 export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   const { showToast } = useToast();
   const { styles, theme } = useStyles();
+  const { closePoll, isLoading: isClosePollLoading } = useClosePoll();
   const { client } = useAuth();
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const { deleteByPostId } = globalFeedSlice.actions;
@@ -143,6 +144,7 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   };
 
   const onDeletePost = () => {
+    setIsVisible(false);
     Alert.alert(
       'Delete this post',
       `This post will be permanently deleted. You'll no longer see and find this post`,
@@ -158,10 +160,10 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
         },
       ]
     );
-    setIsVisible(false);
   };
 
   const onClosePoll = () => {
+    setIsVisible(false);
     Alert.alert(
       'Close poll?',
       "The poll duration you've set will be ignored and your poll will be closed immediately.",
@@ -174,16 +176,20 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
           text: 'Close poll',
           style: 'destructive',
           onPress: () => {
-            closePoll({
-              pollId: (childrenPost as Amity.Post<'poll'>)?.data?.pollId,
-              onSuccess: () => setIsVisible(false),
-              onError: () => {
-                showToast({
-                  type: 'failed',
-                  message: 'Oops, something went wrong.',
-                });
-              },
-            });
+            if (!isClosePollLoading) {
+              closePoll({
+                pollId: (childrenPost as Amity.Post<'poll'>)?.data?.pollId,
+                onSuccess: () => {
+                  showToast({ message: 'Post closed.', type: 'success' });
+                },
+                onError: () => {
+                  showToast({
+                    type: 'failed',
+                    message: 'Oops, something went wrong.',
+                  });
+                },
+              });
+            }
           },
         },
       ]
