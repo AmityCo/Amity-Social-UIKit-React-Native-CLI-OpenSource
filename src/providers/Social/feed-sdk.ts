@@ -3,7 +3,6 @@ import {
   deleteReport,
   FeedRepository,
   isReportedByMe,
-  PollRepository,
   PostContentType,
   PostRepository,
   ReactionRepository,
@@ -296,21 +295,4 @@ export async function unReportTargetById(
     }
   });
   return isReport;
-}
-
-export async function closePoll({
-  pollId,
-  onSuccess,
-  onError,
-}: {
-  pollId: string;
-  onSuccess?: () => void;
-  onError?: (error: any) => void;
-}): Promise<void> {
-  try {
-    await PollRepository.closePoll(pollId);
-    onSuccess?.();
-  } catch (error) {
-    onError?.(error);
-  }
 }
