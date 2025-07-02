@@ -51,7 +51,7 @@ export function PollOptions({
     <View>
       {isPollClosed || isAlreadyVoted || isAuthorSeeingResults ? (
         <PollResults
-          options={options
+          options={[...options]
             .sort((a, b) => b.voteCount - a.voteCount)
             .slice(0, showedAllOptions ? options.length : 4)}
           totalVotes={totalVotes}

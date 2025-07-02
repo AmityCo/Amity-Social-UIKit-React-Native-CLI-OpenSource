@@ -16,7 +16,7 @@ export const usePoll = (pollId: string) => {
   }, [poll]);
 
   const totalVotes = useMemo(() => {
-    const total = poll?.answers.reduce((acc, answer) => {
+    const total = poll?.answers?.reduce((acc, answer) => {
       return acc + answer.voteCount;
     }, 0);
     return total;
