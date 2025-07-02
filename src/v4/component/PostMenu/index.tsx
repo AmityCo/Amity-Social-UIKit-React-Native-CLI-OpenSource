@@ -46,7 +46,7 @@ type PostMenuProps = {
 export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   const { showToast } = useToast();
   const { styles, theme } = useStyles();
-  const { closePoll } = useClosePoll();
+  const { closePoll, isLoading: isClosePollLoading } = useClosePoll();
   const { client } = useAuth();
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const { deleteByPostId } = globalFeedSlice.actions;
@@ -176,18 +176,20 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
           text: 'Close poll',
           style: 'destructive',
           onPress: () => {
-            closePoll({
-              pollId: (childrenPost as Amity.Post<'poll'>)?.data?.pollId,
-              onSuccess: () => {
-                showToast({ message: 'Post closed.', type: 'success' });
-              },
-              onError: () => {
-                showToast({
-                  type: 'failed',
-                  message: 'Oops, something went wrong.',
-                });
-              },
-            });
+            if (!isClosePollLoading) {
+              closePoll({
+                pollId: (childrenPost as Amity.Post<'poll'>)?.data?.pollId,
+                onSuccess: () => {
+                  showToast({ message: 'Post closed.', type: 'success' });
+                },
+                onError: () => {
+                  showToast({
+                    type: 'failed',
+                    message: 'Oops, something went wrong.',
+                  });
+                },
+              });
+            }
           },
         },
       ]
