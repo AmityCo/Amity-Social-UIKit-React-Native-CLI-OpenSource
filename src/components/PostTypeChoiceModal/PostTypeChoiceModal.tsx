@@ -22,6 +22,7 @@ import { RootState } from 'src/redux/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes/RouteParamList';
+import { RootStackParamList as RootStackParamListV4 } from '../../v4/routes/RouteParamList';
 
 const PostTypeChoiceModal = () => {
   const styles = useStyles();
@@ -29,6 +30,8 @@ const PostTypeChoiceModal = () => {
   const dispatch = useDispatch();
   const navigation =
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
+  const navigationV4 =
+    useNavigation() as NativeStackNavigationProp<RootStackParamListV4>;
   const { closePostTypeChoiceModal } = uiSlice.actions;
   const {
     showPostTypeChoiceModal,
@@ -48,20 +51,24 @@ const PostTypeChoiceModal = () => {
       const targetscreen =
         type === 'post'
           ? 'CreatePost'
-          : type === 'poll'
-          ? 'CreatePoll'
           : type === 'livestream'
           ? 'CreateLivestream'
           : null;
-
-      navigation.navigate(targetscreen, {
-        targetId,
-        targetName,
-        targetType,
-        postSetting,
-        needApprovalOnPostCreation,
-        isPublic,
-      });
+      targetscreen &&
+        navigation.navigate(targetscreen, {
+          targetId,
+          targetName,
+          targetType,
+          postSetting,
+          needApprovalOnPostCreation,
+          isPublic,
+        });
+      type === 'poll' &&
+        navigationV4.navigate('PollPostComposer', {
+          targetId,
+          targetName,
+          targetType,
+        });
       closeCreatePostModal();
     } else {
       setPostType(type);

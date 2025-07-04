@@ -18,24 +18,28 @@ import { useSelector } from 'react-redux';
 import ImageView from '../../../components/react-native-image-viewing/dist';
 import { RootState } from '../../../redux/store';
 import { playBtn } from '../../../svg/svg-xml-list';
-import PollSection from '../../../components/PollSection/PollSection';
 import LivestreamContent from '../LivestreamContent';
 import { LinkPreview } from '../../component/PreviewLink';
 import RenderTextWithMention from '../../component/RenderTextWithMention/RenderTextWithMention';
 import { IMentionPosition } from '../../../types';
+import PollContent from '../PollContent';
 
 interface IPostContent {
   post: Amity.Post;
   textPost?: string;
+  disabledPoll?: boolean;
   childrenPosts: string[];
   onPressPost?: () => void;
+  showedAllOptions?: boolean;
   mentionPositionArr?: IMentionPosition[];
 }
 const PostContent: React.FC<IPostContent> = ({
   post,
   textPost,
   onPressPost,
+  disabledPoll,
   childrenPosts,
+  showedAllOptions,
   mentionPositionArr,
 }) => {
   const { apiRegion } = useAuth();
@@ -318,7 +322,12 @@ const PostContent: React.FC<IPostContent> = ({
       )}
       <View>
         {pollIds.length > 0 ? (
-          <PollSection pollId={pollIds[0].pollId} />
+          <PollContent
+            post={post}
+            pollId={pollIds[0].pollId}
+            disabledPoll={disabledPoll}
+            showedAllOptions={showedAllOptions}
+          />
         ) : livestreamId.length > 0 ? (
           <LivestreamContent
             post={post}

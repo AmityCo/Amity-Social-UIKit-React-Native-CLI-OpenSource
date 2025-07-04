@@ -409,6 +409,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
               postData && (
                 <AmityPostContentComponent
                   post={postData}
+                  showedAllOptions
                   AmityPostContentComponentStyle={
                     AmityPostContentComponentStyleEnum.detail
                   }

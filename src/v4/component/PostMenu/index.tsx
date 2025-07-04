@@ -30,11 +30,11 @@ import { useDispatch } from 'react-redux';
 import { Typography } from '../../component/Typography/Typography';
 import { pen, poll, report, trash, unreport } from '../../assets/icons';
 import { useToast } from '../../stores/slices/toast';
-import { usePoll } from '../../../components/PollSection/usePoll';
 import { RootStackParamList } from '../../routes/RouteParamList';
 import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElement/MenuButtonIconElement';
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { ComponentID, PageID } from '../../enum';
+import { usePoll } from '../../hook/usePoll';
 import { useClosePoll } from '../../../v4/hook/poll';
 
 type PostMenuProps = {
@@ -60,9 +60,8 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
     null
   );
 
-  const { data: pollData } = usePoll(
-    (childrenPost as Amity.Post<'poll'>)?.data?.pollId,
-    childrenPost?.dataType === 'poll'
+  const { poll: pollData } = usePoll(
+    (childrenPost as Amity.Post<'poll'>)?.data?.pollId
   );
 
   const slideAnimation = useRef(new Animated.Value(0)).current;
@@ -133,12 +132,13 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
       const deleted = await deletePostById(postId);
       if (deleted) {
         dispatch(deleteByPostId({ postId }));
+        showToast({ type: 'success', message: 'Post deleted.' });
         pageId === PageID.post_detail_page && navigation.pop();
       }
     } catch (error) {
       showToast({
-        message: 'Failed to delete post. Please try again.',
         type: 'failed',
+        message: 'Failed to delete post. Please try again.',
       });
     }
   };
@@ -194,6 +194,7 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
         },
       ]
     );
+    setIsVisible(false);
   };
 
   const reportPostObject = async () => {
