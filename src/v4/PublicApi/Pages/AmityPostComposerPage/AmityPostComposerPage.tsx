@@ -28,7 +28,6 @@ import {
 } from '../../../hook';
 import { useStyles } from './styles';
 import { AmityPostComposerMode, AmityPostComposerPageType } from '../../types';
-import AmityMentionInput from '../../../component/MentionInput/AmityMentionInput';
 import { IDisplayImage, IMentionPosition } from '~/v4/types/type';
 import CloseButtonIconElement from '../../Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
@@ -57,6 +56,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { useFile } from '../../../hook';
+import useMention from '../../../hook/useMention';
+import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   mode,
@@ -88,7 +89,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     userId: (client as Amity.Client)?.userId,
   });
   const { showToastMessage, hideToastMessage } = uiSlice.actions;
-  const [inputMessage, setInputMessage] = useState<string>('');
+  const [inputMessage, setInputMessage] = useState<string>(
+    (post?.data as Amity.ContentDataText)?.text ?? ''
+  );
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
   );
@@ -96,10 +99,6 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const [displayImages, setDisplayImages] = useState<IDisplayImage[]>([]);
   const [displayVideos, setDisplayVideos] = useState<IDisplayImage[]>([]);
   const [mentionUsers, setMentionUsers] = useState<TSearchItem[]>([]);
-  const [isShowingSuggestion, setIsShowingSuggestion] = useState(false);
-  const [initialText, setInitialText] = useState(
-    (post?.data as Amity.ContentDataText)?.text ?? ''
-  );
   const [isSwipeup, setIsSwipeup] = useState(true);
   const [deletedPostIds, setDeletedPostIds] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -116,6 +115,18 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       displayVideos.length > 0) &&
     (displayImages.length <= 10 || displayVideos.length <= 10);
 
+  const { renderInput, renderSuggestions } = useMention({
+    value: inputMessage,
+    onChange: setInputMessage,
+    communityId: privateCommunityId,
+    setMentionUsers: (user: TSearchItem) => {
+      setMentionUsers((prev) => [...prev, user]);
+    },
+    setMentionPosition: (position: IMentionPosition) => {
+      setMentionsPosition((prev) => [...prev, position]);
+    },
+  });
+
   const checkIsEditValid = () => {
     return (
       isInputValid &&
@@ -131,7 +142,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           (user) => user.displayName === username
         );
         const mentioneeId = mentionee ? mentionee.userId : '';
-        return `@[${username}](${mentioneeId})`;
+        return `{@}[${username}](${mentioneeId})`;
       });
       return parsedText;
     },
@@ -248,7 +259,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         (post?.data as Amity.ContentDataText)?.text ?? '',
         users
       );
-      setInitialText(parsedText);
+      setInputMessage(parsedText);
       return users;
     },
     [parsePostText, post?.data]
@@ -263,7 +274,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       getMentionUsers(post.mentionees?.[0]?.userIds ?? []);
       setMentionsPosition(mentionPositions);
     } else {
-      setInitialText((post?.data as Amity.ContentDataText)?.text ?? '');
+      setInputMessage((post?.data as Amity.ContentDataText)?.text ?? '');
     }
   }, [getMentionPositions, getMentionUsers, post]);
 
@@ -332,7 +343,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         response = await editPost(
           post.postId,
           {
-            text: inputMessage,
+            text: replaceTriggerValues(inputMessage, ({ name }) => `@${name}`),
             fileIds: fileIds as string[],
           },
           type,
@@ -344,7 +355,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           targetType,
           targetId,
           {
-            text: inputMessage,
+            text: replaceTriggerValues(inputMessage, ({ name }) => `@${name}`),
             fileIds: fileIds as string[],
           },
           type,
@@ -717,23 +728,13 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           nestedScrollEnabled={true}
-          scrollEnabled={!isShowingSuggestion}
           keyboardShouldPersistTaps="handled"
         >
-          <AmityMentionInput
-            setIsShowingSuggestion={setIsShowingSuggestion}
-            initialValue={initialText}
-            privateCommunityId={privateCommunityId}
-            multiline
-            placeholder="What's going on..."
-            placeholderTextColor={themeStyles.colors.baseShade3}
-            mentionUsers={mentionUsers}
-            setInputMessage={setInputMessage}
-            setMentionUsers={setMentionUsers}
-            mentionsPosition={mentionsPosition}
-            setMentionsPosition={setMentionsPosition}
-            isBottomMentionSuggestionsRender
-          />
+          {renderInput({
+            multiline: true,
+            placeholder: "What's going on...",
+            placeholderTextColor: themeStyles.colors.baseShade3,
+          })}
           <View style={styles.imageContainer}>
             {displayImages.length > 0 && (
               <FlatList
@@ -786,6 +787,16 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
             )}
           </View>
         </ScrollView>
+        {renderSuggestions({
+          type: 'post',
+          bottom: isEditMode
+            ? 0
+            : shouldShowDetailAttachment
+            ? 220
+            : isKeyboardShowing
+            ? 60
+            : 80,
+        })}
         <View
           onTouchStart={() => {
             tEvents = [];

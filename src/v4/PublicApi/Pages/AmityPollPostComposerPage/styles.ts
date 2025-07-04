@@ -50,6 +50,10 @@ export const useStyles = () => {
     inputContainerError: {
       borderBottomColor: theme.colors.alert,
     },
+    pollQuestionInput: {
+      fontSize: 15,
+      color: theme.colors.base,
+    },
     rowContainer: {
       marginBottom: 16,
       flexDirection: 'row',

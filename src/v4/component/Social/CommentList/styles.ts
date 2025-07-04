@@ -6,6 +6,13 @@ export const useStyles = () => {
   const theme = useTheme() as MyMD3Theme;
   const { width } = useWindowDimensions();
   const styles = StyleSheet.create({
+    root: {
+      height: '100%',
+      paddingBottom: 40,
+    },
+    suggestionContainer: {
+      bottom: 0,
+    },
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,

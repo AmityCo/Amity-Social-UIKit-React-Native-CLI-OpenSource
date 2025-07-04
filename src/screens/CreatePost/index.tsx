@@ -37,13 +37,14 @@ import { useTheme } from 'react-native-paper';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { checkCommunityPermission } from '../../providers/Social/communities-sdk';
 import useAuth from '../../hooks/useAuth';
-import AmityMentionInput from '../../components/MentionInput/AmityMentionInput';
 import { TSearchItem } from '../../hooks/useSearch';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import { useDispatch } from 'react-redux';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
 import feedSlice from '../../redux/slices/feedSlice';
 import { useRequestPermission } from '../../v4/hook/useCamera';
+import useMention from '../../v4/hook/useMention';
+import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 export interface IDisplayImage {
   url: string;
@@ -78,7 +79,6 @@ const CreatePost = ({ route }: any) => {
   const [videoMultipleUri, setVideoMultipleUri] = useState<string[]>([]);
   const [displayImages, setDisplayImages] = useState<IDisplayImage[]>([]);
   const [displayVideos, setDisplayVideos] = useState<IDisplayImage[]>([]);
-  const [isScrollEnabled, setIsScrollEnabled] = useState(true);
   const [mentionNames, setMentionNames] = useState<TSearchItem[]>([]);
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
@@ -92,6 +92,19 @@ const CreatePost = ({ route }: any) => {
   const { data: community } = communityObject ?? {};
   const privateCommunityId = !community?.isPublic && community?.communityId;
   const { client, apiRegion } = useAuth();
+
+  const { renderInput, renderSuggestions } = useMention({
+    value: inputMessage,
+    onChange: setInputMessage,
+    communityId: privateCommunityId,
+    setMentionUsers: (user: TSearchItem) => {
+      setMentionNames((prev) => [...prev, user]);
+    },
+    setMentionPosition: (position: IMentionPosition) => {
+      setMentionsPosition((prev) => [...prev, position]);
+    },
+  });
+
   const getCommunityDetail = useCallback(() => {
     if (targetType === 'community') {
       CommunityRepository.getCommunity(targetId, setCommunityObject);
@@ -135,7 +148,7 @@ const CreatePost = ({ route }: any) => {
       targetType,
       targetId,
       {
-        text: inputMessage,
+        text: replaceTriggerValues(inputMessage, ({ name }) => `@${name}`),
         fileIds: fileIds as string[],
       },
       type,
@@ -419,27 +432,13 @@ const CreatePost = ({ route }: any) => {
       >
         <ScrollView
           style={styles.container}
-          scrollEnabled={isScrollEnabled}
           keyboardShouldPersistTaps="handled"
         >
-          <AmityMentionInput
-            privateCommunityId={privateCommunityId}
-            onFocus={() => {
-              setIsScrollEnabled(false);
-            }}
-            onBlur={() => {
-              setIsScrollEnabled(true);
-            }}
-            multiline
-            placeholder="What's going on..."
-            placeholderTextColor={theme.colors.baseShade3}
-            setInputMessage={setInputMessage}
-            mentionsPosition={mentionsPosition}
-            setMentionsPosition={setMentionsPosition}
-            mentionUsers={mentionNames}
-            setMentionUsers={setMentionNames}
-            isBottomMentionSuggestionsRender={true}
-          />
+          {renderInput({
+            multiline: true,
+            placeholder: "What's going on...",
+            placeholderTextColor: theme.colors.baseShade3,
+          })}
           <View style={styles.imageContainer}>
             {displayImages.length > 0 && (
               <FlatList
@@ -476,6 +475,7 @@ const CreatePost = ({ route }: any) => {
             )}
           </View>
         </ScrollView>
+        {renderSuggestions({ type: 'post' })}
 
         <View style={styles.InputWrap}>
           <TouchableOpacity

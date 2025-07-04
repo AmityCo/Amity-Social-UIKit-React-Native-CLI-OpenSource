@@ -28,6 +28,9 @@ import { PollOptions } from './PollOptions';
 import { PollSelection } from './PollSelection';
 import { PollDuration } from './PollDuration';
 import { AndroidBottomSheet, IOSBottomSheet } from './PollDurationBottomSheet';
+import { replaceTriggerValues } from 'react-native-controlled-mentions';
+import useMention from '../../../hook/useMention';
+import { IMentionPosition } from '../../../../types';
 
 type PollDurationValue = {
   value: number;
@@ -59,11 +62,9 @@ export type PollPostComposerContextType = {
   pollQuestion: string;
   setPollQuestion: (question: string) => void;
   mentionUsers: TSearchItem[];
-  setMentionUsers: (users: TSearchItem[]) => void;
+  setMentionUsers: React.Dispatch<React.SetStateAction<TSearchItem[]>>;
   mentionPosition: any[];
-  setMentionPosition: (position: any[]) => void;
-  isScrollEnabled: boolean;
-  setIsScrollEnabled: (isEnabled: boolean) => void;
+  setMentionPosition: React.Dispatch<React.SetStateAction<any[]>>;
   duration: PollDurationValue;
   setDuration: (duration: PollDurationValue) => void;
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
@@ -94,10 +95,6 @@ const AmityPollPostComposerPage = () => {
     { data: '', dataType: 'text' },
     { data: '', dataType: 'text' },
   ]);
-  const [pollQuestion, setPollQuestion] = useState('');
-  const [mentionUsers, setMentionUsers] = useState<TSearchItem[]>([]);
-  const [mentionPosition, setMentionPosition] = useState([]);
-  const [isScrollEnabled, setIsScrollEnabled] = useState(true);
   const [duration, setDuration] = useState<PollDurationValue>(
     durationOptions[durationOptions.length - 1]
   );
@@ -106,6 +103,12 @@ const AmityPollPostComposerPage = () => {
   const [isTimePickerShown, setIsTimePickerShown] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(dayjs().toDate());
   const [selectedTime, setSelectedTime] = useState<Date>(dayjs().toDate());
+
+  const [pollQuestion, setPollQuestion] = useState('');
+  const [mentionUsers, setMentionUsers] = useState<TSearchItem[]>([]);
+  const [mentionPosition, setMentionPosition] = useState<IMentionPosition[]>(
+    []
+  );
 
   return (
     <PollPostComposerContext.Provider
@@ -122,8 +125,6 @@ const AmityPollPostComposerPage = () => {
         setMentionUsers,
         mentionPosition,
         setMentionPosition,
-        isScrollEnabled,
-        setIsScrollEnabled,
         duration,
         setDuration,
         bottomSheetRef,
@@ -162,7 +163,7 @@ const PollPostComposer = () => {
     setLoading,
     duration,
     isMultipleOption,
-    isScrollEnabled,
+    setPollQuestion,
     pollOptions,
     setPollOptions,
     pollQuestion,
@@ -170,7 +171,6 @@ const PollPostComposer = () => {
     setMentionUsers,
     mentionPosition,
     setMentionPosition,
-    setIsScrollEnabled,
     bottomSheetRef,
     selectedTime,
     isShowingDatePicker,
@@ -181,6 +181,18 @@ const PollPostComposer = () => {
 
   const privateCommunityId =
     targetType === 'community' && !community?.isPublic && targetId;
+
+  const { renderInput, renderSuggestions } = useMention({
+    value: pollQuestion,
+    onChange: setPollQuestion,
+    communityId: privateCommunityId,
+    setMentionUsers: (user: TSearchItem) => {
+      setMentionUsers((prev) => [...prev, user]);
+    },
+    setMentionPosition: (position: IMentionPosition) => {
+      setMentionPosition((prev) => [...prev, position]);
+    },
+  });
 
   const goBack = () => {
     const unsavedChanges =
@@ -248,7 +260,10 @@ const PollPostComposer = () => {
         dataType: 'poll',
         targetType,
         targetId,
-        data: { pollId, text: pollQuestion },
+        data: {
+          pollId,
+          text: replaceTriggerValues(pollQuestion, ({ name }) => `@${name}`),
+        },
         mentionees,
         metadata: { mentioned: mentionPosition },
       });
@@ -333,18 +348,10 @@ const PollPostComposer = () => {
       />
       <KeyboardAvoidingView style={styles.fillSpace}>
         <ScrollView
-          scrollEnabled={isScrollEnabled}
           contentContainerStyle={styles.form}
           showsVerticalScrollIndicator={true}
         >
-          <PollQuestion
-            privateCommunityId={privateCommunityId}
-            mentionUsers={mentionUsers}
-            setMentionUsers={setMentionUsers}
-            mentionPosition={mentionPosition}
-            setMentionPosition={setMentionPosition}
-            setIsScrollEnabled={setIsScrollEnabled}
-          />
+          <PollQuestion renderInput={renderInput} />
           <PollOptions
             onPressAddOption={onPressAddOption}
             onChangeOptionText={onChangeOptionText}
@@ -355,6 +362,7 @@ const PollPostComposer = () => {
           <View style={styles.divider} />
           <PollDuration />
         </ScrollView>
+        {renderSuggestions({ type: 'post' })}
       </KeyboardAvoidingView>
       <BottomSheet
         ref={bottomSheetRef}

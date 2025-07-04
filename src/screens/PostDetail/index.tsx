@@ -51,12 +51,13 @@ import { closeIcon } from '../../svg/svg-xml-list';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
 import { deletePostById } from '../../providers/Social/feed-sdk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import AmityMentionInput from '../../components/MentionInput/AmityMentionInput';
 import { TSearchItem } from '../../hooks/useSearch';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import { useDispatch } from 'react-redux';
 import feedSlice from '../../redux/slices/feedSlice';
 import postDetailSlice from '../../redux/slices/postDetailSlice';
+import useMention from '../../v4/hook/useMention';
+import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 const PostDetail = () => {
   const theme = useTheme() as MyMD3Theme;
@@ -75,8 +76,6 @@ const PostDetail = () => {
   const privateCommunityId =
     !communityObject?.isPublic && communityObject?.communityId;
   const [userObject, setUserObject] = useState<Amity.User>();
-  const [initialInputText, setInitialInputText] = useState('');
-  const [resetValue, setResetValue] = useState(false);
   const flatListRef = useRef(null);
   let isSubscribed = false;
   const disposers: Amity.Unsubscriber[] = [];
@@ -109,6 +108,18 @@ const PostDetail = () => {
   const [replyCommentId, setReplyCommentId] = useState<string>('');
 
   const [currentPost, setCurrentPost] = useState<Amity.Post<any>>();
+
+  const { renderInput, renderSuggestions } = useMention({
+    value: inputMessage,
+    communityId: privateCommunityId,
+    onChange: setInputMessage,
+    setMentionUsers: (user: TSearchItem) => {
+      setMentionNames((prev) => [...prev, user]);
+    },
+    setMentionPosition: (position: IMentionPosition) => {
+      setMentionsPosition((prev) => [...prev, position]);
+    },
+  });
 
   useEffect(() => {
     const checkMentionNames = mentionNames.filter((item) => {
@@ -266,15 +277,18 @@ const PostDetail = () => {
     }
   };
   const handleSend: () => Promise<void> = async () => {
-    setResetValue(false);
     if (inputMessage.trim() === '') {
       return;
     }
     Keyboard.dismiss();
+    const comment = replaceTriggerValues(
+      inputMessage,
+      ({ name }) => `@${name}`
+    );
     setInputMessage('');
     if (replyCommentId.length > 0) {
       await createReplyComment(
-        inputMessage,
+        comment,
         postId,
         replyCommentId,
         mentionNames?.map((item) => item.id),
@@ -283,19 +297,17 @@ const PostDetail = () => {
       );
     } else {
       await createComment(
-        inputMessage,
+        comment,
         postId,
         mentionNames?.map((item) => item.id),
         mentionsPosition,
         'post'
       );
     }
-    setInitialInputText('');
     setInputMessage('');
     setMentionNames([]);
     setMentionsPosition([]);
     onCloseReply();
-    setResetValue(true);
     const updatedPost = {
       ...currentPostdetail,
       commentsCount: isNaN(currentPostdetail.commentsCount)
@@ -372,6 +384,7 @@ const PostDetail = () => {
       keyboardVerticalOffset={Platform.select({ ios: 80, android: 80 })}
       style={styles.AllInputWrap}
     >
+      {renderSuggestions({ type: 'comment' })}
       <ScrollView onScroll={handleScroll} style={styles.container}>
         <PostList
           onDelete={onDeletePost}
@@ -416,20 +429,11 @@ const PostDetail = () => {
 
       <View style={styles.InputWrap}>
         <View style={styles.inputContainer}>
-          <AmityMentionInput
-            resetValue={resetValue}
-            initialValue={initialInputText}
-            privateCommunityId={privateCommunityId}
-            multiline
-            placeholder="Say something nice..."
-            placeholderTextColor={theme.colors.baseShade3}
-            mentionUsers={mentionNames}
-            setInputMessage={setInputMessage}
-            setMentionUsers={setMentionNames}
-            mentionsPosition={mentionsPosition}
-            setMentionsPosition={setMentionsPosition}
-            isBottomMentionSuggestionsRender={false}
-          />
+          {renderInput({
+            multiline: true,
+            placeholder: 'Say something nice...',
+            placeholderTextColor: theme.colors.baseShade3,
+          })}
         </View>
 
         <TouchableOpacity

@@ -23,11 +23,11 @@ export function PollResults({ options, totalVotes }: PollResultsProps) {
     totalVotes === 0 ? 0 : (voteCount / totalVotes) * 100;
 
   const voteBy = (option: Amity.PollAnswer) => {
-    if (totalVotes === 1 && option.isVotedByUser) return 'Voted by you';
+    if (option.voteCount === 1 && option.isVotedByUser) return 'Voted by you';
     if (totalVotes > 1)
-      return `Voted by ${totalVotes} participant${totalVotes > 1 ? 's' : ''}${
-        option.isVotedByUser ? ' and you' : ''
-      }`;
+      return `Voted by ${option.voteCount} participant${
+        option.voteCount > 1 ? 's' : ''
+      }${option.isVotedByUser ? ' and you' : ''}`;
     return 'No votes';
   };
 

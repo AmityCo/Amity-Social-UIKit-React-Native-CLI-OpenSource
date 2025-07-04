@@ -6,6 +6,7 @@ export const usePoll = (pollId: string) => {
   const [poll, setPoll] = useState<Amity.Poll | undefined>(undefined);
   const [isAuthorSeeingResults, setIsAuthorSeeingResults] = useState(false);
   const { showToast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const isPollClosed = useMemo(() => {
     return poll?.status === 'closed';
@@ -23,7 +24,10 @@ export const usePoll = (pollId: string) => {
   }, [poll]);
 
   useEffect(() => {
-    PollRepository.getPoll(pollId, ({ data }) => setPoll(data));
+    PollRepository.getPoll(pollId, ({ data, loading: pollLoading }) => {
+      setPoll(data);
+      setLoading(pollLoading);
+    });
   }, [pollId]);
 
   const votePoll = async (answerIds: string[]) => {
@@ -36,6 +40,7 @@ export const usePoll = (pollId: string) => {
 
   return {
     poll,
+    loading,
     votePoll,
     totalVotes,
     isPollClosed,
