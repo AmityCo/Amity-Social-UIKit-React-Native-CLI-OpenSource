@@ -5,6 +5,8 @@ import { MAX_POLL_QUESTION_LENGTH } from '../../../constants';
 import { Typography } from '../../../component/Typography/Typography';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
+import FormLabel from '../../../elements/FormLabel';
+import { ElementID, PageID } from '../../../enum';
 
 type PollQuestionProps = {
   renderInput?: (props: any) => React.ReactNode;
@@ -29,10 +31,12 @@ export function PollQuestion({ renderInput }: PollQuestionProps) {
         ]}
       >
         <View style={styles.rowContainer}>
-          <Typography.TitleBold style={styles.base}>
-            Poll question
-          </Typography.TitleBold>
-          <Typography.Caption style={styles.baseShade1}>
+          <FormLabel
+            style={styles.base}
+            pageId={PageID.poll_post_composer_page}
+            elementId={ElementID.poll_question_title}
+          />
+          <Typography.Caption>
             {questionLength}/{MAX_POLL_QUESTION_LENGTH}
           </Typography.Caption>
         </View>

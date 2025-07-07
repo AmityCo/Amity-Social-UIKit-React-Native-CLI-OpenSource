@@ -7,6 +7,9 @@ import { Typography } from '../../../component/Typography/Typography';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';
 import { AndroidPollDurationPicker } from './PollDurationPicker';
+import FormLabel from '../../../elements/FormLabel';
+import { ElementID, PageID } from '../../../enum';
+import FormDescription from '../../../elements/FormDescription';
 
 export function PollDuration() {
   const { styles, theme } = useStyles();
@@ -14,12 +17,16 @@ export function PollDuration() {
 
   return (
     <View style={styles.fieldContainer}>
-      <Typography.TitleBold style={styles.base}>
-        Poll duration
-      </Typography.TitleBold>
-      <Typography.Caption style={styles.baseShade1}>
-        You can always close the poll before the set duration.
-      </Typography.Caption>
+      <FormLabel
+        style={styles.base}
+        pageId={PageID.poll_post_composer_page}
+        elementId={ElementID.poll_duration_title}
+      />
+      <FormDescription
+        style={styles.baseShade1}
+        pageId={PageID.poll_post_composer_page}
+        elementId={ElementID.poll_duration_desc}
+      />
       <View>
         <TouchableOpacity
           style={styles.durationButton}
