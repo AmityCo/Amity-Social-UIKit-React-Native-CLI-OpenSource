@@ -42,6 +42,7 @@ function useMention({
     mention: {
       trigger: '@',
       textStyle: styles.mention,
+      isInsertSpaceAfterMention: true,
     },
   };
 

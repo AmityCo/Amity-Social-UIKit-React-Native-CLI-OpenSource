@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { MAX_POLL_QUESTION_LENGTH } from '../../../constants';
 import { Typography } from '../../../component/Typography/Typography';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
+import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 type PollQuestionProps = {
   renderInput?: (props: any) => React.ReactNode;
@@ -13,12 +14,17 @@ export function PollQuestion({ renderInput }: PollQuestionProps) {
   const { styles, theme } = useStyles();
   const { pollQuestion } = usePollPostComposerContext();
 
+  const questionLength = replaceTriggerValues(
+    pollQuestion,
+    ({ name }) => `@${name}`
+  ).length;
+
   return (
     <View style={styles.fieldContainer}>
       <View
         style={[
           styles.inputContainer,
-          pollQuestion.length > MAX_POLL_QUESTION_LENGTH &&
+          questionLength > MAX_POLL_QUESTION_LENGTH &&
             styles.inputContainerError,
         ]}
       >
@@ -27,7 +33,7 @@ export function PollQuestion({ renderInput }: PollQuestionProps) {
             Poll question
           </Typography.TitleBold>
           <Typography.Caption style={styles.baseShade1}>
-            {pollQuestion.length}/{MAX_POLL_QUESTION_LENGTH}
+            {questionLength}/{MAX_POLL_QUESTION_LENGTH}
           </Typography.Caption>
         </View>
         {renderInput({
@@ -37,7 +43,7 @@ export function PollQuestion({ renderInput }: PollQuestionProps) {
           placeholderTextColor: theme.colors.baseShade3,
         })}
       </View>
-      {pollQuestion.length > MAX_POLL_QUESTION_LENGTH && (
+      {questionLength > MAX_POLL_QUESTION_LENGTH && (
         <Typography.Caption style={styles.errorText}>
           Poll question cannot exceed {MAX_POLL_QUESTION_LENGTH} characters.
         </Typography.Caption>
