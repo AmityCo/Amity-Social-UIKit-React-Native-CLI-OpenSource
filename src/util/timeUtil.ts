@@ -40,7 +40,8 @@ export const formatTimeLeft = (milliseconds: number): string => {
 
 export function limitDecimalsWithoutRounding(val: number, decimals: number) {
   let parts = val.toString().split('.');
-  return parseFloat(parts[0] + '.' + parts[1].substring(0, decimals));
+  let fractionalPart = parts[1] ? parts[1].substring(0, decimals) : '';
+  return parseFloat(parts[0] + '.' + fractionalPart);
 }
 
 export const formatVoteCount = (count: number): string => {
