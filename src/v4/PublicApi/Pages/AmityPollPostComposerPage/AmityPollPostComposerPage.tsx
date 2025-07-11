@@ -256,6 +256,7 @@ const PollPostComposer = () => {
         },
       ];
 
+      // TODO: share logic for admin approval
       const response = await PostRepository.createPost({
         dataType: 'poll',
         targetType,
