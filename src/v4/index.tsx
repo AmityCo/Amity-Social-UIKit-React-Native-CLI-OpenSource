@@ -15,6 +15,8 @@ export { default as AmityCreateLivestreamPage } from './PublicApi/Pages/AmityCre
 export { default as AmityLivestreamPostTargetSelectionPage } from './PublicApi/Pages/AmityLivestreamPostTargetSelectionPage';
 export { default as AmityLivestreamTerminatedPage } from './PublicApi/Pages/AmityLivestreamTerminatedPage';
 export { default as AmityLivestreamPlayerPage } from './PublicApi/Pages/AmityLivestreamPlayerPage';
+export { default as AmityPollTargetSelectionPage } from './PublicApi/Pages/AmityPollTargetSelectionPage';
+export { default as AmityPollPostComposerPage } from './PublicApi/Pages/AmityPollPostComposerPage';
 
 export { default as AmityStoryTabComponent } from './PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 export { default as AmitySocialHomeTopNavigationComponent } from './PublicApi/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
