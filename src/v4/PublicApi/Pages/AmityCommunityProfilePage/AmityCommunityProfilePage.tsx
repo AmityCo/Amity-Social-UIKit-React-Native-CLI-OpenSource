@@ -39,7 +39,7 @@ import CommunityCreatePostButton from '../../../elements/CommunityCreatePostButt
 import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
-import { livestream, post, story } from '../../../../v4/assets/icons';
+import { livestream, poll, post, story } from '../../../../v4/assets/icons';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 
@@ -239,6 +239,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const {
     AmityPostTargetSelectionPageBehavior,
+    AmityPollTargetSelectionPageBehavior,
     AmityStoryTargetSelectionPageBehavior,
     AmityLivestreamPostTargetSelectionPageBehavior,
   } = useBehaviour();
@@ -305,6 +306,25 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
+  const handleCreatePoll = () => {
+    closeBottomSheet();
+
+    if (AmityPollTargetSelectionPageBehavior.goToPollPostComposerPage) {
+      return AmityPollTargetSelectionPageBehavior.goToPollPostComposerPage({
+        targetId: communityId,
+        targetType: 'community',
+        targetName: community?.displayName,
+        community,
+      });
+    }
+    navigation.navigate('PollPostComposer', {
+      targetId: communityId,
+      targetType: 'community',
+      targetName: community?.displayName,
+      community,
+    });
+  };
+
   if (!community?.isJoined) return null;
 
   return (
@@ -332,6 +352,13 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
             >
               <SvgXml width={24} height={24} xml={story()} />
               <Text style={styles.bottomSheetOptionText}>Story</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleCreatePoll}
+              style={styles.bottomSheetOption}
+            >
+              <SvgXml width={24} height={24} xml={poll()} color={colors.base} />
+              <Text style={styles.bottomSheetOptionText}>Poll</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleCreateLivestream}

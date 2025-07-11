@@ -34,7 +34,6 @@ import BackButton from '../../components/BackButton';
 import EditCommunity from '../../screens/EditCommunity/EditCommunity';
 import VideoPlayerFull from '../../screens/VideoPlayerFullScreen';
 import PostTypeChoiceModal from '../../components/PostTypeChoiceModal/PostTypeChoiceModal';
-import CreatePoll from '../../screens/CreatePoll/CreatePoll';
 import ReactionListScreen from '../../screens/ReactionListScreen/ReactionListScreen';
 import CreateStoryScreen from '../screen/CreateStory/CreateStoryScreen';
 import Toast from '../../components/Toast/Toast';
@@ -54,6 +53,8 @@ import EditPost from '../screen/EditPost/EditPost';
 import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 import LivestreamPlayer from '../screen/LivestreamPlayer';
 import LivestreamTerminated from '../screen/LivestreamTerminated';
+import PollTargetSelection from '../screen/PollTargetSelection';
+import PollPostComposer from '../screen/PollPostComposer';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -188,8 +189,8 @@ export default function AmitySocialUIKitV4Navigator() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="CreatePoll"
-              component={CreatePoll}
+              name="PollPostComposer"
+              component={PollPostComposer}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -303,6 +304,10 @@ export default function AmitySocialUIKitV4Navigator() {
                 name="LivestreamTerminated"
                 component={LivestreamTerminated}
                 options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PollTargetSelection"
+                component={PollTargetSelection}
               />
             </Stack.Group>
           </Stack.Navigator>

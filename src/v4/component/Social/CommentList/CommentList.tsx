@@ -2,19 +2,13 @@ import {
   Alert,
   FlatList,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {
-  FC,
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
-  memo,
-} from 'react';
+import React, { FC, useEffect, useState, useRef, memo } from 'react';
 import { UserInterface, IMentionPosition } from '../../../../types';
 import { getAmityUser } from '../../../../providers/user-provider';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
@@ -24,7 +18,6 @@ import {
   createReplyComment,
   deleteCommentById,
 } from '../../../../providers/Social/comment-sdk';
-import AmityMentionInput from '../../../../components/MentionInput/AmityMentionInput';
 import { useStyles } from './styles';
 import { TSearchItem } from '../../../../hooks/useSearch';
 import { useTheme } from 'react-native-paper';
@@ -34,6 +27,8 @@ import { SvgXml } from 'react-native-svg';
 import { usePaginatorApi } from '../../../hook/usePaginator';
 import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
 import CommentAdComponent from '../../CommentAdComponent/CommentAdComponent';
+import useMention from '../../../../v4/hook/useMention';
+import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 interface ICommentListProp {
   postId: string;
@@ -74,11 +69,21 @@ const CommentList: FC<ICommentListProp> = ({
   const [replyUserName, setReplyUserName] = useState<string>('');
   const [replyCommentId, setReplyCommentId] = useState<string>('');
   const [inputMessage, setInputMessage] = useState('');
-  const [resetValue, setResetValue] = useState(false);
   const [mentionNames, setMentionNames] = useState<TSearchItem[]>([]);
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
   );
+
+  const { renderInput, renderSuggestions } = useMention({
+    value: inputMessage,
+    onChange: setInputMessage,
+    setMentionUsers: (user: TSearchItem) => {
+      setMentionNames((prev) => [...prev, user]);
+    },
+    setMentionPosition: (position: IMentionPosition) => {
+      setMentionsPosition((prev) => [...prev, position]);
+    },
+  });
 
   const { itemWithAds } = usePaginatorApi<IComment>({
     items: commentList,
@@ -173,17 +178,20 @@ const CommentList: FC<ICommentListProp> = ({
     setReplyCommentId('');
   };
 
-  const handleSend: () => Promise<void> = useCallback(async () => {
-    setResetValue(false);
+  const handleSend: () => Promise<void> = async () => {
     if (inputMessage.trim() === '') {
       return;
     }
     setInputMessage('');
     Keyboard.dismiss();
+    const comment = replaceTriggerValues(
+      inputMessage,
+      ({ name }) => `@${name}`
+    );
     if (replyCommentId.length > 0) {
       try {
         await createReplyComment(
-          inputMessage,
+          comment,
           postId,
           replyCommentId,
           mentionNames?.map((item) => item.id),
@@ -196,7 +204,7 @@ const CommentList: FC<ICommentListProp> = ({
     } else {
       try {
         await createComment(
-          inputMessage,
+          comment,
           postId,
           mentionNames?.map((item) => item.id),
           mentionsPosition,
@@ -210,19 +218,18 @@ const CommentList: FC<ICommentListProp> = ({
     setMentionNames([]);
     setMentionsPosition([]);
     onCloseReply();
-    setResetValue(true);
-  }, [
-    inputMessage,
-    mentionNames,
-    mentionsPosition,
-    postId,
-    postType,
-    replyCommentId,
-  ]);
+  };
 
-  const renderFooterComponent = useMemo(() => {
+  const renderFooterComponent = () => {
     return (
-      <View style={styles.commentListFooter}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.commentListFooter}
+      >
+        {renderSuggestions({
+          type: 'comment',
+          style: styles.suggestionContainer,
+        })}
         {replyUserName.length > 0 && (
           <View style={styles.replyLabelWrap}>
             <Text style={styles.replyLabel}>
@@ -243,20 +250,11 @@ const CommentList: FC<ICommentListProp> = ({
         {!disabledInteraction && (
           <View style={styles.InputWrap}>
             <View style={styles.inputContainer}>
-              <AmityMentionInput
-                resetValue={resetValue}
-                initialValue=""
-                privateCommunityId={null}
-                multiline
-                placeholder="Say something nice..."
-                placeholderTextColor={theme.colors.baseShade3}
-                mentionUsers={mentionNames}
-                setInputMessage={setInputMessage}
-                setMentionUsers={setMentionNames}
-                mentionsPosition={mentionsPosition}
-                setMentionsPosition={setMentionsPosition}
-                isBottomMentionSuggestionsRender={false}
-              />
+              {renderInput({
+                multiline: true,
+                placeholder: 'Say something nice...',
+                placeholderTextColor: theme.colors.baseShade3,
+              })}
             </View>
 
             <TouchableOpacity
@@ -276,22 +274,12 @@ const CommentList: FC<ICommentListProp> = ({
             </TouchableOpacity>
           </View>
         )}
-      </View>
+      </KeyboardAvoidingView>
     );
-  }, [
-    disabledInteraction,
-    handleSend,
-    inputMessage.length,
-    mentionNames,
-    mentionsPosition,
-    replyUserName,
-    resetValue,
-    styles,
-    theme.colors,
-  ]);
+  };
 
   return (
-    <View style={{ height: '100%', paddingBottom: 40 }}>
+    <View style={styles.root}>
       <FlatList
         keyboardShouldPersistTaps="handled"
         data={itemWithAds}
@@ -316,7 +304,7 @@ const CommentList: FC<ICommentListProp> = ({
         onEndReachedThreshold={0.8}
         onEndReached={() => onNextPageRef.current && onNextPageRef.current()}
       />
-      {renderFooterComponent}
+      {renderFooterComponent()}
     </View>
   );
 };

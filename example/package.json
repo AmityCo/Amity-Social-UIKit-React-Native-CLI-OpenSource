@@ -12,6 +12,7 @@
     "@amityco/ts-sdk-react-native": "7.6.0",
     "@api.video/react-native-livestream": "2.0.0",
     "@react-native-async-storage/async-storage": "^1.19.3",
+    "@react-native-community/datetimepicker": "7.1.0",
     "@react-native-community/netinfo": "^11.3.1",
     "@react-native-community/push-notification-ios": "^1.11.0",
     "@react-native-firebase/app": "^19.0.0",

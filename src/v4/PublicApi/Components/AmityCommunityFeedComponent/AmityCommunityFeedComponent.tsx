@@ -105,6 +105,7 @@ const AmityCommunityFeedComponent = forwardRef<
     <FlatList
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
+      contentContainerStyle={styles.container}
       data={itemWithAds}
       scrollEnabled={false}
       renderItem={({ item, index }) => {

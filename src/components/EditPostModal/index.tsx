@@ -27,8 +27,9 @@ import postDetailSlice from '../../redux/slices/postDetailSlice';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import feedSlice from '../../redux/slices/feedSlice';
 import { useDispatch } from 'react-redux';
-import MentionInput from '../MentionInput/AmityMentionInput';
 import { TSearchItem } from 'src/hooks/useSearch';
+import useMention from '../../v4/hook/useMention';
+import { replaceTriggerValues } from 'react-native-controlled-mentions';
 interface IModal {
   visible: boolean;
   userId?: string;
@@ -64,11 +65,22 @@ const EditPostModal = ({
   const [imagePosts, setImagePosts] = useState<string[]>([]);
   const [videoPosts, setVideoPosts] = useState<IVideoPost[]>([]);
   const [childrenPostArr, setChildrenPostArr] = useState<string[]>([]);
-  const [initialText, setInitialText] = useState('');
   const { updateByPostId: updateByPostIdGlobalFeed } = globalFeedSlice.actions;
   const { updatePostDetail } = postDetailSlice.actions;
   const { updateByPostId } = feedSlice.actions;
   const dispatch = useDispatch();
+
+  const { renderInput, renderSuggestions } = useMention({
+    value: inputMessage,
+    onChange: setInputMessage,
+    communityId: privateCommunityId,
+    setMentionUsers: (user: TSearchItem) => {
+      setMentionUsers((prev) => [...prev, user]);
+    },
+    setMentionPosition: (position: IMentionPosition) => {
+      setMentionPosition((prev) => [...prev, position]);
+    },
+  });
 
   const parsePostText = useCallback(
     (text: string, mentionUsersArr: TSearchItem[]) => {
@@ -76,8 +88,8 @@ const EditPostModal = ({
         const mentionee = mentionUsersArr.find(
           (user) => user.displayName === username
         );
-        const mentioneeId = mentionee ? mentionee.userId : ''; // Get userId from mentionUsers array based on userName
-        return `@[${username}](${mentioneeId})`;
+        const mentioneeId = mentionee ? mentionee.userId : '';
+        return `{@}[${username}](${mentioneeId})`;
       });
       return parsedText;
     },
@@ -121,7 +133,7 @@ const EditPostModal = ({
 
     setMentionUsers(users);
     const parsedText = parsePostText(postDetail?.data?.text ?? '', users);
-    setInitialText(parsedText);
+    setInputMessage(parsedText);
     return users;
   }, []);
 
@@ -171,7 +183,7 @@ const EditPostModal = ({
       getMentionUsers(postDetail.mentionees?.[0].userIds ?? []);
       setMentionPosition(mentionPositions);
     } else {
-      setInitialText(postDetail?.data?.text ?? '');
+      setInputMessage(postDetail?.data?.text ?? '');
     }
   }, [postDetail]);
 
@@ -210,7 +222,7 @@ const EditPostModal = ({
     const response = await editPost(
       postDetail.postId,
       {
-        text: inputMessage,
+        text: replaceTriggerValues(inputMessage, ({ name }) => `@${name}`),
         fileIds: fileIds as string[],
       },
       type,
@@ -316,31 +328,23 @@ const EditPostModal = ({
           <Text style={styles.headerText}>Save</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.container}>
-        <View style={styles.AllInputWrap}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={Platform.select({ ios: 100, android: 80 })}
-            style={styles.AllInputWrap}
-          >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.select({ ios: 100, android: 80 })}
+        style={styles.AllInputWrap}
+      >
+        <View style={styles.container}>
+          <View style={styles.AllInputWrap}>
             <ScrollView
               style={styles.container}
               keyboardShouldPersistTaps="handled"
             >
-              <MentionInput
-                style={styles.textInput}
-                isBottomMentionSuggestionsRender={true}
-                placeholder="What's going on...?"
-                placeholderTextColor={theme.colors.baseShade3}
-                setInputMessage={setInputMessage}
-                mentionUsers={mentionUsers}
-                setMentionUsers={setMentionUsers}
-                mentionsPosition={mentionPosition}
-                setMentionsPosition={setMentionPosition}
-                multiline
-                privateCommunityId={privateCommunityId}
-                initialValue={initialText}
-              />
+              {renderInput({
+                multiline: true,
+                style: styles.textInput,
+                placeholder: "What's going on...?",
+                placeholderTextColor: theme.colors.baseShade3,
+              })}
               <View style={styles.imageContainer}>
                 {displayImages.length > 0 && (
                   <FlatList
@@ -379,9 +383,10 @@ const EditPostModal = ({
                 )}
               </View>
             </ScrollView>
-          </KeyboardAvoidingView>
+          </View>
         </View>
-      </View>
+        {renderSuggestions({ type: 'post' })}
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
