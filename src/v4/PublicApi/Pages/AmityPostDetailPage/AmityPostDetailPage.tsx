@@ -17,7 +17,6 @@ import React, {
   useCallback,
   useEffect,
   useState,
-  useMemo,
   useLayoutEffect,
 } from 'react';
 import { ComponentID, PageID } from '../../../enum/';
@@ -43,7 +42,6 @@ import {
 import { closeIcon } from '../../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import { IMentionPosition } from '~/types';
-import AmityMentionInput from '../../../../components/MentionInput/AmityMentionInput';
 import { useDispatch } from 'react-redux';
 import uiSlice from '../../../../redux/slices/uiSlice';
 import MyAvatar from '../../../component/MyAvatar/MyAvatar';
@@ -57,6 +55,8 @@ import ErrorComponent from '../../../component/ErrorComponent/ErrorComponent';
 import { getSkeletonBackgrounColor } from '../../../../util/colorUtil';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 import { PostMenu } from '../../../component/PostMenu';
+import useMention from '../../../../v4/hook/useMention';
+import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 type AmityPostDetailPageType = {
   postId: Amity.Post['postId'];
@@ -86,7 +86,6 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const [replyUserName, setReplyUserName] = useState<string>('');
   const [replyCommentId, setReplyCommentId] = useState<string>('');
   const [inputMessage, setInputMessage] = useState('');
-  const [resetValue, setResetValue] = useState(false);
   const [mentionNames, setMentionNames] = useState<TSearchItem[]>([]);
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
@@ -99,6 +98,17 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const [showLivestreamEndPopup, setShowLivestreamEndPopup] = useState<boolean>(
     showEndPopup || false
   );
+
+  const { renderInput, renderSuggestions } = useMention({
+    value: inputMessage,
+    onChange: setInputMessage,
+    setMentionUsers: (user: TSearchItem) => {
+      setMentionNames((prev) => [...prev, user]);
+    },
+    setMentionPosition: (position: IMentionPosition) => {
+      setMentionsPosition((prev) => [...prev, position]);
+    },
+  });
 
   const adjustedHeight =
     height -
@@ -189,17 +199,20 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     setReplyCommentId('');
   };
 
-  const handleSend: () => Promise<void> = useCallback(async () => {
-    setResetValue(false);
+  const handleSend: () => Promise<void> = async () => {
     if (inputMessage.trim() === '') {
       return;
     }
     setInputMessage('');
     Keyboard.dismiss();
+    const comment = replaceTriggerValues(
+      inputMessage,
+      ({ name }) => `@${name}`
+    );
     if (replyCommentId.length > 0) {
       try {
         await createReplyComment(
-          inputMessage,
+          comment,
           postId,
           replyCommentId,
           mentionNames?.map((item) => item.id),
@@ -219,7 +232,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     } else {
       try {
         await createComment(
-          inputMessage,
+          comment,
           postId,
           mentionNames?.map((item) => item.id),
           mentionsPosition,
@@ -240,23 +253,15 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     setMentionNames([]);
     setMentionsPosition([]);
     onCloseReply();
-    setResetValue(true);
-  }, [
-    dispatch,
-    inputMessage,
-    mentionNames,
-    mentionsPosition,
-    postId,
-    replyCommentId,
-    showToastMessage,
-  ]);
+  };
 
-  const renderFooterComponent = useMemo(() => {
+  const renderFooterComponent = () => {
     return (
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.commentListFooter}
       >
+        {renderSuggestions({ type: 'comment' })}
         <View
           onLayout={(event: LayoutChangeEvent) => {
             const { height: layoutHeight } = event.nativeEvent.layout;
@@ -284,20 +289,11 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
             <View style={styles.InputWrap}>
               <MyAvatar style={styles.myAvatar} />
               <View style={styles.inputContainer}>
-                <AmityMentionInput
-                  resetValue={resetValue}
-                  initialValue=""
-                  privateCommunityId={null}
-                  multiline
-                  placeholder="Say something nice..."
-                  placeholderTextColor={themeStyles.colors.baseShade3}
-                  mentionUsers={mentionNames}
-                  setInputMessage={setInputMessage}
-                  setMentionUsers={setMentionNames}
-                  mentionsPosition={mentionsPosition}
-                  setMentionsPosition={setMentionsPosition}
-                  isBottomMentionSuggestionsRender={false}
-                />
+                {renderInput({
+                  multiline: true,
+                  placeholder: 'Say something nice...',
+                  placeholderTextColor: themeStyles.colors.baseShade3,
+                })}
               </View>
 
               <TouchableOpacity
@@ -320,17 +316,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
         </View>
       </KeyboardAvoidingView>
     );
-  }, [
-    disabledInteraction,
-    handleSend,
-    inputMessage.length,
-    mentionNames,
-    mentionsPosition,
-    replyUserName,
-    resetValue,
-    styles,
-    themeStyles,
-  ]);
+  };
 
   const renderLivestreamEndPopup = () => {
     Alert.alert(
@@ -437,7 +423,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
         <Text style={styles.headerTitle}>Post</Text>
         <PostMenu post={postData} pageId={pageId} componentId={componentId} />
       </View>
-      {renderFooterComponent}
+      {renderFooterComponent()}
     </SafeAreaView>
   );
 };

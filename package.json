@@ -234,7 +234,7 @@
     "react-content-loader": "^6.2.1",
     "react-hook-form": "^7.49.3",
     "react-i18next": "12.1.5",
-    "react-native-controlled-mentions": "^2.2.5",
+    "react-native-controlled-mentions": "^3.1.0",
     "react-native-insta-story": "^1.1.9",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-modal-selector": "^2.1.2",

@@ -146,6 +146,14 @@ export enum ElementID {
   livestream_terminated_action_button = 'livestream_terminated_action_button',
   change_thumbnail_button = 'change_thumbnail_button',
   delete_thumbnail_button = 'delete_thumbnail_button',
+  poll_question_title = 'poll_question_title',
+  poll_options_title = 'poll_options_title',
+  poll_options_desc = 'poll_options_desc',
+  poll_add_option_button = 'poll_add_option_button',
+  poll_duration_title = 'poll_duration_title',
+  poll_duration_desc = 'poll_duration_desc',
+  poll_multiple_selection_title = 'poll_multiple_selection_title',
+  poll_multiple_selection_desc = 'poll_multiple_selection_desc',
 }
 
 export interface UiKitConfigKeys {

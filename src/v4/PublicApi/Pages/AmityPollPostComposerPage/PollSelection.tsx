@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Switch } from 'react-native';
-import { Typography } from '../../../component/Typography/Typography';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';
+import FormLabel from '../../../elements/FormLabel';
+import { ElementID, PageID } from '../../../enum';
+import FormDescription from '../../../elements/FormDescription';
 
 export function PollSelection() {
   const { styles, theme } = useStyles();
@@ -13,12 +15,16 @@ export function PollSelection() {
     <View style={styles.fieldContainer}>
       <View style={styles.rowContainer}>
         <View style={styles.fillSpace}>
-          <Typography.TitleBold style={styles.base}>
-            Multiple selection
-          </Typography.TitleBold>
-          <Typography.Caption style={styles.baseShade1}>
-            Let participants vote more than one option.
-          </Typography.Caption>
+          <FormLabel
+            style={styles.base}
+            pageId={PageID.poll_post_composer_page}
+            elementId={ElementID.poll_multiple_selection_title}
+          />
+          <FormDescription
+            style={styles.baseShade1}
+            pageId={PageID.poll_post_composer_page}
+            elementId={ElementID.poll_multiple_selection_desc}
+          />
         </View>
         <Switch
           ios_backgroundColor={theme.colors.baseShade3}

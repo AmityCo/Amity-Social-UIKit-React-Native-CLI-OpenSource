@@ -1,12 +1,15 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import plus from '../../../assets/icons/plus';
 import trash from '../../../assets/icons/trash';
 import { Typography } from '../../../component/Typography/Typography';
 import { MAX_POLL_ANSWER_LENGTH } from '../../../constants';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';
+import FormLabel from '../../../elements/FormLabel';
+import { ElementID, PageID } from '../../../enum';
+import FormDescription from '../../../elements/FormDescription';
+import AddOptionButton from '../../../elements/AddOptionButton';
 
 type PollOptionsProps = {
   onPressAddOption: () => void;
@@ -23,10 +26,16 @@ export function PollOptions({
 
   return (
     <View style={styles.fieldContainer}>
-      <Typography.TitleBold style={styles.base}>Options</Typography.TitleBold>
-      <Typography.Caption style={styles.baseShade1}>
-        Poll must contain at least 2 options.
-      </Typography.Caption>
+      <FormLabel
+        style={styles.base}
+        pageId={PageID.poll_post_composer_page}
+        elementId={ElementID.poll_options_title}
+      />
+      <FormDescription
+        style={styles.baseShade1}
+        pageId={PageID.poll_post_composer_page}
+        elementId={ElementID.poll_options_desc}
+      />
       <View style={styles.optionsContainer}>
         {pollOptions.map((pollOption, index) => {
           const onReachMaxChar =
@@ -69,15 +78,10 @@ export function PollOptions({
           );
         })}
         {pollOptions.length < 10 && (
-          <TouchableOpacity
-            style={styles.addOptionBtn}
+          <AddOptionButton
             onPress={onPressAddOption}
-          >
-            <SvgXml xml={plus(theme.colors.base)} width="20" height="20" />
-            <Typography.BodyBold style={styles.addOptionText}>
-              Add option
-            </Typography.BodyBold>
-          </TouchableOpacity>
+            pageId={PageID.poll_post_composer_page}
+          />
         )}
       </View>
     </View>
