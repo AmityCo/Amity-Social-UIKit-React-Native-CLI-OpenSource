@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@^7.6.0":
-  version "7.6.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.6.0.tgz#fe620b1efb8ffa0590908a1117b7552e910a1941"
-  integrity sha512-PQEBJfGBXDVpEx+Z76HznnAfSACL+sC4sZxZskHQct39LXajjZ3Fy7t8jGFoRgwCop/coZJtth5ogf1a+vW9Zg==
+"@amityco/ts-sdk-react-native@^7.7.0":
+  version "7.7.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.7.0.tgz#82509f4313363351fa2e09444926773ec4fd9fa4"
+  integrity sha512-jChiAFZT6NZZafkiLRaJPbd6QAP0UeYchNatD3fMknNHUXTTJuN8/+pbbgUGGlaa+izmrLKQupWxExt2yNagbg==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
@@ -6018,9 +6018,9 @@ hermes-profile-transformer@^0.0.6:
     source-map "^0.7.3"
 
 hls.js@^1.4.10:
-  version "1.6.5"
-  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.6.5.tgz#0912177e0663836c0f9469739c8deb3d8e598778"
-  integrity sha512-KMn5n7JBK+olC342740hDPHnGWfE8FiHtGMOdJPfUjRdARTWj9OB+8c13fnsf9sk1VtpuU2fKSgUjHvg4rNbzQ==
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.6.7.tgz#1b45ed55dfc92e06edc15b98e6374bd13f78af65"
+  integrity sha512-QW2fnwDGKGc9DwQUGLbmMOz8G48UZK7PVNJPcOUql1b8jubKx4/eMHNP5mGqr6tYlJNDG1g10Lx2U/qPzL6zwQ==
 
 hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
