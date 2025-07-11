@@ -37,3 +37,28 @@ export const formatTimeLeft = (milliseconds: number): string => {
     return `1m`;
   }
 };
+
+export function limitDecimalsWithoutRounding(val: number, decimals: number) {
+  let parts = val.toString().split('.');
+  let fractionalPart = parts[1] ? parts[1].substring(0, decimals) : '';
+  return parseFloat(parts[0] + '.' + fractionalPart);
+}
+
+export const formatVoteCount = (count: number): string => {
+  const ONE_MILLION = 1000000;
+  const ONE_THOUSAND = 1000;
+
+  if (count >= ONE_MILLION) {
+    const millions = count / ONE_MILLION;
+    return millions % 1 === 0
+      ? `${millions}M`
+      : `${limitDecimalsWithoutRounding(millions, 1)}M`;
+  }
+  if (count >= ONE_THOUSAND) {
+    let thousands = count / ONE_THOUSAND;
+    return thousands % 1 === 0
+      ? `${thousands}K`
+      : `${limitDecimalsWithoutRounding(thousands, 1)}K`;
+  }
+  return count.toString();
+};
