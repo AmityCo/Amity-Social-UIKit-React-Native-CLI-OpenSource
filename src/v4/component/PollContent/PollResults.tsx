@@ -6,6 +6,7 @@ import { ElementID } from '../../enum';
 import useAuth from '../../../hooks/useAuth';
 import { Typography } from '../Typography/Typography';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';
+import { formatVoteCount } from '../../../util/timeUtil';
 
 type PollResultsProps = {
   totalVotes: number;
@@ -20,7 +21,7 @@ export function PollResults({ options, totalVotes }: PollResultsProps) {
   const maxVoteCount = Math.max(...options.map((option) => option.voteCount));
 
   const percentage = (voteCount: number) =>
-    totalVotes === 0 ? 0 : (voteCount / totalVotes) * 100;
+    Math.min(totalVotes === 0 ? 0 : (voteCount / totalVotes) * 100, 100);
 
   const voteBy = (option: Amity.PollAnswer) => {
     if (option.voteCount === 1 && option.isVotedByUser) return 'Voted by you';
@@ -28,9 +29,10 @@ export function PollResults({ options, totalVotes }: PollResultsProps) {
       const voteCount = option.isVotedByUser
         ? option.voteCount - 1
         : option.voteCount;
-      return `Voted by ${voteCount} participant${voteCount > 1 ? 's' : ''}${
-        option.isVotedByUser ? ' and you' : ''
-      }`;
+      const formattedCount = formatVoteCount(voteCount);
+      return `Voted by ${formattedCount} participant${
+        voteCount > 1 ? 's' : ''
+      }${option.isVotedByUser ? ' and you' : ''}`;
     }
     return 'No votes';
   };
