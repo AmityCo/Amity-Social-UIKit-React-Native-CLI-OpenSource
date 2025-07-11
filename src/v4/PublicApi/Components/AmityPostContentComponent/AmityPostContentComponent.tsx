@@ -1,27 +1,7 @@
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  Modal,
-  Animated,
-  Alert,
-} from 'react-native';
+import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Pressable } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import {
-  arrowForward,
-  editIcon,
-  reportOutLine,
-  storyDraftDeletHyperLink,
-} from '../../../../svg/svg-xml-list';
+import { arrowForward } from '../../../../svg/svg-xml-list';
 import { useStyles } from './styles';
 import { getCommunityById } from '../../../../providers/Social/communities-sdk';
 import { useNavigation } from '@react-navigation/native';
@@ -37,25 +17,16 @@ import ModeratorBadgeElement from '../../Elements/ModeratorBadgeElement/Moderato
 import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
 import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
-import MenuButtonIconElement from '../../Elements/MenuButtonIconElement/MenuButtonIconElement';
-import {
-  deletePostById,
-  isReportTarget,
-  reportTargetById,
-  unReportTargetById,
-} from '../../../../providers/Social/feed-sdk';
-import useAuth from '../../../../hooks/useAuth';
-import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
-import { useDispatch } from 'react-redux';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
-import uiSlice from '../../../../redux/slices/uiSlice';
 import PostContent from '../../../../v4/component/PostContent';
+import { PostMenu } from '../../../component/PostMenu';
 
 type AmityPostContentComponentProps = {
   post: Amity.Post;
   pageId?: PageID;
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;
   isCommunityNameShown?: boolean;
+  showedAllOptions?: boolean;
 };
 export interface MediaUri {
   uri: string;
@@ -69,6 +40,7 @@ export interface IVideoPost {
 const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
   pageId = PageID.WildCardPage,
   post,
+  showedAllOptions,
   AmityPostContentComponentStyle = AmityPostContentComponentStyleEnum.detail,
   isCommunityNameShown = true,
 }) => {
@@ -83,22 +55,13 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     componentId: componentId,
   });
   const styles = useStyles(themeStyles);
-  const { client } = useAuth();
-  const { showToastMessage } = uiSlice.actions;
   const [textPost, setTextPost] = useState<string>('');
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
-  const { deleteByPostId } = globalFeedSlice.actions;
-  const dispatch = useDispatch();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [isVisible, setIsVisible] = useState(false);
-  const [isReportByMe, setIsReportByMe] = useState(false);
   const [mentionPositionArr, setMentionsPositionArr] = useState<
     IMentionPosition[]
   >([]);
-  const [postDataType, setPostDataType] = useState<'liveStream' | ''>('');
-
-  const slideAnimation = useRef(new Animated.Value(0)).current;
 
   const {
     postId,
@@ -118,12 +81,6 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
   const { isCommunityModerator } = useIsCommunityModerator({
     communityId: targetType === 'community' && targetId,
     userId: creator?.userId,
-  });
-
-  const myId = (client as Amity.Client).userId;
-  const { isCommunityModerator: isIAmModerator } = useIsCommunityModerator({
-    communityId: targetType === 'community' && targetId,
-    userId: myId,
   });
 
   useEffect(() => {
@@ -171,167 +128,6 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     return navigation.navigate('CommunityProfilePage', {
       communityId: targetId,
     });
-  };
-
-  const modalStyle = {
-    transform: [
-      {
-        translateY: slideAnimation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [580, 0], // Adjust this value to control the sliding distance
-        }),
-      },
-    ],
-  };
-
-  const openEditPostModal = () => {
-    closeModal();
-    navigation.navigate('EditPost', { post, community: communityData });
-  };
-
-  const openModal = () => {
-    setIsVisible(true);
-  };
-
-  const closeModal = () => {
-    Animated.timing(slideAnimation, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: true,
-    }).start(() => setIsVisible(false));
-  };
-
-  const checkIsReport = useCallback(async () => {
-    const isReport = await isReportTarget('post', postId);
-    if (isReport) {
-      setIsReportByMe(true);
-    }
-  }, [postId]);
-
-  useEffect(() => {
-    checkIsReport();
-  }, [checkIsReport]);
-
-  const onDeletePost = useCallback(async () => {
-    const deleted = await deletePostById(postId);
-    if (deleted) {
-      dispatch(deleteByPostId({ postId }));
-      navigation.pop();
-    }
-  }, [deleteByPostId, dispatch, navigation, postId]);
-
-  const deletePostObject = () => {
-    Alert.alert(
-      'Delete this post',
-      `This post will be permanently deleted. You'll no longer see and find this post`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => onDeletePost(),
-        },
-      ]
-    );
-    setIsVisible(false);
-  };
-
-  const reportPostObject = async () => {
-    if (isReportByMe) {
-      const unReportPost = await unReportTargetById('post', postId);
-      setIsVisible(false);
-      setIsReportByMe(false);
-      if (unReportPost) {
-        dispatch(
-          showToastMessage({
-            toastMessage: 'Post unreported',
-            isSuccessToast: true,
-          })
-        );
-      }
-    } else {
-      const reportPost = await reportTargetById('post', postId);
-      setIsVisible(false);
-      setIsReportByMe(true);
-      if (reportPost) {
-        dispatch(
-          showToastMessage({
-            toastMessage: 'Post reported',
-            isSuccessToast: true,
-          })
-        );
-      }
-    }
-  };
-
-  const renderOptionModal = () => {
-    return (
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={isVisible}
-        onRequestClose={closeModal}
-      >
-        <Pressable onPress={closeModal} style={styles.modalContainer}>
-          <Animated.View
-            style={[
-              styles.modalContent,
-              modalStyle,
-              (post?.creator?.userId === myId || isIAmModerator) &&
-                postDataType !== 'liveStream' &&
-                styles.twoOptions,
-            ]}
-          >
-            <View style={styles.handleBar} />
-            {post?.creator?.userId === myId ? (
-              postDataType !== 'liveStream' && (
-                <TouchableOpacity
-                  onPress={openEditPostModal}
-                  style={styles.modalRow}
-                >
-                  <SvgXml
-                    xml={editIcon(themeStyles.colors.base)}
-                    width="20"
-                    height="20"
-                  />
-                  <Text style={styles.editText}>Edit Post</Text>
-                </TouchableOpacity>
-              )
-            ) : (
-              <TouchableOpacity
-                onPress={reportPostObject}
-                style={styles.modalRow}
-              >
-                <SvgXml
-                  xml={reportOutLine(themeStyles.colors.base)}
-                  width="20"
-                  height="20"
-                />
-                <Text style={styles.editText}>
-                  {isReportByMe ? 'Unreport post' : 'Report post'}
-                </Text>
-              </TouchableOpacity>
-            )}
-            {(post?.creator?.userId === myId || isIAmModerator) && (
-              <TouchableOpacity
-                onPress={deletePostObject}
-                style={styles.modalRow}
-              >
-                <SvgXml
-                  xml={storyDraftDeletHyperLink()}
-                  width="20"
-                  height="20"
-                />
-                <Text style={styles.deleteText}>Delete Post</Text>
-              </TouchableOpacity>
-            )}
-          </Animated.View>
-        </Pressable>
-      </Modal>
-    );
   };
 
   const onPressPost = useCallback(() => {
@@ -426,16 +222,8 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
           </View>
         </View>
         {AmityPostContentComponentStyle ===
-        AmityPostContentComponentStyleEnum.feed ? (
-          <Pressable onPress={openModal} hitSlop={12}>
-            <MenuButtonIconElement
-              pageID={pageId}
-              componentID={componentId}
-              style={styles.threeDots}
-            />
-          </Pressable>
-        ) : (
-          <View style={styles.threeDots} />
+          AmityPostContentComponentStyleEnum.feed && (
+          <PostMenu post={post} pageId={pageId} componentId={componentId} />
         )}
       </Pressable>
       <View>
@@ -445,8 +233,9 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
             textPost={textPost}
             childrenPosts={children}
             onPressPost={onPressPost}
-            setPostDataType={setPostDataType}
+            showedAllOptions={showedAllOptions}
             mentionPositionArr={mentionPositionArr}
+            disabledPoll={communityData?.isPublic && !communityData?.isJoined}
           />
         </View>
         <AmityPostEngagementActionsComponent
@@ -458,7 +247,6 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
           postId={postId}
         />
       </View>
-      {renderOptionModal()}
     </View>
   );
 };

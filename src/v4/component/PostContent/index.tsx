@@ -18,27 +18,29 @@ import { useSelector } from 'react-redux';
 import ImageView from '../../../components/react-native-image-viewing/dist';
 import { RootState } from '../../../redux/store';
 import { playBtn } from '../../../svg/svg-xml-list';
-import PollSection from '../../../components/PollSection/PollSection';
 import LivestreamContent from '../LivestreamContent';
 import { LinkPreview } from '../../component/PreviewLink';
 import RenderTextWithMention from '../../component/RenderTextWithMention/RenderTextWithMention';
 import { IMentionPosition } from '../../../types';
+import PollContent from '../PollContent';
 
 interface IPostContent {
   post: Amity.Post;
   textPost?: string;
+  disabledPoll?: boolean;
   childrenPosts: string[];
   onPressPost?: () => void;
+  showedAllOptions?: boolean;
   mentionPositionArr?: IMentionPosition[];
-  setPostDataType?: (type: 'liveStream' | '') => void;
 }
 const PostContent: React.FC<IPostContent> = ({
   post,
   textPost,
   onPressPost,
+  disabledPoll,
   childrenPosts,
+  showedAllOptions,
   mentionPositionArr,
-  setPostDataType,
 }) => {
   const { apiRegion } = useAuth();
   const [imagePosts, setImagePosts] = useState<string[]>([]);
@@ -91,7 +93,6 @@ const PostContent: React.FC<IPostContent> = ({
       const response = await Promise.all(
         childrenPosts.map(async (id) => {
           const { data: childrenPost } = await getPostById(id);
-          setPostDataType(childrenPost?.dataType);
           return { dataType: childrenPost?.dataType, data: childrenPost?.data };
         })
       );
@@ -127,7 +128,7 @@ const PostContent: React.FC<IPostContent> = ({
     } catch (error) {
       console.log('error: ', error);
     }
-  }, [apiRegion, childrenPosts, setPostDataType]);
+  }, [apiRegion, childrenPosts]);
 
   useEffect(() => {
     setVideoPosts([]);
@@ -321,7 +322,12 @@ const PostContent: React.FC<IPostContent> = ({
       )}
       <View>
         {pollIds.length > 0 ? (
-          <PollSection pollId={pollIds[0].pollId} />
+          <PollContent
+            post={post}
+            pollId={pollIds[0].pollId}
+            disabledPoll={disabledPoll}
+            showedAllOptions={showedAllOptions}
+          />
         ) : livestreamId.length > 0 ? (
           <LivestreamContent
             post={post}

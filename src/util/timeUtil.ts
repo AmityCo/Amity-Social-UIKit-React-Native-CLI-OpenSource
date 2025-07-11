@@ -20,3 +20,45 @@ export const formatDuration = (seconds: number) => {
 
   return `${formattedHours}${formattedMinutes}${formattedSeconds}`;
 };
+
+export const formatTimeLeft = (milliseconds: number): string => {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  const totalHours = Math.floor(totalMinutes / 60);
+  const totalDays = Math.floor(totalHours / 24);
+
+  if (totalDays > 0) {
+    return `${totalDays}d`;
+  } else if (totalHours > 0) {
+    return `${totalHours}h`;
+  } else if (totalMinutes > 0) {
+    return `${totalMinutes}m`;
+  } else {
+    return `1m`;
+  }
+};
+
+export function limitDecimalsWithoutRounding(val: number, decimals: number) {
+  let parts = val.toString().split('.');
+  let fractionalPart = parts[1] ? parts[1].substring(0, decimals) : '';
+  return parseFloat(parts[0] + '.' + fractionalPart);
+}
+
+export const formatVoteCount = (count: number): string => {
+  const ONE_MILLION = 1000000;
+  const ONE_THOUSAND = 1000;
+
+  if (count >= ONE_MILLION) {
+    const millions = count / ONE_MILLION;
+    return millions % 1 === 0
+      ? `${millions}M`
+      : `${limitDecimalsWithoutRounding(millions, 1)}M`;
+  }
+  if (count >= ONE_THOUSAND) {
+    let thousands = count / ONE_THOUSAND;
+    return thousands % 1 === 0
+      ? `${thousands}K`
+      : `${limitDecimalsWithoutRounding(thousands, 1)}K`;
+  }
+  return count.toString();
+};

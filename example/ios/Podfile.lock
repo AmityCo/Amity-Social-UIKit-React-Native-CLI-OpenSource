@@ -1,5 +1,5 @@
 PODS:
-  - amity-react-native-social-ui-kit (4.0.0-beta-25):
+  - amity-react-native-social-ui-kit (4.0.0-beta-26):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - ApiVideoLiveStream (1.4.1):
@@ -612,6 +612,8 @@ PODS:
     - React-Core
   - RNCPushNotificationIOS (1.11.0):
     - React-Core
+  - RNDateTimePicker (7.1.0):
+    - React-Core
   - RNFBApp (19.3.0):
     - Firebase/CoreOnly (= 10.24.0)
     - React-Core
@@ -720,6 +722,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
@@ -866,6 +869,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCPushNotificationIOS:
     :path: "../node_modules/@react-native-community/push-notification-ios"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -884,7 +889,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  amity-react-native-social-ui-kit: c14c7f387f6b616a73ab6cc37f2f73792895ec39
+  amity-react-native-social-ui-kit: 56acc9775367ac1aef572d2fafa36f16f568ac9f
   ApiVideoLiveStream: 8f9dce7f6d15d5e4bb3c7a25e406bf2a36337a5a
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
@@ -962,6 +967,7 @@ SPEC CHECKSUMS:
   ReactCommon: 9b8ce41770a295df8c3d2cbefa82896e4caeffbb
   RNCAsyncStorage: b6410dead2732b5c72a7fdb1ecb5651bbcf4674b
   RNCPushNotificationIOS: 6c4ca3388c7434e4a662b92e4dfeeee858e6f440
+  RNDateTimePicker: 49abe47592e5ac3d0670d8519a7dfd388f52a147
   RNFBApp: 4097f75673f8b42a7cd1ba17e6ea85a94b45e4d1
   RNFBMessaging: 92325b0d5619ac90ef023a23cfd16fd3b91d0a88
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8

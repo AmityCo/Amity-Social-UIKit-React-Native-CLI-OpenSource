@@ -20,9 +20,11 @@ import Header from './Components/Header';
 import { PollRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { checkCommunityPermission } from '../../providers/Social/communities-sdk';
 import useAuth from '../../hooks/useAuth';
-import AmityMentionInput from '../../components/MentionInput/AmityMentionInput';
 import { TSearchItem } from '../../hooks/useSearch';
 import { text_contain_blocked_word } from '../../constants';
+import useMention from '../../v4/hook/useMention';
+import { IMentionPosition } from '../../types';
+import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 const CreatePoll = ({ navigation, route }) => {
   const theme = useTheme() as MyMD3Theme;
@@ -36,7 +38,6 @@ const CreatePoll = ({ navigation, route }) => {
   const [optionQuestion, setOptionQuestion] = useState('');
   const [mentionUsers, setMentionUsers] = useState<TSearchItem[]>([]);
   const [mentionPosition, setMentionPosition] = useState([]);
-  const [isScrollEnabled, setIsScrollEnabled] = useState(true);
   const [timeFrame, setTimeFrame] = useState<{ key: number; label: string }>(
     null
   );
@@ -69,6 +70,18 @@ const CreatePoll = ({ navigation, route }) => {
     data[index + 1] = { key: index + 1, label: `${index + 1} days` };
   }
 
+  const { renderInput, renderSuggestions } = useMention({
+    value: optionQuestion,
+    communityId: privateCommunityId,
+    onChange: setOptionQuestion,
+    setMentionUsers: (user: TSearchItem) => {
+      setMentionUsers((prev) => [...prev, user]);
+    },
+    setMentionPosition: (position: IMentionPosition) => {
+      setMentionPosition((prev) => [...prev, position]);
+    },
+  });
+
   const goBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
@@ -95,7 +108,10 @@ const CreatePoll = ({ navigation, route }) => {
         dataType: 'poll',
         targetType,
         targetId,
-        data: { pollId, text: optionQuestion },
+        data: {
+          pollId,
+          text: replaceTriggerValues(optionQuestion, ({ name }) => `@${name}`),
+        },
         mentionees,
         metadata: { mentioned: mentionPosition },
       });
@@ -187,7 +203,6 @@ const CreatePoll = ({ navigation, route }) => {
         handleCreatePost={handleCreatePost}
       />
       <ScrollView
-        scrollEnabled={isScrollEnabled}
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
       >
@@ -205,25 +220,11 @@ const CreatePoll = ({ navigation, route }) => {
             </Text>
           </View>
           <View style={styles.mentionInputContainer}>
-            <AmityMentionInput
-              privateCommunityId={privateCommunityId}
-              isBottomMentionSuggestionsRender={true}
-              onFocus={() => {
-                setIsScrollEnabled(false);
-              }}
-              onBlur={() => {
-                setIsScrollEnabled(true);
-              }}
-              placeholder="What's your poll question?"
-              placeholderTextColor={theme.colors.baseShade3}
-              setInputMessage={setOptionQuestion}
-              mentionUsers={mentionUsers}
-              setMentionUsers={setMentionUsers}
-              mentionsPosition={mentionPosition}
-              setMentionsPosition={setMentionPosition}
-              maxLength={MAX_POLL_QUESRION_LENGTH}
-              multiline
-            />
+            {renderInput({
+              multiline: true,
+              placeholder: "What's your poll question?",
+              placeholderTextColor: theme.colors.baseShade3,
+            })}
           </View>
         </View>
         <View style={styles.inputContainer}>
@@ -329,6 +330,7 @@ const CreatePoll = ({ navigation, route }) => {
           />
         </View>
       </ScrollView>
+      {renderSuggestions({ type: 'post' })}
     </View>
   );
 };

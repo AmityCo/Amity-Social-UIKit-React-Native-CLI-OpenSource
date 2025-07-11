@@ -452,6 +452,43 @@
     "*/thumbnail_action/delete_thumbnail_button": {
       "image": "value",
       "text": "Delete thumbnail"
+    },
+    "select_poll_target_page/*/*": {},
+    "select_poll_target_page/*/close_button": {
+      "image": "close_button"
+    },
+    "select_poll_target_page/*/title": {
+      "text": "Post to"
+    },
+    "select_poll_target_page/*/my_timeline_avatar": {},
+    "select_poll_target_page/*/my_timeline_text": {
+      "text": "My timeline"
+    },
+    "poll_post_composer_page/*/*": {},
+    "poll_post_composer_page/*/poll_question_title": {
+      "text": "Poll question"
+    },
+    "poll_post_composer_page/*/poll_options_title": {
+      "text": "Options"
+    },
+    "poll_post_composer_page/*/poll_options_desc": {
+      "text": "Poll must contain at least 2 options."
+    },
+    "poll_post_composer_page/*/poll_add_option_button": {
+      "text": "Add option",
+      "image": "plusIcon"
+    },
+    "poll_post_composer_page/*/poll_duration_title": {
+      "text": "Poll duration"
+    },
+    "poll_post_composer_page/*/poll_duration_desc": {
+      "text": "You can always close the poll before the set duration."
+    },
+    "poll_post_composer_page/*/poll_multiple_selection_title": {
+      "text": "Multiple selection"
+    },
+    "poll_post_composer_page/*/poll_multiple_selection_desc": {
+      "text": "Let participants vote more than one option."
     }
   }
 }
