@@ -1,4 +1,7 @@
-import { AmityPostComposerPageType } from '../PublicApi/types';
+import {
+  AmityPostComposerPageType,
+  AmityStoryTabComponentEnum,
+} from '../PublicApi/types';
 import { AmityPostTargetSelectionPageType } from '../enum';
 
 export type RootStackParamList = {
@@ -87,5 +90,10 @@ export type RootStackParamList = {
     targetName?: string;
     pop?: number;
     community?: Amity.Community;
+  };
+
+  AmityStoryTabComponent: {
+    type: AmityStoryTabComponentEnum;
+    targetId?: string;
   };
 };

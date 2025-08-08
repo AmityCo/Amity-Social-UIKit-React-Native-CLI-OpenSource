@@ -23,12 +23,12 @@ import {
   getMyFollowingsTopic,
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
-import Feed from '../Feed';
-import CustomTab from '../../../components/CustomTab';
-import type { FeedRefType } from '../CommunityHome';
+import Feed from '../../../screen/Feed';
+import CustomTab from '../../../../components/CustomTab';
+import type { FeedRefType } from '../../../screen/CommunityHome';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../../hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
 import {
   blockOrUnblock,
@@ -36,25 +36,27 @@ import {
   editIcon,
   primaryDot,
   privateUserProfile,
-} from '../../../svg/svg-xml-list';
-import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+} from '../../../../svg/svg-xml-list';
+import type { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
-import FloatingButton from '../../../components/FloatingButton';
-import { TabName } from '../../../enum/tabNameState';
+import FloatingButton from '../../../../components/FloatingButton';
+import { TabName } from '../../../../enum/tabNameState';
 import { useDispatch } from 'react-redux';
-import uiSlice from '../../../redux/slices/uiSlice';
-import { PostTargetType } from '../../../enum/postTargetType';
-import GalleryComponent from '../../component/Gallery/GalleryComponent';
-import { useFile } from '../../hook';
-import { defaultAvatarUri } from '../../assets';
-import { ImageSizeState } from '../../enum';
+import uiSlice from '../../../../redux/slices/uiSlice';
+import { PostTargetType } from '../../../../enum/postTargetType';
+import GalleryComponent from '../../../component/Gallery/GalleryComponent';
+import { useFile } from '../../../hook';
+import { defaultAvatarUri } from '../../../assets';
+import { ImageSizeState } from '../../../enum';
+import { RootStackParamList } from '~/v4/routes/RouteParamList';
 
-export default function UserProfile({ route }: any) {
+type UserProfilePageProps = RootStackParamList['UserProfile'];
+
+function UserProfile({ userId }: UserProfilePageProps) {
   const theme = useTheme() as MyMD3Theme;
   const styles = useStyles();
   const { client } = useAuth();
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const { userId } = route.params;
   const { openPostTypeChoiceModal } = uiSlice.actions;
   const dispatch = useDispatch();
   const [user, setUser] = useState<Amity.User>();
@@ -114,7 +116,7 @@ export default function UserProfile({ route }: any) {
           }}
         >
           <Image
-            source={require('../../assets/images/threeDot.png')}
+            source={require('../../../assets/images/threeDot.png')}
             style={styles.dotIcon}
           />
         </TouchableOpacity>
@@ -194,7 +196,7 @@ export default function UserProfile({ route }: any) {
     return (
       <TouchableOpacity style={styles.followButton} onPress={onFollowTap}>
         <Image
-          source={require('../../assets/images/followPlus.png')}
+          source={require('../../../assets/images/followPlus.png')}
           style={styles.followIcon}
         />
         <Text style={styles.followText}>Follow</Text>
@@ -378,3 +380,5 @@ export default function UserProfile({ route }: any) {
     </View>
   );
 }
+
+export default UserProfile;

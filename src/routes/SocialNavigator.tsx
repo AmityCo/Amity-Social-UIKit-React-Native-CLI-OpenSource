@@ -18,7 +18,7 @@ import { CommunitySetting } from '../screens/CommunitySetting/index';
 import CommunityMemberDetail from '../screens/CommunityMemberDetail/CommunityMemberDetail';
 import PostDetail from '../screens/PostDetail';
 import CreatePost from '../screens/CreatePost';
-import UserProfile from '../v4/screen/UserProfile/UserProfile';
+import UserProfile from '../v4/screen/UserProfile';
 import { EditProfile } from '../screens/EditProfile/EditProfile';
 import UserProfileSetting from '../v4/screen/UserProfileSetting/UserProfileSetting';
 import CommunitySearch from '../screens/CommunitySearch';
