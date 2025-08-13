@@ -448,7 +448,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
               width="20"
               height="20"
             />
-            <Typography.Body>
+            <Typography.Body style={styles.hyperlinkText}>
               {storyHyperLink.customText || storyHyperLink.url}
             </Typography.Body>
           </TouchableOpacity>

@@ -164,8 +164,7 @@ export const useStyles = () => {
       alignSelf: 'center',
     },
     hyperlinkText: {
-      marginLeft: 8,
-      color: '#000',
+      color: theme.colors.base,
     },
     error: {
       textAlign: 'center',
