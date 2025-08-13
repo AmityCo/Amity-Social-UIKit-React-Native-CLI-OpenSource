@@ -47,6 +47,7 @@ import {
   AmityCommunityImageFeedComponent,
   AmityCommunityVideoFeedComponent,
   AmityThumbnailActionComponent,
+  AmityUserProfilePage,
 } from './v4';
 
 import {
@@ -126,4 +127,5 @@ export {
   AmityCommunityImageFeedComponent,
   AmityCommunityVideoFeedComponent,
   AmityThumbnailActionComponent,
+  AmityUserProfilePage,
 };

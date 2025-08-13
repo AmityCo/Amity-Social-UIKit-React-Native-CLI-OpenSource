@@ -19,7 +19,7 @@ import CommunityMemberDetail from '../../screens/CommunityMemberDetail/Community
 import AmitySocialHomePage from '../PublicApi/Pages/AmitySocialHomePage/AmitySocialHomePage';
 import PostDetail from '../screen/PostDetail';
 import CreatePost from '../screen/CreatePost';
-import UserProfile from '../screen/UserProfile/UserProfile';
+import UserProfile from '../screen/UserProfile';
 import { EditProfile } from '../../screens/EditProfile/EditProfile';
 import UserProfileSetting from '../../screens/UserProfileSetting/UserProfileSetting';
 import CommunitySearch from '../../screens/CommunitySearch';
@@ -87,6 +87,11 @@ export default function PageRenderer({ children }: PageRendererProps) {
               (children.type?.name as keyof RootStackParamList)
             }
           >
+            <Stack.Screen
+              name="AmityStoryTabComponent"
+              children={() => children}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="Home"
               component={AmitySocialHomePage}
