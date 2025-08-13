@@ -40,6 +40,9 @@ import { useDispatch } from 'react-redux';
 import uiSlice from '../../../../../redux/slices/uiSlice';
 import { LoadingOverlay } from '../../../../../components/LoadingOverlay';
 import Toast from '../../../../../components/Toast/Toast';
+import { Typography } from '../../../../component/Typography/Typography';
+import { useTheme } from 'react-native-paper';
+import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
 
 interface IAmityViewStoryItem {
   communityData: Amity.Community;
@@ -73,6 +76,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
   onPressCommunityName,
 }) => {
   const styles = useStyles();
+  const theme = useTheme<MyMD3Theme>();
   const { getUiKitConfig } = useConfig();
   const progress = useRef(new Animated.Value(0)).current;
   const sheetRef = useRef<BottomSheetMethods>(null);
@@ -439,10 +443,14 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
             style={styles.hyperlinkContainer}
             onPress={onPressHyperLink}
           >
-            <SvgXml xml={storyHyperLinkIcon('blue')} width="25" height="25" />
-            <Text style={styles.hyperlinkText}>
-              {storyHyperLink.customText ?? storyHyperLink.url}
-            </Text>
+            <SvgXml
+              xml={storyHyperLinkIcon(theme.colors.primary)}
+              width="20"
+              height="20"
+            />
+            <Typography.Body style={styles.hyperlinkText}>
+              {storyHyperLink.customText || storyHyperLink.url}
+            </Typography.Body>
           </TouchableOpacity>
         )}
         {currentStory?.dataType === 'video' && (
