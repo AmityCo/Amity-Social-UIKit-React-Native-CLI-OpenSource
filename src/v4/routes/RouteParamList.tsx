@@ -96,4 +96,10 @@ export type RootStackParamList = {
     type: AmityStoryTabComponentEnum;
     targetId?: string;
   };
+
+  AmityPostEngagementContentComponent: {
+    postId: string;
+    targetId: string;
+    targetType: Amity.PostTargetType;
+  };
 };

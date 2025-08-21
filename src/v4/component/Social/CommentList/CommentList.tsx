@@ -1,5 +1,4 @@
 import {
-  Alert,
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
@@ -29,12 +28,15 @@ import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
 import CommentAdComponent from '../../CommentAdComponent/CommentAdComponent';
 import useMention from '../../../../v4/hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
+import MyAvatar from '../../MyAvatar/MyAvatar';
+import { useToast } from '../../../hook/useToast';
 
 interface ICommentListProp {
   postId: string;
   postType: Amity.CommentReferenceType;
   disabledInteraction?: boolean;
   onNavigate?: () => void;
+  withAvatar?: boolean;
 }
 
 interface IComment {
@@ -61,6 +63,7 @@ const CommentList: FC<ICommentListProp> = ({
   postType,
   disabledInteraction,
   onNavigate,
+  withAvatar,
 }) => {
   const styles = useStyles();
   const theme = useTheme() as MyMD3Theme;
@@ -73,6 +76,7 @@ const CommentList: FC<ICommentListProp> = ({
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
   );
+  const { showCommentErrorToast } = useToast();
 
   const { renderInput, renderSuggestions } = useMention({
     value: inputMessage,
@@ -199,7 +203,7 @@ const CommentList: FC<ICommentListProp> = ({
           postType
         );
       } catch (error) {
-        Alert.alert('Reply Error ', error.message);
+        showCommentErrorToast(error);
       }
     } else {
       try {
@@ -211,7 +215,7 @@ const CommentList: FC<ICommentListProp> = ({
           postType
         );
       } catch (error) {
-        Alert.alert('Comment Error ', error.message);
+        showCommentErrorToast(error);
       }
     }
     setInputMessage('');
@@ -248,10 +252,12 @@ const CommentList: FC<ICommentListProp> = ({
           </View>
         )}
         {!disabledInteraction && (
-          <View style={styles.InputWrap}>
+          <View style={styles.inputWrap}>
+            {withAvatar && <MyAvatar />}
             <View style={styles.inputContainer}>
               {renderInput({
                 multiline: true,
+                style: styles.textInput,
                 placeholder: 'Say something nice...',
                 placeholderTextColor: theme.colors.baseShade3,
               })}

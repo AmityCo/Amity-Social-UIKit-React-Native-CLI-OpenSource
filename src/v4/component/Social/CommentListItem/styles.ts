@@ -85,6 +85,7 @@ export const useStyles = () => {
     likeBtn: {
       flexDirection: 'row',
       marginRight: 8,
+      gap: 4,
       alignItems: 'center',
     },
     actionSection: {
@@ -96,6 +97,7 @@ export const useStyles = () => {
     rowContainer: {
       flexDirection: 'row',
       alignItems: 'center',
+      gap: 4,
     },
     likedText: {
       color: theme.colors.primary,
@@ -105,38 +107,43 @@ export const useStyles = () => {
     },
     btnText: {
       color: theme.colors.baseShade2,
-      fontSize: 14,
-      fontWeight: '600',
-    },
-    threeDots: {
-      opacity: 0.5,
-      marginLeft: 5,
     },
     modalContainer: {
       flex: 1,
       justifyContent: 'flex-end',
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
+
+    handleBar: {
+      alignSelf: 'center',
+      width: 36,
+      backgroundColor: theme.colors.baseShade3,
+      height: 5,
+      marginVertical: 10,
+      borderRadius: 10,
+    },
+
     modalContent: {
-      backgroundColor: theme.colors.background,
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 10,
-      padding: 10,
       minHeight: 700,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      backgroundColor: theme.colors.background,
     },
     modalRow: {
+      gap: 12,
       flexDirection: 'row',
       alignItems: 'center',
-      padding: 5,
-      marginVertical: 8,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
     },
-    deleteText: {
-      paddingLeft: 12,
-      fontWeight: '600',
+    normalActionText: {
       color: theme.colors.base,
     },
+    dangerActionText: {
+      color: theme.colors.alert,
+    },
     twoOptions: {
-      minHeight: 720,
+      minHeight: 750,
     },
     timeRow: {
       flexDirection: 'row',

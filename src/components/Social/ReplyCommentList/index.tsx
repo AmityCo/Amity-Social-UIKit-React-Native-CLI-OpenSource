@@ -15,8 +15,7 @@ import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import {
   expandIcon,
-  likedXml,
-  likeXml,
+  likeCircle,
   personXml,
   threeDots,
 } from '../../../svg/svg-xml-list';
@@ -40,6 +39,13 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import { IMentionPosition } from '../../../screens/CreatePost';
 import { LinkPreview } from '../../../v4/component/PreviewLink/LinkPreview';
+import { Typography } from '../../../v4/component/Typography/Typography';
+import { pen, trash, unreport, report } from '../../../v4/assets/icons';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../v4/routes/RouteParamList';
+import { useTimeDifference } from '../../../v4/hook';
+import { useToast } from '../../../v4/hook/useToast';
 
 export interface IComment {
   commentId: string;
@@ -100,6 +106,11 @@ export default function ReplyCommentList({
   const [commentMentionPosition, setCommentMentionPosition] = useState<
     IMentionPosition[]
   >([]);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const timeDifference = useTimeDifference(createdAt);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (mentionPosition) {
@@ -124,46 +135,6 @@ export default function ReplyCommentList({
       setIsReportByMe(true);
     }
   };
-  function getTimeDifference(timestamp: string): string {
-    // Convert the timestamp string to a Date object
-    const timestampDate = Date.parse(timestamp);
-
-    // Get the current date and time
-    const currentDate = Date.now();
-
-    // Calculate the difference in milliseconds
-    const differenceMs = currentDate - timestampDate;
-
-    const differenceYear = Math.floor(
-      differenceMs / (1000 * 60 * 60 * 24 * 365)
-    );
-    const differenceDay = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
-    const differenceHour = Math.floor(differenceMs / (1000 * 60 * 60));
-    const differenceMinutes = Math.floor(differenceMs / (1000 * 60));
-    const differenceSec = Math.floor(differenceMs / 1000);
-
-    if (differenceSec < 60) {
-      return 'Just now';
-    } else if (differenceMinutes < 60) {
-      return (
-        differenceMinutes +
-        ` ${differenceMinutes === 1 ? 'min ago' : 'mins ago'}`
-      );
-    } else if (differenceHour < 24) {
-      return (
-        differenceHour + ` ${differenceHour === 1 ? 'hour ago' : 'hours ago'}`
-      );
-    } else if (differenceDay < 365) {
-      return (
-        (differenceDay !== 1 ? differenceDay : '') +
-        ` ${differenceDay === 1 ? 'Yesterday' : 'days ago'}`
-      );
-    } else {
-      return (
-        differenceYear + ` ${differenceYear === 1 ? 'year ago' : 'years ago'}`
-      );
-    }
-  }
 
   useEffect(() => {
     checkIsReport();
@@ -171,8 +142,8 @@ export default function ReplyCommentList({
 
   const addReactionToComment: () => Promise<void> = async () => {
     if (isLike && likeReaction) {
-      setLikeReaction(likeReaction - 1);
       setIsLike(false);
+      setLikeReaction(likeReaction - 1);
       await removeCommentReaction(commentId, 'like');
     } else {
       setIsLike(true);
@@ -181,35 +152,31 @@ export default function ReplyCommentList({
     }
   };
   const deletePostObject = () => {
-    Alert.alert(
-      'Delete this post',
-      `This post will be permanently deleted. You'll no longer see and find this post`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => onDelete && onDelete(commentId),
-        },
-      ]
-    );
+    Alert.alert('Delete reply', `This reply will be permanently deleted.`, [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => onDelete && onDelete(commentId),
+      },
+    ]);
     setIsVisible(false);
   };
   const reportCommentObject = async () => {
     if (isReportByMe) {
       const unReportPost = await unReportTargetById('comment', commentId);
       if (unReportPost) {
-        Alert.alert('Undo Report sent');
+        showToast('Reply unreported.');
       }
       setIsVisible(false);
       setIsReportByMe(false);
     } else {
       const reportPost = await reportTargetById('comment', commentId);
       if (reportPost) {
-        Alert.alert('Report sent');
+        showToast('Reply reported.');
       }
       setIsVisible(false);
       setIsReportByMe(true);
@@ -239,6 +206,13 @@ export default function ReplyCommentList({
     setEditCommentModal(false);
   };
 
+  const onPressReplyReaction = () => {
+    navigation.navigate('ReactionList', {
+      referenceId: commentId,
+      referenceType: 'comment',
+    });
+  };
+
   return (
     <View key={commentId} style={styles.replyCommentWrap}>
       <View style={styles.replyHeaderSection}>
@@ -259,17 +233,6 @@ export default function ReplyCommentList({
             <Text style={styles.headerText}>{user?.displayName}</Text>
           </View>
 
-          <View style={styles.timeRow}>
-            <Text style={styles.headerTextTime}>
-              {getTimeDifference(createdAt)}
-            </Text>
-            {(editedAt !== createdAt || isEditComment) && (
-              <Text style={styles.dot}>·</Text>
-            )}
-            {(editedAt !== createdAt || isEditComment) && (
-              <Text style={styles.headerTextTime}>Edited</Text>
-            )}
-          </View>
           <View style={styles.commentBubble}>
             {textComment && (
               <LinkPreview
@@ -277,35 +240,50 @@ export default function ReplyCommentList({
                 mentionPositionArr={commentMentionPosition}
               />
             )}
-            {/* <Text style={styles.commentText}>{textComment}</Text> */}
           </View>
           <View style={styles.actionSection}>
-            <TouchableOpacity
-              onPress={() => addReactionToComment()}
-              style={styles.likeBtn}
-            >
-              {isLike ? (
+            <View style={styles.rowContainer}>
+              <View style={styles.timeRow}>
+                <Typography.Caption style={styles.headerTextTime}>
+                  {timeDifference}
+                </Typography.Caption>
+                {(editedAt !== createdAt || isEditComment) && (
+                  <Typography.Caption style={styles.headerTextTime}>
+                    {' '}
+                    (edited)
+                  </Typography.Caption>
+                )}
+              </View>
+              <TouchableOpacity
+                onPress={() => addReactionToComment()}
+                style={styles.likeBtn}
+              >
+                <Typography.CaptionBold
+                  style={isLike ? styles.likedText : styles.btnText}
+                >
+                  Like
+                </Typography.CaptionBold>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={openModal} style={styles.threeDots}>
                 <SvgXml
-                  xml={likedXml(theme.colors.primary)}
+                  xml={threeDots(theme.colors.base)}
                   width="20"
                   height="16"
                 />
-              ) : (
-                <SvgXml xml={likeXml} width="20" height="16" />
-              )}
-
-              <Text style={isLike ? styles.likedText : styles.btnText}>
-                {!isLike && likeReaction === 0 ? 'Like' : likeReaction}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={openModal} style={styles.threeDots}>
-              <SvgXml
-                xml={threeDots(theme.colors.base)}
-                width="20"
-                height="16"
-              />
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
+            {likeReaction > 0 && (
+              <TouchableOpacity
+                onPress={onPressReplyReaction}
+                style={styles.likeBtn}
+              >
+                <Typography.Caption style={styles.btnText}>
+                  {likeReaction}
+                </Typography.Caption>
+                <SvgXml xml={likeCircle} width="20" height="20" />
+              </TouchableOpacity>
+            )}
           </View>
           <View>
             {childrenComment.length > 0 && (
@@ -317,16 +295,6 @@ export default function ReplyCommentList({
               </Pressable>
             )}
           </View>
-          {/* {commentList.length > 0 && (
-            <FlatList
-              data={commentList}
-              renderItem={({ item }) => (
-                <CommentList commentDetail={item} isReplyComment />
-              )}
-              keyExtractor={(item) => item.commentId.toString()}
-              onEndReachedThreshold={0.8}
-            />
-          )} */}
         </View>
       </View>
       <Modal
@@ -344,19 +312,36 @@ export default function ReplyCommentList({
                 styles.twoOptions,
             ]}
           >
+            <View style={styles.handleBar} />
             {user?.userId === (client as Amity.Client).userId ? (
               <View>
                 <TouchableOpacity
                   onPress={openEditCommentModal}
                   style={styles.modalRow}
                 >
-                  <Text style={styles.deleteText}> Edit Comment</Text>
+                  <SvgXml
+                    width="24"
+                    height="24"
+                    xml={pen()}
+                    color={theme.colors.base}
+                  />
+                  <Typography.BodyBold style={styles.normalActionText}>
+                    Edit reply
+                  </Typography.BodyBold>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={deletePostObject}
                   style={styles.modalRow}
                 >
-                  <Text style={styles.deleteText}> Delete Comment</Text>
+                  <SvgXml
+                    width="24"
+                    height="24"
+                    xml={trash()}
+                    color={theme.colors.alert}
+                  />
+                  <Typography.BodyBold style={styles.dangerActionText}>
+                    Delete reply
+                  </Typography.BodyBold>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -364,9 +349,15 @@ export default function ReplyCommentList({
                 onPress={reportCommentObject}
                 style={styles.modalRow}
               >
-                <Text style={styles.deleteText}>
-                  {isReportByMe ? 'Undo Report' : 'Report'}
-                </Text>
+                <SvgXml
+                  width="24"
+                  height="24"
+                  color={theme.colors.base}
+                  xml={isReportByMe ? unreport() : report()}
+                />
+                <Typography.BodyBold style={styles.normalActionText}>
+                  {isReportByMe ? 'Unreport reply' : 'Report reply'}
+                </Typography.BodyBold>
               </TouchableOpacity>
             )}
           </Animated.View>

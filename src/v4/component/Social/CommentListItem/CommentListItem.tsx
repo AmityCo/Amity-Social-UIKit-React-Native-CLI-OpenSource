@@ -43,6 +43,9 @@ import ReplyCommentList from '../../../../components/Social/ReplyCommentList';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../hook/useTimeDifference';
 import { LinkPreview } from '../../PreviewLink';
+import { Typography } from '../../Typography/Typography';
+import { pen, report, trash, unreport } from '../../../../v4/assets/icons';
+import { useToast } from '../../../../v4/hook/useToast';
 export interface IComment {
   commentId: string;
   data: Record<string, any>;
@@ -119,6 +122,7 @@ const CommentListItem = ({
   const [isEditComment, setIsEditComment] = useState<boolean>(false);
   const slideAnimation = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation<any>();
+  const { showToast } = useToast();
 
   useEffect(() => {
     getReplyComments();
@@ -226,35 +230,31 @@ const CommentListItem = ({
   };
 
   const deletePostObject = () => {
-    Alert.alert(
-      'Delete this post',
-      `This post will be permanently deleted. You'll no longer see and find this post`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => onDelete && onDelete(commentId),
-        },
-      ]
-    );
+    Alert.alert('Delete comment', 'This comment will be permanently deleted.', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => onDelete && onDelete(commentId),
+      },
+    ]);
     setIsVisible(false);
   };
   const reportCommentObject = async () => {
     if (isReportByMe) {
       const unReportPost = await unReportTargetById('comment', commentId);
       if (unReportPost) {
-        Alert.alert('Undo Report sent');
+        showToast('Comment unreported.');
       }
       setIsVisible(false);
       setIsReportByMe(false);
     } else {
       const reportPost = await reportTargetById('comment', commentId);
       if (reportPost) {
-        Alert.alert('Report sent');
+        showToast('Comment reported.');
       }
       setIsVisible(false);
       setIsReportByMe(true);
@@ -328,31 +328,39 @@ const CommentListItem = ({
             <View style={styles.actionSection}>
               <View style={styles.rowContainer}>
                 <View style={styles.timeRow}>
-                  <Text style={styles.headerTextTime}>{timeDifference}</Text>
+                  <Typography.Caption style={styles.headerTextTime}>
+                    {timeDifference}
+                  </Typography.Caption>
                   {(editedAt !== createdAt || isEditComment) && (
-                    <Text style={styles.headerTextTime}> (edited)</Text>
+                    <Typography.Caption style={styles.headerTextTime}>
+                      {' '}
+                      (edited)
+                    </Typography.Caption>
                   )}
                 </View>
-
                 <TouchableOpacity
                   onPress={() => addReactionToComment()}
                   style={styles.likeBtn}
                 >
-                  <Text style={isLike ? styles.likedText : styles.btnText}>
-                    {!isLike ? 'Like' : 'Liked'}
-                  </Text>
+                  <Typography.CaptionBold
+                    style={isLike ? styles.likedText : styles.btnText}
+                  >
+                    Like
+                  </Typography.CaptionBold>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={onHandleReply}
                   style={styles.likeBtn}
                 >
-                  <Text style={styles.btnText}>Reply</Text>
+                  <Typography.CaptionBold style={styles.btnText}>
+                    Reply
+                  </Typography.CaptionBold>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={openModal} style={styles.threeDots}>
+                <TouchableOpacity onPress={openModal}>
                   <SvgXml
-                    xml={threeDots(theme.colors.base)}
+                    xml={threeDots(theme.colors.baseShade2)}
                     width="20"
-                    height="16"
+                    height="20"
                   />
                 </TouchableOpacity>
               </View>
@@ -362,13 +370,10 @@ const CommentListItem = ({
                   onPress={onPressCommentReaction}
                   style={styles.likeBtn}
                 >
-                  <Text style={styles.btnText}>{likeReaction}</Text>
-                  <SvgXml
-                    style={{ marginLeft: 4 }}
-                    xml={likeCircle}
-                    width="20"
-                    height="16"
-                  />
+                  <Typography.Caption style={styles.btnText}>
+                    {likeReaction}
+                  </Typography.Caption>
+                  <SvgXml xml={likeCircle} width="20" height="20" />
                 </TouchableOpacity>
               )}
             </View>
@@ -438,19 +443,36 @@ const CommentListItem = ({
                 styles.twoOptions,
             ]}
           >
+            <View style={styles.handleBar} />
             {user?.userId === (client as Amity.Client).userId ? (
               <View>
                 <TouchableOpacity
                   onPress={openEditCommentModal}
                   style={styles.modalRow}
                 >
-                  <Text style={styles.deleteText}> Edit Comment</Text>
+                  <SvgXml
+                    width="24"
+                    height="24"
+                    xml={pen()}
+                    color={theme.colors.base}
+                  />
+                  <Typography.BodyBold style={styles.normalActionText}>
+                    Edit Comment
+                  </Typography.BodyBold>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={deletePostObject}
                   style={styles.modalRow}
                 >
-                  <Text style={styles.deleteText}> Delete Comment</Text>
+                  <SvgXml
+                    width="24"
+                    height="24"
+                    xml={trash()}
+                    color={theme.colors.alert}
+                  />
+                  <Typography.BodyBold style={styles.dangerActionText}>
+                    Delete Comment
+                  </Typography.BodyBold>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -458,9 +480,15 @@ const CommentListItem = ({
                 onPress={reportCommentObject}
                 style={styles.modalRow}
               >
-                <Text style={styles.deleteText}>
-                  {isReportByMe ? 'Undo Report' : 'Report'}
-                </Text>
+                <SvgXml
+                  width="24"
+                  height="24"
+                  color={theme.colors.base}
+                  xml={isReportByMe ? unreport() : report()}
+                />
+                <Typography.BodyBold style={styles.normalActionText}>
+                  {isReportByMe ? 'Unreport comment' : 'Report comment'}
+                </Typography.BodyBold>
               </TouchableOpacity>
             )}
           </Animated.View>
