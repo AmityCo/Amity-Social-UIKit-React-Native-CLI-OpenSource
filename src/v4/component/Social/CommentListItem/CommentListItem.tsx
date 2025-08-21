@@ -126,10 +126,6 @@ const CommentListItem = ({
 
   useEffect(() => {
     getReplyComments();
-    setIsOpenReply(true);
-    return () => {
-      setIsOpenReply(false);
-    };
   }, []);
 
   const openModal = () => {
@@ -411,9 +407,9 @@ const CommentListItem = ({
               style={styles.viewMoreReplyBtn}
             >
               <SvgXml xml={expandIcon} />
-              <Text style={styles.viewMoreText}>
+              <Typography.CaptionBold style={styles.viewMoreText}>
                 View {childrenNumber} replies
-              </Text>
+              </Typography.CaptionBold>
             </TouchableOpacity>
           )}
 
@@ -423,7 +419,9 @@ const CommentListItem = ({
               style={styles.viewMoreReplyBtn}
             >
               <SvgXml xml={expandIcon} />
-              <Text style={styles.viewMoreText}>View more replies</Text>
+              <Typography.CaptionBold style={styles.viewMoreText}>
+                View more replies
+              </Typography.CaptionBold>
             </TouchableOpacity>
           )}
         </View>

@@ -63,20 +63,20 @@ export const useStyles = () => {
     },
 
     viewMoreReplyBtn: {
-      width: 155,
       borderRadius: 4,
-      backgroundColor: theme.colors.baseShade4,
+      borderWidth: 1,
+      borderColor: theme.colors.baseShade4,
+      backgroundColor: theme.colors.background,
       paddingVertical: 5,
       paddingHorizontal: 8,
       marginTop: 12,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+      alignSelf: 'flex-start',
     },
     viewMoreText: {
-      fontWeight: '600',
-      color: theme.colors.baseShade1,
-      paddingHorizontal: 4,
+      color: theme.colors.secondaryShade1,
     },
     commentText: {
       fontSize: 15,

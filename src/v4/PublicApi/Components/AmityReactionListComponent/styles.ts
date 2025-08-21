@@ -26,7 +26,7 @@ export const useStyles = () => {
       paddingBottom: bottom,
     },
     handleBar: {
-      width: 0.35 * width,
+      width: 36,
       backgroundColor: theme.colors.baseShade4,
       height: 5,
       marginVertical: 10,

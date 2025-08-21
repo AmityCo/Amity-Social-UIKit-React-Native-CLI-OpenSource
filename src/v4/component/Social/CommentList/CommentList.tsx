@@ -77,7 +77,6 @@ const CommentList: FC<ICommentListProp> = ({
     []
   );
   const { showCommentErrorToast } = useToast();
-
   const { renderInput, renderSuggestions } = useMention({
     value: inputMessage,
     onChange: setInputMessage,
@@ -229,6 +228,7 @@ const CommentList: FC<ICommentListProp> = ({
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.commentListFooter}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 140 : 20}
       >
         {renderSuggestions({
           type: 'comment',
