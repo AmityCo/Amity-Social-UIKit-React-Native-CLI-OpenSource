@@ -44,4 +44,9 @@ export { AmityThumbnailActionComponent } from './PublicApi/Components/AmityThumb
 
 export { default as AmityExploreComponent } from './PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 
-export { AmityPostTargetSelectionPageType } from './enum/post';
+export {
+  AmityPostTargetSelectionPageType,
+  PostTargetType as AmityPostTargetType,
+} from './enum';
+
+export { default as AmityPostEngagementContentComponent } from './PublicApi/Components/AmityPostEngagementContentComponent';

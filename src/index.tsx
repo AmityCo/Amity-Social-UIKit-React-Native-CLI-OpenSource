@@ -48,6 +48,8 @@ import {
   AmityCommunityVideoFeedComponent,
   AmityThumbnailActionComponent,
   AmityUserProfilePage,
+  AmityPostEngagementContentComponent,
+  AmityPostTargetType,
 } from './v4';
 
 import {
@@ -128,4 +130,6 @@ export {
   AmityCommunityVideoFeedComponent,
   AmityThumbnailActionComponent,
   AmityUserProfilePage,
+  AmityPostEngagementContentComponent,
+  AmityPostTargetType,
 };

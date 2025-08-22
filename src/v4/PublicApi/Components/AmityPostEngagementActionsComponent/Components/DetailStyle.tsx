@@ -57,7 +57,6 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
 
   const renderLikeText = useCallback(
     (likeNumber: number | undefined): string => {
-      if (!likeNumber) return '';
       if (likeNumber === 1) return 'like';
       return 'likes';
     },
@@ -65,7 +64,6 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   );
   const renderCommentText = useCallback(
     (commentNumber: number | undefined): string => {
-      if (!commentNumber) return '';
       if (commentNumber === 1) return 'comment';
       return 'comments';
     },
@@ -104,32 +102,29 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
 
   return (
     <>
-      {totalReactions === 0 && postData?.commentsCount === 0 ? null : (
-        <View style={styles.countSection}>
-          {totalReactions ? (
-            <View style={styles.row}>
-              <SvgXml
-                style={{ marginRight: 4 }}
-                xml={likeReaction(themeStyles.colors.background)}
-                width="20"
-                height="16"
-              />
-              <Text style={styles.likeCountText} onPress={onClickReactions}>
-                {formatNumber(totalReactions)} {renderLikeText(totalReactions)}
-              </Text>
-            </View>
-          ) : (
-            <Text />
-          )}
-          {postData?.commentsCount > 0 && (
-            <Text style={styles.commentCountText}>
-              {postData?.commentsCount > 0 && postData?.commentsCount}{' '}
-              {renderCommentText(postData?.commentsCount)}
+      <View style={styles.countSection}>
+        {totalReactions ? (
+          <View style={styles.row}>
+            <SvgXml
+              width="20"
+              style={{ marginRight: 4 }}
+              height="16"
+              xml={likeReaction(themeStyles.colors.background)}
+            />
+            <Text style={styles.likeCountText} onPress={onClickReactions}>
+              {formatNumber(totalReactions)} {renderLikeText(totalReactions)}
             </Text>
-          )}
-        </View>
-      )}
-      <></>
+          </View>
+        ) : (
+          <Text style={styles.likeCountText} onPress={onClickReactions}>
+            {formatNumber(totalReactions)} {renderLikeText(totalReactions)}
+          </Text>
+        )}
+        <Text style={styles.commentCountText}>
+          {formatNumber(postData?.commentsCount)}{' '}
+          {renderCommentText(postData?.commentsCount)}
+        </Text>
+      </View>
       <View style={[styles.actionSection, styles.detailActionSection]}>
         <View style={styles.row}>
           <TouchableOpacity onPress={addReactionToPost} style={styles.likeBtn}>
