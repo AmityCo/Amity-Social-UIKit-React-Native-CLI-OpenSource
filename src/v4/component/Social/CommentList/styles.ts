@@ -1,4 +1,4 @@
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions, Platform } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 
@@ -26,21 +26,16 @@ export const useStyles = () => {
       paddingVertical: 10,
       color: theme.colors.base,
     },
-    AllInputWrap: {
-      backgroundColor: theme.colors.baseShade4,
-      flex: 1,
-      marginTop: -16,
-    },
-    InputWrap: {
-      backgroundColor: theme.colors.background,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingHorizontal: 15,
-      paddingBottom: 25,
-      paddingTop: 10,
-      alignItems: 'flex-end',
+    inputWrap: {
+      gap: 8,
       borderTopWidth: 1,
+      paddingVertical: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 12,
+      justifyContent: 'space-between',
       borderTopColor: theme.colors.baseShade4,
+      backgroundColor: theme.colors.background,
     },
     postDisabledBtn: {
       color: '#A0BDF8',
@@ -67,27 +62,20 @@ export const useStyles = () => {
       borderTopColor: theme.colors.baseShade4,
     },
     textInput: {
-      borderWidth: 0,
-      borderBottomWidth: 0,
-      backgroundColor: 'transparent',
       fontSize: 15,
-      marginHorizontal: 3,
-      zIndex: 999,
-      paddingTop: 0,
       width: '100%',
-      borderRadius: 20,
-
-      // Additional styles if needed
+      paddingVertical: 0,
+      paddingTop: 0,
     },
     transparentText: {
       color: 'transparent',
     },
     inputContainer: {
       flex: 1,
-      paddingVertical: 10,
-      paddingHorizontal: 12,
-      backgroundColor: theme.colors.baseShade4,
       borderRadius: 20,
+      backgroundColor: theme.colors.baseShade4,
+      paddingVertical: Platform.OS === 'android' ? 8 : 12,
+      paddingHorizontal: Platform.OS === 'android' ? 12 : 14,
     },
     mentionText: {
       color: theme.colors.primary,
