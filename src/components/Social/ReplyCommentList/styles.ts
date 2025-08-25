@@ -14,8 +14,8 @@ export const useStyles = () => {
     },
     replyCommentWrap: {
       backgroundColor: theme.colors.background,
-      width: '100%',
       paddingTop: 4,
+      paddingRight: 12,
     },
     headerSection: {
       paddingVertical: 12,
@@ -84,23 +84,26 @@ export const useStyles = () => {
     },
     likeBtn: {
       flexDirection: 'row',
-      paddingRight: 6,
-      paddingTop: 4,
+      alignItems: 'center',
+      gap: 4,
     },
     actionSection: {
+      flex: 1,
       flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    rowContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
     },
     likedText: {
       color: theme.colors.primary,
-      fontSize: 15,
-      fontWeight: '600',
       marginHorizontal: 4,
     },
     btnText: {
       color: theme.colors.baseShade2,
-      fontSize: 15,
-      fontWeight: '600',
-      marginHorizontal: 4,
     },
     threeDots: {
       padding: 5,
@@ -112,25 +115,35 @@ export const useStyles = () => {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-      backgroundColor: theme.colors.background,
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 10,
-      padding: 10,
       minHeight: 700,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      backgroundColor: theme.colors.background,
     },
     modalRow: {
+      gap: 12,
       flexDirection: 'row',
       alignItems: 'center',
-      padding: 5,
-      marginVertical: 8,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
     },
-    deleteText: {
-      paddingLeft: 12,
-      fontWeight: '600',
+    handleBar: {
+      alignSelf: 'center',
+      width: 36,
+      backgroundColor: theme.colors.baseShade3,
+      height: 5,
+      marginVertical: 10,
+      borderRadius: 10,
+    },
+
+    normalActionText: {
       color: theme.colors.base,
     },
+    dangerActionText: {
+      color: theme.colors.alert,
+    },
     twoOptions: {
-      minHeight: 720,
+      minHeight: 750,
     },
     timeRow: {
       flexDirection: 'row',

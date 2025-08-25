@@ -93,6 +93,11 @@ export default function PageRenderer({ children }: PageRendererProps) {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="AmityPostEngagementContentComponent"
+              children={() => children}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="Home"
               component={AmitySocialHomePage}
               options={{ headerShown: false }}

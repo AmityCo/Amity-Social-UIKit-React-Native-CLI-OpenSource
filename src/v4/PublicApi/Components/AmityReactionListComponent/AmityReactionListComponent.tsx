@@ -22,7 +22,7 @@ import { SvgXml } from 'react-native-svg';
 import {
   fileSearch,
   likeReaction,
-  loveReaction,
+  // loveReaction,
 } from '../../../../svg/svg-xml-list';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -64,12 +64,8 @@ const AmityReactionListComponent: FC<AmityReactionListComponentType> = ({
     referenceType,
   });
   const SUPPORTED_REACTIONS = useMemo(
-    () => [
-      allReactionList?.length,
-      likeReactionList?.length,
-      loveReactionList?.length,
-    ],
-    [allReactionList, likeReactionList, loveReactionList]
+    () => [allReactionList?.length],
+    [allReactionList]
   );
 
   useEffect(() => {
@@ -152,8 +148,8 @@ const AmityReactionListComponent: FC<AmityReactionListComponentType> = ({
   const renderReactors = useCallback(
     ({ item }: { item: ReactionListType }) => {
       const avatarUrl = item.avatar?.fileUrl ?? defaultAvatarUri;
-      const reactionIcon =
-        item.reactionName === 'like' ? likeReaction() : loveReaction();
+      const reactionIcon = likeReaction();
+      // item.reactionName === 'like' ? likeReaction() : loveReaction();
       return (
         <TouchableOpacity
           style={styles.rowContainer}
@@ -181,19 +177,24 @@ const AmityReactionListComponent: FC<AmityReactionListComponentType> = ({
             selectedReactionIndex === index && styles.selectedReaction;
           const selectedReactionBtnStyle =
             selectedReactionIndex === index && styles.selectedReactionBtn;
-          const allReactiontext = index === 0 && 'All';
-          const reactionIcon = index === 1 ? likeReaction() : loveReaction();
+          // const allReactiontext = index === 0 && 'All';
+          const allReactiontext = index === 0 && likeReaction();
+          // const reactionIcon = index === 1 ? likeReaction() : loveReaction();
           return (
             <Pressable
               onPress={onSelect}
               style={[styles.reactionBtn, selectedReactionBtnStyle]}
               key={index}
             >
-              {index !== 0 && (
+              {/* {index !== 0 && (
                 <SvgXml xml={reactionIcon} width={18} height={18} />
               )}
               <Text style={[styles.reaction, selectedReactionTextStyle]}>
                 {allReactiontext} {formatNumber(reactionCount)}
+              </Text> */}
+              <SvgXml xml={allReactiontext} width={18} height={18} />
+              <Text style={[styles.reaction, selectedReactionTextStyle]}>
+                {formatNumber(reactionCount)}
               </Text>
             </Pressable>
           );
