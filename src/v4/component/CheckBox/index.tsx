@@ -16,12 +16,12 @@ import {
 } from '../../assets/icons';
 import { useStyles } from './styles';
 
-type CheckBoxContextType<T extends any = string | number> = {
+type CheckBoxContextType<T extends any = string> = {
   value: T[];
   disabled?: boolean;
   onChange: (value: T[]) => void;
   select?: (value: T[], option: T) => boolean;
-  extractKey?: (value: T) => string | number;
+  extractKey?: (value: T) => string;
 };
 
 const CheckBoxContext = createContext<CheckBoxContextType<any> | null>(null);
@@ -35,19 +35,23 @@ type GroupProps<T> = CheckBoxContextType<T> & PropsWithChildren<ViewProps>;
 
 function Group<T>({
   value,
+  select,
   onChange,
   children,
   disabled,
+  extractKey,
   ...props
 }: GroupProps<T>) {
   return (
-    <CheckBoxContext.Provider value={{ value, onChange, disabled }}>
+    <CheckBoxContext.Provider
+      value={{ value, onChange, disabled, select, extractKey }}
+    >
       <View {...props}>{children}</View>
     </CheckBoxContext.Provider>
   );
 }
 
-type OptionProps<T extends any = string | number> = PropsWithChildren<
+type OptionProps<T extends any = string> = PropsWithChildren<
   Omit<PressableProps, 'style'>
 > & {
   style?: (state: {
@@ -69,7 +73,7 @@ const useOptionContext = () => {
   return context;
 };
 
-function Option<T extends any = string | number>({
+function Option<T extends any = string>({
   style,
   value,
   children,

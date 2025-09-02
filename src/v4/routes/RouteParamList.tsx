@@ -1,8 +1,12 @@
 import {
   AmityPostComposerPageType,
   AmityStoryTabComponentEnum,
-} from '../PublicApi/types';
-import { AmityPostTargetSelectionPageType } from '../enum';
+} from '~/v4/PublicApi/types';
+import { AmityPostTargetSelectionPageType } from '~/v4/enum';
+import {
+  AddCategoryPageContext,
+  AddMemberPageContext,
+} from '~/v4/types/behaviour.interface';
 
 export type RootStackParamList = {
   Home: { postIdCallBack?: string };
@@ -44,11 +48,8 @@ export type RootStackParamList = {
   EditProfile: {
     user: Amity.User;
   };
-  EditCommunity: {
-    communityData: Amity.Community;
-  };
+
   AllMyCommunity: undefined;
-  CreateCommunity: undefined;
   VideoPlayer: { source: string };
   PendingPosts: { communityId: string; isModerator: boolean };
   ReactionList: { referenceId: string; referenceType: string };
@@ -91,6 +92,16 @@ export type RootStackParamList = {
     pop?: number;
     community?: Amity.Community;
   };
+
+  CreateCommunity: undefined;
+
+  EditCommunity: {
+    community: Amity.Community;
+  };
+
+  CommunityAddCategory: AddCategoryPageContext;
+
+  CommunityAddMember: AddMemberPageContext;
 
   AmityStoryTabComponent: {
     type: AmityStoryTabComponentEnum;

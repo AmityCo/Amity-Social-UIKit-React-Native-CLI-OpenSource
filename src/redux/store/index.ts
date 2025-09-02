@@ -1,5 +1,4 @@
-import { Store, configureStore } from '@reduxjs/toolkit';
-
+import { configureStore } from '@reduxjs/toolkit';
 import globalFeedSlice from '../slices/globalfeedSlice';
 import feedSlice from '../slices/feedSlice';
 import postDetailSlice from '../slices/postDetailSlice';
@@ -7,7 +6,7 @@ import uiSlice from '../slices/uiSlice';
 import bottomSheetSlice from '../slices/bottomSheetSlice';
 import toastSlice from '../../v4/stores/slices/toast';
 
-export const store: Store = configureStore({
+export const store = configureStore({
   reducer: {
     globalFeed: globalFeedSlice.reducer,
     postDetail: postDetailSlice.reducer,
@@ -22,7 +21,6 @@ export const store: Store = configureStore({
     }),
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+
 export type AppDispatch = typeof store.dispatch;

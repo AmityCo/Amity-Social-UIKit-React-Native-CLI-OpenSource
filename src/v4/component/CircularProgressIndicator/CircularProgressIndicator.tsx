@@ -1,7 +1,7 @@
+import { useStyles } from './styles';
+import { Circle, Svg } from 'react-native-svg';
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View, Animated } from 'react-native';
-import { Circle, Svg } from 'react-native-svg';
-import { useStyles } from './styles';
 
 type CircularProgressIndicatorProps = {
   progress?: number;
@@ -34,7 +34,6 @@ export const CircularProgressIndicator: React.FC<
     ? circumference - (progress / 100) * circumference
     : 0;
 
-  // Rotating animation for loader mode
   useEffect(() => {
     if (!isProgressMode) {
       Animated.loop(

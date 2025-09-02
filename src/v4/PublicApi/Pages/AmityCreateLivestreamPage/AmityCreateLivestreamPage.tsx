@@ -30,8 +30,7 @@ import { SvgXml } from 'react-native-svg';
 import { Typography } from '../../../../v4/component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
-import bottomSheetSlice from '../../../../redux/slices/bottomSheetSlice';
-import { useDispatch } from 'react-redux';
+import { useBottomSheet } from '~/redux/slices/bottomSheetSlice';
 import { CircularProgressIndicator } from '../../../../v4/component/CircularProgressIndicator';
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import { PostRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
@@ -66,7 +65,6 @@ const calculateTime = (time: number) => {
 function AmityCreateLivestreamPage() {
   const styles = useStyles();
   const streamRef = useRef<any>(null);
-  const dispatch = useDispatch();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const theme = useTheme<MyMD3Theme>();
@@ -93,14 +91,10 @@ function AmityCreateLivestreamPage() {
     uploadedImage,
     removeSelectedImage,
     openImageGallery,
-  } = useImagePicker({
-    selectionLimit: 1,
-    mediaType: 'photo',
-    includeBase64: false,
-  });
+  } = useImagePicker();
 
   const { targetId, targetType, targetName, pop } = route.params;
-  const { closeBottomSheet, openBottomSheet } = bottomSheetSlice.actions;
+  const { openBottomSheet, closeBottomSheet } = useBottomSheet();
   const disabled = !title?.trim() || isConnecting || isLoading;
   const hasPermission =
     (Platform.OS === 'android' && androidPermission) ||
@@ -373,9 +367,7 @@ function AmityCreateLivestreamPage() {
           <Button
             type="primary"
             themeStyle={theme}
-            onPress={() => {
-              Linking.openSettings();
-            }}
+            onPress={() => Linking.openSettings()}
           >
             <Typography.BodyBold style={styles.text}>
               Open settings
@@ -522,23 +514,25 @@ function AmityCreateLivestreamPage() {
                 activeOpacity={0.7}
                 style={styles.thumbnailButton}
                 onPress={() => {
-                  dispatch(
-                    openBottomSheet({
-                      height: 200,
-                      content: (
-                        <AmityThumbnailActionComponent
-                          onChangeThumbnail={() => {
-                            dispatch(closeBottomSheet());
-                            openImageGallery();
-                          }}
-                          onDeleteThumbnail={() => {
-                            dispatch(closeBottomSheet());
-                            removeSelectedImage();
-                          }}
-                        />
-                      ),
-                    })
-                  );
+                  openBottomSheet({
+                    height: 200,
+                    content: (
+                      <AmityThumbnailActionComponent
+                        onChangeThumbnail={() => {
+                          closeBottomSheet();
+                          openImageGallery({
+                            selectionLimit: 1,
+                            mediaType: 'photo',
+                            includeBase64: false,
+                          });
+                        }}
+                        onDeleteThumbnail={() => {
+                          closeBottomSheet();
+                          removeSelectedImage();
+                        }}
+                      />
+                    ),
+                  });
                 }}
               >
                 <View style={styles.thumbnailImageContainer}>
@@ -559,7 +553,13 @@ function AmityCreateLivestreamPage() {
               </TouchableOpacity>
             ) : (
               <AddThumbnailButton
-                onPress={openImageGallery}
+                onPress={() =>
+                  openImageGallery({
+                    selectionLimit: 1,
+                    mediaType: 'photo',
+                    includeBase64: false,
+                  })
+                }
                 pageId={PageID.create_livestream_page}
               />
             )}

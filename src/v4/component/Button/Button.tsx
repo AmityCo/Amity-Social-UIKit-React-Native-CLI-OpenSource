@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import {
   TouchableOpacity,
   StyleProp,
@@ -10,6 +10,7 @@ import {
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
 import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import { SvgXml, XmlProps } from 'react-native-svg';
 
 export const enum BUTTON_SIZE {
   SMALL = 'small',
@@ -17,10 +18,10 @@ export const enum BUTTON_SIZE {
 }
 
 export type ButtonProps = TouchableOpacityProps & {
-  iconStyle?: StyleProp<ViewStyle>;
+  iconProps?: XmlProps;
   size?: BUTTON_SIZE;
   type?: 'primary' | 'secondary' | 'inverse';
-  icon?: React.ReactNode;
+  icon?: string;
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
@@ -31,31 +32,34 @@ export const Button = ({
   icon,
   children,
   style,
-  iconStyle,
+  iconProps,
   size = BUTTON_SIZE.LARGE,
   type = 'primary',
   textStyle,
   themeStyle,
+  disabled,
   ...props
 }: ButtonProps) => {
   const styles = useStyles(themeStyle);
-  // Determine which styles to apply based on props
+
   const buttonStyles = [
     styles.button,
     styles[`button${capitalize(type)}`],
     styles[`button${capitalize(size)}`],
     icon && children ? styles[`${size}WithIcon`] : null,
     icon && !children ? styles[`${size}OnlyIcon`] : null,
+    disabled && styles[`button${capitalize(type)}Disabled`],
     style,
   ];
 
-  const iconStyles = [styles.icon, iconStyle];
-  const textStyles = useMemo(
-    () => [styles[`text${capitalize(type)}`], textStyle],
-    [type, textStyle, styles]
-  );
+  const textStyles = [styles[`text${capitalize(type)}`], textStyle];
 
-  const renderChildren = useCallback(() => {
+  const iconColor = {
+    primary: themeStyle?.colors.background,
+    secondary: themeStyle?.colors.secondary,
+  };
+
+  const renderChildren = () => {
     if (!children) return null;
 
     if (typeof children !== 'string') return children;
@@ -71,30 +75,30 @@ export const Button = ({
     return (
       <Typography.BodyBold style={textStyles}>{children}</Typography.BodyBold>
     );
-  }, [size, children, textStyles]);
+  };
 
   return (
     <TouchableOpacity
       {...props}
+      disabled={disabled}
       style={buttonStyles}
       activeOpacity={0.7}
       accessibilityRole="button"
     >
-      {icon && React.isValidElement(icon)
-        ? React.cloneElement(icon, {
-            style: [
-              ...(icon.props.style ? [icon.props.style] : []),
-              ...iconStyles,
-            ],
-          } as React.ReactElement['props'])
-        : null}
-
+      {icon && (
+        <SvgXml
+          xml={icon}
+          width={20}
+          height={20}
+          color={iconColor[type]}
+          {...iconProps}
+        />
+      )}
       {renderChildren()}
     </TouchableOpacity>
   );
 };
 
-// Helper function to capitalize first letter
 const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };

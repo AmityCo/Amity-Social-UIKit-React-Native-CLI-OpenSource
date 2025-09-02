@@ -27,7 +27,12 @@ function CommunityCreatePostButton({
       activeOpacity={0.8}
       {...props}
     >
-      <SvgXml xml={plus()} width={32} height={32} />
+      <SvgXml
+        xml={plus()}
+        width={32}
+        height={32}
+        color={themeStyles.colors.base}
+      />
     </TouchableOpacity>
   );
 }

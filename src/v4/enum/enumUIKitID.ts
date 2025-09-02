@@ -19,6 +19,7 @@ export enum PageID {
   livestream_terminated_page = 'livestream_terminated_page',
   select_poll_target_page = 'select_poll_target_page',
   poll_post_composer_page = 'poll_post_composer_page',
+  community_setup_page = 'community_setup_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',
@@ -154,6 +155,21 @@ export enum ElementID {
   poll_duration_desc = 'poll_duration_desc',
   poll_multiple_selection_title = 'poll_multiple_selection_title',
   poll_multiple_selection_desc = 'poll_multiple_selection_desc',
+  community_name_title = 'community_name_title',
+  community_about_title = 'community_about_title',
+  community_category_title = 'community_category_title',
+  community_privacy_title = 'community_privacy_title',
+  community_privacy_public_icon = 'community_privacy_public_icon',
+  community_privacy_public_title = 'community_privacy_public_title',
+  community_privacy_public_description = 'community_privacy_public_description',
+  community_privacy_private_icon = 'community_privacy_private_icon',
+  community_privacy_private_title = 'community_privacy_private_title',
+  community_privacy_private_description = 'community_privacy_private_description',
+  community_add_member_title = 'community_add_member_title',
+  community_add_member_button = 'community_add_member_button',
+  community_create_button = 'community_create_button',
+  community_edit_title = 'community_edit_title',
+  community_edit_button = 'community_edit_button',
 }
 
 export interface UiKitConfigKeys {

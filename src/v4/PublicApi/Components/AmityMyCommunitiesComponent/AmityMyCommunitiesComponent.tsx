@@ -57,7 +57,7 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
         </Typography.Caption>
         <Button
           type="primary"
-          icon={<SvgXml xml={plus()} />}
+          icon={plus()}
           themeStyle={themeStyles}
           style={styles.createCommunityButton}
         >

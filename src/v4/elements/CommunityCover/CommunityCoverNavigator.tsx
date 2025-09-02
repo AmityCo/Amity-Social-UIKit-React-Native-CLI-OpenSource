@@ -72,7 +72,7 @@ const CommunityCoverNavigator: FC<CommunityCoverNavigatorProps> = ({
         style={styles.button}
         onPress={() =>
           navigation.navigate('EditCommunity', {
-            communityData: community,
+            community: community,
           })
         }
       >

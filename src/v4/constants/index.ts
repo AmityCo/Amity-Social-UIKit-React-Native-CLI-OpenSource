@@ -19,6 +19,7 @@ export const MAX_POLL_ANSWER_LENGTH = 60;
 export const ERROR_CODE = {
   BLOCKED_WORD: '400308',
   BLOCKED_URL: '400309',
+  IMAGE_NUDITY: '500000',
 };
 
 export const COMMENT_ERROR_MESSAGE = {
@@ -28,3 +29,7 @@ export const COMMENT_ERROR_MESSAGE = {
     "Your comment contains a link that's not allowed. Please review and delete it.",
   GENERIC: 'Oops, something went wrong',
 };
+
+export const MAX_COMMUNITY_NAME_LENGTH = 30;
+
+export const MAX_COMMUNITY_DESCRIPTION_LENGTH = 180;
