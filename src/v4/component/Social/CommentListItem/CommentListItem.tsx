@@ -45,7 +45,7 @@ import { useTimeDifference } from '../../../hook/useTimeDifference';
 import { LinkPreview } from '../../PreviewLink';
 import { Typography } from '../../Typography/Typography';
 import { pen, report, trash, unreport } from '../../../../v4/assets/icons';
-import { useToast } from '../../../../v4/hook/useToast';
+import { useToast } from '~/v4/stores/slices/toast';
 export interface IComment {
   commentId: string;
   data: Record<string, any>;
@@ -243,14 +243,14 @@ const CommentListItem = ({
     if (isReportByMe) {
       const unReportPost = await unReportTargetById('comment', commentId);
       if (unReportPost) {
-        showToast('Comment unreported.');
+        showToast({ message: 'Comment unreported.', type: 'success' });
       }
       setIsVisible(false);
       setIsReportByMe(false);
     } else {
       const reportPost = await reportTargetById('comment', commentId);
       if (reportPost) {
-        showToast('Comment reported.');
+        showToast({ message: 'Comment reported.', type: 'success' });
       }
       setIsVisible(false);
       setIsReportByMe(true);

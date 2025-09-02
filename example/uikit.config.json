@@ -489,6 +489,71 @@
     },
     "poll_post_composer_page/*/poll_multiple_selection_desc": {
       "text": "Let participants vote more than one option."
-    }
+    },
+    "community_setup_page/*/*": {},
+    "community_setup_page/*/close_button": {
+      "image": "value"
+    },
+    "community_setup_page/*/title": {
+      "text": "Create community"
+    },
+    "community_setup_page/*/community_edit_title": {
+      "text": "Edit community"
+    },
+    "community_setup_page/*/community_name_title": {
+      "text": "Community name"
+    },
+    "community_setup_page/*/community_about_title": {
+      "text": "About"
+    },
+    "community_setup_page/*/community_category_title": {
+      "text": "Categories"
+    },
+    "community_setup_page/*/community_privacy_title": {
+      "text": "Privacy"
+    },
+    "community_setup_page/*/community_privacy_private_icon": {
+      "image": "value"
+    },
+    "community_setup_page/*/community_privacy_private_title": {
+      "text": "Private"
+    },
+    "community_setup_page/*/community_privacy_private_description": {
+      "text": "Only members invited by the moderators can join, view, and search the posts in this community."
+    },
+    "community_setup_page/*/community_privacy_public_icon": {
+      "image": "value"
+    },
+    "community_setup_page/*/community_privacy_public_title": {
+      "text": "Public"
+    },
+    "community_setup_page/*/community_privacy_public_description": {
+      "text": "Anyone can join, view, and search the posts in this community."
+    },
+    "community_setup_page/*/community_add_member_title": {
+      "text": "Member"
+    },
+    "community_setup_page/*/community_add_member_button": {
+      "text": "Add",
+      "image": "value"
+    },
+    "community_setup_page/*/community_create_button": {
+      "text": "Create community",
+      "image": "value"
+    },
+    "community_setup_page/*/community_edit_button": {
+      "text": "Save",
+      "image": "value"
+    },
+    "community_setup_page/*/image_button": {
+      "text": "Photo",
+      "image": "value"
+    },
+    "community_setup_page/*/camera_button": {
+      "text": "Camera",
+      "image": "value"
+    },
+    "community_add_category_page/*/*": {},
+    "community_add_member_page/*/*": {}
   }
 }

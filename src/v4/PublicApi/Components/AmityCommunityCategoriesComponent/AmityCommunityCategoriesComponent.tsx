@@ -1,7 +1,7 @@
 import React, { FC, memo, useCallback } from 'react';
 import { FlatList, Pressable, View } from 'react-native';
 import { arrowRight } from '../../../assets/icons';
-import { CategoryChip } from '../../../component/CategoryChip/CategoryChip';
+import CategoryChip from '../../../component/CategoryChip/CategoryChip';
 import { ComponentID, PageID } from '../../../enum';
 import { useStyles } from './styles';
 import { Typography } from '../../../component/Typography/Typography';

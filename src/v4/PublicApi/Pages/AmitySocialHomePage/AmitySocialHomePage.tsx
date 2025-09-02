@@ -12,7 +12,7 @@ import AmityEmptyNewsFeedComponent from '../../Components/AmityEmptyNewsFeedComp
 import AmityMyCommunitiesComponent from '../../Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
 import AmityNewsFeedComponent from '../../Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
 import AmityExploreComponent from '../../Components/AmityExploreComponent/AmityExploreComponent';
-import NewsFeedLoadingComponent from '../../../component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
+// import NewsFeedLoadingComponent from '../../../component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
 import { useCustomRankingGlobalFeed } from '../../../hook/useCustomRankingGlobalFeed';
 
 LogBox.ignoreAllLogs(true);
@@ -73,7 +73,7 @@ const AmitySocialHomePage = () => {
   }, [exploreTab, onTabChange]);
 
   const renderNewsFeed = () => {
-    if (loading) return <NewsFeedLoadingComponent />;
+    // if (loading) return <NewsFeedLoadingComponent />;
     if (activeTab === exploreTab)
       return <AmityExploreComponent pageId={PageID.social_home_page} />;
 

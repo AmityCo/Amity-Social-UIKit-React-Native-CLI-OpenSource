@@ -1,46 +1,40 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Image, View } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
-import { useFile } from '../../hook';
-import { SvgXml } from 'react-native-svg';
-import { category as categoryIcon } from '../../assets/icons';
+import Avatar from '../Avatar';
+import { CloseButton } from '~/v4/elements';
 
 type CategoryChipProps = {
   category: Amity.Category;
+  onPress?: (category: Amity.Category) => void;
 };
 
-export const CategoryChip: FC<CategoryChipProps> = ({ category }) => {
-  const styles = useStyles();
-  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
-  const { getImage } = useFile();
-
-  useEffect(() => {
-    if (!category.avatarFileId) return;
-
-    const fetchImage = async () => {
-      const url = await getImage({
-        fileId: category.avatarFileId,
-      });
-      setImageUrl(url);
-    };
-
-    fetchImage();
-  }, [category.avatarFileId, getImage]);
+function CategoryChip({ category, onPress }: CategoryChipProps) {
+  const { styles, theme } = useStyles();
 
   return (
-    <View style={styles.container}>
-      {category.avatarFileId && imageUrl ? (
-        <Image source={{ uri: imageUrl }} style={styles.categoryImage} />
-      ) : (
-        <View style={styles.categoryImagePlaceholder}>
-          <SvgXml xml={categoryIcon()} />
-        </View>
-      )}
-
-      <Typography.BodyBold style={styles.categoryName}>
+    <View style={styles.categoryChip}>
+      <Avatar.Category
+        iconProps={{ width: 28, height: 28 }}
+        uri={category.avatar?.fileUrl}
+        imageStyle={styles.categoryAvatar}
+      />
+      <Typography.BodyBold
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={styles.categoryName}
+      >
         {category.name}
       </Typography.BodyBold>
+      {onPress && (
+        <CloseButton
+          onPress={() => onPress(category)}
+          iconProps={{ color: theme.colors.baseShade1 }}
+        />
+      )}
     </View>
   );
-};
+}
+
+export default CategoryChip;

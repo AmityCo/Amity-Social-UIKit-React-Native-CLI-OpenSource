@@ -1,5 +1,15 @@
 import { TabName } from '../enum';
 
+export type AddCategoryPageContext = {
+  categories: Amity.Category[];
+  onAddedAction: (categories: Amity.Category[]) => void;
+};
+
+export type AddMemberPageContext = {
+  users: Amity.User[];
+  onAddedAction: (users: Amity.User[]) => void;
+};
+
 export interface IBehaviour {
   AmitySocialHomePageBehaviour?: {
     onChooseTab?: (arg?: string) => void;
@@ -122,5 +132,10 @@ export interface IBehaviour {
       pop?: number;
       community?: Amity.Community;
     }) => void;
+  };
+  AmityCommunitySetupPageBehavior?: {
+    goToAddCategoryPage?: (context: AddCategoryPageContext) => void;
+    goToAddMemberPage?: (context: AddMemberPageContext) => void;
+    goToCommunityProfilePage?: (context: { communityId: string }) => void;
   };
 }

@@ -9,7 +9,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       justifyContent: 'center',
       borderRadius: 8,
     },
-    // Size styles
+
     buttonSmall: {
       paddingVertical: 5,
     },
@@ -33,9 +33,12 @@ export const useStyles = (theme: MyMD3Theme) => {
     largeOnlyIcon: {
       padding: 10,
     },
-    // Colors styles
+
     buttonPrimary: {
       backgroundColor: theme.colors.primary,
+    },
+    buttonPrimaryDisabled: {
+      backgroundColor: theme.colors.primaryShade3,
     },
     buttonSecondary: {
       backgroundColor: 'transparent',
@@ -47,7 +50,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       borderColor: 'white',
       borderWidth: 1,
     },
-    // Text styles
+
     textPrimary: {
       color: 'white',
     },
@@ -57,7 +60,7 @@ export const useStyles = (theme: MyMD3Theme) => {
     textInverse: {
       color: 'white',
     },
-    // Icon styles
+
     icon: {
       width: 20,
       height: 20,

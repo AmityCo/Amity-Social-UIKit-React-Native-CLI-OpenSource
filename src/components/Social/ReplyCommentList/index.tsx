@@ -45,7 +45,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../v4/routes/RouteParamList';
 import { useTimeDifference } from '../../../v4/hook';
-import { useToast } from '../../../v4/hook/useToast';
+import { useToast } from '~/v4/stores/slices/toast';
 
 export interface IComment {
   commentId: string;
@@ -169,14 +169,14 @@ export default function ReplyCommentList({
     if (isReportByMe) {
       const unReportPost = await unReportTargetById('comment', commentId);
       if (unReportPost) {
-        showToast('Reply unreported.');
+        showToast({ message: 'Reply unreported.', type: 'success' });
       }
       setIsVisible(false);
       setIsReportByMe(false);
     } else {
       const reportPost = await reportTargetById('comment', commentId);
       if (reportPost) {
-        showToast('Reply reported.');
+        showToast({ message: 'Reply unreported.', type: 'success' });
       }
       setIsVisible(false);
       setIsReportByMe(true);

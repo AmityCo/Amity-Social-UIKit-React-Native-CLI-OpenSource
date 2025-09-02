@@ -4,7 +4,6 @@ import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
 import { useAmityElement, useJoinCommunity } from '../../hook';
 import { Button, BUTTON_SIZE } from '../../component/Button/Button';
 import { plus } from '../../assets/icons';
-import { SvgXml } from 'react-native-svg';
 
 type CommunityJoinButtonType = {
   pageId?: PageID;
@@ -40,7 +39,7 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
     <Button
       testID={accessibilityId}
       type="primary"
-      icon={<SvgXml xml={plus()} />}
+      icon={plus()}
       themeStyle={themeStyles}
       onPress={handleJoinCommunity}
       disabled={isPending}

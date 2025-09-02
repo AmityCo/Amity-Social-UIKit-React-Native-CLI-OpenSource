@@ -6,12 +6,14 @@ import { Typography } from '../../component/Typography/Typography';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
 
 type FormLabelProps = Partial<TextProps> & {
+  optional?: boolean;
   pageId?: PageID;
   componentId?: ComponentID;
   elementId?: ElementID;
 };
 
 function FormLabel({
+  optional,
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   elementId = ElementID.WildCardElement,
@@ -33,7 +35,12 @@ function FormLabel({
       style={[styles.formLabel, props.style]}
       {...props}
     >
-      {config?.text as string}
+      {config?.text as string}{' '}
+      {optional && (
+        <Typography.Caption style={styles.optional}>
+          (Optional)
+        </Typography.Caption>
+      )}
     </Typography.TitleBold>
   );
 }
