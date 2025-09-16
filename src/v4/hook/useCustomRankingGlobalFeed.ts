@@ -1,11 +1,12 @@
 import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import { RootState } from '../../redux/store';
 import { usePaginatorApi } from '../../v4/hook/usePaginator';
 import { IComment } from '../../components/Social/CommentList';
+import useAuth from '../../hooks/useAuth';
 
 export const isAmityAd = (
   item: Amity.Post<any> | Amity.Ad | IComment
@@ -14,15 +15,18 @@ export const isAmityAd = (
 };
 
 export const useCustomRankingGlobalFeed = () => {
+  const { isConnected } = useAuth();
   const dispatch = useDispatch();
+  const unsubscribeRef = useRef<() => void | null>(null);
+  const onNextPageRef = useRef<() => void | null>(null);
 
-  const { updateGlobalFeed, setPaginationData, setNewGlobalFeed } =
-    globalFeedSlice.actions;
+  const { setNewGlobalFeed } = globalFeedSlice.actions;
 
   const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState(false);
   const postList = useSelector((state: RootState) => state.globalFeed.postList);
 
-  const { itemWithAds, reset } = usePaginatorApi<Amity.Post | Amity.Ad>({
+  const { itemWithAds } = usePaginatorApi<Amity.Post | Amity.Ad>({
     items: postList as (Amity.Post | Amity.Ad)[],
     isLoading: fetching,
     placement: 'feed' as Amity.AdPlacement,
@@ -66,56 +70,43 @@ export const useCustomRankingGlobalFeed = () => {
     return results.filter((result) => result !== null) as Amity.Post<any>[];
   };
 
-  const fetch = useCallback(
-    async ({
-      queryToken,
-      limit = 10,
-    }: {
-      queryToken?: string;
-      limit?: number;
-    } = {}) => {
-      // if load first page, reset all the running index in paginator
-      setFetching(true);
-      if (!queryToken) reset();
-      const {
-        data,
-        paging: { next, previous },
-      } = await FeedRepository.getCustomRankingGlobalFeed({
-        queryToken,
-        limit,
-      });
+  const fetchCustomRancking = useCallback(() => {
+    if (!isConnected) return null;
 
-      if (data) {
-        dispatch(setPaginationData({ next, previous }));
-        const processedPosts = await processPosts(data);
-        if (!queryToken) {
-          dispatch(setNewGlobalFeed(processedPosts));
-        } else {
-          dispatch(updateGlobalFeed(processedPosts));
+    return FeedRepository.getCustomRankingGlobalFeed(
+      { limit: globalFeedPageLimit },
+      ({ data, loading, error: e, onNextPage }) => {
+        setFetching(loading);
+
+        if (!loading && data) {
+          processPosts(data).then((posts) => dispatch(setNewGlobalFeed(posts)));
         }
 
-        setFetching(false);
-      }
-    },
-    [
-      dispatch,
-      reset,
-      setFetching,
-      setNewGlobalFeed,
-      updateGlobalFeed,
-      setPaginationData,
-    ]
-  );
+        if (onNextPage) onNextPageRef.current = onNextPage;
 
-  const refresh = async () => {
-    await fetch({ limit: globalFeedPageLimit });
-    return true;
-  };
+        if (e) setError(e);
+      }
+    );
+  }, [dispatch, setNewGlobalFeed, isConnected]);
+
+  useEffect(() => {
+    unsubscribeRef.current = fetchCustomRancking();
+
+    return () => unsubscribeRef.current?.();
+  }, [fetchCustomRancking]);
+
+  const refresh = useCallback(() => {
+    if (unsubscribeRef.current) unsubscribeRef.current?.();
+    onNextPageRef.current = null;
+
+    unsubscribeRef.current = fetchCustomRancking();
+  }, [fetchCustomRancking]);
 
   return {
-    fetch,
     loading: fetching,
     refresh,
     itemWithAds,
+    onNextPage: onNextPageRef.current,
+    error,
   };
 };
