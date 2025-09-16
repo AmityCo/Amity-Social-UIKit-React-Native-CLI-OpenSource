@@ -41,8 +41,6 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   const handleLoadMore = () => {
     if (loading || !onNextPage) return;
 
-    console.log('onNextPage', onNextPage);
-
     onNextPage?.();
   };
 
@@ -88,7 +86,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
         (isAmityAd(item) ? item.adId.toString() : item.postId.toString()) +
         `_${index}`
       }
-      onEndReachedThreshold={0.1}
+      onEndReachedThreshold={0.5}
       onEndReached={handleLoadMore}
       ref={flatListRef}
       refreshControl={
