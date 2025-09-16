@@ -117,6 +117,7 @@
     "@types/react": "18.2.37"
   },
   "peerDependencies": {
+    "@amityco/ts-sdk-react-native": "^7.9.1",
     "@api.video/react-native-livestream": "^2.0.0",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/netinfo": "^11.3.1",
