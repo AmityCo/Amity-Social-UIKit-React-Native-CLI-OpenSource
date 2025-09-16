@@ -42,6 +42,7 @@ import { useNavigation } from '@react-navigation/native';
 import { livestream, poll, post, story } from '../../../../v4/assets/icons';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import AmityCommunityPinnedPostComponent from '~/v4/PublicApi/Components/AmityCommunityPinnedPostComponent/AmityCommunityPinnedPostComponent';
 
 const AmityCommunityProfilePage = ({
   route,
@@ -137,7 +138,7 @@ const AmityCommunityProfilePage = ({
     );
   }, [pageId, currentTab]);
 
-  const renderTabComponent = useCallback(() => {
+  const renderTabComponent = () => {
     switch (currentTab) {
       case CommunityProfileTab.community_feed:
         return (
@@ -147,6 +148,8 @@ const AmityCommunityProfilePage = ({
             ref={feedRef}
           />
         );
+      case CommunityProfileTab.community_pin:
+        return <AmityCommunityPinnedPostComponent communityId={communityId} />;
       case CommunityProfileTab.community_image_feed:
         return (
           <AmityCommunityImageFeedComponent
@@ -166,10 +169,10 @@ const AmityCommunityProfilePage = ({
       default:
         return null;
     }
-  }, [currentTab, pageId, communityId]);
+  };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       {isScrolling && !isScrolledPastHeader && (
         <View style={styles.smallHeaderNavigationWrap}>
           <CommunityCoverNavigator
@@ -184,8 +187,8 @@ const AmityCommunityProfilePage = ({
           style={[
             styles.stickyHeaderContainer,
             {
-              opacity: animatedOpacity, // Use the animated value
-              transform: [{ translateY: animatedTranslateY }], // Add transform
+              opacity: animatedOpacity,
+              transform: [{ translateY: animatedTranslateY }],
             },
           ]}
         >

@@ -52,6 +52,7 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
   const { posts: pendingPosts } = usePosts({
     targetType: 'community',
     targetId: communityId,
+    feedType: 'reviewing',
   });
   const { accessibilityId, themeStyles } = useAmityComponent({
     pageId,
@@ -164,18 +165,22 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
               />
             </View>
           )}
-          {isCommunityModerator &&
+          {(isCommunityModerator ||
+            pendingPosts?.some(
+              (post) => post.creator?.userId === client.userId
+            )) &&
             pendingPosts?.length > 0 &&
+            community.isJoined &&
             community?.postSetting === 'ADMIN_REVIEW_POST_REQUIRED' && (
               <CommunityPendingPost
                 number={pendingPosts.length}
                 pageId={pageId}
                 componentId={componentId}
+                isModerator={isCommunityModerator}
                 style={styles.pendingPostWrap}
                 onPress={() => {
-                  navigation.navigate('PendingPosts', {
-                    communityId: community.communityId,
-                    isModerator: !!isCommunityModerator,
+                  navigation.navigate('CommunityPendingRequest', {
+                    community,
                   });
                 }}
               />

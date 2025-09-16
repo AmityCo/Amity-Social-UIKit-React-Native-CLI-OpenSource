@@ -1,6 +1,6 @@
-import { Radio } from '../Radio';
+import { Radio } from '../core/Radio';
 import { useStyles } from './style';
-import { CheckBox } from '../CheckBox';
+import { CheckBox } from '../core/CheckBox';
 import { PollResults } from './PollResults';
 import { Typography } from '../Typography/Typography';
 import { TouchableOpacity, View } from 'react-native';

@@ -1,5 +1,6 @@
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { useLiveCollection } from './useLiveCollection';
+import { QUERY_KEY } from '~/v4/constants';
 
 type UseSearchUserByDisplayNameCollection = {
   params?: Parameters<typeof UserRepository.searchUserByDisplayName>[0];
@@ -11,7 +12,10 @@ export const useSearchUserByDisplayNameCollection = ({
   enabled = true,
 }: UseSearchUserByDisplayNameCollection = {}) => {
   const query = useLiveCollection({
-    key: ['search-users-by-display-name-collections', params.displayName],
+    key: [
+      QUERY_KEY.SEARCH_USERS_BY_DISPLAY_NAME_COLLECTION,
+      params.displayName,
+    ],
     params,
     fetcher: UserRepository.searchUserByDisplayName,
     enabled,

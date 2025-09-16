@@ -50,6 +50,14 @@ export const useStyles = (theme: MyMD3Theme) => {
       borderColor: 'white',
       borderWidth: 1,
     },
+    buttonInline: {
+      backgroundColor: 'transparent',
+      color: theme.colors.primary,
+    },
+    buttonInlineDisabled: {
+      backgroundColor: 'transparent',
+      color: theme.colors.primaryShade2,
+    },
 
     textPrimary: {
       color: 'white',

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import arrowRight from '../../../assets/icons/arrowRight';
-import { Radio } from '../../../component/Radio';
+import { Radio } from '../../../component/core/Radio';
 import { Typography } from '../../../component/Typography/Typography';
 import { IOSPollDurationPicker } from './PollDurationPicker';
 import { useStyles } from './styles';

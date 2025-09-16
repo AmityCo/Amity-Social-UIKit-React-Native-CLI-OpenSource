@@ -11,9 +11,15 @@ export const useStyles = () => {
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: theme.colors.primaryShade2,
+      position: 'relative',
     },
     firstChar: {
       color: theme.colors.background,
+    },
+    moderatorBadge: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
     },
   });
 

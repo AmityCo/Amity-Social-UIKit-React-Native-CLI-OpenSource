@@ -41,8 +41,8 @@ export const useCustomRankingGlobalFeed = () => {
           return new Promise((resolve) => {
             const unsubscribe = PostRepository.getPost(
               post?.children[0],
-              ({ error, loading, data }) => {
-                if (!error && !loading) {
+              ({ error: $error, loading, data }) => {
+                if (!$error && !loading) {
                   if (
                     data?.dataType === 'image' ||
                     data?.dataType === 'video' ||

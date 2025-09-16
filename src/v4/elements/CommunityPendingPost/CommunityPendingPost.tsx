@@ -12,12 +12,14 @@ type CommunityPendingPostProps = ViewProps & {
   pageId?: PageID;
   componentId?: ComponentID;
   onPress: () => void;
+  isModerator?: boolean;
 };
 
 const CommunityPendingPost: FC<CommunityPendingPostProps> = ({
   number = 0,
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
+  isModerator = false,
   ...props
 }) => {
   const elementId = ElementID.community_pending_post;
@@ -62,12 +64,18 @@ const CommunityPendingPost: FC<CommunityPendingPostProps> = ({
         <View style={styles.titleContainer}>
           <SvgXml xml={dot()} />
           <Typography.BodyBold style={styles.title}>
-            {'Pending posts'}
+            Pending posts
           </Typography.BodyBold>
         </View>
-        <Typography.Caption style={styles.description}>{`${number} post${
-          number > 1 ? 's' : ''
-        } need approval`}</Typography.Caption>
+        {isModerator ? (
+          <Typography.Caption style={styles.description}>{`${
+            number > 10 ? `10+` : number
+          } post${number > 1 ? 's' : ''} require approval`}</Typography.Caption>
+        ) : (
+          <Typography.Caption style={styles.description}>{`Your post${
+            number > 1 ? 's are ' : ' is '
+          }pending for review`}</Typography.Caption>
+        )}
       </View>
     </TouchableOpacity>
   );

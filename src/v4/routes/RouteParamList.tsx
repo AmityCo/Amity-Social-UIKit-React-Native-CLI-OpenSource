@@ -7,6 +7,7 @@ import {
   AddCategoryPageContext,
   AddMemberPageContext,
 } from '~/v4/types/behaviour.interface';
+import { AmityPostCategory } from '~/v4/enum/AmityPostContentComponentStyle';
 
 export type RootStackParamList = {
   Home: { postIdCallBack?: string };
@@ -15,10 +16,6 @@ export type RootStackParamList = {
   CommunitySearch: undefined;
   CommunityMemberDetail: {
     communityId: string;
-  };
-  CommunitySetting: {
-    communityId: string;
-    communityName: string;
   };
   CommunityList: {
     categoryId: string;
@@ -37,6 +34,7 @@ export type RootStackParamList = {
   PostDetail: {
     postId: string;
     showEndPopup?: boolean;
+    category?: AmityPostCategory;
   };
   UserProfile: {
     userId: string;
@@ -102,6 +100,46 @@ export type RootStackParamList = {
   CommunityAddCategory: AddCategoryPageContext;
 
   CommunityAddMember: AddMemberPageContext;
+
+  CommunityPendingRequest: {
+    community: Amity.Community;
+  };
+
+  CommunitySetting: {
+    community: Amity.Community;
+  };
+
+  CommunityMembership: {
+    community: Amity.Community;
+  };
+
+  CommunityPostPermission: {
+    community: Amity.Community;
+  };
+
+  CommunityStorySetting: {
+    community: Amity.Community;
+  };
+
+  CommunityNotificationSetting: {
+    community: Amity.Community;
+  };
+
+  CommunityPostsNotificationSetting: {
+    community: Amity.Community;
+  };
+
+  CommunityCommentsNotificationSetting: {
+    community: Amity.Community;
+  };
+
+  CommunityStoriesNotificationSetting: {
+    community: Amity.Community;
+  };
+
+  CommunityLivestreamsNotificationSetting: {
+    community: Amity.Community;
+  };
 
   AmityStoryTabComponent: {
     type: AmityStoryTabComponentEnum;

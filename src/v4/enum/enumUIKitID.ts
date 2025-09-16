@@ -20,6 +20,8 @@ export enum PageID {
   select_poll_target_page = 'select_poll_target_page',
   poll_post_composer_page = 'poll_post_composer_page',
   community_setup_page = 'community_setup_page',
+  community_setting_page = 'community_setting_page',
+  pending_request_page = 'pending_request_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',
@@ -49,6 +51,7 @@ export enum ComponentID {
   community_image_feed = 'community_image_feed',
   community_video_feed = 'community_video_feed',
   thumbnail_action = 'thumbnail_action',
+  pending_post_list = 'pending_post_list',
 }
 export enum ElementID {
   CloseBtn = 'close_button',
@@ -170,6 +173,20 @@ export enum ElementID {
   community_create_button = 'community_create_button',
   community_edit_title = 'community_edit_title',
   community_edit_button = 'community_edit_button',
+  edit_profile = 'edit_profile',
+  members = 'members',
+  post_permission = 'post_permission',
+  story_setting = 'story_setting',
+  notifications = 'notifications',
+  leave_community = 'leave_community',
+  close_community = 'close_community',
+  close_community_description = 'close_community_description',
+  posts_tab_description = 'posts_tab_description',
+  posts_button_tab = 'posts_button_tab',
+  post_accept_button = 'post_accept_button',
+  post_decline_button = 'post_decline_button',
+  pin_badge = 'pin_badge',
+  announcement_badge = 'announcement_badge',
 }
 
 export interface UiKitConfigKeys {

@@ -84,7 +84,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const dispatch = useDispatch();
   const { addPostToGlobalFeed, updateByPostId } = globalfeedSlice.actions;
 
-  const isModerator = useIsCommunityModerator({
+  const { isCommunityModerator } = useIsCommunityModerator({
     communityId: community?.communityId,
     userId: (client as Amity.Client)?.userId,
   });
@@ -376,18 +376,17 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         targetType === 'community' &&
         (community?.postSetting === 'ADMIN_REVIEW_POST_REQUIRED' ||
           (community as Record<string, any>)?.needApprovalOnPostCreation) &&
-        !isModerator
+        !isCommunityModerator
       ) {
+        onPressClose();
         return Alert.alert(
           'Post submitted',
           'Your post has been submitted to the pending list. It will be reviewed by community moderator',
           [
             {
               text: 'OK',
-              onPress: () => onPressClose(),
             },
-          ],
-          { cancelable: false }
+          ]
         );
       }
       const formattedPost = await amityPostsFormatter([response]);
@@ -421,7 +420,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     inputMessage,
     isEditMode,
     isInputValid,
-    isModerator,
+    isCommunityModerator,
     mentionUsers,
     mentionsPosition,
     onPressClose,
