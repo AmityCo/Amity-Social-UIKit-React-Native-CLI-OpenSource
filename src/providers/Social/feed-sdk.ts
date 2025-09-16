@@ -17,24 +17,19 @@ export interface IGlobalFeedRes {
   prevPage?: string;
 }
 
-export async function getGlobalFeed(
-  queryToken?: string
-): Promise<IGlobalFeedRes> {
-  const feedObject: Promise<IGlobalFeedRes> = new Promise(
-    async (resolve, reject) => {
-      try {
-        const { data, paging } =
-          await FeedRepository.getCustomRankingGlobalFeed({
-            queryToken,
-            limit: 20,
-          });
-        resolve({ data, nextPage: paging.next, prevPage: paging.prev });
-      } catch (error) {
-        reject(error);
-      }
-    }
+export function getGlobalFeed({
+  limit = 20,
+  callback,
+}: {
+  limit?: number;
+  callback: Amity.LiveCollectionCallback<Amity.Post>;
+}): Amity.Unsubscriber {
+  return FeedRepository.getCustomRankingGlobalFeed(
+    {
+      limit,
+    },
+    callback
   );
-  return feedObject;
 }
 
 export async function addPostReaction(
