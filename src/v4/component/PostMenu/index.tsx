@@ -27,7 +27,7 @@ import {
 import useAuth from '../../../hooks/useAuth';
 import globalFeedSlice from '../../../redux/slices/globalfeedSlice';
 import { useDispatch } from 'react-redux';
-import { Typography } from '../../component/Typography/Typography';
+import { Typography } from '../Typography/Typography';
 import { pen, poll, report, trash, unreport } from '../../assets/icons';
 import { useToast } from '../../stores/slices/toast';
 import { RootStackParamList } from '../../routes/RouteParamList';
@@ -35,7 +35,7 @@ import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElemen
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { ComponentID, PageID } from '../../enum';
 import { usePoll } from '../../hook/usePoll';
-import { useClosePoll } from '../../../v4/hook/poll';
+import { useClosePoll } from '../../hook/poll';
 
 type PostMenuProps = {
   pageId?: PageID;

@@ -19,6 +19,12 @@ export { default as AmityPollTargetSelectionPage } from './PublicApi/Pages/Amity
 export { default as AmityPollPostComposerPage } from './PublicApi/Pages/AmityPollPostComposerPage';
 
 export { default as AmityUserProfilePage } from './PublicApi/Pages/AmityUserProfilePage';
+export { default as AmityCommunitySetupPage } from './PublicApi/Pages/AmityCommunitySetupPage';
+export { default as AmityCommunityAddCategoryPage } from './PublicApi/Pages/AmityCommunityAddCategoryPage';
+export { default as AmityCommunityAddMemberPage } from './PublicApi/Pages/AmityCommunityAddMemberPage';
+export { default as AmityCommunityCommentsNotificationSettingPage } from './PublicApi/Pages/AmityCommunityCommentsNotificationSettingPage';
+export { default as AmityCommunityPostsNotificationSettingPage } from './PublicApi/Pages/AmityCommunityPostsNotificationSettingPage';
+export { default as AmityCommunitySettingPage } from './PublicApi/Pages/AmityCommunitySettingPage';
 
 export { default as AmityStoryTabComponent } from './PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 export { default as AmitySocialHomeTopNavigationComponent } from './PublicApi/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';

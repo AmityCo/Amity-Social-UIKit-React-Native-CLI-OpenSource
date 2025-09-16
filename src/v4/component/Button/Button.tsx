@@ -20,7 +20,7 @@ export const enum BUTTON_SIZE {
 export type ButtonProps = TouchableOpacityProps & {
   iconProps?: XmlProps;
   size?: BUTTON_SIZE;
-  type?: 'primary' | 'secondary' | 'inverse';
+  type?: 'primary' | 'secondary' | 'inverse' | 'inline';
   icon?: string;
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
@@ -42,15 +42,22 @@ export const Button = ({
 }: ButtonProps) => {
   const styles = useStyles(themeStyle);
 
-  const buttonStyles = [
-    styles.button,
-    styles[`button${capitalize(type)}`],
-    styles[`button${capitalize(size)}`],
-    icon && children ? styles[`${size}WithIcon`] : null,
-    icon && !children ? styles[`${size}OnlyIcon`] : null,
-    disabled && styles[`button${capitalize(type)}Disabled`],
-    style,
-  ];
+  const buttonStyles =
+    type === 'inline'
+      ? [
+          styles[`button${capitalize(type)}`],
+          disabled && styles[`button${capitalize(type)}Disabled`],
+          style,
+        ]
+      : [
+          styles.button,
+          styles[`button${capitalize(type)}`],
+          styles[`button${capitalize(size)}`],
+          icon && children ? styles[`${size}WithIcon`] : null,
+          icon && !children ? styles[`${size}OnlyIcon`] : null,
+          disabled && styles[`button${capitalize(type)}Disabled`],
+          style,
+        ];
 
   const textStyles = [styles[`text${capitalize(type)}`], textStyle];
 
@@ -63,6 +70,9 @@ export const Button = ({
     if (!children) return null;
 
     if (typeof children !== 'string') return children;
+
+    if (type === 'inline')
+      return <Typography.Body style={buttonStyles}>{children}</Typography.Body>;
 
     if (size === 'small') {
       return (

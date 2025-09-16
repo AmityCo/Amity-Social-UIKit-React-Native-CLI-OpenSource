@@ -1,19 +1,24 @@
 import { useStyles } from './styles';
 import React, { forwardRef, useImperativeHandle } from 'react';
-import { ComponentID, PageID } from '../../../enum';
-import { useAmityComponent, useCommunity } from '../../../hook';
+import { ComponentID, PageID } from '~/v4/enum';
+import { useAmityComponent, useCommunity } from '~/v4/hook';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
-import { usePosts } from '../../../hook/usePosts';
-import Divider from '../../../component/Divider';
+import { usePosts } from '~/v4/hook/usePosts';
+import Divider from '~/v4/component/Divider';
 import { View, FlatList } from 'react-native';
-import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
-import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
-import { usePaginatorApi } from '../../../hook/usePaginator';
-import { usePostImpression } from '../../../hook/usePostImpression';
-import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
-import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
-import { emptyPost, privateFeed } from '../../../assets/icons';
-import CommunityFeedSkeleton from '../../../component/CommunityFeedSkeleton/CommunityFeedSkeleton';
+import { isAmityAd } from '~/v4/hook/useCustomRankingGlobalFeed';
+import PostAdComponent from '~/v4/component/PostAdComponent/PostAdComponent';
+import { usePaginatorApi } from '~/v4/hook/usePaginator';
+import { usePostImpression } from '~/v4/hook/usePostImpression';
+import {
+  AmityPostCategory,
+  AmityPostContentComponentStyleEnum,
+} from '~/v4/enum/AmityPostContentComponentStyle';
+import EmptyComponent from '~/v4/component/EmptyComponent/EmptyComponent';
+import { emptyPost, privateFeed } from '~/v4/assets/icons';
+import PostFeedSkeleton from '~/v4/component/PostFeedSkeleton';
+import { usePinnedPostCollection } from '~/v4/hook/collections/usePinnedPostCollection';
+import { isPinnedPost } from '~/v4/utils';
 
 export interface AmityCommunityFeedRef {
   handleLoadMore: () => void;
@@ -42,6 +47,29 @@ const AmityCommunityFeedComponent = forwardRef<
     targetType: 'community',
     limit: pageLimit,
   });
+
+  const pinnedPostCollection = usePinnedPostCollection({
+    enabled: !!communityId,
+    params: {
+      communityId,
+      sortBy: 'lastPinned',
+    },
+  });
+
+  const announcementPosts =
+    pinnedPostCollection?.data?.filter(
+      (item) => item?.placement === 'announcement' && item?.post
+    ) || [];
+
+  const pinnedPosts =
+    pinnedPostCollection?.data?.filter(
+      (item) =>
+        item?.placement === 'default' &&
+        item?.post &&
+        !announcementPosts
+          .map((aItem) => aItem?.post?.postId)
+          .includes(item?.post?.postId)
+    ) || [];
 
   const { itemWithAds } = usePaginatorApi<Amity.Post | Amity.Ad>({
     items: posts as Amity.Post[],
@@ -86,7 +114,7 @@ const AmityCommunityFeedComponent = forwardRef<
   }
 
   if (loading && !itemWithAds) {
-    return <CommunityFeedSkeleton themeStyles={themeStyles} />;
+    return <PostFeedSkeleton />;
   }
 
   if (!loading && itemWithAds?.length === 0) {
@@ -101,18 +129,62 @@ const AmityCommunityFeedComponent = forwardRef<
     );
   }
 
+  const postsWithoutAnnouncement =
+    itemWithAds?.filter(
+      (post) =>
+        post &&
+        !announcementPosts.some(
+          (announcementPost) =>
+            !isAmityAd(post) && announcementPost?.post?.postId === post?.postId
+        )
+    ) || [];
+
+  const postsWithPinnedPosts = postsWithoutAnnouncement?.map((post) => {
+    const pinnedPost = pinnedPosts?.find(
+      (pinned) => !isAmityAd(post) && pinned?.post?.postId === post?.postId
+    );
+    return pinnedPost ? pinnedPost : post;
+  });
+
+  const isAnnouncementPostPinned = pinnedPostCollection?.data?.some(
+    (item) =>
+      item?.placement === 'default' &&
+      item?.post &&
+      announcementPosts
+        .map((aItem) => aItem?.post?.postId)
+        .includes(item?.post?.postId)
+  );
+
   return (
     <FlatList
+      scrollEnabled={false}
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
       contentContainerStyle={styles.container}
-      data={itemWithAds}
-      scrollEnabled={false}
+      data={[
+        ...announcementPosts,
+        ...(postsWithPinnedPosts ? postsWithPinnedPosts : []),
+      ]}
       renderItem={({ item, index }) => {
         return (
           <View>
             {index !== 0 && <Divider themeStyles={themeStyles} />}
-            {isAmityAd(item) ? (
+            {isPinnedPost(item) ? (
+              <AmityPostContentComponent
+                post={item.post}
+                category={
+                  item.placement === 'announcement'
+                    ? isAnnouncementPostPinned
+                      ? AmityPostCategory.PIN_AND_ANNOUNCEMENT
+                      : AmityPostCategory.ANNOUNCEMENT
+                    : AmityPostCategory.PIN
+                }
+                isCommunityNameShown={false}
+                AmityPostContentComponentStyle={
+                  AmityPostContentComponentStyleEnum.feed
+                }
+              />
+            ) : isAmityAd(item) ? (
               <PostAdComponent ad={item as Amity.Ad} />
             ) : (
               <AmityPostContentComponent
@@ -128,13 +200,15 @@ const AmityCommunityFeedComponent = forwardRef<
       }}
       ListFooterComponent={
         loading && itemWithAds && itemWithAds.length > 0 ? (
-          <CommunityFeedSkeleton themeStyles={themeStyles} />
+          <PostFeedSkeleton />
         ) : null
       }
       viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
       onViewableItemsChanged={handleViewChange}
       keyExtractor={(item, index) =>
-        isAmityAd(item)
+        isPinnedPost(item)
+          ? item.post.postId
+          : isAmityAd(item)
           ? item.adId.toString() + index
           : item.postId.toString() + '_' + index
       }

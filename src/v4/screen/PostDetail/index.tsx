@@ -16,6 +16,7 @@ const PostDetail: React.FC<IPostDetailPage> = ({ defaultPostId }) => {
       showEndPopup={route?.params?.showEndPopup}
       isFromComponent={!!defaultPostId}
       postId={defaultPostId || postIdFromRoute}
+      category={route?.params?.category}
     />
   );
 };

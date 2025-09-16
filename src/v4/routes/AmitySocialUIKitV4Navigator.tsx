@@ -12,7 +12,6 @@ import type { RootStackParamList } from './RouteParamList';
 import useAuth from '~/hooks/useAuth';
 import CategoryList from '~/screens/CategorytList';
 import CommunityList from '~/screens/CommunityList';
-import { CommunitySetting } from '~/screens/CommunitySetting/index';
 import CommunityMemberDetail from '~/screens/CommunityMemberDetail/CommunityMemberDetail';
 import AmitySocialHomePage from '~/v4/PublicApi/Pages/AmitySocialHomePage/AmitySocialHomePage';
 import PostDetail from '~/v4/screen/PostDetail';
@@ -56,6 +55,16 @@ import PollPostComposer from '~/v4/screen/PollPostComposer';
 import CommunityAddCategory from '~/v4/screen/CommunityAddCategory';
 import CommunityAddMember from '~/v4/screen/CommunityAddMember';
 import EditCommunity from '~/v4/screen/EditCommunity';
+import CommunitySetting from '~/v4/screen/CommunitySetting';
+import CommunityMembership from '~/v4/screen/CommunityMembership';
+import CommunityPostPermission from '~/v4/screen/CommunityPostPermission';
+import CommunityStorySetting from '~/v4/screen/CommunityStorySetting';
+import CommunityNotificationSetting from '~/v4/screen/CommunityNotificationSetting';
+import CommunityPostsNotificationSetting from '~/v4/screen/CommunityPostsNotificationSetting';
+import CommunityCommentsNotificationSetting from '~/v4/screen/CommunityCommentsNotificationSetting';
+import CommunityStoriesNotificationSetting from '~/v4/screen/CommunityStoriesNotificationSetting';
+import CommunityLivestreamsNotificationSetting from '~/v4/screen/CommunityLivestreamsNotificationSetting';
+import CommunityPendingRequest from '~/v4/screen/CommunityPendingRequest';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -142,17 +151,44 @@ export default function AmitySocialUIKitV4Navigator() {
               }}
             />
             <Stack.Screen
+              name="CommunityPendingRequest"
+              component={CommunityPendingRequest}
+            />
+            <Stack.Screen
               name="CommunitySetting"
               component={CommunitySetting}
-              options={({
-                route: {
-                  params: { communityName },
-                },
-              }: any) => ({
-                title: communityName,
-                headerTitleAlign: 'center',
-                headerLeft: () => <BackButton />,
-              })}
+            />
+            <Stack.Screen
+              name="CommunityMembership"
+              component={CommunityMembership}
+            />
+            <Stack.Screen
+              name="CommunityPostPermission"
+              component={CommunityPostPermission}
+            />
+            <Stack.Screen
+              name="CommunityStorySetting"
+              component={CommunityStorySetting}
+            />
+            <Stack.Screen
+              name="CommunityNotificationSetting"
+              component={CommunityNotificationSetting}
+            />
+            <Stack.Screen
+              name="CommunityPostsNotificationSetting"
+              component={CommunityPostsNotificationSetting}
+            />
+            <Stack.Screen
+              name="CommunityCommentsNotificationSetting"
+              component={CommunityCommentsNotificationSetting}
+            />
+            <Stack.Screen
+              name="CommunityStoriesNotificationSetting"
+              component={CommunityStoriesNotificationSetting}
+            />
+            <Stack.Screen
+              name="CommunityLivestreamsNotificationSetting"
+              component={CommunityLivestreamsNotificationSetting}
             />
             <Stack.Screen name="CreateCommunity" component={CreateCommunity} />
             <Stack.Screen

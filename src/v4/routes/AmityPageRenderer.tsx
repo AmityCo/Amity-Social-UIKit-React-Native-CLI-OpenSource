@@ -13,7 +13,6 @@ import useAuth from '~/hooks/useAuth';
 import CategoryList from '~/screens/CategorytList';
 import CommunityList from '~/screens/CommunityList';
 import CommunityHome from '~/v4/screen/CommunityHome';
-import { CommunitySetting } from '~/screens/CommunitySetting/index';
 import CommunityMemberDetail from '~/screens/CommunityMemberDetail/CommunityMemberDetail';
 import AmitySocialHomePage from '~/v4/PublicApi/Pages/AmitySocialHomePage/AmitySocialHomePage';
 import PostDetail from '~/v4/screen/PostDetail';
@@ -53,7 +52,15 @@ import PollPostComposer from '~/v4/screen/PollPostComposer';
 import CommunityAddCategory from '~/v4/screen/CommunityAddCategory';
 import CommunityAddMember from '~/v4/screen/CommunityAddMember';
 import EditCommunity from '~/v4/screen/EditCommunity';
-
+import CommunityPostPermission from '~/v4/screen/CommunityPostPermission';
+import CommunityStorySetting from '~/v4/screen/CommunityStorySetting';
+import CommunityNotificationSetting from '~/v4/screen/CommunityNotificationSetting';
+import CommunityPostsNotificationSetting from '~/v4/screen/CommunityPostsNotificationSetting';
+import CommunityCommentsNotificationSetting from '~/v4/screen/CommunityCommentsNotificationSetting';
+import CommunityStoriesNotificationSetting from '~/v4/screen/CommunityStoriesNotificationSetting';
+import CommunityLivestreamsNotificationSetting from '~/v4/screen/CommunityLivestreamsNotificationSetting';
+import CommunityPendingRequest from '~/v4/screen/CommunityPendingRequest';
+import CommunitySetting from '~/v4/screen/CommunitySetting';
 interface PageRendererProps {
   children: React.JSX.Element;
 }
@@ -166,15 +173,10 @@ export default function PageRenderer({ children }: PageRendererProps) {
             <Stack.Screen
               name="CommunitySetting"
               component={CommunitySetting}
-              options={({
-                route: {
-                  params: { communityName },
-                },
-              }: any) => ({
-                title: communityName,
-                headerTitleAlign: 'center',
-                headerLeft: () => <BackButton />,
-              })}
+            />
+            <Stack.Screen
+              name="CommunityPendingRequest"
+              component={CommunityPendingRequest}
             />
             <Stack.Screen name="CreateCommunity" component={CreateCommunity} />
             <Stack.Screen
@@ -184,6 +186,34 @@ export default function PageRenderer({ children }: PageRendererProps) {
             <Stack.Screen
               name="CommunityAddMember"
               component={CommunityAddMember}
+            />
+            <Stack.Screen
+              name="CommunityPostPermission"
+              component={CommunityPostPermission}
+            />
+            <Stack.Screen
+              name="CommunityStorySetting"
+              component={CommunityStorySetting}
+            />
+            <Stack.Screen
+              name="CommunityNotificationSetting"
+              component={CommunityNotificationSetting}
+            />
+            <Stack.Screen
+              name="CommunityPostsNotificationSetting"
+              component={CommunityPostsNotificationSetting}
+            />
+            <Stack.Screen
+              name="CommunityCommentsNotificationSetting"
+              component={CommunityCommentsNotificationSetting}
+            />
+            <Stack.Screen
+              name="CommunityStoriesNotificationSetting"
+              component={CommunityStoriesNotificationSetting}
+            />
+            <Stack.Screen
+              name="CommunityLivestreamsNotificationSetting"
+              component={CommunityLivestreamsNotificationSetting}
             />
             <Stack.Screen name="EditCommunity" component={EditCommunity} />
             <Stack.Screen name="CommunityList" component={CommunityList} />

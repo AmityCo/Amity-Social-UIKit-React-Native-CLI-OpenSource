@@ -5,7 +5,7 @@ export const useStyles = () => {
 
   const styles = StyleSheet.create({
     otherStatesContainer: {
-      height: screenHeight * 0.5,
+      height: screenHeight * 0.3,
       paddingHorizontal: 24,
     },
     communityNameWrap: {

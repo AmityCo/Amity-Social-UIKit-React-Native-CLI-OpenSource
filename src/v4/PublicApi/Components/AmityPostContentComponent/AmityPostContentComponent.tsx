@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -21,11 +21,17 @@ import AvatarElement from '../../Elements/CommonElements/AvatarElement';
 import { useAmityComponent, useIsCommunityModerator } from '../../../hook';
 import ModeratorBadgeElement from '../../Elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
-import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
+import {
+  AmityPostCategory,
+  AmityPostContentComponentStyleEnum,
+} from '../../../enum/AmityPostContentComponentStyle';
 import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
-import PostContent from '../../../../v4/component/PostContent';
+import PostContent from '../../../component/PostContent';
 import { PostMenu } from '../../../component/PostMenu';
+import PinBadge from '~/v4/elements/PinBadge';
+import AnnouncementBadge from '~/v4/elements/AnnouncementBadge';
+import { Typography } from '~/v4/component/Typography/Typography';
 
 type AmityPostContentComponentProps = {
   post: Amity.Post;
@@ -33,6 +39,7 @@ type AmityPostContentComponentProps = {
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;
   isCommunityNameShown?: boolean;
   showedAllOptions?: boolean;
+  category?: AmityPostCategory;
 };
 export interface MediaUri {
   uri: string;
@@ -49,11 +56,13 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
   showedAllOptions,
   AmityPostContentComponentStyle = AmityPostContentComponentStyleEnum.detail,
   isCommunityNameShown = true,
+  category = AmityPostCategory.GENERAL,
 }) => {
   const theme = useTheme() as MyMD3Theme;
   const {
     AmityPostContentComponentBehavior,
     AmityGlobalFeedComponentBehavior,
+    AmityCommunityProfilePageBehavior,
   } = useBehaviour();
   const componentId = ComponentID.post_content;
   const { accessibilityId, themeStyles } = useAmityComponent({
@@ -136,122 +145,139 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     });
   };
 
-  const onPressPost = useCallback(() => {
+  const onPressPost = () => {
     if (AmityGlobalFeedComponentBehavior.goToPostDetailPage) {
       return AmityGlobalFeedComponentBehavior.goToPostDetailPage(postId);
     }
+    if (AmityCommunityProfilePageBehavior.goToPostDetailPage) {
+      return AmityCommunityProfilePageBehavior.goToPostDetailPage(postId);
+    }
     return navigation.navigate('PostDetail', {
       postId: postId,
+      category: category,
     });
-  }, [AmityGlobalFeedComponentBehavior, navigation, postId]);
+  };
 
   return (
-    <View
-      key={postId}
-      style={styles.postWrap}
-      testID={accessibilityId}
-      accessibilityLabel={accessibilityId}
-    >
-      <Pressable style={styles.headerSection} onPress={onPressPost}>
-        <View style={styles.user}>
-          <AvatarElement
-            style={styles.avatar as ImageStyle}
-            avatarId={creator?.avatarFileId}
-            pageID={pageId}
-            elementID={ElementID.WildCardElement}
-            componentID={componentId}
-          />
+    <View>
+      {(category === AmityPostCategory.ANNOUNCEMENT ||
+        category === AmityPostCategory.PIN_AND_ANNOUNCEMENT) && (
+        <View style={styles.featuredBadgeContainer}>
+          <AnnouncementBadge componentId={ComponentID.post_content} />
+        </View>
+      )}
+      <View
+        key={postId}
+        style={styles.postWrap}
+        testID={accessibilityId}
+        accessibilityLabel={accessibilityId}
+      >
+        <Pressable style={styles.headerSection} onPress={onPressPost}>
+          <View style={styles.user}>
+            <AvatarElement
+              style={styles.avatar as ImageStyle}
+              avatarId={creator?.avatarFileId}
+              pageID={pageId}
+              elementID={ElementID.WildCardElement}
+              componentID={componentId}
+            />
 
-          <View style={styles.fillSpace}>
-            <View style={styles.headerRow}>
-              <TouchableOpacity
-                style={
-                  targetType === 'community' ? styles.headerTextContainer : {}
-                }
-                onPress={handleDisplayNamePress}
-              >
-                <Text
-                  ellipsizeMode="tail"
-                  numberOfLines={1}
-                  style={styles.headerText}
+            <View style={styles.fillSpace}>
+              <View style={styles.headerRow}>
+                <TouchableOpacity
+                  style={
+                    targetType === 'community' ? styles.headerTextContainer : {}
+                  }
+                  onPress={handleDisplayNamePress}
                 >
-                  {creator?.displayName}
-                </Text>
-              </TouchableOpacity>
-
-              {communityData?.displayName && isCommunityNameShown && (
-                <View style={styles.communityNameContainer}>
-                  <SvgXml
-                    style={styles.arrow}
-                    xml={arrowForward(theme.colors.baseShade1)}
-                    width="8"
-                    height="8"
-                  />
-
-                  <TouchableOpacity onPress={handleCommunityNamePress}>
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={3}
-                      style={styles.headerText}
+                  <Typography.BodyBold
+                    ellipsizeMode="tail"
+                    numberOfLines={1}
+                    style={styles.headerText}
+                  >
+                    {creator?.displayName}
+                  </Typography.BodyBold>
+                </TouchableOpacity>
+                {communityData?.displayName && isCommunityNameShown && (
+                  <View style={styles.communityNameContainer}>
+                    <SvgXml
+                      style={styles.arrow}
+                      xml={arrowForward(theme.colors.baseShade1)}
+                      width="8"
+                      height="8"
+                    />
+                    <TouchableOpacity
+                      onPress={handleCommunityNamePress}
+                      style={styles.fillSpace}
                     >
-                      {communityData?.displayName}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-            <View style={styles.timeRow}>
-              {isCommunityModerator && (
-                <View style={styles.row}>
-                  <ModeratorBadgeElement
-                    pageID={pageId}
-                    componentID={componentId}
-                    communityId={targetType === 'community' && targetId}
-                    userId={creator?.userId}
-                  />
-                  <Text style={styles.dot}>·</Text>
-                </View>
-              )}
-              <TimestampElement
-                createdAt={createdAt}
-                style={styles.headerTextTime}
-                componentID={componentId}
-              />
+                      <Typography.BodyBold
+                        ellipsizeMode="tail"
+                        numberOfLines={1}
+                        style={styles.headerText}
+                      >
+                        {communityData?.displayName}
+                      </Typography.BodyBold>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+              <View style={styles.timeRow}>
+                {isCommunityModerator && (
+                  <View style={styles.row}>
+                    <ModeratorBadgeElement
+                      pageID={pageId}
+                      componentID={componentId}
+                      communityId={targetType === 'community' && targetId}
+                      userId={creator?.userId}
+                    />
+                    <Text style={styles.dot}>·</Text>
+                  </View>
+                )}
+                <TimestampElement
+                  createdAt={createdAt}
+                  style={styles.headerTextTime}
+                  componentID={componentId}
+                />
 
-              {editedAt !== createdAt && (
-                <>
-                  <Text style={styles.dot}>·</Text>
-                  <Text style={styles.headerTextTime}>Edited</Text>
-                </>
-              )}
+                {editedAt !== createdAt && (
+                  <>
+                    <Text style={styles.dot}>·</Text>
+                    <Text style={styles.headerTextTime}>Edited</Text>
+                  </>
+                )}
+              </View>
             </View>
           </View>
-        </View>
-        {AmityPostContentComponentStyle ===
-          AmityPostContentComponentStyleEnum.feed && (
-          <PostMenu post={post} pageId={pageId} componentId={componentId} />
-        )}
-      </Pressable>
-      <View>
-        <View style={styles.bodySection}>
-          <PostContent
-            post={post}
-            textPost={textPost}
-            childrenPosts={children}
-            onPressPost={onPressPost}
-            showedAllOptions={showedAllOptions}
-            mentionPositionArr={mentionPositionArr}
-            disabledPoll={communityData?.isPublic && !communityData?.isJoined}
+          {(category === AmityPostCategory.PIN ||
+            category === AmityPostCategory.PIN_AND_ANNOUNCEMENT) && (
+            <PinBadge componentId={ComponentID.post_content} />
+          )}
+          {AmityPostContentComponentStyle ===
+            AmityPostContentComponentStyleEnum.feed && (
+            <PostMenu post={post} pageId={pageId} componentId={componentId} />
+          )}
+        </Pressable>
+        <View>
+          <View style={styles.bodySection}>
+            <PostContent
+              post={post}
+              textPost={textPost}
+              childrenPosts={children}
+              onPressPost={onPressPost}
+              showedAllOptions={showedAllOptions}
+              mentionPositionArr={mentionPositionArr}
+              disabledPoll={communityData?.isPublic && !communityData?.isJoined}
+            />
+          </View>
+          <AmityPostEngagementActionsComponent
+            pageId={pageId}
+            componentId={componentId}
+            AmityPostContentComponentStyle={AmityPostContentComponentStyle}
+            targetType={targetType}
+            targetId={targetId}
+            postId={postId}
           />
         </View>
-        <AmityPostEngagementActionsComponent
-          pageId={pageId}
-          componentId={componentId}
-          AmityPostContentComponentStyle={AmityPostContentComponentStyle}
-          targetType={targetType}
-          targetId={targetId}
-          postId={postId}
-        />
       </View>
     </View>
   );

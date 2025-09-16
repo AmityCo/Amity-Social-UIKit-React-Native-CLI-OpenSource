@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
-import { Image, ImageProps, ImageStyle, StyleProp, View } from 'react-native';
+import {
+  Image,
+  ImageProps,
+  ImageStyle,
+  StyleProp,
+  TouchableOpacity,
+} from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
 import { category } from '~/v4/assets/icons';
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
+import ModeratorBadge from '~/v4/elements/ModeratorBadge';
+import { isModerator } from '~/v4/utils/permissions';
+import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
 type AvatarProps = {
   uri?: string;
@@ -13,28 +24,58 @@ type AvatarProps = {
   iconProps?: XmlProps;
   userAvatarProps?: {
     userName?: string;
+    userId?: string;
     style?: StyleProp<ImageStyle>;
+    roles?: string[];
+    shouldRedirectToUserProfile?: boolean;
   };
 };
 
 function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
   const { styles } = useStyles();
   const [imageError, setImageError] = useState(false);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return uri && !imageError ? (
-    <Image
-      source={{ uri }}
-      {...imageProps}
-      onError={() => setImageError(true)}
-    />
+    <TouchableOpacity
+      style={imageProps.style}
+      activeOpacity={0.7}
+      onPress={() => {
+        if (userAvatarProps?.shouldRedirectToUserProfile) {
+          navigation.navigate('UserProfile', {
+            userId: userAvatarProps?.userId,
+          });
+        }
+      }}
+    >
+      <Image
+        source={{ uri }}
+        {...imageProps}
+        onError={() => setImageError(true)}
+      />
+    </TouchableOpacity>
   ) : iconProps ? (
     <SvgXml {...iconProps} />
   ) : (
-    <View style={[styles.defaultUserAvatar, userAvatarProps.style]}>
+    <TouchableOpacity
+      style={[styles.defaultUserAvatar, userAvatarProps.style]}
+      activeOpacity={0.7}
+      onPress={() => {
+        if (userAvatarProps?.shouldRedirectToUserProfile) {
+          navigation.navigate('UserProfile', {
+            userId: userAvatarProps?.userId,
+          });
+        }
+      }}
+    >
       <Typography.Body style={styles.firstChar}>
         {userAvatarProps.userName?.trim()?.charAt(0).toUpperCase()}
       </Typography.Body>
-    </View>
+      {userAvatarProps.roles && isModerator(userAvatarProps.roles) && (
+        <ModeratorBadge style={styles.moderatorBadge} />
+      )}
+    </TouchableOpacity>
   );
 }
 
@@ -68,17 +109,30 @@ function CategoryAvatar({
 
 type UserAvatarProps = {
   uri?: string;
-  imageStyle?: StyleProp<ImageStyle>;
+  userId?: string;
+  roles?: string[];
   userName?: string;
+  imageStyle?: StyleProp<ImageStyle>;
+  shouldRedirectToUserProfile?: boolean;
 };
 
-function UserAvatar({ uri, imageStyle, userName }: UserAvatarProps) {
+function UserAvatar({
+  uri,
+  roles,
+  userId,
+  userName,
+  imageStyle,
+  shouldRedirectToUserProfile,
+}: UserAvatarProps) {
   return (
     <Avatar
       uri={uri}
       userAvatarProps={{
+        roles,
+        userId,
         userName,
         style: imageStyle,
+        shouldRedirectToUserProfile,
       }}
       imageProps={{
         style: imageStyle,

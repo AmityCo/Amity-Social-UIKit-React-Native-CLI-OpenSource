@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextInput, TextInputProps, View } from 'react-native';
-import { Typography } from '../../component/Typography/Typography';
+import { Typography } from '../Typography/Typography';
 import FormLabel from '../../elements/FormLabel';
 import { ElementID, PageID, ComponentID } from '../../enum';
 import { useStyles } from './styles';

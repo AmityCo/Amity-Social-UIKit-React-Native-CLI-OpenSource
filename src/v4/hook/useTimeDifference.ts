@@ -16,6 +16,7 @@ export const useTimeDifference = (timestamp: string): string => {
     if (differenceSec < 60) return 'Just now';
     if (differenceMinutes < 60) return `${differenceMinutes}m`;
     if (differenceHour < 24) return `${differenceHour}h`;
+    if (differenceDay === 1) return '1d';
     if (differenceDay < 7) return `${differenceDay}d`;
     if (differenceMonth < 12) {
       const formattedMonthDate = timestampDate.format('D MMMM');

@@ -9,8 +9,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useBehaviour } from '../../providers/BehaviourProvider';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';
 import { useAmityComponent } from '../../hook';
-import TextElement from '../../../v4/PublicApi/Elements/CommonElements/TextElement';
-import ImageElement from '../../../v4/PublicApi/Elements/CommonElements/ImageElement';
+import TextElement from '../../PublicApi/Elements/CommonElements/TextElement';
+import ImageElement from '../../PublicApi/Elements/CommonElements/ImageElement';
 import { formatNumber } from '../../../util/numberUtil';
 type SearchResultItemType = {
   pageId?: PageID;

@@ -68,20 +68,22 @@ const CommunityCoverNavigator: FC<CommunityCoverNavigatorProps> = ({
           style={styles.buttonIcon}
         />
       </Pressable>
-      <Pressable
-        style={styles.button}
-        onPress={() =>
-          navigation.navigate('EditCommunity', {
-            community: community,
-          })
-        }
-      >
-        <MenuButtonIconElement
-          pageID={pageId}
-          componentID={componentId}
-          style={styles.buttonIcon}
-        />
-      </Pressable>
+      {community?.isJoined && (
+        <Pressable
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate('CommunitySetting', {
+              community,
+            })
+          }
+        >
+          <MenuButtonIconElement
+            pageID={pageId}
+            componentID={componentId}
+            style={styles.buttonIcon}
+          />
+        </Pressable>
+      )}
     </View>
   );
 };

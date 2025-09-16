@@ -4,7 +4,7 @@ import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsCo
 import { PostTargetType } from '../../../../enum/postTargetType';
 import { AmityPostContentComponentStyleEnum } from '../../../../v4/enum/AmityPostContentComponentStyle';
 import { ComponentID, PageID } from '../../../../v4/enum';
-import CommentList from '../../../../v4/component/Social/CommentList/CommentList';
+import CommentList from '../../../component/Social/CommentList/CommentList';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type AmityPostEngagementContentComponentProps = {

@@ -1,5 +1,6 @@
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { useLiveCollection } from './useLiveCollection';
+import { QUERY_KEY } from '~/v4/constants';
 
 type UseCommunityMemberCollection = {
   params?: Parameters<typeof CommunityRepository.Membership.getMembers>[0];
@@ -11,7 +12,7 @@ export const useCommunityMemberCollection = ({
   enabled = true,
 }: UseCommunityMemberCollection = {}) => {
   const query = useLiveCollection({
-    key: ['community-members-collections'],
+    key: [QUERY_KEY.COMMUNITY_MEMBERS_COLLECTION, JSON.stringify(params)],
     params,
     fetcher: CommunityRepository.Membership.getMembers,
     enabled,

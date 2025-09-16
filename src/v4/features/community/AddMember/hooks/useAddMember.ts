@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useUserCollection } from '~/v4/hook/collections/useUserCollection';
 import { useSearchUserByDisplayNameCollection } from '~/v4/hook/collections/useSearchUserByDisplayNameCollection';
-import { useCommunityMemberCollection } from '~/v4/hook/collections/useCommunityMemberCollection';
 
 type UseAddMemberProps = {
   communityId?: string;
@@ -52,44 +51,16 @@ function useAddMember({ communityId }: UseAddMemberProps = {}) {
     enabled: !!values.search && !communityId,
   });
 
-  const communityMemberCollection = useCommunityMemberCollection({
-    params: {
-      limit: 20,
-      communityId,
-    },
-    enabled: !!communityId,
-  });
-
   const onSubmit = () => {
     route.params?.onAddedAction
       ? route.params.onAddedAction(watch('users'))
       : null;
   };
 
-  const communityMemberIds = communityMemberCollection.data.map(
-    (member) => member.userId
-  );
-  const nonMemberCollection = {
-    ...userCollection,
-    data: userCollection.data.filter(
-      (user) => !communityMemberIds.includes(user.userId)
-    ),
-  };
-
-  const nonMemberSearchUserByDisplayNameCollection = {
-    ...searchUserDisplayNameCollection,
-    data: searchUserDisplayNameCollection.data.filter(
-      (user) => !communityMemberIds.includes(user.userId)
-    ),
-  };
-
-  const collection = communityId
-    ? values.search?.length > 0
-      ? nonMemberSearchUserByDisplayNameCollection
-      : nonMemberCollection
-    : values.search?.length > 0
-    ? searchUserDisplayNameCollection
-    : userCollection;
+  const collection =
+    values.search?.length > 0
+      ? searchUserDisplayNameCollection
+      : userCollection;
 
   return {
     styles,

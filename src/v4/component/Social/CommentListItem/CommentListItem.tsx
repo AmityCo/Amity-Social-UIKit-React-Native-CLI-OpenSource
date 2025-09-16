@@ -44,7 +44,7 @@ import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../hook/useTimeDifference';
 import { LinkPreview } from '../../PreviewLink';
 import { Typography } from '../../Typography/Typography';
-import { pen, report, trash, unreport } from '../../../../v4/assets/icons';
+import { pen, report, trash, unreport } from '../../../assets/icons';
 import { useToast } from '~/v4/stores/slices/toast';
 export interface IComment {
   commentId: string;

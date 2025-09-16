@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { LogBox, SafeAreaView, StyleSheet } from 'react-native';
-import CustomSocialTab from '../../../component/CustomSocialTab/CustomSocialTab';
-import { useUiKitConfig } from '../../../hook';
-import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
+import CustomSocialTab from '~/v4/component/CustomSocialTab/CustomSocialTab';
+import { useUiKitConfig } from '~/v4/hook';
+import { ComponentID, ElementID, PageID } from '~/v4/enum/enumUIKitID';
 import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
-import { useBehaviour } from '../../../providers/BehaviourProvider';
-import AmitySocialHomeTopNavigationComponent from '../../Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
-import AmityEmptyNewsFeedComponent from '../../Components/AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
-import AmityMyCommunitiesComponent from '../../Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
-import AmityNewsFeedComponent from '../../Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
-import AmityExploreComponent from '../../Components/AmityExploreComponent/AmityExploreComponent';
-// import NewsFeedLoadingComponent from '../../../component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
-import { useCustomRankingGlobalFeed } from '../../../hook/useCustomRankingGlobalFeed';
+import { useBehaviour } from '~/v4/providers/BehaviourProvider';
+import AmitySocialHomeTopNavigationComponent from '~/v4/PublicApi/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
+import AmityEmptyNewsFeedComponent from '~/v4/PublicApi/Components/AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
+import AmityMyCommunitiesComponent from '~/v4/PublicApi/Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
+import AmityNewsFeedComponent from '~/v4/PublicApi/Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
+import AmityExploreComponent from '~/v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
+import NewsFeedLoadingComponent from '~/v4/component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
+import { useCustomRankingGlobalFeed } from '~/v4/hook/useCustomRankingGlobalFeed';
 
 LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {
@@ -26,11 +26,8 @@ const AmitySocialHomePage = () => {
   });
 
   const { AmitySocialHomePageBehaviour } = useBehaviour();
-  const {
-    fetch,
-    itemWithAds: globalFeedPosts,
-    loading,
-  } = useCustomRankingGlobalFeed();
+  const { itemWithAds: globalFeedPosts, loading } =
+    useCustomRankingGlobalFeed();
 
   const [newsFeedTab] = useUiKitConfig({
     page: PageID.social_home_page,
@@ -55,10 +52,6 @@ const AmitySocialHomePage = () => {
 
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
 
-  useEffect(() => {
-    fetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   const onTabChange = useCallback(
     (tabName: string) => {
       if (AmitySocialHomePageBehaviour.onChooseTab)
@@ -73,7 +66,7 @@ const AmitySocialHomePage = () => {
   }, [exploreTab, onTabChange]);
 
   const renderNewsFeed = () => {
-    // if (loading) return <NewsFeedLoadingComponent />;
+    if (loading) return <NewsFeedLoadingComponent />;
     if (activeTab === exploreTab)
       return <AmityExploreComponent pageId={PageID.social_home_page} />;
 

@@ -65,6 +65,27 @@ export const useLiveCollection = <Param, Data>({
             if (error) return rejectRef.current?.(error);
             if (!loading) {
               resolveRef.current?.({ data: $data, hasNextPage, onNextPage });
+              queryClient.setQueryData(
+                [key],
+                (
+                  oldData:
+                    | InfiniteData<CollectionResponse<Data>, NextPageParam>
+                    | undefined
+                ) => {
+                  const newPage = { data: $data, hasNextPage, onNextPage };
+                  if (!oldData) {
+                    return {
+                      pages: [newPage],
+                      pageParams: [undefined],
+                    };
+                  }
+
+                  return {
+                    pages: [...oldData.pages, newPage],
+                    pageParams: [...oldData.pageParams, onNextPage],
+                  };
+                }
+              );
             }
           }
         );

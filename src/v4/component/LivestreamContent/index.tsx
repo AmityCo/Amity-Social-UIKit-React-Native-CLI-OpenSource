@@ -17,7 +17,7 @@ import { Typography } from '../Typography/Typography';
 import { LivestreamStatus } from '../../enum/livestreamStatus';
 import LiveStreamEndThumbnail from './LivestreamEndedThumbnail';
 import LiveStreamIdleThumbnail from './LivestreamIdleThumbnail';
-import RenderTextWithMention from '../../component/RenderTextWithMention/RenderTextWithMention';
+import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
 import { RootStackParamList } from '../../routes/RouteParamList';
 import LiveStreamTerminatedThumbnail from './LivestreamTerminatedThumbnail';
 

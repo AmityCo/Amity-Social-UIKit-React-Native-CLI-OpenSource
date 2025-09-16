@@ -17,8 +17,8 @@ import ImageView from '../../../components/react-native-image-viewing/dist';
 import { RootState } from '../../../redux/store';
 import { playBtn } from '../../../svg/svg-xml-list';
 import LivestreamContent from '../LivestreamContent';
-import { LinkPreview } from '../../component/PreviewLink';
-import RenderTextWithMention from '../../component/RenderTextWithMention/RenderTextWithMention';
+import { LinkPreview } from '../PreviewLink';
+import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
 import { IMentionPosition } from '../../../types';
 import PollContent from '../PollContent';
 
@@ -317,38 +317,35 @@ const PostContent: React.FC<IPostContent> = ({
           )}
         </Pressable>
       )}
-      <View>
-        {pollIds.length > 0 ? (
-          <PollContent
-            post={post}
-            pollId={pollIds[0].pollId}
-            disabledPoll={disabledPoll}
-            showedAllOptions={showedAllOptions}
-          />
-        ) : livestreamId.length > 0 ? (
-          <LivestreamContent
-            post={post}
-            onPressPost={onPressPost}
-            streamId={livestreamId[0]}
-          />
-        ) : (
-          renderMediaPosts()
-        )}
-
-        <ImageView
-          images={
-            imagePostsFullSize.length > 0
-              ? imagePostsFullSize
-              : videoPostsFullSize
-          }
-          imageIndex={imageIndex}
-          visible={visibleFullImage}
-          onRequestClose={() => setIsVisibleFullImage(false)}
-          isVideoButton={videoPosts.length > 0 ? true : false}
-          videoPosts={videoPosts}
-          HeaderComponent={renderImageHeader}
+      {pollIds.length > 0 ? (
+        <PollContent
+          post={post}
+          pollId={pollIds[0].pollId}
+          disabledPoll={disabledPoll}
+          showedAllOptions={showedAllOptions}
         />
-      </View>
+      ) : livestreamId.length > 0 ? (
+        <LivestreamContent
+          post={post}
+          onPressPost={onPressPost}
+          streamId={livestreamId[0]}
+        />
+      ) : (
+        renderMediaPosts()
+      )}
+      <ImageView
+        images={
+          imagePostsFullSize.length > 0
+            ? imagePostsFullSize
+            : videoPostsFullSize
+        }
+        imageIndex={imageIndex}
+        visible={visibleFullImage}
+        onRequestClose={() => setIsVisibleFullImage(false)}
+        isVideoButton={videoPosts.length > 0 ? true : false}
+        videoPosts={videoPosts}
+        HeaderComponent={renderImageHeader}
+      />
     </Fragment>
   );
 };

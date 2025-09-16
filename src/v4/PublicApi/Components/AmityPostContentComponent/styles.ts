@@ -5,14 +5,17 @@ export const useStyles = (theme: MyMD3Theme) => {
   const styles = StyleSheet.create({
     postWrap: {
       backgroundColor: theme.colors.background,
-      paddingTop: 4,
+      paddingTop: 8,
       paddingHorizontal: 16,
     },
-    headerSection: {
+    featuredBadgeContainer: {
       paddingTop: 8,
+    },
+    headerSection: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      gap: 4,
     },
     communityNameContainer: {
       flex: 1,
@@ -26,8 +29,6 @@ export const useStyles = (theme: MyMD3Theme) => {
       maxWidth: '60%',
     },
     headerText: {
-      fontWeight: '600',
-      fontSize: 15,
       color: theme.colors.base,
     },
     user: {

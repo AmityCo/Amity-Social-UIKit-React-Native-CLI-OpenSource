@@ -26,7 +26,7 @@ import { SvgXml } from 'react-native-svg';
 import { usePaginatorApi } from '../../../hook/usePaginator';
 import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
 import CommentAdComponent from '../../CommentAdComponent/CommentAdComponent';
-import useMention from '../../../../v4/hook/useMention';
+import useMention from '../../../hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import MyAvatar from '../../MyAvatar/MyAvatar';
 import { useToast } from '~/v4/stores/slices/toast';
