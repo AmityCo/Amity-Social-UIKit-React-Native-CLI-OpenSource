@@ -1,10 +1,11 @@
 import React, { useCallback, useRef, useState } from 'react';
 
+// import { useTranslation } from 'react-i18next';
+
 import { FlatList, View } from 'react-native';
 import {
   deletePostById,
   getGlobalFeed,
-  type IGlobalFeedRes,
 } from '../../../providers/Social/feed-sdk';
 import useAuth from '../../../hooks/useAuth';
 import PostList from '../../../components/Social/PostList';
@@ -15,54 +16,52 @@ import globalFeedSlice from '../../../redux/slices/globalfeedSlice';
 import { RootState } from '../../../redux/store';
 import { useFocusEffect } from '@react-navigation/native';
 import { RefreshControl } from 'react-native';
+import MyStories from '../../../components/MyStories';
 
 export default function GlobalFeed() {
   const { postList } = useSelector((state: RootState) => state.globalFeed);
   const [refreshing, setRefreshing] = useState(false);
-  const { updateGlobalFeed, deleteByPostId, clearFeed } =
-    globalFeedSlice.actions;
+  const { deleteByPostId, setNewGlobalFeed } = globalFeedSlice.actions;
   const dispatch = useDispatch();
   const styles = useStyle();
   const { isConnected } = useAuth();
-  const [postData, setPostData] = useState<IGlobalFeedRes>();
-  const { data: posts = [], nextPage } = postData ?? {};
   const flatListRef = useRef(null);
+  const onNextPageRef = useRef<() => void | null>(null);
+  const unsubscribeRef = useRef<() => void | null>(null);
 
-  async function getGlobalFeedList(queryToken?: string): Promise<void> {
-    const feedObject = await getGlobalFeed(queryToken);
-    if (feedObject) {
-      setPostData(feedObject);
-    }
-  }
+  const getGlobalFeedList = useCallback(() => {
+    return getGlobalFeed({
+      callback: ({ data, loading, onNextPage }) => {
+        if (!loading && data) {
+          amityPostsFormatter(data).then((posts) =>
+            dispatch(setNewGlobalFeed(posts))
+          );
+        }
+
+        onNextPageRef.current = onNextPage;
+      },
+    });
+  }, [dispatch, setNewGlobalFeed]);
+
   const handleLoadMore = () => {
-    if (nextPage) {
-      getGlobalFeedList(nextPage);
-    }
+    onNextPageRef.current?.();
   };
+
   const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    dispatch(clearFeed());
-    await getGlobalFeedList();
+    if (!unsubscribeRef.current) return;
+
+    unsubscribeRef.current?.();
+    unsubscribeRef.current = getGlobalFeedList();
+
     setRefreshing(false);
-  }, [clearFeed, dispatch]);
+  }, [getGlobalFeedList]);
 
   useFocusEffect(
     useCallback(() => {
       if (isConnected) {
-        getGlobalFeedList();
+        unsubscribeRef.current = getGlobalFeedList();
       }
-    }, [isConnected])
-  );
-  const getPostList = useCallback(async () => {
-    if (posts.length > 0) {
-      const formattedPostList = await amityPostsFormatter(posts);
-      dispatch(updateGlobalFeed(formattedPostList));
-    }
-  }, [dispatch, posts, updateGlobalFeed]);
-  useFocusEffect(
-    useCallback(() => {
-      posts && getPostList();
-    }, [getPostList, posts])
+    }, [isConnected, getGlobalFeedList])
   );
 
   const onDeletePost = async (postId: string) => {
@@ -97,7 +96,8 @@ export default function GlobalFeed() {
               tintColor="lightblue"
             />
           }
-          keyboardShouldPersistTaps="handled"
+          extraData={postList}
+          ListHeaderComponent={<MyStories />}
         />
       </View>
     </View>
