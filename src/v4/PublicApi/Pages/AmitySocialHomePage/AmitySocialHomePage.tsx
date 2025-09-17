@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { LogBox, SafeAreaView, StyleSheet } from 'react-native';
 import CustomSocialTab from '../../../component/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../../hook';
@@ -26,11 +26,8 @@ const AmitySocialHomePage = () => {
   });
 
   const { AmitySocialHomePageBehaviour } = useBehaviour();
-  const {
-    fetch,
-    itemWithAds: globalFeedPosts,
-    loading,
-  } = useCustomRankingGlobalFeed();
+  const { itemWithAds: globalFeedPosts, loading } =
+    useCustomRankingGlobalFeed();
 
   const [newsFeedTab] = useUiKitConfig({
     page: PageID.social_home_page,
@@ -55,10 +52,6 @@ const AmitySocialHomePage = () => {
 
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
 
-  useEffect(() => {
-    fetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   const onTabChange = useCallback(
     (tabName: string) => {
       if (AmitySocialHomePageBehaviour.onChooseTab)
