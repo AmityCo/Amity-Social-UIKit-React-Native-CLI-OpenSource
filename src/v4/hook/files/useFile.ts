@@ -9,7 +9,7 @@ const useFile = <T extends Amity.FileType = 'image'>(fileId?: string) => {
     select: (response) => response.data,
   });
 
-  return data;
+  return data as Amity.File<T>;
 };
 
 export default useFile;
