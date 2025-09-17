@@ -19,12 +19,20 @@ export { default as AmityPollTargetSelectionPage } from './PublicApi/Pages/Amity
 export { default as AmityPollPostComposerPage } from './PublicApi/Pages/AmityPollPostComposerPage';
 
 export { default as AmityUserProfilePage } from './PublicApi/Pages/AmityUserProfilePage';
+
 export { default as AmityCommunitySetupPage } from './PublicApi/Pages/AmityCommunitySetupPage';
 export { default as AmityCommunityAddCategoryPage } from './PublicApi/Pages/AmityCommunityAddCategoryPage';
 export { default as AmityCommunityAddMemberPage } from './PublicApi/Pages/AmityCommunityAddMemberPage';
-export { default as AmityCommunityCommentsNotificationSettingPage } from './PublicApi/Pages/AmityCommunityCommentsNotificationSettingPage';
-export { default as AmityCommunityPostsNotificationSettingPage } from './PublicApi/Pages/AmityCommunityPostsNotificationSettingPage';
+export { default as AmityCommunityPendingRequestPage } from './PublicApi/Pages/AmityCommunityPendingRequestPage';
 export { default as AmityCommunitySettingPage } from './PublicApi/Pages/AmityCommunitySettingPage';
+export { default as AmityCommunityMembershipPage } from './PublicApi/Pages/AmityCommunityMembershipPage';
+export { default as AmityCommunityPostPermissionPage } from './PublicApi/Pages/AmityCommunityPostPermissionPage';
+export { default as AmityCommunityStorySettingPage } from './PublicApi/Pages/AmityCommunityStorySettingPage';
+export { default as AmityCommunityNotificationSettingPage } from './PublicApi/Pages/AmityCommunityNotificationSettingPage';
+export { default as AmityCommunityPostsNotificationSettingPage } from './PublicApi/Pages/AmityCommunityPostsNotificationSettingPage';
+export { default as AmityCommunityCommentsNotificationSettingPage } from './PublicApi/Pages/AmityCommunityCommentsNotificationSettingPage';
+export { default as AmityCommunityStoriesNotificationSettingPage } from './PublicApi/Pages/AmityCommunityStoriesNotificationSettingPage';
+export { default as AmityCommunityLivestreamsNotificationSettingPage } from './PublicApi/Pages/AmityCommunityLivestreamsNotificationSettingPage';
 
 export { default as AmityStoryTabComponent } from './PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 export { default as AmitySocialHomeTopNavigationComponent } from './PublicApi/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
@@ -49,6 +57,8 @@ export { default as AmityCommunityVideoFeedComponent } from './PublicApi/Compone
 export { AmityThumbnailActionComponent } from './PublicApi/Components/AmityThumbnailActionComponent';
 
 export { default as AmityExploreComponent } from './PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
+export { default as AmityCommunityPinnedPostComponent } from './PublicApi/Components/AmityCommunityPinnedPostComponent';
+export { default as AmityPendingPostListComponent } from './PublicApi/Components/AmityPendingPostListComponent';
 
 export {
   AmityPostTargetSelectionPageType,
