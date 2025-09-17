@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, Store } from '@reduxjs/toolkit';
 import globalFeedSlice from '../slices/globalfeedSlice';
 import feedSlice from '../slices/feedSlice';
 import postDetailSlice from '../slices/postDetailSlice';
@@ -6,7 +6,7 @@ import uiSlice from '../slices/uiSlice';
 import bottomSheetSlice from '../slices/bottomSheetSlice';
 import toastSlice from '../../v4/stores/slices/toast';
 
-export const store = configureStore({
+export const store: Store = configureStore({
   reducer: {
     globalFeed: globalFeedSlice.reducer,
     postDetail: postDetailSlice.reducer,

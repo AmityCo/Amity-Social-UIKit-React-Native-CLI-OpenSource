@@ -8,7 +8,7 @@ import type { IAmityUIkitProvider } from './amity-ui-kit-provider';
 import { setupAmityVideoPlayer } from '@amityco/video-player-react-native';
 
 export const AuthContext = React.createContext<AuthContextInterface>({
-  client: {},
+  client: null,
   isConnecting: false,
   error: '',
   login: () => {},
