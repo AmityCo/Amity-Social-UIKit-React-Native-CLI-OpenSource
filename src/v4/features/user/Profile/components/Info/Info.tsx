@@ -1,12 +1,10 @@
 import React, {
   useState,
-  useEffect,
   useRef,
   type MutableRefObject,
-  // useLayoutEffect,
   useCallback,
 } from 'react';
-import { View, Text, TouchableOpacity, Image, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable } from 'react-native';
 import { useStyles } from './styles';
 import Feed from '~/v4/screen/Feed';
 import CustomTab from '~/components/CustomTab';
@@ -15,12 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useAuth from '~/hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
-import {
-  blockOrUnblock,
-  cancelFollowRequest,
-  primaryDot,
-  privateUserProfile,
-} from '~/v4/../svg/svg-xml-list';
+import { primaryDot, privateUserProfile } from '~/v4/../svg/svg-xml-list';
 import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
 import FloatingButton from '~/v4/../components/FloatingButton';
@@ -34,12 +27,12 @@ import Avatar from '~/v4/component/Avatar';
 import { Typography } from '~/v4/component/Typography/Typography';
 import { useFollowUserStatus } from '~/v4/hook/useFollowUserStatus';
 import { useUser } from '~/v4/hook/useUser';
-import { verifiedBadge, following as followingIcon } from '~/v4/assets/icons';
+import { verifiedBadge } from '~/v4/assets/icons';
 import { useUserBlock } from '~/v4/hook/useUserBlock';
+import FollowButton from '../FollowButton/FollowButton';
+import useProfile from '../../hooks/useProfile';
 
 type UserProfilePageProps = RootStackParamList['UserProfile'];
-
-// copy all code and separate it following the new floder structure
 
 function Info({ userId }: UserProfilePageProps) {
   const theme = useTheme() as MyMD3Theme;
@@ -48,6 +41,7 @@ function Info({ userId }: UserProfilePageProps) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const { openPostTypeChoiceModal } = uiSlice.actions;
   const dispatch = useDispatch();
+  const { socialSettings } = useProfile();
 
   const {
     followingCount,
@@ -63,13 +57,9 @@ function Info({ userId }: UserProfilePageProps) {
   const user = useUser(userId);
 
   const [currentTab, setCurrentTab] = useState<TabName>(TabName.Timeline);
-  const [socialSettings, setSocialSettings] =
-    useState<Amity.SocialSettings>(null);
 
   const isMyProfile = !followStatus;
   const isBlocked = followStatus === 'blocked';
-  const isUnfollowed = followStatus === 'none';
-  const isPending = followStatus === 'pending';
   const isAccepted = followStatus === 'accepted';
   const shouldShowPrivateProfile =
     !isMyProfile &&
@@ -80,83 +70,6 @@ function Info({ userId }: UserProfilePageProps) {
     useRef<FeedRefType | null>(null);
   const galleryRef: MutableRefObject<FeedRefType | null> =
     useRef<FeedRefType | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      if (client) {
-        const settings = await (client as Amity.Client)?.getSocialSettings();
-        setSocialSettings(settings);
-      }
-    })();
-  }, [client]);
-
-  const followButton = () => {
-    return (
-      <TouchableOpacity
-        style={styles.followButton}
-        onPress={() => unfollowUser(userId)}
-      >
-        <Image
-          source={require('~/v4/assets/images/followPlus.png')}
-          style={styles.followIcon}
-        />
-        <Typography.BodyBold style={styles.followText}>
-          Follow
-        </Typography.BodyBold>
-      </TouchableOpacity>
-    );
-  };
-
-  const followingButton = () => {
-    return (
-      <TouchableOpacity
-        style={styles.followingButton}
-        onPress={() => followUser(userId)}
-      >
-        <SvgXml
-          width={20}
-          height={20}
-          xml={followingIcon()}
-          color={theme.colors.secondary}
-        />
-        <Typography.BodyBold style={styles.followingText}>
-          Following
-        </Typography.BodyBold>
-      </TouchableOpacity>
-    );
-  };
-
-  const unBlockButton = () => {
-    return (
-      <TouchableOpacity
-        style={styles.editProfileButton}
-        onPress={() => unblockUser(user?.displayName)}
-      >
-        <SvgXml
-          width={24}
-          height={20}
-          xml={blockOrUnblock(theme.colors.base)}
-        />
-        <Text style={styles.editProfileText}>Unblock user</Text>
-      </TouchableOpacity>
-    );
-  };
-
-  const cancelRequestButton = () => {
-    return (
-      <TouchableOpacity
-        style={styles.editProfileButton}
-        onPress={() => unfollowUser(userId)}
-      >
-        <SvgXml
-          width={24}
-          height={20}
-          xml={cancelFollowRequest(theme.colors.base)}
-        />
-        <Text style={styles.editProfileText}>Cancel request</Text>
-      </TouchableOpacity>
-    );
-  };
 
   const pendingCountButton = () => {
     const onPressPending = () => {
@@ -170,11 +83,11 @@ function Info({ userId }: UserProfilePageProps) {
       >
         <View style={styles.rowContainer}>
           <SvgXml xml={primaryDot(theme.colors.primary)} />
-          <Text style={styles.pendingRequestText}>Pending requests</Text>
+          <Text style={styles.pendingRequestText}>New follow requests</Text>
         </View>
 
         <Text style={styles.pendingRequestSubText}>
-          Your requests are waiting for review
+          {pendingCount} requests need your approval
         </Text>
       </TouchableOpacity>
     );
@@ -189,14 +102,6 @@ function Info({ userId }: UserProfilePageProps) {
         targetType: PostTargetType.user,
       })
     );
-  };
-
-  const renderButtons = () => {
-    // if (isMyProfile) return editProfileButton();
-    if (isUnfollowed) return followButton();
-    if (isPending) return cancelRequestButton();
-    if (isBlocked) return unBlockButton();
-    if (isAccepted) return followingButton();
   };
 
   const renderPrivateProfile = () => {
@@ -281,7 +186,15 @@ function Info({ userId }: UserProfilePageProps) {
           </Typography.Caption>
         </Pressable>
       </View>
-      {renderButtons()}
+      <FollowButton
+        userId={userId}
+        followStatus={followStatus}
+        userName={user?.displayName}
+        followUser={followUser}
+        unfollowUser={unfollowUser}
+        unblockUser={unblockUser}
+        socialSettings={socialSettings?.userPrivacySetting}
+      />
       {shouldShowPending && pendingCountButton()}
       {!isBlocked && (
         <>

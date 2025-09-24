@@ -185,7 +185,7 @@ export const useStyles = () => {
     pendingRequestContainer: {
       marginTop: 10,
       backgroundColor: theme.colors.baseShade4,
-      borderRadius: 4,
+      borderRadius: 8,
       alignItems: 'center',
       padding: 8,
     },

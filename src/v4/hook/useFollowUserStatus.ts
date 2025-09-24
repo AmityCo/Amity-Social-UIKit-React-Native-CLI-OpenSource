@@ -1,6 +1,7 @@
 import { UserRepository } from '@amityco/ts-sdk-react-native';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Alert } from 'react-native';
+import { useEffect, useState, useCallback } from 'react';
 
 type UseFollowUserStatus = {
   enabled?: boolean;
@@ -18,42 +19,77 @@ export const useFollowUserStatus = ({
   userId,
   enabled = true,
 }: UseFollowUserStatus) => {
-  const {
-    data: followInfo,
-    isLoading,
-    refetch,
-  } = useQuery<FollowInfo>({
-    queryKey: ['UserRepository', 'getFollowInfo', userId],
-    queryFn: () => {
-      return new Promise<FollowInfo>((resolve, reject) => {
-        if (!userId) {
-          reject(new Error('userId is required'));
+  const queryClient = useQueryClient();
+  const [followInfo, setFollowInfo] = useState<FollowInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!userId || !enabled) {
+      return undefined;
+    }
+
+    setIsLoading(true);
+
+    const unsubscribe = UserRepository.Relationship.getFollowInfo(
+      userId,
+      (response) => {
+        if (response.error) {
+          setIsLoading(false);
           return;
         }
 
-        const unsubscribe = UserRepository.Relationship.getFollowInfo(
-          userId,
-          (response) => {
-            if (response.error) {
-              reject(response.error);
-              return;
-            }
+        if (!response.loading && response.data) {
+          const newFollowInfo = {
+            followerCount: response.data.followerCount,
+            followingCount: response.data.followingCount,
+            pendingCount: response.data.pendingCount,
+            status: response.data.status,
+          };
 
-            if (!response.loading && response.data) {
-              resolve({
-                followerCount: response.data.followerCount,
-                followingCount: response.data.followingCount,
-                pendingCount: response.data.pendingCount,
-                status: response.data.status,
-              });
-              unsubscribe?.();
-            }
-          }
-        );
-      });
-    },
-    enabled: enabled && !!userId,
-  });
+          setFollowInfo(newFollowInfo);
+          setIsLoading(false);
+
+          const queryKey = ['UserRepository', 'getFollowInfo', userId];
+          queryClient.setQueryData(queryKey, newFollowInfo);
+        }
+      }
+    );
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, [userId, enabled, queryClient]);
+
+  const refetch = useCallback(() => {
+    const queryKey = ['UserRepository', 'getFollowInfo', userId];
+    queryClient.invalidateQueries({ queryKey });
+
+    // Manually trigger the subscription again
+    setIsLoading(true);
+    const unsubscribe = UserRepository.Relationship.getFollowInfo(
+      userId,
+      (response) => {
+        if (response.error) {
+          setIsLoading(false);
+          return;
+        }
+
+        if (!response.loading && response.data) {
+          const newFollowInfo = {
+            followerCount: response.data.followerCount,
+            followingCount: response.data.followingCount,
+            pendingCount: response.data.pendingCount,
+            status: response.data.status,
+          };
+
+          setFollowInfo(newFollowInfo);
+          setIsLoading(false);
+          queryClient.setQueryData(queryKey, newFollowInfo);
+          unsubscribe?.();
+        }
+      }
+    );
+  }, [userId, queryClient]);
 
   const { mutate: followUser } = useMutation<any, Error, string>({
     mutationFn: UserRepository.Relationship.follow,

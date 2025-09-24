@@ -64,3 +64,5 @@ export { default as pinFill } from './pinFill';
 export { default as featured } from './featured';
 export { default as blockUser } from './blockUser';
 export { default as following } from './following';
+export { default as unfollow } from './unfollow';
+export { default as unblock } from './unblock';
