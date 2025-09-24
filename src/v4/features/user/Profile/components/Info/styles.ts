@@ -40,7 +40,8 @@ export const useStyles = () => {
     },
     profileContainer: {
       backgroundColor: theme.colors.background,
-      padding: 16,
+      paddingVertical: 8,
+      paddingHorizontal: 16,
     },
     descriptionContainer: {
       paddingVertical: 8,
@@ -50,9 +51,10 @@ export const useStyles = () => {
       fontSize: 17,
     },
     avatar: {
-      width: 64,
-      height: 64,
-      borderRadius: 72,
+      width: 56,
+      height: 56,
+      borderRadius: 100,
+      objectFit: 'cover',
       marginRight: 12,
     },
     userInfo: {
@@ -64,6 +66,11 @@ export const useStyles = () => {
       color: theme.colors.base,
       fontWeight: 'bold',
       marginBottom: 8,
+      flex: 1,
+      lineHeight: 24,
+    },
+    verifyIcon: {
+      marginLeft: 4,
     },
     horizontalText: {
       flexDirection: 'row',
@@ -94,10 +101,26 @@ export const useStyles = () => {
       backgroundColor: theme.colors.primary,
       padding: 10,
       marginVertical: 8,
-      borderRadius: 4,
+      borderRadius: 8,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    followingButton: {
+      backgroundColor: 'white',
+      color: theme.colors.secondary,
+      padding: 10,
+      marginVertical: 8,
+      borderRadius: 8,
+      gap: 8,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: theme.colors.secondary,
+    },
+    followingText: {
+      color: theme.colors.secondary,
     },
     followText: {
       marginLeft: 8,
@@ -196,6 +219,9 @@ export const useStyles = () => {
     privateAccountSubTitle: {
       fontSize: 15,
       color: theme.colors.baseShade3,
+    },
+    scrollView: {
+      flex: 1,
     },
   });
 

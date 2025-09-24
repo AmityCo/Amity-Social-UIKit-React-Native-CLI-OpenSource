@@ -62,3 +62,5 @@ export { default as commentNotification } from './commentNotification';
 export { default as firework } from './firework';
 export { default as pinFill } from './pinFill';
 export { default as featured } from './featured';
+export { default as blockUser } from './blockUser';
+export { default as following } from './following';

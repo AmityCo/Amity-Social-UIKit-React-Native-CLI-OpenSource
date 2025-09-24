@@ -240,15 +240,7 @@ export default function AmitySocialUIKitV4Navigator() {
               component={PollPostComposer}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="UserProfile"
-              component={UserProfile}
-              options={{
-                headerLeft: () => <BackButton />,
-                headerTitleAlign: 'center',
-                title: 'Member',
-              }}
-            />
+            <Stack.Screen name="UserProfile" component={UserProfile} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
             <Stack.Screen
               name="UserProfileSetting"
