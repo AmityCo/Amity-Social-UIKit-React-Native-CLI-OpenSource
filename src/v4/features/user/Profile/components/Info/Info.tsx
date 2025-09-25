@@ -4,7 +4,7 @@ import React, {
   type MutableRefObject,
   useCallback,
 } from 'react';
-import { View, Text, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable, Modal } from 'react-native';
 import { useStyles } from './styles';
 import Feed from '~/v4/screen/Feed';
 import CustomTab from '~/components/CustomTab';
@@ -31,6 +31,7 @@ import { verifiedBadge } from '~/v4/assets/icons';
 import { useUserBlock } from '~/v4/hook/useUserBlock';
 import FollowButton from '../FollowButton/FollowButton';
 import { useSocialSettings } from '~/v4/hook/useSocialSettings';
+import ImageViewer from '~/v4/elements/ImageViewer/ImageViewer';
 
 type UserProfilePageProps = RootStackParamList['UserProfile'];
 
@@ -57,6 +58,7 @@ function Info({ userId }: UserProfilePageProps) {
   const user = useUser(userId);
 
   const [currentTab, setCurrentTab] = useState<TabName>(TabName.Timeline);
+  const [openImageViewer, setOpenImageViewer] = useState(false);
 
   const isMyProfile = !followStatus;
   const isBlocked = followStatus === 'blocked';
@@ -144,6 +146,7 @@ function Info({ userId }: UserProfilePageProps) {
           uri={user?.avatar?.fileUrl}
           imageStyle={styles.avatar}
           userName={user?.displayName || user?.userId}
+          onOpenImageViewer={() => setOpenImageViewer(true)}
         />
         <Typography.BodyBold style={styles.title}>
           {user?.displayName}
@@ -208,6 +211,26 @@ function Info({ userId }: UserProfilePageProps) {
       )}
       {(client as Amity.Client).userId === userId && (
         <FloatingButton onPress={handleOnPressPostBtn} isGlobalFeed={false} />
+      )}
+      {openImageViewer && user?.avatar?.fileUrl && (
+        <Modal
+          visible={openImageViewer}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setOpenImageViewer(false)}
+        >
+          <ImageViewer
+            images={[user.avatar.fileUrl]}
+            currentImageIndex={0}
+            themeStyles={theme}
+            onNextImage={() => {}}
+            onPreviousImage={() => {}}
+            onClose={() => {
+              setOpenImageViewer(false);
+            }}
+            isShowCounter={false}
+          />
+        </Modal>
       )}
     </View>
   );
