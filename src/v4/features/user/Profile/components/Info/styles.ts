@@ -40,7 +40,8 @@ export const useStyles = () => {
     },
     profileContainer: {
       backgroundColor: theme.colors.background,
-      padding: 16,
+      paddingVertical: 8,
+      paddingHorizontal: 16,
     },
     descriptionContainer: {
       paddingVertical: 8,
@@ -50,9 +51,10 @@ export const useStyles = () => {
       fontSize: 17,
     },
     avatar: {
-      width: 64,
-      height: 64,
-      borderRadius: 72,
+      width: 56,
+      height: 56,
+      borderRadius: 100,
+      objectFit: 'cover',
       marginRight: 12,
     },
     userInfo: {
@@ -64,6 +66,11 @@ export const useStyles = () => {
       color: theme.colors.base,
       fontWeight: 'bold',
       marginBottom: 8,
+      flex: 1,
+      lineHeight: 24,
+    },
+    verifyIcon: {
+      marginLeft: 4,
     },
     horizontalText: {
       flexDirection: 'row',
@@ -81,29 +88,36 @@ export const useStyles = () => {
       color: theme.colors.baseShade4,
       marginHorizontal: 12,
     },
-    editProfileButton: {
-      borderWidth: 1,
-      borderColor: '#A5A9B5',
-      padding: 8,
-      borderRadius: 4,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
     followButton: {
       backgroundColor: theme.colors.primary,
       padding: 10,
       marginVertical: 8,
-      borderRadius: 4,
+      borderRadius: 8,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    followingButton: {
+      backgroundColor: theme.colors.background,
+      color: theme.colors.secondary,
+      padding: 10,
+      marginVertical: 8,
+      borderRadius: 8,
+      gap: 8,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: theme.colors.secondary,
+    },
+    followingText: {
+      color: theme.colors.secondary,
     },
     followText: {
       marginLeft: 8,
       fontSize: 16,
       fontWeight: '600',
-      color: 'white',
+      color: theme.colors.background,
     },
     editProfileText: {
       marginLeft: 8,
@@ -162,7 +176,7 @@ export const useStyles = () => {
     pendingRequestContainer: {
       marginTop: 10,
       backgroundColor: theme.colors.baseShade4,
-      borderRadius: 4,
+      borderRadius: 8,
       alignItems: 'center',
       padding: 8,
     },
@@ -174,13 +188,10 @@ export const useStyles = () => {
     },
     pendingRequestText: {
       color: theme.colors.base,
-      fontSize: 15,
-      fontWeight: '600',
       marginLeft: 6,
     },
     pendingRequestSubText: {
       color: theme.colors.baseShade1,
-      fontSize: 13,
     },
     privateProfileContainer: {
       justifyContent: 'center',
@@ -196,6 +207,9 @@ export const useStyles = () => {
     privateAccountSubTitle: {
       fontSize: 15,
       color: theme.colors.baseShade3,
+    },
+    scrollView: {
+      flex: 1,
     },
   });
 

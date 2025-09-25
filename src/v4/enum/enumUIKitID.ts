@@ -22,6 +22,7 @@ export enum PageID {
   community_setup_page = 'community_setup_page',
   community_setting_page = 'community_setting_page',
   pending_request_page = 'pending_request_page',
+  user_profile_page = 'user_profile_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',
