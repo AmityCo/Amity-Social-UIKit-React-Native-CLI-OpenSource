@@ -1,7 +1,7 @@
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Alert } from 'react-native';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 type UseFollowUserStatus = {
   enabled?: boolean;
@@ -22,10 +22,16 @@ export const useFollowUserStatus = ({
   const queryClient = useQueryClient();
   const [followInfo, setFollowInfo] = useState<FollowInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const unsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (!userId || !enabled) {
       return undefined;
+    }
+
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current();
+      unsubscribeRef.current = null;
     }
 
     setIsLoading(true);
@@ -55,8 +61,13 @@ export const useFollowUserStatus = ({
       }
     );
 
+    unsubscribeRef.current = unsubscribe;
+
     return () => {
-      unsubscribe?.();
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
+      }
     };
   }, [userId, enabled, queryClient]);
 
@@ -64,7 +75,11 @@ export const useFollowUserStatus = ({
     const queryKey = ['UserRepository', 'getFollowInfo', userId];
     queryClient.invalidateQueries({ queryKey });
 
-    // Manually trigger the subscription again
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current();
+      unsubscribeRef.current = null;
+    }
+
     setIsLoading(true);
     const unsubscribe = UserRepository.Relationship.getFollowInfo(
       userId,
@@ -85,10 +100,11 @@ export const useFollowUserStatus = ({
           setFollowInfo(newFollowInfo);
           setIsLoading(false);
           queryClient.setQueryData(queryKey, newFollowInfo);
-          unsubscribe?.();
         }
       }
     );
+
+    unsubscribeRef.current = unsubscribe;
   }, [userId, queryClient]);
 
   const { mutate: followUser } = useMutation<any, Error, string>({

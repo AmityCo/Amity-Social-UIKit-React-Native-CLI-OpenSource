@@ -30,7 +30,7 @@ import { useUser } from '~/v4/hook/useUser';
 import { verifiedBadge } from '~/v4/assets/icons';
 import { useUserBlock } from '~/v4/hook/useUserBlock';
 import FollowButton from '../FollowButton/FollowButton';
-import useProfile from '../../hooks/useProfile';
+import { useSocialSettings } from '~/v4/hook/useSocialSettings';
 
 type UserProfilePageProps = RootStackParamList['UserProfile'];
 
@@ -41,7 +41,7 @@ function Info({ userId }: UserProfilePageProps) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const { openPostTypeChoiceModal } = uiSlice.actions;
   const dispatch = useDispatch();
-  const { socialSettings } = useProfile();
+  const { socialSettings } = useSocialSettings();
 
   const {
     followingCount,
@@ -83,12 +83,14 @@ function Info({ userId }: UserProfilePageProps) {
       >
         <View style={styles.rowContainer}>
           <SvgXml xml={primaryDot(theme.colors.primary)} />
-          <Text style={styles.pendingRequestText}>New follow requests</Text>
+          <Typography.BodyBold style={styles.pendingRequestText}>
+            New follow requests
+          </Typography.BodyBold>
         </View>
 
-        <Text style={styles.pendingRequestSubText}>
+        <Typography.Caption style={styles.pendingRequestSubText}>
           {pendingCount} requests need your approval
-        </Text>
+        </Typography.Caption>
       </TouchableOpacity>
     );
   };
@@ -161,7 +163,6 @@ function Info({ userId }: UserProfilePageProps) {
       {user?.description ? (
         <View style={styles.descriptionContainer}>
           <Typography.Body style={styles.descriptionText}>
-            {' '}
             {user?.description}
           </Typography.Body>
         </View>

@@ -1,19 +1,17 @@
 import React from 'react';
-import { Text, TouchableOpacity, Image, Alert } from 'react-native';
-import { SvgXml } from 'react-native-svg';
-import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
-import { Typography } from '~/v4/component/Typography/Typography';
+import { Alert } from 'react-native';
 import { cancelFollowRequest } from '~/v4/../svg/svg-xml-list';
 import {
   following as followingIcon,
   unfollow as unfollowIcon,
   unblock as unblockIcon,
 } from '~/v4/assets/icons';
-
-import { useStyles } from './styles';
 import { useBottomSheet } from '~/redux/slices/bottomSheetSlice';
 import MenuAction from '~/v4/elements/MenuAction';
+import { useStyles } from './styles';
+import ActionButton from '~/v4/elements/ActionButton';
+import { plus } from '~/v4/assets/icons';
+import { PageID } from '~/v4/enum';
 
 interface FollowButtonProps {
   userId: string;
@@ -34,7 +32,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   unblockUser,
   socialSettings,
 }) => {
-  const theme = useTheme() as MyMD3Theme;
   const styles = useStyles();
 
   const { openBottomSheet, closeBottomSheet } = useBottomSheet();
@@ -47,25 +44,20 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
   const renderFollowButton = () => {
     return (
-      <TouchableOpacity
-        style={styles.followButton}
+      <ActionButton
+        label="Follow"
         onPress={() => followUser(userId)}
-      >
-        <Image
-          source={require('~/v4/assets/images/followPlus.png')}
-          style={styles.followIcon}
-        />
-        <Typography.BodyBold style={styles.followText}>
-          Follow
-        </Typography.BodyBold>
-      </TouchableOpacity>
+        icon={plus()}
+        pageId={PageID.user_profile_page}
+        style={styles.userProfileFollowButton}
+      />
     );
   };
 
   const renderFollowingButton = () => {
     return (
-      <TouchableOpacity
-        style={styles.followingButton}
+      <ActionButton
+        label="Following"
         onPress={() => {
           openBottomSheet({
             content: (
@@ -75,39 +67,44 @@ const FollowButton: React.FC<FollowButtonProps> = ({
                   handleUnfollow();
                   closeBottomSheet();
                 }}
-                iconProps={{ xml: unfollowIcon() }}
+                iconProps={{
+                  xml: unfollowIcon(),
+                }}
               />
             ),
           });
         }}
-      >
-        <SvgXml
-          width={20}
-          height={20}
-          xml={followingIcon()}
-          color={theme.colors.secondary}
-        />
-        <Typography.BodyBold style={styles.followingText}>
-          Following
-        </Typography.BodyBold>
-      </TouchableOpacity>
+        icon={followingIcon()}
+        type="secondary"
+        pageId={PageID.user_profile_page}
+        style={styles.userProfileFollowButton}
+      />
     );
   };
 
   const renderUnBlockButton = () => {
     return (
-      <TouchableOpacity
-        style={styles.userProfileFollowButton}
+      <ActionButton
+        label="Unblock"
         onPress={() => unblockUser(userName)}
-      >
-        <SvgXml
-          width={20}
-          height={20}
-          xml={unblockIcon()}
-          color={theme.colors.base}
-        />
-        <Text style={styles.editProfileText}>Unblock</Text>
-      </TouchableOpacity>
+        icon={unblockIcon()}
+        type="secondary"
+        pageId={PageID.user_profile_page}
+        style={styles.userProfileFollowButton}
+      />
+    );
+  };
+
+  const renderCancelRequestButton = () => {
+    return (
+      <ActionButton
+        label="Cancel request"
+        onPress={() => unfollowUser(userId)}
+        icon={cancelFollowRequest()}
+        type="secondary"
+        pageId={PageID.user_profile_page}
+        style={styles.userProfileFollowButton}
+      />
     );
   };
 
@@ -129,22 +126,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({
           ]
         )
       : unfollowUser(userId);
-  };
-
-  const renderCancelRequestButton = () => {
-    return (
-      <TouchableOpacity
-        style={styles.userProfileFollowButton}
-        onPress={() => unfollowUser(userId)}
-      >
-        <SvgXml
-          width={24}
-          height={20}
-          xml={cancelFollowRequest(theme.colors.base)}
-        />
-        <Text style={styles.editProfileText}>Cancel request</Text>
-      </TouchableOpacity>
-    );
   };
 
   const renderButtons = () => {
