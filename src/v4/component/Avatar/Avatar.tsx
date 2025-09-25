@@ -28,6 +28,7 @@ type AvatarProps = {
     style?: StyleProp<ImageStyle>;
     roles?: string[];
     shouldRedirectToUserProfile?: boolean;
+    onOpenImageViewer?: () => void;
   };
 };
 
@@ -42,6 +43,9 @@ function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
       style={imageProps.style}
       activeOpacity={0.7}
       onPress={() => {
+        if (userAvatarProps?.onOpenImageViewer) {
+          userAvatarProps.onOpenImageViewer();
+        }
         if (userAvatarProps?.shouldRedirectToUserProfile) {
           navigation.navigate('UserProfile', {
             userId: userAvatarProps?.userId,
@@ -114,6 +118,7 @@ type UserAvatarProps = {
   userName?: string;
   imageStyle?: StyleProp<ImageStyle>;
   shouldRedirectToUserProfile?: boolean;
+  onOpenImageViewer?: () => void;
 };
 
 function UserAvatar({
@@ -123,6 +128,7 @@ function UserAvatar({
   userName,
   imageStyle,
   shouldRedirectToUserProfile,
+  onOpenImageViewer,
 }: UserAvatarProps) {
   return (
     <Avatar
@@ -133,6 +139,7 @@ function UserAvatar({
         userName,
         style: imageStyle,
         shouldRedirectToUserProfile,
+        onOpenImageViewer,
       }}
       imageProps={{
         style: imageStyle,

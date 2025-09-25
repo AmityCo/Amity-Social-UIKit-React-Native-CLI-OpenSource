@@ -19,6 +19,7 @@ type ImageViewerProps = {
   onNextImage: () => void;
   onPreviousImage: () => void;
   onClose?: () => void;
+  isShowCounter?: boolean;
 };
 
 const ImageViewer: FC<ImageViewerProps> = ({
@@ -28,6 +29,7 @@ const ImageViewer: FC<ImageViewerProps> = ({
   onNextImage,
   onPreviousImage,
   onClose = () => {},
+  isShowCounter = true,
 }) => {
   const [active, setActive] = useState(currentImageIndex);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -138,11 +140,13 @@ const ImageViewer: FC<ImageViewerProps> = ({
       </View>
 
       {/* Counter indicator */}
-      <View style={styles.counterContainer}>
-        <Typography.Title style={styles.indicatorText}>
-          {`${active + 1}/${images.length}`}
-        </Typography.Title>
-      </View>
+      {isShowCounter && (
+        <View style={styles.counterContainer}>
+          <Typography.Title style={styles.indicatorText}>
+            {`${active + 1}/${images.length}`}
+          </Typography.Title>
+        </View>
+      )}
     </View>
   );
 };
