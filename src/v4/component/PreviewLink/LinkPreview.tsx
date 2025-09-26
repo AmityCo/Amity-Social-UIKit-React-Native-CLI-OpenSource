@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  Image,
-  LayoutAnimation,
-  Linking,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import { PreviewDataImage } from './types';
 import { getPreviewData } from './utils';
@@ -30,7 +23,6 @@ export const LinkPreview = React.memo(
         setData(undefined);
         const newData = await getPreviewData(text, 5000);
         if (!isCancelled) {
-          LayoutAnimation.easeInEaseOut();
           setData(newData);
         }
       };

@@ -167,7 +167,6 @@ const AmityCreateStoryPage: FC<ICreateStoryPage> = ({
 
   const onPressCameraCapture = useCallback(async () => {
     const photo = await cameraRef?.current?.takePhoto({
-      qualityPrioritization: 'speed',
       flash: flashOnState ? 'on' : 'off',
       enableShutterSound: false,
     });
@@ -270,7 +269,7 @@ const AmityCreateStoryPage: FC<ICreateStoryPage> = ({
           photo={isCamera}
           audio={true}
           format={format}
-          orientation={isPortrait ? 'portrait' : 'landscape-right'}
+          outputOrientation="device"
         />
 
         {renderCaptureBtn()}

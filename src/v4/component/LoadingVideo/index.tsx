@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Image, TouchableOpacity, Platform } from 'react-native';
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Platform,
+  ImageStyle,
+} from 'react-native';
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
 import {
@@ -179,8 +185,8 @@ const LoadingVideo = ({
           resizeMode="cover"
           source={{ uri: thumbNailImage }}
           style={[
-            styles.image,
-            loading ? styles.loadingImage : styles.loadedImage,
+            styles.image as ImageStyle,
+            (loading ? styles.loadingImage : styles.loadedImage) as ImageStyle,
           ]}
         />
       ) : (

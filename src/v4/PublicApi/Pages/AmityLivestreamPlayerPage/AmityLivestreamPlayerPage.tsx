@@ -6,6 +6,7 @@ import {
   useAnimatedValue,
 } from 'react-native';
 import { useStyles } from './styles';
+// @ts-ignore
 import { AmityStreamPlayer } from '@amityco/video-player-react-native';
 import LiveStreamEndThumbnail from '../../../component/LivestreamContent/LivestreamEndedThumbnail';
 import { Animated } from 'react-native';

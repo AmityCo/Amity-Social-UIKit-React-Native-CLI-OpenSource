@@ -8,6 +8,10 @@ import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
 
+messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  console.log('Background notification:', remoteMessage);
+});
+
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
   const [permissionGranted, setPermissionGranted] = useState(false);

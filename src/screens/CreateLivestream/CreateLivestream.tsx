@@ -22,6 +22,7 @@ import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import {
   AmityVideoBroadcaster,
   AmityStreamBroadcasterState,
+  // @ts-ignore
 } from '@amityco/video-broadcaster-react-native';
 
 import { useRequestPermission } from '../../../src/v4/hook/useCamera';

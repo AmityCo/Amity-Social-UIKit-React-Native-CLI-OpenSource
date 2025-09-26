@@ -8,6 +8,7 @@ import {
   Pressable,
   Animated,
   Alert,
+  ImageStyle,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import {
@@ -416,7 +417,7 @@ export default function PostList({
         <View style={styles.user}>
           {user?.avatarFileId ? (
             <Image
-              style={styles.avatar}
+              style={styles.avatar as ImageStyle}
               source={{
                 uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
               }}
