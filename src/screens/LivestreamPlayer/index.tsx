@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { useStyles } from './styles';
 
+// @ts-ignore
 import { AmityStreamPlayer } from '@amityco/video-player-react-native';
 
 import LivestreamEndedView from '../../v4/component/LivestreamContent/LivestreamEndedThumbnail';

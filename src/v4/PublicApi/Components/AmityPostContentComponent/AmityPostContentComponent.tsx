@@ -1,5 +1,11 @@
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  ImageStyle,
+} from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { arrowForward } from '../../../../svg/svg-xml-list';
 import { useStyles } from './styles';
@@ -149,7 +155,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
       <Pressable style={styles.headerSection} onPress={onPressPost}>
         <View style={styles.user}>
           <AvatarElement
-            style={styles.avatar}
+            style={styles.avatar as ImageStyle}
             avatarId={creator?.avatarFileId}
             pageID={pageId}
             elementID={ElementID.WildCardElement}

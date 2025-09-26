@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 // import { useTranslation } from 'react-i18next';
 
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ImageStyle } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { personXml } from '../../../svg/svg-xml-list';
 import { useStyles } from './styles';
@@ -162,7 +162,7 @@ export default function PendingPostList({
         <View style={styles.user}>
           {user?.avatarFileId ? (
             <Image
-              style={styles.avatar}
+              style={styles.avatar as ImageStyle}
               source={{
                 uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
               }}

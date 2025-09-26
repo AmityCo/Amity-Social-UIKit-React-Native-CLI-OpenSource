@@ -1,5 +1,6 @@
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 export const useStyles = () => {
   const { top } = useSafeAreaInsets();
   const { width } = useWindowDimensions();

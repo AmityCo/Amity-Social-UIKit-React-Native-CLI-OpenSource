@@ -4,6 +4,7 @@ import {
   View,
   ImageSourcePropType,
   Pressable,
+  ImageStyle,
 } from 'react-native';
 import React, { useEffect, useState, useCallback, Fragment } from 'react';
 import { FileRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
@@ -131,7 +132,10 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
         {(livestream.status === LivestreamStatus.idle || isUpcoming) &&
           thumbnailUrl && (
             <View style={styles.content}>
-              <Image source={thumbnailUrl} style={styles.streamImageCover} />
+              <Image
+                source={thumbnailUrl}
+                style={styles.streamImageCover as ImageStyle}
+              />
               <View style={styles.streamStatusRecorded}>
                 <Typography.CaptionBold style={styles.streamStatusText}>
                   UPCOMING LIVE
@@ -149,7 +153,10 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
           thumbnailUrl &&
           !isUpcoming && (
             <View style={styles.content}>
-              <Image source={thumbnailUrl} style={styles.streamImageCover} />
+              <Image
+                source={thumbnailUrl}
+                style={styles.streamImageCover as ImageStyle}
+              />
               {livestream.status === LivestreamStatus.live && (
                 <View style={styles.streamStatusLive}>
                   <Typography.CaptionBold style={styles.streamStatusText}>

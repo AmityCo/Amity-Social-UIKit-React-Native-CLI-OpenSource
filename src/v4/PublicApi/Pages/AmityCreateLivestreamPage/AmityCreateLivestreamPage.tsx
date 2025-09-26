@@ -14,12 +14,14 @@ import {
   TouchableOpacity,
   Linking,
   View,
+  ImageStyle,
 } from 'react-native';
 import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   AmityStreamBroadcasterState,
   AmityVideoBroadcaster,
+  // @ts-ignore
 } from '@amityco/video-broadcaster-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
@@ -542,7 +544,7 @@ function AmityCreateLivestreamPage() {
                 <View style={styles.thumbnailImageContainer}>
                   <Image
                     source={{ uri: uploadedImage?.fileUrl || imageUri }}
-                    style={styles.thumbnailImage}
+                    style={styles.thumbnailImage as ImageStyle}
                   />
                   {isLoading && (
                     <View style={styles.thumbnailLoader}>

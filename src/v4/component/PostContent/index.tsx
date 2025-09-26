@@ -1,9 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import {
   Image,
-  ImageStyle,
   Pressable,
-  StyleProp,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -56,9 +54,8 @@ const PostContent: React.FC<IPostContent> = ({
   const [imageIndex, setImageIndex] = useState<number>(0);
 
   const styles = useStyles();
-  let imageStyle: StyleProp<ImageStyle> | StyleProp<ImageStyle>[] =
-    styles.imageLargePost;
-  let colStyle: StyleProp<ImageStyle> = styles.col2;
+  let imageStyle: any = styles.imageLargePost;
+  let colStyle: any = styles.col2;
   const { currentPostdetail } = useSelector(
     (state: RootState) => state.postDetail
   );
