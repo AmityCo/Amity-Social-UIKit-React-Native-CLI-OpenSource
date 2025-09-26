@@ -1,14 +1,5 @@
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { FC, memo, useCallback, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../../redux/store';
 
 import { RefreshControl } from 'react-native';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
@@ -18,7 +9,6 @@ import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostConte
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
 import { usePostImpression } from '../../../../v4/hook/usePostImpression';
-import useAuth from '../../../../hooks/useAuth';
 import { useStyle } from './styles';
 import {
   isAmityAd,
@@ -36,7 +26,8 @@ export const globalFeedPageLimit = 20;
 const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
 }) => {
-  const { fetch, itemWithAds, refresh, loading } = useCustomRankingGlobalFeed();
+  const { itemWithAds, refresh, loading, onNextPage } =
+    useCustomRankingGlobalFeed();
   const componentId = ComponentID.global_feed_component;
   const { isExcluded, themeStyles, accessibilityId } = useAmityComponent({
     pageId,
@@ -45,18 +36,12 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 
   const [refreshing, setRefreshing] = useState(false);
   const styles = useStyle();
-  const { isConnected } = useAuth();
   const flatListRef = useRef(null);
-  const nextPage = useSelector(
-    (state: RootState) => state.globalFeed.paginationData.next
-  );
 
   const handleLoadMore = () => {
-    if (loading || !nextPage) return;
+    if (loading || !onNextPage) return;
 
-    fetch({
-      queryToken: nextPage,
-    });
+    onNextPage?.();
   };
 
   const onRefresh = useCallback(async () => {
@@ -70,14 +55,6 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       isAmityAd(item) ? item?.adId : item?.postId
     )
   );
-
-  useEffect(() => {
-    if (isConnected) {
-      fetch({
-        limit: globalFeedPageLimit,
-      });
-    }
-  }, [isConnected, fetch]);
 
   if (isExcluded) return null;
 
