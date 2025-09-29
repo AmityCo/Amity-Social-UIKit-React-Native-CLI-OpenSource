@@ -11,9 +11,11 @@ import MenuAction from '~/v4/elements/MenuAction';
 import { useStyles } from './styles';
 import ActionButton from '~/v4/elements/ActionButton';
 import { plus } from '~/v4/assets/icons';
-import { PageID } from '~/v4/enum';
+import { ComponentID, ElementID, PageID } from '~/v4/enum';
 
 interface FollowButtonProps {
+  pageId?: PageID;
+  componentId?: ComponentID;
   userId: string;
   followStatus: string | null;
   userName?: string;
@@ -24,6 +26,8 @@ interface FollowButtonProps {
 }
 
 const FollowButton: React.FC<FollowButtonProps> = ({
+  pageId = PageID.WildCardPage,
+  componentId = ComponentID.WildCardComponent,
   userId,
   followStatus,
   userName,
@@ -45,10 +49,11 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   const renderFollowButton = () => {
     return (
       <ActionButton
-        label="Follow"
+        pageId={pageId}
+        componentId={componentId}
+        elementId={ElementID.follow_user_button}
         onPress={() => followUser(userId)}
         icon={plus()}
-        pageId={PageID.user_profile_page}
         style={styles.userProfileFollowButton}
       />
     );
@@ -57,7 +62,9 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   const renderFollowingButton = () => {
     return (
       <ActionButton
-        label="Following"
+        pageId={pageId}
+        componentId={componentId}
+        elementId={ElementID.following_user_button}
         onPress={() => {
           openBottomSheet({
             content: (
@@ -76,7 +83,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({
         }}
         icon={followingIcon()}
         type="secondary"
-        pageId={PageID.user_profile_page}
         style={styles.userProfileFollowButton}
       />
     );
@@ -85,11 +91,12 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   const renderUnBlockButton = () => {
     return (
       <ActionButton
-        label="Unblock"
+        pageId={pageId}
+        componentId={componentId}
+        elementId={ElementID.unblock_user_button}
         onPress={() => unblockUser(userName)}
         icon={unblockIcon()}
         type="secondary"
-        pageId={PageID.user_profile_page}
         style={styles.userProfileFollowButton}
       />
     );
@@ -98,11 +105,12 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   const renderCancelRequestButton = () => {
     return (
       <ActionButton
-        label="Cancel request"
+        pageId={pageId}
+        componentId={componentId}
+        elementId={ElementID.pending_user_button}
         onPress={() => unfollowUser(userId)}
         icon={cancelFollowRequest()}
         type="secondary"
-        pageId={PageID.user_profile_page}
         style={styles.userProfileFollowButton}
       />
     );

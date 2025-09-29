@@ -17,7 +17,6 @@ export { default as AmityLivestreamTerminatedPage } from './PublicApi/Pages/Amit
 export { default as AmityLivestreamPlayerPage } from './PublicApi/Pages/AmityLivestreamPlayerPage';
 export { default as AmityPollTargetSelectionPage } from './PublicApi/Pages/AmityPollTargetSelectionPage';
 export { default as AmityPollPostComposerPage } from './PublicApi/Pages/AmityPollPostComposerPage';
-
 export { default as AmityUserProfilePage } from './PublicApi/Pages/AmityUserProfilePage';
 
 export { default as AmityCommunitySetupPage } from './PublicApi/Pages/AmityCommunitySetupPage';
@@ -55,10 +54,10 @@ export { default as AmityCommunityHeaderComponent } from './PublicApi/Components
 export { default as AmityCommunityImageFeedComponent } from './PublicApi/Components/AmityCommunityImageFeedComponent/AmityCommunityImageFeedComponent';
 export { default as AmityCommunityVideoFeedComponent } from './PublicApi/Components/AmityCommunityVideoFeedComponent/AmityCommunityVideoFeedComponent';
 export { AmityThumbnailActionComponent } from './PublicApi/Components/AmityThumbnailActionComponent';
-
 export { default as AmityExploreComponent } from './PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 export { default as AmityCommunityPinnedPostComponent } from './PublicApi/Components/AmityCommunityPinnedPostComponent';
 export { default as AmityPendingPostListComponent } from './PublicApi/Components/AmityPendingPostListComponent';
+export { default as AmityUserProfileHeaderComponent } from './PublicApi/Components/AmityUserProfileHeaderComponent/AmityUserProfileHeaderComponent';
 
 export {
   AmityPostTargetSelectionPageType,

@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useStyles } from './styles';
 import MenuButton from '~/v4/elements/MenuButton';
 import MenuAction from '~/v4/elements/MenuAction';
-import { ComponentID, PageID } from '~/v4/enum';
+import { PageID } from '~/v4/enum';
 import { useBottomSheet } from '~/redux/slices/bottomSheetSlice';
 import { editIcon } from '~/v4/../svg/svg-xml-list';
 import { blockUser as blockUserIcon } from '~/v4/assets/icons';
@@ -19,9 +19,12 @@ import { report, unreport } from '~/v4/assets/icons';
 import { useToast } from '~/v4/stores/slices/toast';
 import { useUserBlock, useFollowUserStatus } from '~/v4/hook';
 
-type HeaderProps = { userId: string };
+type HeaderProps = {
+  pageId?: PageID;
+  userId: string;
+};
 
-function Header({ userId }: HeaderProps) {
+function Header({ pageId = PageID.WildCardPage, userId }: HeaderProps) {
   const { styles } = useStyles();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -91,11 +94,10 @@ function Header({ userId }: HeaderProps) {
 
   return (
     <View style={styles.container}>
-      <BackButton onPress={navigation.goBack} />
+      <BackButton pageId={pageId} onPress={navigation.goBack} />
       <MenuButton
-        testID="pending-post-menu-button"
-        pageId={PageID.user_profile_page}
-        componentId={ComponentID.pending_post_list}
+        testID="user_profile_header_menu_button"
+        pageId={pageId}
         onPress={() => {
           openBottomSheet({
             content: (

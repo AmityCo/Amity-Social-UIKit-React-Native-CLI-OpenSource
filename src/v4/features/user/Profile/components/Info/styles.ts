@@ -81,7 +81,6 @@ export const useStyles = () => {
       color: theme.colors.baseShade2,
     },
     amountTextComponent: {
-      fontWeight: '600',
       color: theme.colors.base,
     },
     textDivider: {
@@ -199,8 +198,6 @@ export const useStyles = () => {
       paddingVertical: width * 0.3,
     },
     privateAccountTitle: {
-      fontSize: 17,
-      fontWeight: '600',
       color: theme.colors.base,
       marginVertical: 12,
     },

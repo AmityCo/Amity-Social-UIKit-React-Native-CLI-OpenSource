@@ -619,6 +619,127 @@
     },
     "pending_request_page/join_request_content/join_decline_button": {
       "text": "Decline"
+    },
+    "user_profile_page/*/*": {},
+    "user_profile_page/*/back_button": {
+      "image": "value"
+    },
+    "user_profile_page/*/menu_button": {
+      "image": "value"
+    },
+    "user_profile_page/*/user_feed_tab_button": {
+      "image": "Feed"
+    },
+    "user_profile_page/*/user_image_feed_tab_button": {
+      "image": "ImageFeed"
+    },
+    "user_profile_page/*/user_video_feed_tab_button": {
+      "image": "VideoFeed"
+    },
+    "user_profile_page/user_profile_header/*": {},
+    "user_profile_page/user_feed/*": {},
+    "user_profile_page/user_image_feed/*": {},
+    "user_profile_page/user_video_feed/*": {},
+    "user_profile_page/post_composer/image_button": {
+      "icon": "ImageIcon"
+    },
+    "user_profile_page/post_composer/video_button": {
+      "icon": "VideoIcon"
+    },
+    "user_profile_page/post_composer/story_button": {
+      "icon": "ImageIcon"
+    },
+    "user_relationship_page/*/*": {},
+    "user_pending_follow_request_page/*/*": {},
+    "user_profile_page/user_profile_header/follow_user_button": {
+      "text": "Follow",
+      "image": "Plus"
+    },
+    "user_profile_page/user_profile_header/following_user_button": {
+      "text": "Following",
+      "image": "FollowingUser"
+    },
+    "user_profile_page/user_profile_header/pending_user_button": {
+      "text": "Cancel request",
+      "image": "PendingUser"
+    },
+    "user_profile_page/user_profile_header/unblock_user_button": {
+      "text": "Unblock",
+      "image": "UnblockUser"
+    },
+    "user_profile_page/user_profile_header/user_avatar": {},
+    "user_profile_page/user_profile_header/user_name": {},
+    "user_profile_page/user_profile_header/user_description": {},
+    "user_profile_page/user_profile_header/user_following": {
+      "text": "following"
+    },
+    "user_profile_page/user_profile_header/user_follower": {
+      "text": "followers"
+    },
+    "user_profile_page/user_feed/empty_user_feed": {
+      "text": "No posts yet",
+      "image": "EmptyPost"
+    },
+    "user_profile_page/user_feed/private_user_feed": {
+      "text": "This account is private",
+      "image": "PrivateFeed"
+    },
+    "user_profile_page/user_feed/private_user_feed_info": {
+      "text": "Follow this user to see their posts."
+    },
+    "user_profile_page/user_feed/blocked_user_feed": {
+      "text": "You’ve blocked this user",
+      "image": "BlockedUser"
+    },
+    "user_profile_page/user_feed/blocked_user_feed_info": {
+      "text": "Unblock to see their posts."
+    },
+    "user_profile_page/user_image_feed/empty_user_image_feed": {
+      "text": "No photos yet",
+      "image": "EmptyImagePost"
+    },
+    "user_profile_page/user_image_feed/private_user_image_feed": {
+      "text": "This account is private",
+      "image": "PrivateFeed"
+    },
+    "user_profile_page/user_image_feed/private_user_image_feed_info": {
+      "text": "Follow this user to see their posts."
+    },
+    "user_profile_page/user_image_feed/blocked_user_image_feed": {
+      "text": "You’ve blocked this user",
+      "image": "BlockedUser"
+    },
+    "user_profile_page/user_image_feed/blocked_user_image_feed_info": {
+      "text": "Unblock to see their posts."
+    },
+    "user_profile_page/user_video_feed/empty_user_video_feed": {
+      "text": "No videos yet",
+      "image": "EmptyVideoPost"
+    },
+    "user_profile_page/user_video_feed/private_user_video_feed": {
+      "text": "This account is private",
+      "image": "PrivateFeed"
+    },
+    "user_profile_page/user_video_feed/private_user_video_feed_info": {
+      "text": "Follow this user to see their posts."
+    },
+    "user_profile_page/user_video_feed/blocked_user_video_feed": {
+      "text": "You’ve blocked this user",
+      "image": "BlockedUser"
+    },
+    "user_profile_page/user_video_feed/blocked_user_video_feed_info": {
+      "text": "Unblock to see their posts."
+    },
+
+    "user_profile_page/user_video_feed/videos_button": {
+      "text": "Videos"
+    },
+    "user_profile_page/user_video_feed/clips_button": {
+      "text": "Clips"
+    },
+    "user_profile_page/user_video_feed/empty_clip_feed": {
+      "text": "No clips yet",
+      "image": "emptyClipIcon"
     }
   }
 }

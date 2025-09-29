@@ -23,6 +23,8 @@ export enum PageID {
   community_setting_page = 'community_setting_page',
   pending_request_page = 'pending_request_page',
   user_profile_page = 'user_profile_page',
+  user_relationship_page = 'user_relationship_page',
+  user_pending_follow_request_page = 'user_pending_follow_request_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',
@@ -53,6 +55,10 @@ export enum ComponentID {
   community_video_feed = 'community_video_feed',
   thumbnail_action = 'thumbnail_action',
   pending_post_list = 'pending_post_list',
+  user_profile_header = 'user_profile_header',
+  user_feed = 'user_feed',
+  user_image_feed = 'user_image_feed',
+  user_video_feed = 'user_video_feed',
 }
 export enum ElementID {
   CloseBtn = 'close_button',
@@ -188,6 +194,33 @@ export enum ElementID {
   post_decline_button = 'post_decline_button',
   pin_badge = 'pin_badge',
   announcement_badge = 'announcement_badge',
+  user_following = 'user_following',
+  follow_user_button = 'follow_user_button',
+  following_user_button = 'following_user_button',
+  pending_user_button = 'pending_user_button',
+  unblock_user_button = 'unblock_user_button',
+  user_avatar = 'user_avatar',
+  user_name = 'user_name',
+  user_description = 'user_description',
+  user_follower = 'user_follower',
+  empty_user_feed = 'empty_user_feed',
+  private_user_feed = 'private_user_feed',
+  private_user_feed_info = 'private_user_feed_info',
+  blocked_user_feed = 'blocked_user_feed',
+  blocked_user_feed_info = 'blocked_user_feed_info',
+  empty_user_image_feed = 'empty_user_image_feed',
+  private_user_image_feed = 'private_user_image_feed',
+  private_user_image_feed_info = 'private_user_image_feed_info',
+  blocked_user_image_feed = 'blocked_user_image_feed',
+  blocked_user_image_feed_info = 'blocked_user_image_feed_info',
+  empty_user_video_feed = 'empty_user_video_feed',
+  private_user_video_feed = 'private_user_video_feed',
+  private_user_video_feed_info = 'private_user_video_feed_info',
+  blocked_user_video_feed = 'blocked_user_video_feed',
+  blocked_user_video_feed_info = 'blocked_user_video_feed_info',
+  user_display_name_title = 'user_display_name_title',
+  user_about_title = 'user_about_title',
+  update_user_profile_button = 'update_user_profile_button',
 }
 
 export interface UiKitConfigKeys {

@@ -17,8 +17,13 @@ import { isModerator } from '~/v4/utils/permissions';
 import { RootStackParamList } from '~/v4/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { ComponentID, ElementID, PageID } from '~/v4/enum';
+import { useAmityElement } from '~/v4/hook';
 
 type AvatarProps = {
+  pageId?: PageID;
+  componentId?: ComponentID;
+  elementId?: ElementID;
   uri?: string;
   imageProps: Omit<ImageProps, 'source'>;
   iconProps?: XmlProps;
@@ -32,14 +37,29 @@ type AvatarProps = {
   };
 };
 
-function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
+function Avatar({
+  uri,
+  imageProps,
+  iconProps,
+  userAvatarProps,
+  pageId = PageID.WildCardPage,
+  componentId = ComponentID.WildCardComponent,
+  elementId = ElementID.user_avatar,
+}: AvatarProps) {
   const { styles } = useStyles();
   const [imageError, setImageError] = useState(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const { accessibilityId } = useAmityElement({
+    pageId,
+    componentId,
+    elementId,
+  });
+
   return uri && !imageError ? (
     <TouchableOpacity
+      testID={accessibilityId}
       style={imageProps.style}
       activeOpacity={0.7}
       onPress={() => {
@@ -63,6 +83,7 @@ function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
     <SvgXml {...iconProps} />
   ) : (
     <TouchableOpacity
+      testID={accessibilityId}
       style={[styles.defaultUserAvatar, userAvatarProps.style]}
       activeOpacity={0.7}
       onPress={() => {
@@ -112,6 +133,9 @@ function CategoryAvatar({
 }
 
 type UserAvatarProps = {
+  pageId?: PageID;
+  componentId?: ComponentID;
+  elementId?: ElementID;
   uri?: string;
   userId?: string;
   roles?: string[];
@@ -122,6 +146,9 @@ type UserAvatarProps = {
 };
 
 function UserAvatar({
+  pageId = PageID.WildCardPage,
+  componentId = ComponentID.WildCardComponent,
+  elementId = ElementID.WildCardElement,
   uri,
   roles,
   userId,
@@ -132,6 +159,9 @@ function UserAvatar({
 }: UserAvatarProps) {
   return (
     <Avatar
+      pageId={pageId}
+      componentId={componentId}
+      elementId={elementId}
       uri={uri}
       userAvatarProps={{
         roles,
