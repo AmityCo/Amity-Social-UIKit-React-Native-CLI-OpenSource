@@ -1,9 +1,12 @@
 import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
-import { RootState } from '../../redux/store';
+import {
+  RootState,
+  useUIKitDispatch,
+  useUIKitSelector,
+} from '../../redux/store';
 import { usePaginatorApi } from '../../v4/hook/usePaginator';
 import { IComment } from '../../components/Social/CommentList';
 import useAuth from '../../hooks/useAuth';
@@ -16,7 +19,7 @@ export const isAmityAd = (
 
 export const useCustomRankingGlobalFeed = () => {
   const { isConnected } = useAuth();
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const unsubscribeRef = useRef<() => void | null>(null);
   const onNextPageRef = useRef<() => void | null>(null);
 
@@ -24,7 +27,9 @@ export const useCustomRankingGlobalFeed = () => {
 
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(false);
-  const postList = useSelector((state: RootState) => state.globalFeed.postList);
+  const postList = useUIKitSelector(
+    (state: RootState) => state.globalFeed.postList
+  );
 
   const { itemWithAds } = usePaginatorApi<Amity.Post | Amity.Ad>({
     items: postList as (Amity.Post | Amity.Ad)[],

@@ -1,7 +1,10 @@
 import React, { memo, useEffect, useRef } from 'react';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
+import {
+  RootState,
+  useUIKitDispatch,
+  useUIKitSelector,
+} from '../../../redux/store';
 import bottomSheetSlice, {
   BottomSheetState,
 } from '../../../redux/slices/bottomSheetSlice';
@@ -10,8 +13,8 @@ import { StyleSheet } from 'react-native';
 
 const BottomSheetComponent = () => {
   const { closeBottomSheet } = bottomSheetSlice.actions;
-  const dispatch = useDispatch();
-  const { content, height, pageId, componentId } = useSelector(
+  const dispatch = useUIKitDispatch();
+  const { content, height, pageId, componentId } = useUIKitSelector(
     (state: RootState) => state.bottomSheet as BottomSheetState
   );
   const sheetRef = useRef<BottomSheetMethods>(null);

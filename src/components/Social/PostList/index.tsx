@@ -34,7 +34,6 @@ import EditPostModal from '../../../components/EditPostModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import postDetailSlice from '../../../redux/slices/postDetailSlice';
-import { useDispatch } from 'react-redux';
 import globalFeedSlice from '../../../redux/slices/globalfeedSlice';
 import { IMentionPosition } from '../../../screens/CreatePost';
 import feedSlice from '../../../redux/slices/feedSlice';
@@ -42,6 +41,7 @@ import { RootStackParamList } from '../../../routes/RouteParamList';
 import { useTimeDifference } from '../../../hooks/useTimeDifference';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import PostContent from '../../../v4/component/PostContent';
+import { useUIKitDispatch } from '../../../redux/store';
 
 export interface IPost {
   postId: string;
@@ -102,7 +102,7 @@ export default function PostList({
   const slideAnimation = useRef(new Animated.Value(0)).current;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
 
   const [mentionPositionArr, setMentionsPositionArr] = useState<
     IMentionPosition[]

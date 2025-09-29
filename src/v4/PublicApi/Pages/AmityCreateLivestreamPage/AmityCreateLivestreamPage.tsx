@@ -29,7 +29,6 @@ import { Typography } from '../../../../v4/component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 import bottomSheetSlice from '../../../../redux/slices/bottomSheetSlice';
-import { useDispatch } from 'react-redux';
 import { CircularProgressIndicator } from '../../../../v4/component/CircularProgressIndicator';
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import { PostRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
@@ -46,6 +45,7 @@ import { CancelCreateLivestreamButton } from '../../../elements/CancelCreateLive
 import { EndLiveStreamButton } from '../../../elements/EndLiveStreamButton';
 import { AddThumbnailButton } from '../../../elements/AddThumbnailButton';
 import { SwitchCameraButton } from '../../../elements/SwitchCameraButton';
+import { useUIKitDispatch } from '../../../../redux/store';
 
 const calculateTime = (time: number) => {
   const hours = Math.floor(time / 3600000);
@@ -64,7 +64,7 @@ const calculateTime = (time: number) => {
 function AmityCreateLivestreamPage() {
   const styles = useStyles();
   const streamRef = useRef<any>(null);
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const theme = useTheme<MyMD3Theme>();

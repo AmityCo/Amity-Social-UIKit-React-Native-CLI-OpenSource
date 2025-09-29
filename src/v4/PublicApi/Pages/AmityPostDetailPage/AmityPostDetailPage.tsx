@@ -42,7 +42,6 @@ import {
 import { closeIcon } from '../../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import { IMentionPosition } from '~/types';
-import { useDispatch } from 'react-redux';
 import uiSlice from '../../../../redux/slices/uiSlice';
 import MyAvatar from '../../../component/MyAvatar/MyAvatar';
 import {
@@ -57,6 +56,7 @@ import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 import { PostMenu } from '../../../component/PostMenu';
 import useMention from '../../../../v4/hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
+import { useUIKitDispatch } from '../../../../redux/store';
 
 type AmityPostDetailPageType = {
   postId: Amity.Post['postId'];
@@ -73,7 +73,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const { height } = useWindowDimensions();
 
   const pageId = PageID.post_detail_page;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const componentId = ComponentID.WildCardComponent;
   const disabledInteraction = false;
   const navigation =

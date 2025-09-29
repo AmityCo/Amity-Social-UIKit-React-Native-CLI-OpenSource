@@ -1,6 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../../redux/store';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  RootState,
+  useUIKitDispatch,
+  useUIKitSelector,
+} from '../../../redux/store';
 
 type ToastState = {
   visible?: boolean;
@@ -37,11 +40,11 @@ const toastSlice = createSlice({
 export default toastSlice;
 
 export const useToast = () => {
-  const toast = useSelector<RootState, ToastState>(
+  const toast = useUIKitSelector<RootState, ToastState>(
     (state: RootState) => state.toast
   );
   const { showToast, hideToast } = toastSlice.actions;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
 
   return {
     toast,

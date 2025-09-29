@@ -3,7 +3,7 @@ import { useColorScheme } from 'react-native';
 import { Provider } from 'react-redux';
 import AuthContextProvider from './auth-provider';
 import { DefaultTheme, PaperProvider, type MD3Theme } from 'react-native-paper';
-import { store } from '../redux/store';
+import { AmityUIKitReduxContext, store } from '../redux/store';
 import { ConfigProvider } from './config-provider';
 import { IConfigRaw } from '../v4/types/config.interface';
 import { validateConfigColor } from '../util/colorUtil';
@@ -137,7 +137,7 @@ export default function AmityUiKitProvider({
   };
 
   return (
-    <Provider store={store}>
+    <Provider store={store} context={AmityUIKitReduxContext}>
       <AuthContextProvider
         userId={userId}
         displayName={displayName || userId}
