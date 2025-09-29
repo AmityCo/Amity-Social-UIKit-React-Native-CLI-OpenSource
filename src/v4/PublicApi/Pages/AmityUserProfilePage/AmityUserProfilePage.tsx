@@ -41,7 +41,6 @@ import type { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
 import FloatingButton from '../../../../components/FloatingButton';
 import { TabName } from '../../../../enum/tabNameState';
-import { useDispatch } from 'react-redux';
 import uiSlice from '../../../../redux/slices/uiSlice';
 import { PostTargetType } from '../../../../enum/postTargetType';
 import GalleryComponent from '../../../component/Gallery/GalleryComponent';
@@ -49,6 +48,7 @@ import { useFile } from '../../../hook';
 import { defaultAvatarUri } from '../../../assets';
 import { ImageSizeState } from '../../../enum';
 import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { useUIKitDispatch } from '../../../../redux/store';
 
 type UserProfilePageProps = RootStackParamList['UserProfile'];
 
@@ -58,7 +58,7 @@ function UserProfile({ userId }: UserProfilePageProps) {
   const { client } = useAuth();
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const { openPostTypeChoiceModal } = uiSlice.actions;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const [user, setUser] = useState<Amity.User>();
   const [followerCount, setFollowerCount] = useState<number>(0);
   const [followingCount, setFollowingCount] = useState<number>(0);

@@ -6,6 +6,18 @@ import postDetailSlice from '../slices/postDetailSlice';
 import uiSlice from '../slices/uiSlice';
 import bottomSheetSlice from '../slices/bottomSheetSlice';
 import toastSlice from '../../v4/stores/slices/toast';
+import { createContext } from 'react';
+import {
+  createStoreHook,
+  createDispatchHook,
+  createSelectorHook,
+} from 'react-redux';
+
+export const AmityUIKitReduxContext = createContext(null);
+
+export const useUIKitStore = createStoreHook(AmityUIKitReduxContext);
+export const useUIKitDispatch = createDispatchHook(AmityUIKitReduxContext);
+export const useUIKitSelector = createSelectorHook(AmityUIKitReduxContext);
 
 export const store: Store = configureStore({
   reducer: {

@@ -41,7 +41,7 @@ import { ComponentID, PageID } from '../../../../enum';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';
 import RenderTextWithMention from '../../../../component/RenderTextWithMention/RenderTextWithMention';
 import uiSlice from '../../../../../redux/slices/uiSlice';
-import { useDispatch } from 'react-redux';
+import { useUIKitDispatch } from '../../../../../redux/store';
 
 export interface IComment {
   commentId: string;
@@ -90,7 +90,7 @@ const ReplyCommentList = ({
 
   const theme = useTheme() as MyMD3Theme;
   const styles = useStyles();
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { showToastMessage } = uiSlice.actions;
   const timeDifference = useTimeDifference(createdAt);
   const [isLike, setIsLike] = useState<boolean>(
@@ -328,7 +328,7 @@ const ReplyCommentList = ({
               styles.modalContent,
               modalStyle,
               user?.userId === (client as Amity.Client).userId &&
-              styles.twoOptions,
+                styles.twoOptions,
             ]}
           >
             {user?.userId === (client as Amity.Client).userId ? (
