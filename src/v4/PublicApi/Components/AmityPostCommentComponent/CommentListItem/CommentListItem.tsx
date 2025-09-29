@@ -47,7 +47,7 @@ import { ComponentID, PageID } from '../../../../enum';
 import { LinkPreview } from '../../../../component/PreviewLink/LinkPreview';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';
 import uiSlice from '../../../../../redux/slices/uiSlice';
-import { useDispatch } from 'react-redux';
+import { useUIKitDispatch } from '../../../../../redux/store';
 
 export interface IComment {
   commentId: string;
@@ -104,7 +104,7 @@ const CommentListItem = ({
     childrenNumber,
   } = commentDetail ?? {};
   const timeDifference = useTimeDifference(createdAt);
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { showToastMessage } = uiSlice.actions;
   const [isLike, setIsLike] = useState<boolean>(
     myReactions ? myReactions.includes('like') : false

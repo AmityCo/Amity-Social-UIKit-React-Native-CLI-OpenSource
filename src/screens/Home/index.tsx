@@ -15,15 +15,16 @@ import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
 import AllMyCommunity from '../../screens/AllMyCommunity';
 import { TabName } from '../../enum/tabNameState';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
 import uiSlice from '../../redux/slices/uiSlice';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useUIKitDispatch } from '../../redux/store';
+
 LogBox.ignoreAllLogs(true);
 export default function Home() {
   const styles = useStyles();
   const { client } = useAuth();
   const theme = useTheme() as MyMD3Theme;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { openPostTypeChoiceModal } = uiSlice.actions;
   const [activeTab, setActiveTab] = useState<string>(TabName.NewsFeed);
   const navigation = useNavigation<NativeStackNavigationProp<any>>();

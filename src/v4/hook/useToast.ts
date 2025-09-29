@@ -1,10 +1,10 @@
-import { useDispatch } from 'react-redux';
 import uiSlice from '../../redux/slices/uiSlice';
 import { useCallback } from 'react';
 import { getCommentErrorMessage } from '../utils/errors';
+import { useUIKitDispatch } from '../../redux/store';
 
 export const useToast = () => {
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { showToastMessage } = uiSlice.actions;
 
   const showToast = useCallback(

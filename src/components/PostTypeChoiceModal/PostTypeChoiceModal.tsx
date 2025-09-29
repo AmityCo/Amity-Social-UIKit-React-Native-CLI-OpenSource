@@ -16,9 +16,12 @@ import {
 import { useStyles } from './style';
 import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
 import uiSlice from '../../redux/slices/uiSlice';
-import { RootState } from 'src/redux/store';
+import {
+  RootState,
+  useUIKitDispatch,
+  useUIKitSelector,
+} from '../../redux/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes/RouteParamList';
@@ -27,7 +30,7 @@ import { RootStackParamList as RootStackParamListV4 } from '../../v4/routes/Rout
 const PostTypeChoiceModal = () => {
   const styles = useStyles();
   const theme = useTheme() as MyMD3Theme;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const navigation =
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
   const navigationV4 =
@@ -42,7 +45,7 @@ const PostTypeChoiceModal = () => {
     postSetting,
     needApprovalOnPostCreation,
     isPublic,
-  } = useSelector((state: RootState) => state.ui);
+  } = useUIKitSelector((state: RootState) => state.ui);
   const [postType, setPostType] = useState<string>();
   const [createPostModalVisible, setCreatePostModalVisible] = useState(false);
 

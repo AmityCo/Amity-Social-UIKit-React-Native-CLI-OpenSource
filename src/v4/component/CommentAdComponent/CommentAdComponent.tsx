@@ -10,10 +10,10 @@ import AdInformation from '../AdInformation/AdInformation';
 import { infoIcon } from '../../../svg/svg-xml-list';
 import { defaultAdAvatarUri } from '../../assets';
 import bottomSheetSlice from '../../../redux/slices/bottomSheetSlice';
-import { useDispatch } from 'react-redux';
 import AssetDownloader from '../../engine/AssetDownloader';
 import AdEngine from '../../engine/AdEngine';
 import { Linking } from 'react-native';
+import { useUIKitDispatch } from '../../../redux/store';
 
 type CommnetAdComponentType = {
   pageId?: PageID;
@@ -24,7 +24,7 @@ const CommentAdComponent: FC<CommnetAdComponentType> = ({
   ad,
   pageId = PageID.WildCardPage,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const componentId = ComponentID.WildCardComponent;
 
   const { openBottomSheet } = bottomSheetSlice.actions;

@@ -36,13 +36,13 @@ import { NextOrPrevious } from '../../../../component/StoryKit';
 import { useTimeDifference } from '../../../../../hooks/useTimeDifference';
 import { STORY_DEFAULT_DURATION } from '../../../../../constants';
 import GestureRecognizer from 'react-native-swipe-gestures';
-import { useDispatch } from 'react-redux';
 import uiSlice from '../../../../../redux/slices/uiSlice';
 import { LoadingOverlay } from '../../../../../components/LoadingOverlay';
 import Toast from '../../../../../components/Toast/Toast';
 import { Typography } from '../../../../component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import { useUIKitDispatch } from '../../../../../redux/store';
 
 interface IAmityViewStoryItem {
   communityData: Amity.Community;
@@ -98,7 +98,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
   const [load, setLoad] = useState(true);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { showToastMessage } = uiSlice.actions;
 
   const storyViewerBgColor =

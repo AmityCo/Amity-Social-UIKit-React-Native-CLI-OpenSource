@@ -31,7 +31,6 @@ import { AmityPostComposerMode, AmityPostComposerPageType } from '../../types';
 import { IDisplayImage, IMentionPosition } from '~/v4/types/type';
 import CloseButtonIconElement from '../../Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
 import uiSlice from '../../../../redux/slices/uiSlice';
 import { amityPostsFormatter } from '../../../../util/postDataFormatter';
 import useAuth from '../../../../hooks/useAuth';
@@ -58,6 +57,7 @@ import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { useFile } from '../../../hook';
 import useMention from '../../../hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
+import { useUIKitDispatch } from '../../../../redux/store';
 
 const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   mode,
@@ -81,7 +81,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { isKeyboardShowing } = useKeyboardStatus();
   const { client } = useAuth();
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { addPostToGlobalFeed, updateByPostId } = globalfeedSlice.actions;
 
   const isModerator = useIsCommunityModerator({

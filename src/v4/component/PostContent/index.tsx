@@ -14,9 +14,8 @@ import { useStyles } from './styles';
 import useAuth from '../../../hooks/useAuth';
 import { IVideoPost, MediaUri } from '../../../components/Social/PostList';
 import { getPostById } from '../../../providers/Social/feed-sdk';
-import { useSelector } from 'react-redux';
 import ImageView from '../../../components/react-native-image-viewing/dist';
-import { RootState } from '../../../redux/store';
+import { RootState, useUIKitSelector } from '../../../redux/store';
 import { playBtn } from '../../../svg/svg-xml-list';
 import LivestreamContent from '../LivestreamContent';
 import { LinkPreview } from '../../component/PreviewLink';
@@ -59,13 +58,13 @@ const PostContent: React.FC<IPostContent> = ({
   let imageStyle: StyleProp<ImageStyle> | StyleProp<ImageStyle>[] =
     styles.imageLargePost;
   let colStyle: StyleProp<ImageStyle> = styles.col2;
-  const { currentPostdetail } = useSelector(
+  const { currentPostdetail } = useUIKitSelector(
     (state: RootState) => state.postDetail
   );
-  const { postList: postListGlobal } = useSelector(
+  const { postList: postListGlobal } = useUIKitSelector(
     (state: RootState) => state.globalFeed
   );
-  const { postList } = useSelector((state: RootState) => state.feed);
+  const { postList } = useUIKitSelector((state: RootState) => state.feed);
 
   useEffect(() => {
     setImagePostsFullSize([]);
