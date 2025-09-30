@@ -58,6 +58,7 @@ export { default as AmityExploreComponent } from './PublicApi/Components/AmityEx
 export { default as AmityCommunityPinnedPostComponent } from './PublicApi/Components/AmityCommunityPinnedPostComponent';
 export { default as AmityPendingPostListComponent } from './PublicApi/Components/AmityPendingPostListComponent';
 export { default as AmityUserProfileHeaderComponent } from './PublicApi/Components/AmityUserProfileHeaderComponent/AmityUserProfileHeaderComponent';
+export { default as AmityUserFeedComponent } from './PublicApi/Components/AmityUserFeedComponent/AmityUserFeedComponent';
 
 export {
   AmityPostTargetSelectionPageType,

@@ -37,6 +37,7 @@ export const UserFollow: React.FC<UserFollowProps> = ({
         {count}
       </Typography.Body>
       <Typography.Caption style={styles.textComponent}>
+        {' '}
         {config.text as string}
       </Typography.Caption>
     </View>

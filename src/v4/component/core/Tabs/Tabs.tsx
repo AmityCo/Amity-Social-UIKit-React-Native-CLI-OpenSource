@@ -5,9 +5,12 @@ import {
   View,
   ViewProps,
 } from 'react-native';
+import { SvgXml } from 'react-native-svg';
 import { Typography } from '~/v4/component/Typography/Typography';
 import { useStyles } from './styles';
 import { capitalize } from '~/v4/utils';
+import { ComponentID, ElementID, PageID } from '~/v4/enum';
+import { useAmityElement } from '~/v4/hook';
 
 type TabsContextType<T> = {
   variant: 'chip' | 'underline' | 'icon';
@@ -53,13 +56,31 @@ function TabList({ children, style, ...props }: TabListProps) {
 }
 
 type TabProps<T> = TouchableOpacityProps & {
+  pageId?: PageID;
+  componentId?: ComponentID;
+  elementId?: ElementID;
   value: T;
   type?: 'title' | 'body';
+  icon?: string;
 };
 
-function Tab<T>({ value, children, type = 'title', ...props }: TabProps<T>) {
+function Tab<T>({
+  pageId = PageID.WildCardPage,
+  componentId = ComponentID.WildCardComponent,
+  elementId = ElementID.WildCardElement,
+  value,
+  children,
+  type = 'title',
+  icon,
+  ...props
+}: TabProps<T>) {
   const { styles } = useStyles();
   const { activeTab, onChangeTab, variant } = useTabContext<T>();
+  const { config } = useAmityElement({
+    pageId,
+    componentId,
+    elementId,
+  });
 
   const isActive = activeTab === value;
   const Label =
@@ -68,6 +89,9 @@ function Tab<T>({ value, children, type = 'title', ...props }: TabProps<T>) {
       : isActive
       ? Typography.TitleBold
       : Typography.Title;
+
+  const iconToDisplay = variant === 'icon' ? icon || config?.image : null;
+  const iconString = typeof iconToDisplay === 'string' ? iconToDisplay : null;
 
   return (
     <TouchableOpacity
@@ -79,14 +103,18 @@ function Tab<T>({ value, children, type = 'title', ...props }: TabProps<T>) {
       ]}
       {...props}
     >
-      <Label
-        style={[
-          styles[`${variant}TabText`],
-          isActive && [styles[`active${capitalize(variant)}TabText`]],
-        ]}
-      >
-        {children}
-      </Label>
+      {variant === 'icon' && iconString ? (
+        <SvgXml xml={iconString} width={24} height={24} />
+      ) : (
+        <Label
+          style={[
+            styles[`${variant}TabText`],
+            isActive && [styles[`active${capitalize(variant)}TabText`]],
+          ]}
+        >
+          {children}
+        </Label>
+      )}
     </TouchableOpacity>
   );
 }

@@ -1,0 +1,192 @@
+import React, {
+  memo,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react';
+import { FlatList, View } from 'react-native';
+import { ComponentID, PageID } from '../../../enum/enumUIKitID';
+import { useAmityComponent } from '../../../hook/useUiKitReference';
+import { useStyles } from './styles';
+import PostList from '../../../../components/Social/PostList';
+import {
+  CommunityRepository,
+  PostRepository,
+  SubscriptionLevels,
+  UserRepository,
+  getCommunityTopic,
+  getUserTopic,
+  subscribeTopic,
+} from '@amityco/ts-sdk-react-native';
+import { deletePostById } from '../../../../providers/Social/feed-sdk';
+import { amityPostsFormatter } from '../../../../util/postDataFormatter';
+import { useFocusEffect } from '@react-navigation/native';
+import { usePaginatorApi } from '../../../hook/usePaginator';
+import { usePostImpression } from '../../../hook/usePostImpression';
+import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
+import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
+
+type FeedRefType = {
+  handleLoadMore: () => void;
+};
+
+type AmityUserFeedComponentType = {
+  pageId?: PageID;
+  targetId: string;
+  targetType: string;
+};
+
+const pageLimit = 10;
+
+const AmityUserFeedComponent = forwardRef<
+  FeedRefType,
+  AmityUserFeedComponentType
+>(({ pageId, targetId, targetType }, ref) => {
+  const componentId = ComponentID.global_feed_component;
+  const styles = useStyles();
+  const { isExcluded, accessibilityId } = useAmityComponent({
+    pageId,
+    componentId,
+  });
+
+  const [postData, setPostData] = useState<Amity.Post<any>[]>([]);
+  const [onNextPage, setOnNextPage] = useState(null);
+  const disposers: Amity.Unsubscriber[] = useMemo(() => [], []);
+
+  const { itemWithAds } = usePaginatorApi<Amity.Post | Amity.Ad>({
+    items: postData as Amity.Post[],
+    placement: 'feed' as Amity.AdPlacement,
+    pageSize: pageLimit,
+    getItemId: (item) =>
+      isAmityAd(item) ? item?.adId.toString() : item?.postId.toString(),
+  });
+
+  const shouldShowAds = targetType !== 'user';
+  const feedItems = shouldShowAds ? itemWithAds : postData;
+
+  const { handleViewChange } = usePostImpression(
+    itemWithAds?.filter(
+      (item: Amity.Post | Amity.Ad) =>
+        !!(isAmityAd(item) ? item?.adId : item?.postId)
+    ) as (Amity.Post | Amity.Ad)[]
+  );
+
+  let isSubscribed = false;
+
+  const subscribePostTopic = useCallback((type: string, id: string) => {
+    if (isSubscribed) return;
+
+    if (type === 'user') {
+      let user = {} as Amity.User;
+      UserRepository.getUser(id, ({ data }) => {
+        user = data;
+      });
+      disposers.push(
+        subscribeTopic(getUserTopic(user, SubscriptionLevels.POST))
+      );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      isSubscribed = true;
+      return;
+    }
+    if (type === 'community') {
+      CommunityRepository.getCommunity(id, (data) => {
+        if (data.data) {
+          disposers.push(
+            subscribeTopic(
+              getCommunityTopic(data.data, SubscriptionLevels.POST)
+            )
+          );
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      disposers.forEach((fn) => fn());
+    };
+  }, [disposers]);
+
+  const handleLoadMore = () => {
+    if (onNextPage) {
+      onNextPage();
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = PostRepository.getPosts(
+        {
+          targetId,
+          targetType,
+          sortBy: 'lastCreated',
+          limit: 10,
+          feedType: 'published',
+        },
+        async ({ data, error, loading, hasNextPage, onNextPage: nextPage }) => {
+          if (!error && !loading) {
+            const filterData: any[] = data.filter((item) => {
+              return item.dataType === 'text';
+            });
+
+            setOnNextPage(hasNextPage ? () => nextPage : null);
+            const formattedPostList = await amityPostsFormatter(filterData);
+            setPostData(formattedPostList);
+            subscribePostTopic(targetType, targetId);
+          }
+        }
+      );
+      return () => {
+        unsubscribe();
+      };
+    }, [subscribePostTopic, targetId, targetType])
+  );
+
+  useImperativeHandle(ref, () => ({
+    handleLoadMore,
+  }));
+
+  const onDeletePost = async (postId: string) => {
+    await deletePostById(postId);
+  };
+
+  if (isExcluded) return null;
+
+  return (
+    <View
+      testID={accessibilityId}
+      accessibilityLabel={accessibilityId}
+      style={styles.feedWrap}
+    >
+      <FlatList
+        scrollEnabled={false}
+        data={feedItems ?? []}
+        renderItem={({ item, index }) => {
+          if (isAmityAd(item)) return <PostAdComponent ad={item as Amity.Ad} />;
+
+          return (
+            <PostList
+              onDelete={onDeletePost}
+              postDetail={item}
+              isGlobalfeed={false}
+              postIndex={index}
+            />
+          );
+        }}
+        keyExtractor={(item, index) =>
+          isAmityAd(item)
+            ? item.adId.toString() + index
+            : item.postId.toString()
+        }
+        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
+        onViewableItemsChanged={handleViewChange}
+        extraData={itemWithAds}
+      />
+    </View>
+  );
+});
+
+export default memo(AmityUserFeedComponent);

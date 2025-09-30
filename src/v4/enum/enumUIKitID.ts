@@ -221,6 +221,9 @@ export enum ElementID {
   user_display_name_title = 'user_display_name_title',
   user_about_title = 'user_about_title',
   update_user_profile_button = 'update_user_profile_button',
+  user_feed_tab_button = 'user_feed_tab_button',
+  user_image_feed_tab_button = 'user_image_feed_tab_button',
+  user_video_feed_tab_button = 'user_video_feed_tab_button',
 }
 
 export interface UiKitConfigKeys {
