@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@^7.9.1":
-  version "7.9.1"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.9.1.tgz#b708a058958cb2fb8a72a929d5616c928c29aea9"
-  integrity sha512-g6SteHnAmgphn7cAX1XepeTFAlMwawfuUkWH83yqC0t869GiP81qhNH2vQ+uhDjl6gD5RNGau9rcP0roXsVINg==
+"@amityco/ts-sdk-react-native@^7.9.2":
+  version "7.9.2"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.9.2.tgz#03bb7e705a61a9988b9f96d535ea2483c661d280"
+  integrity sha512-GSSJGSWgL3SMVn3yLkJ0/ihwsENZ8D89Am/kOUKCfVnAM4vTb0vQGtcstvFwMSE2s1Stpv75OcVhCMibWDd/2g==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
@@ -22,13 +22,15 @@
     react-native-uuid "^2.0.1"
     ts-jest "^28.0.3"
 
-"@amityco/video-broadcaster-react-native@./amityco-video-broadcaster-react-native-1.1.0.tgz":
-  version "1.1.0"
-  resolved "./amityco-video-broadcaster-react-native-1.1.0.tgz#77a59e1ab06ec2650b5a596c5b77712a85810ffb"
+"@amityco/video-broadcaster-react-native@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@amityco/video-broadcaster-react-native/-/video-broadcaster-react-native-2.0.0.tgz#f87cc5fb22c8ccdc568055204100c2e430a6a711"
+  integrity sha512-iz61X6eNsAI7aH6FeMBjrHdk1AGOksiKIFuumY/cwRDlEJ7j5j5rGhfwRPYl7FrBSdi76axzGOzykyNANjzICw==
 
-"@amityco/video-player-react-native@./amityco-video-player-react-native-1.2.0.tgz":
-  version "1.2.0"
-  resolved "./amityco-video-player-react-native-1.2.0.tgz#7173b122803b20b0da6ae2bbac6acaf09fa5f50a"
+"@amityco/video-player-react-native@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@amityco/video-player-react-native/-/video-player-react-native-2.0.0.tgz#17e44889e2bf330a509f090b0074c34040bebd2f"
+  integrity sha512-gv4rDChGV5f8ZW8gF33aTW7FhsYmdEHSaUV5bDFZdwtb1qtiX6+6YFRstVjivI4Omr7ve0lJps8x9Zf8KRTssQ==
   dependencies:
     react-native-video-controls "^2.8.1"
     uuid "^9.0.1"
@@ -3105,9 +3107,9 @@ available-typed-arrays@^1.0.7:
     possible-typed-array-names "^1.0.0"
 
 axios@^1.2.3:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.12.0.tgz#11248459be05a5ee493485628fa0e4323d0abfc3"
-  integrity sha512-oXTDccv8PcfjZmPGlWsPSwtOJCZ/b6W5jAMCNcfwJbCzDckwG0jrYJFaWH1yvivfCXjVzV/SPDEhMB3Q+DSurg==
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.12.2.tgz#6c307390136cf7a2278d09cec63b136dfc6e6da7"
+  integrity sha512-vMJzPewAlRyOgxV2dU0Cuz2O8zzzx9VYtbJOaBgXFeLc4IV/Eg50n4LowmehOOR61S8ZMpc2K5Sa7g6A4jfkUw==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.4"
@@ -5801,9 +5803,9 @@ hermes-parser@0.28.1:
     hermes-estree "0.28.1"
 
 hls.js@^1.4.10:
-  version "1.6.12"
-  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.6.12.tgz#a130d2b902bd1e1a30b4d9db9676f3dba3187629"
-  integrity sha512-Pz+7IzvkbAht/zXvwLzA/stUHNqztqKvlLbfpq6ZYU68+gZ+CZMlsbQBPUviRap+3IQ41E39ke7Ia+yvhsehEQ==
+  version "1.6.13"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.6.13.tgz#fcf2823f17aaf9127b9011ef135cae5d2520ab75"
+  integrity sha512-hNEzjZNHf5bFrUNvdS4/1RjIanuJ6szpWNfTaX5I6WfGynWXGT7K/YQLYtemSvFExzeMdgdE4SsyVLJbd5PcZA==
 
 hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
