@@ -1,5 +1,5 @@
 PODS:
-  - amity-react-native-social-ui-kit (4.0.0-beta-29):
+  - amity-react-native-social-ui-kit (4.0.0-RC1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2312,7 +2312,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  amity-react-native-social-ui-kit: 895c467d28066ce4efc7e9aec453901765216bc8
+  amity-react-native-social-ui-kit: 69d7f7e737d36eec5c3a842384c265a4434769cf
   ApiVideoLiveStream: 82c2877eb24a18fdf1ba381e840bba4514774bcb
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
