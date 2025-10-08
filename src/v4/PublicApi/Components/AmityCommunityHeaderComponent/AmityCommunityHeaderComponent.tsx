@@ -150,8 +150,8 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
             community={community}
             style={styles.infoWrap}
             onPress={() => {
-              navigation.navigate('CommunityMemberDetail', {
-                communityId: community.communityId,
+              navigation.navigate('CommunityMembership', {
+                community: community,
               });
             }}
           />

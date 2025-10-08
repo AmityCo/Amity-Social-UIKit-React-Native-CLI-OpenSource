@@ -144,11 +144,11 @@ export default function AmitySocialUIKitV4Navigator() {
             <Stack.Screen
               name="CommunityMemberDetail"
               component={CommunityMemberDetail}
-              options={{
-                headerLeft: () => <BackButton />,
-                headerTitleAlign: 'center',
-                title: 'Member',
-              }}
+              // options={{
+              //   headerLeft: () => <BackButton />,
+              //   headerTitleAlign: 'center',
+              //   title: 'Member',
+              // }}
             />
             <Stack.Screen
               name="CommunityPendingRequest"

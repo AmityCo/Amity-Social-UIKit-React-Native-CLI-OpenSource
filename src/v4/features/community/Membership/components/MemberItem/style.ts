@@ -24,6 +24,8 @@ export const useStyles = () => {
     userAvatar: {
       width: 40,
       height: 40,
+      borderRadius: 100,
+      objectFit: 'cover',
     },
     userName: {
       color: theme.colors.base,
