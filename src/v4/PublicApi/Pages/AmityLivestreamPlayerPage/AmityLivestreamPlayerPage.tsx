@@ -7,8 +7,8 @@ import {
 } from 'react-native';
 import { useStyles } from './styles';
 // @ts-ignore
-import { AmityStreamPlayer } from '@amityco/video-player-react-native';
-import LiveStreamEndThumbnail from '../../../component/LivestreamContent/LivestreamEndedThumbnail';
+// import { AmityStreamPlayer } from '@amityco/video-player-react-native';
+// import LiveStreamEndThumbnail from '../../../component/LivestreamContent/LivestreamEndedThumbnail';
 import { Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import {
@@ -143,7 +143,7 @@ function AmityLiveStreamPlayerPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {livestream.status === LivestreamStatus.ended ? (
+      {/* {livestream.status === LivestreamStatus.ended ? (
         <>
           <View style={styles.steamEndContainer}>
             <LiveStreamEndThumbnail />
@@ -167,7 +167,7 @@ function AmityLiveStreamPlayerPage() {
           onBack={navigation.goBack}
           status={livestream.status === 'live' ? 'live' : 'recorded'}
         />
-      )}
+      )} */}
       {livestream.status === LivestreamStatus.live && reconnecting && (
         <View style={styles.connecting}>
           <CircularProgressIndicator size={40} strokeWidth={2} />

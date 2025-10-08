@@ -5,26 +5,29 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { BackHandler, View, StyleSheet, StatusBar } from 'react-native';
 const Modal = ({ visible, children, presentationStyle, onRequestClose }) => {
   if (!visible) {
     return null;
   }
+
+  const handleBackPress = useCallback(() => {
+    if (typeof onRequestClose === 'function') {
+      onRequestClose();
+    }
+    return true;
+  }, [onRequestClose]);
+
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
-      () => {
-        if (typeof onRequestClose === 'function') {
-          onRequestClose();
-        }
-        return true;
-      }
+      handleBackPress
     );
     return () => {
       backHandler.remove();
     };
-  }, []);
+  }, [handleBackPress]);
   const statusBarHidden = presentationStyle === 'overFullScreen';
   const statusBarStateStyle =
     presentationStyle === 'overFullScreen'

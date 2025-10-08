@@ -46,6 +46,8 @@ const AmityCommunityFeedComponent = forwardRef<
     targetId: communityId,
     targetType: 'community',
     limit: pageLimit,
+    // matchingOnlyParentPost: true,
+    // dataTypes: ['text', 'image', 'video', 'poll'],
   });
 
   const pinnedPostCollection = usePinnedPostCollection({

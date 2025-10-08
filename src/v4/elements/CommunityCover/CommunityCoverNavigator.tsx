@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import BackButtonIconElement from '../../PublicApi/Elements/BackButtonIconElement/BackButtonIconElement';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -53,12 +53,18 @@ const CommunityCoverNavigator: FC<CommunityCoverNavigatorProps> = ({
   });
   return (
     <View style={styles.container}>
-      <Pressable
+      <TouchableOpacity
         style={styles.button}
         onPress={() => {
+          if (!navigation.canGoBack()) {
+            navigation.navigate('Home');
+            return;
+          }
+
           if (pop === 2) {
             return navigation.pop(2);
           }
+          console.log('Back pressed');
           navigation.goBack();
         }}
       >
@@ -67,7 +73,7 @@ const CommunityCoverNavigator: FC<CommunityCoverNavigatorProps> = ({
           componentID={componentId}
           style={styles.buttonIcon}
         />
-      </Pressable>
+      </TouchableOpacity>
       {community?.isJoined && (
         <Pressable
           style={styles.button}

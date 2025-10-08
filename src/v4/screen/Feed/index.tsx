@@ -109,6 +109,8 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
           sortBy: 'lastCreated',
           limit: 10,
           feedType: 'published',
+          matchingOnlyParentPost: true,
+          dataTypes: ['text', 'image', 'video', 'poll'],
         },
         async ({ data, error, loading, hasNextPage, onNextPage: nextPage }) => {
           if (!error && !loading) {

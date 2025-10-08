@@ -72,10 +72,14 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
 
   const onPressCreateStory = useCallback(() => {
     hasStoryPermission &&
-      navigation.navigate('CreateStory', {
-        targetId: communityId,
-        targetType: 'community',
-      });
+      navigation.navigate(
+        'CreateStory',
+        {
+          targetId: communityId,
+          targetType: 'community',
+        },
+        { pop: true }
+      );
   }, [communityId, hasStoryPermission, navigation]);
 
   const onPressStoryView = useCallback(() => {
@@ -88,9 +92,13 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
   }, [onPressCreateStory]);
   const onPressCommunityName = useCallback(() => {
     setViewStory(false);
-    navigation.navigate('CommunityProfilePage', {
-      communityId: communityId,
-    });
+    navigation.navigate(
+      'CommunityProfilePage',
+      {
+        communityId: communityId,
+      },
+      { pop: true }
+    );
   }, [communityId, navigation]);
 
   const renderCommunityStory = () => {

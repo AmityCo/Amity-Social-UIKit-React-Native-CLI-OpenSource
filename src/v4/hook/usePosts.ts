@@ -8,12 +8,14 @@ export const usePosts = ({
   feedType,
   dataTypes,
   limit = 20,
+  matchingOnlyParentPost,
 }: {
   targetType: Amity.PostTargetType;
   targetId: string;
   feedType?: Amity.QueryPosts['feedType'];
   dataTypes?: Amity.PostContentType[];
   limit?: number;
+  matchingOnlyParentPost?: boolean;
 }) => {
   const [items, setItems] = useState<Amity.Post[]>();
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,14 @@ export const usePosts = ({
   useFocusEffect(
     useCallback(() => {
       const unsubscribe = PostRepository.getPosts(
-        { targetType, limit, targetId, feedType, dataTypes },
+        {
+          targetType,
+          limit,
+          targetId,
+          feedType,
+          dataTypes,
+          matchingOnlyParentPost,
+        },
         ({
           error,
           loading: isLoading,
@@ -42,7 +51,14 @@ export const usePosts = ({
         }
       );
       return unsubscribe;
-    }, [targetType, targetId, limit, feedType, dataTypes])
+    }, [
+      targetType,
+      targetId,
+      limit,
+      feedType,
+      dataTypes,
+      matchingOnlyParentPost,
+    ])
   );
 
   return { posts: items, onNextPage, loading };

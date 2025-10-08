@@ -34,9 +34,13 @@ const AmityRecommendedCommunityComponent: FC<
 
   const onPressCommunity = useCallback(
     ({ communityId }: { communityId: string }) => {
-      navigation.navigate('CommunityProfilePage', {
-        communityId,
-      });
+      navigation.navigate(
+        'CommunityProfilePage',
+        {
+          communityId,
+        },
+        { pop: true }
+      );
     },
     [navigation]
   );

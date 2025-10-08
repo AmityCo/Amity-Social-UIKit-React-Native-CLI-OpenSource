@@ -140,11 +140,15 @@ export default function CommunityHome({
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('CommunitySetting', {
-              communityId,
-              communityName,
-              isModerator,
-            });
+            navigation.navigate(
+              'CommunitySetting',
+              {
+                communityId,
+                communityName,
+                isModerator,
+              },
+              { pop: true }
+            );
           }}
         >
           <Image

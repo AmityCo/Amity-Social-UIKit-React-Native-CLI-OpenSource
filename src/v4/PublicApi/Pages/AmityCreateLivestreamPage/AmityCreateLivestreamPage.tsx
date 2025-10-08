@@ -18,11 +18,11 @@ import {
 } from 'react-native';
 import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  AmityStreamBroadcasterState,
-  AmityVideoBroadcaster,
-  // @ts-ignore
-} from '@amityco/video-broadcaster-react-native';
+// import {
+//   AmityStreamBroadcasterState,
+//   AmityVideoBroadcaster,
+//   // @ts-ignore
+// } from '@amityco/video-broadcaster-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
 import { arrowDown } from '../../../../v4/assets/icons';
@@ -77,7 +77,7 @@ function AmityCreateLivestreamPage() {
   const [isEnding, setIsEnding] = useState<boolean>(false);
   const [post, setPost] = useState<Amity.Post | null>(null);
   const [stream, setStream] = useState<Amity.Stream | null>(null);
-  const [timer, setTimer] = useState<number | null>(null);
+  // const [timer, setTimer] = useState<number | null>(null);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [androidPermission, setAndroidPermission] = useState<boolean>(false);
   const [iOSPermission, setIOSPermission] = useState<boolean>(true);
@@ -201,16 +201,16 @@ function AmityCreateLivestreamPage() {
     }
   };
 
-  const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
-    if (state === AmityStreamBroadcasterState.CONNECTED) {
-      setIsConnecting(false);
-      setReconnecting(false);
-      const intervalId = setInterval(() => {
-        setTime((prev) => prev + 1000);
-      }, 1000);
-      setTimer(intervalId);
-    }
-  };
+  // const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
+  //   if (state === AmityStreamBroadcasterState.CONNECTED) {
+  //     setIsConnecting(false);
+  //     setReconnecting(false);
+  //     const intervalId = setInterval(() => {
+  //       setTime((prev) => prev + 1000);
+  //     }, 1000);
+  //     setTimer(intervalId);
+  //   }
+  // };
 
   const confirmEndStreamAlert = () => {
     Alert.alert(
@@ -248,7 +248,7 @@ function AmityCreateLivestreamPage() {
           setTitle('');
           setDescription('');
           setTime(0);
-          clearInterval(timer);
+          // clearInterval(timer);
           setIsEnding(false);
           setReconnecting(false);
 
@@ -259,7 +259,12 @@ function AmityCreateLivestreamPage() {
         }
       }
     },
-    [post, stream, timer, navigation]
+    [
+      post,
+      stream,
+      // timer,
+      navigation,
+    ]
   );
 
   useEffect(() => {
@@ -347,14 +352,14 @@ function AmityCreateLivestreamPage() {
       )}
       {hasPermission ? (
         <View style={styles.cameraContainer}>
-          <View style={styles.camera}>
+          {/* <View style={styles.camera}>
             <AmityVideoBroadcaster
               ref={streamRef}
               bitrate={2 * 1024 * 1024}
               onBroadcastStateChange={onBroadcastStateChange}
               resolution={{ width: 1280, height: 720 }}
             />
-          </View>
+          </View> */}
         </View>
       ) : (
         <View style={styles.permission}>

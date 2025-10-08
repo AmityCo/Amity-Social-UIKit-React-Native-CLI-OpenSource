@@ -37,9 +37,13 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
     ({ communityId }: { communityId: string }) => {
       if (AmityMyCommunitiesComponentBehaviour.onPressCommunity)
         return AmityMyCommunitiesComponentBehaviour.onPressCommunity();
-      navigation.navigate('CommunityProfilePage', {
-        communityId,
-      });
+      navigation.navigate(
+        'CommunityProfilePage',
+        {
+          communityId,
+        },
+        { pop: true }
+      );
     },
     [navigation, AmityMyCommunitiesComponentBehaviour]
   );
