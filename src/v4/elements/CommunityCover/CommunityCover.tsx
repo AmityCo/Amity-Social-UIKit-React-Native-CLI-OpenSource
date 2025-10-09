@@ -12,6 +12,7 @@ type CommunityCoverProps = {
   community: Amity.Community;
   smallHeader?: boolean;
   hideButtons?: boolean;
+  isFromComponent?: boolean;
 };
 
 const CommunityCover: FC<CommunityCoverProps> = ({
@@ -20,6 +21,7 @@ const CommunityCover: FC<CommunityCoverProps> = ({
   community,
   smallHeader = false,
   hideButtons = false,
+  isFromComponent
 }) => {
   const { apiRegion } = useAuth();
   const elementId = ElementID.community_cover;
@@ -77,6 +79,7 @@ const CommunityCover: FC<CommunityCoverProps> = ({
           pageId={pageId}
           componentId={componentId}
           communityId={community.communityId}
+          isFromComponent={isFromComponent}
         />
       )}
     </View>

@@ -13,7 +13,6 @@ import useAuth from '../../hooks/useAuth';
 
 import CategoryList from '../../screens/CategorytList';
 import CommunityList from '../../screens/CommunityList';
-import CommunityHome from '../screen/CommunityHome';
 import { CommunitySetting } from '../../screens/CommunitySetting/index';
 import CommunityMemberDetail from '../../screens/CommunityMemberDetail/CommunityMemberDetail';
 import AmitySocialHomePage from '../PublicApi/Pages/AmitySocialHomePage/AmitySocialHomePage';
@@ -53,6 +52,10 @@ import EditPost from '../screen/EditPost/EditPost';
 import AmityExploreComponent from '../PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 import LivestreamPlayer from '../../screens/LivestreamPlayer';
 import PollPostComposer from '../screen/PollPostComposer';
+import AmityCommunityProfilePage from '../PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
+import LivestreamTerminated from '../screen/LivestreamTerminated';
+import PollTargetSelection from '../screen/PollTargetSelection';
+import LivestreamPostTargetSelection from '../screen/LivestreamPostTargetSelection';
 
 interface PageRendererProps {
   children: React.JSX.Element;
@@ -98,7 +101,7 @@ export default function PageRenderer({ children }: PageRendererProps) {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="Home"
+              name="AmitySocialHomePage"
               component={AmitySocialHomePage}
               options={{ headerShown: false }}
             />
@@ -134,13 +137,13 @@ export default function PageRenderer({ children }: PageRendererProps) {
             <Stack.Screen
               name="CategoryList"
               component={CategoryList}
-              options={({}) => ({
+              options={({ }) => ({
                 title: 'Category',
               })}
             />
             <Stack.Screen
-              name="CommunityHome"
-              children={() => <CommunityHome {...children.props} />}
+              name="CommunityProfilePage"
+              children={() => <AmityCommunityProfilePage {...children.props} />}
             />
             <Stack.Screen
               name="PendingPosts"
@@ -220,8 +223,9 @@ export default function PageRenderer({ children }: PageRendererProps) {
               name="UserProfile"
               component={UserProfile}
               options={{
-                title: '',
                 headerLeft: () => <BackButton />,
+                headerTitleAlign: 'center',
+                title: 'Member',
               }}
             />
             <Stack.Screen name="EditProfile" component={EditProfile} />
@@ -310,6 +314,19 @@ export default function PageRenderer({ children }: PageRendererProps) {
                 name="LivestreamPlayer"
                 component={LivestreamPlayer}
                 options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="LivestreamTerminated"
+                component={LivestreamTerminated}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PollTargetSelection"
+                component={PollTargetSelection}
+              />
+              <Stack.Screen
+                name="LivestreamPostTargetSelection"
+                component={LivestreamPostTargetSelection}
               />
             </Stack.Group>
           </Stack.Navigator>
