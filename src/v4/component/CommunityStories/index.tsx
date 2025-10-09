@@ -15,7 +15,7 @@ import { ImageSizeState } from '../../enum/imageSizeState';
 import { useStoryPermission } from '../../hook/useStoryPermission';
 import useConfig from '../../hook/useConfig';
 import { ComponentID, ElementID, PageID } from '../../enum';
-import Modal from '~/v4/component/ModalBox';
+import Modal from 'react-native-modalbox';
 import AmityViewStoryPage from '../../PublicApi/Pages/AmityViewStoryPage/AmityViewStoryPage';
 import { Typography } from '../Typography/Typography';
 

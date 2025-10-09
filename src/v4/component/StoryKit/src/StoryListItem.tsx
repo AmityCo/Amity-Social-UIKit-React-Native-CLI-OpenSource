@@ -14,7 +14,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import Modal from '~/v4/component/ModalBox';
+import Modal from 'react-native-modalbox';
 import { usePrevious, isNullOrWhitespace } from './helpers';
 import {
   IUserStoryItem,

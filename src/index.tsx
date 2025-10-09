@@ -1,4 +1,4 @@
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules, Platform, BackHandler } from 'react-native';
 import AmityUiKitProvider from './providers/amity-ui-kit-provider';
 import AmityUiKitSocial from './routes/SocialNavigator';
 import AmityPageRenderer from './v4/routes/AmityPageRenderer';
@@ -163,3 +163,28 @@ export {
   AmityCommunityPinnedPostComponent,
   AmityPendingPostListComponent,
 };
+
+// Polyfill for BackHandler compatibility with older libraries like react-native-modalbox
+// In React Native 0.65+, BackHandler.removeEventListener was removed
+// This polyfill maintains backward compatibility
+if (!(BackHandler as any).removeEventListener) {
+  const listeners = new Map();
+  const originalAddEventListener = BackHandler.addEventListener;
+
+  BackHandler.addEventListener = (eventName, handler) => {
+    const subscription = originalAddEventListener(eventName, handler);
+    listeners.set(handler, subscription);
+    return subscription;
+  };
+
+  (BackHandler as any).removeEventListener = (
+    _eventName: string,
+    handler: () => boolean
+  ) => {
+    const subscription = listeners.get(handler);
+    if (subscription) {
+      subscription.remove();
+      listeners.delete(handler);
+    }
+  };
+}
