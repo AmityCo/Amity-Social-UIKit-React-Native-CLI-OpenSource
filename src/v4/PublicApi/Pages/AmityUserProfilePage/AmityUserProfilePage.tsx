@@ -15,6 +15,7 @@ import {
   type NativeScrollEvent,
   ScrollView,
   Pressable,
+  SafeAreaView,
 } from 'react-native';
 import { useStyles } from './styles';
 import {
@@ -329,7 +330,7 @@ function UserProfile({ userId }: UserProfilePageProps) {
     if (isMyProfile || isAccepted) navigation.navigate('FollowerList', user);
   }, [isAccepted, isMyProfile, navigation, user]);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         style={{ flex: 1 }}
         ref={scrollViewRef}
@@ -377,7 +378,7 @@ function UserProfile({ userId }: UserProfilePageProps) {
       {(client as Amity.Client).userId === userId && (
         <FloatingButton onPress={handleOnPressPostBtn} isGlobalFeed={false} />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

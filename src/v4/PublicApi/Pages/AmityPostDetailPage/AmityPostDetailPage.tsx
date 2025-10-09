@@ -185,7 +185,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const onPressBack = useCallback(() => {
     const routes = navigation.getState().routes;
     if (isFromComponent && routes.length === 1) {
-      navigation.navigate('Home');
+      navigation.navigate('AmitySocialHomePage');
     } else {
       if (routes[routes.length - 2]?.name === 'CreateLivestream')
         return navigation.pop(3);
