@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Modal from 'react-native-modalbox';
+import Modal from '~/v4/component/ModalBox';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
 import { useStyles } from '../styles';

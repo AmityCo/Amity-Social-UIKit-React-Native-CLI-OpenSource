@@ -1,6 +1,6 @@
 import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Dimensions, View, Platform, StyleSheet } from 'react-native';
-import Modal from 'react-native-modalbox';
+import Modal from '~/v4/component/ModalBox';
 
 import StoryListItem from './StoryListItem';
 import StoryCircleListView from './StoryCircleListView';

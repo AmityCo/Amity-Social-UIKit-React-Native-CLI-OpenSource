@@ -26,7 +26,7 @@ import {
   storyThreedotsMenu,
 } from '../../../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
-import Modal from 'react-native-modalbox';
+import Modal from '~/v4/component/ModalBox';
 import { ComponentID, ElementID, PageID } from '../../../../enum';
 import useConfig from '../../../../hook/useConfig';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
@@ -35,7 +35,7 @@ import { StoryRepository } from '@amityco/ts-sdk-react-native';
 import { NextOrPrevious } from '../../../../component/StoryKit';
 import { useTimeDifference } from '../../../../../hooks/useTimeDifference';
 import { STORY_DEFAULT_DURATION } from '../../../../../constants';
-import GestureRecognizer from 'react-native-swipe-gestures';
+import GestureRecognizer from '~/v4/component/SwipeGestures';
 import { useDispatch } from 'react-redux';
 import uiSlice from '../../../../../redux/slices/uiSlice';
 import { LoadingOverlay } from '../../../../../components/LoadingOverlay';

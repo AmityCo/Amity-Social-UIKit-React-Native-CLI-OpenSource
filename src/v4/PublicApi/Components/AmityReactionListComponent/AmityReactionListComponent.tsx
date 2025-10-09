@@ -15,7 +15,7 @@ import React, {
   useState,
 } from 'react';
 import { useStyles } from './styles';
-import Modal from 'react-native-modalbox';
+import Modal from '~/v4/component/ModalBox';
 import { useReaction } from '../../../hook';
 import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
 import { SvgXml } from 'react-native-svg';

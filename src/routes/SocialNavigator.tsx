@@ -27,7 +27,7 @@ import CreateCommunity from '../v4/screen/CreateCommunity';
 import PendingPosts from '../screens/PendingPosts';
 import type { MyMD3Theme } from '../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
-import { Image, TouchableOpacity } from 'react-native';
+import { BackHandler, Image, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../svg/svg-xml-list';
 import { useStyles } from '../routes/style';
@@ -50,6 +50,19 @@ export default function SocialNavigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
   const { isConnected } = useAuth();
   const theme = useTheme() as MyMD3Theme;
+
+  React.useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        // Custom logic: e.g., check if in a sheet/video/orientation mode
+        console.log('Global back press handled'); // Log to debug
+        return true; // Or false to let RN handle
+      }
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   const styles = useStyles();
   return (

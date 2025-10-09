@@ -4,7 +4,7 @@ import { useStyles } from './styles';
 import { useGlobalStory } from '../../hook/useGlobalStory';
 import ContentLoader, { Circle } from 'react-content-loader/native';
 import StoryCircleItem from './StoryCircleItem';
-import Modal from 'react-native-modalbox';
+import Modal from '~/v4/component/ModalBox';
 import StoryTargetView from './StoryTargetView';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
