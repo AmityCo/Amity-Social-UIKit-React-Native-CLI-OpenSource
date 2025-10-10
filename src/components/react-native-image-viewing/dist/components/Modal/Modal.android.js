@@ -7,10 +7,12 @@
  */
 import React, { useEffect } from 'react';
 import { BackHandler, View, StyleSheet, StatusBar } from 'react-native';
+
 const Modal = ({ visible, children, presentationStyle, onRequestClose }) => {
   if (!visible) {
     return null;
   }
+
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -21,15 +23,18 @@ const Modal = ({ visible, children, presentationStyle, onRequestClose }) => {
         return true;
       }
     );
+
     return () => {
       backHandler.remove();
     };
-  }, []);
+  }, [onRequestClose]);
+
   const statusBarHidden = presentationStyle === 'overFullScreen';
   const statusBarStateStyle =
     presentationStyle === 'overFullScreen'
       ? styles.overFullscreen
       : styles.defaultStyle;
+
   return (
     <>
       {statusBarHidden && <StatusBar hidden />}
@@ -37,6 +42,7 @@ const Modal = ({ visible, children, presentationStyle, onRequestClose }) => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   root: {
     ...StyleSheet.absoluteFillObject,
@@ -50,4 +56,5 @@ const styles = StyleSheet.create({
     top: StatusBar.currentHeight,
   },
 });
+
 export default Modal;

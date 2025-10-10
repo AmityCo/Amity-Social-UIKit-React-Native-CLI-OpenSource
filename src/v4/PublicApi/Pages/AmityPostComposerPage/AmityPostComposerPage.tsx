@@ -28,7 +28,7 @@ import {
 } from '../../../hook';
 import { useStyles } from './styles';
 import { AmityPostComposerMode, AmityPostComposerPageType } from '../../types';
-import { IDisplayImage, IMentionPosition } from '~/v4/types/type';
+import { IDisplayImage, IMentionPosition } from '../../../types/type';
 import CloseButtonIconElement from '../../Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
