@@ -12,17 +12,17 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
-  Linking,
+  // Linking,
   View,
   ImageStyle,
 } from 'react-native';
 import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  AmityStreamBroadcasterState,
-  AmityVideoBroadcaster,
-  // @ts-ignore
-} from '@amityco/video-broadcaster-react-native';
+// import {
+//   AmityStreamBroadcasterState,
+//   AmityVideoBroadcaster,
+//   // @ts-ignore
+// } from '@amityco/video-broadcaster-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
 import { arrowDown } from '../../../../v4/assets/icons';
@@ -35,7 +35,7 @@ import { CircularProgressIndicator } from '../../../component/CircularProgressIn
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import { PostRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import Button from '../../../component/Button/Button';
+// import Button from '../../../component/Button/Button';
 import { useRequestPermission } from '../../../../v4/hook/useCamera';
 import NetInfo from '@react-native-community/netinfo';
 import { LivestreamStatus } from '../../../enum/livestreamStatus';
@@ -77,7 +77,7 @@ function AmityCreateLivestreamPage() {
   const [isEnding, setIsEnding] = useState<boolean>(false);
   const [post, setPost] = useState<Amity.Post | null>(null);
   const [stream, setStream] = useState<Amity.Stream | null>(null);
-  const [timer, setTimer] = useState<number | null>(null);
+  const [timer] = useState<number | null>(null);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [androidPermission, setAndroidPermission] = useState<boolean>(false);
   const [iOSPermission, setIOSPermission] = useState<boolean>(true);
@@ -201,16 +201,16 @@ function AmityCreateLivestreamPage() {
     }
   };
 
-  const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
-    if (state === AmityStreamBroadcasterState.CONNECTED) {
-      setIsConnecting(false);
-      setReconnecting(false);
-      const intervalId = setInterval(() => {
-        setTime((prev) => prev + 1000);
-      }, 1000);
-      setTimer(intervalId);
-    }
-  };
+  // const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
+  //   if (state === AmityStreamBroadcasterState.CONNECTED) {
+  //     setIsConnecting(false);
+  //     setReconnecting(false);
+  //     const intervalId = setInterval(() => {
+  //       setTime((prev) => prev + 1000);
+  //     }, 1000);
+  //     setTimer(intervalId);
+  //   }
+  // };
 
   const confirmEndStreamAlert = () => {
     Alert.alert(
@@ -345,7 +345,7 @@ function AmityCreateLivestreamPage() {
           style={[styles.overlay, !hasPermission && styles.noPermissionOverlay]}
         />
       )}
-      {hasPermission ? (
+      {/* {hasPermission ? (
         <View style={styles.cameraContainer}>
           <View style={styles.camera}>
             <AmityVideoBroadcaster
@@ -374,7 +374,7 @@ function AmityCreateLivestreamPage() {
             </Typography.BodyBold>
           </Button>
         </View>
-      )}
+      )} */}
       {isEnding && (
         <View style={styles.connecting}>
           <CircularProgressIndicator size={40} strokeWidth={2} />

@@ -11,7 +11,7 @@ export { default as AmityMyCommunitiesSearchPage } from './PublicApi/Pages/Amity
 export { default as AmityAllCategoriesPage } from './PublicApi/Pages/AmityAllCategoriesPage/AmityAllCategoriesPage';
 export { default as AmityCommunitiesByCategoryPage } from './PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
 export { default as AmityCommunityProfilePage } from './PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
-export { default as AmityCreateLivestreamPage } from './PublicApi/Pages/AmityCreateLivestreamPage';
+// export { default as AmityCreateLivestreamPage } from './PublicApi/Pages/AmityCreateLivestreamPage';
 export { default as AmityLivestreamPostTargetSelectionPage } from './PublicApi/Pages/AmityLivestreamPostTargetSelectionPage';
 export { default as AmityLivestreamTerminatedPage } from './PublicApi/Pages/AmityLivestreamTerminatedPage';
 export { default as AmityLivestreamPlayerPage } from './PublicApi/Pages/AmityLivestreamPlayerPage';

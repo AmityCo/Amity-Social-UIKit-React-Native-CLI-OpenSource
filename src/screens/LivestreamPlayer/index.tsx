@@ -8,7 +8,7 @@ import {
 import { useStyles } from './styles';
 
 // @ts-ignore
-import { AmityStreamPlayer } from '@amityco/video-player-react-native';
+// import { AmityStreamPlayer } from '@amityco/video-player-react-native';
 
 import LivestreamEndedView from '../../v4/component/LivestreamContent/LivestreamEndedThumbnail';
 import { Animated } from 'react-native';
@@ -94,11 +94,11 @@ const LiveStreamPlayer = ({ navigation, route }) => {
               </View>
             ) : (
               <>
-                <AmityStreamPlayer
+                {/* <AmityStreamPlayer
                   stream={livestream}
                   status={livestream.status === 'live' ? 'live' : 'recorded'}
                   ref={ref}
-                />
+                /> */}
                 {livestream.status === 'live' && (
                   <>
                     <View style={styles.topSectionWrap}>
