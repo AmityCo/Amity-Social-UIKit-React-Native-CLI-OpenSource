@@ -67,7 +67,7 @@ export interface IPost {
 export interface IPostList {
   onDelete?: (postId: string) => void;
   onChange?: (postDetail: Amity.Post<any>) => void;
-  postDetail: Amity.Post<any>;
+  postDetail: Amity.Post<any> & { structureType?: string };
   postIndex?: number;
   isGlobalfeed?: boolean;
 }
@@ -124,6 +124,7 @@ export default function PostList({
     children: childrenPosts = [],
     editedAt,
     metadata,
+    structureType,
   } = postDetail ?? {};
   const mentionPosition = metadata?.mentioned;
 
@@ -410,6 +411,8 @@ export default function PostList({
       isFromGlobalfeed: isGlobalfeed,
     });
   };
+
+  if (structureType === 'liveStream') return null;
 
   return (
     <View key={postId} style={styles.postWrap}>
