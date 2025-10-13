@@ -73,7 +73,7 @@ export default function PageRenderer({ children }: PageRendererProps) {
           <Stack.Navigator
             id={undefined}
             screenOptions={{
-              headerShown: false,
+
               headerShadowVisible: false,
               contentStyle: {
                 backgroundColor: 'white',
@@ -144,6 +144,7 @@ export default function PageRenderer({ children }: PageRendererProps) {
             <Stack.Screen
               name="CommunityProfilePage"
               children={() => <AmityCommunityProfilePage {...children.props} />}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="PendingPosts"
@@ -221,11 +222,10 @@ export default function PageRenderer({ children }: PageRendererProps) {
             />
             <Stack.Screen
               name="UserProfile"
-              component={UserProfile}
+              children={() => <UserProfile {...children.props} />}
               options={{
-                headerLeft: () => <BackButton />,
                 headerTitleAlign: 'center',
-                title: 'Member',
+                title: '',
               }}
             />
             <Stack.Screen name="EditProfile" component={EditProfile} />

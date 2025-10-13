@@ -31,7 +31,7 @@ const PostDetail: React.FC<IPostDetailPage> = ({ defaultPostId }) => {
   return (
     <AmityPostDetailPage
       showEndPopup={route?.params?.showEndPopup}
-      isFromComponent={!!defaultPostId}
+      isFromComponent={!!defaultPostId && !postIdFromRoute }
       postId={postId}
     />
   );
