@@ -16,6 +16,8 @@ export const MAX_POLL_QUESTION_LENGTH = 500;
 
 export const MAX_POLL_ANSWER_LENGTH = 60;
 
+export const MAXIMUM_POST_CHARACTERS = 50000;
+
 export const ERROR_CODE = {
   BLOCKED_WORD: '400308',
   BLOCKED_URL: '400309',
@@ -30,6 +32,14 @@ export const COMMENT_ERROR_MESSAGE = {
   BLOCKED_URL:
     "Your comment contains a link that's not allowed. Please review and delete it.",
   GENERIC: 'Oops, something went wrong',
+};
+
+export const POST_ERROR_MESSAGE = {
+  BLOCKED_WORD: "Your post wasn't posted as it contains an inappropriate word.",
+  BLOCKED_URL:
+    "Your post wasn't posted as it contains a link that's not allowed.",
+  GENERIC_CREATE: 'Failed to create post. Please try again.',
+  GENERIC_EDIT: 'Failed to edit post. Please try again.',
 };
 
 export const MAX_COMMUNITY_NAME_LENGTH = 30;
