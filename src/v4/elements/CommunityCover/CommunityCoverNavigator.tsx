@@ -51,11 +51,27 @@ const CommunityCoverNavigator: FC<CommunityCoverNavigatorProps> = ({
       tintColor: 'white',
     },
   });
+
+  const isPreviousRouteCommunityPostPermissionOrEditCommunity = () => {
+    const navigationState = navigation.getState();
+    const routes = navigationState.routes;
+    const currentIndex = navigationState.index;
+    const previousRoute = currentIndex > 0 ? routes[currentIndex - 1] : null;
+
+    return (
+      previousRoute?.name === 'CommunityPostPermission' ||
+      previousRoute?.name === 'EditCommunity'
+    );
+  };
   return (
     <View style={styles.container}>
       <Pressable
         style={styles.button}
         onPress={() => {
+          if (isPreviousRouteCommunityPostPermissionOrEditCommunity()) {
+            return navigation.pop(4);
+          }
+
           if (pop === 2) {
             return navigation.pop(2);
           }
