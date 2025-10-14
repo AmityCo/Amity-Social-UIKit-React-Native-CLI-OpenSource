@@ -146,4 +146,3 @@ export function useCommunitySetting(community: Amity.Community) {
     handleCommunityNotificationSetting,
   };
 }
-81200;
