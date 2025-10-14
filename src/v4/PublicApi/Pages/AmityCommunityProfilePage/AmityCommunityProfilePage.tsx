@@ -19,7 +19,7 @@ import React, {
 } from 'react';
 import { useStyles } from './styles';
 import { ComponentID, PageID } from '../../../enum';
-import { useAmityPage, useCommunity } from '../../../hook';
+import { useAmityPage, useCommunity, useStoryPermission } from '../../../hook';
 import AmityCommunityHeaderComponent from '../../Components/AmityCommunityHeaderComponent/AmityCommunityHeaderComponent';
 import AmityCommunityFeedComponent, {
   AmityCommunityFeedRef,
@@ -251,6 +251,8 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
       NativeStackNavigationProp<RootStackParamList, 'CreatePost'>
     >();
 
+  const hasStoryPermission = useStoryPermission(communityId);
+
   const openBottomSheet = () => setIsBottomSheetVisible(true);
 
   const closeBottomSheet = () => setIsBottomSheetVisible(false);
@@ -349,13 +351,16 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
               <SvgXml xml={post()} width={24} height={24} />
               <Text style={styles.bottomSheetOptionText}>Post</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleCreateStory}
-              style={styles.bottomSheetOption}
-            >
-              <SvgXml width={24} height={24} xml={story()} />
-              <Text style={styles.bottomSheetOptionText}>Story</Text>
-            </TouchableOpacity>
+            {hasStoryPermission && (
+              <TouchableOpacity
+                onPress={handleCreateStory}
+                style={styles.bottomSheetOption}
+              >
+                <SvgXml width={24} height={24} xml={story()} />
+                <Text style={styles.bottomSheetOptionText}>Story</Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               onPress={handleCreatePoll}
               style={styles.bottomSheetOption}
