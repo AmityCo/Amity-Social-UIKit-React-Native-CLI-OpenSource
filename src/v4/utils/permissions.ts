@@ -47,3 +47,16 @@ export const isAdmin = (roles: string[] = []) => {
 
   return roles.includes(MemberRoles.ADMIN);
 };
+
+export const checkStoryPermission = (
+  client: Amity.Client,
+  communityId: string
+) => {
+  if (!client || !communityId) return false;
+
+  const communityPermission = client
+    .hasPermission(Permissions.ManageStoryPermission)
+    .community(communityId);
+
+  return !!communityPermission;
+};
