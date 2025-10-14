@@ -68,7 +68,7 @@ const CommunityCoverNavigator: FC<CommunityCoverNavigatorProps> = ({
       <Pressable
         style={styles.button}
         onPress={() => {
-          if (isPreviousRouteCommunityPostPermissionOrEditCommunity) {
+          if (isPreviousRouteCommunityPostPermissionOrEditCommunity()) {
             return navigation.pop(4);
           }
 
