@@ -20,7 +20,7 @@ export default function useSocialSettings() {
     queryKey: ['asc-uikit', 'SocialSettings'],
     queryFn: async (): Promise<SocialSettings | null> => {
       const settings = await client?.getSocialSettings();
-      return settings as SocialSettings;
+      return settings;
     },
     enabled: !!client,
     staleTime: STALE_TIME_5_MINUTES,
