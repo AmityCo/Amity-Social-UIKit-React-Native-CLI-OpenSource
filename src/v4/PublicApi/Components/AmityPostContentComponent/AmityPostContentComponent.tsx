@@ -34,7 +34,7 @@ import AnnouncementBadge from '~/v4/elements/AnnouncementBadge';
 import { Typography } from '~/v4/component/Typography/Typography';
 
 type AmityPostContentComponentProps = {
-  post: Amity.Post;
+  post: Amity.Post & { structureType?: string };
   pageId?: PageID;
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;
   isCommunityNameShown?: boolean;
@@ -157,6 +157,8 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
       category: category,
     });
   };
+
+  if (post?.structureType === 'liveStream') return null;
 
   return (
     <View>
