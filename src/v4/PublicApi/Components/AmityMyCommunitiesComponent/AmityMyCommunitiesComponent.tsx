@@ -44,6 +44,10 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
     [navigation, AmityMyCommunitiesComponentBehaviour]
   );
 
+  const onPressCreateCommunity = useCallback(() => {
+    navigation.navigate('CreateCommunity');
+  }, [navigation]);
+
   // Empty state cannot be customized
   const renderEmptyState = useCallback(() => {
     return (
@@ -60,6 +64,7 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
           icon={plus()}
           themeStyle={themeStyles}
           style={styles.createCommunityButton}
+          onPress={onPressCreateCommunity}
         >
           <Typography.BodyBold style={styles.createCommunityButtonText}>
             {'Create community'}
@@ -67,7 +72,7 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
         </Button>
       </View>
     );
-  }, [styles, themeStyles]);
+  }, [styles, themeStyles, onPressCreateCommunity]);
 
   if (isExcluded) return null;
 
