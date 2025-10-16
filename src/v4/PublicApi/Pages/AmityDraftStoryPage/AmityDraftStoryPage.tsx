@@ -146,6 +146,8 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
           hyperlink
         );
       }
+
+      showToast({ message: 'Successfully shared story.', type: 'success' });
     } catch (error) {
       showToast({
         message: 'Failed to share story. Please try again.',
@@ -153,7 +155,6 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
       });
     } finally {
       setLoading(false);
-      showToast({ message: 'Successfully shared story.', type: 'success' });
       onCreateStory();
     }
   }, [
