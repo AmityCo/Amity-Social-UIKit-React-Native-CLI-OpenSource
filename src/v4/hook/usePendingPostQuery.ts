@@ -26,7 +26,7 @@ export const usePendingPostQuery = () => {
     Error,
     DeletePostPayload
   >({
-    mutationFn: PostRepository.deletePost,
+    mutationFn: (postId) => PostRepository.deletePost(postId, false),
     onSuccess: () => {
       showToast({ type: 'success', message: 'Post deleted.' });
     },
