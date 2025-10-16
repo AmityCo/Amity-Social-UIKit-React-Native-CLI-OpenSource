@@ -12,31 +12,30 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
-  Linking,
+  // Linking,
   View,
   ImageStyle,
 } from 'react-native';
 import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  AmityStreamBroadcasterState,
-  AmityVideoBroadcaster,
-  // @ts-ignore
-} from '@amityco/video-broadcaster-react-native';
+// import {
+//   AmityStreamBroadcasterState,
+//   AmityVideoBroadcaster,
+//   // @ts-ignore
+// } from '@amityco/video-broadcaster-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
 import { arrowDown } from '../../../../v4/assets/icons';
 import { SvgXml } from 'react-native-svg';
-import { Typography } from '../../../../v4/component/Typography/Typography';
+import { Typography } from '../../../component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
-import bottomSheetSlice from '../../../../redux/slices/bottomSheetSlice';
-import { useDispatch } from 'react-redux';
-import { CircularProgressIndicator } from '../../../../v4/component/CircularProgressIndicator';
+import { useBottomSheet } from '~/redux/slices/bottomSheetSlice';
+import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import { PostRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import Button from '../../../../v4/component/Button/Button';
+// import Button from '../../../component/Button/Button';
 import { useRequestPermission } from '../../../../v4/hook/useCamera';
 import NetInfo from '@react-native-community/netinfo';
 import { LivestreamStatus } from '../../../enum/livestreamStatus';
@@ -66,7 +65,6 @@ const calculateTime = (time: number) => {
 function AmityCreateLivestreamPage() {
   const styles = useStyles();
   const streamRef = useRef<any>(null);
-  const dispatch = useDispatch();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const theme = useTheme<MyMD3Theme>();
@@ -79,7 +77,7 @@ function AmityCreateLivestreamPage() {
   const [isEnding, setIsEnding] = useState<boolean>(false);
   const [post, setPost] = useState<Amity.Post | null>(null);
   const [stream, setStream] = useState<Amity.Stream | null>(null);
-  const [timer, setTimer] = useState<number | null>(null);
+  const [timer] = useState<number | null>(null);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [androidPermission, setAndroidPermission] = useState<boolean>(false);
   const [iOSPermission, setIOSPermission] = useState<boolean>(true);
@@ -93,14 +91,10 @@ function AmityCreateLivestreamPage() {
     uploadedImage,
     removeSelectedImage,
     openImageGallery,
-  } = useImagePicker({
-    selectionLimit: 1,
-    mediaType: 'photo',
-    includeBase64: false,
-  });
+  } = useImagePicker();
 
   const { targetId, targetType, targetName, pop } = route.params;
-  const { closeBottomSheet, openBottomSheet } = bottomSheetSlice.actions;
+  const { openBottomSheet, closeBottomSheet } = useBottomSheet();
   const disabled = !title?.trim() || isConnecting || isLoading;
   const hasPermission =
     (Platform.OS === 'android' && androidPermission) ||
@@ -207,16 +201,16 @@ function AmityCreateLivestreamPage() {
     }
   };
 
-  const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
-    if (state === AmityStreamBroadcasterState.CONNECTED) {
-      setIsConnecting(false);
-      setReconnecting(false);
-      const intervalId = setInterval(() => {
-        setTime((prev) => prev + 1000);
-      }, 1000);
-      setTimer(intervalId);
-    }
-  };
+  // const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
+  //   if (state === AmityStreamBroadcasterState.CONNECTED) {
+  //     setIsConnecting(false);
+  //     setReconnecting(false);
+  //     const intervalId = setInterval(() => {
+  //       setTime((prev) => prev + 1000);
+  //     }, 1000);
+  //     setTimer(intervalId);
+  //   }
+  // };
 
   const confirmEndStreamAlert = () => {
     Alert.alert(
@@ -351,7 +345,7 @@ function AmityCreateLivestreamPage() {
           style={[styles.overlay, !hasPermission && styles.noPermissionOverlay]}
         />
       )}
-      {hasPermission ? (
+      {/* {hasPermission ? (
         <View style={styles.cameraContainer}>
           <View style={styles.camera}>
             <AmityVideoBroadcaster
@@ -373,16 +367,14 @@ function AmityCreateLivestreamPage() {
           <Button
             type="primary"
             themeStyle={theme}
-            onPress={() => {
-              Linking.openSettings();
-            }}
+            onPress={() => Linking.openSettings()}
           >
             <Typography.BodyBold style={styles.text}>
               Open settings
             </Typography.BodyBold>
           </Button>
         </View>
-      )}
+      )} */}
       {isEnding && (
         <View style={styles.connecting}>
           <CircularProgressIndicator size={40} strokeWidth={2} />
@@ -522,23 +514,25 @@ function AmityCreateLivestreamPage() {
                 activeOpacity={0.7}
                 style={styles.thumbnailButton}
                 onPress={() => {
-                  dispatch(
-                    openBottomSheet({
-                      height: 200,
-                      content: (
-                        <AmityThumbnailActionComponent
-                          onChangeThumbnail={() => {
-                            dispatch(closeBottomSheet());
-                            openImageGallery();
-                          }}
-                          onDeleteThumbnail={() => {
-                            dispatch(closeBottomSheet());
-                            removeSelectedImage();
-                          }}
-                        />
-                      ),
-                    })
-                  );
+                  openBottomSheet({
+                    height: 200,
+                    content: (
+                      <AmityThumbnailActionComponent
+                        onChangeThumbnail={() => {
+                          closeBottomSheet();
+                          openImageGallery({
+                            selectionLimit: 1,
+                            mediaType: 'photo',
+                            includeBase64: false,
+                          });
+                        }}
+                        onDeleteThumbnail={() => {
+                          closeBottomSheet();
+                          removeSelectedImage();
+                        }}
+                      />
+                    ),
+                  });
                 }}
               >
                 <View style={styles.thumbnailImageContainer}>
@@ -559,7 +553,13 @@ function AmityCreateLivestreamPage() {
               </TouchableOpacity>
             ) : (
               <AddThumbnailButton
-                onPress={openImageGallery}
+                onPress={() =>
+                  openImageGallery({
+                    selectionLimit: 1,
+                    mediaType: 'photo',
+                    includeBase64: false,
+                  })
+                }
                 pageId={PageID.create_livestream_page}
               />
             )}

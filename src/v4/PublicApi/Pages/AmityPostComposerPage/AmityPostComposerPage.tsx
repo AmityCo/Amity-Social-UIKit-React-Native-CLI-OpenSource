@@ -57,6 +57,8 @@ import { RootStackParamList } from '../../../routes/RouteParamList';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { useFile } from '../../../hook';
 import useMention from '../../../hook/useMention';
+import { getPostErrorMessage } from '../../../utils/errors';
+import { MAXIMUM_POST_CHARACTERS } from '../../../constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
@@ -84,7 +86,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const dispatch = useDispatch();
   const { addPostToGlobalFeed, updateByPostId } = globalfeedSlice.actions;
 
-  const isModerator = useIsCommunityModerator({
+  const { isCommunityModerator } = useIsCommunityModerator({
     communityId: community?.communityId,
     userId: (client as Amity.Client)?.userId,
   });
@@ -109,7 +111,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     : community?.displayName ?? 'My Timeline';
   const isInputValid =
     !isUploading &&
-    inputMessage.trim().length <= 50000 &&
+    inputMessage.trim().length <= MAXIMUM_POST_CHARACTERS &&
     (inputMessage.trim().length > 0 ||
       displayImages.length > 0 ||
       displayVideos.length > 0) &&
@@ -376,18 +378,17 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         targetType === 'community' &&
         (community?.postSetting === 'ADMIN_REVIEW_POST_REQUIRED' ||
           (community as Record<string, any>)?.needApprovalOnPostCreation) &&
-        !isModerator
+        !isCommunityModerator
       ) {
+        onPressClose();
         return Alert.alert(
           'Post submitted',
           'Your post has been submitted to the pending list. It will be reviewed by community moderator',
           [
             {
               text: 'OK',
-              onPress: () => onPressClose(),
             },
-          ],
-          { cancelable: false }
+          ]
         );
       }
       const formattedPost = await amityPostsFormatter([response]);
@@ -406,8 +407,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       return;
     } catch (error) {
       dispatch(hideToastMessage());
-      // comment out for now. will need later
-      // dispatch(showToastMessage({ toastMessage: error.message }));
+      const errorMessage = getPostErrorMessage(error, isEditMode);
+      dispatch(showToastMessage({ toastMessage: errorMessage }));
     }
   }, [
     addPostToGlobalFeed,
@@ -421,7 +422,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     inputMessage,
     isEditMode,
     isInputValid,
-    isModerator,
+    isCommunityModerator,
     mentionUsers,
     mentionsPosition,
     onPressClose,

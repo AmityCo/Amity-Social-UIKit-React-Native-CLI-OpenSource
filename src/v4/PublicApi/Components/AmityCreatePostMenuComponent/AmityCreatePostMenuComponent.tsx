@@ -1,7 +1,7 @@
 import React, { useCallback, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent, useStoryPermission } from '../../../hook';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -22,6 +22,8 @@ const AmityCreatePostMenuComponent = ({
   const { themeStyles } = useAmityComponent({ pageId, componentId });
 
   const { AmityCreatePostMenuComponentBehavior } = useBehaviour();
+
+  const hasStoryPermission = useStoryPermission();
 
   const styles = StyleSheet.create({
     container: {
@@ -60,14 +62,14 @@ const AmityCreatePostMenuComponent = ({
           navigation.navigate('PollTargetSelection');
         },
 
-        [AmityPostTargetSelectionPageType.livestream]: () => {
-          if (
-            AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage
-          ) {
-            AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage();
-          }
-          navigation.navigate('LivestreamPostTargetSelection');
-        },
+        // [AmityPostTargetSelectionPageType.livestream]: () => {
+        //   if (
+        //     AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage
+        //   ) {
+        //     AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage();
+        //   }
+        //   navigation.navigate('LivestreamPostTargetSelection');
+        // },
       };
       postTypeHandlers[postType]?.();
     },
@@ -82,28 +84,30 @@ const AmityCreatePostMenuComponent = ({
         elementId={ElementID.create_post_button}
         onClick={() => onPressCreatePost(AmityPostTargetSelectionPageType.post)}
       />
-      <ButtonWithIconElement
-        pageId={pageId}
-        componentId={componentId}
-        elementId={ElementID.create_story_button}
-        onClick={() =>
-          onPressCreatePost(AmityPostTargetSelectionPageType.story)
-        }
-      />
+      {hasStoryPermission && (
+        <ButtonWithIconElement
+          pageId={pageId}
+          componentId={componentId}
+          elementId={ElementID.create_story_button}
+          onClick={() =>
+            onPressCreatePost(AmityPostTargetSelectionPageType.story)
+          }
+        />
+      )}
       <ButtonWithIconElement
         pageId={pageId}
         componentId={componentId}
         elementId={ElementID.create_poll_button}
         onClick={() => onPressCreatePost(AmityPostTargetSelectionPageType.poll)}
       />
-      <ButtonWithIconElement
+      {/* <ButtonWithIconElement
         pageId={pageId}
         componentId={componentId}
         elementId={ElementID.create_livestream_button}
         onClick={() =>
           onPressCreatePost(AmityPostTargetSelectionPageType.livestream)
         }
-      />
+      /> */}
     </View>
   );
 };

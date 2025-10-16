@@ -4,7 +4,6 @@ import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
 import { useAmityElement } from '../../hook';
 import { Button } from '../../component/Button/Button';
 import { plus } from '../../assets/icons';
-import { SvgXml } from 'react-native-svg';
 
 type ExploreCreateCommunityType = {
   pageId?: PageID;
@@ -28,7 +27,7 @@ const ExploreCreateCommunity: FC<ExploreCreateCommunityType> = ({
     <Button
       testID={accessibilityId}
       type="primary"
-      icon={<SvgXml xml={plus()} />}
+      icon={plus()}
       themeStyle={themeStyles}
       {...props}
     >

@@ -23,6 +23,7 @@ export const useStyles = () => {
       backgroundColor: theme.colors.base,
     },
     message: {
+      flex: 1,
       color: theme.colors.background,
     },
   });

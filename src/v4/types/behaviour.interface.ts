@@ -1,5 +1,23 @@
 import { TabName } from '../enum';
 
+export type AddCategoryPageContext = {
+  categories: Amity.Category[];
+  onAddedAction: (categories: Amity.Category[]) => void;
+};
+
+export type AddMemberPageContext = {
+  users: Amity.User[];
+  onAddedAction: (users: Amity.User[]) => void;
+};
+
+export type CommunitySettingPageContext = {
+  community: Amity.Community;
+};
+
+export type UserProfilePageContext = {
+  userId: string;
+};
+
 export interface IBehaviour {
   AmitySocialHomePageBehaviour?: {
     onChooseTab?: (arg?: string) => void;
@@ -122,5 +140,38 @@ export interface IBehaviour {
       pop?: number;
       community?: Amity.Community;
     }) => void;
+  };
+  AmityCommunitySetupPageBehavior?: {
+    goToAddCategoryPage?: (context: AddCategoryPageContext) => void;
+    goToAddMemberPage?: (context: AddMemberPageContext) => void;
+    goToCommunityProfilePage?: (context: { communityId: string }) => void;
+  };
+  AmityCommunitySettingPageBehavior?: {
+    goToEditCommunityPage?: (context: CommunitySettingPageContext) => void;
+    goToMembershipPage?: (context: CommunitySettingPageContext) => void;
+    goToNotificationPage?: (context: CommunitySettingPageContext) => void;
+    goToPostPermissionPage?: (context: CommunitySettingPageContext) => void;
+    goToStorySettingPage?: (context: CommunitySettingPageContext) => void;
+  };
+  AmityCommunityMembershipPageBehavior?: {
+    goToAddMemberPage?: (context: AddMemberPageContext) => void;
+    goToUserProfilePage?: (context: UserProfilePageContext) => void;
+  };
+  AmityCommunityNotificationSettingPageBehavior?: {
+    goToPostsNotificationSettingPage?: (
+      context: CommunitySettingPageContext
+    ) => void;
+
+    goToCommentsNotificationSettingPage?: (
+      context: CommunitySettingPageContext
+    ) => void;
+
+    goToStoriesNotificationSettingPage?: (
+      context: CommunitySettingPageContext
+    ) => void;
+
+    goToLivestreamsNotificationSettingPage?: (
+      context: CommunitySettingPageContext
+    ) => void;
   };
 }

@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
+import { getCommentErrorMessage } from '~/v4/utils/errors';
 
 type ToastState = {
   visible?: boolean;
@@ -37,15 +38,23 @@ const toastSlice = createSlice({
 export default toastSlice;
 
 export const useToast = () => {
-  const toast = useSelector<RootState, ToastState>(
-    (state: RootState) => state.toast
-  );
-  const { showToast, hideToast } = toastSlice.actions;
   const dispatch = useDispatch();
+  const toast = useSelector<RootState, ToastState>((state) => state.toast);
+  const { showToast: $showToast, hideToast: $hideToast } = toastSlice.actions;
+
+  const hideToast = () => dispatch($hideToast());
+
+  const showToast = (payload: ToastState) => dispatch($showToast(payload));
+
+  const showCommentErrorToast = (error: Error) => {
+    const errorMessage = getCommentErrorMessage(error);
+    showToast({ message: errorMessage, type: 'informative' });
+  };
 
   return {
     toast,
-    hideToast: () => dispatch(hideToast()),
-    showToast: (payload: ToastState) => dispatch(showToast(payload)),
+    hideToast,
+    showToast,
+    showCommentErrorToast,
   };
 };

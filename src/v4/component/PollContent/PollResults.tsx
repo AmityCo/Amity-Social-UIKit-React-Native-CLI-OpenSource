@@ -21,7 +21,10 @@ export function PollResults({ options, totalVotes }: PollResultsProps) {
   const maxVoteCount = Math.max(...options.map((option) => option.voteCount));
 
   const percentage = (voteCount: number) =>
-    Math.min(totalVotes === 0 ? 0 : (voteCount / totalVotes) * 100, 100);
+    +Math.min(
+      totalVotes === 0 ? 0 : (voteCount / totalVotes) * 100,
+      100
+    ).toFixed(2);
 
   const voteBy = (option: Amity.PollAnswer) => {
     if (option.voteCount === 1 && option.isVotedByUser) return 'Voted by you';

@@ -35,6 +35,8 @@ import { useFile } from '../../../hook/useFile';
 import { defaultAvatarUri } from '../../../assets/index';
 import { getMediaTypeFromUrl } from '../../../../util/urlUtil';
 import { LoadingOverlay } from '../../../../components/LoadingOverlay';
+import mime from 'mime';
+import { useToast } from '~/v4/stores/slices/toast';
 
 const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
   targetId,
@@ -71,6 +73,8 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
     },
     configKey: 'hyperlink_button_icon',
   });
+
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!targetId || targetType !== 'community')
@@ -117,7 +121,10 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
 
   const onPressShareStory = useCallback(async () => {
     const formData = new FormData();
-    formData.append('files', mediaType);
+    formData.append('files', {
+      ...mediaType,
+      type: mime.getType(mediaType.uri),
+    });
 
     try {
       setLoading(true);
@@ -139,13 +146,26 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
           hyperlink
         );
       }
+
+      showToast({ message: 'Successfully shared story.', type: 'success' });
     } catch (error) {
-      Alert.alert('Create Story fail', error.message);
+      showToast({
+        message: 'Failed to share story. Please try again.',
+        type: 'informative',
+      });
     } finally {
       setLoading(false);
       onCreateStory();
     }
-  }, [hyperlink, imageDisplayMode, mediaType, onCreateStory, targetId, type]);
+  }, [
+    hyperlink,
+    imageDisplayMode,
+    mediaType,
+    onCreateStory,
+    showToast,
+    targetId,
+    type,
+  ]);
 
   const onHyperLinkSubmit = useCallback(
     (item?: { url: string; customText: string }) => {

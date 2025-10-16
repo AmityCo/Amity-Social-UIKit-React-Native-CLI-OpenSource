@@ -1,15 +1,10 @@
 import React, { memo, FC, useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import {
-  feed,
-  image,
-  // pin,
-  video,
-} from '../../../assets/icons';
-import IconTab from '../../../component/IconTab/IconTab';
-import { ComponentID, ElementID, PageID } from '../../../enum';
-import { useAmityElement } from '../../../hook';
+import { feed, image, pin, video } from '~/v4/assets/icons';
+import IconTab from '~/v4/component/IconTab/IconTab';
+import { ComponentID, ElementID, PageID } from '~/v4/enum';
+import { useAmityElement } from '~/v4/hook';
 
 export const enum CommunityProfileTab {
   community_feed = 'community_feed',
@@ -85,7 +80,7 @@ const AmityCommunityProfileTabComponent: FC<
           isActive={currentTab === CommunityProfileTab.community_feed}
         />
       </Pressable>
-      {/* <Pressable onPress={() => onTabChange(CommunityProfileTab.community_pin)}>
+      <Pressable onPress={() => onTabChange(CommunityProfileTab.community_pin)}>
         <IconTab
           themeStyles={themeStyles}
           icon={
@@ -97,7 +92,7 @@ const AmityCommunityProfileTabComponent: FC<
           }
           isActive={currentTab === CommunityProfileTab.community_pin}
         />
-      </Pressable> */}
+      </Pressable>
       <Pressable
         onPress={() => onTabChange(CommunityProfileTab.community_image_feed)}
       >

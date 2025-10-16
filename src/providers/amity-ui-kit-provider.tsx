@@ -16,6 +16,7 @@ import { lighten, darken, parseToHsl, hslToColorString } from 'polished';
 import { AdEngineProvider } from '../v4/providers/AdEngineProvider';
 import BottomSheetComponent from '../v4/component/BottomSheetComponent/BottomSheetComponent';
 import Toast from '../v4/component/Toast';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
@@ -55,6 +56,9 @@ export interface CustomColors {
 export interface MyMD3Theme extends MD3Theme {
   colors: MD3Theme['colors'] & CustomColors;
 }
+
+const queryClient = new QueryClient();
+
 export default function AmityUiKitProvider({
   userId,
   displayName,
@@ -137,30 +141,32 @@ export default function AmityUiKitProvider({
   };
 
   return (
-    <Provider store={store}>
-      <AuthContextProvider
-        userId={userId}
-        displayName={displayName || userId}
-        apiKey={apiKey}
-        apiRegion={apiRegion}
-        apiEndpoint={apiEndpoint}
-        authToken={authToken}
-        fcmToken={fcmToken}
-      >
-        <AdEngineProvider>
-          <ConfigProvider configs={configData}>
-            <BehaviourProvider behaviour={behaviour}>
-              <ExploreProvider>
-                <PaperProvider theme={globalTheme}>
-                  {children}
-                  <BottomSheetComponent />
-                  <Toast />
-                </PaperProvider>
-              </ExploreProvider>
-            </BehaviourProvider>
-          </ConfigProvider>
-        </AdEngineProvider>
-      </AuthContextProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <AuthContextProvider
+          userId={userId}
+          displayName={displayName || userId}
+          apiKey={apiKey}
+          apiRegion={apiRegion}
+          apiEndpoint={apiEndpoint}
+          authToken={authToken}
+          fcmToken={fcmToken}
+        >
+          <AdEngineProvider>
+            <ConfigProvider configs={configData}>
+              <BehaviourProvider behaviour={behaviour}>
+                <ExploreProvider>
+                  <PaperProvider theme={globalTheme}>
+                    {children}
+                    <BottomSheetComponent />
+                    <Toast />
+                  </PaperProvider>
+                </ExploreProvider>
+              </BehaviourProvider>
+            </ConfigProvider>
+          </AdEngineProvider>
+        </AuthContextProvider>
+      </Provider>
+    </QueryClientProvider>
   );
 }

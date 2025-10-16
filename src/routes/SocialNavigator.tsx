@@ -23,7 +23,7 @@ import { EditProfile } from '../screens/EditProfile/EditProfile';
 import UserProfileSetting from '../v4/screen/UserProfileSetting/UserProfileSetting';
 import CommunitySearch from '../screens/CommunitySearch';
 import AllMyCommunity from '../screens/AllMyCommunity';
-import CreateCommunity from '../screens/CreateCommunity';
+import CreateCommunity from '../v4/screen/CreateCommunity';
 import PendingPosts from '../screens/PendingPosts';
 import type { MyMD3Theme } from '../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';

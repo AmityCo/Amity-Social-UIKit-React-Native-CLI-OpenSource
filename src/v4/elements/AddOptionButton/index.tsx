@@ -31,7 +31,12 @@ function AddOptionButton({
       style={styles.addOptionButton}
       {...props}
     >
-      <SvgXml xml={plus(themeStyles.colors.base)} width="20" height="20" />
+      <SvgXml
+        xml={plus()}
+        width="20"
+        height="20"
+        color={themeStyles.colors.base}
+      />
       <Typography.BodyBold style={styles.addOptionLabel}>
         {config?.text as string}
       </Typography.BodyBold>

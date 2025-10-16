@@ -19,11 +19,11 @@ import { uploadImageFile } from '../../../src/providers/file-provider';
 import { StreamRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 
-import {
-  AmityVideoBroadcaster,
-  AmityStreamBroadcasterState,
-  // @ts-ignore
-} from '@amityco/video-broadcaster-react-native';
+// import {
+//   AmityVideoBroadcaster,
+//   AmityStreamBroadcasterState,
+//   // @ts-ignore
+// } from '@amityco/video-broadcaster-react-native';
 
 import { useRequestPermission } from '../../../src/v4/hook/useCamera';
 
@@ -57,14 +57,14 @@ const CreateLivestream = ({ navigation, route }) => {
   const [description, setDescription] = useState<string>('');
   const [stream, setStream] = useState<Amity.Stream | null>(null);
   const [isLive, setIsLive] = useState<boolean>(false);
-  const [timer, setTimer] = useState<number | null>(null);
+  const [timer] = useState<number | null>(null);
 
   const [time, setTime] = useState<number>(0);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isEnding, setIsEnding] = useState<boolean>(false);
   const [post, setPost] = useState<Amity.Post | null>(null);
 
-  const [androidPermission, setAndroidPermission] = useState<boolean>(false);
+  const [, setAndroidPermission] = useState<boolean>(false);
 
   const streamRef = useRef(null);
   const sheetRef = useRef<BottomSheetMethods>(null);
@@ -184,13 +184,13 @@ const CreateLivestream = ({ navigation, route }) => {
     } else emptyTitleAlert();
   }, [title, description, createStreamPost, imageUri, uploadFile]);
 
-  const onStreamConnectionSuccess = () => {
-    setIsConnecting(false);
-    const intervalId = setInterval(() => {
-      setTime((prev) => prev + 1000);
-    }, 1000);
-    setTimer(intervalId);
-  };
+  // const onStreamConnectionSuccess = () => {
+  //   setIsConnecting(false);
+  //   const intervalId = setInterval(() => {
+  //     setTime((prev) => prev + 1000);
+  //   }, 1000);
+  //   setTimer(intervalId);
+  // };
 
   const onStopStream = useCallback(async () => {
     if (stream) {
@@ -248,11 +248,11 @@ const CreateLivestream = ({ navigation, route }) => {
     ]);
   };
 
-  const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
-    if (state === AmityStreamBroadcasterState.CONNECTED) {
-      onStreamConnectionSuccess();
-    }
-  };
+  // const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
+  //   if (state === AmityStreamBroadcasterState.CONNECTED) {
+  //     onStreamConnectionSuccess();
+  //   }
+  // };
 
   useEffect(() => {
     if (Platform.OS === 'android') checkPermissionAndroid();
@@ -263,7 +263,7 @@ const CreateLivestream = ({ navigation, route }) => {
     <>
       <View style={styles.container}>
         <View style={styles.cameraContainer}>
-          {((Platform.OS === 'android' && androidPermission) ||
+          {/* {((Platform.OS === 'android' && androidPermission) ||
             Platform.OS === 'ios') && (
             <AmityVideoBroadcaster
               onBroadcastStateChange={onBroadcastStateChange}
@@ -274,7 +274,7 @@ const CreateLivestream = ({ navigation, route }) => {
               ref={streamRef}
               bitrate={2 * 1024 * 1024}
             />
-          )}
+          )} */}
 
           {isEnding ? (
             <View style={styles.endingStreamWrap}>

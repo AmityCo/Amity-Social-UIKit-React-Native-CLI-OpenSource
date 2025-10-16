@@ -1,8 +1,13 @@
 import {
   AmityPostComposerPageType,
   AmityStoryTabComponentEnum,
-} from '../PublicApi/types';
-import { AmityPostTargetSelectionPageType } from '../enum';
+} from '~/v4/PublicApi/types';
+import { AmityPostTargetSelectionPageType } from '~/v4/enum';
+import {
+  AddCategoryPageContext,
+  AddMemberPageContext,
+} from '~/v4/types/behaviour.interface';
+import { AmityPostCategory } from '~/v4/enum/AmityPostContentComponentStyle';
 
 export type RootStackParamList = {
   Home: { postIdCallBack?: string };
@@ -11,10 +16,6 @@ export type RootStackParamList = {
   CommunitySearch: undefined;
   CommunityMemberDetail: {
     communityId: string;
-  };
-  CommunitySetting: {
-    communityId: string;
-    communityName: string;
   };
   CommunityList: {
     categoryId: string;
@@ -33,6 +34,7 @@ export type RootStackParamList = {
   PostDetail: {
     postId: string;
     showEndPopup?: boolean;
+    category?: AmityPostCategory;
   };
   UserProfile: {
     userId: string;
@@ -44,11 +46,8 @@ export type RootStackParamList = {
   EditProfile: {
     user: Amity.User;
   };
-  EditCommunity: {
-    communityData: Amity.Community;
-  };
+
   AllMyCommunity: undefined;
-  CreateCommunity: undefined;
   VideoPlayer: { source: string };
   PendingPosts: { communityId: string; isModerator: boolean };
   ReactionList: { referenceId: string; referenceType: string };
@@ -90,6 +89,56 @@ export type RootStackParamList = {
     targetName?: string;
     pop?: number;
     community?: Amity.Community;
+  };
+
+  CreateCommunity: undefined;
+
+  EditCommunity: {
+    community: Amity.Community;
+  };
+
+  CommunityAddCategory: AddCategoryPageContext;
+
+  CommunityAddMember: AddMemberPageContext;
+
+  CommunityPendingRequest: {
+    community: Amity.Community;
+  };
+
+  CommunitySetting: {
+    community: Amity.Community;
+  };
+
+  CommunityMembership: {
+    community: Amity.Community;
+  };
+
+  CommunityPostPermission: {
+    community: Amity.Community;
+  };
+
+  CommunityStorySetting: {
+    community: Amity.Community;
+  };
+
+  CommunityNotificationSetting: {
+    community: Amity.Community;
+  };
+
+  CommunityPostsNotificationSetting: {
+    community: Amity.Community;
+  };
+
+  CommunityCommentsNotificationSetting: {
+    community: Amity.Community;
+  };
+
+  CommunityStoriesNotificationSetting: {
+    community: Amity.Community;
+  };
+
+  CommunityLivestreamsNotificationSetting: {
+    community: Amity.Community;
   };
 
   AmityStoryTabComponent: {

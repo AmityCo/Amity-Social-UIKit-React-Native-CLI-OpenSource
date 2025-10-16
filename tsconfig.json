@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "amity-react-native-social-ui-kit": ["./src/index"],
-      "~/*": ["./src/*"],
-      "react": ["./node_modules/@types/react"]
+      "~/*": ["./src/*"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
