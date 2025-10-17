@@ -5,10 +5,10 @@ import type { AuthContextInterface } from '../types/auth.interface';
 import { Alert, Platform } from 'react-native';
 import type { IAmityUIkitProvider } from './amity-ui-kit-provider';
 // @ts-ignore
-import { setupAmityVideoPlayer } from '@amityco/video-player-react-native';
+// import { setupAmityVideoPlayer } from '@amityco/video-player-react-native';
 
 export const AuthContext = React.createContext<AuthContextInterface>({
-  client: {},
+  client: null,
   isConnecting: false,
   error: '',
   login: () => {},
@@ -80,7 +80,7 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     const response = await Client.login(loginParam, sessionHandler);
     if (!response) return;
 
-    setupAmityVideoPlayer();
+    // setupAmityVideoPlayer();
 
     if (fcmToken) {
       try {

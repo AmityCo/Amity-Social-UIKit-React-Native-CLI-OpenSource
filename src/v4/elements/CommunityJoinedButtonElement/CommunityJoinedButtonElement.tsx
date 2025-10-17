@@ -2,7 +2,6 @@ import React, { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
 import { useAmityElement, useLeaveCommunity } from '../../hook';
 import { Button, BUTTON_SIZE } from '../../component/Button/Button';
-import { SvgXml } from 'react-native-svg';
 import { check } from '../../assets/icons';
 
 type CommunityJoinedButtonType = {
@@ -36,7 +35,7 @@ const CommunityJoinedButton: FC<CommunityJoinedButtonType> = ({
     <Button
       testID={accessibilityId}
       type="secondary"
-      icon={<SvgXml xml={check()} />}
+      icon={check()}
       themeStyle={themeStyles}
       onPress={handleLeaveCommunity}
       disabled={isPending}

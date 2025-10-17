@@ -19,7 +19,7 @@ import React, {
 } from 'react';
 import { useStyles } from './styles';
 import { ComponentID, PageID } from '../../../enum';
-import { useAmityPage, useCommunity } from '../../../hook';
+import { useAmityPage, useCommunity, useStoryPermission } from '../../../hook';
 import AmityCommunityHeaderComponent from '../../Components/AmityCommunityHeaderComponent/AmityCommunityHeaderComponent';
 import AmityCommunityFeedComponent, {
   AmityCommunityFeedRef,
@@ -39,9 +39,10 @@ import CommunityCreatePostButton from '../../../elements/CommunityCreatePostButt
 import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
-import { livestream, poll, post, story } from '../../../../v4/assets/icons';
+import { poll, post, story } from '../../../../v4/assets/icons';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import AmityCommunityPinnedPostComponent from '~/v4/PublicApi/Components/AmityCommunityPinnedPostComponent/AmityCommunityPinnedPostComponent';
 
 const AmityCommunityProfilePage = ({
   route,
@@ -137,7 +138,7 @@ const AmityCommunityProfilePage = ({
     );
   }, [pageId, currentTab]);
 
-  const renderTabComponent = useCallback(() => {
+  const renderTabComponent = () => {
     switch (currentTab) {
       case CommunityProfileTab.community_feed:
         return (
@@ -147,6 +148,8 @@ const AmityCommunityProfilePage = ({
             ref={feedRef}
           />
         );
+      case CommunityProfileTab.community_pin:
+        return <AmityCommunityPinnedPostComponent communityId={communityId} />;
       case CommunityProfileTab.community_image_feed:
         return (
           <AmityCommunityImageFeedComponent
@@ -166,10 +169,10 @@ const AmityCommunityProfilePage = ({
       default:
         return null;
     }
-  }, [currentTab, pageId, communityId]);
+  };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       {isScrolling && !isScrolledPastHeader && (
         <View style={styles.smallHeaderNavigationWrap}>
           <CommunityCoverNavigator
@@ -184,8 +187,8 @@ const AmityCommunityProfilePage = ({
           style={[
             styles.stickyHeaderContainer,
             {
-              opacity: animatedOpacity, // Use the animated value
-              transform: [{ translateY: animatedTranslateY }], // Add transform
+              opacity: animatedOpacity,
+              transform: [{ translateY: animatedTranslateY }],
             },
           ]}
         >
@@ -241,12 +244,14 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     AmityPostTargetSelectionPageBehavior,
     AmityPollTargetSelectionPageBehavior,
     AmityStoryTargetSelectionPageBehavior,
-    AmityLivestreamPostTargetSelectionPageBehavior,
+    // AmityLivestreamPostTargetSelectionPageBehavior,
   } = useBehaviour();
   const navigation =
     useNavigation<
       NativeStackNavigationProp<RootStackParamList, 'CreatePost'>
     >();
+
+  const hasStoryPermission = useStoryPermission(communityId);
 
   const openBottomSheet = () => setIsBottomSheetVisible(true);
 
@@ -285,26 +290,26 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
-  const handleCreateLivestream = () => {
-    closeBottomSheet();
+  // const handleCreateLivestream = () => {
+  //   closeBottomSheet();
 
-    if (
-      AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage
-    ) {
-      return AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage(
-        {
-          targetId: communityId,
-          targetType: 'community',
-          targetName: community?.displayName,
-        }
-      );
-    }
-    navigation.navigate('CreateLivestream', {
-      targetId: communityId,
-      targetType: 'community',
-      targetName: community?.displayName,
-    });
-  };
+  //   if (
+  //     AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage
+  //   ) {
+  //     return AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage(
+  //       {
+  //         targetId: communityId,
+  //         targetType: 'community',
+  //         targetName: community?.displayName,
+  //       }
+  //     );
+  //   }
+  //   navigation.navigate('CreateLivestream', {
+  //     targetId: communityId,
+  //     targetType: 'community',
+  //     targetName: community?.displayName,
+  //   });
+  // };
 
   const handleCreatePoll = () => {
     closeBottomSheet();
@@ -346,13 +351,16 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
               <SvgXml xml={post()} width={24} height={24} />
               <Text style={styles.bottomSheetOptionText}>Post</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleCreateStory}
-              style={styles.bottomSheetOption}
-            >
-              <SvgXml width={24} height={24} xml={story()} />
-              <Text style={styles.bottomSheetOptionText}>Story</Text>
-            </TouchableOpacity>
+            {hasStoryPermission && (
+              <TouchableOpacity
+                onPress={handleCreateStory}
+                style={styles.bottomSheetOption}
+              >
+                <SvgXml width={24} height={24} xml={story()} />
+                <Text style={styles.bottomSheetOptionText}>Story</Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               onPress={handleCreatePoll}
               style={styles.bottomSheetOption}
@@ -360,7 +368,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
               <SvgXml width={24} height={24} xml={poll()} color={colors.base} />
               <Text style={styles.bottomSheetOptionText}>Poll</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={handleCreateLivestream}
               style={styles.bottomSheetOption}
             >
@@ -371,7 +379,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
                 color={colors.base}
               />
               <Text style={styles.bottomSheetOptionText}>Livestream</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </Animated.View>
         </Pressable>
       </Modal>

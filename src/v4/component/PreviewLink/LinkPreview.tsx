@@ -4,7 +4,7 @@ import { useStyles } from './styles';
 import { PreviewDataImage } from './types';
 import { getPreviewData } from './utils';
 import { IMentionPosition } from '../../types/type';
-import RenderTextWithMention from '../../component/RenderTextWithMention/RenderTextWithMention';
+import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
 
 export interface LinkPreviewProps {
   text: string;

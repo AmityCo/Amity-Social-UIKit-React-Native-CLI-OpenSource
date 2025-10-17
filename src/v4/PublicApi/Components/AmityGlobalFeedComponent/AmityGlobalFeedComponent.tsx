@@ -40,7 +40,6 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 
   const handleLoadMore = () => {
     if (loading || !onNextPage) return;
-
     onNextPage?.();
   };
 

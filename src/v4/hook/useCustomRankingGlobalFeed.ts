@@ -41,12 +41,12 @@ export const useCustomRankingGlobalFeed = () => {
           return new Promise((resolve) => {
             const unsubscribe = PostRepository.getPost(
               post?.children[0],
-              ({ error, loading, data }) => {
-                if (!error && !loading) {
+              ({ error: $error, loading, data }) => {
+                if (!$error && !loading) {
                   if (
                     data?.dataType === 'image' ||
                     data?.dataType === 'video' ||
-                    data?.dataType === 'liveStream' ||
+                    // data?.dataType === 'liveStream' ||
                     data?.dataType === 'poll'
                   ) {
                     resolve(post);
@@ -70,12 +70,12 @@ export const useCustomRankingGlobalFeed = () => {
     return results.filter((result) => result !== null) as Amity.Post<any>[];
   };
 
-  const fetchCustomRancking = useCallback(() => {
+  const fetchCustomRanking = useCallback(() => {
     if (!isConnected) return null;
 
     return FeedRepository.getCustomRankingGlobalFeed(
       { limit: globalFeedPageLimit },
-      ({ data, loading, error: e, onNextPage }) => {
+      ({ data, loading, error: $error, onNextPage }) => {
         setFetching(loading);
 
         if (!loading && data) {
@@ -84,23 +84,23 @@ export const useCustomRankingGlobalFeed = () => {
 
         if (onNextPage) onNextPageRef.current = onNextPage;
 
-        if (e) setError(e);
+        if ($error) setError($error);
       }
     );
   }, [dispatch, setNewGlobalFeed, isConnected]);
 
   useEffect(() => {
-    unsubscribeRef.current = fetchCustomRancking();
+    unsubscribeRef.current = fetchCustomRanking();
 
     return () => unsubscribeRef.current?.();
-  }, [fetchCustomRancking]);
+  }, [fetchCustomRanking]);
 
   const refresh = useCallback(() => {
     if (unsubscribeRef.current) unsubscribeRef.current?.();
     onNextPageRef.current = null;
 
-    unsubscribeRef.current = fetchCustomRancking();
-  }, [fetchCustomRancking]);
+    unsubscribeRef.current = fetchCustomRanking();
+  }, [fetchCustomRanking]);
 
   return {
     loading: fetching,

@@ -1,18 +1,26 @@
-import { useMemo } from 'react';
-import { Permissions } from '../../constants';
 import useAuth from '../../hooks/useAuth';
+import { useUser } from './useUser';
+import useSocialSettings from '../core/hooks/useSocialSettings';
+import {
+  isAdmin,
+  isModerator,
+  checkStoryPermission,
+} from '../utils/permissions';
 
-export const useStoryPermission = (targetId: string) => {
+export function useStoryPermission(communityId?: string) {
   const { client } = useAuth();
-  const hasStoryPermission = useMemo(() => {
-    const userPermission = !!(client as Amity.Client)
-      .hasPermission(Permissions.ManageStoryPermission)
-      .currentUser();
-    if (userPermission) return true;
-    const communityPermission = !!(client as Amity.Client)
-      ?.hasPermission(Permissions.ManageStoryPermission)
-      .community(targetId);
-    return communityPermission;
-  }, [client, targetId]);
+  const { socialSettings } = useSocialSettings();
+  const user = useUser(client?.userId || '');
+
+  const isGlobalAdmin = isAdmin(user?.roles);
+  const isModeratorUser = isModerator(user?.roles);
+
+  const hasStoryPermission = !communityId
+    ? socialSettings?.story?.allowAllUserToCreateStory
+    : socialSettings?.story?.allowAllUserToCreateStory ||
+      isGlobalAdmin ||
+      isModeratorUser ||
+      checkStoryPermission(client, communityId);
+
   return hasStoryPermission;
-};
+}

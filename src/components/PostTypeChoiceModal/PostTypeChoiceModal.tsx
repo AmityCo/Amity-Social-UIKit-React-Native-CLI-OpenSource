@@ -9,7 +9,7 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import CreatePostChooseTargetModal from '../CreatePostChooseTargetModal/CreatePostChooseTargetModal';
 import {
-  livestreamIcon,
+  // livestreamIcon,
   pollIcon,
   postIconOutlined,
 } from '../../svg/svg-xml-list';
@@ -121,7 +121,7 @@ const PostTypeChoiceModal = () => {
     >
       <Pressable onPress={closeModal} style={styles.modalContainer}>
         <Animated.View style={[styles.modalContent, modalStyle]}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => onChooseType('livestream')}
             style={styles.modalRow}
           >
@@ -131,7 +131,7 @@ const PostTypeChoiceModal = () => {
               height="28"
             />
             <Text style={styles.postText}>Livestream</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             onPress={() => onChooseType('post')}
             style={styles.modalRow}

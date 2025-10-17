@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { useStyles } from './styles';
 // @ts-ignore
-import { AmityStreamPlayer } from '@amityco/video-player-react-native';
+// import { AmityStreamPlayer } from '@amityco/video-player-react-native';
 import LiveStreamEndThumbnail from '../../../component/LivestreamContent/LivestreamEndedThumbnail';
 import { Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
@@ -160,14 +160,13 @@ function AmityLiveStreamPlayerPage() {
             />
           </TouchableOpacity>
         </>
-      ) : (
-        <AmityStreamPlayer
-          ref={ref}
-          stream={livestream}
-          onBack={navigation.goBack}
-          status={livestream.status === 'live' ? 'live' : 'recorded'}
-        />
-      )}
+      ) : // <AmityStreamPlayer
+      //   ref={ref}
+      //   stream={livestream}
+      //   onBack={navigation.goBack}
+      //   status={livestream.status === 'live' ? 'live' : 'recorded'}
+      // />
+      null}
       {livestream.status === LivestreamStatus.live && reconnecting && (
         <View style={styles.connecting}>
           <CircularProgressIndicator size={40} strokeWidth={2} />

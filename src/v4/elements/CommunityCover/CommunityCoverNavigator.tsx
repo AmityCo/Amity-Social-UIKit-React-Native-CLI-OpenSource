@@ -51,11 +51,27 @@ const CommunityCoverNavigator: FC<CommunityCoverNavigatorProps> = ({
       tintColor: 'white',
     },
   });
+
+  const isPreviousRouteCommunityPostPermissionOrEditCommunity = () => {
+    const navigationState = navigation.getState();
+    const routes = navigationState.routes;
+    const currentIndex = navigationState.index;
+    const previousRoute = currentIndex > 0 ? routes[currentIndex - 1] : null;
+
+    return (
+      previousRoute?.name === 'CommunityPostPermission' ||
+      previousRoute?.name === 'EditCommunity'
+    );
+  };
   return (
     <View style={styles.container}>
       <Pressable
         style={styles.button}
         onPress={() => {
+          if (isPreviousRouteCommunityPostPermissionOrEditCommunity()) {
+            return navigation.pop(4);
+          }
+
           if (pop === 2) {
             return navigation.pop(2);
           }
@@ -68,20 +84,22 @@ const CommunityCoverNavigator: FC<CommunityCoverNavigatorProps> = ({
           style={styles.buttonIcon}
         />
       </Pressable>
-      <Pressable
-        style={styles.button}
-        onPress={() =>
-          navigation.navigate('EditCommunity', {
-            communityData: community,
-          })
-        }
-      >
-        <MenuButtonIconElement
-          pageID={pageId}
-          componentID={componentId}
-          style={styles.buttonIcon}
-        />
-      </Pressable>
+      {community?.isJoined && (
+        <Pressable
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate('CommunitySetting', {
+              community,
+            })
+          }
+        >
+          <MenuButtonIconElement
+            pageID={pageId}
+            componentID={componentId}
+            style={styles.buttonIcon}
+          />
+        </Pressable>
+      )}
     </View>
   );
 };

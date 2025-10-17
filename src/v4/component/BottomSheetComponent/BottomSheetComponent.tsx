@@ -1,47 +1,26 @@
+import { useStyles } from './styles';
 import React, { memo, useEffect, useRef } from 'react';
+import { useBottomSheet } from '~/redux/slices/bottomSheetSlice';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
-import bottomSheetSlice, {
-  BottomSheetState,
-} from '../../../redux/slices/bottomSheetSlice';
-import { useAmityComponent } from '../../hook';
-import { StyleSheet } from 'react-native';
 
 const BottomSheetComponent = () => {
-  const { closeBottomSheet } = bottomSheetSlice.actions;
-  const dispatch = useDispatch();
-  const { content, height, pageId, componentId } = useSelector(
-    (state: RootState) => state.bottomSheet as BottomSheetState
-  );
   const sheetRef = useRef<BottomSheetMethods>(null);
-  const { themeStyles } = useAmityComponent({
-    pageId,
-    componentId,
-  });
+  const { closeBottomSheet, content, open, height } = useBottomSheet();
 
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: themeStyles.colors.background,
-    },
-  });
+  const { styles } = useStyles();
 
   useEffect(() => {
-    if (content) {
-      sheetRef.current.open();
-    } else {
-      sheetRef.current.close();
-    }
-  }, [content]);
+    open ? sheetRef.current.open() : sheetRef.current.close();
+  }, [open]);
 
   return (
     <BottomSheet
       ref={sheetRef}
       height={height}
-      onClose={() => dispatch(closeBottomSheet())}
       closeOnDragDown
       closeOnBackdropPress
       style={styles.container}
+      onClose={closeBottomSheet}
     >
       {content}
     </BottomSheet>

@@ -17,8 +17,8 @@ import ImageView from '../../../components/react-native-image-viewing/dist';
 import { RootState } from '../../../redux/store';
 import { playBtn } from '../../../svg/svg-xml-list';
 import LivestreamContent from '../LivestreamContent';
-import { LinkPreview } from '../../component/PreviewLink';
-import RenderTextWithMention from '../../component/RenderTextWithMention/RenderTextWithMention';
+import { LinkPreview } from '../PreviewLink';
+import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
 import { IMentionPosition } from '../../../types';
 import PollContent from '../PollContent';
 
@@ -93,35 +93,52 @@ const PostContent: React.FC<IPostContent> = ({
           return { dataType: childrenPost?.dataType, data: childrenPost?.data };
         })
       );
+
+      const images: string[] = [];
+      const videos: IVideoPost[] = [];
+      const polls: { pollId: string }[] = [];
+      const livestreams: Amity.Stream['streamId'][] = [];
+
       response.forEach((item) => {
         if (item?.dataType === 'image' && item?.data?.fileId) {
           const url: string = `https://api.${apiRegion}.amity.co/api/v3/files/${item?.data.fileId}/download?size=medium`;
-          setImagePosts((prev) => {
-            return !prev.includes(url) ? [...prev, url] : [...prev];
-          });
+          if (!images.includes(url)) {
+            images.push(url);
+          }
         } else if (
           item?.dataType === 'video' &&
           item?.data?.videoFileId.original
         ) {
-          setVideoPosts((prev) => {
-            const isExisted = prev.some(
-              (video) =>
-                video.videoFileId.original === item.data.videoFileId.original
-            );
-            return !isExisted ? [...prev, item.data] : [...prev];
-          });
+          const isExisted = videos.some(
+            (video) =>
+              video.videoFileId.original === item.data.videoFileId.original
+          );
+          if (!isExisted) {
+            videos.push(item.data);
+          }
         } else if (item?.dataType === 'poll') {
-          setPollIds((prev) => {
-            return !prev.includes(item.data) ? [...prev, item.data] : [...prev];
-          });
+          if (!polls.some((poll) => poll.pollId === item.data.pollId)) {
+            polls.push(item.data);
+          }
         } else if (item?.dataType === 'liveStream') {
-          setLivestreamId((prev) => {
-            return !prev.includes(item.data)
-              ? [...prev, item.data.streamId]
-              : [...prev];
-          });
+          if (!livestreams.includes(item.data.streamId)) {
+            livestreams.push(item.data.streamId);
+          }
         }
       });
+
+      if (images.length > 0) {
+        setImagePosts(images);
+      }
+      if (videos.length > 0) {
+        setVideoPosts(videos);
+      }
+      if (polls.length > 0) {
+        setPollIds(polls);
+      }
+      if (livestreams.length > 0) {
+        setLivestreamId(livestreams);
+      }
     } catch (error) {
       console.log('error: ', error);
     }
@@ -317,38 +334,35 @@ const PostContent: React.FC<IPostContent> = ({
           )}
         </Pressable>
       )}
-      <View>
-        {pollIds.length > 0 ? (
-          <PollContent
-            post={post}
-            pollId={pollIds[0].pollId}
-            disabledPoll={disabledPoll}
-            showedAllOptions={showedAllOptions}
-          />
-        ) : livestreamId.length > 0 ? (
-          <LivestreamContent
-            post={post}
-            onPressPost={onPressPost}
-            streamId={livestreamId[0]}
-          />
-        ) : (
-          renderMediaPosts()
-        )}
-
-        <ImageView
-          images={
-            imagePostsFullSize.length > 0
-              ? imagePostsFullSize
-              : videoPostsFullSize
-          }
-          imageIndex={imageIndex}
-          visible={visibleFullImage}
-          onRequestClose={() => setIsVisibleFullImage(false)}
-          isVideoButton={videoPosts.length > 0 ? true : false}
-          videoPosts={videoPosts}
-          HeaderComponent={renderImageHeader}
+      {pollIds.length > 0 ? (
+        <PollContent
+          post={post}
+          pollId={pollIds[0].pollId}
+          disabledPoll={disabledPoll}
+          showedAllOptions={showedAllOptions}
         />
-      </View>
+      ) : livestreamId.length > 0 ? (
+        <LivestreamContent
+          post={post}
+          onPressPost={onPressPost}
+          streamId={livestreamId[0]}
+        />
+      ) : (
+        renderMediaPosts()
+      )}
+      <ImageView
+        images={
+          imagePostsFullSize.length > 0
+            ? imagePostsFullSize
+            : videoPostsFullSize
+        }
+        imageIndex={imageIndex}
+        visible={visibleFullImage}
+        onRequestClose={() => setIsVisibleFullImage(false)}
+        isVideoButton={videoPosts.length > 0 ? true : false}
+        videoPosts={videoPosts}
+        HeaderComponent={renderImageHeader}
+      />
     </Fragment>
   );
 };

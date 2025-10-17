@@ -57,6 +57,8 @@ import { RootStackParamList } from '../../../routes/RouteParamList';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { useFile } from '../../../hook';
 import useMention from '../../../hook/useMention';
+import { getPostErrorMessage } from '../../../utils/errors';
+import { MAXIMUM_POST_CHARACTERS } from '../../../constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
@@ -84,7 +86,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const dispatch = useDispatch();
   const { addPostToGlobalFeed, updateByPostId } = globalfeedSlice.actions;
 
-  const isModerator = useIsCommunityModerator({
+  const { isCommunityModerator } = useIsCommunityModerator({
     communityId: community?.communityId,
     userId: (client as Amity.Client)?.userId,
   });
@@ -109,7 +111,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     : community?.displayName ?? 'My Timeline';
   const isInputValid =
     !isUploading &&
-    inputMessage.trim().length <= 50000 &&
+    inputMessage.trim().length <= MAXIMUM_POST_CHARACTERS &&
     (inputMessage.trim().length > 0 ||
       displayImages.length > 0 ||
       displayVideos.length > 0) &&
@@ -159,23 +161,23 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           })
         );
 
-        response.forEach(async (item) => {
+        const images: IDisplayImage[] = [];
+        const videos: IDisplayImage[] = [];
+
+        for (const item of response) {
           if (item?.dataType === 'image') {
             const fileId = item?.data?.fileId;
             const url = await getImage({
               fileId: fileId,
               imageSize: ImageSizeState.full,
             });
-            setDisplayImages((prev) => [
-              ...prev,
-              {
-                url,
-                fileId,
-                fileName: fileId,
-                isUploaded: true,
-                postId: item.postId,
-              },
-            ]);
+            images.push({
+              url,
+              fileId,
+              fileName: fileId,
+              isUploaded: true,
+              postId: item.postId,
+            });
           } else if (item?.dataType === 'video') {
             const fileId = item?.data?.videoFileId?.original;
             const thumbnailFileId = item?.data?.thumbnailFileId;
@@ -187,21 +189,25 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
                 });
               })
             );
-            setDisplayVideos((prev) => [
-              ...prev,
-              {
-                //@ts-ignore
-                url: fileUrls[0]?.value,
-                fileId: fileId,
-                fileName: fileId,
-                isUploaded: true,
-                //@ts-ignore
-                thumbNail: fileUrls[1]?.value,
-                postId: item.postId,
-              },
-            ]);
+            videos.push({
+              //@ts-ignore
+              url: fileUrls[0]?.value,
+              fileId: fileId,
+              fileName: fileId,
+              isUploaded: true,
+              //@ts-ignore
+              thumbNail: fileUrls[1]?.value,
+              postId: item.postId,
+            });
           }
-        });
+        }
+
+        if (images.length > 0) {
+          setDisplayImages(images);
+        }
+        if (videos.length > 0) {
+          setDisplayVideos(videos);
+        }
       } catch (error) {
         console.log('error: ', error);
       }
@@ -376,18 +382,17 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         targetType === 'community' &&
         (community?.postSetting === 'ADMIN_REVIEW_POST_REQUIRED' ||
           (community as Record<string, any>)?.needApprovalOnPostCreation) &&
-        !isModerator
+        !isCommunityModerator
       ) {
+        onPressClose();
         return Alert.alert(
           'Post submitted',
           'Your post has been submitted to the pending list. It will be reviewed by community moderator',
           [
             {
               text: 'OK',
-              onPress: () => onPressClose(),
             },
-          ],
-          { cancelable: false }
+          ]
         );
       }
       const formattedPost = await amityPostsFormatter([response]);
@@ -406,8 +411,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       return;
     } catch (error) {
       dispatch(hideToastMessage());
-      // comment out for now. will need later
-      // dispatch(showToastMessage({ toastMessage: error.message }));
+      const errorMessage = getPostErrorMessage(error, isEditMode);
+      dispatch(showToastMessage({ toastMessage: errorMessage }));
     }
   }, [
     addPostToGlobalFeed,
@@ -421,7 +426,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     inputMessage,
     isEditMode,
     isInputValid,
-    isModerator,
+    isCommunityModerator,
     mentionUsers,
     mentionsPosition,
     onPressClose,
