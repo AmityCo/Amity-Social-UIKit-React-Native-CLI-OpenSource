@@ -117,11 +117,11 @@ const PostContent: React.FC<IPostContent> = ({
             videos.push(item.data);
           }
         } else if (item?.dataType === 'poll') {
-          if (!polls.includes(item.data)) {
+          if (!polls.some((poll) => poll.pollId === item.data.pollId)) {
             polls.push(item.data);
           }
         } else if (item?.dataType === 'liveStream') {
-          if (!livestreams.includes(item.data)) {
+          if (!livestreams.includes(item.data.streamId)) {
             livestreams.push(item.data.streamId);
           }
         }
