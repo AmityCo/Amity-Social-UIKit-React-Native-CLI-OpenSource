@@ -161,23 +161,23 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           })
         );
 
-        response.forEach(async (item) => {
+        const images: IDisplayImage[] = [];
+        const videos: IDisplayImage[] = [];
+
+        for (const item of response) {
           if (item?.dataType === 'image') {
             const fileId = item?.data?.fileId;
             const url = await getImage({
               fileId: fileId,
               imageSize: ImageSizeState.full,
             });
-            setDisplayImages((prev) => [
-              ...prev,
-              {
-                url,
-                fileId,
-                fileName: fileId,
-                isUploaded: true,
-                postId: item.postId,
-              },
-            ]);
+            images.push({
+              url,
+              fileId,
+              fileName: fileId,
+              isUploaded: true,
+              postId: item.postId,
+            });
           } else if (item?.dataType === 'video') {
             const fileId = item?.data?.videoFileId?.original;
             const thumbnailFileId = item?.data?.thumbnailFileId;
@@ -189,21 +189,25 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
                 });
               })
             );
-            setDisplayVideos((prev) => [
-              ...prev,
-              {
-                //@ts-ignore
-                url: fileUrls[0]?.value,
-                fileId: fileId,
-                fileName: fileId,
-                isUploaded: true,
-                //@ts-ignore
-                thumbNail: fileUrls[1]?.value,
-                postId: item.postId,
-              },
-            ]);
+            videos.push({
+              //@ts-ignore
+              url: fileUrls[0]?.value,
+              fileId: fileId,
+              fileName: fileId,
+              isUploaded: true,
+              //@ts-ignore
+              thumbNail: fileUrls[1]?.value,
+              postId: item.postId,
+            });
           }
-        });
+        }
+
+        if (images.length > 0) {
+          setDisplayImages(images);
+        }
+        if (videos.length > 0) {
+          setDisplayVideos(videos);
+        }
       } catch (error) {
         console.log('error: ', error);
       }
