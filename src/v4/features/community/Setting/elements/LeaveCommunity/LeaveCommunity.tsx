@@ -1,9 +1,9 @@
 import React from 'react';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { useAmityElement } from '~/v4/hook';
-import { ComponentID, ElementID, PageID } from '~/v4/enum';
+import { ComponentID, ElementID, PageID } from '../../../../../../v4/enum';
 import { useStyles } from './styles';
-import { Typography } from '~/v4/component/Typography/Typography';
+import { Typography } from '../../../../../../v4/component/Typography/Typography';
 
 type LeaveCommunityProps = TouchableOpacityProps & {
   pageId?: PageID;

@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCommentErrorMessage } from '~/v4/utils/errors';
+import { getCommentErrorMessage } from '../../../v4/utils/errors';
 
 type ToastState = {
   visible?: boolean;

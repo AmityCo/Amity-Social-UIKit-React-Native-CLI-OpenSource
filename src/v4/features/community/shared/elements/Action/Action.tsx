@@ -1,10 +1,10 @@
 import React from 'react';
 import { useStyles } from './styles';
-import { useAmityElement } from '~/v4/hook';
-import { arrowRight } from '~/v4/assets/icons';
+import { useAmityElement } from '../../../../../../v4/hook';
+import { arrowRight } from '../../../../../../v4/assets/icons';
 import { SvgXml, XmlProps } from 'react-native-svg';
-import { ComponentID, ElementID, PageID } from '~/v4/enum';
-import { Typography } from '~/v4/component/Typography/Typography';
+import { ComponentID, ElementID, PageID } from '../../../../../../v4/enum';
+import { Typography } from '../../../../../../v4/component/Typography/Typography';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
 type ActionProps = TouchableOpacityProps & {

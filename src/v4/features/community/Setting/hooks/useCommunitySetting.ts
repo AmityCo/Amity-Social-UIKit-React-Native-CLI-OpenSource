@@ -7,7 +7,7 @@ import { RootStackParamList } from '~/v4/routes/RouteParamList';
 import { useMutation } from '@tanstack/react-query';
 import { ERROR_CODE } from '~/v4/constants';
 import { useStyles } from '../styles';
-import { useToast } from '~/v4/stores/slices/toast';
+import { useToast } from '../../../../../v4/stores/slices/toast';
 
 export function useCommunitySetting(community: Amity.Community) {
   const { styles } = useStyles();

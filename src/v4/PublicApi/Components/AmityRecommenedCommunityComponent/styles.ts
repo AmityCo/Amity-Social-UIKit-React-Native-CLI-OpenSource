@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 
 export const useStyles = () => {
   const theme = useTheme() as MyMD3Theme;

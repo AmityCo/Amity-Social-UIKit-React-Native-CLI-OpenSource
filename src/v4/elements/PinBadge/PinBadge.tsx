@@ -1,8 +1,8 @@
 import React from 'react';
 import { SvgXml, XmlProps } from 'react-native-svg';
-import { pinFill } from '~/v4/assets/icons';
-import { useAmityElement } from '~/v4/hook';
-import { ComponentID, ElementID, PageID } from '~/v4/enum';
+import { pinFill } from '../../../v4/assets/icons';
+import { useAmityElement } from '../../../v4/hook';
+import { ComponentID, ElementID, PageID } from '../../../v4/enum';
 import { useStyles } from './styles';
 
 type PinBadgeProps = {

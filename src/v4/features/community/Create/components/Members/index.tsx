@@ -1,14 +1,14 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
-import { ElementID, PageID } from '~/v4/enum';
-import FormLabel from '~/v4/elements/FormLabel';
+import { ElementID, PageID } from '../../../../../../v4/enum';
+import FormLabel from '../../../../../../v4/elements/FormLabel';
 import { useNavigation } from '@react-navigation/native';
-import { useBehaviour } from '~/v4/providers/BehaviourProvider';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
-import { MemberChip } from '~/v4/component/MemberChip/MemberChip';
+import { useBehaviour } from '../../../../../../v4/providers/BehaviourProvider';
+import { RootStackParamList } from '../../../../../../v4/routes/RouteParamList';
+import { MemberChip } from '../../../../../../v4/component/MemberChip/MemberChip';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import CommunityAddMemberButton from '~/v4/elements/CommunityAddMemberButton';
+import CommunityAddMemberButton from '../../../../../../v4/elements/CommunityAddMemberButton';
 
 type MembersProps = {
   value: Amity.User[];

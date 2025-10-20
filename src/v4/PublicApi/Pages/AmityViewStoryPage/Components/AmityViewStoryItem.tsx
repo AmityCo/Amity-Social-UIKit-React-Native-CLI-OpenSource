@@ -42,7 +42,8 @@ import { LoadingOverlay } from '../../../../../components/LoadingOverlay';
 import Toast from '../../../../../components/Toast/Toast';
 import { Typography } from '../../../../component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../../../providers/amity-ui-kit-provider';
+
 
 interface IAmityViewStoryItem {
   communityData: Amity.Community;

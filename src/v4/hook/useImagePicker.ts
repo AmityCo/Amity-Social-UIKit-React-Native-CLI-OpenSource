@@ -6,9 +6,10 @@ import {
   launchCamera,
   CameraOptions,
 } from 'react-native-image-picker';
-import { deleteAmityFile, uploadImageFile } from '~/providers/file-provider';
+
 import { isValidImageType } from '../utils';
 import { useCameraPermission } from './usePermissions';
+import { deleteAmityFile, uploadImageFile } from '../../providers/file-provider';
 
 export type UseImagePickerResponse = {
   progress: number;

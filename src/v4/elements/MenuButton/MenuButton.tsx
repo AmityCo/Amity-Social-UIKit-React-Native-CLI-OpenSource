@@ -1,8 +1,8 @@
 import React from 'react';
-import { menu } from '~/v4/assets/icons';
-import { useAmityElement } from '~/v4/hook';
+import { menu } from '../../../v4/assets/icons';
+import { useAmityElement } from '../../../v4/hook';
 import { SvgXml, XmlProps } from 'react-native-svg';
-import { ComponentID, ElementID, PageID } from '~/v4/enum';
+import { ComponentID, ElementID, PageID } from '../../../v4/enum';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { useStyles } from './styles';
 

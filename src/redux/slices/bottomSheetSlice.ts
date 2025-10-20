@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { ComponentID, PageID } from '~/v4/enum';
+import { ComponentID, PageID } from '../../v4/enum';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 

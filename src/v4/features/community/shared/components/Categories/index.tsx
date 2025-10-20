@@ -1,16 +1,16 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import FormLabel from '~/v4/elements/FormLabel';
+import FormLabel from '../../../../../../v4/elements/FormLabel';
 import { useStyles } from './styles';
-import { ElementID, PageID } from '~/v4/enum';
-import { Typography } from '~/v4/component/Typography/Typography';
+import { ElementID, PageID } from '../../../../../../v4/enum';
+import { Typography } from '../../../../../../v4/component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
-import { arrowRight } from '~/v4/assets/icons';
-import { useBehaviour } from '~/v4/providers/BehaviourProvider';
+import { arrowRight } from '../../../../../../v4/assets/icons';
+import { useBehaviour } from '../../../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
-import CategoryChip from '~/v4/component/CategoryChip/CategoryChip';
+import { RootStackParamList } from '../../../../../../v4/routes/RouteParamList';
+import CategoryChip from '../../../../../../v4/component/CategoryChip/CategoryChip';
 
 type CategoriesProps = {
   categories: Amity.Category[];
