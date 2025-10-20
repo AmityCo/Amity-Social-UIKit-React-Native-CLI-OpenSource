@@ -48,7 +48,7 @@ import GalleryComponent from '../../../component/Gallery/GalleryComponent';
 import { useFile } from '../../../hook';
 import { defaultAvatarUri } from '../../../assets';
 import { ImageSizeState } from '../../../enum';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 
 type UserProfilePageProps = RootStackParamList['UserProfile'];
 

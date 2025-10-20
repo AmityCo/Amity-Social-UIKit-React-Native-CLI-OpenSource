@@ -28,7 +28,7 @@ import {
 } from '../../../hook';
 import { useStyles } from './styles';
 import { AmityPostComposerMode, AmityPostComposerPageType } from '../../types';
-import { IDisplayImage, IMentionPosition } from '~/v4/types/type';
+import { IDisplayImage, IMentionPosition } from '../../../../v4/types/type';
 import CloseButtonIconElement from '../../Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
@@ -326,15 +326,15 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       chosenMediaType === mediaAttachment.image
         ? displayImages
         : chosenMediaType === mediaAttachment.video
-        ? displayVideos
-        : [];
+          ? displayVideos
+          : [];
     const fileIds = files.map((item) => item.fileId);
     const type: string =
       displayImages?.length > 0
         ? 'image'
         : displayVideos?.length > 0
-        ? 'video'
-        : 'text';
+          ? 'video'
+          : 'text';
     try {
       let response;
       if (isEditMode) {
@@ -797,10 +797,10 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           bottom: isEditMode
             ? 0
             : shouldShowDetailAttachment
-            ? 220
-            : isKeyboardShowing
-            ? 60
-            : 80,
+              ? 220
+              : isKeyboardShowing
+                ? 60
+                : 80,
         })}
         <View
           onTouchStart={() => {

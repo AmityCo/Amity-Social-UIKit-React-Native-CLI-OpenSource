@@ -42,7 +42,7 @@ import { useNavigation } from '@react-navigation/native';
 import { poll, post, story } from '../../../../v4/assets/icons';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
-import AmityCommunityPinnedPostComponent from '~/v4/PublicApi/Components/AmityCommunityPinnedPostComponent/AmityCommunityPinnedPostComponent';
+import AmityCommunityPinnedPostComponent from '../../../../v4/PublicApi/Components/AmityCommunityPinnedPostComponent/AmityCommunityPinnedPostComponent';
 
 const AmityCommunityProfilePage = ({
   route,

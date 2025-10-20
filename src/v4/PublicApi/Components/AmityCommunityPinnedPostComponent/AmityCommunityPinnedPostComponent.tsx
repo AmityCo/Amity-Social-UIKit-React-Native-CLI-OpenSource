@@ -8,7 +8,7 @@ import { View, FlatList } from 'react-native';
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
-} from '~/v4/enum/AmityPostContentComponentStyle';
+} from '../../../../v4/enum/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../../v4/component/EmptyComponent/EmptyComponent';
 import { emptyPost, privateFeed } from '../../../../v4/assets/icons';
 import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';

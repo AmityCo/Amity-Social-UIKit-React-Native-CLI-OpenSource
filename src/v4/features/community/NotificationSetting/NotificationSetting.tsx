@@ -13,7 +13,7 @@ import {
   livestream,
   postNotification,
   story,
-} from '~/v4/assets/icons';
+} from '../../../../v4/assets/icons';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

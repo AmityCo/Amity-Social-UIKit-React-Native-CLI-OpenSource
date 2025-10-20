@@ -2,8 +2,8 @@ import React from 'react';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { arrowLeft } from '../../../v4/assets/icons';
-import { useAmityElement } from '~/v4/hook';
-import { ComponentID, ElementID, PageID } from '~/v4/enum';
+import { useAmityElement } from '../../../v4/hook';
+import { ComponentID, ElementID, PageID } from '../../../v4/enum';
 import { useStyles } from './styles';
 
 type BackButtonProps = TouchableOpacityProps & {

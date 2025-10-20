@@ -13,11 +13,11 @@ import { usePostImpression } from '../../../../v4/hook/usePostImpression';
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
-} from '~/v4/enum/AmityPostContentComponentStyle';
+} from '../../../../v4/enum/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../../v4/component/EmptyComponent/EmptyComponent';
-import { emptyPost, privateFeed } from '~/v4/assets/icons';
+import { emptyPost, privateFeed } from '../../../../v4/assets/icons';
 import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';
-import { usePinnedPostCollection } from '~/v4/hook/collections/usePinnedPostCollection';
+import { usePinnedPostCollection } from '../../../../v4/hook/collections/usePinnedPostCollection';
 import { isPinnedPost } from '../../../../v4/utils';
 
 export interface AmityCommunityFeedRef {
