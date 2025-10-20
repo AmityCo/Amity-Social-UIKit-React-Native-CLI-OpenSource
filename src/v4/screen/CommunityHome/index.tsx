@@ -103,7 +103,9 @@ export default function CommunityHome({
   const disposers: Amity.Unsubscriber[] = useMemo(() => [], []);
   const unsubCommunity = useRef(null);
 
+
   useEffect(() => {
+    
     if (communityIdParam) {
       setCommunityId(communityIdParam);
     } else if (defaultCommunityId && !communityIdParam) {
@@ -115,7 +117,7 @@ export default function CommunityHome({
   }, [communityIdParam, communityNameParam, defaultCommunityId]);
 
   const onClickBack = useCallback(() => {
-    const routes = navigation.getState().routes;
+      const routes = navigation.getState().routes;
     if (routes.length === 1) {
       navigation.navigate('Home');
       setCommunityName('');
@@ -293,8 +295,8 @@ export default function CommunityHome({
             <Text style={styles.pendingDescriptionText}>
               {isUserHasPermission
                 ? (pendingPosts.length > 30 && 'More than ') +
-                  pendingPosts.length +
-                  ' posts need approval'
+                pendingPosts.length +
+                ' posts need approval'
                 : 'Your posts are pending for review'}
             </Text>
           </View>
@@ -354,8 +356,8 @@ export default function CommunityHome({
             source={
               avatarUrl
                 ? {
-                    uri: avatarUrl,
-                  }
+                  uri: avatarUrl,
+                }
                 : require('../../assets/images/userAvatar.png')
             }
           />

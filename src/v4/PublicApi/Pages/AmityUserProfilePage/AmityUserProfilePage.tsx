@@ -15,6 +15,7 @@ import {
   type NativeScrollEvent,
   ScrollView,
   Pressable,
+  SafeAreaView,
 } from 'react-native';
 import { useStyles } from './styles';
 import {
@@ -26,7 +27,7 @@ import {
 import Feed from '../../../screen/Feed';
 import CustomTab from '../../../../components/CustomTab';
 import type { FeedRefType } from '../../../screen/CommunityHome';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useFocusEffect, useNavigation, } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useAuth from '../../../../hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
@@ -47,12 +48,18 @@ import GalleryComponent from '../../../component/Gallery/GalleryComponent';
 import { useFile } from '../../../hook';
 import { defaultAvatarUri } from '../../../assets';
 import { ImageSizeState } from '../../../enum';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
+
 import { useUIKitDispatch } from '../../../../redux/store';
+import BackButton from '../../../../components/BackButton';
 
-type UserProfilePageProps = RootStackParamList['UserProfile'];
+type UserProfilePageProps = {
+  userId: string;
+  isFromComponent?: boolean;
+  isShowBackButton?: boolean;
+};
 
-function UserProfile({ userId }: UserProfilePageProps) {
+function UserProfile({ userId, isFromComponent, isShowBackButton }: UserProfilePageProps) {
+
   const theme = useTheme() as MyMD3Theme;
   const styles = useStyles();
   const { client } = useAuth();
@@ -103,6 +110,21 @@ function UserProfile({ userId }: UserProfilePageProps) {
     await UserRepository.Relationship.unBlockUser(userId);
     setFollowStatus('none');
   };
+  const handleGoBack = () => {
+    const routes = navigation.getState().routes;
+    if (isFromComponent && routes.length === 1) {
+      navigation.navigate('AmitySocialHomePage');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'AmitySocialHomePage' }],
+        })
+      );
+    } else {
+      navigation.goBack();
+    }
+  }
+
   useLayoutEffect(() => {
     navigation.setOptions({
       // eslint-disable-next-line react/no-unstable-nested-components
@@ -121,8 +143,14 @@ function UserProfile({ userId }: UserProfilePageProps) {
           />
         </TouchableOpacity>
       ),
+      headerLeft: () => {
+        return isShowBackButton ? <BackButton onPress={handleGoBack} /> : null;
+      } 
+
     });
   }, [followStatus, navigation, styles.dotIcon, user]);
+
+
 
   useEffect(() => {
     (async () => {
@@ -146,12 +174,13 @@ function UserProfile({ userId }: UserProfilePageProps) {
     })();
   }, [getImage, user?.avatarFileId]);
 
-  useEffect(() => {
-    let userUnsubscribe: () => void;
-    let userRsUnsubscribe: () => void;
-    const unsubFollowing = subscribeTopic(getMyFollowingsTopic());
-    const unsubFollower = subscribeTopic(getMyFollowersTopic());
-    const unsubscribe = navigation.addListener('focus', () => {
+  useFocusEffect(
+    useCallback(() => {
+      let userUnsubscribe: () => void;
+      let userRsUnsubscribe: () => void;
+      const unsubFollowing = subscribeTopic(getMyFollowingsTopic());
+      const unsubFollower = subscribeTopic(getMyFollowersTopic());
+
       userRsUnsubscribe = UserRepository.Relationship.getFollowInfo(
         userId,
         (value) => {
@@ -160,27 +189,25 @@ function UserProfile({ userId }: UserProfilePageProps) {
             setFollowStatus(value.data.status);
             setFollowerCount(value.data.followerCount);
             setFollowingCount(value.data.followingCount);
-          } else {
           }
         }
       );
 
       userUnsubscribe = UserRepository.getUser(userId, ({ data, loading }) => {
-        if (!loading) {
+        if (!loading && data) {
           setUser(data);
-        } else {
         }
       });
-    });
 
-    return () => {
-      unsubscribe();
-      userUnsubscribe && userUnsubscribe();
-      userRsUnsubscribe && userRsUnsubscribe();
-      unsubFollowing();
-      unsubFollower();
-    };
-  }, [navigation, userId]);
+      return () => {
+        userUnsubscribe && userUnsubscribe();
+        userRsUnsubscribe && userRsUnsubscribe();
+        unsubFollowing();
+        unsubFollower();
+      };
+    }, [userId])
+  );
+
   const editProfileButton = () => {
     return (
       <TouchableOpacity
@@ -329,9 +356,9 @@ function UserProfile({ userId }: UserProfilePageProps) {
     if (isMyProfile || isAccepted) navigation.navigate('FollowerList', user);
   }, [isAccepted, isMyProfile, navigation, user]);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: theme.colors.baseShade4 }}
         ref={scrollViewRef}
         onScroll={handleScroll}
         scrollEventThrottle={20}
@@ -377,7 +404,7 @@ function UserProfile({ userId }: UserProfilePageProps) {
       {(client as Amity.Client).userId === userId && (
         <FloatingButton onPress={handleOnPressPostBtn} isGlobalFeed={false} />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

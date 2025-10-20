@@ -226,6 +226,7 @@ You can now import and use the following screens individually:
 
 - [`CommunityHome`](#)
 - [`PostDetail`](#)
+- [`UserProfile`](#)
 
 > ✅ Make sure your screen component is wrapped with `AmityPageRenderer` at the root level.
 >

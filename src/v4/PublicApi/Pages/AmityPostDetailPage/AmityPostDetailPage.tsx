@@ -23,7 +23,7 @@ import { ComponentID, PageID } from '../../../enum/';
 import { TSearchItem, useAmityPage } from '../../../hook';
 import { useStyles } from './styles';
 import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButtonIconElement';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
@@ -143,7 +143,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   }, []);
 
   useLayoutEffect(() => {
-    if (!postId) return () => {};
+    if (!postId) return () => { };
     setLoading(true);
     let unsub: () => void;
     let hasSubscribed = false;
@@ -185,7 +185,13 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const onPressBack = useCallback(() => {
     const routes = navigation.getState().routes;
     if (isFromComponent && routes.length === 1) {
-      navigation.navigate('Home');
+      navigation.navigate('AmitySocialHomePage');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'AmitySocialHomePage' }],
+        })
+      );
     } else {
       if (routes[routes.length - 2]?.name === 'CreateLivestream')
         return navigation.pop(3);
@@ -359,9 +365,9 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
             paddingTop: topBarHeigh,
             paddingBottom: isKeyboardVisible
               ? (Platform.OS !== 'android' ? keyboardHeight : 0) +
-                footerHeight -
-                topBarHeigh -
-                bottom
+              footerHeight -
+              topBarHeigh -
+              bottom
               : footerHeight - topBarHeigh,
             height: adjustedHeight,
           },

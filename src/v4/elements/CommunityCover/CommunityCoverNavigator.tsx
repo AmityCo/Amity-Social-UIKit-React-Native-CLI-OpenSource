@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import BackButtonIconElement from '../../PublicApi/Elements/BackButtonIconElement/BackButtonIconElement';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { CommonActions, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes/RouteParamList';
 import { hexToRgba } from '../../../util/colorUtil';
@@ -13,20 +13,22 @@ type CommunityCoverNavigatorProps = {
   pageId?: PageID;
   componentId?: ComponentID;
   communityId: Amity.Community['communityId'];
+  isFromComponent?: boolean;
 };
 
 const CommunityCoverNavigator: FC<CommunityCoverNavigatorProps> = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   communityId,
+  isFromComponent
 }) => {
+
   const { community } = useCommunity(communityId);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route =
     useRoute<RouteProp<RootStackParamList, 'CommunityProfilePage'>>();
   const { pop } = route?.params || {};
-
   const styles = StyleSheet.create({
     container: {
       position: 'absolute',
@@ -56,10 +58,22 @@ const CommunityCoverNavigator: FC<CommunityCoverNavigatorProps> = ({
       <Pressable
         style={styles.button}
         onPress={() => {
+          const routes = navigation.getState().routes;
           if (pop === 2) {
             return navigation.pop(2);
           }
-          navigation.goBack();
+          if (isFromComponent && routes.length === 1) {
+            navigation.navigate('AmitySocialHomePage');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'AmitySocialHomePage' }],
+              })
+            );
+          } else {
+            navigation.goBack();
+          }
+
         }}
       >
         <BackButtonIconElement

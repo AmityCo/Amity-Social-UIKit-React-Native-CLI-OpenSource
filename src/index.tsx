@@ -1,6 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
 import AmityUiKitProvider from './providers/amity-ui-kit-provider';
-import AmityUiKitSocial from './routes/SocialNavigator';
+import AmityUiKitSocial from './v4/routes/AmitySocialUIKitV4Navigator';
 import AmityPageRenderer from './v4/routes/AmityPageRenderer';
 import PostDetail from './v4/screen/PostDetail';
 import CommunityHome from './v4/screen/CommunityHome';

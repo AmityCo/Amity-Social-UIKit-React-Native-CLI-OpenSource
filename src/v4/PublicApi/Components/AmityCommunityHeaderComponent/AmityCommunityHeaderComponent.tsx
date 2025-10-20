@@ -35,6 +35,7 @@ type AmityCommunityHeaderComponentProps = {
   isScrolled?: boolean;
   isScrolling?: boolean;
   onHeightChange?: (height: number) => void;
+  isFromComponent?: boolean;
 };
 
 const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
@@ -43,6 +44,7 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
   isScrolling = false,
   isScrolled,
   onHeightChange,
+  isFromComponent
 }) => {
   const client = Client.getActiveClient();
   const navigation =
@@ -95,6 +97,7 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
             community={community}
             smallHeader={true}
             hideButtons={!isScrolled && isScrolling}
+            isFromComponent={isFromComponent}
           />
         </View>
       ) : (
@@ -113,6 +116,7 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
             community={community}
             smallHeader={false}
             hideButtons={isScrolling}
+            isFromComponent={isFromComponent}
           />
           <View style={styles.communityNameWrap}>
             {!community.isPublic && (
