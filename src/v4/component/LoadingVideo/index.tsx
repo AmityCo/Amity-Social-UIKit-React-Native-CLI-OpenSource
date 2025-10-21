@@ -1,12 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  Platform,
-  ImageStyle,
-} from 'react-native';
+import { View, TouchableOpacity, Platform } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
 import {
@@ -15,7 +9,6 @@ import {
 } from '../../../providers/file-provider';
 import { closeIcon, playBtn, toastIcon } from '../../../svg/svg-xml-list';
 import { useStyles } from './styles';
-import { createThumbnail, type Thumbnail } from 'react-native-create-thumbnail';
 import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -66,7 +59,7 @@ const LoadingVideo = ({
   const [progress, setProgress] = useState(0);
   const [isProcess, setIsProcess] = useState<boolean>(false);
   const [isUploadError, setIsUploadError] = useState(false);
-  const [thumbNailImage, setThumbNailImage] = useState(thumbNail ?? '');
+  // const [thumbNailImage, setThumbNailImage] = useState(thumbNail ?? '');
   const styles = useStyles();
   const [playingUri, setPlayingUri] = useState<string>('');
   const [isPause, setIsPause] = useState<boolean>(true);
@@ -90,15 +83,15 @@ const LoadingVideo = ({
     setIsUploading(false);
   };
 
-  const processThumbNail = async () => {
-    const thumbNail: Thumbnail = await createThumbnail({
-      url: source,
-    });
-    setThumbNailImage(thumbNail.path);
-  };
-  useEffect(() => {
-    processThumbNail();
-  }, [thumbNail]);
+  // const processThumbNail = async () => {
+  //   const thumbNail: Thumbnail = await createThumbnail({
+  //     url: source,
+  //   });
+  //   setThumbNailImage(thumbNail.path);
+  // };
+  // useEffect(() => {
+  //   processThumbNail();
+  // }, [thumbNail]);
 
   useEffect(() => {
     if (progress === 100) {
@@ -180,16 +173,17 @@ const LoadingVideo = ({
           onFullscreenPlayerWillDismiss={onClosePlayer}
           paused={isPause}
         />
-      ) : thumbNailImage ? (
-        <Image
-          resizeMode="cover"
-          source={{ uri: thumbNailImage }}
-          style={[
-            styles.image as ImageStyle,
-            (loading ? styles.loadingImage : styles.loadedImage) as ImageStyle,
-          ]}
-        />
       ) : (
+        // thumbNail ? (
+        //   <Image
+        //     resizeMode="cover"
+        //     source={{ uri: thumbNail }}
+        //     style={[
+        //       styles.image as ImageStyle,
+        //       (loading ? styles.loadingImage : styles.loadedImage) as ImageStyle,
+        //     ]}
+        //   />
+        // ) :
         <View style={styles.image} />
       )}
 
