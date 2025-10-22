@@ -93,7 +93,7 @@ export default function AmitySocialUIKitV4Navigator() {
             }}
           >
             <Stack.Screen
-              name="Home"
+              name="AmitySocialHomePage"
               component={AmitySocialHomePage}
               options={{ headerShown: false }}
             />

@@ -9,9 +9,9 @@ import { infoIcon } from '../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import AdInformation from '../AdInformation/AdInformation';
 import bottomSheetSlice from '../../../redux/slices/bottomSheetSlice';
-import { useDispatch } from 'react-redux';
 import AdEngine from '../../engine/AdEngine';
 import AssetDownloader from '../../engine/AssetDownloader';
+import { useUIKitDispatch } from '../../../redux/store';
 
 type PostAdComponentType = {
   pageId?: PageID;
@@ -23,7 +23,7 @@ const PostAdComponent: FC<PostAdComponentType> = ({
   pageId = PageID.WildCardPage,
 }) => {
   const componentId = ComponentID.post_content;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
 
   const { openBottomSheet } = bottomSheetSlice.actions;
   const { accessibilityId, themeStyles } = useAmityComponent({

@@ -10,7 +10,7 @@ import {
 import { AmityPostCategory } from '../../v4/enum/AmityPostContentComponentStyle';
 
 export type RootStackParamList = {
-  Home: { postIdCallBack?: string };
+  AmitySocialHomePage: { postIdCallBack?: string };
   AmitySocialGlobalSearchPage: undefined;
   AmityMyCommunitiesSearchPage: undefined;
   CommunitySearch: undefined;

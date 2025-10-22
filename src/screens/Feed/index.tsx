@@ -22,8 +22,11 @@ import {
 import type { FeedRefType } from '../CommunityHome';
 import { deletePostById } from '../../providers/Social/feed-sdk';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import {
+  RootState,
+  useUIKitDispatch,
+  useUIKitSelector,
+} from '../../redux/store';
 import feedSlice from '../../redux/slices/feedSlice';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -35,12 +38,12 @@ function Feed({ targetId, targetType }: IFeed, ref: React.Ref<FeedRefType>) {
   const styles = useStyles();
   const [postData, setPostData] =
     useState<Amity.LiveCollection<Amity.Post<any>>>();
-  const { postList } = useSelector((state: RootState) => state.feed);
+  const { postList } = useUIKitSelector((state: RootState) => state.feed);
   const { clearFeed, updateFeed, deleteByPostId } = feedSlice.actions;
   const [refreshing, setRefreshing] = useState(false);
   const { data: posts, onNextPage, hasNextPage } = postData ?? {};
   const [unSubFunc, setUnSubPageFunc] = useState<() => void>();
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
 
   const disposers: Amity.Unsubscriber[] = [];
   let isSubscribed = false;

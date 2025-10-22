@@ -20,9 +20,9 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
-import { useDispatch } from 'react-redux';
 import uiSlice from '../../../redux/slices/uiSlice';
 import { createVideoThumbnail } from 'react-native-compressor';
+import { useUIKitDispatch } from '../../../redux/store';
 
 interface OverlayImageProps {
   source: string;
@@ -60,7 +60,7 @@ const LoadingVideo = ({
   setIsUploading,
 }: OverlayImageProps) => {
   const theme = useTheme() as MyMD3Theme;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { showToastMessage } = uiSlice.actions;
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);

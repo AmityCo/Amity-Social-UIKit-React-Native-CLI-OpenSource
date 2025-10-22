@@ -44,7 +44,7 @@ export function useCommunitySetting(community: Amity.Community) {
     mutationFn: async () =>
       await CommunityRepository.deleteCommunity(community.communityId),
     onSuccess: () => {
-      navigation.replace('Home');
+      navigation.replace('AmitySocialHomePage');
     },
     onError: () => {
       Alert.alert(

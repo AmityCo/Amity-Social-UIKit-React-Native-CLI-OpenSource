@@ -22,9 +22,9 @@ import React, {
 import { ComponentID, PageID } from '../../../../v4/enum/';
 import { TSearchItem, useAmityPage } from '../../../../v4/hook';
 import { useStyles } from './styles';
-import BackButtonIconElement from '../../../../v4/PublicApi/Elements/BackButtonIconElement/BackButtonIconElement';
-import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
+import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButtonIconElement';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../../routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   PostRepository,
@@ -42,7 +42,6 @@ import AmityPostCommentComponent from '../../../../v4/PublicApi/Components/Amity
 import { closeIcon } from '../../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import { IMentionPosition } from '../../../../types';
-import { useDispatch } from 'react-redux';
 import uiSlice from '../../../../redux/slices/uiSlice';
 import MyAvatar from '../../../../v4/component/MyAvatar/MyAvatar';
 import {
@@ -57,7 +56,11 @@ import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 import { PostMenu } from '../../../../v4/component/PostMenu';
 import useMention from '../../../../v4/hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
-import { createComment, createReplyComment } from '../../../../providers/Social/comment-sdk';
+import {
+  createComment,
+  createReplyComment,
+} from '../../../../providers/Social/comment-sdk';
+import { useUIKitDispatch } from '../../../../redux/store';
 
 type AmityPostDetailPageType = {
   postId: Amity.Post['postId'];
@@ -76,7 +79,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const { height } = useWindowDimensions();
 
   const pageId = PageID.post_detail_page;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const componentId = ComponentID.WildCardComponent;
   const disabledInteraction = false;
   const navigation =
@@ -146,7 +149,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   }, []);
 
   useLayoutEffect(() => {
-    if (!postId) return () => { };
+    if (!postId) return () => {};
     setLoading(true);
     let unsub: () => void;
     let hasSubscribed = false;
@@ -188,7 +191,13 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const onPressBack = useCallback(() => {
     const routes = navigation.getState().routes;
     if (isFromComponent && routes.length === 1) {
-      navigation.navigate('Home');
+      navigation.navigate('AmitySocialHomePage');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'AmitySocialHomePage' }],
+        })
+      );
     } else {
       if (routes[routes.length - 2]?.name === 'CreateLivestream')
         return navigation.pop(3);
@@ -362,9 +371,9 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
             paddingTop: topBarHeigh,
             paddingBottom: isKeyboardVisible
               ? (Platform.OS !== 'android' ? keyboardHeight : 0) +
-              footerHeight -
-              topBarHeigh -
-              bottom
+                footerHeight -
+                topBarHeigh -
+                bottom
               : footerHeight - topBarHeigh,
             height: adjustedHeight,
           },
