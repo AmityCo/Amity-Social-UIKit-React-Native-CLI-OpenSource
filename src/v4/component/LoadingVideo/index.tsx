@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, TouchableOpacity, Platform } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Platform,
+  ImageStyle,
+  Image,
+} from 'react-native';
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
 import {
@@ -16,6 +22,7 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import { useDispatch } from 'react-redux';
 import uiSlice from '../../../redux/slices/uiSlice';
+import { createVideoThumbnail } from 'react-native-compressor';
 
 interface OverlayImageProps {
   source: string;
@@ -59,7 +66,7 @@ const LoadingVideo = ({
   const [progress, setProgress] = useState(0);
   const [isProcess, setIsProcess] = useState<boolean>(false);
   const [isUploadError, setIsUploadError] = useState(false);
-  // const [thumbNailImage, setThumbNailImage] = useState(thumbNail ?? '');
+  const [thumbNailImage, setThumbNailImage] = useState(thumbNail ?? '');
   const styles = useStyles();
   const [playingUri, setPlayingUri] = useState<string>('');
   const [isPause, setIsPause] = useState<boolean>(true);
@@ -83,15 +90,13 @@ const LoadingVideo = ({
     setIsUploading(false);
   };
 
-  // const processThumbNail = async () => {
-  //   const thumbNail: Thumbnail = await createThumbnail({
-  //     url: source,
-  //   });
-  //   setThumbNailImage(thumbNail.path);
-  // };
-  // useEffect(() => {
-  //   processThumbNail();
-  // }, [thumbNail]);
+  const processThumbNail = async () => {
+    const thumbNail = await createVideoThumbnail(source);
+    setThumbNailImage(thumbNail.path);
+  };
+  useEffect(() => {
+    processThumbNail();
+  }, [thumbNail]);
 
   useEffect(() => {
     if (progress === 100) {
@@ -173,17 +178,16 @@ const LoadingVideo = ({
           onFullscreenPlayerWillDismiss={onClosePlayer}
           paused={isPause}
         />
+      ) : thumbNailImage ? (
+        <Image
+          resizeMode="cover"
+          source={{ uri: thumbNailImage }}
+          style={[
+            styles.image as ImageStyle,
+            (loading ? styles.loadingImage : styles.loadedImage) as ImageStyle,
+          ]}
+        />
       ) : (
-        // thumbNail ? (
-        //   <Image
-        //     resizeMode="cover"
-        //     source={{ uri: thumbNail }}
-        //     style={[
-        //       styles.image as ImageStyle,
-        //       (loading ? styles.loadingImage : styles.loadedImage) as ImageStyle,
-        //     ]}
-        //   />
-        // ) :
         <View style={styles.image} />
       )}
 
