@@ -1,7 +1,7 @@
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../v4/routes/RouteParamList';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { useToast } from '~/v4/stores/slices/toast';
-import useImagePicker from '~/v4/hook/useImagePicker';
+import { useToast } from '../../../../../v4/stores/slices/toast';
+import useImagePicker from '../../../../../v4/hook/useImagePicker';
 import { useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';

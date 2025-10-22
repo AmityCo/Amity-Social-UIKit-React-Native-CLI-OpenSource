@@ -1,13 +1,13 @@
 import { Alert } from 'react-native';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { useBehaviour } from '~/v4/providers/BehaviourProvider';
+import { useBehaviour } from '../../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../v4/routes/RouteParamList';
 import { useMutation } from '@tanstack/react-query';
-import { ERROR_CODE } from '~/v4/constants';
+import { ERROR_CODE } from '../../../../../v4/constants';
 import { useStyles } from '../styles';
-import { useToast } from '~/v4/stores/slices/toast';
+import { useToast } from '../../../../../v4/stores/slices/toast';
 
 export function useCommunitySetting(community: Amity.Community) {
   const { styles } = useStyles();
@@ -44,7 +44,7 @@ export function useCommunitySetting(community: Amity.Community) {
     mutationFn: async () =>
       await CommunityRepository.deleteCommunity(community.communityId),
     onSuccess: () => {
-      navigation.replace('Home');
+      navigation.replace('AmitySocialHomePage');
     },
     onError: () => {
       Alert.alert(

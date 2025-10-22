@@ -1,5 +1,5 @@
 import React from 'react';
-import PendingRequest from '~/v4/features/community/PendingRequest';
+import PendingRequest from '../../../../v4/features/community/PendingRequest';
 
 type AmityCommunityPendingRequestPageProps = {
   community: Amity.Community;

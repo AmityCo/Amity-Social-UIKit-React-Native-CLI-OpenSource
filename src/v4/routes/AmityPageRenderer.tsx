@@ -9,58 +9,63 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
-import useAuth from '~/hooks/useAuth';
-import CategoryList from '~/screens/CategorytList';
-import CommunityList from '~/screens/CommunityList';
-import CommunityHome from '~/v4/screen/CommunityHome';
-import CommunityMemberDetail from '~/screens/CommunityMemberDetail/CommunityMemberDetail';
-import AmitySocialHomePage from '~/v4/PublicApi/Pages/AmitySocialHomePage/AmitySocialHomePage';
-import PostDetail from '~/v4/screen/PostDetail';
-import CreatePost from '~/v4/screen/CreatePost';
-import UserProfile from '~/v4/screen/UserProfile';
-import { EditProfile } from '~/screens/EditProfile/EditProfile';
-import UserProfileSetting from '~/screens/UserProfileSetting/UserProfileSetting';
-import CommunitySearch from '~/screens/CommunitySearch';
-import AllMyCommunity from '~/screens/AllMyCommunity';
-import CreateCommunity from '~/v4/screen/CreateCommunity';
-import PendingPosts from '~/screens/PendingPosts';
-import type { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import useAuth from '../../hooks/useAuth';
+import CategoryList from '../../screens/CategorytList';
+import CommunityList from '../../screens/CommunityList';
+
+import CommunityMemberDetail from '../../screens/CommunityMemberDetail/CommunityMemberDetail';
+import AmitySocialHomePage from '../../v4/PublicApi/Pages/AmitySocialHomePage/AmitySocialHomePage';
+import PostDetail from '../../v4/screen/PostDetail';
+import CreatePost from '../../v4/screen/CreatePost';
+import UserProfile from '../../v4/screen/UserProfile';
+import { EditProfile } from '../../screens/EditProfile/EditProfile';
+import UserProfileSetting from '../../screens/UserProfileSetting/UserProfileSetting';
+import CommunitySearch from '../../screens/CommunitySearch';
+import AllMyCommunity from '../../screens/AllMyCommunity';
+import CreateCommunity from '../../v4/screen/CreateCommunity';
+import PendingPosts from '../../screens/PendingPosts';
+import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '~/svg/svg-xml-list';
-import { useStyles } from '~/routes/style';
-import BackButton from '~/components/BackButton';
-import VideoPlayerFull from '~/screens/VideoPlayerFullScreen';
-import PostTypeChoiceModal from '~/components/PostTypeChoiceModal/PostTypeChoiceModal';
-import ReactionListScreen from '~/screens/ReactionListScreen/ReactionListScreen';
-import CreateStoryScreen from '~/v4/screen/CreateStory/CreateStoryScreen';
-import Toast from '~/components/Toast/Toast';
-import AmitySocialGlobalSearchPage from '~/v4/PublicApi/Pages/AmitySocialGlobalSearchPage/AmitySocialGlobalSearchPage';
-import UserPendingRequest from '~/v4/screen/UserPendingRequest/UserPendingRequest';
-import FollowerList from '~/v4/screen/FollowerList/FollowerList';
-import AmityMyCommunitiesSearchPage from '~/v4/PublicApi/Pages/AmityMyCommunitiesSearchPage/AmityMyCommunitiesSearchPage';
-import CreateLivestream from '~/screens/CreateLivestream/CreateLivestream';
-import PostTargetSelection from '~/v4/screen/PostTargetSelection';
-import StoryTargetSelection from '~/v4/PublicApi/Pages/AmityStoryTargetSelectionPage/AmityStoryTargetSelectionPage';
-import AmityAllCategoriesPage from '~/v4/PublicApi/Pages/AmityAllCategoriesPage/AmityAllCategoriesPage';
-import AmityCommunitiesByCategoryPage from '~/v4/PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
-import EditPost from '~/v4/screen/EditPost/EditPost';
-import AmityExploreComponent from '~/v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
-import LivestreamPlayer from '~/screens/LivestreamPlayer';
-import PollPostComposer from '~/v4/screen/PollPostComposer';
-import CommunityAddCategory from '~/v4/screen/CommunityAddCategory';
-import CommunityAddMember from '~/v4/screen/CommunityAddMember';
-import EditCommunity from '~/v4/screen/EditCommunity';
-import CommunityPostPermission from '~/v4/screen/CommunityPostPermission';
-import CommunityStorySetting from '~/v4/screen/CommunityStorySetting';
-import CommunityNotificationSetting from '~/v4/screen/CommunityNotificationSetting';
-import CommunityPostsNotificationSetting from '~/v4/screen/CommunityPostsNotificationSetting';
-import CommunityCommentsNotificationSetting from '~/v4/screen/CommunityCommentsNotificationSetting';
-import CommunityStoriesNotificationSetting from '~/v4/screen/CommunityStoriesNotificationSetting';
-import CommunityLivestreamsNotificationSetting from '~/v4/screen/CommunityLivestreamsNotificationSetting';
-import CommunityPendingRequest from '~/v4/screen/CommunityPendingRequest';
-import CommunitySetting from '~/v4/screen/CommunitySetting';
+import { closeIcon } from '../../svg/svg-xml-list';
+import { useStyles } from '../../routes/style';
+import BackButton from '../../components/BackButton';
+import VideoPlayerFull from '../../screens/VideoPlayerFullScreen';
+import PostTypeChoiceModal from '../../components/PostTypeChoiceModal/PostTypeChoiceModal';
+import ReactionListScreen from '../../screens/ReactionListScreen/ReactionListScreen';
+import CreateStoryScreen from '../../v4/screen/CreateStory/CreateStoryScreen';
+import Toast from '../../components/Toast/Toast';
+import AmitySocialGlobalSearchPage from '../../v4/PublicApi/Pages/AmitySocialGlobalSearchPage/AmitySocialGlobalSearchPage';
+import UserPendingRequest from '../../v4/screen/UserPendingRequest/UserPendingRequest';
+import FollowerList from '../../v4/screen/FollowerList/FollowerList';
+import AmityMyCommunitiesSearchPage from '../../v4/PublicApi/Pages/AmityMyCommunitiesSearchPage/AmityMyCommunitiesSearchPage';
+import CreateLivestream from '../../screens/CreateLivestream/CreateLivestream';
+import PostTargetSelection from '../../v4/screen/PostTargetSelection';
+import StoryTargetSelection from '../../v4/PublicApi/Pages/AmityStoryTargetSelectionPage/AmityStoryTargetSelectionPage';
+import AmityAllCategoriesPage from '../../v4/PublicApi/Pages/AmityAllCategoriesPage/AmityAllCategoriesPage';
+import AmityCommunitiesByCategoryPage from '../../v4/PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
+import EditPost from '../../v4/screen/EditPost/EditPost';
+import AmityExploreComponent from '../../v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
+import LivestreamPlayer from '../../screens/LivestreamPlayer';
+import PollPostComposer from '../../v4/screen/PollPostComposer';
+import CommunityAddCategory from '../../v4/screen/CommunityAddCategory';
+import CommunityAddMember from '../../v4/screen/CommunityAddMember';
+import EditCommunity from '../../v4/screen/EditCommunity';
+import CommunityPostPermission from '../../v4/screen/CommunityPostPermission';
+import CommunityStorySetting from '../../v4/screen/CommunityStorySetting';
+import CommunityNotificationSetting from '../../v4/screen/CommunityNotificationSetting';
+import CommunityPostsNotificationSetting from '../../v4/screen/CommunityPostsNotificationSetting';
+import CommunityCommentsNotificationSetting from '../../v4/screen/CommunityCommentsNotificationSetting';
+import CommunityStoriesNotificationSetting from '../../v4/screen/CommunityStoriesNotificationSetting';
+import CommunityLivestreamsNotificationSetting from '../../v4/screen/CommunityLivestreamsNotificationSetting';
+import CommunityPendingRequest from '../../v4/screen/CommunityPendingRequest';
+import CommunitySetting from '../../v4/screen/CommunitySetting';
+import AmityCommunityProfilePage from '../PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
+import LivestreamTerminated from '../screen/LivestreamTerminated';
+import PollTargetSelection from '../screen/PollTargetSelection';
+import LivestreamPostTargetSelection from '../screen/LivestreamPostTargetSelection';
+
 interface PageRendererProps {
   children: React.JSX.Element;
 }
@@ -77,7 +82,6 @@ export default function PageRenderer({ children }: PageRendererProps) {
           <Stack.Navigator
             id={undefined}
             screenOptions={{
-              headerShown: false,
               headerShadowVisible: false,
               contentStyle: {
                 backgroundColor: 'white',
@@ -105,7 +109,7 @@ export default function PageRenderer({ children }: PageRendererProps) {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="Home"
+              name="AmitySocialHomePage"
               component={AmitySocialHomePage}
               options={{ headerShown: false }}
             />
@@ -146,8 +150,9 @@ export default function PageRenderer({ children }: PageRendererProps) {
               })}
             />
             <Stack.Screen
-              name="CommunityHome"
-              children={() => <CommunityHome {...children.props} />}
+              name="CommunityProfilePage"
+              children={() => <AmityCommunityProfilePage {...children.props} />}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="PendingPosts"
@@ -257,10 +262,10 @@ export default function PageRenderer({ children }: PageRendererProps) {
             />
             <Stack.Screen
               name="UserProfile"
-              component={UserProfile}
+              children={() => <UserProfile {...children.props} />}
               options={{
+                headerTitleAlign: 'center',
                 title: '',
-                headerLeft: () => <BackButton />,
               }}
             />
             <Stack.Screen name="EditProfile" component={EditProfile} />
@@ -340,6 +345,19 @@ export default function PageRenderer({ children }: PageRendererProps) {
                 name="LivestreamPlayer"
                 component={LivestreamPlayer}
                 options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="LivestreamTerminated"
+                component={LivestreamTerminated}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PollTargetSelection"
+                component={PollTargetSelection}
+              />
+              <Stack.Screen
+                name="LivestreamPostTargetSelection"
+                component={LivestreamPostTargetSelection}
               />
             </Stack.Group>
           </Stack.Navigator>

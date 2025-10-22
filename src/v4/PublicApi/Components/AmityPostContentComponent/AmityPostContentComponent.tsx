@@ -29,9 +29,9 @@ import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import PostContent from '../../../component/PostContent';
 import { PostMenu } from '../../../component/PostMenu';
-import PinBadge from '~/v4/elements/PinBadge';
-import AnnouncementBadge from '~/v4/elements/AnnouncementBadge';
-import { Typography } from '~/v4/component/Typography/Typography';
+import PinBadge from '../../../../v4/elements/PinBadge';
+import AnnouncementBadge from '../../../../v4/elements/AnnouncementBadge';
+import { Typography } from '../../../../v4/component/Typography/Typography';
 
 type AmityPostContentComponentProps = {
   post: Amity.Post & { structureType?: string };
@@ -164,10 +164,10 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     <View>
       {(category === AmityPostCategory.ANNOUNCEMENT ||
         category === AmityPostCategory.PIN_AND_ANNOUNCEMENT) && (
-        <View style={styles.featuredBadgeContainer}>
-          <AnnouncementBadge componentId={ComponentID.post_content} />
-        </View>
-      )}
+          <View style={styles.featuredBadgeContainer}>
+            <AnnouncementBadge componentId={ComponentID.post_content} />
+          </View>
+        )}
       <View
         key={postId}
         style={styles.postWrap}
@@ -252,12 +252,12 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
           </View>
           {(category === AmityPostCategory.PIN ||
             category === AmityPostCategory.PIN_AND_ANNOUNCEMENT) && (
-            <PinBadge componentId={ComponentID.post_content} />
-          )}
+              <PinBadge componentId={ComponentID.post_content} />
+            )}
           {AmityPostContentComponentStyle ===
             AmityPostContentComponentStyleEnum.feed && (
-            <PostMenu post={post} pageId={pageId} componentId={componentId} />
-          )}
+              <PostMenu post={post} pageId={pageId} componentId={componentId} />
+            )}
         </Pressable>
         <View>
           <View style={styles.bodySection}>

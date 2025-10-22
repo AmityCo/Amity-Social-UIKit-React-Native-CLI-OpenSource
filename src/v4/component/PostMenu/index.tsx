@@ -26,8 +26,7 @@ import {
 } from '../../../providers/Social/feed-sdk';
 import useAuth from '../../../hooks/useAuth';
 import globalFeedSlice from '../../../redux/slices/globalfeedSlice';
-import { useDispatch } from 'react-redux';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../component/Typography/Typography';
 import { pen, poll, report, trash, unreport } from '../../assets/icons';
 import { useToast } from '../../stores/slices/toast';
 import { RootStackParamList } from '../../routes/RouteParamList';
@@ -35,7 +34,8 @@ import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElemen
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { ComponentID, PageID } from '../../enum';
 import { usePoll } from '../../hook/usePoll';
-import { useClosePoll } from '../../hook/poll';
+import { useClosePoll } from '../../../v4/hook/poll';
+import { useUIKitDispatch } from '../../../redux/store';
 
 type PostMenuProps = {
   pageId?: PageID;
@@ -50,7 +50,7 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   const { client } = useAuth();
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const { deleteByPostId } = globalFeedSlice.actions;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isVisible, setIsVisible] = useState(false);

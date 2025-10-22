@@ -1,19 +1,20 @@
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { LogBox, SafeAreaView, StyleSheet } from 'react-native';
-import CustomSocialTab from '~/v4/component/CustomSocialTab/CustomSocialTab';
-import { useUiKitConfig } from '~/v4/hook';
-import { ComponentID, ElementID, PageID } from '~/v4/enum/enumUIKitID';
-import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import CustomSocialTab from '../../../../v4/component/CustomSocialTab/CustomSocialTab';
+import { useUiKitConfig } from '../../../../v4/hook';
+import { ComponentID, ElementID, PageID } from '../../../../v4/enum/enumUIKitID';
+
 import { useTheme } from 'react-native-paper';
-import { useBehaviour } from '~/v4/providers/BehaviourProvider';
-import AmitySocialHomeTopNavigationComponent from '~/v4/PublicApi/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
-import AmityEmptyNewsFeedComponent from '~/v4/PublicApi/Components/AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
-import AmityMyCommunitiesComponent from '~/v4/PublicApi/Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
-import AmityNewsFeedComponent from '~/v4/PublicApi/Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
-import AmityExploreComponent from '~/v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
-import NewsFeedLoadingComponent from '~/v4/component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
-import { useCustomRankingGlobalFeed } from '~/v4/hook/useCustomRankingGlobalFeed';
+import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
+import AmitySocialHomeTopNavigationComponent from '../../../../v4/PublicApi/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
+import AmityEmptyNewsFeedComponent from '../../../../v4/PublicApi/Components/AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
+import AmityMyCommunitiesComponent from '../../../../v4/PublicApi/Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
+import AmityNewsFeedComponent from '../../../../v4/PublicApi/Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
+import AmityExploreComponent from '../../../../v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
+import NewsFeedLoadingComponent from '../../../../v4/component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
+import { useCustomRankingGlobalFeed } from '../../../../v4/hook/useCustomRankingGlobalFeed';
+import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 
 LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {

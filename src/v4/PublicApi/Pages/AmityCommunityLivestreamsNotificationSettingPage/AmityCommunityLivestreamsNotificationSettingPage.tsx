@@ -1,5 +1,5 @@
 import React from 'react';
-import LivestreamsNotificationSetting from '~/v4/features/community/LivestreamsNotificationSetting';
+import LivestreamsNotificationSetting from '../../../../v4/features/community/LivestreamsNotificationSetting';
 
 type AmityCommunityLivestreamsNotificationSettingPageProps = {
   community: Amity.Community;

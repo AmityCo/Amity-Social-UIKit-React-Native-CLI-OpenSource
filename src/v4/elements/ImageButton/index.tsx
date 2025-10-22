@@ -1,11 +1,11 @@
 import React from 'react';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { photo } from '~/v4/assets/icons';
-import { useAmityElement } from '~/v4/hook';
-import { ComponentID, ElementID, PageID } from '~/v4/enum';
+import { photo } from '../../../v4/assets/icons';
+import { useAmityElement } from '../../../v4/hook';
+import { ComponentID, ElementID, PageID } from '../../../v4/enum';
 import { useStyles } from './styles';
-import { Typography } from '~/v4/component/Typography/Typography';
+import { Typography } from '../../../v4/component/Typography/Typography';
 
 type ImageButtonProps = TouchableOpacityProps & {
   pageId?: PageID;

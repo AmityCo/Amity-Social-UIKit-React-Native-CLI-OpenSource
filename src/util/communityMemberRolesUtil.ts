@@ -1,4 +1,4 @@
-import { MemberRoles } from '~/constants';
+import { MemberRoles } from '../constants';
 
 const ADMIN = 'global-admin';
 const {

@@ -26,10 +26,10 @@ import { amityPostsFormatter } from '../../util/postDataFormatter';
 import postDetailSlice from '../../redux/slices/postDetailSlice';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import feedSlice from '../../redux/slices/feedSlice';
-import { useDispatch } from 'react-redux';
-import { TSearchItem } from 'src/hooks/useSearch';
+import { TSearchItem } from '../../hooks/useSearch';
 import useMention from '../../v4/hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
+import { useUIKitDispatch } from '../../redux/store';
 interface IModal {
   visible: boolean;
   userId?: string;
@@ -68,7 +68,7 @@ const EditPostModal = ({
   const { updateByPostId: updateByPostIdGlobalFeed } = globalFeedSlice.actions;
   const { updatePostDetail } = postDetailSlice.actions;
   const { updateByPostId } = feedSlice.actions;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
 
   const { renderInput, renderSuggestions } = useMention({
     value: inputMessage,

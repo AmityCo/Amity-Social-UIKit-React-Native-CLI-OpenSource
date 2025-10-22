@@ -9509,17 +9509,17 @@ react-native-builder-bob@^0.20.0:
   optionalDependencies:
     jetifier "^2.0.0"
 
+react-native-compressor@^1.13.0:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/react-native-compressor/-/react-native-compressor-1.13.0.tgz#d260621bb7625046a716d5dff56b395267c7e6b0"
+  integrity sha512-vJYbrcjz2S7kgE3Q7444F71CjEDq5Qg6sGn67N9fJ0I1K6EhB/ZxpULdDe3FxJ4h/ncJc0oxOzNWZhxtGTqcQw==
+
 react-native-controlled-mentions@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/react-native-controlled-mentions/-/react-native-controlled-mentions-3.1.0.tgz#a037e76bd738cb0f509049f86df04d3b716616a9"
   integrity sha512-jkQZmHGXQrux3Vb0l+5b4L3GIc9R+pKhjl/MDxSUv6ya5l2Y34m99ka2U2NIZGpG0yqTYDtjZcqqHyb0lYlqww==
   dependencies:
     diff "5.0.0"
-
-react-native-create-thumbnail@^2.0.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-create-thumbnail/-/react-native-create-thumbnail-2.1.1.tgz#633fa52ac17fdf78d19c2c5201382d449f296094"
-  integrity sha512-3rawLi0mZiKfPh53C3mbrI9EVVzLWLYiDynUdpAe/I36XbSSFupxP9+g10/rrhhTNX8NSg/4zAC8Z7P9epnt+g==
 
 react-native-fs@2.20.0:
   version "2.20.0"
@@ -9603,11 +9603,6 @@ react-native-radio-buttons-group@^3.0.2:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/react-native-radio-buttons-group/-/react-native-radio-buttons-group-3.1.0.tgz#b19d383fc2dece17eba1ce37b9f357c47431aded"
   integrity sha512-DiNM1yI6WfRygUZ+Z/bsjggyLypXsxRNXPNYpPHXSEVbRD6uF5Aei+HMIwyeRbfMKPtHwLq7cGsmUDV01i+rOQ==
-
-react-native-rsa-native@^2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-rsa-native/-/react-native-rsa-native-2.0.5.tgz#7db4aef49405bb5b5bcaea12b9dfd1b251c690ab"
-  integrity sha512-gwwvFSwGW5WKrpDyBQ/eTf1UrVABeAvMcT4YWemzPSUo6aHZs1kbBm2rXmwN5okhUzJsry5zjjz/qdx5GXRugQ==
 
 react-native-safe-area-context@5.2.0:
   version "5.2.0"

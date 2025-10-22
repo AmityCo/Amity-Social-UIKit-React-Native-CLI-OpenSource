@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { useStyles } from './styles';
-import { Typography } from '~/v4/component/Typography/Typography';
+import { Typography } from '../../../../v4/component/Typography/Typography';
 import { View } from 'react-native';
 import {
   CommunityPostSettings,
@@ -11,12 +11,12 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Radio } from '~/v4/component/core/Radio';
+import { Radio } from '../../../../v4/component/core/Radio';
 import { useMutation } from '@tanstack/react-query';
-import { useToast } from '~/v4/stores/slices/toast';
+import { useToast } from '../../../../v4/stores/slices/toast';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 
 type CommunityPostPermissionProps = {
   community: Amity.Community;
