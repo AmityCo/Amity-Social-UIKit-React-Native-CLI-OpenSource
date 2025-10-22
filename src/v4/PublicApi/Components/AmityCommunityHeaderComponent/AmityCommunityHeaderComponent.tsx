@@ -22,7 +22,7 @@ import { AmityStoryTabComponentEnum } from '../../types';
 import { BUTTON_SIZE } from '../../../component/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import { Client } from '@amityco/ts-sdk-react-native';
 
 export interface AmityCommunityHeaderRef {
@@ -35,6 +35,7 @@ type AmityCommunityHeaderComponentProps = {
   isScrolled?: boolean;
   isScrolling?: boolean;
   onHeightChange?: (height: number) => void;
+  isFromComponent?: boolean;
 };
 
 const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
@@ -43,6 +44,7 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
   isScrolling = false,
   isScrolled,
   onHeightChange,
+  isFromComponent,
 }) => {
   const client = Client.getActiveClient();
   const navigation =
@@ -96,6 +98,7 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
             community={community}
             smallHeader={true}
             hideButtons={!isScrolled && isScrolling}
+            isFromComponent={isFromComponent}
           />
         </View>
       ) : (
@@ -114,6 +117,7 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
             community={community}
             smallHeader={false}
             hideButtons={isScrolling}
+            isFromComponent={isFromComponent}
           />
           <View style={styles.communityNameWrap}>
             {!community.isPublic && (

@@ -1,16 +1,19 @@
 import { StyleSheet, Text, Animated, ActivityIndicator } from 'react-native';
 import React, { FC, memo, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import uiSlice from '../../redux/slices/uiSlice';
-import { RootState } from 'src/redux/store';
+import {
+  RootState,
+  useUIKitDispatch,
+  useUIKitSelector,
+} from '../../redux/store';
 import { toastIcon, toastSuccess } from '../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 
 const Toast: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { hideToastMessage } = uiSlice.actions;
   const { toastMessage, showToastMessage, isLoadingToast, isSuccessToast } =
-    useSelector((state: RootState) => state.ui);
+    useUIKitSelector((state: RootState) => state.ui);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const timeoutRef = useRef<number | null>(null);
   useEffect(() => {

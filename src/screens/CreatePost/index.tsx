@@ -39,12 +39,12 @@ import { checkCommunityPermission } from '../../providers/Social/communities-sdk
 import useAuth from '../../hooks/useAuth';
 import { TSearchItem } from '../../hooks/useSearch';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
-import { useDispatch } from 'react-redux';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
 import feedSlice from '../../redux/slices/feedSlice';
 import { useRequestPermission } from '../../v4/hook/useCamera';
 import useMention from '../../v4/hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
+import { useUIKitDispatch } from '../../redux/store';
 
 export interface IDisplayImage {
   url: string;
@@ -71,7 +71,7 @@ const CreatePost = ({ route }: any) => {
   const styles = useStyles();
   const { addPostToGlobalFeed } = globalFeedSlice.actions;
   const { addPostToFeed } = feedSlice.actions;
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { targetId, targetType, targetName } = route.params;
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [inputMessage, setInputMessage] = useState('');

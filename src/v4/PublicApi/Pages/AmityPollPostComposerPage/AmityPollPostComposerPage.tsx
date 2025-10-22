@@ -19,7 +19,6 @@ import { RootStackParamList } from '../../../routes/RouteParamList';
 import dayjs from 'dayjs';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
-import { useDispatch } from 'react-redux';
 import { useToast } from '../../../stores/slices/toast';
 import { DAY, MAX_POLL_ANSWER_LENGTH } from '../../../constants';
 import { PollHeader } from './PollHeader';
@@ -31,6 +30,7 @@ import { AndroidBottomSheet, IOSBottomSheet } from './PollDurationBottomSheet';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import useMention from '../../../hook/useMention';
 import { IMentionPosition } from '../../../../types';
+import { useUIKitDispatch } from '../../../../redux/store';
 
 type PollDurationValue = {
   value: number;
@@ -146,7 +146,7 @@ const AmityPollPostComposerPage = () => {
 export default AmityPollPostComposerPage;
 
 const PollPostComposer = () => {
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { styles } = useStyles();
   const { apiRegion, client } = useAuth();
   const { addPostToGlobalFeed } = globalFeedSlice.actions;

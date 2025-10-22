@@ -15,7 +15,7 @@ Our AmityUIKit include user interfaces to enable fast integration of standard Am
 
 #Minimum Requirements
 
-- node 16
+- node 20.19.4
 - JDK 17.0.10
 - ruby 3.2.0
 - XCode 15
@@ -85,7 +85,18 @@ Then, inside another project, Copy tgz file to your application folder where you
 
 ```sh
 1. yarn add ./amity-react-native-social-ui-kit-x.x.x.tgz
-2. yarn add react-native-safe-area-context react-native-image-picker @react-native-async-storage/async-storage react-native-svg react-native-gesture-handler react-native-screens react-native-video@6.0.0-beta.6 react-native-create-thumbnail @react-native-community/netinfo @react-navigation/native \@react-navigation/native-stack @react-navigation/stack react-native-vision-camera react-native-push-notification \@api.video/react-native-livestream@2.0.0 react-native-get-random-values react-native-rsa-native react-native-vlc-media-player react-native-fs@2.20.0 @react-native-community/datetimepicker@7.1.0
+2. yarn add react-native-safe-area-context react-native-image-picker @react-native-async-storage/async-storage react-native-svg react-native-gesture-handler react-native-screens react-native-video react-native-compressor @react-native-community/netinfo @react-navigation/native \@react-navigation/native-stack @react-navigation/stack react-native-vision-camera react-native-push-notification react-native-get-random-values react-native-vlc-media-player react-native-fs@2.20.0 @react-native-community/datetimepicker react-native-video-controls @amityco/ts-sdk-react-native @babel/plugin-transform-export-namespace-from metro-react-native-babel-preset react-native-linear-gradient
+```
+
+### Babel Config
+
+```sh
+module.exports = {
+  presets: ['module:metro-react-native-babel-preset'],
+  plugins: [
+    '@babel/plugin-transform-export-namespace-from',
+  ],
+};
 ```
 
 ### iOS Configuration
@@ -224,8 +235,9 @@ UIKit now supports importing and rendering individual screens. This gives you mo
 
 You can now import and use the following screens individually:
 
-- [`CommunityHome`](#)
+- [`CommunityProfilePage`](#)
 - [`PostDetail`](#)
+- [`UserProfile`](#)
 
 > ✅ Make sure your screen component is wrapped with `AmityPageRenderer` at the root level.
 >
@@ -242,7 +254,8 @@ import {
   AmityPageRenderer,
   AmityExploreComponent,
   PostDetail,
-  CommunityHome,
+  CommunityProfilePage,
+  UserProfile,
 } from 'amity-react-native-social-ui-kit';
 
 export default function App() {

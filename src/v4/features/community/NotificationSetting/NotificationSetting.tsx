@@ -6,18 +6,18 @@ import { Switch, View } from 'react-native';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Typography } from '~/v4/component/Typography/Typography';
+import { Typography } from '../../../../v4/component/Typography/Typography';
 import Action from '../shared/elements/Action';
 import {
   commentNotification,
   livestream,
   postNotification,
   story,
-} from '~/v4/assets/icons';
-import { useBehaviour } from '~/v4/providers/BehaviourProvider';
+} from '../../../../v4/assets/icons';
+import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 
 type CommunityNotificationSettingProps = {
   community: Amity.Community;

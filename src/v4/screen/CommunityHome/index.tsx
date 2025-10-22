@@ -43,7 +43,6 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import FloatingButton from '../../../components/FloatingButton';
-import { useDispatch } from 'react-redux';
 import useFile from '../../../hooks/useFile';
 import { TabName } from '../../../enum/tabNameState';
 import uiSlice from '../../../redux/slices/uiSlice';
@@ -55,6 +54,7 @@ import { AmityStoryTabComponentEnum } from '../../PublicApi/types/index';
 import GalleryComponent from '../../component/Gallery/GalleryComponent';
 import { RootStackParamList } from '../../../v4/routes/RouteParamList';
 import BackButton from '../../../components/BackButton';
+import { useUIKitDispatch } from '../../../redux/store';
 
 export type FeedRefType = {
   handleLoadMore: () => void;
@@ -71,7 +71,7 @@ export default function CommunityHome({
   const theme = useTheme() as MyMD3Theme;
   const { excludes } = useConfig();
   const styles = useStyles();
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const { openPostTypeChoiceModal } = uiSlice.actions;
   const { apiRegion, client } = useAuth();
   const {

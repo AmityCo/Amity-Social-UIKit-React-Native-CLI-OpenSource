@@ -2,18 +2,18 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { Controller } from 'react-hook-form';
 import CoverImage from '../shared/components/CoverImageUpload';
-import { ElementID, PageID } from '~/v4/enum';
-import FormInput from '~/v4/component/FormInput';
+import { ElementID, PageID } from '../../../../v4/enum';
+import FormInput from '../../../../v4/component/FormInput';
 import Categories from '../shared/components/Categories';
 import Privacy from '../shared/components/Privacy';
 import {
   MAX_COMMUNITY_DESCRIPTION_LENGTH,
   MAX_COMMUNITY_NAME_LENGTH,
-} from '~/v4/constants';
+} from '../../../../v4/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { useEditCommunity } from './hooks/useEditCommunity';
-import ActionButton from '~/v4/elements/ActionButton';
+import ActionButton from '../../../../v4/elements/ActionButton';
 
 type EditCommunity = {
   community: Amity.Community;

@@ -1,11 +1,11 @@
 import React from 'react';
 import { SvgXml } from 'react-native-svg';
-import { plus } from '~/v4/assets/icons';
+import { plus } from '../../../v4/assets/icons';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
-import { Typography } from '~/v4/component/Typography/Typography';
+import { Typography } from '../../../v4/component/Typography/Typography';
 import { useStyles } from './styles';
-import { ComponentID, ElementID, PageID } from '~/v4/enum';
-import { useAmityElement } from '~/v4/hook';
+import { ComponentID, ElementID, PageID } from '../../../v4/enum';
+import { useAmityElement } from '../../../v4/hook';
 
 type CommunityAddMemberButtonProps = TouchableOpacityProps & {
   pageId?: PageID;

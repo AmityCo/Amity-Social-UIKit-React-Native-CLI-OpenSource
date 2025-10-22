@@ -26,10 +26,11 @@ if (!(BackHandler as any).removeEventListener) {
 }
 
 import AmityUiKitProvider from './providers/amity-ui-kit-provider';
-import AmityUiKitSocial from './routes/SocialNavigator';
+import AmityUiKitSocial from './v4/routes/AmitySocialUIKitV4Navigator';
 import AmityPageRenderer from './v4/routes/AmityPageRenderer';
 import PostDetail from './v4/screen/PostDetail';
 import CommunityHome from './v4/screen/CommunityHome';
+import UserProfile from './v4/screen/UserProfile';
 import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
@@ -61,7 +62,7 @@ import {
   AmityExploreComponent,
   AmityAllCategoriesPage,
   AmityCommunitiesByCategoryPage,
-  AmityCommunityProfilePage,
+  AmityCommunityProfilePage as CommunityProfilePage,
   // AmityCreateLivestreamPage,
   AmityLivestreamPostTargetSelectionPage,
   AmityLivestreamTerminatedPage,
@@ -156,9 +157,10 @@ export {
   AmityPageRenderer,
   PostDetail,
   CommunityHome,
+  UserProfile,
   AmityAllCategoriesPage,
   AmityCommunitiesByCategoryPage,
-  AmityCommunityProfilePage,
+  CommunityProfilePage,
   // AmityCreateLivestreamPage,
   AmityLivestreamPostTargetSelectionPage,
   AmityLivestreamTerminatedPage,

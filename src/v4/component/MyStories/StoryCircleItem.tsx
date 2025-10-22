@@ -12,7 +12,7 @@ import useConfig from '../../hook/useConfig';
 import { useStyles } from './styles';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 
 interface IStoryCircleItem {
   onPressStoryView: (storyTarget: Amity.StoryTarget) => void;
@@ -31,13 +31,13 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
   const styles = useStyles();
   const storyRingColor: string[] = storyTarget?.hasUnseen
     ? (getUiKitConfig({
-        page: PageID.StoryPage,
-        component: ComponentID.StoryTab,
-        element: ElementID.StoryRing,
-      })?.progress_color as string[]) ?? ['#e2e2e2', '#e2e2e2']
+      page: PageID.StoryPage,
+      component: ComponentID.StoryTab,
+      element: ElementID.StoryRing,
+    })?.progress_color as string[]) ?? ['#e2e2e2', '#e2e2e2']
     : storyTarget?.failedStoriesCount > 0
-    ? ['#DE1029', '#DE1029']
-    : ['#e2e2e2', '#e2e2e2'];
+      ? ['#DE1029', '#DE1029']
+      : ['#e2e2e2', '#e2e2e2'];
 
   useEffect(() => {
     if (storyTarget.targetType !== 'community') return;
@@ -68,8 +68,8 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
         source={
           avatarUrl
             ? {
-                uri: avatarUrl,
-              }
+              uri: avatarUrl,
+            }
             : require('../../assets/images/userAvatar.png')
         }
         style={styles.communityAvatar}

@@ -15,8 +15,8 @@ import type { IComment } from '../../v4/PublicApi/Components/AmityPostCommentCom
 import { editComment } from '../../providers/Social/comment-sdk';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
-import { TSearchItem } from '~/v4/hook';
-import { IMentionPosition } from '~/v4/types/type';
+import { TSearchItem } from '../../v4/hook';
+import { IMentionPosition } from '../../v4/types/type';
 import {
   CommunityRepository,
   UserRepository,

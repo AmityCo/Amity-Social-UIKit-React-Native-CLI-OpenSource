@@ -31,7 +31,7 @@ import { useFile } from '../../../hook';
 import { SvgXml } from 'react-native-svg';
 import { threeDots } from '../../../../svg/svg-xml-list';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../routes/RouteParamList';

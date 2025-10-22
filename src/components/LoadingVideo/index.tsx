@@ -2,10 +2,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
-  Image,
   TouchableOpacity,
   Platform,
   ImageStyle,
+  Image,
 } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
@@ -15,12 +15,12 @@ import {
 } from '../../providers/file-provider';
 import { closeIcon, playBtn } from '../../svg/svg-xml-list';
 import { createStyles } from './styles';
-import { createThumbnail, type Thumbnail } from 'react-native-create-thumbnail';
 import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import { createVideoThumbnail } from 'react-native-compressor';
 
 interface OverlayImageProps {
   source: string;
@@ -79,9 +79,7 @@ const LoadingVideo = ({
   };
 
   const processThumbNail = async () => {
-    const thumbNail: Thumbnail = await createThumbnail({
-      url: source,
-    });
+    const thumbNail = await createVideoThumbnail(source);
     setThumbNailImage(thumbNail.path);
   };
   useEffect(() => {

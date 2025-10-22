@@ -1,10 +1,10 @@
 import React, { memo, FC, useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { feed, image, pin, video } from '~/v4/assets/icons';
-import IconTab from '~/v4/component/IconTab/IconTab';
-import { ComponentID, ElementID, PageID } from '~/v4/enum';
-import { useAmityElement } from '~/v4/hook';
+import { feed, image, pin, video } from '../../../../v4/assets/icons';
+import IconTab from '../../../../v4/component/IconTab/IconTab';
+import { ComponentID, ElementID, PageID } from '../../../../v4/enum';
+import { useAmityElement } from '../../../../v4/hook';
 
 export const enum CommunityProfileTab {
   community_feed = 'community_feed',
@@ -28,107 +28,107 @@ const AmityCommunityProfileTabComponent: FC<
   currentTab,
   onTabChange,
 }) => {
-  const elementId = ElementID.community_profile_tab;
+    const elementId = ElementID.community_profile_tab;
 
-  const { themeStyles, accessibilityId } = useAmityElement({
-    pageId,
-    componentId,
-    elementId,
-  });
+    const { themeStyles, accessibilityId } = useAmityElement({
+      pageId,
+      componentId,
+      elementId,
+    });
 
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: themeStyles?.colors.background,
-      flexDirection: 'row',
-      width: '100%',
-      paddingHorizontal: 16,
-      justifyContent: 'space-between',
-      borderBottomColor: themeStyles?.colors.baseShade4,
-      borderBottomWidth: 1,
-    },
-  });
+    const styles = StyleSheet.create({
+      container: {
+        backgroundColor: themeStyles?.colors.background,
+        flexDirection: 'row',
+        width: '100%',
+        paddingHorizontal: 16,
+        justifyContent: 'space-between',
+        borderBottomColor: themeStyles?.colors.baseShade4,
+        borderBottomWidth: 1,
+      },
+    });
 
-  const getActiveColor = useCallback(
-    (isActive: boolean) => {
-      return isActive
-        ? themeStyles?.colors.base
-        : themeStyles?.colors.baseShade2;
-    },
-    [themeStyles]
-  );
+    const getActiveColor = useCallback(
+      (isActive: boolean) => {
+        return isActive
+          ? themeStyles?.colors.base
+          : themeStyles?.colors.baseShade2;
+      },
+      [themeStyles]
+    );
 
-  return (
-    <View
-      style={styles.container}
-      testID={accessibilityId}
-      accessibilityLabel={accessibilityId}
-    >
-      <Pressable
-        onPress={() => onTabChange(CommunityProfileTab.community_feed)}
+    return (
+      <View
+        style={styles.container}
+        testID={accessibilityId}
+        accessibilityLabel={accessibilityId}
       >
-        <IconTab
-          themeStyles={themeStyles}
-          icon={
-            <SvgXml
-              xml={feed(
-                getActiveColor(
-                  currentTab === CommunityProfileTab.community_feed
-                )
-              )}
-            />
-          }
-          isActive={currentTab === CommunityProfileTab.community_feed}
-        />
-      </Pressable>
-      <Pressable onPress={() => onTabChange(CommunityProfileTab.community_pin)}>
-        <IconTab
-          themeStyles={themeStyles}
-          icon={
-            <SvgXml
-              xml={pin(
-                getActiveColor(currentTab === CommunityProfileTab.community_pin)
-              )}
-            />
-          }
-          isActive={currentTab === CommunityProfileTab.community_pin}
-        />
-      </Pressable>
-      <Pressable
-        onPress={() => onTabChange(CommunityProfileTab.community_image_feed)}
-      >
-        <IconTab
-          themeStyles={themeStyles}
-          icon={
-            <SvgXml
-              xml={image(
-                getActiveColor(
-                  currentTab === CommunityProfileTab.community_image_feed
-                )
-              )}
-            />
-          }
-          isActive={currentTab === CommunityProfileTab.community_image_feed}
-        />
-      </Pressable>
-      <Pressable
-        onPress={() => onTabChange(CommunityProfileTab.community_video_feed)}
-      >
-        <IconTab
-          themeStyles={themeStyles}
-          icon={
-            <SvgXml
-              xml={video(
-                getActiveColor(
-                  currentTab === CommunityProfileTab.community_video_feed
-                )
-              )}
-            />
-          }
-          isActive={currentTab === CommunityProfileTab.community_video_feed}
-        />
-      </Pressable>
-    </View>
-  );
-};
+        <Pressable
+          onPress={() => onTabChange(CommunityProfileTab.community_feed)}
+        >
+          <IconTab
+            themeStyles={themeStyles}
+            icon={
+              <SvgXml
+                xml={feed(
+                  getActiveColor(
+                    currentTab === CommunityProfileTab.community_feed
+                  )
+                )}
+              />
+            }
+            isActive={currentTab === CommunityProfileTab.community_feed}
+          />
+        </Pressable>
+        <Pressable onPress={() => onTabChange(CommunityProfileTab.community_pin)}>
+          <IconTab
+            themeStyles={themeStyles}
+            icon={
+              <SvgXml
+                xml={pin(
+                  getActiveColor(currentTab === CommunityProfileTab.community_pin)
+                )}
+              />
+            }
+            isActive={currentTab === CommunityProfileTab.community_pin}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => onTabChange(CommunityProfileTab.community_image_feed)}
+        >
+          <IconTab
+            themeStyles={themeStyles}
+            icon={
+              <SvgXml
+                xml={image(
+                  getActiveColor(
+                    currentTab === CommunityProfileTab.community_image_feed
+                  )
+                )}
+              />
+            }
+            isActive={currentTab === CommunityProfileTab.community_image_feed}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => onTabChange(CommunityProfileTab.community_video_feed)}
+        >
+          <IconTab
+            themeStyles={themeStyles}
+            icon={
+              <SvgXml
+                xml={video(
+                  getActiveColor(
+                    currentTab === CommunityProfileTab.community_video_feed
+                  )
+                )}
+              />
+            }
+            isActive={currentTab === CommunityProfileTab.community_video_feed}
+          />
+        </Pressable>
+      </View>
+    );
+  };
 
 export default memo(AmityCommunityProfileTabComponent);

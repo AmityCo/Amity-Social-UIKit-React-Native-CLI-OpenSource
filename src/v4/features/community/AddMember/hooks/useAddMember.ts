@@ -1,11 +1,11 @@
 import { useStyles } from '../styles';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../v4/routes/RouteParamList';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useUserCollection } from '~/v4/hook/collections/useUserCollection';
-import { useSearchUserByDisplayNameCollection } from '~/v4/hook/collections/useSearchUserByDisplayNameCollection';
+import { useUserCollection } from '../../../../../v4/hook/collections/useUserCollection';
+import { useSearchUserByDisplayNameCollection } from '../../../../../v4/hook/collections/useSearchUserByDisplayNameCollection';
 
 type UseAddMemberProps = {
   communityId?: string;

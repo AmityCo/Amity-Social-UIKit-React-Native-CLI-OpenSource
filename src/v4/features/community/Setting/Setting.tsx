@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './components/Header';
-import { Title } from '~/v4/elements';
+import { Title } from '../../../../v4/elements';
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -9,16 +9,16 @@ import {
   penFill,
   postPermission,
   story,
-} from '~/v4/assets/icons';
+} from '../../../../v4/assets/icons';
 import Action from '../shared/elements/Action';
-import { ElementID, PageID } from '~/v4/enum';
+import { ElementID, PageID } from '../../../../v4/enum';
 import LeaveCommunity from './elements/LeaveCommunity/LeaveCommunity';
 import CloseCommunity from './elements/CloseCommunity';
 import CloseCommunityDescription from './elements/CloseCommunityDescription';
 import {
   checkDeleteCommunityPermission,
   checkEditCommunityPermission,
-} from '~/v4/utils/permissions';
+} from '../../../../v4/utils/permissions';
 import { useCommunitySetting } from './hooks/useCommunitySetting';
 
 type CommunitySettingProps = {

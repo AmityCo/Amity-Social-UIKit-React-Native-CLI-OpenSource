@@ -1,12 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Title } from '~/v4/elements';
+import { Title } from '../../../../../../v4/elements';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../../v4/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useStyles } from './styles';
-import BackButton from '~/v4/elements/BackButton';
-import { PageID } from '~/v4/enum';
+import BackButton from '../../../../../../v4/elements/BackButton';
+import { PageID } from '../../../../../../v4/enum';
 
 function Header() {
   const { styles } = useStyles();
