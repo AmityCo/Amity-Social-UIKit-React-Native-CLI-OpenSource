@@ -235,7 +235,7 @@ UIKit now supports importing and rendering individual screens. This gives you mo
 
 You can now import and use the following screens individually:
 
-- [`CommunityHome`](#)
+- [`CommunityProfilePage`](#)
 - [`PostDetail`](#)
 - [`UserProfile`](#)
 
@@ -254,7 +254,8 @@ import {
   AmityPageRenderer,
   AmityExploreComponent,
   PostDetail,
-  CommunityHome,
+  CommunityProfilePage,
+  UserProfile,
 } from 'amity-react-native-social-ui-kit';
 
 export default function App() {
