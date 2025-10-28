@@ -443,7 +443,18 @@ function AmityCreateLivestreamPage() {
               />
               <TouchableOpacity
                 style={styles.communityButton}
-                onPress={() => navigation.goBack()}
+                onPress={() => {
+                  const state = navigation.getState();
+                  const routes = state.routes;
+                  const currentIndex = state.index;
+                  const previousRoute = routes[currentIndex - 1];
+
+                  if (previousRoute?.name === 'LivestreamPostTargetSelection') {
+                    navigation.goBack();
+                  } else {
+                    return;
+                  }
+                }}
                 activeOpacity={0.7}
               >
                 <Typography.Body
@@ -452,7 +463,11 @@ function AmityCreateLivestreamPage() {
                   ellipsizeMode="tail"
                 >
                   Live on{' '}
-                  <Typography.BodyBold numberOfLines={1} ellipsizeMode="tail">
+                  <Typography.BodyBold
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={styles.communityName}
+                  >
                     {targetName}
                   </Typography.BodyBold>
                 </Typography.Body>

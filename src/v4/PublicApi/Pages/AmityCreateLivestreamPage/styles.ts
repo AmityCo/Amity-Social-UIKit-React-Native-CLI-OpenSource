@@ -8,7 +8,7 @@ export const useStyles = () => {
   const { height: screenHeight } = Dimensions.get('window');
   const insets = useSafeAreaInsets();
 
-  const availableHeight = screenHeight - 80 - 60 - 40 - 40 - 120;
+  const availableHeight = screenHeight - 80 - 60 - 40 - 40 - 120 - 50;
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -26,7 +26,6 @@ export const useStyles = () => {
     },
     overlay: {
       flex: 1,
-      height: '100%',
       top: 0,
       bottom: 0,
       left: 0,

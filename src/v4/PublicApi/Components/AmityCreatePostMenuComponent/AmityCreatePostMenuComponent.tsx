@@ -62,14 +62,14 @@ const AmityCreatePostMenuComponent = ({
           navigation.navigate('PollTargetSelection');
         },
 
-        // [AmityPostTargetSelectionPageType.livestream]: () => {
-        //   if (
-        //     AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage
-        //   ) {
-        //     AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage();
-        //   }
-        //   navigation.navigate('LivestreamPostTargetSelection');
-        // },
+        [AmityPostTargetSelectionPageType.livestream]: () => {
+          if (
+            AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage
+          ) {
+            AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage();
+          }
+          navigation.navigate('LivestreamPostTargetSelection');
+        },
       };
       postTypeHandlers[postType]?.();
     },
@@ -100,14 +100,14 @@ const AmityCreatePostMenuComponent = ({
         elementId={ElementID.create_poll_button}
         onClick={() => onPressCreatePost(AmityPostTargetSelectionPageType.poll)}
       />
-      {/* <ButtonWithIconElement
+      <ButtonWithIconElement
         pageId={pageId}
         componentId={componentId}
         elementId={ElementID.create_livestream_button}
         onClick={() =>
           onPressCreatePost(AmityPostTargetSelectionPageType.livestream)
         }
-      /> */}
+      />
     </View>
   );
 };
