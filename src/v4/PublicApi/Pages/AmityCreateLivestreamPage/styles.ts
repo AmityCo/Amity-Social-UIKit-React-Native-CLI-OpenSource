@@ -190,6 +190,27 @@ export const useStyles = () => {
       color: theme.colors.background,
       textAlign: 'center',
     },
+    containerRoom: {
+      flex: 1,
+      alignItems: 'stretch',
+      justifyContent: 'center',
+      padding: 10,
+    },
+    participantView: {
+      flex: 1,
+      margin: 5,
+      height: 200,
+      backgroundColor: '#ccc',
+    },
+    roomContainer: {
+      flex: 1,
+      width: '100%',
+      height: '100%',
+    },
+    videoTrack: {
+      width: '100%',
+      height: '100%',
+    },
   });
 
   return styles;

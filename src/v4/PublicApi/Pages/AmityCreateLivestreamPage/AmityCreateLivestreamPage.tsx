@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Image,
@@ -12,17 +6,12 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
-  // Linking,
   View,
   ImageStyle,
+  Linking,
 } from 'react-native';
 import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
-// import {
-//   AmityStreamBroadcasterState,
-//   AmityVideoBroadcaster,
-//   // @ts-ignore
-// } from '@amityco/video-broadcaster-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
 import { arrowDown } from '../../../../v4/assets/icons';
@@ -35,7 +24,7 @@ import { CircularProgressIndicator } from '../../../component/CircularProgressIn
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import { PostRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-// import Button from '../../../component/Button/Button';
+import Button from '../../../component/Button/Button';
 import { useRequestPermission } from '../../../../v4/hook/useCamera';
 import NetInfo from '@react-native-community/netinfo';
 import { LivestreamStatus } from '../../../enum/livestreamStatus';
@@ -47,6 +36,19 @@ import { CancelCreateLivestreamButton } from '../../../elements/CancelCreateLive
 import { EndLiveStreamButton } from '../../../elements/EndLiveStreamButton';
 import { AddThumbnailButton } from '../../../elements/AddThumbnailButton';
 import { SwitchCameraButton } from '../../../elements/SwitchCameraButton';
+
+import { Track, LocalVideoTrack } from 'livekit-client';
+import { LiveKitRoom, registerGlobals } from '@livekit/react-native';
+import { RoomView } from './RoomView';
+
+// Register WebRTC globals required for LiveKit
+registerGlobals();
+
+//TODO : Remove token later and integrate with backend
+
+const LIVEKIT_SERVER_URL = 'wss://sp-live-3tr59jrk.livekit.cloud';
+const LIVEKIT_TOKEN =
+  'eyJhbGciOiJIUzI1NiJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6InNlc3Npb24tOTkwNjFiNjgtYTQyMC00NzgxLTlmMjYtNzFkZjVhNTgxYjRlIiwiY2FuUHVibGlzaCI6dHJ1ZSwiY2FuU3Vic2NyaWJlIjp0cnVlfSwiaXNzIjoiQVBJWHBkcmltdEJoQXJ3IiwiZXhwIjoxNzYxODIzNDI2LCJuYmYiOjAsInN1YiI6IldlYi1UZXN0In0.fJ-s4Z-q5Fd0e-OXwjfX-8kRUTvCCTS1d80vfrldtck';
 
 const calculateTime = (time: number) => {
   const hours = Math.floor(time / 3600000);
@@ -82,6 +84,8 @@ function AmityCreateLivestreamPage() {
   const [androidPermission, setAndroidPermission] = useState<boolean>(false);
   const [iOSPermission, setIOSPermission] = useState<boolean>(true);
   const [reconnecting, setReconnecting] = useState<boolean>(false);
+  const [livekitParticipant, setLivekitParticipant] = useState<any>(null);
+  const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
   const unsubscribeRef = useRef<Amity.Unsubscriber>(null);
 
   const {
@@ -99,6 +103,36 @@ function AmityCreateLivestreamPage() {
   const hasPermission =
     (Platform.OS === 'android' && androidPermission) ||
     (Platform.OS === 'ios' && iOSPermission);
+
+  const switchCamera = useCallback(async () => {
+    if (livekitParticipant) {
+      try {
+        const cameraPublication = livekitParticipant.getTrackPublication(
+          Track.Source.Camera
+        );
+
+        if (cameraPublication?.track) {
+          const videoTrack = cameraPublication.track as LocalVideoTrack;
+
+          // Stop current camera
+          await videoTrack.stop();
+
+          // Get new facing mode
+          const newFacingMode = isFrontCamera ? 'environment' : 'user';
+
+          // Restart camera with new facing mode
+          await videoTrack.restartTrack({
+            facingMode: newFacingMode,
+          });
+
+          // Toggle the camera state
+          setIsFrontCamera((prev) => !prev);
+        }
+      } catch (error) {
+        console.error('Failed to switch camera:', error);
+      }
+    }
+  }, [livekitParticipant, isFrontCamera]);
 
   useRequestPermission({
     shouldCall: Platform.OS === 'ios',
@@ -284,12 +318,6 @@ function AmityCreateLivestreamPage() {
     return () => unsubscribe();
   }, []);
 
-  useLayoutEffect(() => {
-    setTimeout(() => {
-      streamRef.current && streamRef.current.switchCamera();
-    }, 300);
-  }, [streamRef]);
-
   useEffect(() => {
     let threeMinutesTimeout: number;
 
@@ -345,17 +373,33 @@ function AmityCreateLivestreamPage() {
           style={[styles.overlay, !hasPermission && styles.noPermissionOverlay]}
         />
       )}
-      {/* {hasPermission ? (
-        <View style={styles.cameraContainer}>
-          <View style={styles.camera}>
-            <AmityVideoBroadcaster
-              ref={streamRef}
-              bitrate={2 * 1024 * 1024}
-              onBroadcastStateChange={onBroadcastStateChange}
-              resolution={{ width: 1280, height: 720 }}
-            />
+
+      {hasPermission ? (
+        <LiveKitRoom
+          serverUrl={LIVEKIT_SERVER_URL}
+          token={LIVEKIT_TOKEN}
+          connect={true}
+          options={{
+            adaptiveStream: { pixelDensity: 'screen' },
+          }}
+          audio={true}
+          video={{
+            facingMode: 'user',
+            resolution: {
+              width: 1280,
+              height: 720,
+            },
+          }}
+        >
+          <View style={styles.cameraContainer}>
+            <View style={styles.camera}>
+              <RoomView
+                onLocalParticipantReady={setLivekitParticipant}
+                isFrontCamera={isFrontCamera}
+              />
+            </View>
           </View>
-        </View>
+        </LiveKitRoom>
       ) : (
         <View style={styles.permission}>
           <Typography.TitleBold style={styles.permissionTitle}>
@@ -374,7 +418,8 @@ function AmityCreateLivestreamPage() {
             </Typography.BodyBold>
           </Button>
         </View>
-      )} */}
+      )}
+
       {isEnding && (
         <View style={styles.connecting}>
           <CircularProgressIndicator size={40} strokeWidth={2} />
@@ -582,9 +627,7 @@ function AmityCreateLivestreamPage() {
         )}
         <SwitchCameraButton
           pageId={PageID.create_livestream_page}
-          onPress={() => {
-            streamRef.current && streamRef.current.switchCamera();
-          }}
+          onPress={switchCamera}
         />
       </View>
     </SafeAreaView>
