@@ -46,7 +46,9 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
       icon={plus()}
       iconProps={{
         xml: plus(),
-        color: themeStyles.colors.base,
+        color: themeStyles.isDarkTheme
+          ? themeStyles.colors.base
+          : themeStyles.colors.baseShade4,
       }}
       themeStyle={themeStyles}
       onPress={handleJoinCommunity}

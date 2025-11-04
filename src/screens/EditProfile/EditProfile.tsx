@@ -258,14 +258,16 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           </View>
         </View>
 
-        <TextInput
-          style={styles.input}
-          value={displayName}
-          onChangeText={handleDisplayNameTextChange}
-          maxLength={MAX_CHARACTER_COUNT}
-          placeholder=""
-          placeholderTextColor="#a0a0a0"
-        />
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            value={displayName}
+            onChangeText={handleDisplayNameTextChange}
+            maxLength={MAX_CHARACTER_COUNT}
+            placeholder=""
+            placeholderTextColor="#a0a0a0"
+          />
+        </View>
         <View style={styles.displayNameContainer}>
           <Text style={styles.displayNameText}>About</Text>
           <View style={styles.characterCountContainer}>

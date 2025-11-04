@@ -42,7 +42,9 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     buttonSecondary: {
       backgroundColor: 'transparent',
-      borderColor: theme.colors.secondaryShade3,
+      borderColor: theme.isDarkTheme
+        ? theme.colors.baseShade1
+        : theme.colors.secondaryShade2,
       borderWidth: 1,
     },
     buttonInverse: {
@@ -63,7 +65,9 @@ export const useStyles = (theme: MyMD3Theme) => {
       color: 'white',
     },
     textSecondary: {
-      color: theme.colors.secondary,
+      color: theme.isDarkTheme
+        ? theme.colors.baseShade1
+        : theme.colors.secondary,
     },
     textInverse: {
       color: 'white',
