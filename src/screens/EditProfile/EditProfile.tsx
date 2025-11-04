@@ -26,6 +26,7 @@ import { UserRepository } from '@amityco/ts-sdk-react-native';
 import useAuth from '../../hooks/useAuth';
 import { uploadImageFile } from '../../providers/file-provider';
 import { useFocusEffect } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface EditProfileProps {
   navigation: any;
@@ -220,66 +221,68 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   };
 
   return (
-    <View style={styles.container}>
-      <LoadingOverlay
-        isLoading={showLoadingIndicator}
-        loadingText="Loading..."
-      />
-      <View style={styles.avatarContainer}>
-        <TouchableOpacity onPress={handleAvatarPress}>
-          <Image
-            style={styles.avatar}
-            source={
-              imageUri
-                ? { uri: imageUri }
-                : require('../../../assets/icon/Placeholder.png')
-            }
-          />
-        </TouchableOpacity>
-        <View style={styles.cameraIconContainer}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <LoadingOverlay
+          isLoading={showLoadingIndicator}
+          loadingText="Loading..."
+        />
+        <View style={styles.avatarContainer}>
           <TouchableOpacity onPress={handleAvatarPress}>
-            <View style={styles.cameraIcon}>
-              <Image
-                source={require('../../../assets/icon/cameraIcon.png')}
-                style={styles.imageIcon}
-              />
-            </View>
+            <Image
+              style={styles.avatar}
+              source={
+                imageUri
+                  ? { uri: imageUri }
+                  : require('../../../assets/icon/Placeholder.png')
+              }
+            />
           </TouchableOpacity>
+          <View style={styles.cameraIconContainer}>
+            <TouchableOpacity onPress={handleAvatarPress}>
+              <View style={styles.cameraIcon}>
+                <Image
+                  source={require('../../../assets/icon/cameraIcon.png')}
+                  style={styles.imageIcon}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-      <View style={styles.displayNameContainer}>
-        <Text style={styles.displayNameText}>Display name*</Text>
-        <View style={styles.characterCountContainer}>
-          <Text
-            style={styles.characterCountText}
-          >{`${displayNameCharacterCount}/${MAX_CHARACTER_COUNT}`}</Text>
+        <View style={styles.displayNameContainer}>
+          <Text style={styles.displayNameText}>Display name*</Text>
+          <View style={styles.characterCountContainer}>
+            <Text
+              style={styles.characterCountText}
+            >{`${displayNameCharacterCount}/${MAX_CHARACTER_COUNT}`}</Text>
+          </View>
         </View>
-      </View>
 
-      <TextInput
-        style={styles.input}
-        value={displayName}
-        onChangeText={handleDisplayNameTextChange}
-        maxLength={MAX_CHARACTER_COUNT}
-        placeholder=""
-        placeholderTextColor="#a0a0a0"
-      />
-      <View style={styles.displayNameContainer}>
-        <Text style={styles.displayNameText}>About</Text>
-        <View style={styles.characterCountContainer}>
-          <Text
-            style={styles.characterCountText}
-          >{`${aboutCharacterCount}/${MAX_CHARACTER_COUNT}`}</Text>
+        <TextInput
+          style={styles.input}
+          value={displayName}
+          onChangeText={handleDisplayNameTextChange}
+          maxLength={MAX_CHARACTER_COUNT}
+          placeholder=""
+          placeholderTextColor="#a0a0a0"
+        />
+        <View style={styles.displayNameContainer}>
+          <Text style={styles.displayNameText}>About</Text>
+          <View style={styles.characterCountContainer}>
+            <Text
+              style={styles.characterCountText}
+            >{`${aboutCharacterCount}/${MAX_CHARACTER_COUNT}`}</Text>
+          </View>
         </View>
+        <TextInput
+          style={styles.input}
+          value={about}
+          onChangeText={handleAboutTextChange}
+          maxLength={MAX_CHARACTER_COUNT}
+          placeholder=""
+          placeholderTextColor="#a0a0a0"
+        />
       </View>
-      <TextInput
-        style={styles.input}
-        value={about}
-        onChangeText={handleAboutTextChange}
-        maxLength={MAX_CHARACTER_COUNT}
-        placeholder=""
-        placeholderTextColor="#a0a0a0"
-      />
-    </View>
+    </SafeAreaView>
   );
 };

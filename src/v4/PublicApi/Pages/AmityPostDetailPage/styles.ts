@@ -42,11 +42,6 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     input: {
       backgroundColor: theme.colors.baseShade4,
-      borderRadius: 20,
-      fontWeight: '400',
-      width: '90%',
-      paddingHorizontal: 16,
-      paddingVertical: 10,
       color: theme.colors.base,
     },
     AllInputWrap: {

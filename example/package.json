@@ -28,6 +28,7 @@
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-netinfo": "^1.1.0",
+    "react-native-network-logger": "^2.0.1",
     "react-native-safe-area-context": "5.2.0",
     "react-native-screens": "4.8.0",
     "react-native-svg": "15.11.1",

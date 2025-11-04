@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { ERROR_CODE } from '../../../../../v4/constants';
 import { useStyles } from '../styles';
 import { useToast } from '../../../../../v4/stores/slices/toast';
+import { useCustomRankingGlobalFeed } from '~/v4/hook/useCustomRankingGlobalFeed';
 
 export function useCommunitySetting(community: Amity.Community) {
   const { styles } = useStyles();
@@ -17,6 +18,7 @@ export function useCommunitySetting(community: Amity.Community) {
     >();
   const { AmityCommunitySettingPageBehavior } = useBehaviour();
   const { showToast } = useToast();
+  const { refresh } = useCustomRankingGlobalFeed();
 
   const { mutate: leaveCommunity } = useMutation({
     mutationFn: async () =>
@@ -24,6 +26,7 @@ export function useCommunitySetting(community: Amity.Community) {
     onSuccess: () => {
       navigation.goBack();
       showToast({ message: 'Successfully left the group', type: 'success' });
+      setTimeout(() => refresh(), 1000);
     },
     onError: (error) => {
       if (error.message.includes(ERROR_CODE.ONLY_ONE_MODERATOR)) {

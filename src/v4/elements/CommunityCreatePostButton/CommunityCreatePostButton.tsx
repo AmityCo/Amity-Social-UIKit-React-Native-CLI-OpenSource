@@ -31,7 +31,7 @@ function CommunityCreatePostButton({
         xml={plus()}
         width={32}
         height={32}
-        color={themeStyles.colors.background}
+        color={themeStyles.colors.base}
       />
     </TouchableOpacity>
   );
