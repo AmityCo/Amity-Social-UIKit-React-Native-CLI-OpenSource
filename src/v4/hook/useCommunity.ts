@@ -16,7 +16,9 @@ export const useCommunity = (communityId: Amity.Community['communityId']) => {
         }
       }
     );
-    unsubscribe();
+    return () => {
+      unsubscribe();
+    };
   }, [communityId]);
   return { community, loading };
 };

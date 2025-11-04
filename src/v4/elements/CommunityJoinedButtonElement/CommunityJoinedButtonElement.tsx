@@ -35,7 +35,9 @@ const CommunityJoinedButton: FC<CommunityJoinedButtonType> = ({
     <Button
       testID={accessibilityId}
       type="secondary"
-      icon={check()}
+      icon={check(
+        themeStyles.isDarkTheme ? themeStyles.colors.baseShade1 : undefined
+      )}
       themeStyle={themeStyles}
       onPress={handleLeaveCommunity}
       disabled={isPending}

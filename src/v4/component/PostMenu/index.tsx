@@ -133,7 +133,6 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
       if (deleted) {
         dispatch(deleteByPostId({ postId }));
         showToast({ type: 'success', message: 'Post deleted.' });
-        pageId === PageID.post_detail_page && navigation.pop();
       }
     } catch (error) {
       showToast({
@@ -156,7 +155,10 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => deletePost(),
+          onPress: () => {
+            deletePost();
+            pageId === PageID.post_detail_page && navigation.pop();
+          },
         },
       ]
     );
