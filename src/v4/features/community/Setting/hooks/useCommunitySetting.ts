@@ -26,7 +26,7 @@ export function useCommunitySetting(community: Amity.Community) {
     onSuccess: () => {
       navigation.goBack();
       showToast({ message: 'Successfully left the group', type: 'success' });
-      setTimeout(() => refresh(), 1000);
+      setTimeout(() => refresh(), 3000);
     },
     onError: (error) => {
       if (error.message.includes(ERROR_CODE.ONLY_ONE_MODERATOR)) {
