@@ -54,6 +54,7 @@ export interface CustomColors {
   live?: string;
 }
 export interface MyMD3Theme extends MD3Theme {
+  isDarkTheme: boolean;
   colors: MD3Theme['colors'] & CustomColors;
 }
 
@@ -114,6 +115,7 @@ export default function AmityUiKitProvider({
 
   const globalTheme: MyMD3Theme = {
     ...DefaultTheme,
+    isDarkTheme: isDarkTheme,
     colors: {
       ...DefaultTheme.colors,
       primary: validateConfigColor(themeColor?.primary_color),

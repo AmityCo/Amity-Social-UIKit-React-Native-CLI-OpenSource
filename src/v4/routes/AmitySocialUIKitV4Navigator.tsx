@@ -244,15 +244,25 @@ export default function AmitySocialUIKitV4Navigator() {
               name="UserProfile"
               component={UserProfile}
               options={{
+                headerShown: true,
                 headerLeft: () => <BackButton />,
                 headerTitleAlign: 'center',
                 title: 'Member',
               }}
             />
-            <Stack.Screen name="EditProfile" component={EditProfile} />
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
+              options={{
+                headerShown: true,
+              }}
+            />
             <Stack.Screen
               name="UserProfileSetting"
               component={UserProfileSetting}
+              options={{
+                headerShown: true,
+              }}
             />
             <Stack.Screen
               name="VideoPlayer"

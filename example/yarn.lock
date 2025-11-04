@@ -6361,6 +6361,11 @@ react-native-netinfo@^1.1.0:
   resolved "https://registry.yarnpkg.com/react-native-netinfo/-/react-native-netinfo-1.1.0.tgz#343a4a9413006493f350bc7923688bb3315c3dce"
   integrity sha512-muGzEvfCm9i+MF1qgPF1LsUmRxaTUWQ9i2TTbBoE/DBfsprv4Ds27iYLQvAgX5QzAMJm+iYKCq+3QN/hvPxrsQ==
 
+react-native-network-logger@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-network-logger/-/react-native-network-logger-2.0.1.tgz#d365d9af0b68fe5ebbb5f80580d4c757558ca23b"
+  integrity sha512-qR03Uvk2ihmII0hX128UOu+ykl7QH2XOqbj3YEcV4pMxj2JA7CvfuasAoLl8FZe0C8JQFHCHX0zo00/RcJdk0g==
+
 react-native-safe-area-context@5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.2.0.tgz#60a9faab2a6319a61411a652ed862ec0f59384be"

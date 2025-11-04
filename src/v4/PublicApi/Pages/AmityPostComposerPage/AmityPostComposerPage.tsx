@@ -739,6 +739,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
             multiline: true,
             placeholder: "What's going on...",
             placeholderTextColor: themeStyles.colors.baseShade3,
+            style: styles.input,
           })}
           <View style={styles.imageContainer}>
             {displayImages.length > 0 && (

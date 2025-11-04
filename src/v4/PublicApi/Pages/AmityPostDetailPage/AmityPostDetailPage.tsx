@@ -305,6 +305,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
                   multiline: true,
                   placeholder: 'Say something nice...',
                   placeholderTextColor: themeStyles.colors.baseShade3,
+                  style: styles.input,
                 })}
               </View>
 

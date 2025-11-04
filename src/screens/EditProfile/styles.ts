@@ -8,16 +8,17 @@ export const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      alignItems: 'center',
       // justifyContent: 'center',
       paddingHorizontal: 16,
       backgroundColor: theme.colors.background,
     },
     avatarContainer: {
+      alignItems: 'center',
       position: 'relative',
       marginBottom: 20,
     },
     avatar: {
+      alignItems: 'center',
       width: 64,
       height: 64,
       borderRadius: 32,
@@ -30,8 +31,8 @@ export const useStyles = () => {
     },
     cameraIconContainer: {
       position: 'absolute',
-      bottom: -8,
-      right: -5,
+      bottom: 0,
+      right: '40%',
     },
     cameraIcon: {
       backgroundColor: '#EBECEF',
@@ -50,6 +51,7 @@ export const useStyles = () => {
       flex: 1,
       fontWeight: '600',
       fontSize: 17,
+      color: theme.colors.base,
     },
     characterCountContainer: {
       marginRight: 10,
@@ -58,14 +60,20 @@ export const useStyles = () => {
       fontSize: 14,
       color: 'gray',
     },
-    input: {
+    inputContainer: {
+      justifyContent: 'flex-start',
       width: '100%',
+      alignItems: 'flex-start',
+    },
+    input: {
       height: 50,
       padding: 10,
       borderBottomWidth: 1,
       borderRadius: 5,
       borderColor: '#EBECEF',
       fontSize: 16,
+      color: theme.colors.base,
+      width: '100%', // Now this will work
     },
   });
 

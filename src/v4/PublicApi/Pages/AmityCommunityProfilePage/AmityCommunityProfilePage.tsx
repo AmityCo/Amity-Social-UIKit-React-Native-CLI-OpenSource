@@ -369,7 +369,11 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
               onPress={handleCreatePost}
               style={styles.bottomSheetOption}
             >
-              <SvgXml xml={post()} width={24} height={24} />
+              <SvgXml
+                xml={post({ fill: colors.base })}
+                width={24}
+                height={24}
+              />
               <Text style={styles.bottomSheetOptionText}>Post</Text>
             </TouchableOpacity>
             {hasStoryPermission && (
@@ -377,7 +381,12 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
                 onPress={handleCreateStory}
                 style={styles.bottomSheetOption}
               >
-                <SvgXml width={24} height={24} xml={story()} />
+                <SvgXml
+                  width={24}
+                  height={24}
+                  xml={story({ fill: colors.base })}
+                  fill={colors.base}
+                />
                 <Text style={styles.bottomSheetOptionText}>Story</Text>
               </TouchableOpacity>
             )}
