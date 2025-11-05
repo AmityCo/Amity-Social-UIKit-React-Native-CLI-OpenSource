@@ -31,7 +31,7 @@ import { defaultAvatarUri } from '../../../assets';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { formatNumber } from '../../../../util/numberUtil';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 
 type AmityReactionListComponentType = {
   referenceId: string;

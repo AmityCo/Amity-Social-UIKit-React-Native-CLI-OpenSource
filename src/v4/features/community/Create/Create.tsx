@@ -2,8 +2,8 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { Controller } from 'react-hook-form';
 import CoverImage from '../shared/components/CoverImageUpload';
-import { ElementID, PageID } from '~/v4/enum';
-import FormInput from '~/v4/component/FormInput';
+import { ElementID, PageID } from '../../../../v4/enum';
+import FormInput from '../../../../v4/component/FormInput';
 import Categories from '../shared/components/Categories';
 import { AmityCommunityPrivacyEnum } from '../shared/types';
 import Privacy from '../shared/components/Privacy';
@@ -11,12 +11,12 @@ import Members from './components/Members';
 import {
   MAX_COMMUNITY_DESCRIPTION_LENGTH,
   MAX_COMMUNITY_NAME_LENGTH,
-} from '~/v4/constants';
+} from '../../../../v4/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { useCreateCommunity } from './hooks/useCreateCommunity';
-import ActionButton from '~/v4/elements/ActionButton';
-import { plus } from '~/v4/assets/icons';
+import ActionButton from '../../../../v4/elements/ActionButton';
+import { plus } from '../../../../v4/assets/icons';
 
 function CreateCommunity() {
   const {

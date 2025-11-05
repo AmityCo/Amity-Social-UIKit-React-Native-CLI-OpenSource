@@ -49,6 +49,9 @@ export const useStyles = (theme: MyMD3Theme) => {
       marginTop: 14,
       paddingBottom: 3 * bottom + 16,
     },
+    input: {
+      color: theme.colors.base,
+    },
   });
 
   return styles;

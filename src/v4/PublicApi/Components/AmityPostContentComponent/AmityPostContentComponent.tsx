@@ -29,9 +29,9 @@ import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import PostContent from '../../../component/PostContent';
 import { PostMenu } from '../../../component/PostMenu';
-import PinBadge from '~/v4/elements/PinBadge';
-import AnnouncementBadge from '~/v4/elements/AnnouncementBadge';
-import { Typography } from '~/v4/component/Typography/Typography';
+import PinBadge from '../../../../v4/elements/PinBadge';
+import AnnouncementBadge from '../../../../v4/elements/AnnouncementBadge';
+import { Typography } from '../../../../v4/component/Typography/Typography';
 
 type AmityPostContentComponentProps = {
   post: Amity.Post & { structureType?: string };

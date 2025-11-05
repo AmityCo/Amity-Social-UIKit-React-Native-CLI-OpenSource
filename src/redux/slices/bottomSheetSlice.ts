@@ -1,7 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { ComponentID, PageID } from '~/v4/enum';
+import { ComponentID, PageID } from '../../v4/enum';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+import { RootState, useUIKitDispatch, useUIKitSelector } from '../store';
 
 export interface BottomSheetState {
   open: boolean;
@@ -46,7 +45,7 @@ const bottomSheetSlice = createSlice({
 export default bottomSheetSlice;
 
 export const useBottomSheet = () => {
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const {
     openBottomSheet: $openBottomSheet,
     closeBottomSheet: $closeBottomSheet,
@@ -57,7 +56,9 @@ export const useBottomSheet = () => {
     content: $content,
     open: $open,
     height: $height,
-  } = useSelector<RootState, BottomSheetState>((state) => state.bottomSheet);
+  } = useUIKitSelector<RootState, BottomSheetState>(
+    (state) => state.bottomSheet
+  );
 
   const openBottomSheet = ({ content, height }: OpenBottomSheetPayload) => {
     dispatch($openBottomSheet({ content, height }));

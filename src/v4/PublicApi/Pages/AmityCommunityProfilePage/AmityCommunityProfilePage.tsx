@@ -30,29 +30,34 @@ import AmityCommunityProfileTabComponent, {
 import AmityCommunityImageFeedComponent from '../../Components/AmityCommunityImageFeedComponent/AmityCommunityImageFeedComponent';
 import AmityCommunityVideoFeedComponent from '../../Components/AmityCommunityVideoFeedComponent/AmityCommunityVideoFeedComponent';
 import CommunityCoverNavigator from '../../../elements/CommunityCover/CommunityCoverNavigator';
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import CommunityCreatePostButton from '../../../elements/CommunityCreatePostButton/CommunityCreatePostButton';
 import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
-import { useNavigation } from '@react-navigation/native';
 import { livestream, poll, post, story } from '../../../../v4/assets/icons';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
-import AmityCommunityPinnedPostComponent from '~/v4/PublicApi/Components/AmityCommunityPinnedPostComponent/AmityCommunityPinnedPostComponent';
+import AmityCommunityPinnedPostComponent from '../../../../v4/PublicApi/Components/AmityCommunityPinnedPostComponent/AmityCommunityPinnedPostComponent';
 
-const AmityCommunityProfilePage = ({
-  route,
-}: NativeStackScreenProps<RootStackParamList, 'CommunityProfilePage'>) => {
+type ICommunityProfilePage = {
+  defaultCommunityId?: string;
+};
+const AmityCommunityProfilePage: React.FC<ICommunityProfilePage> = ({
+  defaultCommunityId,
+}) => {
   const pageId = PageID.community_profile_page;
-  const { communityId } = route.params;
+
   const { accessibilityId, themeStyles } = useAmityPage({
     pageId,
   });
-
+  const route =
+    useRoute<RouteProp<RootStackParamList, 'CommunityProfilePage'>>();
+  const routeCommunityId = route?.params?.communityId;
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const [communityId, setCommunityId] = useState<string>();
   const [currentTab, setCurrentTab] = useState(
     CommunityProfileTab.community_feed
   );
@@ -68,6 +73,18 @@ const AmityCommunityProfilePage = ({
   const feedRef = useRef<AmityCommunityFeedRef>(null);
 
   const styles = useStyles(themeStyles);
+
+  useEffect(() => {
+    const routes = navigation.getState().routes;
+    if (defaultCommunityId && routes.length === 1) {
+      setCommunityId(defaultCommunityId);
+    } else if (routeCommunityId) {
+      setCommunityId(routeCommunityId);
+    }
+    return () => {
+      setCommunityId(undefined);
+    };
+  }, [defaultCommunityId, routeCommunityId, navigation]);
 
   useEffect(() => {
     if (isScrolledPastHeader) {
@@ -179,6 +196,7 @@ const AmityCommunityProfilePage = ({
             pageId={pageId}
             componentId={ComponentID.community_header}
             communityId={communityId}
+            isFromComponent={!!defaultCommunityId}
           />
         </View>
       )}
@@ -197,6 +215,7 @@ const AmityCommunityProfilePage = ({
             communityId={communityId}
             isScrolled={true}
             isScrolling={isScrolling}
+            isFromComponent={!!defaultCommunityId}
           />
           <View style={styles.smallHeaderCommunityTabWrap}>
             {renderCommunityProfileTab()}
@@ -221,6 +240,7 @@ const AmityCommunityProfilePage = ({
           communityId={communityId}
           onHeightChange={setHeaderHeight}
           isScrolling={isScrolling}
+          isFromComponent={!!defaultCommunityId}
         />
         {renderCommunityProfileTab()}
         {renderTabComponent()}
@@ -348,7 +368,11 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
               onPress={handleCreatePost}
               style={styles.bottomSheetOption}
             >
-              <SvgXml xml={post()} width={24} height={24} />
+              <SvgXml
+                xml={post({ fill: colors.base })}
+                width={24}
+                height={24}
+              />
               <Text style={styles.bottomSheetOptionText}>Post</Text>
             </TouchableOpacity>
             {hasStoryPermission && (
@@ -356,7 +380,12 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
                 onPress={handleCreateStory}
                 style={styles.bottomSheetOption}
               >
-                <SvgXml width={24} height={24} xml={story()} />
+                <SvgXml
+                  width={24}
+                  height={24}
+                  xml={story({ fill: colors.base })}
+                  fill={colors.base}
+                />
                 <Text style={styles.bottomSheetOptionText}>Story</Text>
               </TouchableOpacity>
             )}

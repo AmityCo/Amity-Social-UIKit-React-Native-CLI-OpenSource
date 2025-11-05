@@ -1,24 +1,24 @@
 import { useStyles } from './styles';
 import React, { forwardRef, useImperativeHandle } from 'react';
-import { ComponentID, PageID } from '~/v4/enum';
-import { useAmityComponent, useCommunity } from '~/v4/hook';
+import { ComponentID, PageID } from '../../../../v4/enum';
+import { useAmityComponent, useCommunity } from '../../../../v4/hook';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
-import { usePosts } from '~/v4/hook/usePosts';
-import Divider from '~/v4/component/Divider';
+import { usePosts } from '../../../../v4/hook/usePosts';
+import Divider from '../../../../v4/component/Divider';
 import { View, FlatList } from 'react-native';
-import { isAmityAd } from '~/v4/hook/useCustomRankingGlobalFeed';
-import PostAdComponent from '~/v4/component/PostAdComponent/PostAdComponent';
-import { usePaginatorApi } from '~/v4/hook/usePaginator';
-import { usePostImpression } from '~/v4/hook/usePostImpression';
+import { isAmityAd } from '../../../../v4/hook/useCustomRankingGlobalFeed';
+import PostAdComponent from '../../../../v4/component/PostAdComponent/PostAdComponent';
+import { usePaginatorApi } from '../../../../v4/hook/usePaginator';
+import { usePostImpression } from '../../../../v4/hook/usePostImpression';
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
-} from '~/v4/enum/AmityPostContentComponentStyle';
-import EmptyComponent from '~/v4/component/EmptyComponent/EmptyComponent';
-import { emptyPost, privateFeed } from '~/v4/assets/icons';
-import PostFeedSkeleton from '~/v4/component/PostFeedSkeleton';
-import { usePinnedPostCollection } from '~/v4/hook/collections/usePinnedPostCollection';
-import { isPinnedPost } from '~/v4/utils';
+} from '../../../../v4/enum/AmityPostContentComponentStyle';
+import EmptyComponent from '../../../../v4/component/EmptyComponent/EmptyComponent';
+import { emptyPost, privateFeed } from '../../../../v4/assets/icons';
+import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';
+import { usePinnedPostCollection } from '../../../../v4/hook/collections/usePinnedPostCollection';
+import { isPinnedPost } from '../../../../v4/utils';
 
 export interface AmityCommunityFeedRef {
   handleLoadMore: () => void;

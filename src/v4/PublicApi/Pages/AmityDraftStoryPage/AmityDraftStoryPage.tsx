@@ -36,7 +36,7 @@ import { defaultAvatarUri } from '../../../assets/index';
 import { getMediaTypeFromUrl } from '../../../../util/urlUtil';
 import { LoadingOverlay } from '../../../../components/LoadingOverlay';
 import mime from 'mime';
-import { useToast } from '~/v4/stores/slices/toast';
+import { useToast } from '../../../../v4/stores/slices/toast';
 
 const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
   targetId,

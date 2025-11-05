@@ -45,7 +45,7 @@ import { useTimeDifference } from '../../../hook/useTimeDifference';
 import { LinkPreview } from '../../PreviewLink';
 import { Typography } from '../../Typography/Typography';
 import { pen, report, trash, unreport } from '../../../assets/icons';
-import { useToast } from '~/v4/stores/slices/toast';
+import { useToast } from '../../../../v4/stores/slices/toast';
 export interface IComment {
   commentId: string;
   data: Record<string, any>;

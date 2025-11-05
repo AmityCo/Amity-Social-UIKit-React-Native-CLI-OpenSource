@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Modal,
 } from 'react-native';
-import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import ImageViewer from '../ImageViewer/ImageViewer';
 import ImageFeedSkeleton from '../../component/ImageFeedSkeleton/ImageFeedSkeleton';
 

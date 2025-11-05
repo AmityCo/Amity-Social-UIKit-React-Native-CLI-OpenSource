@@ -61,7 +61,7 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     bottomSheetOptionText: {
       fontSize: 16,
-      color: theme.colors.onSurface,
+      color: theme.colors.base,
       marginLeft: 12,
       fontWeight: '500',
     },

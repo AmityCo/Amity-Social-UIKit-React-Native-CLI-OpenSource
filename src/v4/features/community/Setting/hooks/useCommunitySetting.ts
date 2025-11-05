@@ -1,13 +1,14 @@
 import { Alert } from 'react-native';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { useBehaviour } from '~/v4/providers/BehaviourProvider';
+import { useBehaviour } from '../../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '~/v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../v4/routes/RouteParamList';
 import { useMutation } from '@tanstack/react-query';
-import { ERROR_CODE } from '~/v4/constants';
+import { ERROR_CODE } from '../../../../../v4/constants';
 import { useStyles } from '../styles';
-import { useToast } from '~/v4/stores/slices/toast';
+import { useToast } from '../../../../../v4/stores/slices/toast';
+import { useCustomRankingGlobalFeed } from '~/v4/hook/useCustomRankingGlobalFeed';
 
 export function useCommunitySetting(community: Amity.Community) {
   const { styles } = useStyles();
@@ -17,6 +18,7 @@ export function useCommunitySetting(community: Amity.Community) {
     >();
   const { AmityCommunitySettingPageBehavior } = useBehaviour();
   const { showToast } = useToast();
+  const { refresh } = useCustomRankingGlobalFeed();
 
   const { mutate: leaveCommunity } = useMutation({
     mutationFn: async () =>
@@ -24,6 +26,7 @@ export function useCommunitySetting(community: Amity.Community) {
     onSuccess: () => {
       navigation.goBack();
       showToast({ message: 'Successfully left the group', type: 'success' });
+      setTimeout(() => refresh(), 3000);
     },
     onError: (error) => {
       if (error.message.includes(ERROR_CODE.ONLY_ONE_MODERATOR)) {
@@ -44,7 +47,7 @@ export function useCommunitySetting(community: Amity.Community) {
     mutationFn: async () =>
       await CommunityRepository.deleteCommunity(community.communityId),
     onSuccess: () => {
-      navigation.replace('Home');
+      navigation.replace('AmitySocialHomePage');
     },
     onError: () => {
       Alert.alert(

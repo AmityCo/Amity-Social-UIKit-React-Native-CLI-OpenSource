@@ -2,14 +2,14 @@ import React, { Fragment } from 'react';
 import { FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
-import { CheckBox } from '~/v4/component/core/CheckBox';
-import { Typography } from '~/v4/component/Typography/Typography';
-import Avatar from '~/v4/component/Avatar';
-import CategoryChip from '~/v4/component/CategoryChip/CategoryChip';
+import { CheckBox } from '../../../../v4/component/core/CheckBox';
+import { Typography } from '../../../../v4/component/Typography/Typography';
+import Avatar from '../../../../v4/component/Avatar';
+import CategoryChip from '../../../../v4/component/CategoryChip/CategoryChip';
 import { Controller } from 'react-hook-form';
 import useAddCategory from './hooks/useAddCategory';
 import MemberSkeleton from '../shared/components/MemberSkeleton';
-import ActionButton from '~/v4/elements/ActionButton';
+import ActionButton from '../../../../v4/elements/ActionButton';
 
 const AddCategory = () => {
   const {

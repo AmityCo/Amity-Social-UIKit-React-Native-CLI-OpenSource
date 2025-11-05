@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import { Typography } from '../../component/Typography/Typography';
-import { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import { SvgXml } from 'react-native-svg';
 import { cross } from '../../assets/icons';
 

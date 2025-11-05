@@ -3,7 +3,7 @@ import { useColorScheme } from 'react-native';
 import { Provider } from 'react-redux';
 import AuthContextProvider from './auth-provider';
 import { DefaultTheme, PaperProvider, type MD3Theme } from 'react-native-paper';
-import { store } from '../redux/store';
+import { AmityUIKitReduxContext, store } from '../redux/store';
 import { ConfigProvider } from './config-provider';
 import { IConfigRaw } from '../v4/types/config.interface';
 import { validateConfigColor } from '../util/colorUtil';
@@ -54,6 +54,7 @@ export interface CustomColors {
   live?: string;
 }
 export interface MyMD3Theme extends MD3Theme {
+  isDarkTheme: boolean;
   colors: MD3Theme['colors'] & CustomColors;
 }
 
@@ -114,6 +115,7 @@ export default function AmityUiKitProvider({
 
   const globalTheme: MyMD3Theme = {
     ...DefaultTheme,
+    isDarkTheme: isDarkTheme,
     colors: {
       ...DefaultTheme.colors,
       primary: validateConfigColor(themeColor?.primary_color),
@@ -142,7 +144,7 @@ export default function AmityUiKitProvider({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
+      <Provider store={store} context={AmityUIKitReduxContext}>
         <AuthContextProvider
           userId={userId}
           displayName={displayName || userId}

@@ -2,7 +2,7 @@ import React from 'react';
 import Avatar from '../Avatar';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useStyles } from './styles';
-import { CloseButton } from '~/v4/elements';
+import { CloseButton } from '../../../v4/elements';
 import { Typography } from '../Typography/Typography';
 
 type MemberChipProps = {

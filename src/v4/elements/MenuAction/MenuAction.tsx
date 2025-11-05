@@ -1,6 +1,6 @@
 import React from 'react';
 import { SvgXml, XmlProps } from 'react-native-svg';
-import { Typography } from '~/v4/component/Typography/Typography';
+import { Typography } from '../../../v4/component/Typography/Typography';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { useStyles } from './styles';
 

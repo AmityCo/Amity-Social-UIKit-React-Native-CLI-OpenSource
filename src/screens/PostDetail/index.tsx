@@ -43,8 +43,11 @@ import {
 } from '../../providers/Social/comment-sdk';
 import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import {
+  RootState,
+  useUIKitDispatch,
+  useUIKitSelector,
+} from '../../redux/store';
 import { IMentionPosition } from '../CreatePost';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../svg/svg-xml-list';
@@ -53,7 +56,6 @@ import { deletePostById } from '../../providers/Social/feed-sdk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TSearchItem } from '../../hooks/useSearch';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
-import { useDispatch } from 'react-redux';
 import feedSlice from '../../redux/slices/feedSlice';
 import postDetailSlice from '../../redux/slices/postDetailSlice';
 import useMention from '../../v4/hook/useMention';
@@ -79,7 +81,7 @@ const PostDetail = () => {
   const flatListRef = useRef(null);
   let isSubscribed = false;
   const disposers: Amity.Unsubscriber[] = [];
-  const dispatch = useDispatch();
+  const dispatch = useUIKitDispatch();
   const {
     updateByPostId: updateByPostIdGlobalFeed,
     deleteByPostId: deleteByPostIdGlobalFeed,
@@ -87,15 +89,15 @@ const PostDetail = () => {
   const { updateByPostId, deleteByPostId } = feedSlice.actions;
 
   const [loading, setLoading] = useState<boolean>(true);
-  const { currentPostdetail } = useSelector(
+  const { currentPostdetail } = useUIKitSelector(
     (state: RootState) => state.postDetail
   );
   const { updatePostDetail } = postDetailSlice.actions;
 
-  const { postList: postListGlobal } = useSelector(
+  const { postList: postListGlobal } = useUIKitSelector(
     (state: RootState) => state.globalFeed
   );
-  const { postList: postListFeed } = useSelector(
+  const { postList: postListFeed } = useUIKitSelector(
     (state: RootState) => state.feed
   );
 

@@ -4,6 +4,7 @@ import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
 import { useAmityElement, useJoinCommunity } from '../../hook';
 import { Button, BUTTON_SIZE } from '../../component/Button/Button';
 import { plus } from '../../assets/icons';
+import { useCustomRankingGlobalFeed } from '~/v4/hook/useCustomRankingGlobalFeed';
 
 type CommunityJoinButtonType = {
   pageId?: PageID;
@@ -26,7 +27,10 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
     elementId: ElementID.community_join_button,
   });
 
-  const { joinCommunity, isPending } = useJoinCommunity();
+  const { refresh } = useCustomRankingGlobalFeed();
+  const { joinCommunity, isPending } = useJoinCommunity({
+    onSuccess: () => setTimeout(() => refresh(), 3000),
+  });
 
   const handleJoinCommunity = () => {
     if (!communityId) return;
@@ -40,6 +44,12 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
       testID={accessibilityId}
       type="primary"
       icon={plus()}
+      iconProps={{
+        xml: plus(),
+        color: themeStyles.isDarkTheme
+          ? themeStyles.colors.base
+          : themeStyles.colors.baseShade4,
+      }}
       themeStyle={themeStyles}
       onPress={handleJoinCommunity}
       disabled={isPending}

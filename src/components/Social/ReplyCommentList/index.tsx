@@ -45,7 +45,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../v4/routes/RouteParamList';
 import { useTimeDifference } from '../../../v4/hook';
-import { useToast } from '~/v4/stores/slices/toast';
+import { useToast } from '../../../v4/stores/slices/toast';
 
 export interface IComment {
   commentId: string;

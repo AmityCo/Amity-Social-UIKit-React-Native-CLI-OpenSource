@@ -19,7 +19,7 @@ import { SvgXml } from 'react-native-svg';
 import { Typography } from '../../../component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
-import { useBottomSheet } from '~/redux/slices/bottomSheetSlice';
+import { useBottomSheet } from '../../../../redux/slices/bottomSheetSlice';
 import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import { PostRepository, RoomRepository } from '@amityco/ts-sdk-react-native';

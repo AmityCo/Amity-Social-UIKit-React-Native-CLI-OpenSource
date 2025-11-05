@@ -9,62 +9,62 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
-import useAuth from '~/hooks/useAuth';
-import CategoryList from '~/screens/CategorytList';
-import CommunityList from '~/screens/CommunityList';
-import CommunityMemberDetail from '~/screens/CommunityMemberDetail/CommunityMemberDetail';
-import AmitySocialHomePage from '~/v4/PublicApi/Pages/AmitySocialHomePage/AmitySocialHomePage';
-import PostDetail from '~/v4/screen/PostDetail';
-import CreatePost from '~/v4/screen/CreatePost';
-import UserProfile from '~/v4/screen/UserProfile';
-import { EditProfile } from '~/screens/EditProfile/EditProfile';
-import UserProfileSetting from '~/screens/UserProfileSetting/UserProfileSetting';
-import CommunitySearch from '~/screens/CommunitySearch';
-import AllMyCommunity from '~/screens/AllMyCommunity';
-import CreateCommunity from '~/v4/screen/CreateCommunity';
-import PendingPosts from '~/screens/PendingPosts';
-import type { MyMD3Theme } from '~/providers/amity-ui-kit-provider';
+import useAuth from '../../hooks/useAuth';
+import CategoryList from '../../screens/CategorytList';
+import CommunityList from '../../screens/CommunityList';
+import CommunityMemberDetail from '../../screens/CommunityMemberDetail/CommunityMemberDetail';
+import AmitySocialHomePage from '../../v4/PublicApi/Pages/AmitySocialHomePage/AmitySocialHomePage';
+import PostDetail from '../../v4/screen/PostDetail';
+import CreatePost from '../../v4/screen/CreatePost';
+import UserProfile from '../../v4/screen/UserProfile';
+import { EditProfile } from '../../screens/EditProfile/EditProfile';
+import UserProfileSetting from '../../screens/UserProfileSetting/UserProfileSetting';
+import CommunitySearch from '../../screens/CommunitySearch';
+import AllMyCommunity from '../../screens/AllMyCommunity';
+import CreateCommunity from '../../v4/screen/CreateCommunity';
+import PendingPosts from '../../screens/PendingPosts';
+import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
 import { useTheme } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '~/svg/svg-xml-list';
-import { useStyles } from '~/routes/style';
-import BackButton from '~/components/BackButton';
-import VideoPlayerFull from '~/screens/VideoPlayerFullScreen';
-import PostTypeChoiceModal from '~/components/PostTypeChoiceModal/PostTypeChoiceModal';
-import ReactionListScreen from '~/screens/ReactionListScreen/ReactionListScreen';
-import CreateStoryScreen from '~/v4/screen/CreateStory/CreateStoryScreen';
-import Toast from '~/components/Toast/Toast';
-import AmitySocialGlobalSearchPage from '~/v4/PublicApi/Pages/AmitySocialGlobalSearchPage/AmitySocialGlobalSearchPage';
-import UserPendingRequest from '~/v4/screen/UserPendingRequest/UserPendingRequest';
-import FollowerList from '~/v4/screen/FollowerList/FollowerList';
-import AmityMyCommunitiesSearchPage from '~/v4/PublicApi/Pages/AmityMyCommunitiesSearchPage/AmityMyCommunitiesSearchPage';
-import CreateLivestream from '~/v4/screen/CreateLivestream';
-import PostTargetSelection from '~/v4/screen/PostTargetSelection';
-import StoryTargetSelection from '~/v4/PublicApi/Pages/AmityStoryTargetSelectionPage/AmityStoryTargetSelectionPage';
-import LivestreamPostTargetSelection from '~/v4/screen/LivestreamPostTargetSelection';
-import AmityAllCategoriesPage from '~/v4/PublicApi/Pages/AmityAllCategoriesPage/AmityAllCategoriesPage';
-import AmityCommunitiesByCategoryPage from '~/v4/PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
-import AmityCommunityProfilePage from '~/v4/PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
-import EditPost from '~/v4/screen/EditPost/EditPost';
-import AmityExploreComponent from '~/v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
-import LivestreamPlayer from '~/v4/screen/LivestreamPlayer';
-import LivestreamTerminated from '~/v4/screen/LivestreamTerminated';
-import PollTargetSelection from '~/v4/screen/PollTargetSelection';
-import PollPostComposer from '~/v4/screen/PollPostComposer';
-import CommunityAddCategory from '~/v4/screen/CommunityAddCategory';
-import CommunityAddMember from '~/v4/screen/CommunityAddMember';
-import EditCommunity from '~/v4/screen/EditCommunity';
-import CommunitySetting from '~/v4/screen/CommunitySetting';
-import CommunityMembership from '~/v4/screen/CommunityMembership';
-import CommunityPostPermission from '~/v4/screen/CommunityPostPermission';
-import CommunityStorySetting from '~/v4/screen/CommunityStorySetting';
-import CommunityNotificationSetting from '~/v4/screen/CommunityNotificationSetting';
-import CommunityPostsNotificationSetting from '~/v4/screen/CommunityPostsNotificationSetting';
-import CommunityCommentsNotificationSetting from '~/v4/screen/CommunityCommentsNotificationSetting';
-import CommunityStoriesNotificationSetting from '~/v4/screen/CommunityStoriesNotificationSetting';
-import CommunityLivestreamsNotificationSetting from '~/v4/screen/CommunityLivestreamsNotificationSetting';
-import CommunityPendingRequest from '~/v4/screen/CommunityPendingRequest';
+import { closeIcon } from '../../svg/svg-xml-list';
+import { useStyles } from '../../routes/style';
+import BackButton from '../../components/BackButton';
+import VideoPlayerFull from '../../screens/VideoPlayerFullScreen';
+import PostTypeChoiceModal from '../../components/PostTypeChoiceModal/PostTypeChoiceModal';
+import ReactionListScreen from '../../screens/ReactionListScreen/ReactionListScreen';
+import CreateStoryScreen from '../../v4/screen/CreateStory/CreateStoryScreen';
+import Toast from '../../components/Toast/Toast';
+import AmitySocialGlobalSearchPage from '../../v4/PublicApi/Pages/AmitySocialGlobalSearchPage/AmitySocialGlobalSearchPage';
+import UserPendingRequest from '../../v4/screen/UserPendingRequest/UserPendingRequest';
+import FollowerList from '../../v4/screen/FollowerList/FollowerList';
+import AmityMyCommunitiesSearchPage from '../../v4/PublicApi/Pages/AmityMyCommunitiesSearchPage/AmityMyCommunitiesSearchPage';
+import CreateLivestream from '../../v4/screen/CreateLivestream';
+import PostTargetSelection from '../../v4/screen/PostTargetSelection';
+import StoryTargetSelection from '../../v4/PublicApi/Pages/AmityStoryTargetSelectionPage/AmityStoryTargetSelectionPage';
+import LivestreamPostTargetSelection from '../../v4/screen/LivestreamPostTargetSelection';
+import AmityAllCategoriesPage from '../../v4/PublicApi/Pages/AmityAllCategoriesPage/AmityAllCategoriesPage';
+import AmityCommunitiesByCategoryPage from '../../v4/PublicApi/Pages/AmityCommunitiesByCategoryPage/AmityCommunitiesByCategoryPage';
+import AmityCommunityProfilePage from '../../v4/PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
+import EditPost from '../../v4/screen/EditPost/EditPost';
+import AmityExploreComponent from '../../v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
+import LivestreamPlayer from '../../v4/screen/LivestreamPlayer';
+import LivestreamTerminated from '../../v4/screen/LivestreamTerminated';
+import PollTargetSelection from '../../v4/screen/PollTargetSelection';
+import PollPostComposer from '../../v4/screen/PollPostComposer';
+import CommunityAddCategory from '../../v4/screen/CommunityAddCategory';
+import CommunityAddMember from '../../v4/screen/CommunityAddMember';
+import EditCommunity from '../../v4/screen/EditCommunity';
+import CommunitySetting from '../../v4/screen/CommunitySetting';
+import CommunityMembership from '../../v4/screen/CommunityMembership';
+import CommunityPostPermission from '../../v4/screen/CommunityPostPermission';
+import CommunityStorySetting from '../../v4/screen/CommunityStorySetting';
+import CommunityNotificationSetting from '../../v4/screen/CommunityNotificationSetting';
+import CommunityPostsNotificationSetting from '../../v4/screen/CommunityPostsNotificationSetting';
+import CommunityCommentsNotificationSetting from '../../v4/screen/CommunityCommentsNotificationSetting';
+import CommunityStoriesNotificationSetting from '../../v4/screen/CommunityStoriesNotificationSetting';
+import CommunityLivestreamsNotificationSetting from '../../v4/screen/CommunityLivestreamsNotificationSetting';
+import CommunityPendingRequest from '../../v4/screen/CommunityPendingRequest';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -93,7 +93,7 @@ export default function AmitySocialUIKitV4Navigator() {
             }}
           >
             <Stack.Screen
-              name="Home"
+              name="AmitySocialHomePage"
               component={AmitySocialHomePage}
               options={{ headerShown: false }}
             />
@@ -244,15 +244,25 @@ export default function AmitySocialUIKitV4Navigator() {
               name="UserProfile"
               component={UserProfile}
               options={{
+                headerShown: true,
                 headerLeft: () => <BackButton />,
                 headerTitleAlign: 'center',
                 title: 'Member',
               }}
             />
-            <Stack.Screen name="EditProfile" component={EditProfile} />
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
+              options={{
+                headerShown: true,
+              }}
+            />
             <Stack.Screen
               name="UserProfileSetting"
               component={UserProfileSetting}
+              options={{
+                headerShown: true,
+              }}
             />
             <Stack.Screen
               name="VideoPlayer"

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useStyles } from './styles';
 import { FlatList, View } from 'react-native';
-import { useCommunityMemberCollection } from '~/v4/hook/collections/useCommunityMemberCollection';
+import { useCommunityMemberCollection } from '../../../../../../v4/hook/collections/useCommunityMemberCollection';
 import MemberItem from '../MemberItem';
-import MemberSkeleton from '~/v4/features/community/shared/components/MemberSkeleton';
-import { MemberRoles } from '~/constants';
+import MemberSkeleton from '../../../../../../v4/features/community/shared/components/MemberSkeleton';
+import { MemberRoles } from '../../../../../constants';
 
 type ModeratorListProps = {
   community: Amity.Community;

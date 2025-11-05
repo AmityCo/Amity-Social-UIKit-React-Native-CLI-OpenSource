@@ -1,10 +1,10 @@
 import React, { memo, FC, useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { feed, image, pin, video } from '~/v4/assets/icons';
-import IconTab from '~/v4/component/IconTab/IconTab';
-import { ComponentID, ElementID, PageID } from '~/v4/enum';
-import { useAmityElement } from '~/v4/hook';
+import { feed, image, pin, video } from '../../../../v4/assets/icons';
+import IconTab from '../../../../v4/component/IconTab/IconTab';
+import { ComponentID, ElementID, PageID } from '../../../../v4/enum';
+import { useAmityElement } from '../../../../v4/hook';
 
 export const enum CommunityProfileTab {
   community_feed = 'community_feed',

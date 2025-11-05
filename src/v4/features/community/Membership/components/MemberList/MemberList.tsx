@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useStyles } from './styles';
 import { FlatList, View } from 'react-native';
-import SearchInput from '~/v4/component/SearchInput';
-import { useCommunityMemberCollection } from '~/v4/hook/collections/useCommunityMemberCollection';
+import SearchInput from '../../../../../../v4/component/SearchInput';
+import { useCommunityMemberCollection } from '../../../../../../v4/hook/collections/useCommunityMemberCollection';
 import MemberItem from '../MemberItem';
-import { useSearchMemberByDisplayNameCollection } from '~/v4/hook/collections/useSearchMemberByDisplayNameCollection';
-import MemberSkeleton from '~/v4/features/community/shared/components/MemberSkeleton';
+import { useSearchMemberByDisplayNameCollection } from '../../../../../../v4/hook/collections/useSearchMemberByDisplayNameCollection';
+import MemberSkeleton from '../../../../../../v4/features/community/shared/components/MemberSkeleton';
 
 type MemberListProps = {
   community: Amity.Community;

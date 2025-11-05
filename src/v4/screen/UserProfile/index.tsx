@@ -1,19 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AmityUserProfilePage from '../../PublicApi/Pages/AmityUserProfilePage';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../routes/RouteParamList';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-type UserProfileProps = NativeStackScreenProps<
-  RootStackParamList,
-  'UserProfile'
->;
+type UserProfileProps = {
+  defaultUserId?: string;
+  isShowBackButton?: boolean;
+};
 
-function UserProfile(_: UserProfileProps) {
+function UserProfile({ defaultUserId, isShowBackButton }: UserProfileProps) {
   const route = useRoute<RouteProp<RootStackParamList, 'UserProfile'>>();
-  const userId = route?.params?.userId;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const userIdFromRoute = route?.params?.userId;
+  const [userId, setUserId] = useState<string>('');
 
-  return <AmityUserProfilePage userId={userId} />;
+  useEffect(() => {
+    const routes = navigation.getState().routes;
+
+    if (defaultUserId && routes.length === 1) {
+      setUserId(defaultUserId);
+    } else if (userIdFromRoute) {
+      setUserId(userIdFromRoute);
+    }
+    return () => {
+      setUserId('');
+    };
+  }, [defaultUserId, navigation, userIdFromRoute]);
+
+  return (
+    <AmityUserProfilePage
+      userId={userId}
+      isFromComponent={!!defaultUserId && !userIdFromRoute}
+      isShowBackButton={isShowBackButton ? isShowBackButton : !defaultUserId}
+    />
+  );
 }
 
 export default UserProfile;

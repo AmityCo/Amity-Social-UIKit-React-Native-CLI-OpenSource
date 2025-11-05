@@ -1,21 +1,30 @@
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
-import Avatar from '~/v4/component/Avatar';
+import Avatar from '../../../../../../v4/component/Avatar';
 import { useStyles } from './style';
-import { Typography } from '~/v4/component/Typography/Typography';
-import MenuButton from '~/v4/elements/MenuButton';
-import useAuth from '~/hooks/useAuth';
-import { useBottomSheet } from '~/redux/slices/bottomSheetSlice';
-import MenuAction from '~/v4/elements/MenuAction';
-import { MemberRoles } from '~/v4/constants';
-import { useToast } from '~/v4/stores/slices/toast';
-import { demote, promote, report, trash, unreport } from '~/v4/assets/icons';
-import { checkEditRolePermission, isModerator } from '~/v4/utils/permissions';
+import { Typography } from '../../../../../../v4/component/Typography/Typography';
+import MenuButton from '../../../../../../v4/elements/MenuButton';
+import useAuth from '../../../../../../hooks/useAuth';
+import { useBottomSheet } from '../../../../../../redux/slices/bottomSheetSlice';
+import MenuAction from '../../../../../../v4/elements/MenuAction';
+import { MemberRoles } from '../../../../../../v4/constants';
+import { useToast } from '../../../../../../v4/stores/slices/toast';
+import {
+  demote,
+  promote,
+  report,
+  trash,
+  unreport,
+} from '../../../../../../v4/assets/icons';
+import {
+  checkEditRolePermission,
+  isModerator,
+} from '../../../../../../v4/utils/permissions';
 import {
   useRolesQuery,
   useMembersQuery,
   useUserFlaggedByMeQuery,
-} from '~/v4/hook';
+} from '../../../../../../v4/hook';
 
 type MemberItemProps = {
   member: Amity.Membership<'community'>;
