@@ -7,7 +7,7 @@ import {
   ImageStyle,
 } from 'react-native';
 import React, { useEffect, useState, useCallback, Fragment } from 'react';
-import { FileRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
+import { FileRepository, RoomRepository } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
@@ -22,14 +22,14 @@ import { RootStackParamList } from '../../routes/RouteParamList';
 import LiveStreamTerminatedThumbnail from './LivestreamTerminatedThumbnail';
 
 interface ILivestreamContent {
-  streamId: Amity.Stream['streamId'];
+  roomId: Amity.Room['roomId'];
   onPressPost: () => void;
   post: Amity.Post;
 }
 
 const LivestreamContent: React.FC<ILivestreamContent> = ({
   post,
-  streamId,
+  roomId,
   onPressPost,
 }) => {
   const { styles, theme } = useStyles();
@@ -39,18 +39,18 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
     >();
 
   const [error, setError] = useState<boolean>(false);
-  const [livestream, setLivestream] = useState<Amity.Stream>();
+  const [livestream, setLivestream] = useState<Amity.Room>();
   const [thumbnailUrl, setThumbnailUrl] = useState<ImageSourcePropType>();
   const [isUpcoming, setIsUpcoming] = useState<boolean>(false);
 
   const onPlayLivestream = useCallback(() => {
     navigation.navigate('LivestreamPlayer', {
       post,
-      streamId: livestream.streamId,
+      roomId: livestream.roomId,
     });
   }, [livestream, navigation, post]);
 
-  const getLivestreamThumbnail = async (currentStream: Amity.Stream) => {
+  const getLivestreamThumbnail = async (currentStream: Amity.Room) => {
     const defaultThumbnail = require('../../assets/images/livestream.png');
 
     if (currentStream.thumbnailFileId) {
@@ -71,8 +71,8 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
 
   useEffect(() => {
     setIsUpcoming(true);
-    const unsubscribe = StreamRepository.getStreamById(
-      streamId,
+    const unsubscribe = RoomRepository.getRoom(
+      roomId,
       ({ data, loading, error: streamError }) => {
         if (streamError) setError(!!streamError);
         if (!loading && data) {
@@ -86,13 +86,13 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
     return () => {
       unsubscribe();
     };
-  }, [streamId]);
+  }, [roomId]);
 
   if (!livestream) return null;
 
   if (error || livestream?.isDeleted) {
     return (
-      <View key={livestream.streamId} style={styles.container}>
+      <View key={livestream.roomId} style={styles.container}>
         <LiveStreamIdleThumbnail />
       </View>
     );
@@ -107,7 +107,7 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
 
   if (isTerminated && isLiveOrEnded) {
     return (
-      <View key={livestream.streamId} style={styles.container}>
+      <View key={livestream.roomId} style={styles.container}>
         <LiveStreamTerminatedThumbnail />
       </View>
     );

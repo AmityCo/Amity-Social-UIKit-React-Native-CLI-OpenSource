@@ -13,6 +13,7 @@ export const useStyles = () => {
       position: 'relative',
       backgroundColor: '#000000',
     },
+
     steamEndContainer: {
       flex: 1,
       justifyContent: 'center',

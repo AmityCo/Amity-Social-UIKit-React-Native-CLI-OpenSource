@@ -72,7 +72,7 @@ export type RootStackParamList = {
     targetType: string;
   };
   LivestreamPlayer: {
-    streamId: string;
+    roomId: string;
     post: Amity.Post;
   };
   LivestreamTerminated: {

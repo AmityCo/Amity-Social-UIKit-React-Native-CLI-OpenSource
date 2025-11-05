@@ -9,7 +9,7 @@
     "pods": "pod-install --quiet"
   },
   "dependencies": {
-    "@amityco/ts-sdk-react-native": "^7.9.2",
+    "@amityco/ts-sdk-react-native": "7.11.1-16808a2d.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
     "@livekit/react-native": "^2.9.3",
     "@livekit/react-native-webrtc": "^137.0.2",

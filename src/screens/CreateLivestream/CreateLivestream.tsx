@@ -16,7 +16,7 @@ import { useStyles } from './styles';
 import useImagePicker from '../../../src/hooks/useImagePicker';
 import { uploadImageFile } from '../../../src/providers/file-provider';
 
-import { StreamRepository, PostRepository } from '@amityco/ts-sdk-react-native';
+import { PostRepository, RoomRepository } from '@amityco/ts-sdk-react-native';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 
 // import {
@@ -55,7 +55,7 @@ const CreateLivestream = ({ navigation, route }) => {
 
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [stream, setStream] = useState<Amity.Stream | null>(null);
+  const [room, setRoom] = useState<Amity.Room | null>(null);
   const [isLive, setIsLive] = useState<boolean>(false);
   const [timer] = useState<number | null>(null);
 
@@ -141,16 +141,16 @@ const CreateLivestream = ({ navigation, route }) => {
   }, []);
 
   const createStreamPost = useCallback(
-    (newStream: Amity.Stream) => {
+    (newRoom: Amity.Room) => {
       const params = {
         targetId,
         targetType,
         dataType: 'liveStream' as Amity.PostContentType,
         data: {
-          text: `${newStream.title}${
-            newStream.description ? `\n\n${newStream.description}` : ''
+          text: `${newRoom.title}${
+            newRoom.description ? `\n\n${newRoom.description}` : ''
           }`,
-          streamId: newStream.streamId,
+          roomId: newRoom.roomId,
         },
       };
 
@@ -168,18 +168,18 @@ const CreateLivestream = ({ navigation, route }) => {
 
       if (imageUri) fileId = await uploadFile(imageUri);
 
-      const { data: newStream } = await StreamRepository.createStream({
+      const { data: newRoom } = await RoomRepository.createRoom({
         title,
         description: description || undefined,
         thumbnailFileId: fileId,
       });
 
-      if (newStream) {
-        const { data: newPost } = await createStreamPost(newStream);
-        setStream(newStream);
+      if (newRoom) {
+        const { data: newPost } = await createStreamPost(newRoom);
+        setRoom(newRoom);
         setPost(newPost);
 
-        streamRef?.current.startPublish(newStream.streamId);
+        streamRef?.current.startPublish(newRoom.roomId);
       }
     } else emptyTitleAlert();
   }, [title, description, createStreamPost, imageUri, uploadFile]);
@@ -193,17 +193,17 @@ const CreateLivestream = ({ navigation, route }) => {
   // };
 
   const onStopStream = useCallback(async () => {
-    if (stream) {
+    if (room) {
       setIsEnding(true);
       try {
-        await StreamRepository.disposeStream(stream.streamId);
+        await RoomRepository.stopRoom(room.roomId);
       } catch (e) {
-        console.log('disposeStream error', e);
+        console.log('stopRoom error', e);
       }
 
       streamRef?.current.stopPublish();
       setIsLive(false);
-      setStream(null);
+      setRoom(null);
       setTitle(undefined);
       setDescription(undefined);
       setTime(0);
@@ -214,7 +214,7 @@ const CreateLivestream = ({ navigation, route }) => {
         postId: post.postId,
       });
     }
-  }, [stream, timer, post, navigation]);
+  }, [room, timer, post, navigation]);
 
   const onSwitchCamera = () => {
     streamRef?.current.switchCamera();

@@ -345,7 +345,7 @@ const PostContent: React.FC<IPostContent> = ({
         <LivestreamContent
           post={post}
           onPressPost={onPressPost}
-          streamId={livestreamId[0]}
+          roomId={livestreamId[0]}
         />
       ) : (
         renderMediaPosts()

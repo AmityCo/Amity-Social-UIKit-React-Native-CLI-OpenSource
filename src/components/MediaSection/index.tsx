@@ -26,9 +26,7 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
   const [imagePosts, setImagePosts] = useState<string[]>([]);
   const [videoPosts, setVideoPosts] = useState<IVideoPost[]>([]);
   const [pollIds, setPollIds] = useState<{ pollId: string }[]>([]);
-  const [livestreamId, setLivestreamId] = useState<Amity.Stream['streamId'][]>(
-    []
-  );
+  const [livestreamId, setLivestreamId] = useState<Amity.Room['roomId'][]>([]);
 
   const [imagePostsFullSize, setImagePostsFullSize] = useState<MediaUri[]>([]);
   const [videoPostsFullSize, setVideoPostsFullSize] = useState<MediaUri[]>([]);
@@ -99,7 +97,7 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
         } else if (item?.dataType === 'liveStream') {
           setLivestreamId((prev) => {
             return !prev.includes(item.data)
-              ? [...prev, item.data.streamId]
+              ? [...prev, item.data.roomId]
               : [...prev];
           });
         }
@@ -265,7 +263,7 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
         <PollSection pollId={pollIds[0].pollId} />
       ) : livestreamId.length > 0 ? (
         <LivestreamContent
-          streamId={livestreamId[0]}
+          roomId={livestreamId[0]}
           post={null}
           onPressPost={() => {}}
         />

@@ -22,7 +22,7 @@ import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 import { useBottomSheet } from '~/redux/slices/bottomSheetSlice';
 import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
-import { PostRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
+import { PostRepository, RoomRepository } from '@amityco/ts-sdk-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Button from '../../../component/Button/Button';
 import { useRequestPermission } from '../../../../v4/hook/useCamera';
@@ -40,15 +40,35 @@ import { SwitchCameraButton } from '../../../elements/SwitchCameraButton';
 import { Track, LocalVideoTrack } from 'livekit-client';
 import { LiveKitRoom, registerGlobals } from '@livekit/react-native';
 import { RoomView } from './RoomView';
+import useAuth from '~/hooks/useAuth';
 
 // Register WebRTC globals required for LiveKit
 registerGlobals();
 
-//TODO : Remove token later and integrate with backend
+const NETWORK_ID = 'network-789';
+const API_SECRET = 'rosebud';
 
-const LIVEKIT_SERVER_URL = 'wss://sp-live-3tr59jrk.livekit.cloud';
-const LIVEKIT_TOKEN =
-  'eyJhbGciOiJIUzI1NiJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6InNlc3Npb24tOTkwNjFiNjgtYTQyMC00NzgxLTlmMjYtNzFkZjVhNTgxYjRlIiwiY2FuUHVibGlzaCI6dHJ1ZSwiY2FuU3Vic2NyaWJlIjp0cnVlfSwiaXNzIjoiQVBJWHBkcmltdEJoQXJ3IiwiZXhwIjoxNzYxODIzNDI2LCJuYmYiOjAsInN1YiI6IldlYi1UZXN0In0.fJ-s4Z-q5Fd0e-OXwjfX-8kRUTvCCTS1d80vfrldtck';
+const BASE_URL = 'https://poc-co-stream.social.plus';
+
+type LiveStreamSession = {
+  sessionId: string;
+  roomName: string;
+  status: 'idle' | 'live';
+  creatorTag: string;
+  playbackUrl: string;
+  muxPlayerPlaybackUrl: string;
+  liveThumbnailUrl: string;
+};
+
+type RoomTokenResponse = {
+  token: string;
+  url: string;
+  roomName: string;
+  rtmpIngestUrl: string;
+  rtmpStreamKey: string;
+};
+
+const serverUrl = 'wss://sp-live-3tr59jrk.livekit.cloud';
 
 const calculateTime = (time: number) => {
   const hours = Math.floor(time / 3600000);
@@ -66,11 +86,12 @@ const calculateTime = (time: number) => {
 
 function AmityCreateLivestreamPage() {
   const styles = useStyles();
-  const streamRef = useRef<any>(null);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const theme = useTheme<MyMD3Theme>();
   const route = useRoute<RouteProp<RootStackParamList, 'CreateLivestream'>>();
+  const { client } = useAuth() as { client: { userId: string } };
+  const currentUserId = client.userId ?? '';
 
   const [time, setTime] = useState<number>(0);
   const [title, setTitle] = useState<string>('');
@@ -78,8 +99,8 @@ function AmityCreateLivestreamPage() {
   const [description, setDescription] = useState<string>('');
   const [isEnding, setIsEnding] = useState<boolean>(false);
   const [post, setPost] = useState<Amity.Post | null>(null);
-  const [stream, setStream] = useState<Amity.Stream | null>(null);
-  const [timer] = useState<number | null>(null);
+  const [room, setRoom] = useState<Amity.Room | null>(null);
+  const timerRef = useRef<number | null>(null);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [androidPermission, setAndroidPermission] = useState<boolean>(false);
   const [iOSPermission, setIOSPermission] = useState<boolean>(true);
@@ -87,6 +108,8 @@ function AmityCreateLivestreamPage() {
   const [livekitParticipant, setLivekitParticipant] = useState<any>(null);
   const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
   const unsubscribeRef = useRef<Amity.Unsubscriber>(null);
+  const [roomToken, setRoomToken] = useState('');
+  const currentSessionIdRef = useRef(room?.roomId || '');
 
   const {
     imageUri,
@@ -190,37 +213,48 @@ function AmityCreateLivestreamPage() {
       setIsLive(true);
       setIsConnecting(true);
 
-      const { data: newStream } = await StreamRepository.createStream({
+      const { data: newStream } = await RoomRepository.createRoom({
         title,
         description: description || undefined,
         thumbnailFileId: uploadedImage?.fileId,
+        type: 'coHosts',
       });
+
+      setRoom(newStream);
 
       if (newStream) {
         const params = {
           targetId,
           targetType,
-          dataType: 'liveStream' as Amity.PostContentType,
+          dataType: 'room' as Amity.PostContentType,
           data: {
             text: `${newStream.title}${
               newStream.description ? `\n\n${newStream.description}` : ''
             }`,
-            streamId: newStream.streamId,
+            roomId: newStream.roomId,
           },
         };
 
         const newPost = await PostRepository.createPost(params);
 
-        streamRef.current = StreamRepository.getStreamById(
-          newStream.streamId,
-          ({ data }) => {
-            setStream(data);
-            setPost(newPost.data);
-            streamRef?.current?.startPublish(newStream.streamId);
-          }
-        );
+        setPost(newPost.data);
+
+        // Set isConnecting to false since LiveKit room is already connected
+        setIsConnecting(false);
+
+        // Start the timer when live stream actually starts
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+
+        const intervalId = setInterval(() => {
+          setTime((prev) => prev + 1000);
+        }, 1000);
+
+        timerRef.current = intervalId;
       }
     } catch (error) {
+      console.log('startLiveStream error', error);
       setIsLive(false);
       setIsConnecting(false);
       Alert.alert(
@@ -234,17 +268,6 @@ function AmityCreateLivestreamPage() {
       );
     }
   };
-
-  // const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
-  //   if (state === AmityStreamBroadcasterState.CONNECTED) {
-  //     setIsConnecting(false);
-  //     setReconnecting(false);
-  //     const intervalId = setInterval(() => {
-  //       setTime((prev) => prev + 1000);
-  //     }, 1000);
-  //     setTimer(intervalId);
-  //   }
-  // };
 
   const confirmEndStreamAlert = () => {
     Alert.alert(
@@ -268,21 +291,22 @@ function AmityCreateLivestreamPage() {
 
   const endLiveStream = useCallback(
     async (showEndPopup = false) => {
-      if (stream) {
+      if (room) {
         setIsEnding(true);
         try {
-          await StreamRepository.disposeStream(stream.streamId);
+          await RoomRepository.stopRoom(room.roomId);
         } catch (e) {
           console.log('disposeStream error', e);
         } finally {
-          streamRef?.current.stopPublish();
-
           setIsLive(false);
-          setStream(null);
+          setRoom(null);
           setTitle('');
           setDescription('');
           setTime(0);
-          clearInterval(timer);
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
           setIsEnding(false);
           setReconnecting(false);
 
@@ -293,15 +317,15 @@ function AmityCreateLivestreamPage() {
         }
       }
     },
-    [post, stream, timer, navigation]
+    [post, room, navigation]
   );
 
   useEffect(() => {
     const fourHours = 4 * 60 * 60 * 1000;
-    if (streamRef.current && stream && time >= fourHours) {
+    if (room && time >= fourHours) {
       endLiveStream(true);
     }
-  }, [endLiveStream, stream, time]);
+  }, [endLiveStream, room, time]);
 
   useEffect(() => {
     if (Platform.OS === 'android') checkPermissionAndroid();
@@ -321,39 +345,32 @@ function AmityCreateLivestreamPage() {
   useEffect(() => {
     let threeMinutesTimeout: number;
 
-    if (reconnecting && stream && stream?.status === 'live') {
+    if (reconnecting && room && room?.status === 'live') {
       threeMinutesTimeout = setTimeout(() => {
         endLiveStream();
       }, 1000 * 60 * 3);
     }
 
-    if (
-      !reconnecting &&
-      stream &&
-      stream?.status === 'live' &&
-      streamRef?.current
-    ) {
-      streamRef?.current?.startPublish(stream?.streamId);
-
+    if (!reconnecting && room && room?.status === 'live') {
       if (threeMinutesTimeout) {
         clearTimeout(threeMinutesTimeout);
         threeMinutesTimeout = null;
       }
     }
-  }, [reconnecting, endLiveStream, stream]);
+  }, [reconnecting, endLiveStream, room]);
 
   useEffect(() => {
     const isTerminated =
-      stream?.moderation?.terminateLabels &&
-      stream?.moderation?.terminateLabels?.length > 0;
+      room?.moderation?.terminateLabels &&
+      room?.moderation?.terminateLabels?.length > 0;
     const isLiveOrEnded =
-      stream?.status === LivestreamStatus.live ||
-      stream?.status === LivestreamStatus.ended;
+      room?.status === LivestreamStatus.live ||
+      room?.status === LivestreamStatus.ended;
 
     if (isLiveOrEnded && isTerminated) {
       navigation.replace('LivestreamTerminated', { type: 'streamer' });
     }
-  }, [stream?.moderation?.terminateLabels, stream?.status, navigation]);
+  }, [room?.moderation?.terminateLabels, room?.status, navigation]);
 
   useEffect(() => {
     const unsubscribe = unsubscribeRef.current;
@@ -362,6 +379,59 @@ function AmityCreateLivestreamPage() {
       unsubscribe && unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    const headers = {
+      'Authorization': `Bearer ${API_SECRET}`,
+      'Content-Type': 'application/json',
+    };
+
+    const generateSession = async (): Promise<LiveStreamSession> => {
+      const url = `${BASE_URL}/api/sessions/create`;
+      const body = {
+        userId: currentUserId,
+        coHostId: '',
+        networkId: NETWORK_ID,
+      };
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+      return response.json();
+    };
+
+    const getRoomToken = async ({ sessionId }: { sessionId: string }) => {
+      const url = `${BASE_URL}/api/sessions/${sessionId}/token`;
+      const body = {
+        userId: currentUserId,
+      };
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+
+      const result: RoomTokenResponse = await response.json();
+      if (result.token) setRoomToken(result.token);
+    };
+
+    generateSession().then(({ sessionId }) => {
+      currentSessionIdRef.current = sessionId;
+      getRoomToken({ sessionId });
+    });
+
+    // if (!room.roomId)
+    //   generateSession().then(({ sessionId }) => {
+    //     currentSessionIdRef.current = sessionId;
+    //     getRoomToken({ sessionId });
+    //   });
+    // else getRoomToken({ sessionId: room.roomId });
+  }, [currentUserId]);
+
+  console.log('time =>', time);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -374,10 +444,12 @@ function AmityCreateLivestreamPage() {
         />
       )}
 
+      {/* Preview camera part */}
+
       {hasPermission ? (
         <LiveKitRoom
-          serverUrl={LIVEKIT_SERVER_URL}
-          token={LIVEKIT_TOKEN}
+          serverUrl={serverUrl}
+          token={roomToken}
           connect={true}
           options={{
             adaptiveStream: { pixelDensity: 'screen' },
@@ -385,10 +457,10 @@ function AmityCreateLivestreamPage() {
           audio={true}
           video={{
             facingMode: 'user',
-            resolution: {
-              width: 1280,
-              height: 720,
-            },
+          }}
+          onConnected={() => {
+            setIsConnecting(false);
+            setReconnecting(false);
           }}
         >
           <View style={styles.cameraContainer}>
