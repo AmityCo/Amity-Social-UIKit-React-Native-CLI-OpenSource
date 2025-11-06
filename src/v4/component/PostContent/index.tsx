@@ -43,9 +43,7 @@ const PostContent: React.FC<IPostContent> = ({
   const [imagePosts, setImagePosts] = useState<string[]>([]);
   const [videoPosts, setVideoPosts] = useState<IVideoPost[]>([]);
   const [pollIds, setPollIds] = useState<{ pollId: string }[]>([]);
-  const [livestreamId, setLivestreamId] = useState<Amity.Stream['streamId'][]>(
-    []
-  );
+  const [livestreamId, setLivestreamId] = useState<Amity.Room['roomId'][]>([]);
 
   const [imagePostsFullSize, setImagePostsFullSize] = useState<MediaUri[]>([]);
   const [videoPostsFullSize, setVideoPostsFullSize] = useState<MediaUri[]>([]);
@@ -96,7 +94,7 @@ const PostContent: React.FC<IPostContent> = ({
       const images: string[] = [];
       const videos: IVideoPost[] = [];
       const polls: { pollId: string }[] = [];
-      const livestreams: Amity.Stream['streamId'][] = [];
+      const livestreams: Amity.Room['roomId'][] = [];
 
       response.forEach((item) => {
         if (item?.dataType === 'image' && item?.data?.fileId) {
@@ -119,9 +117,9 @@ const PostContent: React.FC<IPostContent> = ({
           if (!polls.some((poll) => poll.pollId === item.data.pollId)) {
             polls.push(item.data);
           }
-        } else if (item?.dataType === 'liveStream') {
-          if (!livestreams.includes(item.data.streamId)) {
-            livestreams.push(item.data.streamId);
+        } else if (item?.dataType === 'room') {
+          if (!livestreams.includes(item.data.roomId)) {
+            livestreams.push(item.data.roomId);
           }
         }
       });

@@ -93,7 +93,7 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
           setPollIds((prev) => {
             return !prev.includes(item.data) ? [...prev, item.data] : [...prev];
           });
-        } else if (item?.dataType === 'liveStream') {
+        } else if (item?.dataType === 'room') {
           setLivestreamId((prev) => {
             return !prev.includes(item.data)
               ? [...prev, item.data.roomId]

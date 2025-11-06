@@ -145,7 +145,7 @@ const CreateLivestream = ({ navigation, route }) => {
       const params = {
         targetId,
         targetType,
-        dataType: 'liveStream' as Amity.PostContentType,
+        dataType: 'room' as Amity.PostContentType,
         data: {
           text: `${newRoom.title}${
             newRoom.description ? `\n\n${newRoom.description}` : ''

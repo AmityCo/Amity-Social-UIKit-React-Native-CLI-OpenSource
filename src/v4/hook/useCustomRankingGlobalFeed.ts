@@ -51,7 +51,7 @@ export const useCustomRankingGlobalFeed = () => {
                   if (
                     data?.dataType === 'image' ||
                     data?.dataType === 'video' ||
-                    data?.dataType === 'liveStream' ||
+                    data?.dataType === 'room' ||
                     data?.dataType === 'poll'
                   ) {
                     resolve(post);

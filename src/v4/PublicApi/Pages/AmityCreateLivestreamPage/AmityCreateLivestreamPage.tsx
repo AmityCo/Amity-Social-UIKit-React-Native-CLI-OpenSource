@@ -27,7 +27,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Button from '../../../component/Button/Button';
 import { useRequestPermission } from '../../../../v4/hook/useCamera';
 import NetInfo from '@react-native-community/netinfo';
-import { LivestreamStatus } from '../../../enum/livestreamStatus';
+import { RoomStatus } from '../../../enum/roomStatus';
 import { AmityThumbnailActionComponent } from '../../Components/AmityThumbnailActionComponent';
 import { StartLivestreamButton } from '../../../elements/StartLivestreamButton';
 import { PageID } from '../../../enum';
@@ -40,33 +40,10 @@ import { SwitchCameraButton } from '../../../elements/SwitchCameraButton';
 import { Track, LocalVideoTrack } from 'livekit-client';
 import { LiveKitRoom, registerGlobals } from '@livekit/react-native';
 import { RoomView } from './RoomView';
-import useAuth from '~/hooks/useAuth';
+import { Camera, useCameraDevice } from 'react-native-vision-camera';
 
 // Register WebRTC globals required for LiveKit
 registerGlobals();
-
-const NETWORK_ID = 'network-789';
-const API_SECRET = 'rosebud';
-
-const BASE_URL = 'https://poc-co-stream.social.plus';
-
-type LiveStreamSession = {
-  sessionId: string;
-  roomName: string;
-  status: 'idle' | 'live';
-  creatorTag: string;
-  playbackUrl: string;
-  muxPlayerPlaybackUrl: string;
-  liveThumbnailUrl: string;
-};
-
-type RoomTokenResponse = {
-  token: string;
-  url: string;
-  roomName: string;
-  rtmpIngestUrl: string;
-  rtmpStreamKey: string;
-};
 
 const serverUrl = 'wss://sp-live-3tr59jrk.livekit.cloud';
 
@@ -90,8 +67,6 @@ function AmityCreateLivestreamPage() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const theme = useTheme<MyMD3Theme>();
   const route = useRoute<RouteProp<RootStackParamList, 'CreateLivestream'>>();
-  const { client } = useAuth() as { client: { userId: string } };
-  const currentUserId = client.userId ?? '';
 
   const [time, setTime] = useState<number>(0);
   const [title, setTitle] = useState<string>('');
@@ -107,9 +82,12 @@ function AmityCreateLivestreamPage() {
   const [reconnecting, setReconnecting] = useState<boolean>(false);
   const [livekitParticipant, setLivekitParticipant] = useState<any>(null);
   const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
+  const [roomToken, setRoomToken] = useState<Amity.RoomIngestData | null>(null);
   const unsubscribeRef = useRef<Amity.Unsubscriber>(null);
-  const [roomToken, setRoomToken] = useState('');
-  const currentSessionIdRef = useRef(room?.roomId || '');
+
+  const frontCamera = useCameraDevice('front');
+  const backCamera = useCameraDevice('back');
+  const cameraDevice = isFrontCamera ? frontCamera : backCamera;
 
   const {
     imageUri,
@@ -128,7 +106,7 @@ function AmityCreateLivestreamPage() {
     (Platform.OS === 'ios' && iOSPermission);
 
   const switchCamera = useCallback(async () => {
-    if (livekitParticipant) {
+    if (isLive && livekitParticipant) {
       try {
         const cameraPublication = livekitParticipant.getTrackPublication(
           Track.Source.Camera
@@ -154,8 +132,11 @@ function AmityCreateLivestreamPage() {
       } catch (error) {
         console.error('Failed to switch camera:', error);
       }
+    } else {
+      // Just toggle the camera state for preview
+      setIsFrontCamera((prev) => !prev);
     }
-  }, [livekitParticipant, isFrontCamera]);
+  }, [livekitParticipant, isFrontCamera, isLive]);
 
   useRequestPermission({
     shouldCall: Platform.OS === 'ios',
@@ -223,6 +204,12 @@ function AmityCreateLivestreamPage() {
       setRoom(newStream);
 
       if (newStream) {
+        const roomTokenResponse = await RoomRepository.getRoomToken(
+          newStream.roomId
+        );
+
+        setRoomToken(roomTokenResponse);
+
         const params = {
           targetId,
           targetType,
@@ -345,13 +332,13 @@ function AmityCreateLivestreamPage() {
   useEffect(() => {
     let threeMinutesTimeout: number;
 
-    if (reconnecting && room && room?.status === 'live') {
+    if (reconnecting && room && room?.status === RoomStatus.live) {
       threeMinutesTimeout = setTimeout(() => {
         endLiveStream();
       }, 1000 * 60 * 3);
     }
 
-    if (!reconnecting && room && room?.status === 'live') {
+    if (!reconnecting && room && room?.status === RoomStatus.live) {
       if (threeMinutesTimeout) {
         clearTimeout(threeMinutesTimeout);
         threeMinutesTimeout = null;
@@ -364,8 +351,7 @@ function AmityCreateLivestreamPage() {
       room?.moderation?.terminateLabels &&
       room?.moderation?.terminateLabels?.length > 0;
     const isLiveOrEnded =
-      room?.status === LivestreamStatus.live ||
-      room?.status === LivestreamStatus.ended;
+      room?.status === RoomStatus.live || room?.status === RoomStatus.ended;
 
     if (isLiveOrEnded && isTerminated) {
       navigation.replace('LivestreamTerminated', { type: 'streamer' });
@@ -379,59 +365,6 @@ function AmityCreateLivestreamPage() {
       unsubscribe && unsubscribe();
     };
   }, []);
-
-  useEffect(() => {
-    const headers = {
-      'Authorization': `Bearer ${API_SECRET}`,
-      'Content-Type': 'application/json',
-    };
-
-    const generateSession = async (): Promise<LiveStreamSession> => {
-      const url = `${BASE_URL}/api/sessions/create`;
-      const body = {
-        userId: currentUserId,
-        coHostId: '',
-        networkId: NETWORK_ID,
-      };
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body),
-      });
-      return response.json();
-    };
-
-    const getRoomToken = async ({ sessionId }: { sessionId: string }) => {
-      const url = `${BASE_URL}/api/sessions/${sessionId}/token`;
-      const body = {
-        userId: currentUserId,
-      };
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body),
-      });
-
-      const result: RoomTokenResponse = await response.json();
-      if (result.token) setRoomToken(result.token);
-    };
-
-    generateSession().then(({ sessionId }) => {
-      currentSessionIdRef.current = sessionId;
-      getRoomToken({ sessionId });
-    });
-
-    // if (!room.roomId)
-    //   generateSession().then(({ sessionId }) => {
-    //     currentSessionIdRef.current = sessionId;
-    //     getRoomToken({ sessionId });
-    //   });
-    // else getRoomToken({ sessionId: room.roomId });
-  }, [currentUserId]);
-
-  console.log('time =>', time);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -447,31 +380,49 @@ function AmityCreateLivestreamPage() {
       {/* Preview camera part */}
 
       {hasPermission ? (
-        <LiveKitRoom
-          serverUrl={serverUrl}
-          token={roomToken}
-          connect={true}
-          options={{
-            adaptiveStream: { pixelDensity: 'screen' },
-          }}
-          audio={true}
-          video={{
-            facingMode: 'user',
-          }}
-          onConnected={() => {
-            setIsConnecting(false);
-            setReconnecting(false);
-          }}
-        >
+        roomToken ? (
+          <LiveKitRoom
+            serverUrl={serverUrl}
+            token={roomToken.coHostToken}
+            connect={true}
+            options={{
+              adaptiveStream: { pixelDensity: 'screen' },
+            }}
+            audio={{
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true,
+            }}
+            video={{
+              facingMode: isFrontCamera ? 'user' : 'environment',
+            }}
+            onConnected={() => {
+              setIsConnecting(false);
+              setReconnecting(false);
+            }}
+          >
+            <View style={styles.cameraContainer}>
+              <View style={styles.camera}>
+                <RoomView
+                  onLocalParticipantReady={setLivekitParticipant}
+                  isFrontCamera={isFrontCamera}
+                />
+              </View>
+            </View>
+          </LiveKitRoom>
+        ) : (
           <View style={styles.cameraContainer}>
             <View style={styles.camera}>
-              <RoomView
-                onLocalParticipantReady={setLivekitParticipant}
-                isFrontCamera={isFrontCamera}
-              />
+              {cameraDevice && (
+                <Camera
+                  style={{ flex: 1 }}
+                  device={cameraDevice}
+                  isActive={true}
+                />
+              )}
             </View>
           </View>
-        </LiveKitRoom>
+        )
       ) : (
         <View style={styles.permission}>
           <Typography.TitleBold style={styles.permissionTitle}>

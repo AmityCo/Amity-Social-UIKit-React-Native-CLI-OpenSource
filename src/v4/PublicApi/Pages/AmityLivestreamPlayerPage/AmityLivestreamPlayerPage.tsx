@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { useStyles } from './styles';
 import LiveStreamEndThumbnail from '../../../component/LivestreamContent/LivestreamEndedThumbnail';
@@ -13,13 +13,14 @@ import { close } from '../../../assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
-import { LivestreamStatus } from '../../../enum/livestreamStatus';
+import { RoomStatus } from '../../../enum/roomStatus';
 import LiveStreamIdleThumbnail from '../../../component/LivestreamContent/LivestreamIdleThumbnail';
 import { Typography } from '../../../component/Typography/Typography';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NetInfo from '@react-native-community/netinfo';
 import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
-import VideoPlayer from 'react-native-video-controls';
+import Video from 'react-native-video';
+import useAuth from '../../../../hooks/useAuth';
 
 const usePostSubscription = (postId: string) => {
   const [subscribedPost, setSubscribedPost] = useState<Amity.Post>(null);
@@ -59,6 +60,8 @@ function AmityLiveStreamPlayerPage() {
   const [room, setRoom] = useState<Amity.Room | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const { roomId, post } = route.params;
+  const { client } = useAuth();
+  const videoRef = useRef<any>(null);
 
   const { subscribedPost } = usePostSubscription(post?.postId);
 
@@ -85,8 +88,7 @@ function AmityLiveStreamPlayerPage() {
       room?.moderation?.terminateLabels &&
       room?.moderation?.terminateLabels?.length > 0;
     const isLiveOrEnded =
-      room?.status === LivestreamStatus.live ||
-      room?.status === LivestreamStatus.ended;
+      room?.status === RoomStatus.live || room?.status === RoomStatus.ended;
 
     if (isLiveOrEnded && isTerminated) {
       navigation.replace('LivestreamTerminated', { type: 'viewer' });
@@ -100,9 +102,17 @@ function AmityLiveStreamPlayerPage() {
     return () => unsubscribe();
   }, []);
 
-  if (!room || error) {
-    console.log('livestream error =>', room, error);
+  // Start in fullscreen mode on iOS
+  useEffect(() => {
+    if (videoRef.current && room && room.status !== RoomStatus.ended) {
+      const timer = setTimeout(() => {
+        videoRef.current?.presentFullscreenPlayer();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [room]);
 
+  if (!room || error) {
     return (
       <SafeAreaView style={styles.container}>
         <LiveStreamIdleThumbnail />
@@ -112,7 +122,7 @@ function AmityLiveStreamPlayerPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {room.status === LivestreamStatus.ended ? (
+      {room.status === RoomStatus.ended ? (
         <>
           <View style={styles.steamEndContainer}>
             <LiveStreamEndThumbnail />
@@ -131,24 +141,38 @@ function AmityLiveStreamPlayerPage() {
         </>
       ) : (
         <View style={styles.container}>
-          <VideoPlayer
+          <Video
+            ref={videoRef}
             source={{
-              uri: room.livePlaybackUrl,
+              uri:
+                room.status === RoomStatus.recorded
+                  ? room.recordedPlaybackInfos[0]?.url
+                  : room.livePlaybackUrl,
+
+              headers: {
+                Authorization: `Bearer ${client.token.accessToken}`,
+              },
             }}
             style={styles.container}
             resizeMode="contain"
-            onBack={navigation.goBack}
-            controlAnimationTiming={300}
-            toggleResizeModeOnFullscreen={false}
-            tapAnywhereToPause={false}
-            disableVolume={false}
-            disableFullscreen={true}
-            showOnStart={true}
+            controls={room.status === RoomStatus.recorded}
+            fullscreen={true}
+            fullscreenOrientation="landscape"
             paused={false}
+            muted={false}
+            volume={1.0}
+            audioOutput="speaker"
+            playInBackground={false}
+            playWhenInactive={false}
+            onError={(e) => {
+              console.log('Video Player Error: ', e);
+            }}
+            onFullscreenPlayerDidDismiss={() => navigation.goBack()}
           />
         </View>
       )}
-      {room.status === LivestreamStatus.live && reconnecting && (
+      {((room.status === RoomStatus.live && reconnecting) ||
+        room.status === RoomStatus.waiting_reconnect) && (
         <View style={styles.connecting}>
           <CircularProgressIndicator size={40} strokeWidth={2} />
           <Typography.TitleBold style={styles.text}>
@@ -160,7 +184,8 @@ function AmityLiveStreamPlayerPage() {
           </Typography.Caption>
         </View>
       )}
-      {room.status === LivestreamStatus.live && (
+      {(room.status === RoomStatus.live ||
+        room.status === RoomStatus.waiting_reconnect) && (
         <View style={styles.indicator}>
           <View style={styles.status}>
             <Typography.CaptionBold style={styles.live}>

@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@7.11.1-16808a2d.0":
-  version "7.11.1-16808a2d.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.11.1-16808a2d.0.tgz#bc93b204ac9b3ad0e3bcdded3e742b302d1d027b"
-  integrity sha512-zKxf/FJuEex4qaBRWc1R4B/v4A2dNDT9knj3sHS5eMiRuyGuHqTfYAtoMobkO5J9KLAR+46uYvhdhTYbnsVWCA==
+"@amityco/ts-sdk-react-native@7.11.1-d5cedc38.0":
+  version "7.11.1-d5cedc38.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.11.1-d5cedc38.0.tgz#99389d96a15690ef275ecfc75eac8e51883e3b60"
+  integrity sha512-MSCNddq0FBB2nZ84cXWkkVFcP4VH7sZ+hNMfbhmA2pIoSmB4y4aB15yt11DP1USUVl6Igi2ij1AM+rgYgUO5BQ==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
@@ -3125,9 +3125,9 @@ available-typed-arrays@^1.0.7:
     possible-typed-array-names "^1.0.0"
 
 axios@^1.2.3:
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.13.1.tgz#45b62dc8fe04e0e92274e08b98e910ba3d7963a7"
-  integrity sha512-hU4EGxxt+j7TQijx1oYdAjw4xuIp1wRQSsbMFwSthCWeBQur1eF+qJ5iQ5sN3Tw8YRzQNKb8jszgBdMDVqwJcw==
+  version "1.13.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.13.2.tgz#9ada120b7b5ab24509553ec3e40123521117f687"
+  integrity sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.4"

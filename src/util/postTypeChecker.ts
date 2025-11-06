@@ -8,7 +8,7 @@ export const isTextPost = (
 
 export const isStreamPost = (
   post?: Amity.Post | null
-): post is Amity.Post<'liveStream'> => {
+): post is Amity.Post<'room'> => {
   return !!(
     post &&
     post.data &&

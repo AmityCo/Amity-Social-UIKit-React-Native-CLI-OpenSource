@@ -14,7 +14,7 @@ import { SvgXml } from 'react-native-svg';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { play } from '../../assets/icons';
 import { Typography } from '../Typography/Typography';
-import { LivestreamStatus } from '../../enum/livestreamStatus';
+import { RoomStatus } from '../../enum/roomStatus';
 import LiveStreamEndThumbnail from './LivestreamEndedThumbnail';
 import LiveStreamIdleThumbnail from './LivestreamIdleThumbnail';
 import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
@@ -102,8 +102,8 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
     livestream?.moderation?.terminateLabels &&
     livestream?.moderation?.terminateLabels?.length > 0;
   const isLiveOrEnded =
-    livestream?.status === LivestreamStatus.live ||
-    livestream?.status === LivestreamStatus.ended;
+    livestream?.status === RoomStatus.live ||
+    livestream?.status === RoomStatus.ended;
 
   if (isTerminated && isLiveOrEnded) {
     return (
@@ -129,7 +129,7 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
         )}
       </Pressable>
       <View style={styles.container}>
-        {(livestream.status === LivestreamStatus.idle || isUpcoming) &&
+        {(livestream.status === RoomStatus.idle || isUpcoming) &&
           thumbnailUrl && (
             <View style={styles.content}>
               <Image
@@ -144,12 +144,10 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
             </View>
           )}
 
-        {livestream.status === LivestreamStatus.ended && (
-          <LiveStreamEndThumbnail />
-        )}
+        {livestream.status === RoomStatus.ended && <LiveStreamEndThumbnail />}
 
-        {(livestream.status === LivestreamStatus.live ||
-          livestream.status === LivestreamStatus.recorded) &&
+        {(livestream.status === RoomStatus.live ||
+          livestream.status === RoomStatus.recorded) &&
           thumbnailUrl &&
           !isUpcoming && (
             <View style={styles.content}>
@@ -157,14 +155,15 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
                 source={thumbnailUrl}
                 style={styles.streamImageCover as ImageStyle}
               />
-              {livestream.status === LivestreamStatus.live && (
+              {(livestream.status === RoomStatus.live ||
+                livestream.status === RoomStatus.waiting_reconnect) && (
                 <View style={styles.streamStatusLive}>
                   <Typography.CaptionBold style={styles.streamStatusText}>
                     LIVE
                   </Typography.CaptionBold>
                 </View>
               )}
-              {livestream.status === LivestreamStatus.recorded && (
+              {livestream.status === RoomStatus.recorded && (
                 <View style={styles.streamStatusRecorded}>
                   <Typography.CaptionBold style={styles.streamStatusText}>
                     RECORDED
