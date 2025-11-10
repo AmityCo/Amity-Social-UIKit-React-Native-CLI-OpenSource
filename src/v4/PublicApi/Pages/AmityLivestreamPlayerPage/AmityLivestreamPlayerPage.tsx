@@ -119,6 +119,11 @@ function AmityLiveStreamPlayerPage() {
       </SafeAreaView>
     );
   }
+  // TODO : Fix redirect just close player instead of calling onBack
+
+  const closePlayer = () => {
+    navigation.goBack();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -127,10 +132,7 @@ function AmityLiveStreamPlayerPage() {
           <View style={styles.steamEndContainer}>
             <LiveStreamEndThumbnail />
           </View>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={navigation.goBack}
-          >
+          <TouchableOpacity style={styles.closeButton} onPress={closePlayer}>
             <SvgXml
               xml={close()}
               width="28"
@@ -141,6 +143,16 @@ function AmityLiveStreamPlayerPage() {
         </>
       ) : (
         <View style={styles.container}>
+          {(room.status === RoomStatus.live ||
+            room.status === RoomStatus.waiting_reconnect) && (
+            <View style={styles.indicator}>
+              <View style={styles.status}>
+                <Typography.CaptionBold style={styles.live}>
+                  LIVE
+                </Typography.CaptionBold>
+              </View>
+            </View>
+          )}
           <Video
             ref={videoRef}
             source={{
@@ -167,10 +179,11 @@ function AmityLiveStreamPlayerPage() {
             onError={(e) => {
               console.log('Video Player Error: ', e);
             }}
-            onFullscreenPlayerDidDismiss={() => navigation.goBack()}
+            onFullscreenPlayerDidDismiss={closePlayer}
           />
         </View>
       )}
+
       {((room.status === RoomStatus.live && reconnecting) ||
         room.status === RoomStatus.waiting_reconnect) && (
         <View style={styles.connecting}>
@@ -182,16 +195,6 @@ function AmityLiveStreamPlayerPage() {
             Due to poor connection, this live stream has been {'\n'} paused. It
             will resume automatically {'\n'} once the connection is stable.
           </Typography.Caption>
-        </View>
-      )}
-      {(room.status === RoomStatus.live ||
-        room.status === RoomStatus.waiting_reconnect) && (
-        <View style={styles.indicator}>
-          <View style={styles.status}>
-            <Typography.CaptionBold style={styles.live}>
-              LIVE
-            </Typography.CaptionBold>
-          </View>
         </View>
       )}
     </SafeAreaView>

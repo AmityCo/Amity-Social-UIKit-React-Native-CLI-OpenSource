@@ -82,7 +82,9 @@ function AmityCreateLivestreamPage() {
   const [reconnecting, setReconnecting] = useState<boolean>(false);
   const [livekitParticipant, setLivekitParticipant] = useState<any>(null);
   const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
-  const [roomToken, setRoomToken] = useState<Amity.RoomIngestData | null>(null);
+  const [roomToken, setRoomToken] = useState<Amity.BroadcasterData | null>(
+    null
+  );
   const unsubscribeRef = useRef<Amity.Unsubscriber>(null);
 
   const frontCamera = useCameraDevice('front');
@@ -204,7 +206,7 @@ function AmityCreateLivestreamPage() {
       setRoom(newStream);
 
       if (newStream) {
-        const roomTokenResponse = await RoomRepository.getRoomToken(
+        const roomTokenResponse = await RoomRepository.getBroadcasterData(
           newStream.roomId
         );
 
