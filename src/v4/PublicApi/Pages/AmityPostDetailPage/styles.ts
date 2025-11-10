@@ -1,9 +1,7 @@
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const useStyles = (theme: MyMD3Theme) => {
-  const { top, bottom } = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const styles = StyleSheet.create({
     container: {
@@ -15,9 +13,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       paddingHorizontal: 16,
     },
     header: {
-      top: top,
       width: '100%',
-      position: 'absolute',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -39,15 +35,11 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     scrollContainer: {
       flex: 1,
+      paddingBottom: 50,
     },
     input: {
       backgroundColor: theme.colors.baseShade4,
       color: theme.colors.base,
-    },
-    AllInputWrap: {
-      backgroundColor: theme.colors.baseShade4,
-      flex: 1,
-      marginTop: -16,
     },
     InputWrap: {
       backgroundColor: theme.colors.background,
@@ -91,22 +83,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       borderTopWidth: 1,
       borderTopColor: theme.colors.baseShade4,
     },
-    textInput: {
-      borderWidth: 0,
-      borderBottomWidth: 0,
-      backgroundColor: 'transparent',
-      fontSize: 15,
-      marginHorizontal: 3,
-      zIndex: 999,
-      paddingTop: 0,
-      width: '100%',
-      borderRadius: 20,
 
-      // Additional styles if needed
-    },
-    transparentText: {
-      color: 'transparent',
-    },
     inputContainer: {
       flex: 1,
       justifyContent: 'center',
@@ -124,16 +101,6 @@ export const useStyles = (theme: MyMD3Theme) => {
       color: theme.colors.base,
       fontSize: 15,
       letterSpacing: 0,
-    },
-    overlay: {
-      ...StyleSheet.absoluteFillObject, // Take up the whole screen
-      justifyContent: 'center',
-      alignItems: 'flex-start',
-      paddingHorizontal: 12,
-    },
-    inputTextOverlayWrap: {
-      flexDirection: 'row',
-      backgroundColor: theme.colors.baseShade4,
     },
     replyLabelWrap: {
       height: 40,
@@ -160,7 +127,9 @@ export const useStyles = (theme: MyMD3Theme) => {
     commentListFooter: {
       width: width,
       position: 'absolute',
-      bottom: bottom,
+      bottom: 0,
+      left: 0,
+      right: 0,
     },
   });
 
