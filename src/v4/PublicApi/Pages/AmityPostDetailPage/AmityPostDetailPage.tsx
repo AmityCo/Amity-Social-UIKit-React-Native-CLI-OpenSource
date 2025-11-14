@@ -1,6 +1,5 @@
 import {
   Pressable,
-  SafeAreaView,
   View,
   Alert,
   Keyboard,
@@ -8,8 +7,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  useWindowDimensions,
-  LayoutChangeEvent,
 } from 'react-native';
 import React, {
   FC,
@@ -49,7 +46,7 @@ import {
   text_contain_blocked_word,
 } from '../../../../constants';
 
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorComponent from '../../../../v4/component/ErrorComponent/ErrorComponent';
 import { getSkeletonBackgrounColor } from '../../../../util/colorUtil';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
@@ -75,9 +72,6 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   showEndPopup,
   category,
 }) => {
-  const { top, bottom } = useSafeAreaInsets();
-  const { height } = useWindowDimensions();
-
   const pageId = PageID.post_detail_page;
   const dispatch = useUIKitDispatch();
   const componentId = ComponentID.WildCardComponent;
@@ -97,10 +91,6 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     []
   );
 
-  const [topBarHeigh, setTopBarHeight] = useState(0);
-  const [footerHeight, setFooterHeight] = useState(0);
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [showLivestreamEndPopup, setShowLivestreamEndPopup] = useState<boolean>(
     showEndPopup || false
   );
@@ -116,37 +106,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     },
   });
 
-  const adjustedHeight =
-    height -
-    (footerHeight +
-      (isKeyboardVisible ? keyboardHeight : 0) +
-      top +
-      bottom +
-      topBarHeigh);
-
   const { showToastMessage } = uiSlice.actions;
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      (event) => {
-        setKeyboardHeight(event.endCoordinates.height);
-        setIsKeyboardVisible(true);
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardHeight(0);
-        setIsKeyboardVisible(false);
-      }
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   useLayoutEffect(() => {
     if (!postId) return () => {};
@@ -269,17 +229,9 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
 
   const renderFooterComponent = () => {
     return (
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.commentListFooter}
-      >
+      <View style={styles.commentListFooter}>
         {renderSuggestions({ type: 'comment' })}
-        <View
-          onLayout={(event: LayoutChangeEvent) => {
-            const { height: layoutHeight } = event.nativeEvent.layout;
-            setFooterHeight(layoutHeight);
-          }}
-        >
+        <View>
           {replyUserName.length > 0 && (
             <View style={styles.replyLabelWrap}>
               <Text style={styles.replyLabel}>
@@ -327,7 +279,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
             </View>
           )}
         </View>
-      </KeyboardAvoidingView>
+      </View>
     );
   };
 
@@ -364,81 +316,71 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   }
 
   return (
-    <SafeAreaView testID={accessibilityId} style={styles.container}>
-      <View
-        style={[
-          styles.scrollContainer,
-          {
-            paddingTop: topBarHeigh,
-            paddingBottom: isKeyboardVisible
-              ? (Platform.OS !== 'android' ? keyboardHeight : 0) +
-                footerHeight -
-                topBarHeigh -
-                bottom
-              : footerHeight - topBarHeigh,
-            height: adjustedHeight,
-          },
-        ]}
+    <KeyboardAvoidingView
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <SafeAreaView
+        edges={['top']}
+        testID={accessibilityId}
+        style={styles.container}
       >
-        {loading ? (
-          <View style={styles.skeletonContainer}>
-            <ContentLoader
-              speed={1}
-              {...getSkeletonBackgrounColor(themeStyles)}
-            >
-              <Circle cx="16" cy="16" r="16" />
-              <Rect x="40" y="4" width="180" height="8" rx="3" />
-              <Rect x="40" y="20" width="64" height="8" rx="3" />
-              <Rect x="0" y="56" width="240" height="8" rx="3" />
-              <Rect x="0" y="76" width="180" height="8" rx="3" />
-              <Rect x="0" y="96" width="300" height="8" rx="3" />
-            </ContentLoader>
-          </View>
-        ) : (
-          <AmityPostCommentComponent
-            setReplyUserName={setReplyUserName}
-            setReplyCommentId={setReplyCommentId}
-            postId={postId}
-            communityId={
-              postData?.targetType === 'community' && postData?.targetId
-            }
-            postType="post"
-            disabledInteraction={false}
-            ListHeaderComponent={
-              postData && (
-                <AmityPostContentComponent
-                  post={postData}
-                  showedAllOptions
-                  category={category}
-                  AmityPostContentComponentStyle={
-                    AmityPostContentComponentStyleEnum.detail
-                  }
-                  pageId={pageId}
-                />
-              )
-            }
-          />
-        )}
-      </View>
-      <View
-        style={styles.header}
-        onLayout={(event: LayoutChangeEvent) => {
-          const { height: layoutHeight } = event.nativeEvent.layout;
-          setTopBarHeight(layoutHeight);
-        }}
-      >
-        <Pressable onPress={onPressBack}>
-          <BackButtonIconElement
-            pageID={pageId}
-            componentID={componentId}
-            style={styles.headerIcon}
-          />
-        </Pressable>
-        <Text style={styles.headerTitle}>Post</Text>
-        <PostMenu post={postData} pageId={pageId} componentId={componentId} />
-      </View>
-      {renderFooterComponent()}
-    </SafeAreaView>
+        <View style={styles.header}>
+          <Pressable onPress={onPressBack}>
+            <BackButtonIconElement
+              pageID={pageId}
+              componentID={componentId}
+              style={styles.headerIcon}
+            />
+          </Pressable>
+          <Text style={styles.headerTitle}>Post</Text>
+          <PostMenu post={postData} pageId={pageId} componentId={componentId} />
+        </View>
+        <View style={[styles.scrollContainer]}>
+          {loading ? (
+            <View style={styles.skeletonContainer}>
+              <ContentLoader
+                speed={1}
+                {...getSkeletonBackgrounColor(themeStyles)}
+              >
+                <Circle cx="16" cy="16" r="16" />
+                <Rect x="40" y="4" width="180" height="8" rx="3" />
+                <Rect x="40" y="20" width="64" height="8" rx="3" />
+                <Rect x="0" y="56" width="240" height="8" rx="3" />
+                <Rect x="0" y="76" width="180" height="8" rx="3" />
+                <Rect x="0" y="96" width="300" height="8" rx="3" />
+              </ContentLoader>
+            </View>
+          ) : (
+            <AmityPostCommentComponent
+              setReplyUserName={setReplyUserName}
+              setReplyCommentId={setReplyCommentId}
+              postId={postId}
+              communityId={
+                postData?.targetType === 'community' && postData?.targetId
+              }
+              postType="post"
+              disabledInteraction={false}
+              ListHeaderComponent={
+                postData && (
+                  <AmityPostContentComponent
+                    post={postData}
+                    showedAllOptions
+                    category={category}
+                    AmityPostContentComponentStyle={
+                      AmityPostContentComponentStyleEnum.detail
+                    }
+                    pageId={pageId}
+                  />
+                )
+              }
+            />
+          )}
+        </View>
+        {renderFooterComponent()}
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
