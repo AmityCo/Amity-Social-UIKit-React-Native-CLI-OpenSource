@@ -39,6 +39,8 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
     input: {
       color: theme.colors.base,
+      paddingTop: Platform.OS === 'android' ? 6 : 0,
+      alignItems: 'center',
     },
     InputWrap: {
       backgroundColor: theme.colors.background,
