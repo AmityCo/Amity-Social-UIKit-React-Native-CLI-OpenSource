@@ -1,4 +1,4 @@
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { Platform, StyleSheet, useWindowDimensions } from 'react-native';
 import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
 
 export const useStyles = (theme: MyMD3Theme) => {
@@ -38,7 +38,6 @@ export const useStyles = (theme: MyMD3Theme) => {
       paddingBottom: 50,
     },
     input: {
-      backgroundColor: theme.colors.baseShade4,
       color: theme.colors.base,
     },
     InputWrap: {
@@ -88,8 +87,8 @@ export const useStyles = (theme: MyMD3Theme) => {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'flex-start',
-      paddingVertical: 10,
-      paddingHorizontal: 12,
+      paddingVertical: Platform.OS === 'android' ? 2 : 10,
+      paddingHorizontal: Platform.OS === 'android' ? 6 : 12,
       backgroundColor: theme.colors.baseShade4,
       borderRadius: 20,
     },
