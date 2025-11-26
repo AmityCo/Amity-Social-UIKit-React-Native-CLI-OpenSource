@@ -60,7 +60,7 @@ const TargetSelectionPage = ({
   const defaultTheme = useTheme() as MyMD3Theme;
 
   const user = useUser((client as Amity.Client).userId);
-  const { communities, onNextCommunityPage } = useCommunities();
+  const { communities, onNextCommunityPage, loading } = useCommunities();
   const { themeStyles, accessibilityId } = useAmityPage({ pageId });
 
   const theme = themeStyles || defaultTheme;
@@ -139,7 +139,7 @@ const TargetSelectionPage = ({
           </Typography.Body>
         </>
       )}
-      {(communities?.length === 0 || !communities) && (
+      {!loading && (communities?.length === 0 || !communities) && (
         <View style={styles.noCommunityContainer}>
           <Illustration />
           <Typography.TitleBold style={styles.noCommunityTitle}>
