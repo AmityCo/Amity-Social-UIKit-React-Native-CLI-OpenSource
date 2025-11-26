@@ -38,6 +38,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       paddingBottom: 50,
     },
     input: {
+      width: '100%',
       color: theme.colors.base,
       paddingTop: Platform.OS === 'android' ? 6 : 0,
       alignItems: 'center',
@@ -99,6 +100,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       fontSize: 15,
     },
     inputText: {
+      width: '100%',
       color: theme.colors.base,
       fontSize: 15,
       letterSpacing: 0,

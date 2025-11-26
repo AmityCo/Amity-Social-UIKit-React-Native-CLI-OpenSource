@@ -27,6 +27,7 @@ export const useStyles = () => {
       color: theme.colors.base,
     },
     inputWrap: {
+      width: '100%',
       gap: 8,
       borderTopWidth: 1,
       paddingVertical: 8,
