@@ -17,6 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import TextKeyElement from '../../PublicApi/Elements/TextKeyElement/TextKeyElement';
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
+import { Illustration } from '~/v4/PublicApi/Components/AmityEmptyNewsFeedComponent/Elements';
 
 export type FeedParams = {
   targetId: string;
@@ -137,6 +138,14 @@ const TargetSelectionPage = ({
             My communities
           </Typography.Body>
         </>
+      )}
+      {(communities?.length === 0 || !communities) && (
+        <View style={styles.noCommunityContainer}>
+          <Illustration />
+          <Typography.TitleBold style={styles.noCommunityTitle}>
+            You haven't joined any communities yet.
+          </Typography.TitleBold>
+        </View>
       )}
       <FlatList
         data={communities}
