@@ -17,7 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import TextKeyElement from '../../PublicApi/Elements/TextKeyElement/TextKeyElement';
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
-import { Illustration } from '~/v4/PublicApi/Components/AmityEmptyNewsFeedComponent/Elements';
+import { Illustration } from '../../../v4/PublicApi/Components/AmityEmptyNewsFeedComponent/Elements';
 
 export type FeedParams = {
   targetId: string;
