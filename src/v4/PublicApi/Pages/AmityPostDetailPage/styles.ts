@@ -90,7 +90,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'flex-start',
-      paddingVertical: Platform.OS === 'android' ? 2 : 10,
+      paddingVertical: Platform.OS === 'android' ? 0 : 10,
       paddingHorizontal: Platform.OS === 'android' ? 6 : 12,
       backgroundColor: theme.colors.baseShade4,
       borderRadius: 20,
