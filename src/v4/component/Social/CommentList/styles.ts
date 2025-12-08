@@ -67,6 +67,7 @@ export const useStyles = () => {
       width: '100%',
       paddingVertical: 0,
       paddingTop: 0,
+      color: theme.colors.base,
     },
     transparentText: {
       color: 'transparent',
