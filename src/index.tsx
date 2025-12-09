@@ -99,6 +99,7 @@ import {
   AmityPostComposerMode,
   mediaAttachment,
 } from './v4/PublicApi/types';
+import { AmityStoryTabComponentStyle } from './v4/PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 
 const LINKING_ERROR =
   `The package 'amity-react-native-social-ui-kit' doesn't seem to be linked. Make sure: \n\n` +
@@ -190,4 +191,5 @@ export {
   AmityCommunityLivestreamsNotificationSettingPage,
   AmityCommunityPinnedPostComponent,
   AmityPendingPostListComponent,
+  AmityStoryTabComponentStyle,
 };
