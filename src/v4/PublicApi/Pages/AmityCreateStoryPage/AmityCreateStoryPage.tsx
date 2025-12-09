@@ -197,8 +197,14 @@ const AmityCreateStoryPage: FC<ICreateStoryPage> = ({
     setIsRecording(true);
     cameraRef?.current?.startRecording({
       onRecordingFinished: (video) => onFinishCapture(video),
-      onRecordingError: (error) =>
-        Alert.alert('Video Record Error', error.message),
+      onRecordingError: (error) => {
+        if (error.message.includes('no data was received! (null)')) {
+          Alert.alert(
+            'Video Too Short',
+            'Please press and hold the button for at least 1 second to record a video.'
+          );
+        } else Alert.alert('Video Record Error', error.message);
+      },
       fileType: 'mp4',
       flash: flashOnState ? 'on' : 'off',
     });
