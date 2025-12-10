@@ -39,4 +39,8 @@ const AmityStoryTabComponent: FC<AmityStoryTabComponentType> = ({
   return null;
 };
 
+export const AmityStoryTabComponentStyle = {
+  height: 130,
+};
+
 export default memo(AmityStoryTabComponent);
