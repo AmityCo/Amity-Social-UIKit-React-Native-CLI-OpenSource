@@ -5,21 +5,38 @@ import ReactAppDependencyProvider
 import FirebaseCore
 
 @main
-class AppDelegate: RCTAppDelegate {
-  override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    // Initialize Firebase
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  var window: UIWindow?
+
+  var reactNativeDelegate: ReactNativeDelegate?
+  var reactNativeFactory: RCTReactNativeFactory?
+
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
     FirebaseApp.configure()
 
-    self.moduleName = "AmityReactNativeSocialUiKitExample"
-    self.dependencyProvider = RCTAppDependencyProvider()
+    let delegate = ReactNativeDelegate()
+    let factory = RCTReactNativeFactory(delegate: delegate)
+    delegate.dependencyProvider = RCTAppDependencyProvider()
 
-    // You can add your custom initial props in the dictionary below.
-    // They will be passed down to the ViewController used by React Native.
-    self.initialProps = [:]
+    reactNativeDelegate = delegate
+    reactNativeFactory = factory
 
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    window = UIWindow(frame: UIScreen.main.bounds)
+
+    factory.startReactNative(
+      withModuleName: "AmityReactNativeSocialUiKitExample",
+      in: window,
+      launchOptions: launchOptions
+    )
+
+    return true
   }
+}
 
+class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
   override func sourceURL(for bridge: RCTBridge) -> URL? {
     self.bundleURL()
   }

@@ -26,11 +26,10 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-    <!-- Do not change NSAllowsArbitraryLoads to true, or you will risk app rejection! -->
-    <key>NSAllowsArbitraryLoads</key>
-    <false/>
-    <key>NSAllowsLocalNetworking</key>
-    <true/>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>App needs access to the camera to take photos.</string>
@@ -40,6 +39,8 @@
 	<string>App needs access to the microphone to record audio.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>App needs access to the gallery to select photos.</string>
+	<key>RCTNewArchEnabled</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
