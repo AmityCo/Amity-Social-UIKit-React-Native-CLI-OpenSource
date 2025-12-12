@@ -10,7 +10,7 @@ This guide helps client-side engineers understand how the UIKit is structured, w
 
 ## Project Layout & Responsibilities
 
-Even thought the UIKit project is still supporting v3 and v4, you can focus only folders under `/v4`. The folder structure is nearly the same with the recommended docs.
+Even though the UIKit project is still supporting v3 and v4, you can focus folders under `/v4` only. The folder structure is nearly the same with the recommended docs.
 
 | Path            | Purpose                                                                                                      |
 | --------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -25,11 +25,6 @@ Even thought the UIKit project is still supporting v3 and v4, you can focus only
 4. **Config overrides:** Import `uikit.config.json` (or a custom variant) and pass as the `configs` prop on the provider to drive themes, typography, and feature flags.
 5. **SDK integration:** Providers internally initialize `@amityco/ts-sdk-react-native`, so consumers only supply credentials and handle auth token rotation as needed.
 
-## Component Usage Patterns
-
-- **Full app shell:** `AmityUiKitSocial` (tabs, feeds, stories, search) with built-in navigation.
-- **Screen modules:** `CommunityHome`, `PostDetail`, `UserProfile`, and other supported individual screens or components must be wrapped with `AmityPageRenderer` for navigation wiring.
-
 ## Dependencies Overview
 
 ### Runtime
@@ -43,9 +38,10 @@ The dependencies must be provided by host app and should be the same versions wi
 Please refer to /package.json > peer dependencies
 
 - Core React Native stack: `react`, `react-native`, navigation (`@react-navigation/native`, `.../stack`, `.../native-stack`), gestures (`react-native-gesture-handler`, `react-native-screens`, `react-native-safe-area-context`).
-- Media & storage: `react-native-image-picker`, `react-native-video`, `react-native-video-controls`, `react-native-compressor`, `react-native-fs`, `react-native-vision-camera`.
+- Media & storage: `react-native-image-picker`, `react-native-video`, `react-native-video-controls`, `react-native-compressor`, `react-native-fs`, `react-native-vision-camera`, `react-native-svg`, `@react-native-community/datetimepicker`.
 - Networking & utilities: `@react-native-async-storage/async-storage`, `@react-native-community/netinfo`, `react-native-get-random-values`, `react-native-linear-gradient`.
 - Amity platform: `@amityco/ts-sdk-react-native` plus optional Firebase messaging modules for push notifications.
+- Tools: `@babel/plugin-transform-export-namespace-from`, `metro-react-native-babel-preset`
 
 ## Assets Handling
 
