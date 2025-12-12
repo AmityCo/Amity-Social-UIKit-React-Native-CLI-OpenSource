@@ -52,7 +52,7 @@ Please refer to /package.json > dependencies & devDependencies
 
 The peer dependencies must be provided by host app and should be the versions compatible with React Native version in the host app.
 
-Please refer to /package.json > peer dependencies
+Please refer to /package.json > peerDependencies
 
 - Core React Native stack: `react`, `react-native`, navigation (`@react-navigation/native`, `.../stack`, `.../native-stack`), gestures (`react-native-gesture-handler`, `react-native-screens`, `react-native-safe-area-context`).
 - Media & storage: `react-native-image-picker`, `react-native-video`, `react-native-video-controls`, `react-native-compressor`, `react-native-fs`, `react-native-vision-camera`, `react-native-svg`, `@react-native-community/datetimepicker`.
@@ -64,4 +64,4 @@ Please refer to /package.json > peer dependencies
 
 - Static assets reside in `v4/assets/icons`, and `v4/assets/images`.
 
-**NOTE: icons are treated as function and rendered using `react-native-svg` library**
+**NOTE: icons are treated as javascript function to return svg string and rendered using `react-native-svg` library to customize colors and sizes**
