@@ -47,4 +47,4 @@ Please refer to /package.json > peer dependencies
 
 - Static assets reside in `v4/assets/icons`, and `v4/assets/images`.
 
-**NOTE: icons are treated as React component and rendered using `react-native-svg` library**
+**NOTE: icons are treated as function and rendered using `react-native-svg` library**
