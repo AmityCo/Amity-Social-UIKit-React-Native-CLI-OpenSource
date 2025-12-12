@@ -33,7 +33,7 @@ Please refer to /package.json > dependencies & devDependencies
 
 ## Peer
 
-The dependencies must be provided by host app and should be the same versions with UIKit.
+The peer dependencies must be provided by host app and should be the versions compatible with React Native version in the host app.
 
 Please refer to /package.json > peer dependencies
 
