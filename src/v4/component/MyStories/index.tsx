@@ -115,18 +115,18 @@ const MyStories = () => {
 };
 export const AmityGlobalStoryTabWrapper = ({ children }) => {
   const { globalStoryTargets, getGlobalStoryTargets } = useGlobalStory();
-  const { isConnected } = useAuth();
+
+  const { sessionState } = useAuth();
 
   useEffect(() => {
-    if (isConnected) {
+    if (sessionState === 'established') {
       getGlobalStoryTargets();
     }
-  }, [isConnected, getGlobalStoryTargets]);
+  }, [sessionState, getGlobalStoryTargets]);
   return (
     <View
       style={{
         height: globalStoryTargets.length > 0 ? 113 : 0,
-        overflow: 'hidden',
       }}
     >
       {children}
