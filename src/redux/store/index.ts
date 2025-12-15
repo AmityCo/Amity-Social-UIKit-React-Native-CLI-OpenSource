@@ -10,13 +10,21 @@ import {
   createStoreHook,
   createDispatchHook,
   createSelectorHook,
+  ReactReduxContextValue,
 } from 'react-redux';
+import { AnyAction } from 'redux';
 
-export const AmityUIKitReduxContext = createContext(null);
+export const AmityUIKitReduxContext = createContext<
+  ReactReduxContextValue<any, AnyAction>
+>(null as any);
 
-export const useUIKitStore = createStoreHook(AmityUIKitReduxContext);
-export const useUIKitDispatch = createDispatchHook(AmityUIKitReduxContext);
-export const useUIKitSelector = createSelectorHook(AmityUIKitReduxContext);
+export const useUIKitStore = createStoreHook(AmityUIKitReduxContext as any);
+export const useUIKitDispatch = createDispatchHook(
+  AmityUIKitReduxContext as any
+);
+export const useUIKitSelector = createSelectorHook(
+  AmityUIKitReduxContext as any
+);
 
 export const store: Store = configureStore({
   reducer: {

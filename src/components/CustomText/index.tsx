@@ -9,10 +9,13 @@ interface CustomTextProps {
   ellipsizeMode?: 'tail' | 'head' | 'middle' | 'clip' | undefined;
 }
 
-const CustomText: React.FC<CustomTextProps> = (
-  { children, style, numberOfLines, ellipsizeMode = 'tail' }: CustomTextProps,
-  props
-) => {
+const CustomText: React.FC<CustomTextProps> = ({
+  children,
+  style,
+  numberOfLines,
+  ellipsizeMode = 'tail',
+  ...props
+}: CustomTextProps) => {
   return (
     <Text
       {...props}

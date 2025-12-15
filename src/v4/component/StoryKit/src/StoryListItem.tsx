@@ -152,7 +152,7 @@ export const StoryListItem = ({
   }, [myReactions, reactionCounts]);
 
   useEffect(() => {
-    let isPrevious = !!prevCurrentPage && prevCurrentPage > currentPage;
+    let isPrevious = !!prevCurrentPage && +prevCurrentPage > +currentPage;
     if (isPrevious) {
       setCurrent(content.length - 1);
     } else {
@@ -180,12 +180,12 @@ export const StoryListItem = ({
     if (!isNullOrWhitespace(prevCurrent)) {
       if (prevCurrent) {
         if (
-          current > prevCurrent &&
+          +current > +prevCurrent &&
           content[current - 1].story_image === content[current].story_image
         ) {
           start();
         } else if (
-          current < prevCurrent &&
+          +current < +prevCurrent &&
           content[current + 1].story_image === content[current].story_image
         ) {
           start();

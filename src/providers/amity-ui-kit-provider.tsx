@@ -144,7 +144,7 @@ export default function AmityUiKitProvider({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Provider store={store} context={AmityUIKitReduxContext}>
+      <Provider store={store} context={AmityUIKitReduxContext as any}>
         <AuthContextProvider
           userId={userId}
           displayName={displayName || userId}
