@@ -12,13 +12,13 @@ jobs:
     - name: remove from npm
       continue-on-error: true
       run: |
-        prev=$(npm view @amityco/amity-react-native-social-ui-kit dist-tags.dev/${{ github.event.pull_request.number }})
-        npm unpublish @amityco/amity-react-native-social-ui-kit@$prev
+        prev=$(npm view @amityco/react-native-social-uikit dist-tags.dev/${{ github.event.pull_request.number }})
+        npm unpublish @amityco/react-native-social-uikit@$prev
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: clean dist tag
       continue-on-error: true
-      run: npm dist-tag rm @amityco/amity-react-native-social-ui-kit dev/${{ github.event.pull_request.number }}
+      run: npm dist-tag rm @amityco/react-native-social-uikit dev/${{ github.event.pull_request.number }}
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

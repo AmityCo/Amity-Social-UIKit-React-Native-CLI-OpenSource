@@ -32,8 +32,8 @@ jobs:
       - name: unpublish old version
         continue-on-error: true
         run: |
-          prev=$(npm view @amityco/amity-react-native-social-ui-kit dist-tags.nightly
-          [[ ! -z $prev ]] && npm unpublish @amityco/amity-react-native-social-ui-kit@$prev
+          prev=$(npm view @amityco/react-native-social-uikit dist-tags.nightly
+          [[ ! -z $prev ]] && npm unpublish @amityco/react-native-social-uikit@$prev
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
