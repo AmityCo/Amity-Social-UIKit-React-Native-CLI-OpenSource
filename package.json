@@ -1,5 +1,5 @@
 {
-  "name": "amity-react-native-social-ui-kit",
+  "name": "@amityco/amity-react-native-social-ui-kit",
   "version": "4.0.0-RC7",
   "description": "Social UIKit",
   "main": "lib/commonjs/index",

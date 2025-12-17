@@ -1,0 +1,46 @@
+name: Staging release pipeline
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  sync_staging:
+    runs-on: ubuntu-latest
+
+    # environment:
+    #   name: staging
+    #   url: https://amity-react-native-social-ui-kit.staging.amity.co/develop/
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version: '18'
+          cache: 'yarn'
+          cache-dependency-path: ./yarn.lock
+
+      - name: install deps
+        run: yarn install --immutable
+
+      - name: build library
+        run: yarn prepack
+
+      - name: unpublish old version
+        continue-on-error: true
+        run: |
+          prev=$(npm view @amityco/amity-react-native-social-ui-kit dist-tags.nightly
+          [[ ! -z $prev ]] && npm unpublish @amityco/amity-react-native-social-ui-kit@$prev
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: increase version number
+        run: npm version prerelease --preid $(git rev-parse --short HEAD) --no-git-tag-version
+
+      - name: publish on npm with nightly dist-tag
+        run: npm publish --tag nightly
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
