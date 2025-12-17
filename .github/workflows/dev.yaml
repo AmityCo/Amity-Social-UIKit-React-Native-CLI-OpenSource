@@ -1,0 +1,65 @@
+name: Dev release pipeline
+
+on:
+  pull_request:
+    branches:
+      - production
+
+jobs:
+  sync_dev:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+
+    # environment:
+    #   name: dev/${{ github.event.pull_request.number }}
+    #   url: https://amity-react-native-social-ui-kit.staging.amity.co/${{ github.event.pull_request.number }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version: '14'
+          cache: 'yarn'
+          cache-dependency-path: ./yarn.lock
+
+      - name: install deps
+        run: yarn install --immutable
+
+      - name: build sdk
+        run: yarn build:sdk
+
+      - name: run unit tests
+        continue-on-error: true
+        run: yarn test
+
+      - name: sonar scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: unpublish old version
+        if: "contains(github.event.pull_request.title, '(sdk):')"
+        continue-on-error: true
+        run: |
+          prev=$(npm view @amityco/amity-react-native-social-ui-kit dist-tags.dev/${{ github.event.pull_request.number }})
+          [[ ! -z $prev ]] && npm unpublish @amityco/amity-react-native-social-ui-kit@$prev
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: increase version number
+        run: npx lerna version prerelease --preid $(git rev-parse --short HEAD) --yes --no-changelog --no-git-tag-version --no-push
+
+      - name: publish on npm with dev dist-tag
+        if: "contains(github.event.pull_request.title, '(sdk):')"
+        continue-on-error: true
+        run: cd packages/sdk && npm publish --tag dev/${{ github.event.pull_request.number }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: build app
+        run: yarn build:app

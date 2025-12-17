@@ -1,0 +1,42 @@
+name: Production release pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version: '14'
+          cache: 'yarn'
+          cache-dependency-path: ./yarn.lock
+
+      - name: install deps
+        run: yarn install --immutable
+
+      - name: build sdk and app
+        run: yarn build
+
+      - name: run tests
+        run: yarn test
+
+      - name: sonar scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: publish on npm
+        run: cd packages/sdk && npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

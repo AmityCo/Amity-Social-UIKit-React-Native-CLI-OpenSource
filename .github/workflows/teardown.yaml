@@ -1,0 +1,24 @@
+name: "Dev environment teardown"
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  wipe:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: remove from npm
+      continue-on-error: true
+      run: |
+        prev=$(npm view @amityco/amity-react-native-social-ui-kit dist-tags.dev/${{ github.event.pull_request.number }})
+        npm unpublish @amityco/amity-react-native-social-ui-kit@$prev
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: clean dist tag
+      continue-on-error: true
+      run: npm dist-tag rm @amityco/amity-react-native-social-ui-kit dev/${{ github.event.pull_request.number }}
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
