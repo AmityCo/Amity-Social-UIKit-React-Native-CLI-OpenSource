@@ -52,7 +52,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: increase version number
-        run: npx lerna version prerelease --preid $(git rev-parse --short HEAD) --yes --no-changelog --no-git-tag-version --no-push
+        run: npm version prerelease --preid $(git rev-parse --short HEAD) --no-git-tag-version
 
       - name: publish on npm with dev dist-tag
         if: "contains(github.event.pull_request.title, '(sdk):')"
