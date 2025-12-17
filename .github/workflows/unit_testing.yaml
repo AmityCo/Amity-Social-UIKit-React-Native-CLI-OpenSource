@@ -20,8 +20,5 @@ jobs:
       - name: install deps
         run: yarn install --immutable
 
-      - name: build sdk
-        run: yarn build:sdk
-
-      - name: run tests
+      - name: run unit tests
         run: yarn test

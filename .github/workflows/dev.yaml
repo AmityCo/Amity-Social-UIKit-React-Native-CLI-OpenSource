@@ -30,12 +30,12 @@ jobs:
       - name: install deps
         run: yarn install --immutable
 
-      - name: build sdk
-        run: yarn build:sdk
-
       - name: run unit tests
         continue-on-error: true
         run: yarn test
+
+      - name: build library
+        run: yarn prepack
 
       # - name: sonar scan
       #   uses: SonarSource/sonarqube-scan-action@v5
@@ -57,9 +57,6 @@ jobs:
       - name: publish on npm with dev dist-tag
         if: "contains(github.event.pull_request.title, '(sdk):')"
         continue-on-error: true
-        run: cd packages/sdk && npm publish --tag dev/${{ github.event.pull_request.number }}
+        run: npm publish --tag dev/${{ github.event.pull_request.number }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: build app
-        run: yarn build:app

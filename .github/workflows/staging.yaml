@@ -26,8 +26,8 @@ jobs:
       - name: install deps
         run: yarn install --immutable
 
-      - name: build sdk
-        run: yarn build:sdk
+      - name: build library
+        run: yarn prepack
 
       - name: unpublish old version
         continue-on-error: true
@@ -41,9 +41,6 @@ jobs:
         run: npx lerna version prerelease --preid $(git rev-parse --short HEAD) --yes --no-changelog --no-git-tag-version --no-push
 
       - name: publish on npm with nightly dist-tag
-        run: cd packages/sdk && npm publish --tag nightly
+        run: npm publish --tag nightly
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: build app
-        run: yarn build:app
