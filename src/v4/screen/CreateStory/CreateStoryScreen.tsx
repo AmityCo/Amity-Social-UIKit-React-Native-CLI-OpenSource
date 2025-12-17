@@ -32,11 +32,32 @@ const CreateStoryScreen = ({ navigation, route }) => {
     return null;
   }
 
+  const handleCreateStory = () => {
+    const state = navigation.getState();
+    const routes = state.routes;
+    const currentIndex = state.index;
+
+    if (currentIndex > 0) {
+      const previousRoute = routes[currentIndex - 1];
+      const previousRouteName = previousRoute.name;
+
+      if (
+        previousRouteName === 'ViewStory' ||
+        previousRouteName === 'StoryTargetSelection'
+      ) {
+        navigation.pop(2);
+        return;
+      }
+    }
+
+    navigation.goBack();
+  };
+
   return (
     <AmityCreateStoryPage
       targetId={targetId}
       targetType={targetType}
-      onCreateStory={() => navigation.goBack()}
+      onCreateStory={handleCreateStory}
     />
   );
 };
