@@ -43,7 +43,6 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: unpublish old version
-        if: "contains(github.event.pull_request.title, '(sdk):')"
         continue-on-error: true
         run: |
           prev=$(npm view @amityco/amity-react-native-social-ui-kit dist-tags.dev/${{ github.event.pull_request.number }})
@@ -55,7 +54,6 @@ jobs:
         run: npm version prerelease --preid $(git rev-parse --short HEAD) --no-git-tag-version
 
       - name: publish on npm with dev dist-tag
-        if: "contains(github.event.pull_request.title, '(sdk):')"
         continue-on-error: true
         run: npm publish --tag dev/${{ github.event.pull_request.number }}
         env:
