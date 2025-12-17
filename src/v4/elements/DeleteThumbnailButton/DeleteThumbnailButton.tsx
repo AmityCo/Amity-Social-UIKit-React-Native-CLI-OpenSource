@@ -16,7 +16,7 @@ const ChangeThumbnailButton = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   ...props
-}: ChangeThumbnailButtonProps): JSX.Element => {
+}: ChangeThumbnailButtonProps): React.JSX.Element => {
   const { themeStyles, config } = useAmityElement({
     pageId,
     componentId,

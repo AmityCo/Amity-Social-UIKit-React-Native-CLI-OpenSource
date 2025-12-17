@@ -17,7 +17,7 @@ interface AmityCreatePostMenuComponentProps {
 const AmityCreatePostMenuComponent = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
-}: AmityCreatePostMenuComponentProps): JSX.Element => {
+}: AmityCreatePostMenuComponentProps): React.JSX.Element => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { themeStyles } = useAmityComponent({ pageId, componentId });
 

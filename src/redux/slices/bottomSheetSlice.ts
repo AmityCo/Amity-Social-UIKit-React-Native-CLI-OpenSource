@@ -4,14 +4,14 @@ import { RootState, useUIKitDispatch, useUIKitSelector } from '../store';
 
 export interface BottomSheetState {
   open: boolean;
-  content: JSX.Element | null;
+  content: React.JSX.Element | null;
   height?: number;
   pageId?: PageID;
   componentId?: ComponentID;
 }
 
 type OpenBottomSheetPayload = {
-  content: JSX.Element;
+  content: React.JSX.Element;
   height?: number;
 };
 
