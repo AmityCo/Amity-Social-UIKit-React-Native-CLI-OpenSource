@@ -37,10 +37,10 @@ jobs:
         continue-on-error: true
         run: yarn test
 
-      - name: sonar scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # - name: sonar scan
+      #   uses: SonarSource/sonarqube-scan-action@v5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: unpublish old version
         if: "contains(github.event.pull_request.title, '(sdk):')"

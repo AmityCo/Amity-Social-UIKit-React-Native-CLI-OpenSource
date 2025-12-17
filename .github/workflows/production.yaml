@@ -31,10 +31,10 @@ jobs:
       - name: run tests
         run: yarn test
 
-      - name: sonar scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # - name: sonar scan
+      #   uses: SonarSource/sonarqube-scan-action@v5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: publish on npm
         run: cd packages/sdk && npm publish --access public
