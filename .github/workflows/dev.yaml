@@ -55,6 +55,6 @@ jobs:
 
       - name: publish on npm with dev dist-tag
         continue-on-error: true
-        run: npm publish --tag dev/${{ github.event.pull_request.number }}
+        run: npm publish --tag dev/${{ github.event.pull_request.number }} --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
