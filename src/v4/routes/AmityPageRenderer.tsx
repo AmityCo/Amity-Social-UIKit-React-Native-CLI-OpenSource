@@ -84,7 +84,7 @@ export default function PageRenderer({ children }: PageRendererProps) {
             screenOptions={{
               headerShadowVisible: false,
               contentStyle: {
-                backgroundColor: 'white',
+                backgroundColor: theme.colors.background,
               },
               headerStyle: {
                 backgroundColor: theme.colors.background,
