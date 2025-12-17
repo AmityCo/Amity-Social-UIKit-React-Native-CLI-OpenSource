@@ -201,14 +201,14 @@ You can import and use the following screens individually in your application:
 
 ### 📝 Component Props
 
-| Component                  | Required Props                                         | Notes                                                                                                                                                                                                                                                                                  |
-| -------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CommunityHome`            | `defaultCommunityId: string`                           | Community to display                                                                                                                                                                                                                                                                   |
-| `PostDetail`               | `defaultPostId: string`                                | Post Detail page to display                                                                                                                                                                                                                                                            |
-| `AmityExploreComponent`    | -                                                      | Explore page to display                                                                                                                                                                                                                                                                |
-| `UserProfile`              | `defaultUserId: string` , `isShowBackButton?: boolean` | User profile to display                                                                                                                                                                                                                                                                |
-| `AmityGlobalFeedComponent` | `isShowStoryTab: boolean`                              | default value of `isShowStoryTab` is `true`                                                                                                                                                                                                                                            |
-| `AmityStoryTabComponent`   | `type: AmityStoryTabComponentEnum`                     | This component should be wrapped with `<View style={AmityStoryTabComponentStyle}>` The `targetId` is required only when the type is set to `AmityStoryTabComponentEnum.communityFeed`. For the global story tab component, use the type set to `AmityStoryTabComponentEnum.globalFeed` |
+| Component                  | Required Props                                         | Notes                                                                                                                                                                                                                                                                     |
+| -------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CommunityHome`            | `defaultCommunityId: string`                           | Community to display                                                                                                                                                                                                                                                      |
+| `PostDetail`               | `defaultPostId: string`                                | Post Detail page to display                                                                                                                                                                                                                                               |
+| `AmityExploreComponent`    | -                                                      | Explore page to display                                                                                                                                                                                                                                                   |
+| `UserProfile`              | `defaultUserId: string` , `isShowBackButton?: boolean` | User profile to display                                                                                                                                                                                                                                                   |
+| `AmityGlobalFeedComponent` | `isShowStoryTab: boolean`                              | default value of `isShowStoryTab` is `true`                                                                                                                                                                                                                               |
+| `AmityStoryTabComponent`   | `type: AmityStoryTabComponentEnum`                     | This component should be wrapped with ` <AmityGlobalStoryTabWrapper>` The `targetId` is required only when the type is set to `AmityStoryTabComponentEnum.communityFeed`. For the global story tab component, use the type set to `AmityStoryTabComponentEnum.globalFeed` |
 
 ### Component Usage
 
@@ -251,6 +251,7 @@ import {
   AmityStoryTabComponent,
   AmityStoryTabComponentEnum,
   AmityStoryTabComponentStyle,
+  AmityGlobalStoryTabWrapper,
 } from 'amity-react-native-social-ui-kit';
 
 export default function App() {
@@ -262,13 +263,13 @@ export default function App() {
       userId="userId"
       displayName="displayName"
     >
-      <View style={AmityStoryTabComponentStyle}>
+      <AmityGlobalStoryTabWrapper>
         <AmityPageRenderer>
           <AmityStoryTabComponent
             type={AmityStoryTabComponentEnum.globalFeed}
           />
         </AmityPageRenderer>
-      </View>
+      </AmityGlobalStoryTabWrapper>
     </AmityUiKitProvider>
   );
 }
