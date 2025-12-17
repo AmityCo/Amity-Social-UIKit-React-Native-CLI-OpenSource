@@ -25,8 +25,8 @@ jobs:
       - name: install deps
         run: yarn install --immutable
 
-      - name: build sdk and app
-        run: yarn build
+      - name: build library
+        run: yarn prepack
 
       - name: run tests
         run: yarn test
@@ -37,6 +37,6 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: publish on npm
-        run: cd packages/sdk && npm publish --access public
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
