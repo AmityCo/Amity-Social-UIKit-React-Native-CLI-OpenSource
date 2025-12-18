@@ -1,4 +1,4 @@
-# Amity React Native Social UIKit — Client Engineering Guide
+# Amity React Native Social UIKit — Engineering Guide
 
 This guide helps client-side engineers understand how the UIKit is structured, where to extend it, and how it integrates with native layers. Pair it with the public README for installation steps.
 

@@ -1,4 +1,4 @@
-# CI/CD Pipeline Documentation
+# Release Documentation
 
 ## Overview
 
@@ -152,30 +152,30 @@ npm install @amityco/react-native-social-uikit@4.0.1
 
 ## Release Flow Diagram
 
-```
+```md
 ┌─────────────────────┐
-│  Open PR            │
-│  (to production)    │
+│ Open PR │
+│ (to production) │
 └──────────┬──────────┘
-           │
-           ├──► Add Release/* label (required)
-           ├──► Push commits
-           └──► Auto-publishes: @dev/<PR_NUMBER>
-                    │
-                    ▼
-           ┌─────────────────┐
-           │  Merge PR       │
-           └────────┬────────┘
-                    │
-                    └──► Auto-publishes: @nightly
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │  Create Git Tag │
-                    │  (v4.0.1)       │
-                    └────────┬────────┘
-                             │
-                             └──► Auto-publishes: @latest
+│
+├──► Add Release/\* label (required)
+├──► Push commits
+└──► Auto-publishes: @dev/<PR_NUMBER>
+│
+▼
+┌─────────────────┐
+│ Merge PR │
+└────────┬────────┘
+│
+└──► Auto-publishes: @nightly
+│
+▼
+┌─────────────────┐
+│ Create Git Tag │
+│ (v4.0.1) │
+└────────┬────────┘
+│
+└──► Auto-publishes: @latest
 ```
 
 ---
@@ -212,13 +212,16 @@ Configure these secrets in **Settings** → **Secrets and variables** → **Acti
 
 ### For Releases
 
-1. Merge PR to production branch
-2. Test using nightly version: `npm install @amityco/react-native-social-uikit@nightly`
-3. Create semantic version tag: `git tag v4.0.1 && git push origin v4.0.1`
-4. Monitor workflow in Actions tab
-5. Verify on npm: `npm view @amityco/react-native-social-uikit`
+1. Merge feature PRs into the `staging` branch
+2. Bump version in `/package.json` on the `staging` branch
+3. Commit and push the version bump
+4. Create a pull request from `staging` to `production` branch
+5. Create a version tag (e.g., `v4.0.0-RC1`)
+6. Create a release using the version tag
+7. Add release notes summarizing the key changes
+8. Check the updated version in npm package
 
 ---
 
 **Last Updated:** 2025-12-18
-**Maintained By:** Amity Engineering Team
+**Maintained By:** Social React Native Engineering Team
