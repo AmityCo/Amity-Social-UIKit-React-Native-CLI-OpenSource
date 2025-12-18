@@ -19,12 +19,14 @@ import Divider from '../../../component/Divider';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
+  isShowStoryTab?: boolean;
 };
 
 export const globalFeedPageLimit = 20;
 
 const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
+  isShowStoryTab = true,
 }) => {
   const { itemWithAds, refresh, loading, onNextPage } =
     useCustomRankingGlobalFeed();
@@ -99,7 +101,8 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       keyboardShouldPersistTaps="handled"
       ListHeaderComponent={
         !refreshing &&
-        !loading && (
+        !loading &&
+        isShowStoryTab && (
           <AmityStoryTabComponent
             type={AmityStoryTabComponentEnum.globalFeed}
           />

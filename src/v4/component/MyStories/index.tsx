@@ -8,6 +8,7 @@ import Modal from 'react-native-modalbox';
 import StoryTargetView from './StoryTargetView';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import useAuth from '../../../hooks/useAuth';
 
 export interface IStoryItems {
   communityId: string;
@@ -111,6 +112,26 @@ const MyStories = () => {
   }
 
   return null;
+};
+export const AmityGlobalStoryTabWrapper = ({ children }) => {
+  const { globalStoryTargets, getGlobalStoryTargets } = useGlobalStory();
+
+  const { sessionState } = useAuth();
+
+  useEffect(() => {
+    if (sessionState === 'established') {
+      getGlobalStoryTargets();
+    }
+  }, [sessionState, getGlobalStoryTargets]);
+  return (
+    <View
+      style={{
+        height: globalStoryTargets.length > 0 ? 113 : 0,
+      }}
+    >
+      {children}
+    </View>
+  );
 };
 
 export default memo(MyStories);

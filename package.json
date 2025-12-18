@@ -1,5 +1,5 @@
 {
-  "name": "amity-react-native-social-ui-kit",
+  "name": "@amityco/react-native-social-uikit",
   "version": "4.0.0-RC8",
   "description": "Social UIKit",
   "main": "lib/commonjs/index",
@@ -130,9 +130,9 @@
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-netinfo": "^1.1.0",
-    "react-native-safe-area-context": "5.2.0",
-    "react-native-screens": "4.8.0",
-    "react-native-svg": "15.11.1",
+    "react-native-safe-area-context": "^5.2.0",
+    "react-native-screens": "^4.8.0",
+    "react-native-svg": "^15.11.0",
     "react-native-video": "^6.16.1",
     "react-native-vision-camera": "^4.7.1"
   },

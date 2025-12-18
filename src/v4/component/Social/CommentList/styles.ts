@@ -27,6 +27,7 @@ export const useStyles = () => {
       color: theme.colors.base,
     },
     inputWrap: {
+      width: '100%',
       gap: 8,
       borderTopWidth: 1,
       paddingVertical: 8,
@@ -66,6 +67,7 @@ export const useStyles = () => {
       width: '100%',
       paddingVertical: 0,
       paddingTop: 0,
+      color: theme.colors.base,
     },
     transparentText: {
       color: 'transparent',
