@@ -100,6 +100,7 @@ export interface IBehaviour {
       needApprovalOnPostCreation?: boolean;
       isPublic?: boolean;
     }) => void;
+    onClickClose?: () => void;
   };
   AmityStoryTargetSelectionPageBehavior?: {
     goToStoryComposerPage?: (arg?: {

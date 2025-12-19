@@ -13,7 +13,6 @@ import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import CloseButtonIconElement from '../../PublicApi/Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { PageID, ComponentID, ElementID } from '../../enum';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
 import TextKeyElement from '../../PublicApi/Elements/TextKeyElement/TextKeyElement';
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
@@ -48,15 +47,17 @@ interface ITargetSelectionPage {
     postSetting,
     needApprovalOnPostCreation,
   }: FeedParams) => void;
+  onClickClose?: () => void;
 }
 
 const TargetSelectionPage = ({
   pageId,
   hideMyTimelineTarget = false,
   onSelectFeed,
+  onClickClose,
 }: ITargetSelectionPage) => {
   const { client } = useAuth();
-  const navigation = useNavigation();
+
   const defaultTheme = useTheme() as MyMD3Theme;
 
   const user = useUser((client as Amity.Client).userId);
@@ -102,7 +103,9 @@ const TargetSelectionPage = ({
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.closeButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            onClickClose && onClickClose();
+          }}
         >
           <CloseButtonIconElement style={styles.closeIcon} pageID={pageId} />
         </TouchableOpacity>
