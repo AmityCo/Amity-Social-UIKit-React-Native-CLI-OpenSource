@@ -31,6 +31,7 @@ export const BehaviourProvider = ({
       AmityCommunitySettingPageBehavior: {},
       AmityCommunityMembershipPageBehavior: {},
       AmityCommunityNotificationSettingPageBehavior: {},
+      AmityPostComposerPageBehavior: {},
     }),
     []
   );

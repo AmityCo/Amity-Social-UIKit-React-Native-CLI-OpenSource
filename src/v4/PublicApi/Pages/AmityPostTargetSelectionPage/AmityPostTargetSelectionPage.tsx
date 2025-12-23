@@ -85,9 +85,6 @@ const AmityPostTargetSelectionPage = ({
     if (AmityPostTargetSelectionPageBehavior?.onClickClose) {
       AmityPostTargetSelectionPageBehavior.onClickClose();
     }
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-    }
   };
 
   return (

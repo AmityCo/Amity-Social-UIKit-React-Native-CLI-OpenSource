@@ -17,6 +17,8 @@ import TextKeyElement from '../../PublicApi/Elements/TextKeyElement/TextKeyEleme
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
 import { Illustration } from '../../../v4/PublicApi/Components/AmityEmptyNewsFeedComponent/Elements';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type FeedParams = {
   targetId: string;
@@ -63,7 +65,7 @@ const TargetSelectionPage = ({
   const user = useUser((client as Amity.Client).userId);
   const { communities, onNextCommunityPage, loading } = useCommunities();
   const { themeStyles, accessibilityId } = useAmityPage({ pageId });
-
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const theme = themeStyles || defaultTheme;
   const styles = useStyles(theme);
 
@@ -104,7 +106,10 @@ const TargetSelectionPage = ({
         <TouchableOpacity
           style={styles.closeButton}
           onPress={() => {
-            onClickClose && onClickClose();
+            onClickClose?.();
+            if (navigation.canGoBack()) {
+              navigation.goBack();
+            }
           }}
         >
           <CloseButtonIconElement style={styles.closeIcon} pageID={pageId} />

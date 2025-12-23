@@ -38,6 +38,9 @@ export interface IBehaviour {
     goToUserProfilePage?: (arg?: { userId?: string }) => void;
     goToPostComposerPage?: () => void;
   };
+  AmityPostComposerPageBehavior?: {
+    onPressPost?: () => void;
+  };
   AmityCommunitySearchResultComponent?: {
     goToCommunityProfilePage?: (arg?: {
       targetId: string;
@@ -107,6 +110,7 @@ export interface IBehaviour {
       targetId: string;
       targetType: 'community' | 'user';
     }) => void;
+    onClickClose?: () => void;
   };
   AmityLivestreamPostTargetSelectionPageBehavior?: {
     goToCreateLivestreamPage?: (arg?: {
@@ -124,6 +128,7 @@ export interface IBehaviour {
       needApprovalOnPostCreation?: boolean;
       isPublic?: boolean;
     }) => void;
+    onClickClose?: () => void;
   };
   AmityCommunityProfilePageBehavior?: {
     goToPendingPostPage?: () => void;
@@ -141,6 +146,7 @@ export interface IBehaviour {
       pop?: number;
       community?: Amity.Community;
     }) => void;
+    onClickClose?: () => void;
   };
   AmityCommunitySetupPageBehavior?: {
     goToAddCategoryPage?: (context: AddCategoryPageContext) => void;

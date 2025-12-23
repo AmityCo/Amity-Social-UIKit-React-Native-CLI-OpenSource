@@ -27,7 +27,7 @@ const VideoViewer: FC<VideoViewerProps> = ({
   images,
   onNextImage,
   onPreviousImage,
-  onClose = () => { },
+  onClose = () => {},
 }) => {
   const [active, setActive] = useState(currentImageIndex);
   const scrollViewRef = useRef<ScrollView>(null);
