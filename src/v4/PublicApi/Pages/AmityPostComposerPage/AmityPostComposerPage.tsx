@@ -60,6 +60,7 @@ import { getPostErrorMessage } from '../../../utils/errors';
 import { MAXIMUM_POST_CHARACTERS } from '../../../constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import { useUIKitDispatch } from '../../../../redux/store';
+import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
 
 const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   mode,
@@ -75,6 +76,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     shouldCall: true,
   });
   const pageId = PageID.post_composer_page;
+  const { AmityPostComposerPageBehavior } = useBehaviour();
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
   const styles = useStyles(themeStyles);
   const { getImage } = useFile();
@@ -286,10 +288,13 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
 
   const onPressClose = useCallback(() => {
     const routes = navigation.getState().routes;
+    if (AmityPostComposerPageBehavior?.onPressPost) {
+      AmityPostComposerPageBehavior.onPressPost();
+    }
     if (routes[routes.length - 2].name === 'PostTargetSelection') {
       navigation.pop(2);
     } else navigation.pop();
-  }, [navigation]);
+  }, [navigation, AmityPostComposerPageBehavior]);
 
   const onClose = useCallback(() => {
     Alert.alert(

@@ -158,8 +158,6 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     });
   };
 
-  if (post?.structureType === 'liveStream') return null;
-
   return (
     <View>
       {(category === AmityPostCategory.ANNOUNCEMENT ||

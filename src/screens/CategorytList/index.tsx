@@ -1,12 +1,6 @@
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  FlatList,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { FlatList, View, Text, Image, TouchableOpacity } from 'react-native';
 import { useStyles } from './styles';
 import CloseButton from '../../components/BackButton';
 import useAuth from '../../hooks/useAuth';
@@ -14,10 +8,10 @@ import useAuth from '../../hooks/useAuth';
 export default function CategoryList({ navigation }: any) {
   const { apiRegion } = useAuth();
 
-  const [categoryObject, setCategoryObject] = useState<Amity.LiveCollection<Amity.Category>>();
+  const [categoryObject, setCategoryObject] =
+    useState<Amity.LiveCollection<Amity.Category>>();
   const { data: categoryArr = [], onNextPage } = categoryObject ?? {};
   const styles = useStyles();
-
 
   const onEndReachedCalledDuringMomentumRef = useRef(true);
   React.useLayoutEffect(() => {
@@ -41,7 +35,7 @@ export default function CategoryList({ navigation }: any) {
         unsubscribe();
       } catch (error) {
         console.error('Failed to load categories:', error);
-      } 
+      }
     };
     loadCategories();
   }, []);
@@ -71,10 +65,9 @@ export default function CategoryList({ navigation }: any) {
     );
   };
 
-
-  const handleEndReached=()=>{
-    onNextPage && onNextPage()
-  }
+  const handleEndReached = () => {
+    onNextPage && onNextPage();
+  };
 
   return (
     <View style={styles.container}>

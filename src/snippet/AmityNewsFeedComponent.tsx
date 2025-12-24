@@ -7,7 +7,7 @@
 import {
   AmityNewsFeedComponent,
   AmityUiKitProvider,
-} from 'amity-react-native-social-ui-kit';
+} from '@amityco/react-native-social-uikit';
 import React from 'react';
 import config from '../../uikit.config.json';
 <AmityUiKitProvider

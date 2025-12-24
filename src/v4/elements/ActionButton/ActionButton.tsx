@@ -1,7 +1,10 @@
 import React from 'react';
 import { useAmityElement } from '../../../v4/hook';
 import { ComponentID, ElementID, PageID } from '../../../v4/enum';
-import Button, { BUTTON_SIZE, ButtonProps } from '../../../v4/component/Button/Button';
+import Button, {
+  BUTTON_SIZE,
+  ButtonProps,
+} from '../../../v4/component/Button/Button';
 import { useStyles } from './styles';
 
 type ActionButtonProps = ButtonProps & {
