@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@7.11.1-fee58395.0":
-  version "7.11.1-fee58395.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.11.1-fee58395.0.tgz#c882c9c5a2022de1fd3cdf93798a08b48c6d460d"
-  integrity sha512-Y2xP0p5jlQZdwK7jx72aoMpr2feQ/Qeg6K+YkvvULc4PSOndqZQ1UmURcBBSK/HJbM67dgU2Tm9VlcD1PvF4TA==
+"@amityco/ts-sdk-react-native@^7.12.0":
+  version "7.12.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.12.0.tgz#644c1ef711050bd99d2a69b6827e705b7a4402b5"
+  integrity sha512-jn2ScxrqLMl4oi1E6zX0ZpLZmLj5Fo0NC6oThh5GZ09CD7kVB39b0z9EVWvs65mnUM+Owb+G5zc6qcGg3+ECAA==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
@@ -4503,9 +4503,9 @@ for-own@^1.0.0:
     for-in "^1.0.1"
 
 form-data@^4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.4.tgz#784cdcce0669a9d68e94d11ac4eea98088edd2c4"
-  integrity sha512-KrGhL9Q4zjj0kiUt5OO4Mr/A/jlI2jDYs5eHBpYHPcBEVSiipAvn2Ko2HnPe20rmcuuvMHNdZFp+4IlGTMF0Ow==
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.5.tgz#b49e48858045ff4cbf6b03e1805cebcad3679053"
+  integrity sha512-8RipRLol37bNs2bhoV67fiTEvdTrbMUYcFTiy3+wuuOnUog2QBHCZWXDRijWQfAkhBj2Uf5UnVaiWwA5vdd82w==
   dependencies:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
@@ -4745,9 +4745,9 @@ hermes-parser@0.25.1:
     hermes-estree "0.25.1"
 
 hls.js@^1.4.10:
-  version "1.6.14"
-  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.6.14.tgz#acee6b3b7ea878d01adbd5af554199e2d3a12a0e"
-  integrity sha512-CSpT2aXsv71HST8C5ETeVo+6YybqCpHBiYrCRQSn3U5QUZuLTSsvtq/bj+zuvjLVADeKxoebzo16OkH8m1+65Q==
+  version "1.6.15"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.6.15.tgz#9ce13080d143a9bc9b903fb43f081e335b8321e5"
+  integrity sha512-E3a5VwgXimGHwpRGV+WxRTKeSp2DW5DI5MWv34ulL3t5UNmyJWCQ1KmLEHbYzcfThfXG8amBL+fCYPneGHC4VA==
 
 hoist-non-react-statics@^3.3.0:
   version "3.3.2"
