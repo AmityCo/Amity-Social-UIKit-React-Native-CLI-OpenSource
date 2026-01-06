@@ -3,12 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { useStyles } from './styles';
 import LiveStreamEndThumbnail from '../../../component/LivestreamContent/LivestreamEndedThumbnail';
 import { SvgXml } from 'react-native-svg';
-import {
-  getPostTopic,
-  PostRepository,
-  RoomRepository,
-  subscribeTopic,
-} from '@amityco/ts-sdk-react-native';
+import { RoomRepository } from '@amityco/ts-sdk-react-native';
 import { close } from '../../../assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -21,34 +16,10 @@ import NetInfo from '@react-native-community/netinfo';
 import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
 import Video from 'react-native-video';
 import useAuth from '../../../../hooks/useAuth';
-
-const usePostSubscription = (postId: string) => {
-  const [subscribedPost, setSubscribedPost] = useState<Amity.Post>(null);
-
-  useEffect(() => {
-    let unsubscribe: () => void;
-    if (postId) {
-      unsubscribe = PostRepository.getPost(postId, ({ data }) => {
-        setSubscribedPost(data);
-      });
-    }
-    return () => {
-      unsubscribe && unsubscribe();
-    };
-  }, [postId]);
-
-  useEffect(() => {
-    let unsubscribe: () => void;
-    if (subscribedPost) {
-      unsubscribe = subscribeTopic(getPostTopic(subscribedPost));
-    }
-    return () => {
-      unsubscribe && unsubscribe();
-    };
-  }, [subscribedPost]);
-
-  return { subscribedPost };
-};
+import {
+  usePostSubscription,
+  useRoomSubscription,
+} from '../../../../v4/hook/index';
 
 function AmityLiveStreamPlayerPage() {
   const { styles, theme } = useStyles();
@@ -64,6 +35,8 @@ function AmityLiveStreamPlayerPage() {
   const videoRef = useRef<any>(null);
 
   const { subscribedPost } = usePostSubscription(post?.postId);
+
+  useRoomSubscription({ room });
 
   useEffect(() => {
     const unsubscribe = RoomRepository.getRoom(

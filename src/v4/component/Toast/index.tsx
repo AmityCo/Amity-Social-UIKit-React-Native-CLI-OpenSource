@@ -8,8 +8,8 @@ import { informative, failed, success } from '../../assets/icons';
 import { CircularProgressIndicator } from '../CircularProgressIndicator';
 
 const Toast = () => {
-  const { styles, theme } = useStyles();
   const { hideToast, toast } = useToast();
+  const { styles, theme } = useStyles(toast.bottomPosition);
   const timeoutRef = useRef<number | null>(null);
   const fadeIn = useRef(new Animated.Value(0)).current;
 

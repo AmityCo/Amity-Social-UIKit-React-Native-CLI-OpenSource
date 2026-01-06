@@ -211,6 +211,48 @@ export const useStyles = () => {
       width: '100%',
       height: '100%',
     },
+    countdownOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 80,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      zIndex: 150,
+    },
+    countdownContainer: {
+      alignItems: 'center',
+      gap: 24,
+    },
+    countdownCircle: {
+      position: 'relative',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 72,
+      height: 72,
+    },
+    countdownNumberContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    countdownNumber: {
+      fontSize: 32,
+      fontWeight: '700',
+      color: theme.colors.background,
+    },
+    countdownText: {
+      fontSize: 24,
+      fontWeight: '500',
+      color: theme.colors.background,
+      textAlign: 'center',
+    },
   });
 
   return styles;

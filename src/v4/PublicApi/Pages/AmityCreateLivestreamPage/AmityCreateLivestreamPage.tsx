@@ -41,6 +41,8 @@ import { Track, LocalVideoTrack } from 'livekit-client';
 import { LiveKitRoom, registerGlobals } from '@livekit/react-native';
 import { RoomView } from './RoomView';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
+import { useRoomSubscription } from '../../../../v4/hook/useRoomSubscription';
+import { useToast } from '../../../../v4/stores/slices/toast';
 
 // Register WebRTC globals required for LiveKit
 registerGlobals();
@@ -73,6 +75,7 @@ function AmityCreateLivestreamPage() {
   const [isLive, setIsLive] = useState<boolean>(false);
   const [description, setDescription] = useState<string>('');
   const [isEnding, setIsEnding] = useState<boolean>(false);
+  const [countdown, setCountdown] = useState<number | null>(null);
   const [post, setPost] = useState<Amity.Post | null>(null);
   const [room, setRoom] = useState<Amity.Room | null>(null);
   const timerRef = useRef<number | null>(null);
@@ -86,6 +89,9 @@ function AmityCreateLivestreamPage() {
     null
   );
   const unsubscribeRef = useRef<Amity.Unsubscriber>(null);
+
+  useRoomSubscription({ room });
+  const { showToast } = useToast();
 
   const frontCamera = useCameraDevice('front');
   const backCamera = useCameraDevice('back');
@@ -106,6 +112,10 @@ function AmityCreateLivestreamPage() {
   const hasPermission =
     (Platform.OS === 'android' && androidPermission) ||
     (Platform.OS === 'ios' && iOSPermission);
+
+  const fourHours = 4 * 60 * 60 * 1000; // 4 hours
+  const countdownStart = fourHours - 10 * 1000; // Start countdown 10 seconds before end
+  const toastTriggerTime = fourHours - 3 * 60 * 1000; // Show toast 3 minutes before end
 
   const switchCamera = useCallback(async () => {
     if (isLive && livekitParticipant) {
@@ -310,11 +320,36 @@ function AmityCreateLivestreamPage() {
   );
 
   useEffect(() => {
-    const fourHours = 4 * 60 * 60 * 1000;
+    // Show toast when 3 minutes left
+    if (room && time >= toastTriggerTime && time < toastTriggerTime + 1000) {
+      showToast({
+        type: 'informative',
+        message:
+          'Your live will automatically end once it reaches 4-hour limit.',
+        duration: 3000,
+        bottomPosition: 96,
+      });
+    }
+
     if (room && time >= fourHours) {
       endLiveStream(true);
+      setCountdown(null);
+    } else if (room && time >= countdownStart && time < fourHours) {
+      // Calculate countdown from 10 to 0
+      const remaining = Math.ceil((fourHours - time) / 1000);
+      setCountdown(remaining);
+    } else {
+      setCountdown(null);
     }
-  }, [endLiveStream, room, time]);
+  }, [
+    endLiveStream,
+    room,
+    time,
+    showToast,
+    toastTriggerTime,
+    fourHours,
+    countdownStart,
+  ]);
 
   useEffect(() => {
     if (Platform.OS === 'android') checkPermissionAndroid();
@@ -482,6 +517,27 @@ function AmityCreateLivestreamPage() {
                 pageId={PageID.create_livestream_page}
               />
             </View>
+            {countdown !== null && (
+              <View style={styles.countdownOverlay}>
+                <View style={styles.countdownContainer}>
+                  <Typography.TitleBold style={styles.countdownText}>
+                    Live stream ends in
+                  </Typography.TitleBold>
+                  <View style={styles.countdownCircle}>
+                    <CircularProgressIndicator
+                      size={64}
+                      strokeWidth={2}
+                      progress={((10 - countdown) / 10) * 100}
+                    />
+                    <View style={styles.countdownNumberContainer}>
+                      <Typography.Title style={styles.countdownNumber}>
+                        {countdown}
+                      </Typography.Title>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            )}
           </>
         )
       ) : (

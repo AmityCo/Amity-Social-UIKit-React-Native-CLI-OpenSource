@@ -3,7 +3,7 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export const useStyles = () => {
+export const useStyles = (bottomPosition: number = 16) => {
   const theme = useTheme<MyMD3Theme>();
   const { bottom } = useSafeAreaInsets();
 
@@ -13,7 +13,7 @@ export const useStyles = () => {
       zIndex: 999,
       width: '90%',
       borderRadius: 8,
-      bottom: bottom + 16,
+      bottom: bottom + bottomPosition,
       paddingVertical: 16,
       alignSelf: 'center',
       flexDirection: 'row',
