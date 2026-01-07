@@ -301,7 +301,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       'Discard this post',
       'The post will be permanently deleted. It cannot be undone',
       [
-        { text: 'Keey Editing', style: 'cancel' },
+        { text: 'Keep Editing', style: 'cancel' },
         {
           text: 'Discard',
           style: 'destructive',
