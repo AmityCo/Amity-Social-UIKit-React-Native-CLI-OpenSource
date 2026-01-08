@@ -2,6 +2,7 @@ import { decode } from 'html-entities';
 import { Image } from 'react-native';
 
 import { PreviewData, PreviewDataImage, Size } from './types';
+import axios from 'axios';
 
 export const getActualImageUrl = (baseUrl: string, imageUrl?: string) => {
   let actualImageUrl = imageUrl?.trim();
@@ -80,7 +81,7 @@ export const getPreviewData = async (text: string, requestTimeout = 5000) => {
     let abortControllerTimeout: number;
     const abortController = new AbortController();
 
-    const request = fetch(url, {
+    const request = axios.get(url, {
       headers: {
         'User-Agent':
           'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
