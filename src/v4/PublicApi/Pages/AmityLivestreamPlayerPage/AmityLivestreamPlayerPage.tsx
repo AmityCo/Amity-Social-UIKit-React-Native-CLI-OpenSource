@@ -30,9 +30,12 @@ function AmityLiveStreamPlayerPage() {
   const [reconnecting, setReconnecting] = useState(false);
   const [room, setRoom] = useState<Amity.Room | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const [wasLive, setWasLive] = useState(false);
+  const [showEndThumbnail, setShowEndThumbnail] = useState(false);
   const { roomId, post } = route.params;
   const { client } = useAuth();
   const videoRef = useRef<any>(null);
+  const isProgrammaticDismiss = useRef(false);
 
   const { subscribedPost } = usePostSubscription(post?.postId);
 
@@ -75,6 +78,38 @@ function AmityLiveStreamPlayerPage() {
     return () => unsubscribe();
   }, []);
 
+  // Track if user was watching live
+  useEffect(() => {
+    if (room?.status === RoomStatus.live) {
+      setWasLive(true);
+    }
+  }, [room?.status]);
+
+  // Dismiss fullscreen player when stream ends
+  useEffect(() => {
+    const shouldShowEndThumbnail =
+      room?.status === RoomStatus.ended ||
+      (room?.status === RoomStatus.recorded && wasLive);
+
+    console.log('shouldShowEndThumbnail =>', shouldShowEndThumbnail);
+    console.log('videoRef.current', videoRef.current);
+
+    if (shouldShowEndThumbnail && videoRef.current) {
+      console.log('Dismissing fullscreen player');
+      isProgrammaticDismiss.current = true;
+      videoRef.current?.dismissFullscreenPlayer();
+      // Delay showing end thumbnail to allow fullscreen dismiss to complete
+      setTimeout(() => {
+        setShowEndThumbnail(true);
+      }, 300);
+    } else if (shouldShowEndThumbnail && !videoRef.current) {
+      // If video ref is already null, show end thumbnail immediately
+      setShowEndThumbnail(true);
+    } else if (!shouldShowEndThumbnail) {
+      setShowEndThumbnail(false);
+    }
+  }, [room?.status, wasLive]);
+
   // Start in fullscreen mode on iOS
   useEffect(() => {
     if (videoRef.current && room && room.status !== RoomStatus.ended) {
@@ -98,9 +133,17 @@ function AmityLiveStreamPlayerPage() {
     navigation.goBack();
   };
 
+  const handleFullscreenDismiss = () => {
+    // Only navigate back if user manually dismissed, not programmatically
+    if (!isProgrammaticDismiss.current) {
+      closePlayer();
+    }
+    isProgrammaticDismiss.current = false;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {room.status === RoomStatus.ended ? (
+      {showEndThumbnail ? (
         <>
           <View style={styles.steamEndContainer}>
             <LiveStreamEndThumbnail />
@@ -126,34 +169,37 @@ function AmityLiveStreamPlayerPage() {
               </View>
             </View>
           )}
-          <Video
-            ref={videoRef}
-            source={{
-              uri:
-                room.status === RoomStatus.recorded
-                  ? room.recordedPlaybackInfos[0]?.url
-                  : room.livePlaybackUrl,
+          {!showEndThumbnail && (
+            <Video
+              ref={videoRef}
+              source={{
+                uri:
+                  room.status === RoomStatus.recorded
+                    ? room.recordedPlaybackInfos[0]?.url
+                    : room.livePlaybackUrl,
+                headers: {
+                  Authorization: `Bearer ${client.token.accessToken}`,
+                },
 
-              headers: {
-                Authorization: `Bearer ${client.token.accessToken}`,
-              },
-            }}
-            style={styles.container}
-            resizeMode="contain"
-            controls={room.status === RoomStatus.recorded}
-            fullscreen={true}
-            fullscreenOrientation="landscape"
-            paused={false}
-            muted={false}
-            volume={1.0}
-            audioOutput="speaker"
-            playInBackground={false}
-            playWhenInactive={false}
-            onError={(e) => {
-              console.log('Video Player Error: ', e);
-            }}
-            onFullscreenPlayerDidDismiss={closePlayer}
-          />
+                type: 'm3u8',
+              }}
+              style={styles.container}
+              resizeMode="contain"
+              controls={room.status === RoomStatus.recorded}
+              fullscreen={true}
+              fullscreenOrientation="landscape"
+              paused={false}
+              muted={false}
+              volume={1.0}
+              audioOutput="speaker"
+              playInBackground={false}
+              playWhenInactive={false}
+              onError={(e) => {
+                console.log('Video Player Error: ', e);
+              }}
+              onFullscreenPlayerDidDismiss={handleFullscreenDismiss}
+            />
+          )}
         </View>
       )}
 
