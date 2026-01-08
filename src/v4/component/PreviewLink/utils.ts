@@ -2,7 +2,7 @@ import { decode } from 'html-entities';
 import { Image } from 'react-native';
 
 import { PreviewData, PreviewDataImage, Size } from './types';
-import axios from 'axios';
+import { Client } from '@amityco/ts-sdk-react-native';
 
 export const getActualImageUrl = (baseUrl: string, imageUrl?: string) => {
   let actualImageUrl = imageUrl?.trim();
@@ -55,7 +55,7 @@ export const getImageSize = (url: string) => {
 
 // Functions below use functions from the same file and mocks are not working
 /* istanbul ignore next */
-export const getPreviewData = async (text: string, requestTimeout = 5000) => {
+export const getPreviewData = async (text: string) => {
   const previewData: PreviewData = {
     description: undefined,
     image: undefined,
@@ -78,114 +78,14 @@ export const getPreviewData = async (text: string, requestTimeout = 5000) => {
       url = 'https://' + url;
     }
 
-    let abortControllerTimeout: number;
-    const abortController = new AbortController();
+    const request = await Client.fetchLinkPreview(url);
 
-    const request = axios.get(url, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
-      },
-      signal: abortController.signal,
-    });
-
-    abortControllerTimeout = setTimeout(() => {
-      abortController.abort();
-    }, requestTimeout);
-
-    const response = await request;
-
-    clearTimeout(abortControllerTimeout);
-
-    previewData.link = url;
-
-    const contentType = response.headers.get('content-type') ?? '';
-
-    if (REGEX_IMAGE_CONTENT_TYPE.test(contentType)) {
-      const image = await getPreviewDataImage(url);
-      previewData.image = image;
-      return previewData;
-    }
-
-    const html = await response.text();
-
-    // Some pages return undefined
-    if (!html) return previewData;
-
-    const head = html.substring(0, html.indexOf('<body'));
-
-    // Get page title
-    const title = REGEX_TITLE.exec(head);
-    previewData.title = getHtmlEntitiesDecodedText(title?.[1]);
-
-    let matches: RegExpMatchArray | null;
-    const meta: RegExpMatchArray[] = [];
-    while ((matches = REGEX_META.exec(head)) !== null) {
-      // @ts-ignore
-      meta.push([...matches]);
-    }
-
-    const metaPreviewData = meta.reduce<{
-      description?: string;
-      imageUrl?: string;
-      title?: string;
-    }>(
-      (acc, curr) => {
-        // Verify that we have property/name and content
-        // Note that if a page will specify property, name and content in the same meta, regex will fail
-        if (!curr[2] || !curr[3]) return acc;
-
-        // Only take the first occurrence
-        // For description take the meta description tag into consideration
-        const description =
-          !acc.description &&
-          (getContent(curr[2], curr[3], 'og:description') ||
-            getContent(curr[2], curr[3], 'description'));
-        const ogImage =
-          !acc.imageUrl && getContent(curr[2], curr[3], 'og:image');
-        const ogTitle = !acc.title && getContent(curr[2], curr[3], 'og:title');
-
-        return {
-          description: description
-            ? getHtmlEntitiesDecodedText(description)
-            : acc.description,
-          imageUrl: ogImage ? getActualImageUrl(url, ogImage) : acc.imageUrl,
-          title: ogTitle ? getHtmlEntitiesDecodedText(ogTitle) : acc.title,
-        };
-      },
-      { title: previewData.title }
-    );
-
-    previewData.description = metaPreviewData.description;
-    previewData.image = await getPreviewDataImage(metaPreviewData.imageUrl);
-    previewData.title = metaPreviewData.title;
-
-    if (!previewData.image) {
-      let imageMatches: RegExpMatchArray | null;
-      const tags: RegExpMatchArray[] = [];
-      while ((imageMatches = REGEX_IMAGE_TAG.exec(html)) !== null) {
-        // @ts-ignore
-        tags.push([...imageMatches]);
-      }
-
-      let images: PreviewDataImage[] = [];
-
-      for (const tag of tags
-        .filter((t) => !t[1].startsWith('data'))
-        .slice(0, 5)) {
-        const image = await getPreviewDataImage(getActualImageUrl(url, tag[1]));
-
-        if (!image) continue;
-
-        images = [...images, image];
-      }
-
-      previewData.image = images.sort(
-        (a, b) => b.height * b.width - a.height * a.width
-      )[0];
-    }
-
-    return previewData;
+    return {
+      description: request.description || undefined,
+      image: request.image || undefined,
+      link: url,
+      title: request.title || undefined,
+    };
   } catch {
     return previewData;
   }

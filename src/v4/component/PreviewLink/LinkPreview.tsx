@@ -21,7 +21,7 @@ export const LinkPreview = React.memo(
 
       const fetchData = async () => {
         setData(undefined);
-        const newData = await getPreviewData(text, 5000);
+        const newData = await getPreviewData(text);
         if (!isCancelled) {
           setData(newData);
         }
@@ -37,8 +37,8 @@ export const LinkPreview = React.memo(
 
     const renderImageNode = React.useCallback(
       (image: PreviewDataImage) => {
-        const imageUrl = image?.url
-          ? { uri: image.url }
+        const imageUrl = image
+          ? { uri: image }
           : require('../../assets/images/previewLinkDefaultBackground.png');
 
         return (
