@@ -157,8 +157,15 @@ export const useStyles = () => {
     text: {
       color: theme.colors.background,
     },
-    timer: {
+
+    closeButton: {
       left: 16,
+      zIndex: 100,
+      position: 'absolute',
+      top: 20 + insets.top,
+    },
+    timer: {
+      right: 16,
       zIndex: 100,
       position: 'absolute',
       top: 20 + insets.top,

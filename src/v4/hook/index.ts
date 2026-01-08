@@ -32,4 +32,3 @@ export * from './useRolesQuery';
 export * from './useFlagUserQuery';
 export * from './usePostSubscription';
 export * from './useRoomSubscription';
-export * from './useRoom';

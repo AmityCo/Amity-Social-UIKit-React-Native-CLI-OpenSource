@@ -14,7 +14,7 @@ import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
-import { arrowDown } from '../../../../v4/assets/icons';
+import { arrowDown, close } from '../../../../v4/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import { Typography } from '../../../component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
@@ -511,6 +511,19 @@ function AmityCreateLivestreamPage() {
                 </Typography.Caption>
               </View>
             )}
+
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => confirmEndStreamAlert()}
+            >
+              <SvgXml
+                xml={close()}
+                width="28"
+                height="28"
+                color={theme.colors.background}
+              />
+            </TouchableOpacity>
+
             <View style={styles.timer}>
               <LiveTimerStatus
                 time={calculateTime(time)}
