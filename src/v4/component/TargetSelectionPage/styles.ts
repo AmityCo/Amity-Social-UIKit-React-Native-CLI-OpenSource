@@ -39,6 +39,17 @@ export const useStyles = (theme: MyMD3Theme) => {
       marginBottom: 26,
       paddingHorizontal: 16,
     },
+    noCommunityContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: '40%',
+    },
+    noCommunityTitle: {
+      marginTop: 16,
+      color: theme.colors.baseShade3,
+    },
   });
 
   return styles;

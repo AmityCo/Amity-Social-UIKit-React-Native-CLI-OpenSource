@@ -7,7 +7,7 @@
 import {
   AmityCommunitySearchResultComponent,
   AmityUiKitProvider,
-} from 'amity-react-native-social-ui-kit';
+} from '@amityco/react-native-social-uikit';
 import React from 'react';
 import config from '../../uikit.config.json';
 import { TabName } from '../v4/enum';

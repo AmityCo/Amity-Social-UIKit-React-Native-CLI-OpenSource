@@ -13,10 +13,12 @@ import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import CloseButtonIconElement from '../../PublicApi/Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { PageID, ComponentID, ElementID } from '../../enum';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
 import TextKeyElement from '../../PublicApi/Elements/TextKeyElement/TextKeyElement';
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
+import { Illustration } from '../../../v4/PublicApi/Components/AmityEmptyNewsFeedComponent/Elements';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type FeedParams = {
   targetId: string;
@@ -47,21 +49,23 @@ interface ITargetSelectionPage {
     postSetting,
     needApprovalOnPostCreation,
   }: FeedParams) => void;
+  onClickClose?: () => void;
 }
 
 const TargetSelectionPage = ({
   pageId,
   hideMyTimelineTarget = false,
   onSelectFeed,
+  onClickClose,
 }: ITargetSelectionPage) => {
   const { client } = useAuth();
-  const navigation = useNavigation();
+
   const defaultTheme = useTheme() as MyMD3Theme;
 
   const user = useUser((client as Amity.Client).userId);
-  const { communities, onNextCommunityPage } = useCommunities();
+  const { communities, onNextCommunityPage, loading } = useCommunities();
   const { themeStyles, accessibilityId } = useAmityPage({ pageId });
-
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const theme = themeStyles || defaultTheme;
   const styles = useStyles(theme);
 
@@ -101,7 +105,12 @@ const TargetSelectionPage = ({
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.closeButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            onClickClose?.();
+            if (navigation.canGoBack()) {
+              navigation.goBack();
+            }
+          }}
         >
           <CloseButtonIconElement style={styles.closeIcon} pageID={pageId} />
         </TouchableOpacity>
@@ -137,6 +146,14 @@ const TargetSelectionPage = ({
             My communities
           </Typography.Body>
         </>
+      )}
+      {!loading && (communities?.length === 0 || !communities) && (
+        <View style={styles.noCommunityContainer}>
+          <Illustration />
+          <Typography.TitleBold style={styles.noCommunityTitle}>
+            You haven't joined any communities yet.
+          </Typography.TitleBold>
+        </View>
       )}
       <FlatList
         data={communities}

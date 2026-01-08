@@ -37,10 +37,16 @@ const AmityLivestreamPostTargetSelectionPage = () => {
     navigation.navigate('CreateLivestream', context);
   };
 
+  const onClickClose = () => {
+    if (AmityLivestreamPostTargetSelectionPageBehavior?.onClickClose) {
+      AmityLivestreamPostTargetSelectionPageBehavior.onClickClose();
+    }
+  };
   return (
     <TargetSelectionPage
       onSelectFeed={onSelectFeed}
       pageId={PageID.livestream_post_target_selection_page}
+      onClickClose={onClickClose}
     />
   );
 };

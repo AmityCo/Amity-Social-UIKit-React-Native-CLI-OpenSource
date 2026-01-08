@@ -24,6 +24,8 @@ import {
   PhotoFile,
   VideoFile,
   useCameraFormat,
+  useCameraPermission,
+  useMicrophonePermission,
 } from 'react-native-vision-camera';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
@@ -63,6 +65,11 @@ const AmityCreateStoryPage: FC<ICreateStoryPage> = ({
   onCreateStory,
   onDiscardStory,
 }) => {
+  const { hasPermission: hasCameraPermission } = useCameraPermission();
+  const { hasPermission: hasMicrophonePermission } = useMicrophonePermission();
+
+  const [cameraKey, setCameraKey] = useState(0);
+
   const { width, height } = useWindowDimensions();
   const isPortrait = width < height;
   const landscapeStyle: ViewStyle = !isPortrait && {
@@ -113,6 +120,19 @@ const AmityCreateStoryPage: FC<ICreateStoryPage> = ({
     clearInterval(timerRef?.current);
     cameraRef?.current?.stopRecording();
   }, []);
+
+  useEffect(() => {
+    if (backCamera && !activeCamera) {
+      setActiveCamera(backCamera);
+    }
+  }, [backCamera, activeCamera]);
+
+  useEffect(() => {
+    if (hasCameraPermission && hasMicrophonePermission && activeCamera) {
+      // Force remount camera component
+      setCameraKey((prev) => prev + 1);
+    }
+  }, [hasCameraPermission, hasMicrophonePermission, activeCamera]);
 
   useEffect(() => {
     if (totalTime === TIMER_LIMIT) return onStopRecord();
@@ -177,8 +197,14 @@ const AmityCreateStoryPage: FC<ICreateStoryPage> = ({
     setIsRecording(true);
     cameraRef?.current?.startRecording({
       onRecordingFinished: (video) => onFinishCapture(video),
-      onRecordingError: (error) =>
-        Alert.alert('Video Record Error', error.message),
+      onRecordingError: (error) => {
+        if (error.message.includes('no data was received! (null)')) {
+          Alert.alert(
+            'Video Too Short',
+            'Please press and hold the button for at least 1 second to record a video.'
+          );
+        } else Alert.alert('Video Record Error', error.message);
+      },
       fileType: 'mp4',
       flash: flashOnState ? 'on' : 'off',
     });
@@ -262,6 +288,7 @@ const AmityCreateStoryPage: FC<ICreateStoryPage> = ({
       <View style={styles.cameraContainer}>
         <Camera
           ref={cameraRef}
+          key={cameraKey}
           style={[styles.camera, landscapeStyle]}
           device={activeCamera}
           isActive={true}

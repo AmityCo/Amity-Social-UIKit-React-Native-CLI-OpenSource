@@ -1,5 +1,5 @@
 import React, { FC, memo, useCallback, useRef, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 
 import { RefreshControl } from 'react-native';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
@@ -19,12 +19,16 @@ import Divider from '../../../component/Divider';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
+  isShowStoryTab?: boolean;
+  GlobalFeedHeaderComponent?: React.ReactElement;
 };
 
 export const globalFeedPageLimit = 20;
 
 const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
+  isShowStoryTab = true,
+  GlobalFeedHeaderComponent,
 }) => {
   const { itemWithAds, refresh, loading, onNextPage } =
     useCustomRankingGlobalFeed();
@@ -98,11 +102,15 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       }
       keyboardShouldPersistTaps="handled"
       ListHeaderComponent={
-        !refreshing &&
-        !loading && (
-          <AmityStoryTabComponent
-            type={AmityStoryTabComponentEnum.globalFeed}
-          />
+        !refreshing && !loading && isShowStoryTab ? (
+          <View>
+            {GlobalFeedHeaderComponent}
+            <AmityStoryTabComponent
+              type={AmityStoryTabComponentEnum.globalFeed}
+            />
+          </View>
+        ) : (
+          GlobalFeedHeaderComponent
         )
       }
       viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}

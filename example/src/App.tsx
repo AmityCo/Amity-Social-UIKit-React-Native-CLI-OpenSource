@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   AmityUiKitProvider,
   AmityUiKitSocial,
-} from 'amity-react-native-social-ui-kit';
+} from '@amityco/react-native-social-uikit';
 import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
