@@ -118,6 +118,7 @@ function AmityLiveStreamPlayerPage() {
       }, 100);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [room]);
 
   if (!room || error) {
