@@ -91,11 +91,7 @@ function AmityLiveStreamPlayerPage() {
       room?.status === RoomStatus.ended ||
       (room?.status === RoomStatus.recorded && wasLive);
 
-    console.log('shouldShowEndThumbnail =>', shouldShowEndThumbnail);
-    console.log('videoRef.current', videoRef.current);
-
     if (shouldShowEndThumbnail && videoRef.current) {
-      console.log('Dismissing fullscreen player');
       isProgrammaticDismiss.current = true;
       videoRef.current?.dismissFullscreenPlayer();
       // Delay showing end thumbnail to allow fullscreen dismiss to complete
