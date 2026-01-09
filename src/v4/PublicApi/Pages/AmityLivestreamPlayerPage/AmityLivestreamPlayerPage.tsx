@@ -169,37 +169,35 @@ function AmityLiveStreamPlayerPage() {
               </View>
             </View>
           )}
-          {!showEndThumbnail && (
-            <Video
-              ref={videoRef}
-              source={{
-                uri:
-                  room.status === RoomStatus.recorded
-                    ? room.recordedPlaybackInfos[0]?.url
-                    : room.livePlaybackUrl,
-                headers: {
-                  Authorization: `Bearer ${client.token.accessToken}`,
-                },
+          <Video
+            ref={videoRef}
+            source={{
+              uri:
+                room.status === RoomStatus.recorded
+                  ? room.recordedPlaybackInfos[0]?.url
+                  : room.livePlaybackUrl,
+              headers: {
+                Authorization: `Bearer ${client.token.accessToken}`,
+              },
 
-                type: 'm3u8',
-              }}
-              style={styles.container}
-              resizeMode="contain"
-              controls={room.status === RoomStatus.recorded}
-              fullscreen={true}
-              fullscreenOrientation="landscape"
-              paused={false}
-              muted={false}
-              volume={1.0}
-              audioOutput="speaker"
-              playInBackground={false}
-              playWhenInactive={false}
-              onError={(e) => {
-                console.log('Video Player Error: ', e);
-              }}
-              onFullscreenPlayerDidDismiss={handleFullscreenDismiss}
-            />
-          )}
+              type: 'm3u8',
+            }}
+            style={styles.container}
+            resizeMode="contain"
+            controls={room.status === RoomStatus.recorded}
+            fullscreen={true}
+            fullscreenOrientation="landscape"
+            paused={false}
+            muted={false}
+            volume={1.0}
+            audioOutput="speaker"
+            playInBackground={false}
+            playWhenInactive={false}
+            onError={(e) => {
+              console.log('Video Player Error: ', e);
+            }}
+            onFullscreenPlayerDidDismiss={handleFullscreenDismiss}
+          />
         </View>
       )}
 
