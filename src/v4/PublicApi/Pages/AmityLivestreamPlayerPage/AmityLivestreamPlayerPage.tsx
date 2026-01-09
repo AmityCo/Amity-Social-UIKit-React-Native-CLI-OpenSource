@@ -127,7 +127,6 @@ function AmityLiveStreamPlayerPage() {
       </SafeAreaView>
     );
   }
-  // TODO : Fix redirect just close player instead of calling onBack
 
   const closePlayer = () => {
     navigation.goBack();
