@@ -17,6 +17,7 @@ export const useStyles = () => {
     steamEndContainer: {
       flex: 1,
       justifyContent: 'center',
+      backgroundColor: '#000000',
     },
     indicator: {
       left: 16,
