@@ -200,17 +200,16 @@ function AmityLiveStreamPlayerPage() {
         </>
       ) : (
         <View style={styles.container}>
-          {Platform.OS !== 'android' &&
-            (room.status === RoomStatus.live ||
-              room.status === RoomStatus.waiting_reconnect) && (
-              <View style={styles.indicator}>
-                <View style={styles.status}>
-                  <Typography.CaptionBold style={styles.live}>
-                    LIVE
-                  </Typography.CaptionBold>
-                </View>
+          {(room.status === RoomStatus.live ||
+            room.status === RoomStatus.waiting_reconnect) && (
+            <View style={styles.indicator}>
+              <View style={styles.status}>
+                <Typography.CaptionBold style={styles.live}>
+                  LIVE
+                </Typography.CaptionBold>
               </View>
-            )}
+            </View>
+          )}
 
           {!shouldShowEndThumbnail && (
             <Video
