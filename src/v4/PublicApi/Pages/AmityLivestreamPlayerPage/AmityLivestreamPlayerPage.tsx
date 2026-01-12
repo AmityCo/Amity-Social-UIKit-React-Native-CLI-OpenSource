@@ -101,6 +101,8 @@ function AmityLiveStreamPlayerPage() {
   }, [room?.status, wasLive]);
 
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
     if (
       videoRef.current &&
       room &&
@@ -113,12 +115,17 @@ function AmityLiveStreamPlayerPage() {
         room?.moderation?.terminateLabels?.length > 0;
 
       if (!isTerminated) {
-        const timer = setTimeout(() => {
+        timer = setTimeout(() => {
           videoRef.current?.presentFullscreenPlayer();
         }, 100);
-        return () => clearTimeout(timer);
       }
     }
+
+    return () => {
+      if (timer !== null) {
+        clearTimeout(timer);
+      }
+    };
   }, [room, videoError]);
 
   const isTerminated =
@@ -128,7 +135,6 @@ function AmityLiveStreamPlayerPage() {
   const shouldShowEndThumbnail =
     room?.status === RoomStatus.ended ||
     (room?.status === RoomStatus.recorded && wasLive) ||
-    videoError ||
     isTerminated;
 
   useEffect(() => {
