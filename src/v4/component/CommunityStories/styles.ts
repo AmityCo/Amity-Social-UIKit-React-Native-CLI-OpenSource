@@ -91,10 +91,15 @@ export const useStyles = () => {
       alignItems: 'center',
       width: 68,
     },
+    errorIcon: {
+      position: 'absolute',
+      right: 8,
+      bottom: 0,
+    },
     storyCreateIcon: {
       position: 'absolute',
-      left: 42,
-      top: 30,
+      left: 8,
+      top: -16,
     },
     base: {
       color: theme.colors.base,
