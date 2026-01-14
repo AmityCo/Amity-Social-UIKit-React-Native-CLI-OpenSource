@@ -60,7 +60,6 @@ export async function uploadImageFile(
       );
 
       if (file) {
-        console.log('file =>', file);
         resolve(file);
       } else {
         reject({ message: 'Upload failed - no file data returned' });
