@@ -91,6 +91,7 @@ const LoadingImage = ({
     } catch (error) {
       handleLoadEnd();
       setIsProcess(false);
+      setIsUploading(false);
       setIsUploadError(true);
       onUploadError?.(true, source);
     }
