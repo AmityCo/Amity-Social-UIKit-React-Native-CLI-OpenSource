@@ -35,6 +35,7 @@ interface OverlayImageProps {
     originalPath: string,
     thumbNail: string
   ) => void;
+  onUploadError?: (hasError: boolean, source: string) => void;
   index?: number;
   isUploaded: boolean;
   fileId?: string;
@@ -50,6 +51,7 @@ const LoadingVideo = ({
   onClose,
   index,
   onLoadFinish,
+  onUploadError,
   isUploaded = false,
   thumbNail,
   onPlay,
@@ -129,23 +131,30 @@ const LoadingVideo = ({
       } else {
         handleLoadEnd();
         dispatch(showToastMessage({ toastMessage: 'Failed to upload file' }));
+        setIsProcess(false);
         setIsUploadError(true);
+        onUploadError?.(true, source);
       }
     } catch (error) {
       handleLoadEnd();
       dispatch(showToastMessage({ toastMessage: 'Failed to upload file' }));
+      setIsProcess(false);
       setIsUploadError(true);
+      onUploadError?.(true, source);
     }
   }, [source]);
 
   const handleDelete = async () => {
-    if (!fileId) return null;
-    if (!isEditMode) {
+    if (fileId && !isEditMode) {
       await deleteAmityFile(fileId);
     }
     onClose && onClose(source, fileId, postId);
   };
   useEffect(() => {
+    setIsUploadError(false);
+    onUploadError?.(false, source);
+    setProgress(0);
+    setIsProcess(false);
     if (isUploaded) {
       setLoading(false);
     } else {
@@ -216,7 +225,7 @@ const LoadingVideo = ({
       ) : (
         <TouchableOpacity
           style={styles.closeButton}
-          disabled={loading || isProcess}
+          disabled={(loading || isProcess) && !isUploadError}
           onPress={handleDelete}
         >
           <SvgXml xml={closeIcon(theme.colors.base)} width="12" height="12" />

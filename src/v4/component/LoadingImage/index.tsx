@@ -10,8 +10,6 @@ import { closeIcon, toastIcon } from '../../../svg/svg-xml-list';
 import { useStyles } from './styles';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
-import uiSlice from '../../../redux/slices/uiSlice';
-import { useUIKitDispatch } from '../../../redux/store';
 
 interface OverlayImageProps {
   source: string;
@@ -23,6 +21,7 @@ interface OverlayImageProps {
     index: number,
     originalPath: string
   ) => void;
+  onUploadError?: (hasError: boolean, source: string) => void;
   index?: number;
   isUploaded: boolean;
   fileId?: string;
@@ -36,6 +35,7 @@ const LoadingImage = ({
   onClose,
   index,
   onLoadFinish,
+  onUploadError,
   isUploaded = false,
   fileId = '',
   isEditMode = false,
@@ -44,8 +44,6 @@ const LoadingImage = ({
   setIsUploading,
 }: OverlayImageProps) => {
   const theme = useTheme() as MyMD3Theme;
-  const dispatch = useUIKitDispatch();
-  const { showToastMessage } = uiSlice.actions;
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [isProcess, setIsProcess] = useState<boolean>(false);
@@ -84,33 +82,39 @@ const LoadingImage = ({
             source
           );
       } else {
+        setIsUploading(false);
         handleLoadEnd();
-        dispatch(showToastMessage({ toastMessage: 'Failed to upload file' }));
+        setIsProcess(false);
         setIsUploadError(true);
+        onUploadError?.(true, source);
       }
     } catch (error) {
       handleLoadEnd();
-      dispatch(showToastMessage({ toastMessage: 'Failed to upload file' }));
+      setIsProcess(false);
+      setIsUploading(false);
       setIsUploadError(true);
+      onUploadError?.(true, source);
     }
   }, [
-    dispatch,
     handleLoadEnd,
     index,
     onLoadFinish,
+    onUploadError,
     setIsUploading,
-    showToastMessage,
     source,
   ]);
 
   const handleDelete = async () => {
-    if (!fileId) return null;
-    if (!isEditMode) {
+    if (fileId && !isEditMode) {
       await deleteAmityFile(fileId);
     }
     onClose && onClose(source, fileId, postId);
   };
   useEffect(() => {
+    setIsUploadError(false);
+    onUploadError?.(false, source);
+    setProgress(0);
+    setIsProcess(false);
     if (isUploaded) {
       setLoading(false);
     } else {
@@ -151,19 +155,21 @@ const LoadingImage = ({
           )}
         </View>
       )}
-      {!loading && isUploadError ? (
-        <TouchableOpacity style={styles.overlay} onPress={onRetryUpload}>
-          <SvgXml xml={toastIcon()} width="24" height="24" />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.closeButton}
-          disabled={loading || isProcess}
-          onPress={handleDelete}
-        >
-          <SvgXml xml={closeIcon(theme.colors.base)} width="12" height="12" />
-        </TouchableOpacity>
+      {!loading && isUploadError && (
+        <View style={styles.failedOverlay}>
+          <TouchableOpacity style={styles.errorOverlay} onPress={onRetryUpload}>
+            <SvgXml xml={toastIcon()} width="28" height="28" />
+          </TouchableOpacity>
+        </View>
       )}
+
+      <TouchableOpacity
+        style={styles.closeButton}
+        disabled={(loading || isProcess) && !isUploadError}
+        onPress={handleDelete}
+      >
+        <SvgXml xml={closeIcon(theme.colors.base)} width="12" height="12" />
+      </TouchableOpacity>
     </View>
   );
 };
