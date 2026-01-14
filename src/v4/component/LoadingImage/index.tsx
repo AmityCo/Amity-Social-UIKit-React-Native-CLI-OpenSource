@@ -104,8 +104,6 @@ const LoadingImage = ({
   ]);
 
   const handleDelete = async () => {
-    console.log('fileId', fileId);
-    console.log('isEditMode', isEditMode);
     if (fileId && !isEditMode) {
       await deleteAmityFile(fileId);
     }
