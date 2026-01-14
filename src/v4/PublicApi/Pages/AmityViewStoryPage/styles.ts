@@ -14,6 +14,7 @@ export const useStyles = () => {
       flex: 1,
       width: width,
       backgroundColor: '#000',
+      position: 'relative',
     },
     flex: {
       flex: 1,
@@ -73,7 +74,7 @@ export const useStyles = () => {
       fontSize: 14,
     },
     avatarSubText: {
-      color: theme.colors.background,
+      color: 'white',
       fontSize: 12,
     },
     closeIconContainer: {
@@ -218,6 +219,27 @@ export const useStyles = () => {
     deleteStoryTxt: {
       color: theme.colors.base,
       fontSize: 14,
+    },
+    errorContainer: {
+      width: '100%',
+      position: 'absolute',
+      bottom: 120,
+      left: 0,
+      backgroundColor: theme.colors.alert,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+    },
+    errorContainerLeft: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    errorText: {
+      color: 'white',
     },
   });
 

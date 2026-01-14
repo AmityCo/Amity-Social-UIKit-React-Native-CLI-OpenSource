@@ -43,6 +43,8 @@ import { Typography } from '../../../../component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../../providers/amity-ui-kit-provider';
 import { useUIKitDispatch } from '../../../../../redux/store';
+import { informative } from '~/v4/assets/icons/toast';
+import { close as closeIcon } from '../../../../assets/icons';
 
 interface IAmityViewStoryItem {
   communityData: Amity.Community;
@@ -96,7 +98,6 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
   const [isLiked, setIsLiked] = useState<boolean>(myReactions?.length > 0);
   const [openCommentSheet, setOpenCommentSheet] = useState(false);
   const [load, setLoad] = useState(true);
-  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useUIKitDispatch();
   const { showToastMessage } = uiSlice.actions;
@@ -248,10 +249,20 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
       );
       if (deleted) {
         current === 0 && previous();
-        dispatch(showToastMessage({ toastMessage: 'Story deleted' }));
+        dispatch(
+          showToastMessage({
+            toastMessage: 'Story deleted',
+            isSuccessToast: true,
+          })
+        );
       }
     } catch (err) {
-      dispatch(showToastMessage({ toastMessage: 'Delete Story Error!' }));
+      dispatch(
+        showToastMessage({
+          toastMessage: 'Failed to delete story. Please try again.',
+          isSuccessToast: false,
+        })
+      );
     } finally {
       setLoading(false);
       sheetRef?.current?.close();
@@ -288,6 +299,30 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
     sheetRef.current?.open();
   }, [progress]);
 
+  const onPressMenuButtonFailed = useCallback(() => {
+    progress.stopAnimation(() => setPressed(true));
+    Alert.alert(
+      'Failed to upload story',
+      'Would you like to discard uploading?',
+      [
+        { text: 'Cancel', onPress: () => sheetRef?.current?.close() },
+        { text: 'Delete', style: 'destructive', onPress: deleteStory },
+      ]
+    );
+  }, [deleteStory, progress]);
+
+  const isFailedImageUpload =
+    currentStory?.dataType === 'image' &&
+    (currentStory?.syncState === 'error' ||
+      currentStory?.syncState === 'syncing' ||
+      !currentStory?.imageData?.fileUrl);
+
+  const isFailedVideoUpload =
+    currentStory?.dataType === 'video' &&
+    (currentStory?.syncState === 'error' ||
+      currentStory?.syncState === 'syncing' ||
+      !currentStory?.videoData?.fileUrl);
+
   return (
     <View style={[styles.container]}>
       <SafeAreaView>
@@ -296,7 +331,13 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
             <Video
               onLoadStart={() => setLoad(true)}
               onProgress={({ currentTime }) => setCurrentSeek(currentTime)}
-              source={{ uri: currentStory?.videoData.fileUrl }}
+              source={{
+                uri:
+                  currentStory?.videoData?.fileUrl ||
+                  (typeof currentStory?.data?.fileData === 'string'
+                    ? currentStory?.data?.fileData
+                    : ''),
+              }}
               style={styles.video}
               resizeMode="contain"
               controls={false}
@@ -308,23 +349,21 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
           ) : currentStory?.dataType === 'image' ? (
             <Image
               onLoadStart={() => setLoad(true)}
-              onError={({ nativeEvent: { error: err } }) =>
-                err && setError(true)
-              }
               onLoadEnd={() => start()}
-              source={{ uri: currentStory?.imageData.fileUrl }}
-              style={[styles.image]}
+              source={{
+                uri:
+                  currentStory?.imageData?.fileUrl ||
+                  (typeof currentStory?.data?.fileData === 'string'
+                    ? currentStory?.data?.fileData
+                    : ''),
+              }}
+              style={[styles.image, isFailedImageUpload && { opacity: 0.6 }]}
               resizeMode="contain"
             />
           ) : null}
           {load && (
             <View style={styles.spinnerContainer}>
               <ActivityIndicator size="large" color={'white'} />
-            </View>
-          )}
-          {error && (
-            <View style={styles.spinnerContainer}>
-              <Text style={styles.error}>Story load error</Text>
             </View>
           )}
         </View>
@@ -399,7 +438,12 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
                 </TouchableOpacity>
               )}
               <TouchableOpacity hitSlop={5} onPress={() => onClose()}>
-                <Text style={styles.whiteText}>X</Text>
+                <SvgXml
+                  xml={closeIcon()}
+                  width="28"
+                  height="28"
+                  color="white"
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -465,49 +509,70 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
           </TouchableOpacity>
         )}
       </GestureRecognizer>
-      <View style={styles.footer}>
-        {hasStoryImpressionPermission ? (
-          <TouchableOpacity
-            style={[
-              styles.seenContainer,
-              { backgroundColor: storyViewerBgColor },
-            ]}
-          >
-            <SvgXml xml={seenIcon()} width="25" height="25" />
-            <Text style={styles.seen}>{reachCount}</Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.seenContainer} />
-        )}
-        <View style={styles.seenContainer}>
-          <TouchableOpacity
-            style={[
-              styles.iconContainer,
-              { backgroundColor: storyCommentBgColor },
-            ]}
-            onPress={onPressComment}
-          >
-            <SvgXml xml={storyCommentIcon()} width="25" height="25" />
-            <Text style={styles.seen}>{commentsCounts}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.iconContainer,
-              {
-                backgroundColor: storyReactionBgColor,
-              },
-            ]}
-            onPress={onPressReaction}
-          >
-            <SvgXml
-              xml={isLiked ? storyLikedIcon : storyLikeIcon}
-              width="25"
-              height="25"
-            />
-            <Text style={styles.seen}>{totalReaction}</Text>
-          </TouchableOpacity>
+      {(isFailedImageUpload || isFailedVideoUpload) && hasStoryPermission ? (
+        <View style={styles.errorContainer}>
+          <View style={styles.errorContainerLeft}>
+            <SvgXml xml={informative('white')} width="20" height="20" />
+            <Typography.Body style={styles.errorText}>
+              Failed to upload story
+            </Typography.Body>
+          </View>
+          {
+            <TouchableOpacity
+              hitSlop={5}
+              style={styles.threeDotsMenu}
+              onPress={onPressMenuButtonFailed}
+            >
+              <SvgXml xml={storyThreedotsMenu()} width="20" height="20" />
+            </TouchableOpacity>
+          }
         </View>
-      </View>
+      ) : (
+        <View style={styles.footer}>
+          {hasStoryImpressionPermission ? (
+            <TouchableOpacity
+              style={[
+                styles.seenContainer,
+                { backgroundColor: storyViewerBgColor },
+              ]}
+            >
+              <SvgXml xml={seenIcon()} width="25" height="25" />
+              <Text style={styles.seen}>{reachCount}</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.seenContainer} />
+          )}
+          <View style={styles.seenContainer}>
+            <TouchableOpacity
+              style={[
+                styles.iconContainer,
+                { backgroundColor: storyCommentBgColor },
+              ]}
+              onPress={onPressComment}
+            >
+              <SvgXml xml={storyCommentIcon()} width="25" height="25" />
+              <Text style={styles.seen}>{commentsCounts}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.iconContainer,
+                {
+                  backgroundColor: storyReactionBgColor,
+                },
+              ]}
+              onPress={onPressReaction}
+            >
+              <SvgXml
+                xml={isLiked ? storyLikedIcon : storyLikeIcon}
+                width="25"
+                height="25"
+              />
+              <Text style={styles.seen}>{totalReaction}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
       {openCommentSheet && (
         <Modal
           style={styles.bottomSheet}

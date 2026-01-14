@@ -82,6 +82,11 @@ export const useStyles = () => {
       left: 45,
       top: 42,
     },
+    errorIcon: {
+      position: 'absolute',
+      left: 45,
+      bottom: 24,
+    },
     scrollContainer: {
       paddingVertical: 4,
     },
