@@ -18,8 +18,6 @@ import { useStyles } from './styles';
 import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import uiSlice from '../../../redux/slices/uiSlice';
 import { createVideoThumbnail } from 'react-native-compressor';
 import { useUIKitDispatch } from '../../../redux/store';
@@ -61,7 +59,6 @@ const LoadingVideo = ({
   postId,
   setIsUploading,
 }: OverlayImageProps) => {
-  const theme = useTheme() as MyMD3Theme;
   const dispatch = useUIKitDispatch();
   const { showToastMessage } = uiSlice.actions;
   const [loading, setLoading] = useState(true);
@@ -228,7 +225,7 @@ const LoadingVideo = ({
           disabled={(loading || isProcess) && !isUploadError}
           onPress={handleDelete}
         >
-          <SvgXml xml={closeIcon(theme.colors.base)} width="12" height="12" />
+          <SvgXml xml={closeIcon('white')} width="12" height="12" />
         </TouchableOpacity>
       )}
     </View>
