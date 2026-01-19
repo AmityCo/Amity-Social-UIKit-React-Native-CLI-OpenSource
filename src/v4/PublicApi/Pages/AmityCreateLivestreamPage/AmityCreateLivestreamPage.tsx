@@ -36,13 +36,13 @@ import { CancelCreateLivestreamButton } from '../../../elements/CancelCreateLive
 import { EndLiveStreamButton } from '../../../elements/EndLiveStreamButton';
 import { AddThumbnailButton } from '../../../elements/AddThumbnailButton';
 import { SwitchCameraButton } from '../../../elements/SwitchCameraButton';
-
 import { Track, LocalVideoTrack } from 'livekit-client';
 import { LiveKitRoom, registerGlobals } from '@livekit/react-native';
 import { RoomView } from './RoomView';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
 import { useRoomSubscription } from '../../../../v4/hook/useRoomSubscription';
 import { useToast } from '../../../../v4/stores/slices/toast';
+import { usePostSubscription } from '../../../../v4/hook';
 
 // Register WebRTC globals required for LiveKit
 registerGlobals();
@@ -91,6 +91,9 @@ function AmityCreateLivestreamPage() {
   const unsubscribeRef = useRef<Amity.Unsubscriber>(null);
 
   useRoomSubscription({ room });
+
+  const { subscribedPost } = usePostSubscription(post?.postId || '');
+
   const { showToast } = useToast();
 
   const frontCamera = useCameraDevice('front');
@@ -394,6 +397,17 @@ function AmityCreateLivestreamPage() {
       navigation.replace('LivestreamTerminated', { type: 'streamer' });
     }
   }, [room?.moderation?.terminateLabels, room?.status, navigation]);
+
+  useEffect(() => {
+    if (room?.isDeleted || subscribedPost?.isDeleted) {
+      navigation.replace('PostDetail', { postId: subscribedPost?.postId });
+    }
+  }, [
+    navigation,
+    room?.isDeleted,
+    subscribedPost?.postId,
+    subscribedPost?.isDeleted,
+  ]);
 
   useEffect(() => {
     const unsubscribe = unsubscribeRef.current;
