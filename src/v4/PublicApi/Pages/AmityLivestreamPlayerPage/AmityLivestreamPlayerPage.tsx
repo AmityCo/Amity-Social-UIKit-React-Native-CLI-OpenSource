@@ -66,7 +66,12 @@ function AmityLiveStreamPlayerPage() {
     if (room?.isDeleted || subscribedPost?.isDeleted) {
       navigation.replace('PostDetail', { postId: subscribedPost?.postId });
     }
-  }, [room?.isDeleted, subscribedPost, navigation]);
+  }, [
+    navigation,
+    room?.isDeleted,
+    subscribedPost?.postId,
+    subscribedPost?.isDeleted,
+  ]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
