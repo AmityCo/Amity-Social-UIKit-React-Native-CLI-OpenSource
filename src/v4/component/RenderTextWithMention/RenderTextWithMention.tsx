@@ -1,4 +1,4 @@
-import { Text, Linking, TouchableOpacity } from 'react-native';
+import { Text, Linking } from 'react-native';
 import { useStyles } from './styles';
 import React, { memo, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -6,7 +6,6 @@ import { IMentionPosition } from '../../types/type';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes/RouteParamList';
 import ReadMore from '@fawazahmed/react-native-read-more';
-import { URL_REGEX } from '../../../v4/constants';
 
 interface IrenderTextWithMention {
   mentionPositionArr: IMentionPosition[];
@@ -29,9 +28,10 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
   const navigation =
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
   const linkArr = useCallback((text: string): LinkInfo[] => {
+    const urlRegex = /(https?:\/\/|www\.)[^\s]+/g;
     const links: LinkInfo[] = [];
     let match;
-    while ((match = URL_REGEX.exec(text)) !== null) {
+    while ((match = urlRegex.exec(text)) !== null) {
       links.push({
         link: match[0],
         index: match.index,
@@ -54,14 +54,8 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
     },
     [navigation]
   );
-  const handleLinkClick = useCallback(async (url: string) => {
-    try {
-      const hasProtocol = /^(https?|ftp|mailto):/.test(url);
-      const formattedUrl = hasProtocol ? url : `https://${url}`;
-      await Linking.openURL(formattedUrl);
-    } catch (error) {
-      console.warn('Failed to open URL:', error);
-    }
+  const handleLinkClick = useCallback((url: string) => {
+    Linking.openURL(url);
   }, []);
 
   const handleOnClick = useCallback(
@@ -94,14 +88,14 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
       const nonHighlightedText = textPost.slice(currentPosition, index);
       // Add highlighted text
       const highlightedText = (
-        <TouchableOpacity
+        <Text
+          selectable
           onPress={() => handleOnClick(link, userId)}
           key={`highlighted-${i}`}
+          style={styles.mentionText}
         >
-          <Text style={styles.mentionText} selectable>
-            {textPost.slice(index, index + length)}
-          </Text>
-        </TouchableOpacity>
+          {textPost.slice(index, index + length)}
+        </Text>
       );
 
       // Update currentPosition for the next iteration
