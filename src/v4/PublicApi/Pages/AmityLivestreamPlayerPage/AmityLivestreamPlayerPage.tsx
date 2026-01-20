@@ -29,9 +29,8 @@ function AmityLiveStreamPlayerPage() {
 
   const [reconnecting, setReconnecting] = useState(false);
   const [room, setRoom] = useState<Amity.Room | null>(null);
-  const [videoError, setVideoError] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [, setPlayerInitialized] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
   const [videoKey, setVideoKey] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [wasLive, setWasLive] = useState(false);
@@ -105,34 +104,6 @@ function AmityLiveStreamPlayerPage() {
     }
   }, [room?.status, wasLive]);
 
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | null = null;
-
-    if (
-      videoRef.current &&
-      room &&
-      room.status === RoomStatus.live &&
-      !videoError &&
-      Platform.OS === 'ios'
-    ) {
-      const isTerminated =
-        room?.moderation?.terminateLabels &&
-        room?.moderation?.terminateLabels?.length > 0;
-
-      if (!isTerminated) {
-        timer = setTimeout(() => {
-          videoRef.current?.presentFullscreenPlayer();
-        }, 100);
-      }
-    }
-
-    return () => {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
-    };
-  }, [room, videoError]);
-
   const isTerminated =
     room?.moderation?.terminateLabels &&
     room?.moderation?.terminateLabels?.length > 0;
@@ -141,33 +112,6 @@ function AmityLiveStreamPlayerPage() {
     room?.status === RoomStatus.ended ||
     (room?.status === RoomStatus.recorded && wasLive) ||
     isTerminated;
-
-  useEffect(() => {
-    if (!room?.status) return;
-
-    const shouldEnd =
-      room.status === RoomStatus.ended ||
-      (room.status === RoomStatus.recorded && wasLive);
-
-    if (!shouldEnd || isStreamEnding.current) return;
-
-    isStreamEnding.current = true;
-    setIsPaused(true);
-
-    if (Platform.OS === 'ios') {
-      // iOS: just dismiss fullscreen, DO NOT destroy immediately
-      if (videoRef.current) {
-        try {
-          videoRef.current.dismissFullscreenPlayer?.();
-        } catch {}
-      }
-    } else {
-      // Android: HARD destroy
-      setTimeout(() => {
-        setVideoKey((prev) => prev + 1);
-      }, 50);
-    }
-  }, [room?.status, wasLive]);
 
   if (!room || error) {
     return (
@@ -234,10 +178,7 @@ function AmityLiveStreamPlayerPage() {
               }}
               style={styles.container}
               resizeMode="contain"
-              controls={room?.status === RoomStatus.recorded && !wasLive}
-              fullscreen={
-                Platform.OS === 'ios' && room.status !== RoomStatus.recorded
-              }
+              controls={true}
               fullscreenOrientation="landscape"
               paused={isPaused}
               muted={false}
@@ -247,21 +188,18 @@ function AmityLiveStreamPlayerPage() {
               playWhenInactive={false}
               repeat={false}
               onLoad={() => {
-                setPlayerInitialized(true);
+                setIsVideoLoading(false);
                 if (room.status === RoomStatus.recorded) {
                   setIsPaused(false);
                 }
               }}
-              onError={(e) => {
-                console.log('Video Error: ', e);
-                setVideoError(true);
-              }}
-              onFullscreenPlayerDidDismiss={() => {
-                if (Platform.OS === 'ios') {
-                  closePlayer();
-                }
-              }}
             />
+          )}
+
+          {isVideoLoading && (
+            <View style={styles.connecting}>
+              <CircularProgressIndicator size={40} strokeWidth={2} />
+            </View>
           )}
         </View>
       )}
