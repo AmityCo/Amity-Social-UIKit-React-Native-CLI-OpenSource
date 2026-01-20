@@ -230,6 +230,7 @@ function AmityLiveStreamPlayerPage() {
                 headers: {
                   Authorization: `Bearer ${client.token.accessToken}`,
                 },
+                type: 'm3u8',
               }}
               style={styles.container}
               resizeMode="contain"
