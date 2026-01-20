@@ -2,12 +2,13 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import React, { FC, useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import {
+  errorIcon,
   officialIcon,
   privateIcon,
   storyRing,
 } from '../../../svg/svg-xml-list';
 import { ComponentID, ElementID, ImageSizeState, PageID } from '../../enum';
-import { useFile } from '../../hook';
+import { useFile, useStoryPermission } from '../../hook';
 import useConfig from '../../hook/useConfig';
 import { useStyles } from './styles';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
@@ -26,18 +27,20 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
   const theme = useTheme() as MyMD3Theme;
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
+  const hasStoryPermission = useStoryPermission(storyTarget.targetId);
   const { getImage } = useFile();
   const { getUiKitConfig } = useConfig();
   const styles = useStyles();
-  const storyRingColor: string[] = storyTarget?.hasUnseen
-    ? (getUiKitConfig({
-        page: PageID.StoryPage,
-        component: ComponentID.StoryTab,
-        element: ElementID.StoryRing,
-      })?.progress_color as string[]) ?? ['#e2e2e2', '#e2e2e2']
-    : storyTarget?.failedStoriesCount > 0
-    ? ['#DE1029', '#DE1029']
-    : ['#e2e2e2', '#e2e2e2'];
+  const storyRingColor: string[] =
+    hasStoryPermission && storyTarget?.failedStoriesCount > 0
+      ? ['#DE1029', '#DE1029']
+      : storyTarget?.hasUnseen
+      ? (getUiKitConfig({
+          page: PageID.StoryPage,
+          component: ComponentID.StoryTab,
+          element: ElementID.StoryRing,
+        })?.progress_color as string[]) ?? ['#e2e2e2', '#e2e2e2']
+      : ['#e2e2e2', '#e2e2e2'];
 
   useEffect(() => {
     if (storyTarget.targetType !== 'community') return;
@@ -80,12 +83,16 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
         height={68}
         xml={storyRing(storyRingColor[0], storyRingColor[1])}
       />
-      {communityData?.isOfficial && (
+      {hasStoryPermission && storyTarget?.failedStoriesCount > 0 ? (
+        <View style={styles.errorIcon}>
+          <SvgXml width={16} height={16} xml={errorIcon()} />
+        </View>
+      ) : communityData?.isOfficial ? (
         <SvgXml
           style={styles.officialIcon}
           xml={officialIcon(theme.colors.primary)}
         />
-      )}
+      ) : null}
       <View style={styles.textRow}>
         {!communityData?.isPublic && (
           <SvgXml width={17} height={17} xml={privateIcon(theme.colors.base)} />

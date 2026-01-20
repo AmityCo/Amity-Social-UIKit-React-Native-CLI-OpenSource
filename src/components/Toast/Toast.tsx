@@ -53,6 +53,7 @@ const Toast: FC = () => {
       alignSelf: 'center',
       flexDirection: 'row',
       alignItems: 'center',
+      gap: 12,
     },
     message: {
       lineHeight: 24,
