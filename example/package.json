@@ -9,9 +9,9 @@
     "pods": "pod-install --quiet"
   },
   "dependencies": {
-    "@amityco/ts-sdk-react-native": "^7.12.0",
+    "@amityco/ts-sdk-react-native": "7.12.1-6e066c82.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
-    "@livekit/react-native": "^2.9.3",
+    "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-community/datetimepicker": "^8.4.4",
@@ -21,7 +21,7 @@
     "@react-navigation/native": "^7.1.8",
     "@react-navigation/native-stack": "^7.3.12",
     "@react-navigation/stack": "^7.3.1",
-    "livekit-client": "^2.15.14",
+    "livekit-client": "^2.17.0",
     "react": "18.3.1",
     "react-native": "0.77.0",
     "react-native-compressor": "^1.13.0",

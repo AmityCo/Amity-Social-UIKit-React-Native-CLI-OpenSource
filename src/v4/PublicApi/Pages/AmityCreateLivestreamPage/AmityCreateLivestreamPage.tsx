@@ -43,6 +43,7 @@ import { Camera, useCameraDevice } from 'react-native-vision-camera';
 import { useRoomSubscription } from '../../../../v4/hook/useRoomSubscription';
 import { useToast } from '../../../../v4/stores/slices/toast';
 import { usePostSubscription } from '../../../../v4/hook';
+import { useRoom } from '~/v4/features/room/hooks/useRoom';
 
 // Register WebRTC globals required for LiveKit
 registerGlobals();
@@ -77,7 +78,7 @@ function AmityCreateLivestreamPage() {
   const [isEnding, setIsEnding] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [post, setPost] = useState<Amity.Post | null>(null);
-  const [room, setRoom] = useState<Amity.Room | null>(null);
+  const [roomId, setRoomId] = useState<string>('');
   const timerRef = useRef<number | null>(null);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [androidPermission, setAndroidPermission] = useState<boolean>(false);
@@ -89,6 +90,8 @@ function AmityCreateLivestreamPage() {
     null
   );
   const unsubscribeRef = useRef<Amity.Unsubscriber>(null);
+
+  const room = useRoom(roomId);
 
   useRoomSubscription({ room });
 
@@ -216,7 +219,7 @@ function AmityCreateLivestreamPage() {
         type: 'coHosts',
       });
 
-      setRoom(newStream);
+      setRoomId(newStream.roomId);
 
       if (newStream) {
         const roomTokenResponse = await RoomRepository.getBroadcasterData(
@@ -301,7 +304,7 @@ function AmityCreateLivestreamPage() {
           console.log('disposeStream error', e);
         } finally {
           setIsLive(false);
-          setRoom(null);
+          setRoomId('');
           setTitle('');
           setDescription('');
           setTime(0);
@@ -387,16 +390,12 @@ function AmityCreateLivestreamPage() {
   }, [reconnecting, endLiveStream, room]);
 
   useEffect(() => {
-    const isTerminated =
-      room?.moderation?.terminateLabels &&
-      room?.moderation?.terminateLabels?.length > 0;
-    const isLiveOrEnded =
-      room?.status === RoomStatus.live || room?.status === RoomStatus.ended;
+    const isTerminated = room?.status === RoomStatus.terminated;
 
-    if (isLiveOrEnded && isTerminated) {
+    if (isTerminated) {
       navigation.replace('LivestreamTerminated', { type: 'streamer' });
     }
-  }, [room?.moderation?.terminateLabels, room?.status, navigation]);
+  }, [room?.status, navigation]);
 
   useEffect(() => {
     if (room?.isDeleted || subscribedPost?.isDeleted) {
