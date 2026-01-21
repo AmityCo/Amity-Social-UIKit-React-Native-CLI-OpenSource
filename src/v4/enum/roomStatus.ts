@@ -1,7 +1,8 @@
 export const RoomStatus = {
-  idle: 'idle' as Amity.RoomStatus,
-  live: 'live' as Amity.RoomStatus,
-  recorded: 'recorded' as Amity.RoomStatus,
-  ended: 'ended' as Amity.RoomStatus,
-  waiting_reconnect: 'waitingReconnect' as Amity.RoomStatus,
-};
+  idle: 'idle',
+  live: 'live',
+  recorded: 'recorded',
+  ended: 'ended',
+  waitingReconnect: 'waitingReconnect',
+  terminated: 'terminated',
+} as const satisfies Record<Amity.RoomStatus, Amity.RoomStatus>;

@@ -104,14 +104,16 @@ function AmityLiveStreamPlayerPage() {
     }
   }, [room?.status, wasLive]);
 
-  const isTerminated =
-    room?.moderation?.terminateLabels &&
-    room?.moderation?.terminateLabels?.length > 0;
+  useEffect(() => {
+    const isTerminated = room?.status === RoomStatus.terminated;
+    if (isTerminated) {
+      navigation.replace('LivestreamTerminated', { type: 'viewer' });
+    }
+  }, [room?.status, navigation]);
 
   const shouldShowEndThumbnail =
     room?.status === RoomStatus.ended ||
-    (room?.status === RoomStatus.recorded && wasLive) ||
-    isTerminated;
+    (room?.status === RoomStatus.recorded && wasLive);
 
   if (!room || error) {
     return (
@@ -150,7 +152,7 @@ function AmityLiveStreamPlayerPage() {
       ) : (
         <View style={styles.container}>
           {(room.status === RoomStatus.live ||
-            room.status === RoomStatus.waiting_reconnect) && (
+            room.status === RoomStatus.waitingReconnect) && (
             <View style={styles.indicator}>
               <View style={styles.status}>
                 <Typography.CaptionBold style={styles.live}>
@@ -205,7 +207,7 @@ function AmityLiveStreamPlayerPage() {
       )}
 
       {((room.status === RoomStatus.live && reconnecting) ||
-        room.status === RoomStatus.waiting_reconnect) && (
+        room.status === RoomStatus.waitingReconnect) && (
         <View style={styles.connecting}>
           <CircularProgressIndicator size={40} strokeWidth={2} />
           <Typography.TitleBold style={styles.text}>
