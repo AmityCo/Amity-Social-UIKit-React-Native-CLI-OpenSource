@@ -6,10 +6,14 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "pods": "pod-install --quiet"
+    "pods": "pod-install --quiet",
+    "ios:pod": "cd ios && pod install",
+    "android:clean": "cd android && ./gradlew clean",
+    "android:debug": "cd android && ./gradlew assembleDebug",
+    "android:release": "cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
-    "@amityco/ts-sdk-react-native": "7.12.1-6e066c82.0",
+    "@amityco/ts-sdk-react-native": "^7.12.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
     "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",

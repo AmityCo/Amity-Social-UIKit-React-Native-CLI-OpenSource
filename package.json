@@ -39,14 +39,7 @@
     "build:android": "cd example/android && ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a",
     "build:ios": "cd example/ios && xcodebuild -workspace AmityReactNativeSocialUiKitExample.xcworkspace -scheme AmityReactNativeSocialUiKitExample -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO",
     "bootstrap": "yarn example && yarn install && yarn example pods",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
-    "install": "yarn",
-    "ios:pod": "cd example/ios && pod install",
-    "android:clean": "cd example/android && ./gradlew clean",
-    "android:debug": "cd example/android && ./gradlew assembleDebug",
-    "android:release": "cd example/android && ./gradlew assembleRelease",
-    "android:run": "cd example && react-native run-android",
-    "ios:run": "cd example && react-native run-ios"
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build"
   },
   "keywords": [
     "react-native",
@@ -64,7 +57,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@amityco/ts-sdk-react-native": "7.12.1-6e066c82.0",
+    "@amityco/ts-sdk-react-native": "^7.12.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.2.2",
@@ -123,7 +116,7 @@
     "@types/react": "18.2.37"
   },
   "peerDependencies": {
-    "@amityco/ts-sdk-react-native": "7.12.1-6e066c82.0",
+    "@amityco/ts-sdk-react-native": "^7.12.0",
     "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
