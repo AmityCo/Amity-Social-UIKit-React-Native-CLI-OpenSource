@@ -80,6 +80,9 @@ function AmityCreateLivestreamPage() {
   const [post, setPost] = useState<Amity.Post | null>(null);
   const [roomId, setRoomId] = useState<string>('');
   const timerRef = useRef<number | null>(null);
+  const connectionLossTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [androidPermission, setAndroidPermission] = useState<boolean>(false);
   const [iOSPermission, setIOSPermission] = useState<boolean>(true);
@@ -373,21 +376,24 @@ function AmityCreateLivestreamPage() {
   }, []);
 
   useEffect(() => {
-    let threeMinutesTimeout: number;
-
-    if (reconnecting && room && room?.status === RoomStatus.live) {
-      threeMinutesTimeout = setTimeout(() => {
+    if (reconnecting && room?.status === RoomStatus.live) {
+      connectionLossTimeoutRef.current = setTimeout(() => {
         endLiveStream();
       }, 1000 * 60 * 3);
-    }
-
-    if (!reconnecting && room && room?.status === RoomStatus.live) {
-      if (threeMinutesTimeout) {
-        clearTimeout(threeMinutesTimeout);
-        threeMinutesTimeout = null;
+    } else {
+      if (connectionLossTimeoutRef.current) {
+        clearTimeout(connectionLossTimeoutRef.current);
+        connectionLossTimeoutRef.current = null;
       }
     }
-  }, [reconnecting, endLiveStream, room]);
+
+    return () => {
+      if (connectionLossTimeoutRef.current) {
+        clearTimeout(connectionLossTimeoutRef.current);
+        connectionLossTimeoutRef.current = null;
+      }
+    };
+  }, [reconnecting, endLiveStream, room?.status]);
 
   useEffect(() => {
     const isTerminated = room?.status === RoomStatus.terminated;
@@ -449,6 +455,9 @@ function AmityCreateLivestreamPage() {
             onConnected={() => {
               setIsConnecting(false);
               setReconnecting(false);
+            }}
+            onDisconnected={() => {
+              setReconnecting(true);
             }}
           >
             <View style={styles.cameraContainer}>
