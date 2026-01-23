@@ -83,7 +83,7 @@ export async function checkCommunityPermission(
   apiRegion: string
 ): Promise<any> {
   const url: string = `https://api.${apiRegion}.amity.co/api/v3/communities/${communityId}/permissions/me`;
-  const accessToken = client.token.accessToken;
+  const accessToken = client?.token?.accessToken;
 
   try {
     const response = await fetch(url, {

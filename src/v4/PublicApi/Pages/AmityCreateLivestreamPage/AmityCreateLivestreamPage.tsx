@@ -43,7 +43,7 @@ import { Camera, useCameraDevice } from 'react-native-vision-camera';
 import { useRoomSubscription } from '../../../../v4/hook/useRoomSubscription';
 import { useToast } from '../../../../v4/stores/slices/toast';
 import { usePostSubscription } from '../../../../v4/hook';
-import { useRoom } from '~/v4/features/room/hooks/useRoom';
+import { useRoom } from '../../../../v4/features/room/hooks/useRoom';
 
 // Register WebRTC globals required for LiveKit
 registerGlobals();

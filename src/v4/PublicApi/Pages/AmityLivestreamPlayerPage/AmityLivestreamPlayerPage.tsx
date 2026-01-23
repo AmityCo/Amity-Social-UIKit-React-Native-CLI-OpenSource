@@ -177,7 +177,7 @@ function AmityLiveStreamPlayerPage() {
                     ? room.recordedPlaybackInfos[0]?.url
                     : room.livePlaybackUrl,
                 headers: {
-                  Authorization: `Bearer ${client.token.accessToken}`,
+                  Authorization: `Bearer ${client?.token?.accessToken}`,
                 },
                 type: 'm3u8',
               }}
