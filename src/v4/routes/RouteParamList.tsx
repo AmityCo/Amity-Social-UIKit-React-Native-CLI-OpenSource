@@ -35,6 +35,7 @@ export type RootStackParamList = {
     postId: string;
     showEndPopup?: boolean;
     category?: AmityPostCategory;
+    isDeleted?: boolean;
   };
   UserProfile: {
     userId: string;

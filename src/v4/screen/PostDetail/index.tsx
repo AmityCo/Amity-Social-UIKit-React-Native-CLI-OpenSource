@@ -34,6 +34,7 @@ const PostDetail: React.FC<IPostDetailPage> = ({ defaultPostId }) => {
       isFromComponent={!!defaultPostId && !postIdFromRoute}
       postId={postId}
       category={route?.params?.category}
+      isDeleted={route?.params?.isDeleted}
     />
   );
 };

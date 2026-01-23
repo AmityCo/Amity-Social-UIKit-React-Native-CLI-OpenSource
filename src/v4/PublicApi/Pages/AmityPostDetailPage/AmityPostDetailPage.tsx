@@ -64,6 +64,7 @@ type AmityPostDetailPageType = {
   isFromComponent?: boolean;
   showEndPopup?: boolean;
   category?: AmityPostCategory;
+  isDeleted?: boolean;
 };
 
 const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
@@ -71,6 +72,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   isFromComponent,
   showEndPopup,
   category,
+  isDeleted,
 }) => {
   const pageId = PageID.post_detail_page;
   const dispatch = useUIKitDispatch();
@@ -304,7 +306,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
 
   if (isExcluded) return null;
 
-  if (postData?.isDeleted) {
+  if (isDeleted || postData?.isDeleted) {
     return (
       <ErrorComponent
         themeStyle={themeStyles}
