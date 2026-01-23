@@ -182,7 +182,7 @@ function AmityLiveStreamPlayerPage() {
                 type: 'm3u8',
               }}
               style={styles.container}
-              resizeMode="contain"
+              resizeMode="cover"
               controls={true}
               fullscreenOrientation="landscape"
               paused={isPaused}
