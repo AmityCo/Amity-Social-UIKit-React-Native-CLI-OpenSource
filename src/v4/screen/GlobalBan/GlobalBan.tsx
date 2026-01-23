@@ -28,7 +28,7 @@ export function GlobalBan() {
             You've been banned.
           </Typography.Headline>
           <Typography.Body style={styles.body}>
-            Based on your previous activities, you account has been banned from
+            Based on your previous activities, your account has been banned from
             all feeds.
           </Typography.Body>
         </View>

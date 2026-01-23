@@ -87,7 +87,7 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
       const response = await Client.login(loginParam, sessionHandler);
       if (!response) return;
     } catch (err) {
-      if (err?.message.includes(ERROR_CODE.GLOBAL_BAN)) {
+      if (err?.message?.includes(ERROR_CODE.GLOBAL_BAN)) {
         setIsGlobalBan(true);
       }
     }
