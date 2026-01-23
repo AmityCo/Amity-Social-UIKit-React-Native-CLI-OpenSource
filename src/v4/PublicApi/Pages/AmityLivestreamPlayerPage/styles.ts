@@ -22,7 +22,7 @@ export const useStyles = () => {
     indicator: {
       left: 16,
       zIndex: 1,
-      top: insets.top + 20,
+      top: 20,
       position: 'absolute',
     },
     status: {
