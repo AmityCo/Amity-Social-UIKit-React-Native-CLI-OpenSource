@@ -63,7 +63,10 @@ function AmityLiveStreamPlayerPage() {
 
   useEffect(() => {
     if (room?.isDeleted || subscribedPost?.isDeleted) {
-      navigation.replace('PostDetail', { postId: subscribedPost?.postId });
+      navigation.replace('PostDetail', {
+        postId: subscribedPost?.postId,
+        isDeleted: subscribedPost?.isDeleted,
+      });
     }
   }, [
     navigation,
@@ -116,7 +119,8 @@ function AmityLiveStreamPlayerPage() {
 
   const shouldShowEndThumbnail =
     room?.status === RoomStatus.ended ||
-    (room?.status === RoomStatus.recorded && wasLive);
+    (room?.status === RoomStatus.recorded && wasLive) ||
+    (room as any)?.user?.isGlobalBan;
 
   if (!room || error) {
     return (
@@ -177,7 +181,7 @@ function AmityLiveStreamPlayerPage() {
                     ? room.recordedPlaybackInfos[0]?.url
                     : room.livePlaybackUrl,
                 headers: {
-                  Authorization: `Bearer ${client.token.accessToken}`,
+                  Authorization: `Bearer ${client?.token?.accessToken}`,
                 },
                 type: 'm3u8',
               }}
