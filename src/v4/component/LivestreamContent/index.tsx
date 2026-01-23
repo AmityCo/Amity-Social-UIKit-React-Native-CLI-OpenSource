@@ -147,7 +147,8 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
         {livestream.status === RoomStatus.ended && <LiveStreamEndThumbnail />}
 
         {(livestream.status === RoomStatus.live ||
-          livestream.status === RoomStatus.recorded) &&
+          livestream.status === RoomStatus.recorded ||
+          livestream.status === RoomStatus.waitingReconnect) &&
           thumbnailUrl &&
           !isUpcoming && (
             <View style={styles.content}>
@@ -156,7 +157,7 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
                 style={styles.streamImageCover as ImageStyle}
               />
               {(livestream.status === RoomStatus.live ||
-                livestream.status === RoomStatus.waiting_reconnect) && (
+                livestream.status === RoomStatus.waitingReconnect) && (
                 <View style={styles.streamStatusLive}>
                   <Typography.CaptionBold style={styles.streamStatusText}>
                     LIVE
