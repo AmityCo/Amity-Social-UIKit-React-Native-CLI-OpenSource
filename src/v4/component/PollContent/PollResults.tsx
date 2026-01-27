@@ -28,7 +28,7 @@ export function PollResults({ options, totalVotes }: PollResultsProps) {
 
   const voteBy = (option: Amity.PollAnswer) => {
     if (option.voteCount === 1 && option.isVotedByUser) return 'Voted by you';
-    if (option.voteCount > 1) {
+    if (option.voteCount >= 1) {
       const voteCount = option.isVotedByUser
         ? option.voteCount - 1
         : option.voteCount;
