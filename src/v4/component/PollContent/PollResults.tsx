@@ -26,18 +26,23 @@ export function PollResults({ options, totalVotes }: PollResultsProps) {
       100
     ).toFixed(2);
 
-  const voteBy = (option: Amity.PollAnswer) => {
-    if (option.voteCount === 1 && option.isVotedByUser) return 'Voted by you';
-    if (option.voteCount >= 1) {
-      const voteCount = option.isVotedByUser
-        ? option.voteCount - 1
-        : option.voteCount;
-      const formattedCount = formatVoteCount(voteCount);
-      return `Voted by ${formattedCount} participant${
-        voteCount > 1 ? 's' : ''
-      }${option.isVotedByUser ? ' and you' : ''}`;
+  const voteBy = (option: Amity.PollAnswer): string => {
+    const { voteCount, isVotedByUser } = option;
+
+    if (voteCount === 0) return 'No votes';
+
+    if (isVotedByUser) {
+      const otherVotes = voteCount - 1;
+      if (otherVotes === 0) return 'Voted by you';
+
+      const formattedCount = formatVoteCount(otherVotes);
+      const plural = otherVotes > 1 ? 's' : '';
+      return `Voted by ${formattedCount} participant${plural} and you`;
     }
-    return 'No votes';
+
+    const formattedCount = formatVoteCount(voteCount);
+    const plural = voteCount > 1 ? 's' : '';
+    return `Voted by ${formattedCount} participant${plural}`;
   };
 
   return (
