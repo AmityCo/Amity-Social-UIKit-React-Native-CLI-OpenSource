@@ -18,11 +18,27 @@ export const useStyles = () => {
       height: '100%',
       resizeMode: 'cover',
       borderRadius: 5,
+      position: 'relative',
     },
     overlay: {
       ...StyleSheet.absoluteFillObject,
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    failedOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      borderRadius: 5,
+    },
+    errorOverlay: {
+      position: 'absolute',
+      top: '50%',
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     progressBar: {
       marginVertical: 10,
@@ -40,6 +56,7 @@ export const useStyles = () => {
       padding: 7,
       backgroundColor: 'rgba(0, 0, 0, 0.4)',
       borderRadius: 72,
+      zIndex: 10,
     },
   });
 };

@@ -209,8 +209,8 @@ const AmityCommunityFeedComponent = forwardRef<
         isPinnedPost(item)
           ? item.post.postId
           : isAmityAd(item)
-            ? item.adId.toString() + index
-            : item.postId.toString() + '_' + index
+          ? item.adId.toString() + index
+          : item.postId.toString() + '_' + index
       }
       extraData={itemWithAds}
     />

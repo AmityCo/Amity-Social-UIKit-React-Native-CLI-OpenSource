@@ -9,8 +9,17 @@ import { useBottomSheet } from '../../../../../../redux/slices/bottomSheetSlice'
 import MenuAction from '../../../../../../v4/elements/MenuAction';
 import { MemberRoles } from '../../../../../../v4/constants';
 import { useToast } from '../../../../../../v4/stores/slices/toast';
-import { demote, promote, report, trash, unreport } from '../../../../../../v4/assets/icons';
-import { checkEditRolePermission, isModerator } from '../../../../../../v4/utils/permissions';
+import {
+  demote,
+  promote,
+  report,
+  trash,
+  unreport,
+} from '../../../../../../v4/assets/icons';
+import {
+  checkEditRolePermission,
+  isModerator,
+} from '../../../../../../v4/utils/permissions';
 import {
   useRolesQuery,
   useMembersQuery,

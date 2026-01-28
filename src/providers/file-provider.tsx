@@ -38,29 +38,51 @@ export async function uploadImageFile(
   perCentCallback?: (percent: number) => void
 ): Promise<Amity.File<'image'>[]> {
   return await new Promise(async (resolve, reject) => {
-    const formData = new FormData();
-    const parts = filePath.split('/');
-    const fileName = parts[parts.length - 1];
-    const fileType = Platform.OS === 'ios' ? 'image/jpeg' : 'image/jpg';
-    const uri =
-      Platform.OS === 'android' ? filePath : filePath.replace('file://', '');
+    try {
+      const formData = new FormData();
+      const parts = filePath.split('/');
+      const fileName = parts[parts.length - 1];
+      const fileType = Platform.OS === 'ios' ? 'image/jpeg' : 'image/jpg';
+      const uri =
+        Platform.OS === 'android' ? filePath : filePath.replace('file://', '');
 
-    formData.append('files', {
-      name: fileName,
-      type: fileType,
-      uri: uri,
-    });
+      formData.append('files', {
+        name: fileName,
+        type: fileType,
+        uri: uri,
+      });
 
-    const { data: file } = await FileRepository.uploadImage(
-      formData,
-      (percent) => {
-        perCentCallback && perCentCallback(percent);
+      const { data: file } = await FileRepository.uploadImage(
+        formData,
+        (percent) => {
+          perCentCallback && perCentCallback(percent);
+        }
+      );
+
+      if (file) {
+        resolve(file);
+      } else {
+        reject({ message: 'Upload failed - no file data returned' });
       }
-    );
-    if (file) {
-      resolve(file);
-    } else {
-      reject('Upload error');
+    } catch (error: any) {
+      if (
+        error?.message?.includes('INVALID_IMAGE') ||
+        error?.message?.includes('Inappropriate')
+      ) {
+        reject({
+          message: 'Inappropriate image',
+          details: 'Please choose a different image to upload.',
+          code: 'INVALID_IMAGE',
+        });
+      } else {
+        reject({
+          message: 'Upload failed',
+          details:
+            error?.message ||
+            "We couldn't complete your upload. Please try again.",
+          originalError: error,
+        });
+      }
     }
   });
 }

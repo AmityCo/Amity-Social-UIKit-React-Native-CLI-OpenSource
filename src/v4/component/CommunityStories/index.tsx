@@ -5,6 +5,7 @@ import { useStory } from '../../hook/useStory';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import {
+  errorIcon,
   storyCircleCreatePlusIcon,
   storyRing,
 } from '../../../svg/svg-xml-list';
@@ -34,17 +35,18 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
   const { getImage } = useFile();
   const [avatarUrl, setAvatarUrl] = useState(undefined);
   const [viewStory, setViewStory] = useState(false);
-  const storyRingColor: string[] = storyTarget?.hasUnseen
-    ? (getUiKitConfig({
-        page: PageID.StoryPage,
-        component: ComponentID.StoryTab,
-        element: ElementID.StoryRing,
-      })?.progress_color as string[]) ?? ['#e2e2e2', '#e2e2e2']
-    : storyTarget?.failedStoriesCount > 0
-    ? ['#DE1029', '#DE1029']
-    : stories.length > 0
-    ? ['#e2e2e2', '#ffffff']
-    : ['#ffffff', '#ffffff'];
+  const storyRingColor: string[] =
+    hasStoryPermission && storyTarget?.failedStoriesCount > 0
+      ? ['#DE1029', '#DE1029']
+      : storyTarget?.hasUnseen
+      ? (getUiKitConfig({
+          page: PageID.StoryPage,
+          component: ComponentID.StoryTab,
+          element: ElementID.StoryRing,
+        })?.progress_color as string[]) ?? ['#e2e2e2', '#e2e2e2']
+      : stories.length > 0
+      ? ['#e2e2e2', '#ffffff']
+      : ['#ffffff', '#ffffff'];
 
   useEffect(() => {
     (async () => {
@@ -86,6 +88,7 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
     setViewStory(false);
     onPressCreateStory();
   }, [onPressCreateStory]);
+
   const onPressCommunityName = useCallback(() => {
     setViewStory(false);
     navigation.navigate('CommunityProfilePage', {
@@ -121,12 +124,18 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
               height={48}
               xml={storyRing(storyRingColor[0], storyRingColor[1])}
             />
-            {hasStoryPermission && (
-              <SvgXml
-                style={styles.storyCreateIcon}
-                xml={storyCircleCreatePlusIcon()}
-              />
-            )}
+            {hasStoryPermission ? (
+              storyTarget?.failedStoriesCount > 0 ? (
+                <SvgXml style={styles.errorIcon} xml={errorIcon()} />
+              ) : (
+                <TouchableOpacity onPress={() => onPressCreateStory()}>
+                  <SvgXml
+                    style={styles.storyCreateIcon}
+                    xml={storyCircleCreatePlusIcon()}
+                  />
+                </TouchableOpacity>
+              )
+            ) : null}
           </TouchableOpacity>
           <Typography.Caption style={styles.base}>Story</Typography.Caption>
         </>

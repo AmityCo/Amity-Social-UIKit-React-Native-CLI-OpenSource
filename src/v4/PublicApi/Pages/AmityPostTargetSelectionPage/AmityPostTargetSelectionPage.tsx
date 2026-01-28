@@ -81,10 +81,17 @@ const AmityPostTargetSelectionPage = ({
     }
   };
 
+  const onClickClose = () => {
+    if (AmityPostTargetSelectionPageBehavior?.onClickClose) {
+      AmityPostTargetSelectionPageBehavior.onClickClose();
+    }
+  };
+
   return (
     <TargetSelectionPage
       pageId={PageID.select_post_target_page}
       onSelectFeed={onSelectFeed}
+      onClickClose={onClickClose}
     />
   );
 };

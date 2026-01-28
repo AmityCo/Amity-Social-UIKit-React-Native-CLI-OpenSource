@@ -18,8 +18,6 @@ import { useStyles } from './styles';
 import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
 import uiSlice from '../../../redux/slices/uiSlice';
 import { createVideoThumbnail } from 'react-native-compressor';
 import { useUIKitDispatch } from '../../../redux/store';
@@ -35,6 +33,7 @@ interface OverlayImageProps {
     originalPath: string,
     thumbNail: string
   ) => void;
+  onUploadError?: (hasError: boolean, source: string) => void;
   index?: number;
   isUploaded: boolean;
   fileId?: string;
@@ -50,6 +49,7 @@ const LoadingVideo = ({
   onClose,
   index,
   onLoadFinish,
+  onUploadError,
   isUploaded = false,
   thumbNail,
   onPlay,
@@ -59,7 +59,6 @@ const LoadingVideo = ({
   postId,
   setIsUploading,
 }: OverlayImageProps) => {
-  const theme = useTheme() as MyMD3Theme;
   const dispatch = useUIKitDispatch();
   const { showToastMessage } = uiSlice.actions;
   const [loading, setLoading] = useState(true);
@@ -129,23 +128,30 @@ const LoadingVideo = ({
       } else {
         handleLoadEnd();
         dispatch(showToastMessage({ toastMessage: 'Failed to upload file' }));
+        setIsProcess(false);
         setIsUploadError(true);
+        onUploadError?.(true, source);
       }
     } catch (error) {
       handleLoadEnd();
       dispatch(showToastMessage({ toastMessage: 'Failed to upload file' }));
+      setIsProcess(false);
       setIsUploadError(true);
+      onUploadError?.(true, source);
     }
   }, [source]);
 
   const handleDelete = async () => {
-    if (!fileId) return null;
-    if (!isEditMode) {
+    if (fileId && !isEditMode) {
       await deleteAmityFile(fileId);
     }
     onClose && onClose(source, fileId, postId);
   };
   useEffect(() => {
+    setIsUploadError(false);
+    onUploadError?.(false, source);
+    setProgress(0);
+    setIsProcess(false);
     if (isUploaded) {
       setLoading(false);
     } else {
@@ -216,10 +222,10 @@ const LoadingVideo = ({
       ) : (
         <TouchableOpacity
           style={styles.closeButton}
-          disabled={loading || isProcess}
+          disabled={(loading || isProcess) && !isUploadError}
           onPress={handleDelete}
         >
-          <SvgXml xml={closeIcon(theme.colors.base)} width="12" height="12" />
+          <SvgXml xml={closeIcon('white')} width="12" height="12" />
         </TouchableOpacity>
       )}
     </View>

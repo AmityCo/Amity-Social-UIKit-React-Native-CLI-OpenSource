@@ -60,6 +60,7 @@ import { getPostErrorMessage } from '../../../utils/errors';
 import { MAXIMUM_POST_CHARACTERS } from '../../../constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import { useUIKitDispatch } from '../../../../redux/store';
+import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
 
 const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   mode,
@@ -75,6 +76,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     shouldCall: true,
   });
   const pageId = PageID.post_composer_page;
+  const { AmityPostComposerPageBehavior } = useBehaviour();
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
   const styles = useStyles(themeStyles);
   const { getImage } = useFile();
@@ -105,12 +107,16 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const [deletedPostIds, setDeletedPostIds] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [hasChangedAttachment, setHasChangedAttachment] = useState(false);
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+  const [videoErrors, setVideoErrors] = useState<Set<string>>(new Set());
   const privateCommunityId = !community?.isPublic && community?.communityId;
   const title = isEditMode
     ? 'Edit Post'
     : community?.displayName ?? 'My Timeline';
   const isInputValid =
     !isUploading &&
+    imageErrors.size === 0 &&
+    videoErrors.size === 0 &&
     inputMessage.trim().length <= MAXIMUM_POST_CHARACTERS &&
     (inputMessage.trim().length > 0 ||
       displayImages.length > 0 ||
@@ -286,17 +292,20 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
 
   const onPressClose = useCallback(() => {
     const routes = navigation.getState().routes;
+    if (AmityPostComposerPageBehavior?.onPressPost) {
+      AmityPostComposerPageBehavior.onPressPost();
+    }
     if (routes[routes.length - 2].name === 'PostTargetSelection') {
       navigation.pop(2);
     } else navigation.pop();
-  }, [navigation]);
+  }, [navigation, AmityPostComposerPageBehavior]);
 
   const onClose = useCallback(() => {
     Alert.alert(
       'Discard this post',
       'The post will be permanently deleted. It cannot be undone',
       [
-        { text: 'Keey Editing', style: 'cancel' },
+        { text: 'Keep Editing', style: 'cancel' },
         {
           text: 'Discard',
           style: 'destructive',
@@ -593,10 +602,45 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     }
   }, [displayVideos.length, processMedia]);
 
+  const handleImageUploadError = useCallback(
+    (hasError: boolean, source: string) => {
+      setImageErrors((prev) => {
+        const newSet = new Set(prev);
+        if (hasError) {
+          newSet.add(source);
+        } else {
+          newSet.delete(source);
+        }
+        return newSet;
+      });
+    },
+    []
+  );
+
+  const handleVideoUploadError = useCallback(
+    (hasError: boolean, source: string) => {
+      setVideoErrors((prev) => {
+        const newSet = new Set(prev);
+        if (hasError) {
+          newSet.add(source);
+        } else {
+          newSet.delete(source);
+        }
+        return newSet;
+      });
+    },
+    []
+  );
+
   const handleOnCloseImage = useCallback(
     (originalPath: string, _, postId: string) => {
       setHasChangedAttachment(true);
       setDeletedPostIds((prev) => [...prev, postId]);
+      setImageErrors((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(originalPath);
+        return newSet;
+      });
       setDisplayImages((prevData) => {
         const newData = prevData.filter(
           (item: IDisplayImage) => item.url !== originalPath
@@ -610,6 +654,11 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     (originalPath: string, _, postId: string) => {
       setHasChangedAttachment(true);
       setDeletedPostIds((prev) => [...prev, postId]);
+      setVideoErrors((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(originalPath);
+        return newSet;
+      });
       setDisplayVideos((prevData) => {
         const newData = prevData.filter(
           (item: IDisplayImage) => item.url !== originalPath
@@ -755,6 +804,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
                       onClose={handleOnCloseImage}
                       index={index} //TODO: Fix this without index
                       onLoadFinish={handleOnFinishImage}
+                      onUploadError={handleImageUploadError}
                       isUploaded={item.isUploaded}
                       fileId={item.fileId}
                       fileCount={displayImages.length}
@@ -778,6 +828,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
                       onClose={handleOnCloseVideo}
                       index={index} //TODO: Fix this without index
                       onLoadFinish={handleOnFinishVideo}
+                      onUploadError={handleVideoUploadError}
                       isUploaded={item.isUploaded}
                       fileId={item.fileId}
                       thumbNail={item.thumbNail as string}

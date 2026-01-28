@@ -24,11 +24,18 @@ const AmityStoryTargetSelectionPage = () => {
     });
   };
 
+  const onClickClose = () => {
+    if (AmityStoryTargetSelectionPageBehavior?.onClickClose) {
+      AmityStoryTargetSelectionPageBehavior.onClickClose();
+    }
+  };
+
   return (
     <TargetSelectionPage
       pageId={PageID.select_story_target_page}
       onSelectFeed={onSelectFeed}
       hideMyTimelineTarget={true}
+      onClickClose={onClickClose}
     />
   );
 };

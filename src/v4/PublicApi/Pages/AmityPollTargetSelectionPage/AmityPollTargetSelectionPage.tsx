@@ -28,11 +28,16 @@ const AmityPollTargetSelectionPage = () => {
     }
     navigation.navigate('PollPostComposer', context);
   };
-
+  const onClickClose = () => {
+    if (AmityPollTargetSelectionPageBehavior?.onClickClose) {
+      AmityPollTargetSelectionPageBehavior.onClickClose();
+    }
+  };
   return (
     <TargetSelectionPage
       onSelectFeed={onSelectFeed}
       pageId={PageID.select_poll_target_page}
+      onClickClose={onClickClose}
     />
   );
 };
