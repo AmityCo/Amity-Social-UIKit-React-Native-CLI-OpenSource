@@ -35,6 +35,7 @@ export type RootStackParamList = {
     postId: string;
     showEndPopup?: boolean;
     category?: AmityPostCategory;
+    isDeleted?: boolean;
   };
   UserProfile: {
     userId: string;
@@ -72,7 +73,7 @@ export type RootStackParamList = {
     targetType: string;
   };
   LivestreamPlayer: {
-    streamId: string;
+    roomId: string;
     post: Amity.Post;
   };
   LivestreamTerminated: {

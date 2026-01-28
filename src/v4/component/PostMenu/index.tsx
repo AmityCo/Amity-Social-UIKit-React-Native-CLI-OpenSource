@@ -255,7 +255,7 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
                 ],
               },
               (post?.creator?.userId === myId || isIAmModerator) &&
-                ((childrenPost?.dataType !== 'liveStream' &&
+                ((childrenPost?.dataType !== 'room' &&
                   childrenPost?.dataType !== 'poll') ||
                   (childrenPost?.dataType === 'poll' &&
                     pollData?.status === 'open')) &&
@@ -280,7 +280,7 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
               </TouchableOpacity>
             )}
             {post?.creator?.userId === myId &&
-              childrenPost?.dataType !== 'liveStream' &&
+              childrenPost?.dataType !== 'room' &&
               childrenPost?.dataType !== 'poll' && (
                 <TouchableOpacity
                   onPress={goToEditPost}

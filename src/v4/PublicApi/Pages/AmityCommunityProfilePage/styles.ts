@@ -41,7 +41,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       backgroundColor: theme.colors.background,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
-      padding: 10,
+      paddingHorizontal: 16,
       minHeight: 200,
       paddingBottom: insets.bottom + 10,
     },
@@ -57,7 +57,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 16,
-      paddingHorizontal: 16,
+      paddingHorizontal: 0,
     },
     bottomSheetOptionText: {
       fontSize: 16,

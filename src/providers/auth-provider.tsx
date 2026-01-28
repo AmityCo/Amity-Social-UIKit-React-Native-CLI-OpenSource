@@ -4,8 +4,7 @@ import { Client } from '@amityco/ts-sdk-react-native';
 import type { AuthContextInterface } from '../types/auth.interface';
 import { Alert, Platform } from 'react-native';
 import type { IAmityUIkitProvider } from './amity-ui-kit-provider';
-// @ts-ignore
-// import { setupAmityVideoPlayer } from '@amityco/video-player-react-native';
+import { ERROR_CODE } from '../v4/constants';
 
 export const AuthContext = React.createContext<AuthContextInterface>({
   client: null,
@@ -18,6 +17,7 @@ export const AuthContext = React.createContext<AuthContextInterface>({
   apiRegion: 'sg',
   authToken: '',
   fcmToken: undefined,
+  isGlobalBan: false,
 });
 
 export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
@@ -37,6 +37,7 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
   const client: Amity.Client = Client.createClient(apiKey, apiRegion, {
     apiEndpoint: { http: apiEndpoint },
   });
+  const [isGlobalBan, setIsGlobalBan] = useState(false);
 
   const sessionHandler: Amity.SessionHandler = {
     sessionWillRenewAccessToken(renewal) {
@@ -45,8 +46,11 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
   };
 
   useEffect(() => {
-    return Client.onSessionStateChange((state: Amity.SessionStates) =>
-      setSessionState(state)
+    return Client.onSessionStateChange(
+      (state: Amity.SessionStates, reason: Amity.TokenTerminationReason) => {
+        setSessionState(state);
+        setIsGlobalBan(reason === 'globalBan');
+      }
     );
   }, []);
 
@@ -77,8 +81,14 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     if (authToken?.length > 0) {
       loginParam = { ...loginParam, authToken: authToken };
     }
-    const response = await Client.login(loginParam, sessionHandler);
-    if (!response) return;
+    try {
+      const response = await Client.login(loginParam, sessionHandler);
+      if (!response) return;
+    } catch (err) {
+      if (err?.message?.includes(ERROR_CODE.GLOBAL_BAN)) {
+        setIsGlobalBan(true);
+      }
+    }
 
     // setupAmityVideoPlayer();
 
@@ -149,11 +159,11 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
         isConnected,
         sessionState,
         apiRegion: apiRegion.toLowerCase(),
+        isGlobalBan,
       }}
     >
       {children}
     </AuthContext.Provider>
-    //
   );
 };
 export default AuthContextProvider;

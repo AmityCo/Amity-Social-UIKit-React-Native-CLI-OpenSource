@@ -7,14 +7,11 @@ import {
 } from 'react-native';
 import { useStyles } from './styles';
 
-// @ts-ignore
-// import { AmityStreamPlayer } from '@amityco/video-player-react-native';
-
 import LivestreamEndedView from '../../v4/component/LivestreamContent/LivestreamEndedThumbnail';
 import { Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon, playIcon, stopIcon } from '../../svg/svg-xml-list';
-import { StreamRepository } from '@amityco/ts-sdk-react-native';
+import { RoomRepository } from '@amityco/ts-sdk-react-native';
 
 const LiveStreamPlayer = ({ navigation, route }) => {
   const ref = useRef<any>(null);
@@ -24,9 +21,9 @@ const LiveStreamPlayer = ({ navigation, route }) => {
 
   const [isPlaying, setIsPlaying] = useState(true);
 
-  const { streamId } = route.params;
+  const { roomId } = route.params;
 
-  const [livestream, setLivestream] = useState<Amity.Stream>();
+  const [livestream, setLivestream] = useState<Amity.Room>();
 
   const onClosePlayer = () => {
     navigation.goBack();
@@ -59,15 +56,12 @@ const LiveStreamPlayer = ({ navigation, route }) => {
 
   useEffect(() => {
     const getLivestream = () => {
-      return StreamRepository.getStreamById(
-        streamId,
-        ({ data, loading, error }) => {
-          if (error) console.error('Error fetching livestream', error);
-          if (!loading && data) {
-            setLivestream({ ...data });
-          }
+      return RoomRepository.getRoom(roomId, ({ data, loading, error }) => {
+        if (error) console.error('Error fetching livestream', error);
+        if (!loading && data) {
+          setLivestream({ ...data });
         }
-      );
+      });
     };
 
     const unsubscribe = getLivestream();
@@ -75,7 +69,7 @@ const LiveStreamPlayer = ({ navigation, route }) => {
     return () => {
       unsubscribe();
     };
-  }, [streamId]);
+  }, [roomId]);
 
   return (
     <View style={styles.container}>

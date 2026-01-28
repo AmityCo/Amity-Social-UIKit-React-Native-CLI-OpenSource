@@ -6,11 +6,17 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "pods": "pod-install --quiet"
+    "pods": "pod-install --quiet",
+    "ios:pod": "cd ios && pod install",
+    "android:clean": "cd android && ./gradlew clean",
+    "android:debug": "cd android && ./gradlew assembleDebug",
+    "android:release": "cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
-    "@amityco/ts-sdk-react-native": "^7.9.2",
+    "@amityco/ts-sdk-react-native": "7.12.1-b52ac434.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
+    "@livekit/react-native": "^2.9.6",
+    "@livekit/react-native-webrtc": "^137.0.2",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-community/datetimepicker": "^8.4.4",
     "@react-native-community/netinfo": "^11.3.1",
@@ -21,6 +27,7 @@
     "@react-navigation/stack": "^7.3.1",
     "react": "19.1.1",
     "react-native": "0.82.1",
+    "livekit-client": "^2.17.0",
     "react-native-compressor": "^1.13.0",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.28.0",

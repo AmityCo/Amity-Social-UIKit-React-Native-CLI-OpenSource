@@ -1,13 +1,14 @@
 import React, { useCallback, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
+import { ComponentID, PageID } from '../../../enum/enumUIKitID';
 import { useAmityComponent, useStoryPermission } from '../../../hook';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
-import ButtonWithIconElement from '../../Elements/ButtonWithIconElement/ButtonWithIconElement';
 import { AmityPostTargetSelectionPageType } from '../../../enum';
+import { livestream, poll, post, story } from '~/v4/assets/icons';
+import MenuAction from '../../../../v4/elements/MenuAction';
 
 interface AmityCreatePostMenuComponentProps {
   pageId?: PageID;
@@ -31,6 +32,13 @@ const AmityCreatePostMenuComponent = ({
       width: 200,
       backgroundColor: themeStyles.colors.background,
       borderRadius: 12,
+    },
+    menu: {
+      gap: 12,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      flexDirection: 'row',
+      alignItems: 'center',
     },
   });
 
@@ -62,14 +70,14 @@ const AmityCreatePostMenuComponent = ({
           navigation.navigate('PollTargetSelection');
         },
 
-        // [AmityPostTargetSelectionPageType.livestream]: () => {
-        //   if (
-        //     AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage
-        //   ) {
-        //     AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage();
-        //   }
-        //   navigation.navigate('LivestreamPostTargetSelection');
-        // },
+        [AmityPostTargetSelectionPageType.livestream]: () => {
+          if (
+            AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage
+          ) {
+            AmityCreatePostMenuComponentBehavior.goToSelectLivestreamPostTargetPage();
+          }
+          navigation.navigate('LivestreamPostTargetSelection');
+        },
       };
       postTypeHandlers[postType]?.();
     },
@@ -78,36 +86,44 @@ const AmityCreatePostMenuComponent = ({
 
   return (
     <View style={styles.container}>
-      <ButtonWithIconElement
-        pageId={pageId}
-        componentId={componentId}
-        elementId={ElementID.create_post_button}
-        onClick={() => onPressCreatePost(AmityPostTargetSelectionPageType.post)}
+      <MenuAction
+        onPress={() => onPressCreatePost(AmityPostTargetSelectionPageType.post)}
+        style={styles.menu}
+        label="Post"
+        iconProps={{
+          xml: post(),
+        }}
       />
       {hasStoryPermission && (
-        <ButtonWithIconElement
-          pageId={pageId}
-          componentId={componentId}
-          elementId={ElementID.create_story_button}
-          onClick={() =>
+        <MenuAction
+          style={styles.menu}
+          label="Story"
+          iconProps={{
+            xml: story(),
+          }}
+          onPress={() =>
             onPressCreatePost(AmityPostTargetSelectionPageType.story)
           }
         />
       )}
-      <ButtonWithIconElement
-        pageId={pageId}
-        componentId={componentId}
-        elementId={ElementID.create_poll_button}
-        onClick={() => onPressCreatePost(AmityPostTargetSelectionPageType.poll)}
+      <MenuAction
+        style={styles.menu}
+        label="Poll"
+        iconProps={{
+          xml: poll(),
+        }}
+        onPress={() => onPressCreatePost(AmityPostTargetSelectionPageType.poll)}
       />
-      {/* <ButtonWithIconElement
-        pageId={pageId}
-        componentId={componentId}
-        elementId={ElementID.create_livestream_button}
-        onClick={() =>
+      <MenuAction
+        style={styles.menu}
+        label="Livestream"
+        iconProps={{
+          xml: livestream(),
+        }}
+        onPress={() =>
           onPressCreatePost(AmityPostTargetSelectionPageType.livestream)
         }
-      /> */}
+      />
     </View>
   );
 };

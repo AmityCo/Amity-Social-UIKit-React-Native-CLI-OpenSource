@@ -46,7 +46,7 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
         );
         setPostData(data);
         setTotalReactions(data.reactionsCount);
-        setIsLike(data.myReactions?.length > 0);
+        setIsLike(data?.myReactions?.length > 0);
       }
     });
     return () => {

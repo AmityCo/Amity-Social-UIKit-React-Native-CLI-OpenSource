@@ -13,14 +13,16 @@ export const useStyles = () => {
       position: 'relative',
       backgroundColor: '#000000',
     },
+
     steamEndContainer: {
       flex: 1,
       justifyContent: 'center',
+      backgroundColor: '#000000',
     },
     indicator: {
       left: 16,
       zIndex: 1,
-      top: insets.top + 20,
+      top: 20,
       position: 'absolute',
     },
     status: {

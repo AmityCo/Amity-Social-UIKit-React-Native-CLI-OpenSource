@@ -6,6 +6,7 @@ export const useStyle = (themeStyle: MyMD3Theme) => {
     container: {
       display: 'flex',
       flexDirection: 'row',
+      alignItems: 'center',
       width: 200,
       paddingTop: 12,
       paddingBottom: 12,
@@ -13,8 +14,8 @@ export const useStyle = (themeStyle: MyMD3Theme) => {
       gap: 12,
     },
     icon: {
-      width: 20,
-      height: 20,
+      width: 24,
+      height: 24,
       tintColor: themeStyle.colors.base,
     },
     label: {

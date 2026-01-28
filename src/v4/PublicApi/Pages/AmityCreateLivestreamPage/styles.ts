@@ -8,7 +8,7 @@ export const useStyles = () => {
   const { height: screenHeight } = Dimensions.get('window');
   const insets = useSafeAreaInsets();
 
-  const availableHeight = screenHeight - 80 - 60 - 40 - 40 - 120;
+  const availableHeight = screenHeight - 80 - 60 - 40 - 40 - 120 - 50;
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -26,7 +26,6 @@ export const useStyles = () => {
     },
     overlay: {
       flex: 1,
-      height: '100%',
       top: 0,
       bottom: 0,
       left: 0,
@@ -158,8 +157,15 @@ export const useStyles = () => {
     text: {
       color: theme.colors.background,
     },
-    timer: {
+
+    closeButton: {
       left: 16,
+      zIndex: 100,
+      position: 'absolute',
+      top: 20 + insets.top,
+    },
+    timer: {
+      right: 16,
       zIndex: 100,
       position: 'absolute',
       top: 20 + insets.top,
@@ -188,6 +194,69 @@ export const useStyles = () => {
       marginBottom: 24,
     },
     reconnectingText: {
+      color: theme.colors.background,
+      textAlign: 'center',
+    },
+    containerRoom: {
+      flex: 1,
+      alignItems: 'stretch',
+      justifyContent: 'center',
+      padding: 10,
+    },
+    participantView: {
+      flex: 1,
+      margin: 5,
+      height: 200,
+      backgroundColor: '#ccc',
+    },
+    roomContainer: {
+      flex: 1,
+      width: '100%',
+      height: '100%',
+    },
+    videoTrack: {
+      width: '100%',
+      height: '100%',
+    },
+    countdownOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 80,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      zIndex: 150,
+    },
+    countdownContainer: {
+      alignItems: 'center',
+      gap: 24,
+    },
+    countdownCircle: {
+      position: 'relative',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 72,
+      height: 72,
+    },
+    countdownNumberContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    countdownNumber: {
+      fontSize: 32,
+      fontWeight: '700',
+      color: theme.colors.background,
+    },
+    countdownText: {
+      fontSize: 24,
+      fontWeight: '500',
       color: theme.colors.background,
       textAlign: 'center',
     },

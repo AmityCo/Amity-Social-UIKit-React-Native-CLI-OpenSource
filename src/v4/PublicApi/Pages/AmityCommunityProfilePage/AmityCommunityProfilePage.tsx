@@ -35,8 +35,7 @@ import { RootStackParamList } from '../../../routes/RouteParamList';
 import CommunityCreatePostButton from '../../../elements/CommunityCreatePostButton/CommunityCreatePostButton';
 import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
-
-import { poll, post, story } from '../../../../v4/assets/icons';
+import { livestream, poll, post, story } from '../../../../v4/assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { useTheme } from 'react-native-paper';
@@ -265,7 +264,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     AmityPostTargetSelectionPageBehavior,
     AmityPollTargetSelectionPageBehavior,
     AmityStoryTargetSelectionPageBehavior,
-    // AmityLivestreamPostTargetSelectionPageBehavior,
+    AmityLivestreamPostTargetSelectionPageBehavior,
   } = useBehaviour();
   const navigation =
     useNavigation<
@@ -311,26 +310,26 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
-  // const handleCreateLivestream = () => {
-  //   closeBottomSheet();
+  const handleCreateLivestream = () => {
+    closeBottomSheet();
 
-  //   if (
-  //     AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage
-  //   ) {
-  //     return AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage(
-  //       {
-  //         targetId: communityId,
-  //         targetType: 'community',
-  //         targetName: community?.displayName,
-  //       }
-  //     );
-  //   }
-  //   navigation.navigate('CreateLivestream', {
-  //     targetId: communityId,
-  //     targetType: 'community',
-  //     targetName: community?.displayName,
-  //   });
-  // };
+    if (
+      AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage
+    ) {
+      return AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage(
+        {
+          targetId: communityId,
+          targetType: 'community',
+          targetName: community?.displayName,
+        }
+      );
+    }
+    navigation.navigate('CreateLivestream', {
+      targetId: communityId,
+      targetType: 'community',
+      targetName: community?.displayName,
+    });
+  };
 
   const handleCreatePoll = () => {
     closeBottomSheet();
@@ -398,7 +397,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
               <SvgXml width={24} height={24} xml={poll()} color={colors.base} />
               <Text style={styles.bottomSheetOptionText}>Poll</Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity
+            <TouchableOpacity
               onPress={handleCreateLivestream}
               style={styles.bottomSheetOption}
             >
@@ -409,7 +408,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
                 color={colors.base}
               />
               <Text style={styles.bottomSheetOptionText}>Livestream</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </Animated.View>
         </Pressable>
       </Modal>

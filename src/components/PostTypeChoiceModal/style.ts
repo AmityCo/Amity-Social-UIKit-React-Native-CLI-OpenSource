@@ -37,8 +37,7 @@ export const useStyles = () => {
     modalRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      padding: 5,
-      marginVertical: 5,
+      paddingVertical: 16,
     },
     closeButtonText: {
       color: '#FFF',
