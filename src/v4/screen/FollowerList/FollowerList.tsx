@@ -1,4 +1,4 @@
-import { FlatList, SafeAreaView } from 'react-native';
+import { FlatList } from 'react-native';
 import React, {
   FC,
   memo,
@@ -14,6 +14,7 @@ import { RootStackParamList } from '../../../routes/RouteParamList';
 import CustomTab from '../../../components/CustomTab';
 import { TabName } from '../../enum/tabNameState';
 import FollowerListItem from './Components/FollowerListItem';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type FollowerListType = {
   route: RouteProp<RootStackParamList, 'FollowerList'>;

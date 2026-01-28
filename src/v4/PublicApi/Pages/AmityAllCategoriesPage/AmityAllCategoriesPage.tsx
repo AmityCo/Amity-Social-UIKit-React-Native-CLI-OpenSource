@@ -1,4 +1,4 @@
-import { View, FlatList, SafeAreaView, Pressable } from 'react-native';
+import { View, FlatList, Pressable } from 'react-native';
 import React, { memo, useCallback } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import CategoryListSkeleton from './CategoryListSkeleton/CategoryListSkeleton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AmityAllCategoriesPage = () => {
   const pageId = PageID.all_categories_page;

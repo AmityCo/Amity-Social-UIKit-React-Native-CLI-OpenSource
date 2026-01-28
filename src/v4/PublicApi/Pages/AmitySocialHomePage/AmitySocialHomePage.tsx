@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useCallback, useState } from 'react';
-import { LogBox, SafeAreaView, StyleSheet } from 'react-native';
+import { LogBox, StyleSheet } from 'react-native';
 import CustomSocialTab from '../../../../v4/component/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../../../v4/hook';
 import {
@@ -19,6 +19,7 @@ import AmityExploreComponent from '../../../../v4/PublicApi/Components/AmityExpl
 import NewsFeedLoadingComponent from '../../../../v4/component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
 import { useCustomRankingGlobalFeed } from '../../../../v4/hook/useCustomRankingGlobalFeed';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {

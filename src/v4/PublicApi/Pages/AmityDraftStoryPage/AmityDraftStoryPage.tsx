@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Image,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
 import React, { FC, useCallback, useState, useEffect, memo } from 'react';
 import Video from 'react-native-video';
 import {
@@ -37,6 +30,7 @@ import { getMediaTypeFromUrl } from '../../../../util/urlUtil';
 import { LoadingOverlay } from '../../../../components/LoadingOverlay';
 import mime from 'mime';
 import { useToast } from '../../../../v4/stores/slices/toast';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
   targetId,

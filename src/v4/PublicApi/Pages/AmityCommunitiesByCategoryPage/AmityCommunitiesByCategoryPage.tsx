@@ -1,10 +1,4 @@
-import {
-  View,
-  FlatList,
-  SafeAreaView,
-  TouchableOpacity,
-  Pressable,
-} from 'react-native';
+import { View, FlatList, TouchableOpacity, Pressable } from 'react-native';
 import React, { memo, useCallback } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
@@ -18,6 +12,7 @@ import { RootStackParamList } from '../../../routes/RouteParamList';
 import CommunityEmptyTitle from '../../../elements/CommunityEmptyTitle/CommunityEmptyTitle';
 import CommunityEmptyImage from '../../../elements/CommunityEmptyImage/CommunityEmptyImage';
 import CommunityListSkeleton from '../../../component/CommunityListSkeleton/CommunityListSkeleton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AmityCommunitiesByCategoryPage = ({ route }: any) => {
   const pageId = PageID.communities_by_category_page;

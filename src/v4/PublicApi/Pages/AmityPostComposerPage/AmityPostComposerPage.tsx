@@ -4,7 +4,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -61,6 +60,7 @@ import { MAXIMUM_POST_CHARACTERS } from '../../../constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import { useUIKitDispatch } from '../../../../redux/store';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   mode,

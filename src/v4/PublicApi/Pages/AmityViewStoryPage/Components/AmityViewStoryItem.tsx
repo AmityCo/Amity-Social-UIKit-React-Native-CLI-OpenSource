@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
   Linking,
   Platform,
-  SafeAreaView,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -45,6 +44,7 @@ import { MyMD3Theme } from '../../../../../providers/amity-ui-kit-provider';
 import { useUIKitDispatch } from '../../../../../redux/store';
 import { informative } from '../../../../../v4/assets/icons/toast';
 import { close as closeIcon } from '../../../../assets/icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface IAmityViewStoryItem {
   communityData: Amity.Community;

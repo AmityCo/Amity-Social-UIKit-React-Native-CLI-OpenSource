@@ -9,7 +9,6 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
   View,
-  SafeAreaView,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -45,6 +44,7 @@ import { StoryRepository } from '@amityco/ts-sdk-react-native';
 import CommentList from '../../Social/CommentList/CommentList';
 import { useStoryPermission } from '../../../hook/useStoryPermission';
 import { useConfigImageUri } from '../../../hook/useConfigImageUri';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const StoryListItem = ({
   index,

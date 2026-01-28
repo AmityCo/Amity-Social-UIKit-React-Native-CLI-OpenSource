@@ -15,7 +15,6 @@ import {
   type NativeScrollEvent,
   ScrollView,
   Pressable,
-  SafeAreaView,
 } from 'react-native';
 import { useStyles } from './styles';
 import {
@@ -55,6 +54,7 @@ import { ImageSizeState } from '../../../enum';
 
 import { useUIKitDispatch } from '../../../../redux/store';
 import BackButton from '../../../../components/BackButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type UserProfilePageProps = {
   userId: string;

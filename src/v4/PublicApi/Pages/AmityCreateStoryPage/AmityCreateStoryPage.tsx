@@ -3,7 +3,6 @@ import {
   View,
   Pressable,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   Platform,
   Modal,
@@ -46,6 +45,7 @@ import { RootStackParamList } from '../../../routes/RouteParamList';
 import AmityDraftStoryPage from '../AmityDraftStoryPage/AmityDraftStoryPage';
 import { TAmityStoryMediaType } from '../../types';
 import { getMediaTypeFromUrl } from '../../../../util/urlUtil';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ICreateStoryPage {
   targetId: string;
