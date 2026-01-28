@@ -122,9 +122,11 @@ function AmityCreateLivestreamPage() {
     (Platform.OS === 'android' && androidPermission) ||
     (Platform.OS === 'ios' && iOSPermission);
 
-  const fourHours = 4 * 60 * 60 * 1000; // 4 hours
+  // will change after QA testing
+
+  const fourHours = 2 * 60 * 1000; // 2 minutes
   const countdownStart = fourHours - 10 * 1000; // Start countdown 10 seconds before end
-  const toastTriggerTime = fourHours - 3 * 60 * 1000; // Show toast 3 minutes before end
+  const toastTriggerTime = fourHours - 30 * 1000; // Show toast 3 minutes before end
 
   const switchCamera = useCallback(async () => {
     if (isLive && livekitParticipant) {
@@ -267,7 +269,7 @@ function AmityCreateLivestreamPage() {
       setIsConnecting(false);
       Alert.alert(
         'Cannot start live stream',
-        'Something went wrong while trying to complete your request.Please try again.',
+        'Something went wrong while trying to complete your request. Please try again.',
         [
           {
             text: 'OK',
@@ -567,9 +569,9 @@ function AmityCreateLivestreamPage() {
                       progress={((10 - countdown) / 10) * 100}
                     />
                     <View style={styles.countdownNumberContainer}>
-                      <Typography.Title style={styles.countdownNumber}>
+                      <Typography style={styles.countdownNumber}>
                         {countdown}
-                      </Typography.Title>
+                      </Typography>
                     </View>
                   </View>
                 </View>
