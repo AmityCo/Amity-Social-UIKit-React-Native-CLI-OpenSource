@@ -122,11 +122,9 @@ function AmityCreateLivestreamPage() {
     (Platform.OS === 'android' && androidPermission) ||
     (Platform.OS === 'ios' && iOSPermission);
 
-  // will change after QA testing
-
-  const fourHours = 2 * 60 * 1000; // 2 minutes
+  const fourHours = 4 * 60 * 60 * 1000; // 4 hours
   const countdownStart = fourHours - 10 * 1000; // Start countdown 10 seconds before end
-  const toastTriggerTime = fourHours - 30 * 1000; // Show toast 3 minutes before end
+  const toastTriggerTime = fourHours - 3 * 60 * 1000; // Show toast 3 minutes before end
 
   const switchCamera = useCallback(async () => {
     if (isLive && livekitParticipant) {
