@@ -95,11 +95,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         referenceType: postType,
         limit: commentListLimit,
       },
-      async ({ error, loading, data, hasNextPage, onNextPage }) => {
-        if (error) {
-          dispatch(showToastMessage({ toastMessage: "Couldn't load comment" }));
-          return;
-        }
+      async ({ loading, data, hasNextPage, onNextPage }) => {
         if (!loading) {
           data && data.length > 0 && (await queryComment(data));
           onNextPageRef.current = hasNextPage ? onNextPage : null;

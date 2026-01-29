@@ -108,14 +108,10 @@ function AmityLiveStreamPlayerPage() {
   }, [room?.status, wasLive]);
 
   useEffect(() => {
-    const isTerminated =
-      room?.moderation?.terminateLabels &&
-      room?.moderation?.terminateLabels?.length > 0;
-
-    if (isTerminated) {
+    if (room?.status === RoomStatus.terminated) {
       navigation.replace('LivestreamTerminated', { type: 'viewer' });
     }
-  }, [room?.moderation?.terminateLabels, navigation]);
+  }, [room?.status, navigation]);
 
   const shouldShowEndThumbnail =
     room?.status === RoomStatus.ended ||

@@ -40,6 +40,8 @@ import { closeIcon } from '../../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import { IMentionPosition } from '../../../../types';
 import uiSlice from '../../../../redux/slices/uiSlice';
+import NetInfo from '@react-native-community/netinfo';
+import { useToast } from '../../../../v4/stores/slices/toast';
 import MyAvatar from '../../../../v4/component/MyAvatar/MyAvatar';
 import {
   comment_contains_inapproproate_word,
@@ -82,6 +84,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
   const styles = useStyles(themeStyles);
+  const { showToast } = useToast();
   const [postData, setPostData] = useState<Amity.Post<any>>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -109,6 +112,20 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   });
 
   const { showToastMessage } = uiSlice.actions;
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      if (!state.isConnected) {
+        showToast({
+          type: 'failed',
+          message: 'No internet connection.',
+          duration: 3000,
+          bottomPosition: 96,
+        });
+      }
+    });
+    return () => unsubscribe();
+  }, [showToast]);
 
   useLayoutEffect(() => {
     if (!postId) return () => {};
