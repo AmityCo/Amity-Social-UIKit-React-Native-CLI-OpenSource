@@ -15,13 +15,11 @@ import { deleteCommentById } from '../../../../providers/Social/comment-sdk';
 import { ComponentID, PageID } from '../../../enum';
 import { useAmityComponent } from '../../../hook';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
-import uiSlice from '../../../../redux/slices/uiSlice';
 import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
 import CommentAdComponent from '../../../component/CommentAdComponent/CommentAdComponent';
 import { usePaginatorApi } from '../../../hook/usePaginator';
 import { useCommentAdImpression } from '../../../hook/useCommentAdImpression';
 import { useStyles } from './styles';
-import { useUIKitDispatch } from '../../../../redux/store';
 
 export interface IComment {
   commentId: string;
@@ -69,8 +67,6 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
     componentId,
   });
   const styles = useStyles();
-  const dispatch = useUIKitDispatch();
-  const { showToastMessage } = uiSlice.actions;
   const onNextPageRef = useRef<() => void | null>(null);
   const [commentList, setCommentList] = useState<IComment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -109,7 +105,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
       setCommentList([]);
       unsubComment();
     };
-  }, [dispatch, postId, postType, showToastMessage]);
+  }, [postId, postType]);
 
   const queryComment = async (comments: Amity.InternalComment[]) => {
     const formattedCommentList = await Promise.all(
