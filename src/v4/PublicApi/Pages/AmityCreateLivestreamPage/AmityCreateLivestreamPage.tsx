@@ -396,14 +396,10 @@ function AmityCreateLivestreamPage() {
   }, [reconnecting, endLiveStream, room?.status]);
 
   useEffect(() => {
-    const isTerminated =
-      room?.moderation?.terminateLabels &&
-      room?.moderation?.terminateLabels?.length > 0;
-
-    if (isTerminated) {
+    if (room?.status === RoomStatus.terminated) {
       navigation.replace('LivestreamTerminated', { type: 'streamer' });
     }
-  }, [room?.moderation?.terminateLabels, navigation]);
+  }, [room?.status, navigation]);
 
   useEffect(() => {
     if (room?.isDeleted || subscribedPost?.isDeleted) {
