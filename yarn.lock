@@ -2,15 +2,15 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@7.12.1-7200581b.0":
-  version "7.12.1-7200581b.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.12.1-7200581b.0.tgz#14eb4689256924c839a5e349509c59c7df91f67b"
-  integrity sha512-r1xLjyn2x8khGaDiXuu/rpWejhqDUUKljCjrLc5C7P3bLyGjSfV7k6KPaMC13YuKIUjYQvLNTYhrj7kZAWlaRw==
+"@amityco/ts-sdk-react-native@7.12.1-622940cf.0":
+  version "7.12.1-622940cf.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.12.1-622940cf.0.tgz#a2668705fff7b214b1e5e73914e49c53a7fcb26f"
+  integrity sha512-AaHQNMuNzH7HXxSDJ7M/NrWTdR9FhWrFNQzefSNHF5mTvNvIidrp80bka2/3HPa2VBOTffEF8b5pkQl2R1r+oA==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
     agentkeepalive "^4.2.1"
-    axios "1.2.3"
+    axios "1.10.0"
     debug "^4.3.4"
     hls.js "^1.4.10"
     js-base64 "^3.7.2"
@@ -3381,12 +3381,12 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-axios@1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.2.3.tgz#31a3d824c0ebf754a004b585e5f04a5f87e6c4ff"
-  integrity sha512-pdDkMYJeuXLZ6Xj/Q5J3Phpe+jbGdsSzlQaFVkMQzRUL05+6+tetX8TV3p4HrU4kzuO9bt+io/yGQxuyxA/xcw==
+axios@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.10.0.tgz#af320aee8632eaf2a400b6a1979fa75856f38d54"
+  integrity sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==
   dependencies:
-    follow-redirects "^1.15.0"
+    follow-redirects "^1.15.6"
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
@@ -5584,12 +5584,7 @@ flow-enums-runtime@^0.0.6:
   resolved "https://registry.yarnpkg.com/flow-enums-runtime/-/flow-enums-runtime-0.0.6.tgz#5bb0cd1b0a3e471330f4d109039b7eba5cb3e787"
   integrity sha512-3PYnM29RFXwvAN6Pc/scUfkI7RwhQ/xqyLUyPNlXUp9S40zI8nup9tUSrTLSVnWGBN38FNiGWbwZOB6uR4OGdw==
 
-flow-parser@0.*:
-  version "0.274.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.274.0.tgz#dfd8e7ecd483713b979e25fab4e7d9da3bb3d7c3"
-  integrity sha512-pwmoGcWUSyamhv1DWhSFBROYqBfVJ/XAjqAdcrKSaisn5vI5dQ0Ni0Lawrp03TE2ZPC69vseFdeWkYlpCAqxtw==
-
-follow-redirects@^1.15.0:
+follow-redirects@^1.15.6:
   version "1.15.11"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.11.tgz#777d73d72a92f8ec4d2e410eb47352a56b8e8340"
   integrity sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==
