@@ -267,7 +267,7 @@ function AmityCreateLivestreamPage() {
       setIsConnecting(false);
       Alert.alert(
         'Cannot start live stream',
-        'Something went wrong while trying to complete your request.Please try again.',
+        'Something went wrong while trying to complete your request. Please try again.',
         [
           {
             text: 'OK',
@@ -396,14 +396,10 @@ function AmityCreateLivestreamPage() {
   }, [reconnecting, endLiveStream, room?.status]);
 
   useEffect(() => {
-    const isTerminated =
-      room?.moderation?.terminateLabels &&
-      room?.moderation?.terminateLabels?.length > 0;
-
-    if (isTerminated) {
+    if (room?.status === RoomStatus.terminated) {
       navigation.replace('LivestreamTerminated', { type: 'streamer' });
     }
-  }, [room?.moderation?.terminateLabels, navigation]);
+  }, [room?.status, navigation]);
 
   useEffect(() => {
     if (room?.isDeleted || subscribedPost?.isDeleted) {
@@ -567,9 +563,9 @@ function AmityCreateLivestreamPage() {
                       progress={((10 - countdown) / 10) * 100}
                     />
                     <View style={styles.countdownNumberContainer}>
-                      <Typography.Title style={styles.countdownNumber}>
+                      <Typography style={styles.countdownNumber}>
                         {countdown}
-                      </Typography.Title>
+                      </Typography>
                     </View>
                   </View>
                 </View>
