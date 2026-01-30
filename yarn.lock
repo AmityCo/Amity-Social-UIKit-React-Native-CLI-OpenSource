@@ -2,15 +2,15 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@7.12.1-622940cf.0":
-  version "7.12.1-622940cf.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.12.1-622940cf.0.tgz#a2668705fff7b214b1e5e73914e49c53a7fcb26f"
-  integrity sha512-AaHQNMuNzH7HXxSDJ7M/NrWTdR9FhWrFNQzefSNHF5mTvNvIidrp80bka2/3HPa2VBOTffEF8b5pkQl2R1r+oA==
+"@amityco/ts-sdk-react-native@7.12.1-fb119589.0":
+  version "7.12.1-fb119589.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.12.1-fb119589.0.tgz#855d261f4a77e437c1087808e161222092dc2870"
+  integrity sha512-nDQq0IOnsWqjNWobce7CaODYMo4l67f15lnG5v4fkL/rco23jOqvZU8X/pHO4mRBKcZ6imTeaJ/wDouabOA50g==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
     agentkeepalive "^4.2.1"
-    axios "1.10.0"
+    axios "1.12.0"
     debug "^4.3.4"
     hls.js "^1.4.10"
     js-base64 "^3.7.2"
@@ -3381,13 +3381,13 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-axios@1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.10.0.tgz#af320aee8632eaf2a400b6a1979fa75856f38d54"
-  integrity sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==
+axios@1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.12.0.tgz#11248459be05a5ee493485628fa0e4323d0abfc3"
+  integrity sha512-oXTDccv8PcfjZmPGlWsPSwtOJCZ/b6W5jAMCNcfwJbCzDckwG0jrYJFaWH1yvivfCXjVzV/SPDEhMB3Q+DSurg==
   dependencies:
     follow-redirects "^1.15.6"
-    form-data "^4.0.0"
+    form-data "^4.0.4"
     proxy-from-env "^1.1.0"
 
 babel-jest@^29.7.0:
@@ -5618,7 +5618,7 @@ form-data-encoder@^2.1.2:
   resolved "https://registry.yarnpkg.com/form-data-encoder/-/form-data-encoder-2.1.4.tgz#261ea35d2a70d48d30ec7a9603130fa5515e9cd5"
   integrity sha512-yDYSgNMraqvnxiEXO4hi88+YZxaHC6QKzb5N84iRCTDeRO7ZALpir/lVmf/uXUhnwUr2O4HU8s/n6x+yNjQkHw==
 
-form-data@^4.0.0:
+form-data@^4.0.4:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.5.tgz#b49e48858045ff4cbf6b03e1805cebcad3679053"
   integrity sha512-8RipRLol37bNs2bhoV67fiTEvdTrbMUYcFTiy3+wuuOnUog2QBHCZWXDRijWQfAkhBj2Uf5UnVaiWwA5vdd82w==
