@@ -54,7 +54,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
       if (!error && !loading) {
         setPostData(data);
         setTotalReactions(data.reactionsCount);
-        setIsLike(data.myReactions.length > 0);
+        setIsLike(data.myReactions?.length > 0);
       }
     });
     return () => unsubscribeRef?.current && unsubscribeRef?.current();

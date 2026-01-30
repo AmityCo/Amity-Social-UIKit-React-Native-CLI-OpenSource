@@ -3,10 +3,15 @@ import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import FirebaseCore
+import livekit_react_native
+import livekit_react_native_webrtc
 
 @main
 class AppDelegate: RCTAppDelegate {
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+
+    LivekitReactNative.setup()
+
     // Initialize Firebase
     FirebaseApp.configure()
 

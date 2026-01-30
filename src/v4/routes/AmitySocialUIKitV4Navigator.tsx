@@ -65,13 +65,17 @@ import CommunityCommentsNotificationSetting from '../../v4/screen/CommunityComme
 import CommunityStoriesNotificationSetting from '../../v4/screen/CommunityStoriesNotificationSetting';
 import CommunityLivestreamsNotificationSetting from '../../v4/screen/CommunityLivestreamsNotificationSetting';
 import CommunityPendingRequest from '../../v4/screen/CommunityPendingRequest';
+import { GlobalBan } from '../screen/GlobalBan';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
-  const { isConnected } = useAuth();
+  const { isConnected, isGlobalBan } = useAuth();
   const theme = useTheme() as MyMD3Theme;
 
   const styles = useStyles();
+
+  if (isGlobalBan) return <GlobalBan />;
+
   return (
     <NavigationIndependentTree>
       <NavigationContainer>

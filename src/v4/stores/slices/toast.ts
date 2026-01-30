@@ -10,12 +10,14 @@ type ToastState = {
   message: string;
   type: 'failed' | 'success' | 'informative' | 'loading';
   duration?: number;
+  bottomPosition?: number;
 };
 const initialState: ToastState = {
   visible: false,
   message: '',
   type: 'loading',
   duration: 2500,
+  bottomPosition: 16,
 };
 
 const toastSlice = createSlice({
@@ -27,12 +29,15 @@ const toastSlice = createSlice({
       state.message = action.payload.message;
       state.type = action.payload.type;
       state.duration = action.payload.duration ?? initialState.duration;
+      state.bottomPosition =
+        action.payload.bottomPosition ?? initialState.bottomPosition;
     },
     hideToast: (state) => {
       state.visible = false;
       state.message = '';
       state.type = 'loading';
       state.duration = 2500;
+      state.bottomPosition = 16;
     },
   },
 });

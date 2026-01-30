@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Image,
@@ -12,20 +6,15 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
-  // Linking,
   View,
   ImageStyle,
+  Linking,
 } from 'react-native';
 import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
-// import {
-//   AmityStreamBroadcasterState,
-//   AmityVideoBroadcaster,
-//   // @ts-ignore
-// } from '@amityco/video-broadcaster-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
-import { arrowDown } from '../../../../v4/assets/icons';
+import { arrowDown, close } from '../../../../v4/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import { Typography } from '../../../component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
@@ -33,12 +22,12 @@ import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 import { useBottomSheet } from '../../../../redux/slices/bottomSheetSlice';
 import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
-import { PostRepository, StreamRepository } from '@amityco/ts-sdk-react-native';
+import { PostRepository, RoomRepository } from '@amityco/ts-sdk-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-// import Button from '../../../component/Button/Button';
+import Button from '../../../component/Button/Button';
 import { useRequestPermission } from '../../../../v4/hook/useCamera';
 import NetInfo from '@react-native-community/netinfo';
-import { LivestreamStatus } from '../../../enum/livestreamStatus';
+import { RoomStatus } from '../../../enum/roomStatus';
 import { AmityThumbnailActionComponent } from '../../Components/AmityThumbnailActionComponent';
 import { StartLivestreamButton } from '../../../elements/StartLivestreamButton';
 import { PageID } from '../../../enum';
@@ -47,6 +36,19 @@ import { CancelCreateLivestreamButton } from '../../../elements/CancelCreateLive
 import { EndLiveStreamButton } from '../../../elements/EndLiveStreamButton';
 import { AddThumbnailButton } from '../../../elements/AddThumbnailButton';
 import { SwitchCameraButton } from '../../../elements/SwitchCameraButton';
+import { Track, LocalVideoTrack } from 'livekit-client';
+import { LiveKitRoom, registerGlobals } from '@livekit/react-native';
+import { RoomView } from './RoomView';
+import { Camera, useCameraDevice } from 'react-native-vision-camera';
+import { useRoomSubscription } from '../../../../v4/hook/useRoomSubscription';
+import { useToast } from '../../../../v4/stores/slices/toast';
+import { usePostSubscription } from '../../../../v4/hook';
+import { useRoom } from '../../../../v4/features/room/hooks/useRoom';
+
+// Register WebRTC globals required for LiveKit
+registerGlobals();
+
+const serverUrl = 'wss://sp-live-3tr59jrk.livekit.cloud';
 
 const calculateTime = (time: number) => {
   const hours = Math.floor(time / 3600000);
@@ -64,7 +66,6 @@ const calculateTime = (time: number) => {
 
 function AmityCreateLivestreamPage() {
   const styles = useStyles();
-  const streamRef = useRef<any>(null);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const theme = useTheme<MyMD3Theme>();
@@ -75,14 +76,35 @@ function AmityCreateLivestreamPage() {
   const [isLive, setIsLive] = useState<boolean>(false);
   const [description, setDescription] = useState<string>('');
   const [isEnding, setIsEnding] = useState<boolean>(false);
+  const [countdown, setCountdown] = useState<number | null>(null);
   const [post, setPost] = useState<Amity.Post | null>(null);
-  const [stream, setStream] = useState<Amity.Stream | null>(null);
-  const [timer] = useState<number | null>(null);
+  const [roomId, setRoomId] = useState<string>('');
+  const timerRef = useRef<number | null>(null);
+  const connectionLossTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [androidPermission, setAndroidPermission] = useState<boolean>(false);
   const [iOSPermission, setIOSPermission] = useState<boolean>(true);
   const [reconnecting, setReconnecting] = useState<boolean>(false);
+  const [livekitParticipant, setLivekitParticipant] = useState<any>(null);
+  const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
+  const [roomToken, setRoomToken] = useState<Amity.BroadcasterData | null>(
+    null
+  );
   const unsubscribeRef = useRef<Amity.Unsubscriber>(null);
+
+  const room = useRoom(roomId);
+
+  useRoomSubscription({ room });
+
+  const { subscribedPost } = usePostSubscription(post?.postId || '');
+
+  const { showToast } = useToast();
+
+  const frontCamera = useCameraDevice('front');
+  const backCamera = useCameraDevice('back');
+  const cameraDevice = isFrontCamera ? frontCamera : backCamera;
 
   const {
     imageUri,
@@ -99,6 +121,43 @@ function AmityCreateLivestreamPage() {
   const hasPermission =
     (Platform.OS === 'android' && androidPermission) ||
     (Platform.OS === 'ios' && iOSPermission);
+
+  const fourHours = 4 * 60 * 60 * 1000; // 4 hours
+  const countdownStart = fourHours - 10 * 1000; // Start countdown 10 seconds before end
+  const toastTriggerTime = fourHours - 3 * 60 * 1000; // Show toast 3 minutes before end
+
+  const switchCamera = useCallback(async () => {
+    if (isLive && livekitParticipant) {
+      try {
+        const cameraPublication = livekitParticipant.getTrackPublication(
+          Track.Source.Camera
+        );
+
+        if (cameraPublication?.track) {
+          const videoTrack = cameraPublication.track as LocalVideoTrack;
+
+          // Stop current camera
+          await videoTrack.stop();
+
+          // Get new facing mode
+          const newFacingMode = isFrontCamera ? 'environment' : 'user';
+
+          // Restart camera with new facing mode
+          await videoTrack.restartTrack({
+            facingMode: newFacingMode,
+          });
+
+          // Toggle the camera state
+          setIsFrontCamera((prev) => !prev);
+        }
+      } catch (error) {
+        console.error('Failed to switch camera:', error);
+      }
+    } else {
+      // Just toggle the camera state for preview
+      setIsFrontCamera((prev) => !prev);
+    }
+  }, [livekitParticipant, isFrontCamera, isLive]);
 
   useRequestPermission({
     shouldCall: Platform.OS === 'ios',
@@ -156,42 +215,59 @@ function AmityCreateLivestreamPage() {
       setIsLive(true);
       setIsConnecting(true);
 
-      const { data: newStream } = await StreamRepository.createStream({
+      const { data: newStream } = await RoomRepository.createRoom({
         title,
         description: description || undefined,
         thumbnailFileId: uploadedImage?.fileId,
+        type: 'coHosts',
       });
 
+      setRoomId(newStream.roomId);
+
       if (newStream) {
+        const roomTokenResponse = await RoomRepository.getBroadcasterData(
+          newStream.roomId
+        );
+
+        setRoomToken(roomTokenResponse);
+
         const params = {
           targetId,
           targetType,
-          dataType: 'liveStream' as Amity.PostContentType,
+          dataType: 'room' as Amity.PostContentType,
           data: {
             text: `${newStream.title}${
               newStream.description ? `\n\n${newStream.description}` : ''
             }`,
-            streamId: newStream.streamId,
+            roomId: newStream.roomId,
           },
         };
 
         const newPost = await PostRepository.createPost(params);
 
-        streamRef.current = StreamRepository.getStreamById(
-          newStream.streamId,
-          ({ data }) => {
-            setStream(data);
-            setPost(newPost.data);
-            streamRef?.current?.startPublish(newStream.streamId);
-          }
-        );
+        setPost(newPost.data);
+
+        // Set isConnecting to false since LiveKit room is already connected
+        setIsConnecting(false);
+
+        // Start the timer when live stream actually starts
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+
+        const intervalId = setInterval(() => {
+          setTime((prev) => prev + 1000);
+        }, 1000);
+
+        timerRef.current = intervalId;
       }
     } catch (error) {
+      console.log('startLiveStream error', error);
       setIsLive(false);
       setIsConnecting(false);
       Alert.alert(
         'Cannot start live stream',
-        'Something went wrong while trying to complete your request.Please try again.',
+        'Something went wrong while trying to complete your request. Please try again.',
         [
           {
             text: 'OK',
@@ -200,17 +276,6 @@ function AmityCreateLivestreamPage() {
       );
     }
   };
-
-  // const onBroadcastStateChange = (state: AmityStreamBroadcasterState) => {
-  //   if (state === AmityStreamBroadcasterState.CONNECTED) {
-  //     setIsConnecting(false);
-  //     setReconnecting(false);
-  //     const intervalId = setInterval(() => {
-  //       setTime((prev) => prev + 1000);
-  //     }, 1000);
-  //     setTimer(intervalId);
-  //   }
-  // };
 
   const confirmEndStreamAlert = () => {
     Alert.alert(
@@ -234,21 +299,22 @@ function AmityCreateLivestreamPage() {
 
   const endLiveStream = useCallback(
     async (showEndPopup = false) => {
-      if (stream) {
+      if (room) {
         setIsEnding(true);
         try {
-          await StreamRepository.disposeStream(stream.streamId);
+          await RoomRepository.stopRoom(room.roomId);
         } catch (e) {
           console.log('disposeStream error', e);
         } finally {
-          streamRef?.current.stopPublish();
-
           setIsLive(false);
-          setStream(null);
+          setRoomId('');
           setTitle('');
           setDescription('');
           setTime(0);
-          clearInterval(timer);
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
           setIsEnding(false);
           setReconnecting(false);
 
@@ -259,15 +325,40 @@ function AmityCreateLivestreamPage() {
         }
       }
     },
-    [post, stream, timer, navigation]
+    [post, room, navigation]
   );
 
   useEffect(() => {
-    const fourHours = 4 * 60 * 60 * 1000;
-    if (streamRef.current && stream && time >= fourHours) {
-      endLiveStream(true);
+    // Show toast when 3 minutes left
+    if (room && time >= toastTriggerTime && time < toastTriggerTime + 1000) {
+      showToast({
+        type: 'informative',
+        message:
+          'Your live will automatically end once it reaches 4-hour limit.',
+        duration: 3000,
+        bottomPosition: 96,
+      });
     }
-  }, [endLiveStream, stream, time]);
+
+    if (room && time >= fourHours) {
+      endLiveStream(true);
+      setCountdown(null);
+    } else if (room && time >= countdownStart && time < fourHours) {
+      // Calculate countdown from 10 to 0
+      const remaining = Math.ceil((fourHours - time) / 1000);
+      setCountdown(remaining);
+    } else {
+      setCountdown(null);
+    }
+  }, [
+    endLiveStream,
+    room,
+    time,
+    showToast,
+    toastTriggerTime,
+    fourHours,
+    countdownStart,
+  ]);
 
   useEffect(() => {
     if (Platform.OS === 'android') checkPermissionAndroid();
@@ -284,48 +375,42 @@ function AmityCreateLivestreamPage() {
     return () => unsubscribe();
   }, []);
 
-  useLayoutEffect(() => {
-    setTimeout(() => {
-      streamRef.current && streamRef.current.switchCamera();
-    }, 300);
-  }, [streamRef]);
-
   useEffect(() => {
-    let threeMinutesTimeout: number;
-
-    if (reconnecting && stream && stream?.status === 'live') {
-      threeMinutesTimeout = setTimeout(() => {
+    if (reconnecting && room?.status === RoomStatus.live) {
+      connectionLossTimeoutRef.current = setTimeout(() => {
         endLiveStream();
       }, 1000 * 60 * 3);
-    }
-
-    if (
-      !reconnecting &&
-      stream &&
-      stream?.status === 'live' &&
-      streamRef?.current
-    ) {
-      streamRef?.current?.startPublish(stream?.streamId);
-
-      if (threeMinutesTimeout) {
-        clearTimeout(threeMinutesTimeout);
-        threeMinutesTimeout = null;
+    } else {
+      if (connectionLossTimeoutRef.current) {
+        clearTimeout(connectionLossTimeoutRef.current);
+        connectionLossTimeoutRef.current = null;
       }
     }
-  }, [reconnecting, endLiveStream, stream]);
+
+    return () => {
+      if (connectionLossTimeoutRef.current) {
+        clearTimeout(connectionLossTimeoutRef.current);
+        connectionLossTimeoutRef.current = null;
+      }
+    };
+  }, [reconnecting, endLiveStream, room?.status]);
 
   useEffect(() => {
-    const isTerminated =
-      stream?.moderation?.terminateLabels &&
-      stream?.moderation?.terminateLabels?.length > 0;
-    const isLiveOrEnded =
-      stream?.status === LivestreamStatus.live ||
-      stream?.status === LivestreamStatus.ended;
-
-    if (isLiveOrEnded && isTerminated) {
+    if (room?.status === RoomStatus.terminated) {
       navigation.replace('LivestreamTerminated', { type: 'streamer' });
     }
-  }, [stream?.moderation?.terminateLabels, stream?.status, navigation]);
+  }, [room?.status, navigation]);
+
+  useEffect(() => {
+    if (room?.isDeleted || subscribedPost?.isDeleted) {
+      navigation.replace('PostDetail', { postId: subscribedPost?.postId });
+    }
+  }, [
+    navigation,
+    room?.isDeleted,
+    subscribedPost?.postId,
+    subscribedPost?.isDeleted,
+  ]);
 
   useEffect(() => {
     const unsubscribe = unsubscribeRef.current;
@@ -345,17 +430,56 @@ function AmityCreateLivestreamPage() {
           style={[styles.overlay, !hasPermission && styles.noPermissionOverlay]}
         />
       )}
-      {/* {hasPermission ? (
-        <View style={styles.cameraContainer}>
-          <View style={styles.camera}>
-            <AmityVideoBroadcaster
-              ref={streamRef}
-              bitrate={2 * 1024 * 1024}
-              onBroadcastStateChange={onBroadcastStateChange}
-              resolution={{ width: 1280, height: 720 }}
-            />
+
+      {/* Preview camera part */}
+
+      {hasPermission ? (
+        roomToken ? (
+          <LiveKitRoom
+            serverUrl={serverUrl}
+            token={roomToken.coHostToken}
+            connect={true}
+            options={{
+              adaptiveStream: { pixelDensity: 'screen' },
+            }}
+            audio={{
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true,
+            }}
+            video={{
+              facingMode: isFrontCamera ? 'user' : 'environment',
+            }}
+            onConnected={() => {
+              setIsConnecting(false);
+              setReconnecting(false);
+            }}
+            onDisconnected={() => {
+              setReconnecting(true);
+            }}
+          >
+            <View style={styles.cameraContainer}>
+              <View style={styles.camera}>
+                <RoomView
+                  onLocalParticipantReady={setLivekitParticipant}
+                  isFrontCamera={isFrontCamera}
+                />
+              </View>
+            </View>
+          </LiveKitRoom>
+        ) : (
+          <View style={styles.cameraContainer}>
+            <View style={styles.camera}>
+              {cameraDevice && (
+                <Camera
+                  style={{ flex: 1 }}
+                  device={cameraDevice}
+                  isActive={true}
+                />
+              )}
+            </View>
           </View>
-        </View>
+        )
       ) : (
         <View style={styles.permission}>
           <Typography.TitleBold style={styles.permissionTitle}>
@@ -374,7 +498,8 @@ function AmityCreateLivestreamPage() {
             </Typography.BodyBold>
           </Button>
         </View>
-      )} */}
+      )}
+
       {isEnding && (
         <View style={styles.connecting}>
           <CircularProgressIndicator size={40} strokeWidth={2} />
@@ -406,12 +531,46 @@ function AmityCreateLivestreamPage() {
                 </Typography.Caption>
               </View>
             )}
+
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => confirmEndStreamAlert()}
+            >
+              <SvgXml
+                xml={close()}
+                width="28"
+                height="28"
+                color={theme.colors.background}
+              />
+            </TouchableOpacity>
+
             <View style={styles.timer}>
               <LiveTimerStatus
                 time={calculateTime(time)}
                 pageId={PageID.create_livestream_page}
               />
             </View>
+            {countdown !== null && (
+              <View style={styles.countdownOverlay}>
+                <View style={styles.countdownContainer}>
+                  <Typography.TitleBold style={styles.countdownText}>
+                    Live stream ends in
+                  </Typography.TitleBold>
+                  <View style={styles.countdownCircle}>
+                    <CircularProgressIndicator
+                      size={64}
+                      strokeWidth={2}
+                      progress={((10 - countdown) / 10) * 100}
+                    />
+                    <View style={styles.countdownNumberContainer}>
+                      <Typography style={styles.countdownNumber}>
+                        {countdown}
+                      </Typography>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            )}
           </>
         )
       ) : (
@@ -443,7 +602,18 @@ function AmityCreateLivestreamPage() {
               />
               <TouchableOpacity
                 style={styles.communityButton}
-                onPress={() => navigation.goBack()}
+                onPress={() => {
+                  const state = navigation.getState();
+                  const routes = state.routes;
+                  const currentIndex = state.index;
+                  const previousRoute = routes[currentIndex - 1];
+
+                  if (previousRoute?.name === 'LivestreamPostTargetSelection') {
+                    navigation.goBack();
+                  } else {
+                    return;
+                  }
+                }}
                 activeOpacity={0.7}
               >
                 <Typography.Body
@@ -452,7 +622,11 @@ function AmityCreateLivestreamPage() {
                   ellipsizeMode="tail"
                 >
                   Live on{' '}
-                  <Typography.BodyBold numberOfLines={1} ellipsizeMode="tail">
+                  <Typography.BodyBold
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={styles.communityName}
+                  >
                     {targetName}
                   </Typography.BodyBold>
                 </Typography.Body>
@@ -567,9 +741,7 @@ function AmityCreateLivestreamPage() {
         )}
         <SwitchCameraButton
           pageId={PageID.create_livestream_page}
-          onPress={() => {
-            streamRef.current && streamRef.current.switchCamera();
-          }}
+          onPress={switchCamera}
         />
       </View>
     </SafeAreaView>

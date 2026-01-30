@@ -34,7 +34,7 @@ import AnnouncementBadge from '../../../../v4/elements/AnnouncementBadge';
 import { Typography } from '../../../../v4/component/Typography/Typography';
 
 type AmityPostContentComponentProps = {
-  post: Amity.Post & { structureType?: string };
+  post: Amity.Post;
   pageId?: PageID;
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;
   isCommunityNameShown?: boolean;

@@ -26,6 +26,7 @@ if (!(BackHandler as any).removeEventListener) {
 }
 
 import AmityUiKitProvider from './providers/amity-ui-kit-provider';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import AmityUiKitSocial from './v4/routes/AmitySocialUIKitV4Navigator';
 import AmityPageRenderer from './v4/routes/AmityPageRenderer';
 import PostDetail from './v4/screen/PostDetail';
@@ -63,7 +64,7 @@ import {
   AmityAllCategoriesPage,
   AmityCommunitiesByCategoryPage,
   AmityCommunityProfilePage as CommunityProfilePage,
-  // AmityCreateLivestreamPage,
+  AmityCreateLivestreamPage,
   AmityLivestreamPostTargetSelectionPage,
   AmityLivestreamTerminatedPage,
   AmityLivestreamPlayerPage,
@@ -123,6 +124,7 @@ export function multiply(a: number, b: number): Promise<number> {
 }
 export {
   AmityUiKitProvider,
+  ErrorBoundary,
   AmityUiKitSocial,
   AmityStoryTabComponent,
   AmityStoryTabComponentEnum,
@@ -162,7 +164,7 @@ export {
   AmityAllCategoriesPage,
   AmityCommunitiesByCategoryPage,
   CommunityProfilePage,
-  // AmityCreateLivestreamPage,
+  AmityCreateLivestreamPage,
   AmityLivestreamPostTargetSelectionPage,
   AmityLivestreamTerminatedPage,
   AmityLivestreamPlayerPage,

@@ -60,7 +60,7 @@ class AssetDownloader {
 
     try {
       // Begin download
-      const accessToken = this.client.token.accessToken;
+      const accessToken = this?.client?.token?.accessToken;
       const downloadOptions = {
         fromUrl: url,
         headers: {

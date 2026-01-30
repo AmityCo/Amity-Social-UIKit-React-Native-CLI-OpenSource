@@ -1,131 +1,79 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  useAnimatedValue,
-} from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, TouchableOpacity, Platform } from 'react-native';
 import { useStyles } from './styles';
-// @ts-ignore
-// import { AmityStreamPlayer } from '@amityco/video-player-react-native';
 import LiveStreamEndThumbnail from '../../../component/LivestreamContent/LivestreamEndedThumbnail';
-import { Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import {
-  getPostTopic,
-  PostRepository,
-  StreamRepository,
-  subscribeTopic,
-} from '@amityco/ts-sdk-react-native';
-import { close, pause, resume } from '../../../assets/icons';
+import { close } from '../../../assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
-import { LivestreamStatus } from '../../../enum/livestreamStatus';
+import { RoomStatus } from '../../../enum/roomStatus';
 import LiveStreamIdleThumbnail from '../../../component/LivestreamContent/LivestreamIdleThumbnail';
 import { Typography } from '../../../component/Typography/Typography';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NetInfo from '@react-native-community/netinfo';
 import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
-const usePostSubscription = (postId: string) => {
-  const [subscribedPost, setSubscribedPost] = useState<Amity.Post>(null);
-
-  useEffect(() => {
-    let unsubscribe: () => void;
-    if (postId) {
-      unsubscribe = PostRepository.getPost(postId, ({ data }) => {
-        setSubscribedPost(data);
-      });
-    }
-    return () => {
-      unsubscribe && unsubscribe();
-    };
-  }, [postId]);
-
-  useEffect(() => {
-    let unsubscribe: () => void;
-    if (subscribedPost) {
-      unsubscribe = subscribeTopic(getPostTopic(subscribedPost));
-    }
-    return () => {
-      unsubscribe && unsubscribe();
-    };
-  }, [subscribedPost]);
-
-  return { subscribedPost };
-};
+import Video from 'react-native-video';
+import useAuth from '../../../../hooks/useAuth';
+import {
+  usePostSubscription,
+  useRoomSubscription,
+} from '../../../../v4/hook/index';
+import { RoomRepository } from '@amityco/ts-sdk-react-native';
 
 function AmityLiveStreamPlayerPage() {
-  const ref = useRef<any>(null);
   const { styles, theme } = useStyles();
-  const controlOpacity = useAnimatedValue(0);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'LivestreamPlayer'>>();
 
-  const [error, setError] = useState<any>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
   const [reconnecting, setReconnecting] = useState(false);
-  const [livestream, setLivestream] = useState<Amity.Stream>();
+  const [room, setRoom] = useState<Amity.Room | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
+  const [videoKey, setVideoKey] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [wasLive, setWasLive] = useState(false);
 
-  const { streamId, post } = route.params;
-
+  const { roomId, post } = route.params;
   const { subscribedPost } = usePostSubscription(post?.postId);
+  useRoomSubscription({ room });
 
-  const onStopPlayer = () => {
-    ref.current && ref.current.pause();
-    setIsPlaying(false);
-  };
-
-  const onStartPlayer = () => {
-    ref.current && ref.current.play();
-    setIsPlaying(true);
-  };
-
-  const onPressControlButton = () => {
-    isPlaying ? onStopPlayer() : onStartPlayer();
-  };
-
-  const onToggleControl = () => {
-    controlOpacity.stopAnimation((currentValue) => {
-      Animated.timing(controlOpacity, {
-        toValue: currentValue === 0 ? 1 : 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-    });
-  };
+  const { client } = useAuth();
+  const videoRef = useRef<any>(null);
+  const isStreamEnding = useRef(false);
 
   useEffect(() => {
-    const unsubscribe = StreamRepository.getStreamById(
-      streamId,
+    const unsubscribe = RoomRepository.getRoom(
+      roomId,
       ({ data, loading, error: streamError }) => {
         if (streamError) setError(streamError);
-        if (!loading && data) setLivestream({ ...data });
+        if (!loading && data) setRoom({ ...data });
       }
     );
 
     return () => unsubscribe();
-  }, [streamId]);
+  }, [roomId]);
 
   useEffect(() => {
-    if (livestream?.isDeleted || subscribedPost?.isDeleted) {
-      navigation.replace('PostDetail', { postId: subscribedPost?.postId });
+    if (room?.status === RoomStatus.live) {
+      setWasLive(true);
     }
-  }, [livestream?.isDeleted, subscribedPost, navigation]);
+  }, [room?.status]);
 
   useEffect(() => {
-    const isTerminated =
-      livestream?.moderation?.terminateLabels &&
-      livestream?.moderation?.terminateLabels?.length > 0;
-    const isLiveOrEnded =
-      livestream?.status === LivestreamStatus.live ||
-      livestream?.status === LivestreamStatus.ended;
-
-    if (isLiveOrEnded && isTerminated) {
-      navigation.replace('LivestreamTerminated', { type: 'viewer' });
+    if (room?.isDeleted || subscribedPost?.isDeleted) {
+      navigation.replace('PostDetail', {
+        postId: subscribedPost?.postId,
+        isDeleted: subscribedPost?.isDeleted,
+      });
     }
-  }, [livestream?.moderation?.terminateLabels, livestream?.status, navigation]);
+  }, [
+    navigation,
+    room?.isDeleted,
+    subscribedPost?.postId,
+    subscribedPost?.isDeleted,
+  ]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -134,24 +82,68 @@ function AmityLiveStreamPlayerPage() {
     return () => unsubscribe();
   }, []);
 
-  if (!livestream || error)
+  useEffect(() => {
+    if (!room?.status) return;
+
+    const shouldEnd =
+      room.status === RoomStatus.ended ||
+      (room.status === RoomStatus.recorded && wasLive);
+
+    if (!shouldEnd || isStreamEnding.current) return;
+
+    isStreamEnding.current = true;
+    setIsPaused(true);
+
+    if (Platform.OS === 'ios') {
+      // iOS: ONLY dismiss fullscreen. DO NOT touch key. DO NOT unmount.
+      requestAnimationFrame(() => {
+        videoRef.current?.dismissFullscreenPlayer?.();
+      });
+    } else {
+      // Android: HARD destroy
+      setTimeout(() => {
+        setVideoKey((prev) => prev + 1);
+      }, 50);
+    }
+  }, [room?.status, wasLive]);
+
+  useEffect(() => {
+    if (room?.status === RoomStatus.terminated) {
+      navigation.replace('LivestreamTerminated', { type: 'viewer' });
+    }
+  }, [room?.status, navigation]);
+
+  const shouldShowEndThumbnail =
+    room?.status === RoomStatus.ended ||
+    (room?.status === RoomStatus.recorded && wasLive) ||
+    (room as any)?.user?.isGlobalBan;
+
+  if (!room || error) {
     return (
       <SafeAreaView style={styles.container}>
         <LiveStreamIdleThumbnail />
       </SafeAreaView>
     );
+  }
+
+  const closePlayer = () => {
+    navigation.goBack();
+  };
+
+  const videoUrl =
+    room.status === RoomStatus.recorded
+      ? room.recordedPlaybackInfos[0]?.url
+      : room.livePlaybackUrl;
 
   return (
     <SafeAreaView style={styles.container}>
-      {livestream.status === LivestreamStatus.ended ? (
+      {shouldShowEndThumbnail ? (
         <>
           <View style={styles.steamEndContainer}>
             <LiveStreamEndThumbnail />
           </View>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={navigation.goBack}
-          >
+
+          <TouchableOpacity style={styles.closeButton} onPress={closePlayer}>
             <SvgXml
               xml={close()}
               width="28"
@@ -160,14 +152,65 @@ function AmityLiveStreamPlayerPage() {
             />
           </TouchableOpacity>
         </>
-      ) : // <AmityStreamPlayer
-      //   ref={ref}
-      //   stream={livestream}
-      //   onBack={navigation.goBack}
-      //   status={livestream.status === 'live' ? 'live' : 'recorded'}
-      // />
-      null}
-      {livestream.status === LivestreamStatus.live && reconnecting && (
+      ) : (
+        <View style={styles.container}>
+          {(room.status === RoomStatus.live ||
+            room.status === RoomStatus.waitingReconnect) && (
+            <View style={styles.indicator}>
+              <View style={styles.status}>
+                <Typography.CaptionBold style={styles.live}>
+                  LIVE
+                </Typography.CaptionBold>
+              </View>
+            </View>
+          )}
+
+          {!shouldShowEndThumbnail && (
+            <Video
+              key={
+                Platform.OS === 'android' ? `${videoUrl}-${videoKey}` : videoUrl
+              }
+              ref={videoRef}
+              source={{
+                uri:
+                  room.status === RoomStatus.recorded
+                    ? room.recordedPlaybackInfos[0]?.url
+                    : room.livePlaybackUrl,
+                headers: {
+                  Authorization: `Bearer ${client?.token?.accessToken}`,
+                },
+                type: 'm3u8',
+              }}
+              style={styles.container}
+              resizeMode="cover"
+              controls={true}
+              fullscreenOrientation="landscape"
+              paused={isPaused}
+              muted={false}
+              volume={1.0}
+              audioOutput="speaker"
+              playInBackground={false}
+              playWhenInactive={false}
+              repeat={false}
+              onLoad={() => {
+                setIsVideoLoading(false);
+                if (room.status === RoomStatus.recorded) {
+                  setIsPaused(false);
+                }
+              }}
+            />
+          )}
+
+          {isVideoLoading && (
+            <View style={styles.connecting}>
+              <CircularProgressIndicator size={40} strokeWidth={2} />
+            </View>
+          )}
+        </View>
+      )}
+
+      {((room.status === RoomStatus.live && reconnecting) ||
+        room.status === RoomStatus.waitingReconnect) && (
         <View style={styles.connecting}>
           <CircularProgressIndicator size={40} strokeWidth={2} />
           <Typography.TitleBold style={styles.text}>
@@ -178,54 +221,6 @@ function AmityLiveStreamPlayerPage() {
             will resume automatically {'\n'} once the connection is stable.
           </Typography.Caption>
         </View>
-      )}
-      {livestream.status === LivestreamStatus.live && (
-        <>
-          <View style={styles.indicator}>
-            <View style={styles.status}>
-              <Typography.CaptionBold style={styles.live}>
-                LIVE
-              </Typography.CaptionBold>
-            </View>
-          </View>
-          <TouchableWithoutFeedback onPress={onToggleControl}>
-            <Animated.View
-              style={[styles.control, { opacity: controlOpacity }]}
-            >
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={navigation.goBack}
-              >
-                <SvgXml
-                  xml={close()}
-                  width="28"
-                  height="28"
-                  color={theme.colors.background}
-                />
-              </TouchableOpacity>
-
-              <View style={styles.controller}>
-                <TouchableOpacity onPress={onPressControlButton}>
-                  {isPlaying ? (
-                    <SvgXml
-                      width={32}
-                      height={32}
-                      xml={pause()}
-                      color={theme.colors.background}
-                    />
-                  ) : (
-                    <SvgXml
-                      width={32}
-                      height={32}
-                      xml={resume()}
-                      color={theme.colors.background}
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </Animated.View>
-          </TouchableWithoutFeedback>
-        </>
       )}
     </SafeAreaView>
   );

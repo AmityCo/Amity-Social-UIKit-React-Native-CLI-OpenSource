@@ -17,6 +17,8 @@ import { AdEngineProvider } from '../v4/providers/AdEngineProvider';
 import BottomSheetComponent from '../v4/component/BottomSheetComponent/BottomSheetComponent';
 import Toast from '../v4/component/Toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
@@ -143,32 +145,36 @@ export default function AmityUiKitProvider({
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store} context={AmityUIKitReduxContext}>
-        <AuthContextProvider
-          userId={userId}
-          displayName={displayName || userId}
-          apiKey={apiKey}
-          apiRegion={apiRegion}
-          apiEndpoint={apiEndpoint}
-          authToken={authToken}
-          fcmToken={fcmToken}
-        >
-          <AdEngineProvider>
-            <ConfigProvider configs={configData}>
-              <BehaviourProvider behaviour={behaviour}>
-                <ExploreProvider>
-                  <PaperProvider theme={globalTheme}>
-                    {children}
-                    <BottomSheetComponent />
-                    <Toast />
-                  </PaperProvider>
-                </ExploreProvider>
-              </BehaviourProvider>
-            </ConfigProvider>
-          </AdEngineProvider>
-        </AuthContextProvider>
-      </Provider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <Provider store={store} context={AmityUIKitReduxContext}>
+            <AuthContextProvider
+              userId={userId}
+              displayName={displayName || userId}
+              apiKey={apiKey}
+              apiRegion={apiRegion}
+              apiEndpoint={apiEndpoint}
+              authToken={authToken}
+              fcmToken={fcmToken}
+            >
+              <AdEngineProvider>
+                <ConfigProvider configs={configData}>
+                  <BehaviourProvider behaviour={behaviour}>
+                    <ExploreProvider>
+                      <PaperProvider theme={globalTheme}>
+                        {children}
+                        <BottomSheetComponent />
+                        <Toast />
+                      </PaperProvider>
+                    </ExploreProvider>
+                  </BehaviourProvider>
+                </ConfigProvider>
+              </AdEngineProvider>
+            </AuthContextProvider>
+          </Provider>
+        </QueryClientProvider>
+      </SafeAreaProvider>
+    </ErrorBoundary>
   );
 }

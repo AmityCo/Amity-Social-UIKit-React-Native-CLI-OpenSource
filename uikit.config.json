@@ -287,7 +287,7 @@
       "image": "create_poll_button"
     },
     "social_home_page/create_post_menu/create_livestream_button": {
-      "text": "Livestream",
+      "text": "Live stream",
       "image": "create_livestream_button"
     },
     "select_post_target_page/*/close_button": {

@@ -9,7 +9,7 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import CreatePostChooseTargetModal from '../CreatePostChooseTargetModal/CreatePostChooseTargetModal';
 import {
-  // livestreamIcon,
+  livestreamIcon,
   pollIcon,
   postIconOutlined,
 } from '../../svg/svg-xml-list';
@@ -124,25 +124,14 @@ const PostTypeChoiceModal = () => {
     >
       <Pressable onPress={closeModal} style={styles.modalContainer}>
         <Animated.View style={[styles.modalContent, modalStyle]}>
-          {/* <TouchableOpacity
-            onPress={() => onChooseType('livestream')}
-            style={styles.modalRow}
-          >
-            <SvgXml
-              xml={livestreamIcon(theme.colors.base)}
-              width="28"
-              height="28"
-            />
-            <Text style={styles.postText}>Livestream</Text>
-          </TouchableOpacity> */}
           <TouchableOpacity
             onPress={() => onChooseType('post')}
             style={styles.modalRow}
           >
             <SvgXml
               xml={postIconOutlined(theme.colors.base)}
-              width="28"
-              height="28"
+              width="24"
+              height="24"
             />
             <Text style={styles.postText}>Post</Text>
           </TouchableOpacity>
@@ -150,8 +139,19 @@ const PostTypeChoiceModal = () => {
             onPress={() => onChooseType('poll')}
             style={styles.modalRow}
           >
-            <SvgXml xml={pollIcon(theme.colors.base)} width="28" height="28" />
+            <SvgXml xml={pollIcon(theme.colors.base)} width="24" height="24" />
             <Text style={styles.postText}>Poll</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => onChooseType('livestream')}
+            style={styles.modalRow}
+          >
+            <SvgXml
+              xml={livestreamIcon(theme.colors.base)}
+              width="24"
+              height="24"
+            />
+            <Text style={styles.postText}>Livestream</Text>
           </TouchableOpacity>
           <CreatePostChooseTargetModal
             visible={createPostModalVisible}

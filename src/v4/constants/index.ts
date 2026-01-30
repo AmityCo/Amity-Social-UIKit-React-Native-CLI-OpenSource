@@ -24,6 +24,7 @@ export const ERROR_CODE = {
   IMAGE_NUDITY: '500000',
   ONLY_ONE_MODERATOR: '400317',
   ONLY_ONE_MEMBER: '400318',
+  GLOBAL_BAN: '400312',
 };
 
 export const COMMENT_ERROR_MESSAGE = {
@@ -105,3 +106,6 @@ export const QUERY_KEY = {
   POSTS_COLLECTION: 'posts-collections',
   PINNED_POSTS_COLLECTION: 'pinned-posts-collections',
 };
+
+export const URL_REGEX =
+  /(?:(?:https?|ftp):\/\/(?:[a-zA-Z0-9.-]+|[\d.]+)(?::\d{1,5})?(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?|mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|www\.(?:[a-zA-Z0-9.-]+)(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?!\.))/g;
