@@ -1,6 +1,6 @@
 {
   "name": "@amityco/react-native-social-uikit",
-  "version": "4.0.0-RC13",
+  "version": "4.0.0-RC14",
   "description": "Social UIKit",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -57,7 +57,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@amityco/ts-sdk-react-native": "7.12.1-fb119589.0",
+    "@amityco/ts-sdk-react-native": "7.13.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.2.2",
@@ -116,6 +116,7 @@
     "@types/react": "^19.1.0"
   },
   "peerDependencies": {
+    "@amityco/ts-sdk-react-native": "7.13.0",
     "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",

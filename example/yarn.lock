@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@7.12.1-fb119589.0":
-  version "7.12.1-fb119589.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.12.1-fb119589.0.tgz#855d261f4a77e437c1087808e161222092dc2870"
-  integrity sha512-nDQq0IOnsWqjNWobce7CaODYMo4l67f15lnG5v4fkL/rco23jOqvZU8X/pHO4mRBKcZ6imTeaJ/wDouabOA50g==
+"@amityco/ts-sdk-react-native@7.13.0":
+  version "7.13.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.13.0.tgz#fdc021744d4c10b6a286ca11707e1dcfc8d66a29"
+  integrity sha512-WtGk3fJdc1mzMUeCvqA9MWbL0YF1oQEcv+ozXCI4Jd5Cbcv2VaP0ShwlFOJKhgkHQ4xp8QhuQSx9wNzY3SD8vA==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
@@ -4152,6 +4152,11 @@ flow-enums-runtime@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/flow-enums-runtime/-/flow-enums-runtime-0.0.6.tgz#5bb0cd1b0a3e471330f4d109039b7eba5cb3e787"
   integrity sha512-3PYnM29RFXwvAN6Pc/scUfkI7RwhQ/xqyLUyPNlXUp9S40zI8nup9tUSrTLSVnWGBN38FNiGWbwZOB6uR4OGdw==
+
+flow-parser@0.*:
+  version "0.273.1"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.273.1.tgz#809bae16ae5661dd360a1172bec36ed87fe7a69c"
+  integrity sha512-UTTfeYIhxYJ7xuW+HL9oyx6lnUGx1+W5Cyo8hOPgMrDU49GANfONtkb9dguDvIyQ20fz8CHZwB25ZP2206bBWQ==
 
 follow-redirects@^1.15.6:
   version "1.15.11"
