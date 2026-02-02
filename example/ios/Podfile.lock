@@ -1,5 +1,5 @@
 PODS:
-  - amity-react-native-social-ui-kit (4.0.0-RC13):
+  - amity-react-native-social-ui-kit (4.0.0-RC14):
     - boost
     - DoubleConversion
     - fast_float
@@ -3226,7 +3226,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  amity-react-native-social-ui-kit: 1bff74e58f7f976300cefc202c7747ac31bfa6b0
+  amity-react-native-social-ui-kit: 32e3a4ca7bfaf5c7b2b096ec59dbdea6713b53bd
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
