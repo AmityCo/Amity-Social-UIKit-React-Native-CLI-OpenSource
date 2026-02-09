@@ -20,7 +20,7 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
 import { uploadImageFile } from '../../core/legacy/file';
-import { getAvatarURL } from '../../util/apiUtil';
+import { getAvatarURL } from '../../core/utils/api';
 import { updateCommunity } from '../../core/legacy/community';
 import { PrivacyState } from '../../core/enums';
 import { useForm, Controller } from 'react-hook-form';

@@ -26,7 +26,7 @@ import HyperlinkConfig from './Components/HyperLinkConfig';
 import { IAmityDraftStoryPage } from '../../types';
 import { useFile } from '../../../hook/useFile';
 import { defaultAvatarUri } from '../../../assets/index';
-import { getMediaTypeFromUrl } from '../../../../util/urlUtil';
+import { getMediaTypeFromUrl } from '../../../../core/utils/url';
 import { LoadingOverlay } from '../../../../components/LoadingOverlay';
 import mime from 'mime';
 import { useToast } from '../../../../core/stores/slices/toastSlice';

@@ -15,7 +15,7 @@ import {
   storyRing,
 } from '../../../svg/svg-xml-list';
 import useConfig from '../../../core/hooks/useConfig';
-import { ElementID } from '../../../util/enumUIKitID';
+import { ElementID } from '../../../core/utils/enumUIKitID';
 
 const StoryCircleListItem = ({
   item,

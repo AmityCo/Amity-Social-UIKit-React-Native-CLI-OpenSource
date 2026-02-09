@@ -3,7 +3,7 @@ import { useStyles } from './style';
 import { TouchableOpacity, View } from 'react-native';
 import { Typography } from '../Typography/Typography';
 import { Client } from '@amityco/ts-sdk-react-native';
-import { formatTimeLeft } from '../../../util/timeUtil';
+import { formatTimeLeft } from '../../../core/utils/time';
 
 type PollFooterProps = {
   totalVotes: number;

@@ -29,7 +29,7 @@ import { RootStackParamList } from '../../../../routes/RouteParamList';
 import LikeButtonIconElement from '../../../Elements/LikeButtonIconElement/LikeButtonIconElement';
 import CommentButtonIconElement from '../../../Elements/CommentButtonIconElement/CommentButtonIconElement';
 import { useBehaviour } from '../../../../providers/BehaviourProvider';
-import { formatNumber } from '../../../../../util/numberUtil';
+import { formatNumber } from '../../../../../core/utils/number';
 
 const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   community,

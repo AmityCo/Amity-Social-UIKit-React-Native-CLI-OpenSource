@@ -9,7 +9,7 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes/RouteParamList';
-import { hexToRgba } from '../../../util/colorUtil';
+import { hexToRgba } from '../../../core/utils/color';
 import { PageID, ComponentID } from '../../enum';
 import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElement/MenuButtonIconElement';
 import { useCommunity } from '../../hook';

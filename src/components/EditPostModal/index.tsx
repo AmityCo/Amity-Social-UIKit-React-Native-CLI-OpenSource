@@ -22,7 +22,7 @@ import useAuth from '../../core/hooks/useAuth';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
-import { amityPostsFormatter } from '../../util/postDataFormatter';
+import { amityPostsFormatter } from '../../core/utils/post';
 import postDetailSlice from '../../core/stores/slices/postDetailSlice';
 import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
 import feedSlice from '../../core/stores/slices/feedSlice';

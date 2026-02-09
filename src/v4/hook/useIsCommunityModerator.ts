@@ -1,5 +1,5 @@
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { isModerator } from '../../util/permission';
+import { isModerator } from '../../core/utils/permission';
 import { useEffect, useState } from 'react';
 
 export const useIsCommunityModerator = ({

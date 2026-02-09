@@ -2,7 +2,7 @@ import { Platform, StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import useConfig from '../../core/hooks/useConfig';
-import { ComponentID } from '../../util/enumUIKitID';
+import { ComponentID } from '../../core/utils/enumUIKitID';
 
 export const useStyles = () => {
   const theme = useTheme() as MyMD3Theme;

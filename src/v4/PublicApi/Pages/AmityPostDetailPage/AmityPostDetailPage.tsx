@@ -50,7 +50,7 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorComponent from '../../../../v4/component/ErrorComponent/ErrorComponent';
-import { getSkeletonBackgrounColor } from '../../../../util/colorUtil';
+import { getSkeletonBackgrounColor } from '../../../../core/utils/color';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 import { PostMenu } from '../../../../v4/component/PostMenu';
 import useMention from '../../../../v4/hook/useMention';

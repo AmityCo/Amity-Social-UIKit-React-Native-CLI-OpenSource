@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import ContentLoader, { Rect } from 'react-content-loader/native';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
-import { getSkeletonBackgrounColor } from '../../../util/colorUtil';
+import { getSkeletonBackgrounColor } from '../../../core/utils/color';
 
 type CommunityListSkeletonProps = {
   hasTitle?: boolean;

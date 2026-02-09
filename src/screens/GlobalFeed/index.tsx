@@ -7,7 +7,7 @@ import { deletePostById, getGlobalFeed } from '../../core/legacy/feed';
 import useAuth from '../../core/hooks/useAuth';
 import PostList from '../../components/Social/PostList';
 import { useStyle } from './styles';
-import { amityPostsFormatter } from '../../util/postDataFormatter';
+import { amityPostsFormatter } from '../../core/utils/post';
 import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
 import {
   RootState,

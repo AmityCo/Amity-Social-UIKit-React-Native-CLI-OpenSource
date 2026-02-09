@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
 import { MyMD3Theme } from '../../../../../core/providers/AmityUIKitProvider';
-import { getSkeletonBackgrounColor } from '../../../../../util/colorUtil';
+import { getSkeletonBackgrounColor } from '../../../../../core/utils/color';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type CategoryListSkeletonProps = {

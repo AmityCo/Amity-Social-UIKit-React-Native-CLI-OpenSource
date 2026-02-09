@@ -31,7 +31,7 @@ import { IDisplayImage, IMentionPosition } from '../../../../v4/types/type';
 import CloseButtonIconElement from '../../Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
-import { amityPostsFormatter } from '../../../../util/postDataFormatter';
+import { amityPostsFormatter } from '../../../../core/utils/post';
 import useAuth from '../../../../core/hooks/useAuth';
 import globalfeedSlice from '../../../../core/stores/slices/globalfeedSlice';
 import {

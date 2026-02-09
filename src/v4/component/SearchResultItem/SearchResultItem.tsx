@@ -11,7 +11,7 @@ import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement
 import { useAmityComponent } from '../../hook';
 import TextElement from '../../PublicApi/Elements/CommonElements/TextElement';
 import ImageElement from '../../PublicApi/Elements/CommonElements/ImageElement';
-import { formatNumber } from '../../../util/numberUtil';
+import { formatNumber } from '../../../core/utils/number';
 type SearchResultItemType = {
   pageId?: PageID;
   componentId?: ComponentID;

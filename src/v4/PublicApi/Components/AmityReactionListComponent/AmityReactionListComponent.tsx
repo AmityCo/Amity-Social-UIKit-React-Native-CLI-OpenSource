@@ -29,7 +29,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { defaultAvatarUri } from '../../../assets';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
-import { formatNumber } from '../../../../util/numberUtil';
+import { formatNumber } from '../../../../core/utils/number';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 

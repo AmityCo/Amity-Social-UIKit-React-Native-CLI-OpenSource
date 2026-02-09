@@ -39,7 +39,7 @@ import { checkCommunityPermission } from '../../core/legacy/community';
 import useAuth from '../../core/hooks/useAuth';
 import { TSearchItem } from '../../core/hooks/useSearch';
 import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
-import { amityPostsFormatter } from '../../util/postDataFormatter';
+import { amityPostsFormatter } from '../../core/utils/post';
 import feedSlice from '../../core/stores/slices/feedSlice';
 import { useRequestPermission } from '../../v4/hook/useCamera';
 import useMention from '../../v4/hook/useMention';

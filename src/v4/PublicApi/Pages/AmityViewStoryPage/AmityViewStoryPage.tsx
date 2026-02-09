@@ -2,7 +2,7 @@ import { ActivityIndicator, View } from 'react-native';
 import React, { FC, memo, useCallback, useLayoutEffect, useState } from 'react';
 import { useFile, useStory, useStoryPermission } from '../../../hook';
 import { useStyles } from './styles';
-import { isCommunityModerator } from '../../../../util/permission';
+import { isCommunityModerator } from '../../../../core/utils/permission';
 import useAuth from '../../../../core/hooks/useAuth';
 import { ImageSizeState } from '../../../enum';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';

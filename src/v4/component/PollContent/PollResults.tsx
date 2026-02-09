@@ -6,7 +6,7 @@ import { ElementID } from '../../enum';
 import useAuth from '../../../core/hooks/useAuth';
 import { Typography } from '../Typography/Typography';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';
-import { formatVoteCount } from '../../../util/timeUtil';
+import { formatVoteCount } from '../../../core/utils/time';
 
 type PollResultsProps = {
   totalVotes: number;

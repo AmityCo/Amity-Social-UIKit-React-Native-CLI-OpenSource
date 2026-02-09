@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 
-import { formatDuration } from '../../../util/timeUtil';
+import { formatDuration } from '../../../core/utils/time';
 import { Typography } from '../../component/Typography/Typography';
 import VideoPlayer from 'react-native-video-controls';
 import ImageFeedSkeleton from '../../component/ImageFeedSkeleton/ImageFeedSkeleton';

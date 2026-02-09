@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
-import { hexToRgba } from '../../../util/colorUtil';
+import { hexToRgba } from '../../../core/utils/color';
 
 export const useStyles = (theme: MyMD3Theme) => {
   const styles = StyleSheet.create({

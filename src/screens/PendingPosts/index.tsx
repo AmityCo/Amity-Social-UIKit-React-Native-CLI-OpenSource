@@ -6,7 +6,7 @@ import { useStyles } from './styles';
 import useAuth from '../../core/hooks/useAuth';
 import { RootStackParamList } from '../../routes/RouteParamList';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { amityPostsFormatter } from '../../util/postDataFormatter';
+import { amityPostsFormatter } from '../../core/utils/post';
 import PendingPostList from '../../components/Social/PendingPostList';
 export default function PendingPosts() {
   const route = useRoute<RouteProp<RootStackParamList, 'PendingPosts'>>();

@@ -21,7 +21,7 @@ import {
 } from '@amityco/ts-sdk-react-native';
 import type { FeedRefType } from '../CommunityHome';
 import { deletePostById } from '../../core/legacy/feed';
-import { amityPostsFormatter } from '../../util/postDataFormatter';
+import { amityPostsFormatter } from '../../core/utils/post';
 import {
   RootState,
   useUIKitDispatch,

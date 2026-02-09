@@ -6,7 +6,7 @@ import { DefaultTheme, PaperProvider, type MD3Theme } from 'react-native-paper';
 import { AmityUIKitReduxContext, store } from '../stores/store';
 import { ConfigProvider } from './ConfigProvider';
 import { IConfigRaw } from '../../v4/types/config.interface';
-import { validateConfigColor } from '../../util/colorUtil';
+import { validateConfigColor } from '../utils/color';
 import useValidateConfig from '../../v4/hook/useValidateConfig';
 import fallBackConfig from '../../../uikit.config.json';
 import { BehaviourProvider } from '../../v4/providers/BehaviourProvider';
