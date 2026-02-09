@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { useColorScheme } from 'react-native';
 import { Provider } from 'react-redux';
-import AuthContextProvider from './auth-provider';
+import AuthContextProvider from '../../providers/auth-provider';
 import { DefaultTheme, PaperProvider, type MD3Theme } from 'react-native-paper';
-import { AmityUIKitReduxContext, store } from '../redux/store';
-import { ConfigProvider } from './config-provider';
-import { IConfigRaw } from '../v4/types/config.interface';
-import { validateConfigColor } from '../util/colorUtil';
-import useValidateConfig from '../v4/hook/useValidateConfig';
-import fallBackConfig from '../../uikit.config.json';
-import { BehaviourProvider } from '../v4/providers/BehaviourProvider';
-import { ExploreProvider } from '../v4/providers/ExploreProvider';
-import { IBehaviour } from '../v4/types/behaviour.interface';
+import { AmityUIKitReduxContext, store } from '../../redux/store';
+import { ConfigProvider } from '../../providers/config-provider';
+import { IConfigRaw } from '../../v4/types/config.interface';
+import { validateConfigColor } from '../../util/colorUtil';
+import useValidateConfig from '../../v4/hook/useValidateConfig';
+import fallBackConfig from '../../../uikit.config.json';
+import { BehaviourProvider } from '../../v4/providers/BehaviourProvider';
+import { ExploreProvider } from '../../v4/providers/ExploreProvider';
+import { IBehaviour } from '../../v4/types/behaviour.interface';
 import { lighten, darken, parseToHsl, hslToColorString } from 'polished';
-import { AdEngineProvider } from '../v4/providers/AdEngineProvider';
-import BottomSheetComponent from '../v4/component/BottomSheetComponent/BottomSheetComponent';
-import Toast from '../v4/component/Toast';
+import { AdEngineProvider } from '../../v4/providers/AdEngineProvider';
+import BottomSheetComponent from '../../v4/component/BottomSheetComponent/BottomSheetComponent';
+import Toast from '../../v4/component/Toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ErrorBoundary } from '../components/ErrorBoundary';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {

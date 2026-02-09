@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, useWindowDimensions } from 'react-native';
-import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 
 export const useStyles = (theme: MyMD3Theme) => {
   const { width } = useWindowDimensions();

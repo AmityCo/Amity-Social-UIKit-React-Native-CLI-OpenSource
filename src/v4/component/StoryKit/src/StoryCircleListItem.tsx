@@ -4,7 +4,7 @@ import { View, Image, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { usePrevious } from './helpers/StateHelpers';
 import { IUserStory, StoryCircleListItemProps } from './interfaces';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { SvgXml } from 'react-native-svg';
 import {
   communityIcon,

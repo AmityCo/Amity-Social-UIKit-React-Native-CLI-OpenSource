@@ -13,7 +13,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { circleCloseIcon, plusIcon } from '../../svg/svg-xml-list';
 import { useStyles } from './styles';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import ModalSelector from 'react-native-modal-selector';
 import Header from './Components/Header';

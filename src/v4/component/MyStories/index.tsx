@@ -7,7 +7,7 @@ import StoryCircleItem from './StoryCircleItem';
 import Modal from 'react-native-modalbox';
 import StoryTargetView from './StoryTargetView';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import useAuth from '../../../hooks/useAuth';
 
 export interface IStoryItems {

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState, type FC } from 'react';
 import { Client } from '@amityco/ts-sdk-react-native';
 import type { AuthContextInterface } from '../types/auth.interface';
 import { Alert, Platform } from 'react-native';
-import type { IAmityUIkitProvider } from './amity-ui-kit-provider';
+import type { IAmityUIkitProvider } from '../core/providers/AmityUIKitProvider';
 import { ERROR_CODE } from '../v4/constants';
 
 export const AuthContext = React.createContext<AuthContextInterface>({

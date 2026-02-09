@@ -1,5 +1,5 @@
 import React, { memo, FC } from 'react';
-import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import CommunityRowImage from '../../elements/CommunityRowImage/CommunityRowImage';
 import { ComponentID, PageID } from '../../enum';
 import { View } from 'react-native';

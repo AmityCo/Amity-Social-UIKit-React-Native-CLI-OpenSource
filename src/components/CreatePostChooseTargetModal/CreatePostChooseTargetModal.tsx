@@ -17,7 +17,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useAuth from '../../hooks/useAuth';
 import { useStyles } from './styles';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 interface IModal {
   visible: boolean;
   userId?: string;

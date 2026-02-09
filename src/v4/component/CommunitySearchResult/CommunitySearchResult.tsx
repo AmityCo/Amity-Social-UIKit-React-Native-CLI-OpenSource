@@ -2,7 +2,7 @@ import React, { FC, useCallback } from 'react';
 import { View, FlatList, Pressable } from 'react-native';
 import CommunityRowItem from '../CommunityRowItem/CommunityRowItem';
 import CommunityListSkeleton from '../CommunityListSkeleton/CommunityListSkeleton';
-import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { ComponentID, PageID } from '../../enum';
 import { useAmityComponent } from '../../hook';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

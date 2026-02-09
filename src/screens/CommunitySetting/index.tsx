@@ -12,7 +12,7 @@ import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { SvgXml } from 'react-native-svg';
 import { arrowOutlined } from '../../svg/svg-xml-list';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 
 interface ChatDetailProps {
   navigation: any;

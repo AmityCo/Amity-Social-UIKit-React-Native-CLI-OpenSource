@@ -23,7 +23,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useAuth from '../../hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
 import { blockOrUnblock, editIcon } from '../../svg/svg-xml-list';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import FloatingButton from '../../components/FloatingButton';
 import { TabName } from '../../enum/tabNameState';

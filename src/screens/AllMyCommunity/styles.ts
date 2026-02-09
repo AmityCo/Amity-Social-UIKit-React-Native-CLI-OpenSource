@@ -1,6 +1,6 @@
 import { Platform, StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import useConfig from '../../hooks/useConfig';
 import { ComponentID } from '../../util/enumUIKitID';
 

@@ -18,7 +18,7 @@ import UserItem from '../UserItem';
 import SectionHeader from '../ListSectionHeader';
 import SelectedUserHorizontal from '../SelectedUserHorizontal';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 interface IModal {
   visible: boolean;
   userId?: string;

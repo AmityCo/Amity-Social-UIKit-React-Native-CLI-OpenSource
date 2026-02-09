@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modalbox';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { useStyles } from '../styles';
 import useConfig from '../../../../hook/useConfig';
 import { ComponentID, ElementID, PageID } from '../../../../enum';

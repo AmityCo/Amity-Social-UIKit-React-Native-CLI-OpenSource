@@ -9,7 +9,7 @@ import {
 
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
-import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { SvgXml, XmlProps } from 'react-native-svg';
 
 export const enum BUTTON_SIZE {

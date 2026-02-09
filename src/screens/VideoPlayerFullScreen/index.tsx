@@ -19,7 +19,7 @@ import { closeIcon } from '../../svg/svg-xml-list';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 
 const VideoPlayerFull = () => {
   const theme = useTheme() as MyMD3Theme;

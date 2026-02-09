@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, ViewProps, ScrollView } from 'react-native';
 import { CommunityCategoryChip } from './CommunityCategoryChip/CommunityCategoryChip';
-import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { useStyles } from './styles';
 
 type CommunityCategoryChipsProps = ViewProps & {

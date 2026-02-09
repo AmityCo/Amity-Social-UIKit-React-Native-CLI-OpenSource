@@ -38,7 +38,7 @@ import {
 } from '../../../../../providers/Social/feed-sdk';
 import EditCommentModal from '../../../../../components/EditCommentModal';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import ReplyCommentList from '../ReplyCommentList/index';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../../hook';

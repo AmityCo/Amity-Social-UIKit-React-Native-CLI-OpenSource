@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 
 export const useStyle = (theme: MyMD3Theme) => {
   return StyleSheet.create({

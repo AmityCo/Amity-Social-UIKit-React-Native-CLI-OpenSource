@@ -41,7 +41,7 @@ import {
   createReplyComment,
   deleteCommentById,
 } from '../../providers/Social/comment-sdk';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import {
   RootState,

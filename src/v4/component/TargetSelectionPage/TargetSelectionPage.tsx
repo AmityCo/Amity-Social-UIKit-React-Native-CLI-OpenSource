@@ -9,7 +9,7 @@ import {
 import TargetItem from './TargetItem/TargetItem';
 import { Divider, useTheme } from 'react-native-paper';
 import useAuth from '../../../hooks/useAuth';
-import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import CloseButtonIconElement from '../../PublicApi/Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { PageID, ComponentID, ElementID } from '../../enum';
 import { SafeAreaView } from 'react-native-safe-area-context';

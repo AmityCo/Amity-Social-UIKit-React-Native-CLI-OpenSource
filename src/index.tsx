@@ -25,7 +25,7 @@ if (!(BackHandler as any).removeEventListener) {
   };
 }
 
-import AmityUiKitProvider from './providers/amity-ui-kit-provider';
+import AmityUiKitProvider from './core/providers/AmityUIKitProvider';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import AmityUiKitSocial from './v4/routes/AmitySocialUIKitV4Navigator';
 import AmityPageRenderer from './v4/routes/AmityPageRenderer';

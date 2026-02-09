@@ -14,7 +14,7 @@ import { useStyles } from './styles';
 import type { IComment } from '../../v4/PublicApi/Components/AmityPostCommentComponent/CommentListItem/CommentListItem';
 import { editComment } from '../../providers/Social/comment-sdk';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { TSearchItem } from '../../v4/hook';
 import { IMentionPosition } from '../../v4/types/type';
 import {

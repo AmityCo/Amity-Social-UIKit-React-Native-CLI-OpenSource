@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useStyle } from './styles';
-import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { useAmityElement, useConfigImageUri } from '../../../hook';
 import { PageID, ComponentID, ElementID } from '../../../enum';
 

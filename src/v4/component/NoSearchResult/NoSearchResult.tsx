@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image } from 'react-native';
 import React, { memo } from 'react';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 const NoSearchResult = () => {
   const theme = useTheme() as MyMD3Theme;
   const styles = StyleSheet.create({

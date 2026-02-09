@@ -20,7 +20,7 @@ import {
   ImageSizeState,
 } from '../../../enum';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { useConfigImageUri } from '../../../hook/useConfigImageUri';
 import HyperlinkConfig from './Components/HyperLinkConfig';
 import { IAmityDraftStoryPage } from '../../types';

@@ -18,7 +18,7 @@ import AmityNewsFeedComponent from '../../../../v4/PublicApi/Components/AmityNew
 import AmityExploreComponent from '../../../../v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 import NewsFeedLoadingComponent from '../../../../v4/component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
 import { useCustomRankingGlobalFeed } from '../../../../v4/hook/useCustomRankingGlobalFeed';
-import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 LogBox.ignoreAllLogs(true);

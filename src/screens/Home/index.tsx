@@ -11,7 +11,7 @@ import GlobalFeed from '../GlobalFeed';
 import { useStyles } from './styles';
 import CustomTab from '../../components/CustomTab';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import AllMyCommunity from '../../screens/AllMyCommunity';
 import { TabName } from '../../enum/tabNameState';
 import { useNavigation } from '@react-navigation/native';

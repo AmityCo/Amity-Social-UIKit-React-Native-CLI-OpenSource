@@ -39,7 +39,7 @@ import { livestream, poll, post, story } from '../../../../v4/assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import AmityCommunityPinnedPostComponent from '../../../../v4/PublicApi/Components/AmityCommunityPinnedPostComponent/AmityCommunityPinnedPostComponent';
 
 type ICommunityProfilePage = {

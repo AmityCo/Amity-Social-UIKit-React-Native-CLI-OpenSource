@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { View, StyleSheet } from 'react-native';
-import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 
 export type DividerProps = {
   themeStyles?: MyMD3Theme;

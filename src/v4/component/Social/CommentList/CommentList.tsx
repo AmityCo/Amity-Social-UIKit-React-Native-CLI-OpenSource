@@ -20,7 +20,7 @@ import {
 import { useStyles } from './styles';
 import { TSearchItem } from '../../../../hooks/useSearch';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { closeIcon } from '../../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import { usePaginatorApi } from '../../../hook/usePaginator';

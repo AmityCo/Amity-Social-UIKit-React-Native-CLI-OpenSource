@@ -14,7 +14,7 @@ import {
   postIconOutlined,
 } from '../../svg/svg-xml-list';
 import { useStyles } from './style';
-import { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import uiSlice from '../../redux/slices/uiSlice';
 import {

@@ -8,7 +8,7 @@ import ContentLoader, {
 } from 'react-content-loader/native';
 import { Divider } from 'react-native-paper';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 
 const NewsFeedLoadingComponent = () => {
   const styles = useStyles();

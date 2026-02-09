@@ -33,7 +33,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useAuth from '../../../hooks/useAuth';
 import EditPostModal from '../../../components/EditPostModal';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import postDetailSlice from '../../../redux/slices/postDetailSlice';
 import globalFeedSlice from '../../../redux/slices/globalfeedSlice';
 import { IMentionPosition } from '../../../screens/CreatePost';

@@ -20,7 +20,7 @@ import LoadingVideo from '../LoadingVideo';
 import type { IVideoPost } from '../Social/PostList';
 import useAuth from '../../hooks/useAuth';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
 import postDetailSlice from '../../redux/slices/postDetailSlice';

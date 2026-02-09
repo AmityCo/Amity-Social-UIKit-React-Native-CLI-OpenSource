@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 
 type IconTabProps = {
   isActive: boolean;

@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react';
 import { useStyle } from './styles';
 import { View } from 'react-native';
 import { Typography } from '../Typography/Typography';
-import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { SvgXml } from 'react-native-svg';
 import { errorPage } from '../../assets/icons';
 import Button, { BUTTON_SIZE } from '../Button/Button';

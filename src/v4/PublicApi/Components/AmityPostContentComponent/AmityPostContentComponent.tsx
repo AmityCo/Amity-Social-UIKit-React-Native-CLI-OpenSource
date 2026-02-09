@@ -13,7 +13,7 @@ import { getCommunityById } from '../../../../providers/Social/communities-sdk';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { IMentionPosition } from '../../../types/type';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { ComponentID, ElementID, PageID } from '../../../enum';

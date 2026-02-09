@@ -13,7 +13,7 @@ import useConfig from '../../hook/useConfig';
 import { useStyles } from './styles';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 
 interface IStoryCircleItem {
   onPressStoryView: (storyTarget: Amity.StoryTarget) => void;

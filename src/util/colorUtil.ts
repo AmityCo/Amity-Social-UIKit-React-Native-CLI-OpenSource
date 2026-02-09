@@ -1,5 +1,5 @@
 import { lighten } from 'polished';
-import { MyMD3Theme } from '../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../core/providers/AmityUIKitProvider';
 
 const hexColorRegExp = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 export const validateConfigColor = (color: string): string => {

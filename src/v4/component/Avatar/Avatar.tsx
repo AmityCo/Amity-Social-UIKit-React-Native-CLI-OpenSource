@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SvgXml, XmlProps } from 'react-native-svg';
-import { MyMD3Theme } from '../../../providers/amity-ui-kit-provider';
+import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { category } from '../../../v4/assets/icons';
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';

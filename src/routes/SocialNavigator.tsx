@@ -25,7 +25,7 @@ import CommunitySearch from '../screens/CommunitySearch';
 import AllMyCommunity from '../screens/AllMyCommunity';
 import CreateCommunity from '../v4/screen/CreateCommunity';
 import PendingPosts from '../screens/PendingPosts';
-import type { MyMD3Theme } from '../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import { Image, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';

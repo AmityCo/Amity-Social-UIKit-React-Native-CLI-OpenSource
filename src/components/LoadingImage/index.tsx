@@ -9,7 +9,7 @@ import {
 import { closeIcon } from '../../svg/svg-xml-list';
 import { createStyles } from './styles';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 
 interface OverlayImageProps {
   source: string;

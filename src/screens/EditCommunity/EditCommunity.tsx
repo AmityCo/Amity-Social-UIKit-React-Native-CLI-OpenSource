@@ -17,7 +17,7 @@ import ChooseCategoryModal from '../../components/ChooseCategoryModal';
 import { RadioButton } from 'react-native-radio-buttons-group';
 import useAuth from '../../hooks/useAuth';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '../../providers/amity-ui-kit-provider';
+import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
 import { uploadImageFile } from '../../providers/file-provider';
 import { getAvatarURL } from '../../util/apiUtil';
