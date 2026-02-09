@@ -22,7 +22,7 @@ import { likeReaction } from '../../../../../svg/svg-xml-list';
 import {
   addPostReaction,
   removePostReaction,
-} from '../../../../../providers/Social/feed-sdk';
+} from '../../../../../core/legacy/feed';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../routes/RouteParamList';

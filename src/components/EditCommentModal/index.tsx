@@ -12,7 +12,7 @@ import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../svg/svg-xml-list';
 import { useStyles } from './styles';
 import type { IComment } from '../../v4/PublicApi/Components/AmityPostCommentComponent/CommentListItem/CommentListItem';
-import { editComment } from '../../providers/Social/comment-sdk';
+import { editComment } from '../../core/legacy/comment';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { TSearchItem } from '../../v4/hook';

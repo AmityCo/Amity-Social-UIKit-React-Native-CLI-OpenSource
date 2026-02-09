@@ -15,7 +15,7 @@ import { likeReaction } from '../../../../../svg/svg-xml-list';
 import {
   addPostReaction,
   removePostReaction,
-} from '../../../../../providers/Social/feed-sdk';
+} from '../../../../../core/legacy/feed';
 import LikeButtonIconElement from '../../../Elements/LikeButtonIconElement/LikeButtonIconElement';
 import CommentButtonIconElement from '../../../Elements/CommentButtonIconElement/CommentButtonIconElement';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';

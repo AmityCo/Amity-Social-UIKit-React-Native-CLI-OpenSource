@@ -2,10 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
-import {
-  deleteAmityFile,
-  uploadImageFile,
-} from '../../providers/file-provider';
+import { deleteAmityFile, uploadImageFile } from '../../core/legacy/file';
 import { closeIcon } from '../../svg/svg-xml-list';
 import { createStyles } from './styles';
 import { useTheme } from 'react-native-paper';

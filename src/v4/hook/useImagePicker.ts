@@ -9,10 +9,7 @@ import {
 
 import { isValidImageType } from '../utils';
 import { useCameraPermission } from './usePermissions';
-import {
-  deleteAmityFile,
-  uploadImageFile,
-} from '../../providers/file-provider';
+import { deleteAmityFile, uploadImageFile } from '../../core/legacy/file';
 
 export type UseImagePickerResponse = {
   progress: number;

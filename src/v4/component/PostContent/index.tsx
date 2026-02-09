@@ -11,7 +11,7 @@ import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
 import useAuth from '../../../hooks/useAuth';
 import { IVideoPost, MediaUri } from '../../../components/Social/PostList';
-import { getPostById } from '../../../providers/Social/feed-sdk';
+import { getPostById } from '../../../core/legacy/feed';
 import ImageView from '../../../components/react-native-image-viewing/dist';
 import { RootState, useUIKitSelector } from '../../../redux/store';
 import { playBtn } from '../../../svg/svg-xml-list';

@@ -153,21 +153,7 @@ export async function editComment(
   );
   return createCommentObject;
 }
-export async function getCommentsDataByIds(
-  commentIds: string[]
-): Promise<Amity.InternalComment[]> {
-  const commentObject: Promise<Amity.InternalComment[]> = new Promise(
-    async (resolve, reject) => {
-      try {
-        const { data } = await CommentRepository.getCommentByIds(commentIds);
-        resolve(data);
-      } catch (error) {
-        reject(error);
-      }
-    }
-  );
-  return commentObject;
-}
+
 export async function deleteCommentById(commentId: string): Promise<boolean> {
   const isDeletedObject: Promise<boolean> = new Promise(
     async (resolve, reject) => {

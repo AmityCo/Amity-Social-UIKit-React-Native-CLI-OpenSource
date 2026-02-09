@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useStyles } from './styles';
 import { PollRepository, PostRepository } from '@amityco/ts-sdk-react-native';
-import { checkCommunityPermission } from '../../../../providers/Social/communities-sdk';
+import { checkCommunityPermission } from '../../../../core/legacy/community';
 import useAuth from '../../../../hooks/useAuth';
 import { TSearchItem } from '../../../../hooks/useSearch';
 import { text_contain_blocked_word } from '../../../../constants';

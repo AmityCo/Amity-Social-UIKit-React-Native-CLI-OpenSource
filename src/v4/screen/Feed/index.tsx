@@ -20,7 +20,7 @@ import {
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
 import type { FeedRefType } from '../CommunityHome';
-import { deletePostById } from '../../../providers/Social/feed-sdk';
+import { deletePostById } from '../../../core/legacy/feed';
 import { amityPostsFormatter } from '../../../util/postDataFormatter';
 import { useFocusEffect } from '@react-navigation/native';
 import { usePaginatorApi } from '../../hook/usePaginator';

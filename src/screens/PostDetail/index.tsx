@@ -23,7 +23,7 @@ import PostList from '../../components/Social/PostList';
 import { useStyles } from './styles';
 import type { IComment } from '../../components/Social/CommentList';
 import type { UserInterface } from '../../types/user.interface';
-import { getAmityUser } from '../../providers/user-provider';
+import { getAmityUser } from '../../core/legacy/user';
 import CommentList from '../../components/Social/CommentList';
 import {
   CommentRepository,
@@ -40,7 +40,7 @@ import {
   createComment,
   createReplyComment,
   deleteCommentById,
-} from '../../providers/Social/comment-sdk';
+} from '../../core/legacy/comment';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import {
@@ -52,7 +52,7 @@ import { IMentionPosition } from '../CreatePost';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../svg/svg-xml-list';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
-import { deletePostById } from '../../providers/Social/feed-sdk';
+import { deletePostById } from '../../core/legacy/feed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TSearchItem } from '../../hooks/useSearch';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';

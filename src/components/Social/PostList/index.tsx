@@ -27,7 +27,7 @@ import {
   removePostReaction,
   reportTargetById,
   unReportTargetById,
-} from '../../../providers/Social/feed-sdk';
+} from '../../../core/legacy/feed';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useAuth from '../../../hooks/useAuth';

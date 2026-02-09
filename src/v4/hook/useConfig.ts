@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ConfigContext } from '../../providers/config-provider';
+import { ConfigContext } from '../../core/providers/ConfigProvider';
 import { IUIKitConfigOptions } from '../types/config.interface';
 
 interface IUIKitConfig {

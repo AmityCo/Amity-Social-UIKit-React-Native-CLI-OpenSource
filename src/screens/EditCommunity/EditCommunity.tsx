@@ -19,9 +19,9 @@ import useAuth from '../../hooks/useAuth';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
-import { uploadImageFile } from '../../providers/file-provider';
+import { uploadImageFile } from '../../core/legacy/file';
 import { getAvatarURL } from '../../util/apiUtil';
-import { updateCommunity } from '../../providers/Social/communities-sdk';
+import { updateCommunity } from '../../core/legacy/community';
 import { PrivacyState } from '../../enum/privacyState';
 import { useForm, Controller } from 'react-hook-form';
 

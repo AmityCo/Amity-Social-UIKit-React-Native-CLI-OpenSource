@@ -20,7 +20,7 @@ import {
   assignRolesToUsers,
   removeRolesFromUsers,
   updateCommunityMember,
-} from '../../../providers/Social/communities-sdk';
+} from '../../../core/legacy/community';
 import useAuth from '../../../hooks/useAuth';
 
 interface IMemberActionModal {

@@ -9,7 +9,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { arrowForward } from '../../../../svg/svg-xml-list';
 import { useStyles } from './styles';
-import { getCommunityById } from '../../../../providers/Social/communities-sdk';
+import { getCommunityById } from '../../../../core/legacy/community';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from 'react-native-paper';

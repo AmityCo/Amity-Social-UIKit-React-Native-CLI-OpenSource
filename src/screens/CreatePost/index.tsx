@@ -30,12 +30,12 @@ import ImagePicker, {
   launchCamera,
 } from 'react-native-image-picker';
 import LoadingImage from '../../components/LoadingImage';
-import { createPostToFeed } from '../../providers/Social/feed-sdk';
+import { createPostToFeed } from '../../core/legacy/feed';
 import LoadingVideo from '../../components/LoadingVideo';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { checkCommunityPermission } from '../../providers/Social/communities-sdk';
+import { checkCommunityPermission } from '../../core/legacy/community';
 import useAuth from '../../hooks/useAuth';
 import { TSearchItem } from '../../hooks/useSearch';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';

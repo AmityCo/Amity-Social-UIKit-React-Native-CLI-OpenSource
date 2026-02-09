@@ -58,7 +58,7 @@ import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import {
   createComment,
   createReplyComment,
-} from '../../../../providers/Social/comment-sdk';
+} from '../../../../core/legacy/comment';
 import { useUIKitDispatch } from '../../../../redux/store';
 
 type AmityPostDetailPageType = {

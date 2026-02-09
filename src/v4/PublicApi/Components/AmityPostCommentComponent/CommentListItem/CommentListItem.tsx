@@ -27,15 +27,15 @@ import type { UserInterface, IMentionPosition } from '../../../../../types';
 import {
   addCommentReaction,
   removeCommentReaction,
-} from '../../../../../providers/Social/comment-sdk';
-import { getAmityUser } from '../../../../../providers/user-provider';
+} from '../../../../../core/legacy/comment';
+import { getAmityUser } from '../../../../../core/legacy/user';
 import { Pressable } from 'react-native';
 import useAuth from '../../../../../hooks/useAuth';
 import {
   isReportTarget,
   reportTargetById,
   unReportTargetById,
-} from '../../../../../providers/Social/feed-sdk';
+} from '../../../../../core/legacy/feed';
 import EditCommentModal from '../../../../../components/EditCommentModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';

@@ -9,14 +9,14 @@ import {
 } from 'react-native';
 import React, { FC, useEffect, useState, useRef, memo } from 'react';
 import { UserInterface, IMentionPosition } from '../../../../types';
-import { getAmityUser } from '../../../../providers/user-provider';
+import { getAmityUser } from '../../../../core/legacy/user';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import CommentListItem from '../CommentListItem/CommentListItem';
 import {
   createComment,
   createReplyComment,
   deleteCommentById,
-} from '../../../../providers/Social/comment-sdk';
+} from '../../../../core/legacy/comment';
 import { useStyles } from './styles';
 import { TSearchItem } from '../../../../hooks/useSearch';
 import { useTheme } from 'react-native-paper';

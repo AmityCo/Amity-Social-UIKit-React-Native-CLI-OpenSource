@@ -18,7 +18,7 @@ import { useTheme } from 'react-native-paper';
 import ModalSelector from 'react-native-modal-selector';
 import Header from './Components/Header';
 import { PollRepository, PostRepository } from '@amityco/ts-sdk-react-native';
-import { checkCommunityPermission } from '../../providers/Social/communities-sdk';
+import { checkCommunityPermission } from '../../core/legacy/community';
 import useAuth from '../../hooks/useAuth';
 import { TSearchItem } from '../../hooks/useSearch';
 import { text_contain_blocked_word } from '../../constants';

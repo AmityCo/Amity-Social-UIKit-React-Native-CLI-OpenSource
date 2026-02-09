@@ -14,7 +14,7 @@ import { SvgXml } from 'react-native-svg';
 import { closeIcon, syncIcon, editThumbnailIcon } from '../../svg/svg-xml-list';
 import { useStyles } from './styles';
 import useImagePicker from '../../../src/hooks/useImagePicker';
-import { uploadImageFile } from '../../../src/providers/file-provider';
+import { uploadImageFile } from '../../core/legacy/file';
 
 import { PostRepository, RoomRepository } from '@amityco/ts-sdk-react-native';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';

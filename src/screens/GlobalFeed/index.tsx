@@ -3,7 +3,7 @@ import React, { useCallback, useRef, useState } from 'react';
 // import { useTranslation } from 'react-i18next';
 
 import { FlatList, View } from 'react-native';
-import { deletePostById, getGlobalFeed } from '../../providers/Social/feed-sdk';
+import { deletePostById, getGlobalFeed } from '../../core/legacy/feed';
 import useAuth from '../../hooks/useAuth';
 import PostList from '../../components/Social/PostList';
 import { useStyle } from './styles';

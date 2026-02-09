@@ -8,10 +8,10 @@ import React, {
   useCallback,
 } from 'react';
 import { UserInterface, IMentionPosition } from '../../../../types';
-import { getAmityUser } from '../../../../providers/user-provider';
+import { getAmityUser } from '../../../../core/legacy/user';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import CommentListItem from './CommentListItem/CommentListItem';
-import { deleteCommentById } from '../../../../providers/Social/comment-sdk';
+import { deleteCommentById } from '../../../../core/legacy/comment';
 import { ComponentID, PageID } from '../../../enum';
 import { useAmityComponent } from '../../../hook';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';

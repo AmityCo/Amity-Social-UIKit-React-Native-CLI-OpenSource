@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { AuthContext } from '../providers/auth-provider';
+import { AuthContext } from '../core/providers/AuthProvider';
 import type { AuthContextInterface } from '../types/auth.interface';
 
 const useAuth = (): AuthContextInterface => {

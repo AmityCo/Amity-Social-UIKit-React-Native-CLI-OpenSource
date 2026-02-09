@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { getAmityUser } from '../../providers/user-provider';
+import { getAmityUser } from '../../core/legacy/user';
 import type { UserInterface } from '../../types/user.interface';
 import { closeIcon } from '../../svg/svg-xml-list';
 import { useNavigation } from '@react-navigation/native';

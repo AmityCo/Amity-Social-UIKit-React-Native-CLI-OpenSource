@@ -33,7 +33,7 @@ import { editIcon, plusIcon, primaryDot } from '../../../svg/svg-xml-list';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { amityPostsFormatter } from '../../../util/postDataFormatter';
-import { checkCommunityPermission } from '../../../providers/Social/communities-sdk';
+import { checkCommunityPermission } from '../../../core/legacy/community';
 import {
   CommonActions,
   RouteProp,

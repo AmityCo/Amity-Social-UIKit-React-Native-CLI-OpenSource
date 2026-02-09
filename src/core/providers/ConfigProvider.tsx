@@ -1,10 +1,10 @@
 import React, { createContext, ReactNode } from 'react';
-import defaultConfig from '../../uikit.config.json';
+import defaultConfig from '../../../uikit.config.json';
 import {
   IConfigRaw,
   IUIKitConfig,
   IUIKitConfigOptions,
-} from '../v4/types/config.interface';
+} from '../../v4/types/config.interface';
 
 interface IConfigProviderProps {
   children: ReactNode;

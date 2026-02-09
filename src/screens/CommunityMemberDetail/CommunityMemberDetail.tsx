@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Image } from 'react-native';
 import { useStyles } from './styles';
 import type { UserInterface } from '../../types/user.interface';
 import AddMembersModal from '../../components/AddMembersModal';
-import { updateCommunityMember } from '../../providers/Social/communities-sdk';
+import { updateCommunityMember } from '../../core/legacy/community';
 import MemberActionModal from './Components/MemberActionModal';
 import CustomTab from '../../components/CustomTab';
 import { TabName } from '../../enum/tabNameState';

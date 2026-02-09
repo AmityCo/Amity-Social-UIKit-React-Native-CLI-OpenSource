@@ -24,7 +24,7 @@ import DoneButton from '../../components/DoneButton/index';
 import { LoadingOverlay } from '../../components/LoadingOverlay/index';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import useAuth from '../../hooks/useAuth';
-import { uploadImageFile } from '../../providers/file-provider';
+import { uploadImageFile } from '../../core/legacy/file';
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

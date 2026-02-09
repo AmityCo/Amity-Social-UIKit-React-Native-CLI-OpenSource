@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
-import { getCommunityById } from '../../../providers/Social/communities-sdk';
+import { getCommunityById } from '../../../core/legacy/community';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useIsCommunityModerator } from '../../hook';
@@ -23,7 +23,7 @@ import {
   deletePostById,
   reportTargetById,
   unReportTargetById,
-} from '../../../providers/Social/feed-sdk';
+} from '../../../core/legacy/feed';
 import useAuth from '../../../hooks/useAuth';
 import globalFeedSlice from '../../../redux/slices/globalfeedSlice';
 import { Typography } from '../../component/Typography/Typography';

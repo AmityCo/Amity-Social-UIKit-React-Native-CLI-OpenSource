@@ -38,7 +38,7 @@ import {
   createPostToFeed,
   editPost,
   getPostById,
-} from '../../../../providers/Social/feed-sdk';
+} from '../../../../core/legacy/feed';
 import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';
 import AmityMediaAttachmentComponent from '../../Components/AmityMediaAttachmentComponent/AmityMediaAttachmentComponent';
 import AmityDetailedMediaAttachmentComponent from '../../Components/AmityDetailedMediaAttachmentComponent/AmityDetailedMediaAttachmentComponent';
