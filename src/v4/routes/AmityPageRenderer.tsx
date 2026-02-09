@@ -9,7 +9,7 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 import CategoryList from '../../screens/CategorytList';
 import CommunityList from '../../screens/CommunityList';
 

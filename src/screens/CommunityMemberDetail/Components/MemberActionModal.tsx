@@ -21,7 +21,7 @@ import {
   removeRolesFromUsers,
   updateCommunityMember,
 } from '../../../core/legacy/community';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 
 interface IMemberActionModal {
   isVisible: boolean;

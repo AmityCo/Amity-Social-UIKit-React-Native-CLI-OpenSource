@@ -32,7 +32,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import useAuth from '../../../../hooks/useAuth';
+import useAuth from '../../../../core/hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
 import {
   blockOrUnblock,

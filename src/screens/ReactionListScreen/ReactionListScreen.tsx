@@ -2,7 +2,7 @@ import { Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
 import React, { useCallback } from 'react';
 import { useStyles } from './styles';
 import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
-import { useReaction } from '../../hooks/useReaction';
+import { useReaction } from '../../core/hooks/useReaction';
 import { SvgXml } from 'react-native-svg';
 import { fileSearch } from '../../svg/svg-xml-list';
 import { formatNumber } from '../../util/numberUtil';

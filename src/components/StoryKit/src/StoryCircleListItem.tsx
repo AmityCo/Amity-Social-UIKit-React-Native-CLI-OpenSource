@@ -14,7 +14,7 @@ import {
   privateIcon,
   storyRing,
 } from '../../../svg/svg-xml-list';
-import useConfig from '../../../hooks/useConfig';
+import useConfig from '../../../core/hooks/useConfig';
 import { ElementID } from '../../../util/enumUIKitID';
 
 const StoryCircleListItem = ({

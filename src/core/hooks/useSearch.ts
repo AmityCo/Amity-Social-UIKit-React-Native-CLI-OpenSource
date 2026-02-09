@@ -3,7 +3,7 @@ import {
   UserRepository,
 } from '@amityco/ts-sdk-react-native';
 import { useCallback, useEffect, useState, useRef } from 'react';
-import { ISearchItem } from '../components/SearchItem';
+import { ISearchItem } from '../../components/SearchItem';
 
 export type TSearchItem = Amity.User &
   ISearchItem &

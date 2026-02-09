@@ -3,7 +3,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import RoundCheckbox from '../RoundCheckbox/index';
 import type { UserInterface } from 'src/types/user.interface';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 
 export default function UserItem({
   user,

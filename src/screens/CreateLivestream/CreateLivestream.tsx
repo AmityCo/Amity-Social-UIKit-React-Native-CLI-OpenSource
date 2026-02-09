@@ -13,7 +13,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { closeIcon, syncIcon, editThumbnailIcon } from '../../svg/svg-xml-list';
 import { useStyles } from './styles';
-import useImagePicker from '../../../src/hooks/useImagePicker';
+import useImagePicker from '../../core/hooks/useImagePicker';
 import { uploadImageFile } from '../../core/legacy/file';
 
 import { PostRepository, RoomRepository } from '@amityco/ts-sdk-react-native';

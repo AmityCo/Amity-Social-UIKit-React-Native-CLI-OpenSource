@@ -4,7 +4,7 @@ import { useAmityElement } from '../../hook';
 import LinearGradient from 'react-native-linear-gradient';
 import { Image, StyleSheet, View } from 'react-native';
 import CommunityCoverNavigator from './CommunityCoverNavigator';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 
 type CommunityCoverProps = {
   pageId?: PageID;

@@ -9,7 +9,7 @@ import {
 } from '../../redux/store';
 import { usePaginatorApi } from '../../v4/hook/usePaginator';
 import { IComment } from '../../components/Social/CommentList';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 
 export const isAmityAd = (
   item: Amity.Post<any> | Amity.Ad | IComment

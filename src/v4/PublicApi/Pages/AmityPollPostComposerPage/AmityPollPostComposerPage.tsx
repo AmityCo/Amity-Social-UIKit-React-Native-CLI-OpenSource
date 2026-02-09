@@ -9,8 +9,8 @@ import {
 import { useStyles } from './styles';
 import { PollRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { checkCommunityPermission } from '../../../../core/legacy/community';
-import useAuth from '../../../../hooks/useAuth';
-import { TSearchItem } from '../../../../hooks/useSearch';
+import useAuth from '../../../../core/hooks/useAuth';
+import { TSearchItem } from '../../../../core/hooks/useSearch';
 import { text_contain_blocked_word } from '../../../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';

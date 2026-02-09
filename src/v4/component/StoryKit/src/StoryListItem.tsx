@@ -32,7 +32,7 @@ import {
   storyThreedotsMenu,
 } from '../../../../svg/svg-xml-list';
 import { useStyles } from './styles';
-import { useTimeDifference } from '../../../../hooks/useTimeDifference';
+import { useTimeDifference } from '../../../../core/hooks/useTimeDifference';
 import { useStory } from '../../../hook/useStory';
 import { ElementID, ComponentID, PageID } from '../../../enum/enumUIKitID';
 import useConfig from '../../../hook/useConfig';

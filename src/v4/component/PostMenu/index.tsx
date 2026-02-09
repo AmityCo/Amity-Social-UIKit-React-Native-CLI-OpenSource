@@ -24,7 +24,7 @@ import {
   reportTargetById,
   unReportTargetById,
 } from '../../../core/legacy/feed';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 import globalFeedSlice from '../../../redux/slices/globalfeedSlice';
 import { Typography } from '../../component/Typography/Typography';
 import { pen, poll, report, trash, unreport } from '../../assets/icons';

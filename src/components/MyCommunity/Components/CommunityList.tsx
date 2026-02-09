@@ -7,7 +7,7 @@ import {
   privateIcon,
 } from '../../../svg/svg-xml-list';
 import { useStyle } from '../styles';
-import useFile from '../../../hooks/useFile';
+import useFile from '../../../core/hooks/useFile';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import { PrivacyState } from '../../../enum/privacyState';

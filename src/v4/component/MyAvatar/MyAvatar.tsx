@@ -1,6 +1,6 @@
 import { Image, ImageProps, StyleSheet } from 'react-native';
 import React, { FC, memo, useEffect, useState } from 'react';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 import { useFile } from '../../hook';
 import { defaultAvatarUri } from '../../assets';
 import { UserRepository } from '@amityco/ts-sdk-react-native';

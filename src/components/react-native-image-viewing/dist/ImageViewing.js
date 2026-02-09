@@ -25,7 +25,7 @@ import useAnimatedComponents from './hooks/useAnimatedComponents';
 import useImageIndexChange from './hooks/useImageIndexChange';
 import useRequestClose from './hooks/useRequestClose';
 import Video from 'react-native-video';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 import { useNavigation } from '@react-navigation/native';
 
 const DEFAULT_ANIMATION_TYPE = 'fade';
@@ -65,15 +65,11 @@ function ImageViewing({
   const [playingUri, setPlayingUri] = useState('');
   const videoPlayerRef = useRef(null);
 
- 
-  
-
   useEffect(() => {
     if (onImageIndexChange) {
       onImageIndexChange(currentImageIndex);
     }
   }, [currentImageIndex]);
-
 
   const onClosePlayer = () => {
     setIsPlaying(false);
@@ -81,8 +77,8 @@ function ImageViewing({
   };
 
   useEffect(() => {
-    if(!videoPosts) return onClosePlayer()
-  }, [videoPosts])
+    if (!videoPosts) return onClosePlayer();
+  }, [videoPosts]);
 
   const onZoom = useCallback(
     (isScaled) => {
@@ -98,18 +94,18 @@ function ImageViewing({
     [imageList]
   );
   const playVideoFullScreen = async () => {
-if (Platform.OS === 'ios') {
+    if (Platform.OS === 'ios') {
       onClickPlayButton(currentImageIndex);
       setPlayingUri(
         `https://api.${apiRegion}.amity.co/api/v3/files/${videoPosts[currentImageIndex]?.videoFileId?.original}/download`
       );
       setIsPlaying(true);
     } else {
-    navigation.navigate('VideoPlayer', {
-      source: `https://api.${apiRegion}.amity.co/api/v3/files/${videoPosts[currentImageIndex]?.videoFileId?.original}/download`,
-    });
-    onRequestCloseEnhanced()
-}
+      navigation.navigate('VideoPlayer', {
+        source: `https://api.${apiRegion}.amity.co/api/v3/files/${videoPosts[currentImageIndex]?.videoFileId?.original}/download`,
+      });
+      onRequestCloseEnhanced();
+    }
   };
 
   // useEffect(() => {
@@ -121,7 +117,6 @@ if (Platform.OS === 'ios') {
   if (!visible) {
     return null;
   }
-
 
   return (
     <Modal
@@ -166,22 +161,24 @@ if (Platform.OS === 'ios') {
             <View>
               {/* Your overlay content */}
 
-              {!playingUri && <ImageItem
-                onZoom={onZoom}
-                imageSrc={imageSrc}
-                onRequestClose={onRequestCloseEnhanced}
-                onLongPress={onLongPress}
-                delayLongPress={delayLongPress}
-                swipeToCloseEnabled={swipeToCloseEnabled}
-                doubleTapToZoomEnabled={doubleTapToZoomEnabled}
-              />}
-              {isVideoButton && !playingUri &&(
-              <TouchableOpacity
-              style={styles.playButton}
-              onPress={playVideoFullScreen}
-              >
+              {!playingUri && (
+                <ImageItem
+                  onZoom={onZoom}
+                  imageSrc={imageSrc}
+                  onRequestClose={onRequestCloseEnhanced}
+                  onLongPress={onLongPress}
+                  delayLongPress={delayLongPress}
+                  swipeToCloseEnabled={swipeToCloseEnabled}
+                  doubleTapToZoomEnabled={doubleTapToZoomEnabled}
+                />
+              )}
+              {isVideoButton && !playingUri && (
+                <TouchableOpacity
+                  style={styles.playButton}
+                  onPress={playVideoFullScreen}
+                >
                   <SvgXml xml={playBtn} width="50" height="50" />
-              </TouchableOpacity>
+                </TouchableOpacity>
               )}
             </View>
           )}
@@ -203,14 +200,16 @@ if (Platform.OS === 'ios') {
             })}
           </Animated.View>
         )}
-      {playingUri && <Video 
-       resizeMode='contain'
-       style={{width : "100%", height : "100%"}}
-       controls={true}
-       source={{ uri: playingUri }}
-       onVideoFullscreenPlayerWillDismiss={onClosePlayer}
-       ref={videoPlayerRef}
-     />}
+        {playingUri && (
+          <Video
+            resizeMode="contain"
+            style={{ width: '100%', height: '100%' }}
+            controls={true}
+            source={{ uri: playingUri }}
+            onVideoFullscreenPlayerWillDismiss={onClosePlayer}
+            ref={videoPlayerRef}
+          />
+        )}
       </View>
     </Modal>
   );
@@ -253,7 +252,7 @@ const styles = StyleSheet.create({
     width: 320,
     height: 200,
   },
-  });
+});
 const EnhancedImageViewing = (props) => (
   <ImageViewing key={props.imageIndex} {...props} />
 );

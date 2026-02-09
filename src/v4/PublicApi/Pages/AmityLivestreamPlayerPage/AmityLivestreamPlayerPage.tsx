@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import NetInfo from '@react-native-community/netinfo';
 import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
 import Video from 'react-native-video';
-import useAuth from '../../../../hooks/useAuth';
+import useAuth from '../../../../core/hooks/useAuth';
 import {
   usePostSubscription,
   useRoomSubscription,

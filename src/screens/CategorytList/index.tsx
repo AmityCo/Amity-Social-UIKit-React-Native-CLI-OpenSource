@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { FlatList, View, Text, Image, TouchableOpacity } from 'react-native';
 import { useStyles } from './styles';
 import CloseButton from '../../components/BackButton';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 
 export default function CategoryList({ navigation }: any) {
   const { apiRegion } = useAuth();

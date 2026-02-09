@@ -1,7 +1,7 @@
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import useAuth from './useAuth';
-import { isImagePost, isVideoPost } from '../util/postTypeChecker';
+import { isImagePost, isVideoPost } from '../../util/postTypeChecker';
 
 type ElementOf<T> = T extends Array<infer U> ? U : never;
 

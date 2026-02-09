@@ -20,7 +20,7 @@ import CustomTab from '../../components/CustomTab';
 import type { FeedRefType } from '../CommunityHome';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
 import { blockOrUnblock, editIcon } from '../../svg/svg-xml-list';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';

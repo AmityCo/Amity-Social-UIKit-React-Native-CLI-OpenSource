@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 
 export const useCategories = ({
   limit = 5,

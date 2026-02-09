@@ -3,7 +3,7 @@ import { useStyles } from './style';
 import { View } from 'react-native';
 import { useUser } from '../../hook';
 import { ElementID } from '../../enum';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 import { Typography } from '../Typography/Typography';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';
 import { formatVoteCount } from '../../../util/timeUtil';

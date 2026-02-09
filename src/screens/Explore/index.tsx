@@ -10,7 +10,7 @@ import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { useStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
 import { communityIcon } from '../../svg/svg-xml-list';
 

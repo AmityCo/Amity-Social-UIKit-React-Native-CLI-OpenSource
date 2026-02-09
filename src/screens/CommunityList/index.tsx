@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useStyles } from './styles';
 import CloseButton from '../../components/BackButton';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 
 export default function CommunityList({ navigation, route }: any) {
   const { apiRegion } = useAuth();

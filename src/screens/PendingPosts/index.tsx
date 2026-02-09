@@ -3,7 +3,7 @@ import { PostRepository } from '@amityco/ts-sdk-react-native';
 import React, { useEffect, useState } from 'react';
 import { FlatList, View, Text } from 'react-native';
 import { useStyles } from './styles';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 import { RootStackParamList } from '../../routes/RouteParamList';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { amityPostsFormatter } from '../../util/postDataFormatter';

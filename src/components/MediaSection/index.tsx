@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 import { IVideoPost, MediaUri } from '../Social/PostList';
 import { getPostById } from '../../core/legacy/feed';
 import ImageView from '../../components/react-native-image-viewing/dist';

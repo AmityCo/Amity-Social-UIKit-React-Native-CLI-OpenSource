@@ -18,7 +18,7 @@ import {
   deleteCommentById,
 } from '../../../../core/legacy/comment';
 import { useStyles } from './styles';
-import { TSearchItem } from '../../../../hooks/useSearch';
+import { TSearchItem } from '../../../../core/hooks/useSearch';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { closeIcon } from '../../../../svg/svg-xml-list';

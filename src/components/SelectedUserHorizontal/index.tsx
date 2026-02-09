@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import type { UserInterface } from '../../types/user.interface';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 
 const AvatarListItem = ({
   user,

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ConfigContext } from '../core/providers/ConfigProvider';
+import { ConfigContext } from '../providers/ConfigProvider';
 
 interface IUIKitConfig {
   globalTheme: Record<string, any>;

@@ -9,7 +9,7 @@ import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import Timestamp from '../../../../v4/elements/Timestamp';
 import { ComponentID, ElementID, PageID } from '../../../../v4/enum';
 import MenuButton from '../../../../v4/elements/MenuButton';
-import useAuth from '../../../../hooks/useAuth';
+import useAuth from '../../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../../redux/slices/bottomSheetSlice';
 import { firework, trash } from '../../../../v4/assets/icons';
 import MenuAction from '../../../../v4/elements/MenuAction';

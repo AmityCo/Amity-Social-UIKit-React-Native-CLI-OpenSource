@@ -27,7 +27,7 @@ import {
 import CustomTab from '../../../components/CustomTab';
 import { useStyles } from './styles';
 import Feed from '../Feed';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
 import { editIcon, plusIcon, primaryDot } from '../../../svg/svg-xml-list';
 import { useTheme } from 'react-native-paper';
@@ -43,7 +43,7 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import FloatingButton from '../../../components/FloatingButton';
-import useFile from '../../../hooks/useFile';
+import useFile from '../../../core/hooks/useFile';
 import { TabName } from '../../../enum/tabNameState';
 import uiSlice from '../../../redux/slices/uiSlice';
 import { PostTargetType } from '../../../enum/postTargetType';

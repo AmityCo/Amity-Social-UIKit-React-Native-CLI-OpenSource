@@ -5,7 +5,7 @@ import { View, TouchableOpacity, LogBox } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { plusIcon, searchIcon } from '../../svg/svg-xml-list';
 import FloatingButton from '../../components/FloatingButton';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 import Explore from '../../screens/Explore';
 import GlobalFeed from '../GlobalFeed';
 import { useStyles } from './styles';

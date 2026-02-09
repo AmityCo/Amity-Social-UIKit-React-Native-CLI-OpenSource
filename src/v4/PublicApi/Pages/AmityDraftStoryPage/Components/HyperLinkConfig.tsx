@@ -16,7 +16,7 @@ import { useStyles } from '../styles';
 import useConfig from '../../../../hook/useConfig';
 import { ComponentID, ElementID, PageID } from '../../../../enum';
 import { checkURLValidation } from '../../../../../util/urlUtil';
-import useAuth from '../../../../../hooks/useAuth';
+import useAuth from '../../../../../core/hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
 import { storyDraftDeletHyperLink } from '../../../../../svg/svg-xml-list';
 

@@ -5,7 +5,7 @@ import { useFile } from '../../../hook';
 import { ImageSizeState } from '../../../enum';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
 import useConfig from '../../../hook/useConfig';
-import useAuth from '../../../../hooks/useAuth';
+import useAuth from '../../../../core/hooks/useAuth';
 
 type AvatarElementType = Partial<ImageProps> & {
   avatarId: string;

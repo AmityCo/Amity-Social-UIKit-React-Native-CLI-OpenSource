@@ -30,7 +30,7 @@ import {
 } from '../../../../../core/legacy/comment';
 import { getAmityUser } from '../../../../../core/legacy/user';
 import { Pressable } from 'react-native';
-import useAuth from '../../../../../hooks/useAuth';
+import useAuth from '../../../../../core/hooks/useAuth';
 import {
   isReportTarget,
   reportTargetById,

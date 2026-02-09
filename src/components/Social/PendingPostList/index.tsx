@@ -10,7 +10,7 @@ import { useStyles } from './styles';
 import type { UserInterface } from '../../../types/user.interface';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 import MediaSection from '../../../components/MediaSection';
 import { IMentionPosition } from '../../../screens/CreatePost';
 import { PostRepository } from '@amityco/ts-sdk-react-native';

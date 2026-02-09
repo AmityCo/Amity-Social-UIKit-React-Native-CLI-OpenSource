@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 
 type SocialSettings = Amity.SocialSettings & {
   story?: {

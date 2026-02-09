@@ -32,7 +32,7 @@ import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import CommentList from '../../../../component/Social/CommentList/CommentList';
 import { StoryRepository } from '@amityco/ts-sdk-react-native';
 import { NextOrPrevious } from '../../../../component/StoryKit';
-import { useTimeDifference } from '../../../../../hooks/useTimeDifference';
+import { useTimeDifference } from '../../../../../core/hooks/useTimeDifference';
 import { STORY_DEFAULT_DURATION } from '../../../../../constants';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import uiSlice from '../../../../../redux/slices/uiSlice';

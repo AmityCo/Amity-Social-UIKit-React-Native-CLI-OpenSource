@@ -6,7 +6,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from 'react';
-import { useGallery } from '../../../hooks/useGallery';
+import { useGallery } from '../../../core/hooks/useGallery';
 import GalleryTab from './GalleryTab';
 import { TabName } from '../../../enum/tabNameState';
 import { SvgXml } from 'react-native-svg';

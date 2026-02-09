@@ -33,7 +33,7 @@ import {
 
 import { getAmityUser } from '../../../core/legacy/user';
 import { Pressable } from 'react-native';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 import {
   isReportTarget,
   reportTargetById,
@@ -46,7 +46,7 @@ import { IMentionPosition } from '../../../screens/CreatePost';
 import { useNavigation } from '@react-navigation/native';
 import ReplyCommentList from '../ReplyCommentList';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
-import { useTimeDifference } from '../../../hooks/useTimeDifference';
+import { useTimeDifference } from '../../../core/hooks/useTimeDifference';
 import { LinkPreview } from '../../../v4/component/PreviewLink/LinkPreview';
 export interface IComment {
   commentId: string;

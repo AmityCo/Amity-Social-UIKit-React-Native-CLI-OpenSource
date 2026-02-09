@@ -8,7 +8,7 @@ import Modal from 'react-native-modalbox';
 import StoryTargetView from './StoryTargetView';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 
 export interface IStoryItems {
   communityId: string;

@@ -1,6 +1,6 @@
 import { Image, Text, TouchableOpacity } from 'react-native';
 import React, { memo } from 'react';
-import useFile from '../../../hooks/useFile';
+import useFile from '../../../core/hooks/useFile';
 import { SvgXml } from 'react-native-svg';
 import { categoryIcon } from '../../../svg/svg-xml-list';
 import { useStyle } from '../styles';

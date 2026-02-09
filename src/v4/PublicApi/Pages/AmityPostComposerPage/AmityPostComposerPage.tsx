@@ -32,7 +32,7 @@ import CloseButtonIconElement from '../../Elements/CloseButtonIconElement/CloseB
 import { useNavigation } from '@react-navigation/native';
 import uiSlice from '../../../../redux/slices/uiSlice';
 import { amityPostsFormatter } from '../../../../util/postDataFormatter';
-import useAuth from '../../../../hooks/useAuth';
+import useAuth from '../../../../core/hooks/useAuth';
 import globalfeedSlice from '../../../../redux/slices/globalfeedSlice';
 import {
   createPostToFeed,

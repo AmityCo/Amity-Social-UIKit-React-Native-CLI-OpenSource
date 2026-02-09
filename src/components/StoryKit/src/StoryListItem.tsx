@@ -30,8 +30,8 @@ import {
   storyLikedIcon,
 } from '../../../svg/svg-xml-list';
 import { useStyles } from './styles';
-import { useTimeDifference } from '../../../hooks/useTimeDifference';
-import { useStory } from '../../../hooks/useStory';
+import { useTimeDifference } from '../../../core/hooks/useTimeDifference';
+import { useStory } from '../../../core/hooks/useStory';
 import { StoryRepository } from '@amityco/ts-sdk-react-native';
 export const StoryListItem = ({
   index,

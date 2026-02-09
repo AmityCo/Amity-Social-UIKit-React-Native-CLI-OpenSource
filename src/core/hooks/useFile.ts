@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FileRepository } from '@amityco/ts-sdk-react-native';
-import { ImageSizeState, ImageSizeSubset } from '../enum/imageSizeState';
+import { ImageSizeState, ImageSizeSubset } from '../../enum/imageSizeState';
 
 interface useFileProps {
   fileId: string;

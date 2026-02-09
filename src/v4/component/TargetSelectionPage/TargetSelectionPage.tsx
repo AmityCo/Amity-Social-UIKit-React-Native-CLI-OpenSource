@@ -8,7 +8,7 @@ import {
 } from '../../hook';
 import TargetItem from './TargetItem/TargetItem';
 import { Divider, useTheme } from 'react-native-paper';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/hooks/useAuth';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import CloseButtonIconElement from '../../PublicApi/Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { PageID, ComponentID, ElementID } from '../../enum';

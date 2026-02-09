@@ -54,7 +54,7 @@ import { closeIcon } from '../../svg/svg-xml-list';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
 import { deletePostById } from '../../core/legacy/feed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TSearchItem } from '../../hooks/useSearch';
+import { TSearchItem } from '../../core/hooks/useSearch';
 import globalFeedSlice from '../../redux/slices/globalfeedSlice';
 import feedSlice from '../../redux/slices/feedSlice';
 import postDetailSlice from '../../redux/slices/postDetailSlice';

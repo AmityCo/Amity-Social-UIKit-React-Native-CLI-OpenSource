@@ -6,7 +6,7 @@ import { SvgXml } from 'react-native-svg';
 import { communityIcon, userIcon } from '../../svg/svg-xml-list';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import { useNavigation } from '@react-navigation/native';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../core/hooks/useAuth';
 export interface ISearchItem {
   targetId: string;
   targetType: string;

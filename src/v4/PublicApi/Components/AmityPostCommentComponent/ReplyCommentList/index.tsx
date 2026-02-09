@@ -25,7 +25,7 @@ import {
   removeCommentReaction,
 } from '../../../../../core/legacy/comment';
 import { Pressable } from 'react-native';
-import useAuth from '../../../../../hooks/useAuth';
+import useAuth from '../../../../../core/hooks/useAuth';
 import { useTimeDifference } from '../../../../hook/useTimeDifference';
 import {
   isReportTarget,
