@@ -22,7 +22,7 @@ import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
 import { uploadImageFile } from '../../core/legacy/file';
 import { getAvatarURL } from '../../util/apiUtil';
 import { updateCommunity } from '../../core/legacy/community';
-import { PrivacyState } from '../../enum/privacyState';
+import { PrivacyState } from '../../core/enums';
 import { useForm, Controller } from 'react-hook-form';
 
 const EditCommunity = ({ navigation, route }) => {

@@ -13,7 +13,7 @@ import CustomTab from '../../components/CustomTab';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import AllMyCommunity from '../../screens/AllMyCommunity';
-import { TabName } from '../../enum/tabNameState';
+import { TabName } from '../../core/enums';
 import { useNavigation } from '@react-navigation/native';
 import uiSlice from '../../redux/slices/uiSlice';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

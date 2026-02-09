@@ -6,7 +6,7 @@ import AddMembersModal from '../../components/AddMembersModal';
 import { updateCommunityMember } from '../../core/legacy/community';
 import MemberActionModal from './Components/MemberActionModal';
 import CustomTab from '../../components/CustomTab';
-import { TabName } from '../../enum/tabNameState';
+import { TabName } from '../../core/enums';
 import CommunityMembersTab from './Components/CommunityMembersTab';
 
 export default function CommunityMemberDetail({ navigation, route }: any) {

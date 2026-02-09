@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { useGallery } from '../../../core/hooks/useGallery';
 import GalleryTab from './GalleryTab';
-import { TabName } from '../../../enum/tabNameState';
+import { TabName } from '../../../core/enums';
 import { SvgXml } from 'react-native-svg';
 import { photo, playBtn, video } from '../../../svg/svg-xml-list';
 import { useStyles } from '../styles';

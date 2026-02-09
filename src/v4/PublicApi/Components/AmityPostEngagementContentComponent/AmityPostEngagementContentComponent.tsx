@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStyles } from './styles';
 import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
-import { PostTargetType } from '../../../../enum/postTargetType';
+import { PostTargetType } from '../../../../core/enums';
 import { AmityPostContentComponentStyleEnum } from '../../../../v4/enum/AmityPostContentComponentStyle';
 import { ComponentID, PageID } from '../../../../v4/enum';
 import CommentList from '../../../component/Social/CommentList/CommentList';

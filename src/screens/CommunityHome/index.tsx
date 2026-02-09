@@ -36,9 +36,8 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import FloatingButton from '../../components/FloatingButton';
 import useFile from '../../core/hooks/useFile';
-import { TabName } from '../../enum/tabNameState';
+import { TabName, PostTargetType } from '../../core/enums';
 import uiSlice from '../../redux/slices/uiSlice';
-import { PostTargetType } from '../../enum/postTargetType';
 import CommunityStories from '../../components/CommunityStories';
 import { useUIKitDispatch } from '../../redux/store';
 

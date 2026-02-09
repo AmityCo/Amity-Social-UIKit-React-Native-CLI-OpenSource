@@ -21,7 +21,7 @@ import type { ISearchItem } from '../../components/SearchItem';
 import SearchItem from '../../components/SearchItem';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
-import { TabName } from '../../enum/tabNameState';
+import { TabName } from '../../core/enums';
 
 enum searchTypeEnum {
   user = 'user',

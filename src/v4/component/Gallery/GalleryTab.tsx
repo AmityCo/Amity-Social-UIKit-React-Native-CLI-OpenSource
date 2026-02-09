@@ -6,7 +6,7 @@ import {
   TextStyle,
 } from 'react-native';
 import React, { FC, memo, useCallback } from 'react';
-import { TabName } from '../../../enum/tabNameState';
+import { TabName } from '../../../core/enums';
 import { useStyles } from './styles';
 
 interface IGalleryTab {

@@ -44,9 +44,8 @@ import {
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import FloatingButton from '../../../../components/FloatingButton';
-import { TabName } from '../../../../enum/tabNameState';
+import { TabName, PostTargetType } from '../../../../core/enums';
 import uiSlice from '../../../../redux/slices/uiSlice';
-import { PostTargetType } from '../../../../enum/postTargetType';
 import GalleryComponent from '../../../component/Gallery/GalleryComponent';
 import { useFile } from '../../../hook';
 import { defaultAvatarUri } from '../../../assets';

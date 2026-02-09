@@ -44,9 +44,8 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import FloatingButton from '../../../components/FloatingButton';
 import useFile from '../../../core/hooks/useFile';
-import { TabName } from '../../../enum/tabNameState';
+import { TabName, PostTargetType } from '../../../core/enums';
 import uiSlice from '../../../redux/slices/uiSlice';
-import { PostTargetType } from '../../../enum/postTargetType';
 import useConfig from '../../hook/useConfig';
 import { ComponentID } from '../../enum/enumUIKitID';
 import AmityStoryTabComponent from '../../PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';

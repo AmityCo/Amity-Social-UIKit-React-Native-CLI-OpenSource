@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import { useStyles } from './styles';
-import { TabName } from '../../enum/tabNameState';
+import { TabName } from '../../core/enums';
 
 interface ICustomTab {
   onTabChange: (tabName: TabName) => void;

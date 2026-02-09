@@ -9,7 +9,7 @@ import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { UserInterface } from '../../../types/user.interface';
 import UserItem from '../../../components/UserItem';
 import { useStyles } from '../styles';
-import { TabName } from '../../../enum/tabNameState';
+import { TabName } from '../../../core/enums';
 import { useFocusEffect } from '@react-navigation/native';
 
 interface ICommunityMembersTab {

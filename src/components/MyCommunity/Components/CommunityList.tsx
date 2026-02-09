@@ -10,7 +10,7 @@ import { useStyle } from '../styles';
 import useFile from '../../../core/hooks/useFile';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
-import { PrivacyState } from '../../../enum/privacyState';
+import { PrivacyState } from '../../../core/enums';
 
 interface ICommunityItems {
   communityId: string;

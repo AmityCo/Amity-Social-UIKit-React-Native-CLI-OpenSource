@@ -26,9 +26,8 @@ import { blockOrUnblock, editIcon } from '../../svg/svg-xml-list';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import FloatingButton from '../../components/FloatingButton';
-import { TabName } from '../../enum/tabNameState';
+import { TabName, PostTargetType } from '../../core/enums';
 import uiSlice from '../../redux/slices/uiSlice';
-import { PostTargetType } from '../../enum/postTargetType';
 import UserProfileGallery from './Components/UserProfileGallery';
 import { useUIKitDispatch } from '../../redux/store';
 
