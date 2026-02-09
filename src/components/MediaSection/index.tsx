@@ -12,7 +12,7 @@ import useAuth from '../../core/hooks/useAuth';
 import { IVideoPost, MediaUri } from '../Social/PostList';
 import { getPostById } from '../../core/legacy/feed';
 import ImageView from '../../components/react-native-image-viewing/dist';
-import { RootState, useUIKitSelector } from '../../redux/store';
+import { RootState, useUIKitSelector } from '../../core/stores/store';
 import { playBtn } from '../../svg/svg-xml-list';
 import PollSection from '../PollSection/PollSection';
 import LivestreamContent from '../../v4/component/LivestreamContent';

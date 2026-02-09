@@ -15,9 +15,9 @@ import { useStyles } from './styles';
 import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import uiSlice from '../../../redux/slices/uiSlice';
+import uiSlice from '../../../core/stores/slices/uiSlice';
 import { createVideoThumbnail } from 'react-native-compressor';
-import { useUIKitDispatch } from '../../../redux/store';
+import { useUIKitDispatch } from '../../../core/stores/store';
 
 interface OverlayImageProps {
   source: string;

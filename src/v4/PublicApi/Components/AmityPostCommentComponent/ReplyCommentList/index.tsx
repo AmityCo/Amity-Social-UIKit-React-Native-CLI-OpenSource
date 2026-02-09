@@ -40,8 +40,8 @@ import ModeratorBadgeElement from '../../../../PublicApi/Elements/ModeratorBadge
 import { ComponentID, PageID } from '../../../../enum';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';
 import RenderTextWithMention from '../../../../component/RenderTextWithMention/RenderTextWithMention';
-import uiSlice from '../../../../../redux/slices/uiSlice';
-import { useUIKitDispatch } from '../../../../../redux/store';
+import uiSlice from '../../../../../core/stores/slices/uiSlice';
+import { useUIKitDispatch } from '../../../../../core/stores/store';
 
 export interface IComment {
   commentId: string;

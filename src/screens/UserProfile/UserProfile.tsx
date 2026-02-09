@@ -27,9 +27,9 @@ import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import FloatingButton from '../../components/FloatingButton';
 import { TabName, PostTargetType } from '../../core/enums';
-import uiSlice from '../../redux/slices/uiSlice';
+import uiSlice from '../../core/stores/slices/uiSlice';
 import UserProfileGallery from './Components/UserProfileGallery';
-import { useUIKitDispatch } from '../../redux/store';
+import { useUIKitDispatch } from '../../core/stores/store';
 
 export default function UserProfile({ route }: any) {
   const theme = useTheme() as MyMD3Theme;

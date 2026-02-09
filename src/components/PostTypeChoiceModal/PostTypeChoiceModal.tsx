@@ -16,12 +16,12 @@ import {
 import { useStyles } from './style';
 import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
-import uiSlice from '../../redux/slices/uiSlice';
+import uiSlice from '../../core/stores/slices/uiSlice';
 import {
   RootState,
   useUIKitDispatch,
   useUIKitSelector,
-} from '../../redux/store';
+} from '../../core/stores/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes/RouteParamList';

@@ -29,7 +29,7 @@ import { defaultAvatarUri } from '../../../assets/index';
 import { getMediaTypeFromUrl } from '../../../../util/urlUtil';
 import { LoadingOverlay } from '../../../../components/LoadingOverlay';
 import mime from 'mime';
-import { useToast } from '../../../../v4/stores/slices/toast';
+import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({

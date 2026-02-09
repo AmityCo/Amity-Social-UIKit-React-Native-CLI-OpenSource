@@ -19,7 +19,7 @@ import { SvgXml } from 'react-native-svg';
 import { Typography } from '../../../component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
-import { useBottomSheet } from '../../../../redux/slices/bottomSheetSlice';
+import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
 import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import { PostRepository, RoomRepository } from '@amityco/ts-sdk-react-native';
@@ -41,7 +41,7 @@ import { LiveKitRoom, registerGlobals } from '@livekit/react-native';
 import { RoomView } from './RoomView';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
 import { useRoomSubscription } from '../../../../v4/hook/useRoomSubscription';
-import { useToast } from '../../../../v4/stores/slices/toast';
+import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { usePostSubscription } from '../../../../v4/hook';
 import { useRoom } from '../../../../v4/features/room/hooks/useRoom';
 

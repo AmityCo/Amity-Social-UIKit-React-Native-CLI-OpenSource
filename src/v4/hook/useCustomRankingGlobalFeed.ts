@@ -1,12 +1,12 @@
 import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import globalFeedSlice from '../../redux/slices/globalfeedSlice';
+import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
 import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import {
   RootState,
   useUIKitDispatch,
   useUIKitSelector,
-} from '../../redux/store';
+} from '../../core/stores/store';
 import { usePaginatorApi } from '../../v4/hook/usePaginator';
 import { IComment } from '../../components/Social/CommentList';
 import useAuth from '../../core/hooks/useAuth';

@@ -5,10 +5,10 @@ import { useStyles } from './style';
 import { Typography } from '../../../../../../v4/component/Typography/Typography';
 import MenuButton from '../../../../../../v4/elements/MenuButton';
 import useAuth from '../../../../../../core/hooks/useAuth';
-import { useBottomSheet } from '../../../../../../redux/slices/bottomSheetSlice';
+import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
 import MenuAction from '../../../../../../v4/elements/MenuAction';
 import { MemberRoles } from '../../../../../../v4/constants';
-import { useToast } from '../../../../../../v4/stores/slices/toast';
+import { useToast } from '../../../../../../core/stores/slices/toastSlice';
 import {
   demote,
   promote,

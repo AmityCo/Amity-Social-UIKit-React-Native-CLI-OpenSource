@@ -9,11 +9,11 @@ import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement
 import AdInformation from '../AdInformation/AdInformation';
 import { infoIcon } from '../../../svg/svg-xml-list';
 import { defaultAdAvatarUri } from '../../assets';
-import bottomSheetSlice from '../../../redux/slices/bottomSheetSlice';
+import bottomSheetSlice from '../../../core/stores/slices/bottomSheetSlice';
 import AssetDownloader from '../../engine/AssetDownloader';
 import AdEngine from '../../engine/AdEngine';
 import { Linking } from 'react-native';
-import { useUIKitDispatch } from '../../../redux/store';
+import { useUIKitDispatch } from '../../../core/stores/store';
 
 type CommnetAdComponentType = {
   pageId?: PageID;

@@ -13,7 +13,7 @@ import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import { Radio } from '../../../../v4/component/core/Radio';
 import { useMutation } from '@tanstack/react-query';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { useToast } from '../../../../v4/stores/slices/toast';
+import { useToast } from '../../../../core/stores/slices/toastSlice';
 type CommunityStoriesNotificationSettingProps = {
   community: Amity.Community;
 };

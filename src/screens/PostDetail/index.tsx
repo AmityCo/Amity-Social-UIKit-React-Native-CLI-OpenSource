@@ -47,7 +47,7 @@ import {
   RootState,
   useUIKitDispatch,
   useUIKitSelector,
-} from '../../redux/store';
+} from '../../core/stores/store';
 import { IMentionPosition } from '../CreatePost';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../svg/svg-xml-list';
@@ -55,9 +55,9 @@ import { amityPostsFormatter } from '../../util/postDataFormatter';
 import { deletePostById } from '../../core/legacy/feed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TSearchItem } from '../../core/hooks/useSearch';
-import globalFeedSlice from '../../redux/slices/globalfeedSlice';
-import feedSlice from '../../redux/slices/feedSlice';
-import postDetailSlice from '../../redux/slices/postDetailSlice';
+import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
+import feedSlice from '../../core/stores/slices/feedSlice';
+import postDetailSlice from '../../core/stores/slices/postDetailSlice';
 import useMention from '../../v4/hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 

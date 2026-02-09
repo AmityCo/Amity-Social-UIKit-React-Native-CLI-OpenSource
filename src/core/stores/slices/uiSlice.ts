@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { PostTargetType } from '../../core/enums';
+import { PostTargetType } from '../../enums';
 
 interface UIState {
   showPostTypeChoiceModal: boolean;

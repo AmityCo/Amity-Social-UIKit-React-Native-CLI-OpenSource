@@ -13,7 +13,7 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Radio } from '../../../../v4/component/core/Radio';
 import { useMutation } from '@tanstack/react-query';
-import { useToast } from '../../../../v4/stores/slices/toast';
+import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';

@@ -38,13 +38,13 @@ import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { checkCommunityPermission } from '../../core/legacy/community';
 import useAuth from '../../core/hooks/useAuth';
 import { TSearchItem } from '../../core/hooks/useSearch';
-import globalFeedSlice from '../../redux/slices/globalfeedSlice';
+import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
-import feedSlice from '../../redux/slices/feedSlice';
+import feedSlice from '../../core/stores/slices/feedSlice';
 import { useRequestPermission } from '../../v4/hook/useCamera';
 import useMention from '../../v4/hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
-import { useUIKitDispatch } from '../../redux/store';
+import { useUIKitDispatch } from '../../core/stores/store';
 
 export interface IDisplayImage {
   url: string;

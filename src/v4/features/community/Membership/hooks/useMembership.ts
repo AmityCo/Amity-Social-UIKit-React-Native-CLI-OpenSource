@@ -1,6 +1,6 @@
 import { RootStackParamList } from '../../../../../v4/routes/RouteParamList';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { useToast } from '../../../../../v4/stores/slices/toast';
+import { useToast } from '../../../../../core/stores/slices/toastSlice';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useMutation } from '@tanstack/react-query';

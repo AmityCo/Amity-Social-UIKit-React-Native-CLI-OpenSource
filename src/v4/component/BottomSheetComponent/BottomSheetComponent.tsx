@@ -1,6 +1,6 @@
 import { useStyles } from './styles';
 import React, { memo, useEffect, useRef } from 'react';
-import { useBottomSheet } from '../../../redux/slices/bottomSheetSlice';
+import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 
 const BottomSheetComponent = () => {

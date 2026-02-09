@@ -1,7 +1,7 @@
 import { useStyles } from './styles';
 import { Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { useToast } from '../../stores/slices/toast';
+import { useToast } from '../../../core/stores/slices/toastSlice';
 import React, { memo, useEffect, useRef } from 'react';
 import { Typography } from '../Typography/Typography';
 import { informative, failed, success } from '../../assets/icons';

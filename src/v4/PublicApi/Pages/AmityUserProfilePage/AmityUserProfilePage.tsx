@@ -45,13 +45,13 @@ import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import FloatingButton from '../../../../components/FloatingButton';
 import { TabName, PostTargetType } from '../../../../core/enums';
-import uiSlice from '../../../../redux/slices/uiSlice';
+import uiSlice from '../../../../core/stores/slices/uiSlice';
 import GalleryComponent from '../../../component/Gallery/GalleryComponent';
 import { useFile } from '../../../hook';
 import { defaultAvatarUri } from '../../../assets';
 import { ImageSizeState } from '../../../enum';
 
-import { useUIKitDispatch } from '../../../../redux/store';
+import { useUIKitDispatch } from '../../../../core/stores/store';
 import BackButton from '../../../../components/BackButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

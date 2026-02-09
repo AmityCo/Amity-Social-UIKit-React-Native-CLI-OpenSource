@@ -39,9 +39,9 @@ import AmityPostCommentComponent from '../../../../v4/PublicApi/Components/Amity
 import { closeIcon } from '../../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import { IMentionPosition } from '../../../../types';
-import uiSlice from '../../../../redux/slices/uiSlice';
+import uiSlice from '../../../../core/stores/slices/uiSlice';
 import NetInfo from '@react-native-community/netinfo';
-import { useToast } from '../../../../v4/stores/slices/toast';
+import { useToast } from '../../../../core/stores/slices/toastSlice';
 import MyAvatar from '../../../../v4/component/MyAvatar/MyAvatar';
 import {
   comment_contains_inapproproate_word,
@@ -59,7 +59,7 @@ import {
   createComment,
   createReplyComment,
 } from '../../../../core/legacy/comment';
-import { useUIKitDispatch } from '../../../../redux/store';
+import { useUIKitDispatch } from '../../../../core/stores/store';
 
 type AmityPostDetailPageType = {
   postId: Amity.Post['postId'];

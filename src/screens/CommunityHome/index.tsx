@@ -37,9 +37,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import FloatingButton from '../../components/FloatingButton';
 import useFile from '../../core/hooks/useFile';
 import { TabName, PostTargetType } from '../../core/enums';
-import uiSlice from '../../redux/slices/uiSlice';
+import uiSlice from '../../core/stores/slices/uiSlice';
 import CommunityStories from '../../components/CommunityStories';
-import { useUIKitDispatch } from '../../redux/store';
+import { useUIKitDispatch } from '../../core/stores/store';
 
 export type FeedRefType = {
   handleLoadMore: () => void;

@@ -18,8 +18,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import dayjs from 'dayjs';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
-import globalFeedSlice from '../../../../redux/slices/globalfeedSlice';
-import { useToast } from '../../../stores/slices/toast';
+import globalFeedSlice from '../../../../core/stores/slices/globalfeedSlice';
+import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { DAY, MAX_POLL_ANSWER_LENGTH } from '../../../constants';
 import { PollHeader } from './PollHeader';
 import { PollQuestion } from './PollQuestion';
@@ -30,7 +30,7 @@ import { AndroidBottomSheet, IOSBottomSheet } from './PollDurationBottomSheet';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import useMention from '../../../hook/useMention';
 import { IMentionPosition } from '../../../../types';
-import { useUIKitDispatch } from '../../../../redux/store';
+import { useUIKitDispatch } from '../../../../core/stores/store';
 
 type PollDurationValue = {
   value: number;

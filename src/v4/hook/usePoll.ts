@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { PollRepository } from '@amityco/ts-sdk-react-native';
-import { useToast } from '../stores/slices/toast';
+import { useToast } from '../../core/stores/slices/toastSlice';
 
 export const usePoll = (pollId: string) => {
   const [poll, setPoll] = useState<Amity.Poll | undefined>(undefined);

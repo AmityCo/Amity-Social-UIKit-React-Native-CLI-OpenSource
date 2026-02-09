@@ -26,8 +26,8 @@ import {
   RootState,
   useUIKitDispatch,
   useUIKitSelector,
-} from '../../redux/store';
-import feedSlice from '../../redux/slices/feedSlice';
+} from '../../core/stores/store';
+import feedSlice from '../../core/stores/slices/feedSlice';
 import { useFocusEffect } from '@react-navigation/native';
 
 interface IFeed {

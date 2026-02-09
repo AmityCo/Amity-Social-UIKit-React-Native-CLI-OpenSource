@@ -15,9 +15,9 @@ import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import AllMyCommunity from '../../screens/AllMyCommunity';
 import { TabName } from '../../core/enums';
 import { useNavigation } from '@react-navigation/native';
-import uiSlice from '../../redux/slices/uiSlice';
+import uiSlice from '../../core/stores/slices/uiSlice';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useUIKitDispatch } from '../../redux/store';
+import { useUIKitDispatch } from '../../core/stores/store';
 
 LogBox.ignoreAllLogs(true);
 export default function Home() {

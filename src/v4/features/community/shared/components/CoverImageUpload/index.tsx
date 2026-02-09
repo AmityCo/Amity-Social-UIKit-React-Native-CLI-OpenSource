@@ -8,7 +8,7 @@ import { getFileUrlWithSize } from '../../../../../../v4/utils';
 import { imageUpload } from '../../../../../../v4/assets/icons';
 import CameraButton from '../../../../../../v4/elements/CameraButton';
 import LinearGradient from 'react-native-linear-gradient';
-import { useBottomSheet } from '../../../../../../redux/slices/bottomSheetSlice';
+import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
 import { UseImagePickerResponse } from '../../../../../../v4/hook/useImagePicker';
 import { Image, Platform, TouchableOpacity, View } from 'react-native';
 import { CircularProgressIndicator } from '../../../../../../v4/component/CircularProgressIndicator';

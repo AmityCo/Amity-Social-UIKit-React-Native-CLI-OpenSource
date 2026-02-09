@@ -4,7 +4,7 @@ import feedSlice from '../slices/feedSlice';
 import postDetailSlice from '../slices/postDetailSlice';
 import uiSlice from '../slices/uiSlice';
 import bottomSheetSlice from '../slices/bottomSheetSlice';
-import toastSlice from '../../v4/stores/slices/toast';
+import toastSlice from '../slices/toastSlice';
 import { createContext } from 'react';
 import {
   createStoreHook,

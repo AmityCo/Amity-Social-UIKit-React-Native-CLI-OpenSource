@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useToast } from '../stores/slices/toast';
+import { useToast } from '../../core/stores/slices/toastSlice';
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 
 type DeletePostResponse = Awaited<ReturnType<typeof PostRepository.deletePost>>;

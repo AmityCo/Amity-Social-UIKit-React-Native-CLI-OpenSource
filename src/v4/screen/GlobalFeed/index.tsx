@@ -8,12 +8,12 @@ import useAuth from '../../../core/hooks/useAuth';
 import PostList from '../../../components/Social/PostList';
 import { useStyle } from './styles';
 import { amityPostsFormatter } from '../../../util/postDataFormatter';
-import globalFeedSlice from '../../../redux/slices/globalfeedSlice';
+import globalFeedSlice from '../../../core/stores/slices/globalfeedSlice';
 import {
   RootState,
   useUIKitDispatch,
   useUIKitSelector,
-} from '../../../redux/store';
+} from '../../../core/stores/store';
 import { useFocusEffect } from '@react-navigation/native';
 import { RefreshControl } from 'react-native';
 import MyStories from '../../../components/MyStories';

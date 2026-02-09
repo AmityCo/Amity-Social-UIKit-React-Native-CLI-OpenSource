@@ -3,7 +3,7 @@ import { useColorScheme } from 'react-native';
 import { Provider } from 'react-redux';
 import AuthContextProvider from './AuthProvider';
 import { DefaultTheme, PaperProvider, type MD3Theme } from 'react-native-paper';
-import { AmityUIKitReduxContext, store } from '../../redux/store';
+import { AmityUIKitReduxContext, store } from '../stores/store';
 import { ConfigProvider } from './ConfigProvider';
 import { IConfigRaw } from '../../v4/types/config.interface';
 import { validateConfigColor } from '../../util/colorUtil';

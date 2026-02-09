@@ -23,13 +23,13 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { amityPostsFormatter } from '../../util/postDataFormatter';
-import postDetailSlice from '../../redux/slices/postDetailSlice';
-import globalFeedSlice from '../../redux/slices/globalfeedSlice';
-import feedSlice from '../../redux/slices/feedSlice';
+import postDetailSlice from '../../core/stores/slices/postDetailSlice';
+import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
+import feedSlice from '../../core/stores/slices/feedSlice';
 import { TSearchItem } from '../../core/hooks/useSearch';
 import useMention from '../../v4/hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
-import { useUIKitDispatch } from '../../redux/store';
+import { useUIKitDispatch } from '../../core/stores/store';
 interface IModal {
   visible: boolean;
   userId?: string;

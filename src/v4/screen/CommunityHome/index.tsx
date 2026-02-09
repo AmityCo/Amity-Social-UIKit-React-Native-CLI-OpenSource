@@ -45,7 +45,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import FloatingButton from '../../../components/FloatingButton';
 import useFile from '../../../core/hooks/useFile';
 import { TabName, PostTargetType } from '../../../core/enums';
-import uiSlice from '../../../redux/slices/uiSlice';
+import uiSlice from '../../../core/stores/slices/uiSlice';
 import useConfig from '../../hook/useConfig';
 import { ComponentID } from '../../enum/enumUIKitID';
 import AmityStoryTabComponent from '../../PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
@@ -53,7 +53,7 @@ import { AmityStoryTabComponentEnum } from '../../PublicApi/types/index';
 import GalleryComponent from '../../component/Gallery/GalleryComponent';
 import { RootStackParamList } from '../../../v4/routes/RouteParamList';
 import BackButton from '../../../components/BackButton';
-import { useUIKitDispatch } from '../../../redux/store';
+import { useUIKitDispatch } from '../../../core/stores/store';
 
 export type FeedRefType = {
   handleLoadMore: () => void;

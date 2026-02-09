@@ -8,10 +8,10 @@ import { useAmityComponent } from '../../hook';
 import { infoIcon } from '../../../svg/svg-xml-list';
 import { SvgXml } from 'react-native-svg';
 import AdInformation from '../AdInformation/AdInformation';
-import bottomSheetSlice from '../../../redux/slices/bottomSheetSlice';
+import bottomSheetSlice from '../../../core/stores/slices/bottomSheetSlice';
 import AdEngine from '../../engine/AdEngine';
 import AssetDownloader from '../../engine/AssetDownloader';
-import { useUIKitDispatch } from '../../../redux/store';
+import { useUIKitDispatch } from '../../../core/stores/store';
 
 type PostAdComponentType = {
   pageId?: PageID;

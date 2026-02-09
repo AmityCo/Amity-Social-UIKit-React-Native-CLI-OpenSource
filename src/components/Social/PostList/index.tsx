@@ -34,15 +34,15 @@ import useAuth from '../../../core/hooks/useAuth';
 import EditPostModal from '../../../components/EditPostModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
-import postDetailSlice from '../../../redux/slices/postDetailSlice';
-import globalFeedSlice from '../../../redux/slices/globalfeedSlice';
+import postDetailSlice from '../../../core/stores/slices/postDetailSlice';
+import globalFeedSlice from '../../../core/stores/slices/globalfeedSlice';
 import { IMentionPosition } from '../../../screens/CreatePost';
-import feedSlice from '../../../redux/slices/feedSlice';
+import feedSlice from '../../../core/stores/slices/feedSlice';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { useTimeDifference } from '../../../core/hooks/useTimeDifference';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import PostContent from '../../../v4/component/PostContent';
-import { useUIKitDispatch } from '../../../redux/store';
+import { useUIKitDispatch } from '../../../core/stores/store';
 
 export interface IPost {
   postId: string;

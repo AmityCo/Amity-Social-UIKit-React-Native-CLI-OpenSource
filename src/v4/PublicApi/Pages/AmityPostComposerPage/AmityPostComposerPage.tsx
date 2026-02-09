@@ -30,10 +30,10 @@ import { AmityPostComposerMode, AmityPostComposerPageType } from '../../types';
 import { IDisplayImage, IMentionPosition } from '../../../../v4/types/type';
 import CloseButtonIconElement from '../../Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
-import uiSlice from '../../../../redux/slices/uiSlice';
+import uiSlice from '../../../../core/stores/slices/uiSlice';
 import { amityPostsFormatter } from '../../../../util/postDataFormatter';
 import useAuth from '../../../../core/hooks/useAuth';
-import globalfeedSlice from '../../../../redux/slices/globalfeedSlice';
+import globalfeedSlice from '../../../../core/stores/slices/globalfeedSlice';
 import {
   createPostToFeed,
   editPost,
@@ -58,7 +58,7 @@ import useMention from '../../../hook/useMention';
 import { getPostErrorMessage } from '../../../utils/errors';
 import { MAXIMUM_POST_CHARACTERS } from '../../../constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
-import { useUIKitDispatch } from '../../../../redux/store';
+import { useUIKitDispatch } from '../../../../core/stores/store';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

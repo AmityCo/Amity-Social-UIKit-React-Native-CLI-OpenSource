@@ -29,7 +29,7 @@ import CommentAdComponent from '../../CommentAdComponent/CommentAdComponent';
 import useMention from '../../../hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import MyAvatar from '../../MyAvatar/MyAvatar';
-import { useToast } from '../../../../v4/stores/slices/toast';
+import { useToast } from '../../../../core/stores/slices/toastSlice';
 
 interface ICommentListProp {
   postId: string;
