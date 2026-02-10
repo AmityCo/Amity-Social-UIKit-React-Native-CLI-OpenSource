@@ -152,7 +152,9 @@ function UserProfile({
         </TouchableOpacity>
       ),
       headerLeft: () => {
-        return isShowBackButton ? <BackButton onPress={handleGoBack} /> : null;
+        return isShowBackButton ? (
+          <BackButton goBack={false} onPress={handleGoBack} />
+        ) : null;
       },
     });
   }, [

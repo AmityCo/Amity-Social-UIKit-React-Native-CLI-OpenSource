@@ -42,6 +42,9 @@ import AmityReactionListComponent from '../../AmityReactionListComponent/AmityRe
 import RenderTextWithMention from '../../../../component/RenderTextWithMention/RenderTextWithMention';
 import uiSlice from '../../../../../redux/slices/uiSlice';
 import { useUIKitDispatch } from '../../../../../redux/store';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '~/routes/RouteParamList';
 
 export interface IComment {
   commentId: string;
@@ -65,14 +68,12 @@ export interface IReplyCommentList {
   commentId: string;
   commentDetail: IComment;
   onDelete?: (commentId: string) => void;
-  onHandleReply?: (user: UserInterface, commentId: string) => void;
 }
 
 const ReplyCommentList = ({
   commentDetail,
   onDelete,
   commentId,
-  onHandleReply,
 }: IReplyCommentList) => {
   const {
     data,
@@ -108,6 +109,8 @@ const ReplyCommentList = ({
   const [editCommentModal, setEditCommentModal] = useState<boolean>(false);
   const [isEditComment, setIsEditComment] = useState<boolean>(false);
   const slideAnimation = useRef(new Animated.Value(0)).current;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const openModal = () => {
     setIsVisible(true);
@@ -215,10 +218,6 @@ const ReplyCommentList = ({
     setIsReactionListVisible(true);
   };
 
-  const onPressReply = () => {
-    onHandleReply && onHandleReply(user, commentId);
-  };
-
   return (
     <View key={commentId} style={styles.replyCommentWrap}>
       <View style={styles.replyHeaderSection}>
@@ -236,7 +235,16 @@ const ReplyCommentList = ({
         )}
         <View style={styles.rightSection}>
           <View style={styles.commentBubble}>
-            <Text style={styles.headerText}>{user?.displayName}</Text>
+            <TouchableOpacity
+              onPress={() =>
+                user?.userId &&
+                navigation.navigate('UserProfile', {
+                  userId: user?.userId || '',
+                })
+              }
+            >
+              <Text style={styles.headerText}>{user?.displayName}</Text>
+            </TouchableOpacity>
             {targetType === 'community' && targetId && (
               <View style={{ marginVertical: 6 }}>
                 <ModeratorBadgeElement
@@ -275,9 +283,6 @@ const ReplyCommentList = ({
                 <Text style={isLike ? styles.likedText : styles.btnText}>
                   {!isLike ? 'Like' : 'Liked'}
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={onPressReply} style={styles.likeBtn}>
-                <Text style={styles.btnText}>Reply</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={openModal} style={styles.threeDots}>
                 <SvgXml

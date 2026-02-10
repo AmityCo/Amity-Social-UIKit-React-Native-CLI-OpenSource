@@ -48,6 +48,9 @@ import { LinkPreview } from '../../../../component/PreviewLink/LinkPreview';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';
 import uiSlice from '../../../../../redux/slices/uiSlice';
 import { useUIKitDispatch } from '../../../../../redux/store';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '~/routes/RouteParamList';
 
 export interface IComment {
   commentId: string;
@@ -129,6 +132,8 @@ const CommentListItem = ({
   const [isEditComment, setIsEditComment] = useState<boolean>(false);
   const slideAnimation = useRef(new Animated.Value(0)).current;
   const [isReactionListVisible, setIsReactionListVisible] = useState(false);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     getReplyComments();
@@ -331,7 +336,16 @@ const CommentListItem = ({
         )}
         <View style={styles.rightSection}>
           <View style={styles.commentBubble}>
-            <Text style={styles.headerText}>{user?.displayName}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                user?.userId &&
+                  navigation.navigate('UserProfile', {
+                    userId: user?.userId || '',
+                  });
+              }}
+            >
+              <Text style={styles.headerText}>{user?.displayName}</Text>
+            </TouchableOpacity>
             {targetType === 'community' && targetId && (
               <View style={{ marginVertical: 6 }}>
                 <ModeratorBadgeElement
@@ -410,7 +424,6 @@ const CommentListItem = ({
                 previewReplyCommentList[previewReplyCommentList.length - 1]
               }
               onDelete={onDelete}
-              onHandleReply={onHandleReply}
             />
           )}
           {isOpenReply && replyCommentList?.length > 0 && (
@@ -421,7 +434,6 @@ const CommentListItem = ({
                   commentId={item.commentId}
                   commentDetail={item}
                   onDelete={onDelete}
-                  onHandleReply={onHandleReply}
                 />
               )}
               keyExtractor={(item) => item.commentId}
