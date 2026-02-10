@@ -1,113 +1,56 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import {
   AmityUiKitProvider,
   AmityUiKitSocial,
 } from '@amityco/react-native-social-uikit';
+import { OneSignal, LogLevel } from 'react-native-onesignal'; // Import OneSignal
 import config from '../uikit.config.json';
-import messaging from '@react-native-firebase/messaging';
-import { useEffect, useState } from 'react';
-import { PermissionsAndroid, Platform } from 'react-native';
-
-messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  console.log('Background notification:', remoteMessage);
-});
 
 export default function App() {
-  const [fcmToken, setFcmToken] = useState(null);
-  const [permissionGranted, setPermissionGranted] = useState(false);
+  const [pushToken, setPushToken] = useState(null);
+  console.log('pushToken: ', pushToken);
+
   useEffect(() => {
-    let granted: boolean;
-    messaging()
-      .hasPermission()
-      .then((enabled) => {
-        granted =
-          enabled === messaging.AuthorizationStatus.AUTHORIZED ||
-          enabled === messaging.AuthorizationStatus.PROVISIONAL;
-        if (!granted) {
-          if (Platform.OS === 'android' && Platform.Version > 33) {
-            PermissionsAndroid.request('android.permission.POST_NOTIFICATIONS')
-              .then((result) => {
-                granted = result === PermissionsAndroid.RESULTS.GRANTED;
-              })
-              .finally(() => {
-                setPermissionGranted(granted);
-              });
-          } else {
-            messaging()
-              .requestPermission()
-              .then((result) => {
-                granted =
-                  result === messaging.AuthorizationStatus.AUTHORIZED ||
-                  result === messaging.AuthorizationStatus.PROVISIONAL;
-              })
-              .finally(() => {
-                setPermissionGranted(granted);
-              });
-          }
-        }
-      })
-      .catch((error) => console.log(error))
-      .finally(() => {
-        setPermissionGranted(granted);
-      });
+    // 1. Initialize OneSignal
+    OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+    OneSignal.initialize('128d4bfb-a7d1-4863-9267-2d79a3b5c73a'); // Replace with your App ID
+    OneSignal.Notifications.requestPermission(true);
+    // 2. Get Push Token
+    const fetchToken = async () => {
+      const token = await OneSignal.User.pushSubscription.getTokenAsync();
+      if (token) {
+        setPushToken(token);
+      }
+    };
+
+    fetchToken();
+
+    const listener = () => {
+      fetchToken();
+    };
+
+    OneSignal.User.pushSubscription.addEventListener('change', listener);
+    OneSignal.Notifications.addEventListener('click', (event) => {
+      console.log('OneSignal: notification clicked:', event);
+    });
+
     return () => {
-      messaging().onTokenRefresh((token) => setFcmToken(token));
+      OneSignal.User.pushSubscription.removeEventListener('change', listener);
     };
   }, []);
 
-  useEffect(() => {
-    let unsubscribe: () => void;
-    if (permissionGranted) {
-      messaging()
-        .registerDeviceForRemoteMessages()
-        .then(() =>
-          Platform.select({
-            ios: messaging().getAPNSToken(),
-            android: messaging().getToken(),
-          })
-        )
-        .then(async (token) => {
-          setFcmToken(token);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+  if (!pushToken) return null;
 
-      messaging().onNotificationOpenedApp((remoteMessage) => {
-        console.log(
-          'Notification caused app to open from background state:',
-          remoteMessage.notification
-        );
-      });
-
-      messaging()
-        .getInitialNotification()
-        .then((remoteMessage) => {
-          if (remoteMessage) {
-            console.log(
-              'Notification caused app to open from quit state:',
-              remoteMessage.notification
-            );
-          }
-        });
-      unsubscribe = messaging().onMessage(async (remoteMessage) => {
-        console.log(remoteMessage);
-      });
-    }
-
-    return () => unsubscribe?.();
-  }, [permissionGranted]);
-
-  if (!fcmToken) return null;
   return (
     <AmityUiKitProvider
-      configs={config} //put your config json object
-      apiKey="YOUR_API_KEY" // Put your apiKey
-      apiRegion="API_REGION" // Put your apiRegion
-      userId="USER_ID" // Put your UserId
-      displayName="DISPLAYNAME" // Put your displayName
-      apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
-      fcmToken={fcmToken} // android:fcm iOS:APN
+      configs={config}
+      apiKey="b0ebeb5939def76019308d4a530b12ddd558dde5bf346e2e"
+      apiRegion="us"
+      userId="topAmity"
+      displayName="topAmity"
+      apiEndpoint="https://api.us.amity.co"
+      fcmToken={pushToken}
     >
       <AmityUiKitSocial />
     </AmityUiKitProvider>
