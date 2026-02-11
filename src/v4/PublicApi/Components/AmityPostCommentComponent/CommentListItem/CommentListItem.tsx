@@ -180,6 +180,7 @@ const CommentListItem = ({
             userId: userObject.data.userId,
             displayName: userObject.data.displayName,
             avatarFileId: userObject.data.avatarFileId,
+            avatarCustomUrl: userObject.data?.avatarCustomUrl,
           };
 
           return {
@@ -326,7 +327,9 @@ const CommentListItem = ({
           <Image
             style={styles.avatar}
             source={{
-              uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
+              uri: user?.avatarCustomUrl
+                ? user?.avatarCustomUrl
+                : `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
             }}
           />
         ) : (

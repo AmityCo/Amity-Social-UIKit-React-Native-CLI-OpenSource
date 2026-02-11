@@ -116,7 +116,8 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         formattedUserObject = {
           userId: userObject.data.userId,
           displayName: userObject.data.displayName,
-          avatarFileId: userObject.data.avatarFileId,
+          avatarFileId: userObject.data?.avatarFileId,
+          avatarCustomUrl: userObject.data?.avatarCustomUrl,
         };
 
         return {

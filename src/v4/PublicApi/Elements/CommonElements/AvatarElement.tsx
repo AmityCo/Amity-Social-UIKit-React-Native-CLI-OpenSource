@@ -15,6 +15,7 @@ type AvatarElementType = Partial<ImageProps> & {
   targetType?: 'community' | 'user';
   // to bypass the default avatar
   defaultAvatar?: string;
+  avatarCustomUrl?: string;
 };
 
 const AvatarElement: FC<AvatarElementType> = ({
@@ -24,6 +25,8 @@ const AvatarElement: FC<AvatarElementType> = ({
   elementID,
   targetType,
   defaultAvatar,
+  avatarCustomUrl,
+
   ...props
 }) => {
   const { client } = useAuth();
@@ -33,25 +36,33 @@ const AvatarElement: FC<AvatarElementType> = ({
       ? defaultCommunityAvatarUri
       : defaultAvatarUri;
   }, [defaultAvatar, targetType]);
-
   const [avatarUrl, setAvatarUrl] = useState<string>(fallbackAvatar);
   const { excludes } = useConfig();
   const configId = `${pageID}/${componentID}/${elementID}`;
   const { getImage } = useFile();
 
   useLayoutEffect(() => {
-    if (!avatarId) {
-      setAvatarUrl(fallbackAvatar);
-      return;
-    }
-    (async () => {
+    const loadAvatar = async () => {
+      if (avatarCustomUrl) {
+        setAvatarUrl(avatarCustomUrl);
+        return;
+      }
+
+      if (!avatarId) {
+        setAvatarUrl(fallbackAvatar);
+        return;
+      }
+
       const avatar = await getImage({
         fileId: avatarId,
         imageSize: ImageSizeState.small,
       });
-      setAvatarUrl(avatar);
-    })();
-  }, [avatarId, fallbackAvatar, getImage]);
+
+      setAvatarUrl(avatar ?? fallbackAvatar);
+    };
+
+    loadAvatar();
+  }, [avatarId, fallbackAvatar, getImage, avatarCustomUrl]);
 
   if (excludes.includes(configId)) return null;
 

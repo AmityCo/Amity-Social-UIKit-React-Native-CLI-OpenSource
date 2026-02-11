@@ -80,6 +80,7 @@ export function PollResults({ options, totalVotes }: PollResultsProps) {
                   targetType="user"
                   style={styles.optionAvatar}
                   avatarId={user?.avatarFileId}
+                  avatarCustomUrl={user?.avatarCustomUrl}
                   elementID={ElementID.WildCardElement}
                 />
               )}

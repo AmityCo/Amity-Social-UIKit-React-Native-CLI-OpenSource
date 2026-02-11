@@ -100,7 +100,6 @@ const ReplyCommentList = ({
   const [likeReaction, setLikeReaction] = useState<number>(
     reactions.like ? reactions.like : 0
   );
-
   const { client, apiRegion } = useAuth();
   const [textComment, setTextComment] = useState<string>(data.text);
   const [isVisible, setIsVisible] = useState(false);
@@ -225,7 +224,9 @@ const ReplyCommentList = ({
           <Image
             style={styles.avatar}
             source={{
-              uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
+              uri: user?.avatarCustomUrl
+                ? user?.avatarCustomUrl
+                : `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
             }}
           />
         ) : (
