@@ -221,18 +221,27 @@ const ReplyCommentList = ({
   return (
     <View key={commentId} style={styles.replyCommentWrap}>
       <View style={styles.replyHeaderSection}>
-        {user?.avatarFileId ? (
-          <Image
-            style={styles.avatar}
-            source={{
-              uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
-            }}
-          />
-        ) : (
-          <View style={styles.avatar}>
-            <SvgXml xml={personXml} width="20" height="16" />
-          </View>
-        )}
+        <TouchableOpacity
+          onPress={() =>
+            user?.userId &&
+            navigation.navigate('UserProfile', {
+              userId: user?.userId || '',
+            })
+          }
+        >
+          {user?.avatarFileId ? (
+            <Image
+              style={styles.avatar}
+              source={{
+                uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
+              }}
+            />
+          ) : (
+            <View style={styles.avatar}>
+              <SvgXml xml={personXml} width="20" height="16" />
+            </View>
+          )}
+        </TouchableOpacity>
         <View style={styles.rightSection}>
           <View style={styles.commentBubble}>
             <TouchableOpacity
