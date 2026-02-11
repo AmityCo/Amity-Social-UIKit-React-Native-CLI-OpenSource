@@ -84,7 +84,7 @@ android {
         applicationId "com.amityreactnativesocialuikitexample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 77
         versionName "1.0"
     }
     signingConfigs {

@@ -91,16 +91,17 @@ export const useStyles = () => {
     rowContainer: {
       flexDirection: 'row',
       alignItems: 'center',
+      gap: 8,
     },
     likedText: {
       color: theme.colors.primary,
-      fontSize: 14,
+      fontSize: 13,
       fontWeight: '600',
       marginLeft: 1,
     },
     btnText: {
       color: theme.colors.baseShade2,
-      fontSize: 14,
+      fontSize: 13,
       fontWeight: '600',
     },
     threeDots: {
