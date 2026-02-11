@@ -65,6 +65,7 @@ import AmityCommunityProfilePage from '../PublicApi/Pages/AmityCommunityProfileP
 import LivestreamTerminated from '../screen/LivestreamTerminated';
 import PollTargetSelection from '../screen/PollTargetSelection';
 import LivestreamPostTargetSelection from '../screen/LivestreamPostTargetSelection';
+import CommunityMembership from '../screen/CommunityMembership';
 
 interface PageRendererProps {
   children: React.JSX.Element;
@@ -82,6 +83,7 @@ export default function PageRenderer({ children }: PageRendererProps) {
           <Stack.Navigator
             id={undefined}
             screenOptions={{
+              headerShown: false,
               headerShadowVisible: false,
               contentStyle: {
                 backgroundColor: theme.colors.background,
@@ -191,6 +193,10 @@ export default function PageRenderer({ children }: PageRendererProps) {
             <Stack.Screen
               name="CommunityAddMember"
               component={CommunityAddMember}
+            />
+            <Stack.Screen
+              name="CommunityMembership"
+              component={CommunityMembership}
             />
             <Stack.Screen
               name="CommunityPostPermission"
