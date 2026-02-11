@@ -50,7 +50,7 @@ import uiSlice from '../../../../../redux/slices/uiSlice';
 import { useUIKitDispatch } from '../../../../../redux/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '~/routes/RouteParamList';
+import { RootStackParamList } from '../../../../routes/RouteParamList';
 
 export interface IComment {
   commentId: string;
@@ -323,20 +323,29 @@ const CommentListItem = ({
   return (
     <View key={commentId} style={styles.commentWrap}>
       <View style={styles.headerSection}>
-        {user?.avatarFileId ? (
-          <Image
-            style={styles.avatar}
-            source={{
-              uri: user?.avatarCustomUrl
-                ? user?.avatarCustomUrl
-                : `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
-            }}
-          />
-        ) : (
-          <View style={styles.avatar}>
-            <SvgXml xml={personXml} width="20" height="16" />
-          </View>
-        )}
+        <TouchableOpacity
+          onPress={() => {
+            user?.userId &&
+              navigation.navigate('UserProfile', {
+                userId: user?.userId || '',
+              });
+          }}
+        >
+          {user?.avatarFileId ? (
+            <Image
+              style={styles.avatar}
+              source={{
+                uri: user?.avatarCustomUrl
+                  ? user?.avatarCustomUrl
+                  : `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
+              }}
+            />
+          ) : (
+            <View style={styles.avatar}>
+              <SvgXml xml={personXml} width="20" height="16" />
+            </View>
+          )}
+        </TouchableOpacity>
         <View style={styles.rightSection}>
           <View style={styles.commentBubble}>
             <TouchableOpacity
