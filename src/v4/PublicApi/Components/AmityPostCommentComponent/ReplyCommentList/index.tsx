@@ -44,7 +44,7 @@ import uiSlice from '../../../../../redux/slices/uiSlice';
 import { useUIKitDispatch } from '../../../../../redux/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '~/routes/RouteParamList';
+import { RootStackParamList } from '../../../../routes/RouteParamList';
 
 export interface IComment {
   commentId: string;
