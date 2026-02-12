@@ -91,6 +91,9 @@ const SearchResultItem: FC<SearchResultItemType> = ({
         pageID={pageId}
         componentID={componentId}
         elementID={ElementID.community_avatar}
+        avatarCustomUrl={
+          searchType === TabName.Users ? item?.avatarCustomUrl : undefined
+        }
         targetType={searchType === TabName.Communities ? 'community' : 'user'}
       />
       <View style={styles.profileInfoContainer}>

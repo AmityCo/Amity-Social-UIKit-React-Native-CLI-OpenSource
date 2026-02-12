@@ -151,7 +151,9 @@ function UserProfile({
         </TouchableOpacity>
       ),
       headerLeft: () => {
-        return isShowBackButton ? <BackButton onPress={handleGoBack} /> : null;
+        return isShowBackButton ? (
+          <BackButton goBack={false} onPress={handleGoBack} />
+        ) : null;
       },
     });
   }, [
@@ -173,17 +175,32 @@ function UserProfile({
   }, [client]);
 
   useEffect(() => {
-    if (!user?.avatarFileId) {
-      return setAvatar(defaultAvatarUri);
-    }
-    (async () => {
+    const loadAvatar = async () => {
+      if (!user) {
+        setAvatar(defaultAvatarUri);
+        return;
+      }
+
+      if (user.avatarCustomUrl) {
+        setAvatar(user.avatarCustomUrl);
+        return;
+      }
+
+      if (!user.avatarFileId) {
+        setAvatar(defaultAvatarUri);
+        return;
+      }
+
       const avatarUrl = await getImage({
         fileId: user.avatarFileId,
         imageSize: ImageSizeState.small,
       });
+
       setAvatar(avatarUrl ?? defaultAvatarUri);
-    })();
-  }, [getImage, user?.avatarFileId]);
+    };
+
+    loadAvatar();
+  }, [getImage, user]);
 
   useFocusEffect(
     useCallback(() => {

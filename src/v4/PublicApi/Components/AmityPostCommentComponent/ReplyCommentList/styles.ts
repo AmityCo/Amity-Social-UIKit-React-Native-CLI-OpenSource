@@ -85,8 +85,8 @@ export const useStyles = () => {
     },
     likeBtn: {
       flexDirection: 'row',
-      paddingRight: 6,
-      paddingTop: 4,
+      marginRight: 8,
+      alignItems: 'center',
     },
     actionSection: {
       flex: 1,
@@ -97,18 +97,15 @@ export const useStyles = () => {
     },
     likedText: {
       color: theme.colors.primary,
-      fontSize: 15,
+      fontSize: 13,
       fontWeight: '600',
-      marginHorizontal: 4,
     },
     btnText: {
       color: theme.colors.baseShade2,
-      fontSize: 15,
+      fontSize: 13,
       fontWeight: '600',
-      marginHorizontal: 4,
     },
     threeDots: {
-      padding: 5,
       opacity: 0.5,
     },
     modalContainer: {
@@ -158,6 +155,7 @@ export const useStyles = () => {
     rowContainer: {
       flexDirection: 'row',
       alignItems: 'center',
+      gap: 8,
     },
   });
 
