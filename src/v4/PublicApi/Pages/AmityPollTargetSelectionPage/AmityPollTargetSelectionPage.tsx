@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageID } from '../../../enum';
-import { useBehaviour } from '../../../providers/BehaviourProvider';
+import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import TargetSelectionPage, {

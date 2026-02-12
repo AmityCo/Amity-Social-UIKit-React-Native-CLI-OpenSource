@@ -5,7 +5,7 @@ import { useStyles } from './styles';
 import { useAmityComponent } from '../../../hook';
 import TrendingCommunityTitleComponent from './TrendingCommunityTitle/TrendingCommunityTitle';
 import CommunityRowItem from '../../../component/CommunityRowItem/CommunityRowItem';
-import { useExplore } from '../../../providers/ExploreProvider';
+import { useExplore } from '../../../../social/providers/ExploreProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { useNavigation } from '@react-navigation/native';

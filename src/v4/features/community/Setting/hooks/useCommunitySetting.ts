@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { useBehaviour } from '../../../../../v4/providers/BehaviourProvider';
+import { useBehaviour } from '../../../../../social/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';

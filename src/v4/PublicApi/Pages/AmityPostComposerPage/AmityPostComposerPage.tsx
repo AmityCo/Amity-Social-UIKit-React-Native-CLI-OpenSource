@@ -59,7 +59,7 @@ import { getPostErrorMessage } from '../../../utils/errors';
 import { MAXIMUM_POST_CHARACTERS } from '../../../../core/constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import { useUIKitDispatch } from '../../../../core/stores/store';
-import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
+import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({

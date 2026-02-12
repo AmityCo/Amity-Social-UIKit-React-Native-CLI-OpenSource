@@ -6,8 +6,8 @@ import React, {
   PropsWithChildren,
   useCallback,
 } from 'react';
-import { AdEngine } from '../engine/AdEngine';
-import { TimeWindowTracker } from '../engine/TimeWindowTracker';
+import { AdEngine } from '../../v4/engine/AdEngine';
+import { TimeWindowTracker } from '../../v4/engine/TimeWindowTracker';
 
 export const AdEngineContext = createContext<{
   ads: Amity.Ad[];

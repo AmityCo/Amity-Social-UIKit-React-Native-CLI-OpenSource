@@ -6,7 +6,7 @@ import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useBehaviour } from '../../providers/BehaviourProvider';
+import { useBehaviour } from '../../../social/providers/BehaviourProvider';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';
 import { useAmityComponent } from '../../hook';
 import TextElement from '../../PublicApi/Elements/CommonElements/TextElement';

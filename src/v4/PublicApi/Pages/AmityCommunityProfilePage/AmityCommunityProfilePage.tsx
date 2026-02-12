@@ -34,7 +34,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import CommunityCreatePostButton from '../../../elements/CommunityCreatePostButton/CommunityCreatePostButton';
 import { SvgXml } from 'react-native-svg';
-import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
+import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import { livestream, poll, post, story } from '../../../../core/assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 

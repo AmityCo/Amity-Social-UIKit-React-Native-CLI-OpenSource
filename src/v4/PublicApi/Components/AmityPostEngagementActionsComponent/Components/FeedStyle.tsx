@@ -28,7 +28,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import LikeButtonIconElement from '../../../Elements/LikeButtonIconElement/LikeButtonIconElement';
 import CommentButtonIconElement from '../../../Elements/CommentButtonIconElement/CommentButtonIconElement';
-import { useBehaviour } from '../../../../providers/BehaviourProvider';
+import { useBehaviour } from '../../../../../social/providers/BehaviourProvider';
 import { formatNumber } from '../../../../../core/utils/number';
 
 const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({

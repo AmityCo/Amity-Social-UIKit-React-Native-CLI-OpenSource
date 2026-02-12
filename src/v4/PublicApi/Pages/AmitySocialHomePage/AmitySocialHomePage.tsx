@@ -10,7 +10,7 @@ import {
 } from '../../../../v4/enum/enumUIKitID';
 
 import { useTheme } from 'react-native-paper';
-import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
+import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import AmitySocialHomeTopNavigationComponent from '../../../../v4/PublicApi/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
 import AmityEmptyNewsFeedComponent from '../../../../v4/PublicApi/Components/AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
 import AmityMyCommunitiesComponent from '../../../../v4/PublicApi/Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';

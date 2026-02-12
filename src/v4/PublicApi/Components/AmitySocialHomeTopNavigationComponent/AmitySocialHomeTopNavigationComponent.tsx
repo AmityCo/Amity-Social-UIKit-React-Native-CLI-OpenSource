@@ -10,7 +10,7 @@ import {
   useUiKitConfig,
 } from '../../../hook';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
-import { useBehaviour } from '../../../providers/BehaviourProvider';
+import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import AmityCreatePostMenuComponent from '../AmityCreatePostMenuComponent/AmityCreatePostMenuComponent';
 import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';
 import { usePopup } from '../../../hook/usePopup';

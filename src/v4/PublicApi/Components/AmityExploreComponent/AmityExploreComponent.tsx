@@ -9,7 +9,7 @@ import AmityCommunityCategoriesComponent from '../AmityCommunityCategoriesCompon
 import AmityTrendingCommunitiesComponent from '../AmityTrendingCommunitiesComponent/AmityTrendingCommunitiesComponent';
 import AmityExploreCommunityEmptyComponent from '../AmityExploreCommunityEmptyComponent/AmityExploreCommunityEmptyComponent';
 import AmityExploreEmptyComponent from '../AmityExploreEmptyComponent/AmityExploreEmptyComponent';
-import { useExplore } from '../../../providers/ExploreProvider';
+import { useExplore } from '../../../../social/providers/ExploreProvider';
 import ExploreLoadingSkeleton from './ExploreLoadingSkeleton/ExploreLoadingSkeleton';
 import { useAmityPage } from '../../../hook';
 import ErrorComponent from '../../../component/ErrorComponent/ErrorComponent';

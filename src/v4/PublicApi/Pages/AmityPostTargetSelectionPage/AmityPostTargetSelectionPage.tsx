@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageID, AmityPostTargetSelectionPageType } from '../../../../v4/enum';
-import { useBehaviour } from '../../../providers/BehaviourProvider';
+import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 
 import TargetSelectionPage, {
   FeedParams,

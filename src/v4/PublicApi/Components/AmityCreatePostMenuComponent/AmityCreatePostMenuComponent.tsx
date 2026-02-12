@@ -2,7 +2,7 @@ import React, { useCallback, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum/enumUIKitID';
 import { useAmityComponent, useStoryPermission } from '../../../hook';
-import { useBehaviour } from '../../../providers/BehaviourProvider';
+import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';

@@ -4,7 +4,7 @@ import { ComponentID, ElementID, PageID } from '../../../../enum';
 import useConfig from '../../../../hook/useConfig';
 import { useUiKitConfig } from '../../../../hook';
 import { useStyles } from './styles/styles';
-import { useBehaviour } from '../../../../providers/BehaviourProvider';
+import { useBehaviour } from '../../../../../social/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';

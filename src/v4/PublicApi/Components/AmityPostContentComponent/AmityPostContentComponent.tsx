@@ -26,7 +26,7 @@ import {
   AmityPostContentComponentStyleEnum,
 } from '../../../enum/AmityPostContentComponentStyle';
 import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
-import { useBehaviour } from '../../../providers/BehaviourProvider';
+import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import PostContent from '../../../component/PostContent';
 import { PostMenu } from '../../../component/PostMenu';
 import PinBadge from '../../../../v4/elements/PinBadge';

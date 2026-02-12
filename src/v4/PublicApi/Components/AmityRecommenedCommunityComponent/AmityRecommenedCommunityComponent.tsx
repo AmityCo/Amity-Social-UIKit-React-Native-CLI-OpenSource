@@ -4,7 +4,7 @@ import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedC
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../../enum';
 import { useAmityElement } from '../../../hook';
-import { useExplore } from '../../../providers/ExploreProvider';
+import { useExplore } from '../../../../social/providers/ExploreProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { useNavigation } from '@react-navigation/native';

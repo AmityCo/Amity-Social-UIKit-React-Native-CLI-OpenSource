@@ -4,7 +4,7 @@ import { useStyles } from './styles';
 import { useAmityComponent, useCommunities } from '../../../hook/';
 import { PageID, ComponentID } from '../../../enum';
 import { useNavigation } from '@react-navigation/native';
-import { useBehaviour } from '../../../providers/BehaviourProvider';
+import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import CommunitySearchResult from '../../../component/CommunitySearchResult/CommunitySearchResult';

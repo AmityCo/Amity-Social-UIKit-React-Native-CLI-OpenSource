@@ -3,7 +3,7 @@ import { AdEngine } from '../engine/AdEngine';
 import {
   useAdSettings,
   useRecommendAds,
-} from '../../v4/providers/AdEngineProvider';
+} from '../../social/providers/AdEngineProvider';
 import { useFocusEffect } from '@react-navigation/native';
 
 type ItemWithAd<T> = [T] | [T, Amity.Ad];
