@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useStyles } from './styles';
 import { Typography } from '../../Typography/Typography';
 import { SvgXml } from 'react-native-svg';
-import { exclamation } from '../../../assets/icons';
+import { exclamation } from '../../../../core/assets/icons';
 
 const LiveStreamIdleThumbnail = () => {
   const { styles, theme } = useStyles();

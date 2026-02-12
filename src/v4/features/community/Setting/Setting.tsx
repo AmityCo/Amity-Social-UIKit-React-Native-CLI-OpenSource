@@ -9,7 +9,7 @@ import {
   penFill,
   postPermission,
   story,
-} from '../../../../v4/assets/icons';
+} from '../../../../core/assets/icons';
 import Action from '../shared/elements/Action';
 import { ElementID, PageID } from '../../../../v4/enum';
 import LeaveCommunity from './elements/LeaveCommunity/LeaveCommunity';

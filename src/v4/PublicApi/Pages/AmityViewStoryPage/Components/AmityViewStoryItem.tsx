@@ -42,8 +42,8 @@ import { Typography } from '../../../../component/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../../core/providers/AmityUIKitProvider';
 import { useUIKitDispatch } from '../../../../../core/stores/store';
-import { informative } from '../../../../../v4/assets/icons/toast';
-import { close as closeIcon } from '../../../../assets/icons';
+import { informative } from '../../../../../core/assets/icons/toast';
+import { close as closeIcon } from '../../../../../core/assets/icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface IAmityViewStoryItem {

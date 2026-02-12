@@ -27,7 +27,7 @@ import {
 import useAuth from '../../../core/hooks/useAuth';
 import globalFeedSlice from '../../../core/stores/slices/globalfeedSlice';
 import { Typography } from '../../component/Typography/Typography';
-import { pen, poll, report, trash, unreport } from '../../assets/icons';
+import { pen, poll, report, trash, unreport } from '../../../core/assets/icons';
 import { useToast } from '../../../core/stores/slices/toastSlice';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElement/MenuButtonIconElement';

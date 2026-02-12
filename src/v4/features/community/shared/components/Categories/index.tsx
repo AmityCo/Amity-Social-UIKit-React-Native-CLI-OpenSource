@@ -5,7 +5,7 @@ import { useStyles } from './styles';
 import { ElementID, PageID } from '../../../../../../v4/enum';
 import { Typography } from '../../../../../../v4/component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
-import { arrowRight } from '../../../../../../v4/assets/icons';
+import { arrowRight } from '../../../../../../core/assets/icons';
 import { useBehaviour } from '../../../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

@@ -8,7 +8,7 @@ import { AmityCommunityPrivacyEnum } from '../../types';
 import {
   public as $public,
   private as $private,
-} from '../../../../../../v4/assets/icons';
+} from '../../../../../../core/assets/icons';
 import { Title } from '../../../../../../v4/elements';
 import FormDescription from '../../../../../../v4/elements/FormDescription';
 import CommunityPrivacyIcon from '../../../../../../v4/elements/CommunityPrivacyIcon';

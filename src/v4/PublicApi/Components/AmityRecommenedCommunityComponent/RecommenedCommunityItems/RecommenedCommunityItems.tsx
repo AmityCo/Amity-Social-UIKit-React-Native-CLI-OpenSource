@@ -7,7 +7,7 @@ import { useStyles } from './styles';
 import CommunityJoinedButton from '../../../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
 import CommunityJoinButton from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import { SvgXml } from 'react-native-svg';
-import { community as communityIcon } from '../../../../assets/icons';
+import { community as communityIcon } from '../../../../../core/assets/icons';
 import CommunityPrivateBadge from '../../../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
 import CommunityOfficialBadge from '../../../../elements/CommunityOfficialBadge/CommunityOfficialBadge';
 import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityCategory';

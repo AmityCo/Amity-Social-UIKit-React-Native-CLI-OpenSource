@@ -3,7 +3,7 @@ import { TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
 import { useAmityElement, useJoinCommunity } from '../../hook';
 import { Button, BUTTON_SIZE } from '../../component/Button/Button';
-import { plus } from '../../assets/icons';
+import { plus } from '../../../core/assets/icons';
 import { useCustomRankingGlobalFeed } from '../../../v4/hook/useCustomRankingGlobalFeed';
 
 type CommunityJoinButtonType = {

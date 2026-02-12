@@ -4,7 +4,7 @@ import { useAmityComponent, useCommunity } from '../../../hook';
 import { usePosts } from '../../../hook/usePosts';
 import { View } from 'react-native';
 import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
-import { emptyVideoPost, privateFeed } from '../../../assets/icons';
+import { emptyVideoPost, privateFeed } from '../../../../core/assets/icons';
 import VideoGallery from '../../../elements/VideoGallery/VideoGallery';
 import { useStyles } from './styles';
 import { AmityCommunityFeedRef } from '../AmityCommunityFeedComponent/AmityCommunityFeedComponent';

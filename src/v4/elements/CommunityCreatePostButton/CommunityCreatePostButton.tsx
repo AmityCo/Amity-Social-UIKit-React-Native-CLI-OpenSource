@@ -4,7 +4,7 @@ import { SvgXml } from 'react-native-svg';
 import { useAmityElement } from '../../hook';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enum';
-import { plus } from '../../../v4/assets/icons';
+import { plus } from '../../../core/assets/icons';
 
 type CommunityCreatePostButtonProps = TouchableOpacityProps & {
   pageId?: PageID;

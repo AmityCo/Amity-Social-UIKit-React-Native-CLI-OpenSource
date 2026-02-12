@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useStyles } from './styles';
 import BackButton from '../../../../../../v4/elements/BackButton';
 import { SvgXml } from 'react-native-svg';
-import { plus } from '../../../../../../v4/assets/icons';
+import { plus } from '../../../../../../core/assets/icons';
 import { useBehaviour } from '../../../../../../v4/providers/BehaviourProvider';
 
 type HeaderProps = {

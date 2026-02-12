@@ -12,7 +12,7 @@ import { useStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { play } from '../../assets/icons';
+import { play } from '../../../core/assets/icons';
 import { Typography } from '../Typography/Typography';
 import { RoomStatus } from '../../enum/roomStatus';
 import LiveStreamEndThumbnail from './LivestreamEndedThumbnail';

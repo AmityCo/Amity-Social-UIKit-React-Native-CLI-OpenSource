@@ -5,7 +5,7 @@ import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { ImageButton } from '../../../../../../v4/elements';
 import { getFileUrlWithSize } from '../../../../../../v4/utils';
-import { imageUpload } from '../../../../../../v4/assets/icons';
+import { imageUpload } from '../../../../../../core/assets/icons';
 import CameraButton from '../../../../../../v4/elements/CameraButton';
 import LinearGradient from 'react-native-linear-gradient';
 import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';

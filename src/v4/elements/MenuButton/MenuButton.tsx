@@ -1,5 +1,5 @@
 import React from 'react';
-import { menu } from '../../../v4/assets/icons';
+import { menu } from '../../../core/assets/icons';
 import { useAmityElement } from '../../../v4/hook';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { ComponentID, ElementID, PageID } from '../../../v4/enum';

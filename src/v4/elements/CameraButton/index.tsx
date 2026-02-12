@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { camera } from '../../../v4/assets/icons';
+import { camera } from '../../../core/assets/icons';
 import { useAmityElement } from '../../../v4/hook';
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../../v4/enum';

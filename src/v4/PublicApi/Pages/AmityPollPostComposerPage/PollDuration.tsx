@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { View, TouchableOpacity, Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import arrowDown from '../../../assets/icons/arrowDown';
+import { arrowDown } from '../../../../core/assets/icons';
 import { Typography } from '../../../component/Typography/Typography';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';

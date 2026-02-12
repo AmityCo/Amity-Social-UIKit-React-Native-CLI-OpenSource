@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { TextInput, TextInputProps, View, ViewProps } from 'react-native';
 import { useStyles } from './styles';
 import { SvgXml, XmlProps } from 'react-native-svg';
-import { search } from '../../../v4/assets/icons';
+import { search } from '../../../core/assets/icons';
 
 type SearchInputProps = {
   iconProps?: XmlProps;

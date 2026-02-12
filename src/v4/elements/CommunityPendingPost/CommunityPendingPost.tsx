@@ -5,7 +5,7 @@ import { StyleSheet, TouchableOpacity, ViewProps } from 'react-native';
 import { View } from 'react-native';
 import { Typography } from '../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
-import { dot } from '../../assets/icons';
+import { dot } from '../../../core/assets/icons';
 
 type CommunityPendingPostProps = ViewProps & {
   number: number;

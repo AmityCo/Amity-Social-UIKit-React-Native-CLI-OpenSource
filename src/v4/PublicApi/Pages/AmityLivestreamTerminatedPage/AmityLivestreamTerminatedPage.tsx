@@ -6,7 +6,7 @@ import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { Typography } from '../../../component/Typography/Typography';
 import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { ban, terminated, trash, warning } from '../../../assets/icons';
+import { ban, terminated, trash, warning } from '../../../../core/assets/icons';
 import { LivestreamTerminatedActionButton } from '../../../elements/LivestreamTerminatedActionButton';
 import { PageID } from '../../../enum';
 

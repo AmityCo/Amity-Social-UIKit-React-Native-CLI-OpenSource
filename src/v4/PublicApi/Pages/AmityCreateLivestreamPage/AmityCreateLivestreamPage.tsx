@@ -14,7 +14,7 @@ import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../v4/hook/useImagePicker';
-import { arrowDown, close } from '../../../../v4/assets/icons';
+import { arrowDown, close } from '../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import { Typography } from '../../../component/Typography/Typography';
 import { useTheme } from 'react-native-paper';

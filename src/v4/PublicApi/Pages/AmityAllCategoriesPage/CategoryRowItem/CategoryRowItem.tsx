@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import React, { FC, memo } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../../enum';
-import { arrowRight } from '../../../../assets/icons';
+import { arrowRight } from '../../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import CategoryRowImage from '../../../../elements/CategoryRowImage/CategoryRowImage';
 import CategoryRowName from '../../../../elements/CategoryRowName/CategoryRowName';

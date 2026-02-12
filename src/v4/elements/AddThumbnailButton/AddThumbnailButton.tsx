@@ -4,7 +4,7 @@ import { SvgXml } from 'react-native-svg';
 import { useAmityElement } from '../../hook';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enum';
-import { thumbnail } from '../../assets/icons';
+import { thumbnail } from '../../../core/assets/icons';
 import { Typography } from '../../component/Typography/Typography';
 
 type AddThumbnailButtonProps = TouchableOpacityProps & {

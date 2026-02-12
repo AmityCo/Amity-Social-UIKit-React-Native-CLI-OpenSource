@@ -40,7 +40,7 @@ import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { IMentionPosition } from '../../../screens/CreatePost';
 import { LinkPreview } from '../../../v4/component/PreviewLink/LinkPreview';
 import { Typography } from '../../../v4/component/Typography/Typography';
-import { pen, trash, unreport, report } from '../../../v4/assets/icons';
+import { pen, trash, unreport, report } from '../../../core/assets/icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';

@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Platform } from 'react-native';
 import { useStyles } from './styles';
 import LiveStreamEndThumbnail from '../../../component/LivestreamContent/LivestreamEndedThumbnail';
 import { SvgXml } from 'react-native-svg';
-import { close } from '../../../assets/icons';
+import { close } from '../../../../core/assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';

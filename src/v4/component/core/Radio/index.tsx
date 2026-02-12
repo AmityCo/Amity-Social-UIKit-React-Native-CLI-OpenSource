@@ -13,7 +13,7 @@ import {
   radioUnchecked,
   radioCheckedDisabled,
   radioUncheckedDisabled,
-} from '../../../assets/icons';
+} from '../../../../core/assets/icons';
 import { useStyles } from './styles';
 
 type RadioContextType<T extends any = string | number> = {

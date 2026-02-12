@@ -35,7 +35,7 @@ import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import CommunityCreatePostButton from '../../../elements/CommunityCreatePostButton/CommunityCreatePostButton';
 import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
-import { livestream, poll, post, story } from '../../../../v4/assets/icons';
+import { livestream, poll, post, story } from '../../../../core/assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { useTheme } from 'react-native-paper';

@@ -15,7 +15,7 @@ import {
   report,
   trash,
   unreport,
-} from '../../../../../../v4/assets/icons';
+} from '../../../../../../core/assets/icons';
 import {
   checkEditRolePermission,
   isModerator,

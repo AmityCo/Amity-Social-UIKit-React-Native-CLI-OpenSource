@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
 import { useAmityElement, useLeaveCommunity } from '../../hook';
 import { Button, BUTTON_SIZE } from '../../component/Button/Button';
-import { check } from '../../assets/icons';
+import { check } from '../../../core/assets/icons';
 
 type CommunityJoinedButtonType = {
   pageId?: PageID;

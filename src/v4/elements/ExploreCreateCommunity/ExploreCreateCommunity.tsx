@@ -3,7 +3,7 @@ import { TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
 import { useAmityElement } from '../../hook';
 import { Button } from '../../component/Button/Button';
-import { plus } from '../../assets/icons';
+import { plus } from '../../../core/assets/icons';
 
 type ExploreCreateCommunityType = {
   pageId?: PageID;

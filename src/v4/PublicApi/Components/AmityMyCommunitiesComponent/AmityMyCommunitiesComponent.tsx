@@ -8,7 +8,7 @@ import { useBehaviour } from '../../../providers/BehaviourProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import CommunitySearchResult from '../../../component/CommunitySearchResult/CommunitySearchResult';
-import { emptyCommunity, plus } from '../../../assets/icons';
+import { emptyCommunity, plus } from '../../../../core/assets/icons';
 import { Typography } from '../../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { Button } from '../../../component/Button/Button';

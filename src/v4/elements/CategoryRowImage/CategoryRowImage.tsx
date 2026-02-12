@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import { useAmityElement, useFile } from '../../hook';
 import { PageID, ComponentID, ElementID } from '../../enum';
 import { SvgXml } from 'react-native-svg';
-import { category as categoryIcon } from '../../assets/icons';
+import { category as categoryIcon } from '../../../core/assets/icons';
 
 type CategoryRowImageProps = {
   avatarFileId?: string;

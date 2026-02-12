@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStyles } from './styles';
 import { useAmityElement } from '../../../../../../v4/hook';
-import { arrowRight } from '../../../../../../v4/assets/icons';
+import { arrowRight } from '../../../../../../core/assets/icons';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { ComponentID, ElementID, PageID } from '../../../../../../v4/enum';
 import { Typography } from '../../../../../../v4/component/Typography/Typography';

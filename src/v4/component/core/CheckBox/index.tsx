@@ -13,7 +13,7 @@ import {
   checkboxUnchecked,
   checkboxCheckedDisabled,
   checkboxUncheckedDisabled,
-} from '../../../assets/icons';
+} from '../../../../core/assets/icons';
 import { useStyles } from './styles';
 
 type CheckBoxContextType<T extends any = string> = {

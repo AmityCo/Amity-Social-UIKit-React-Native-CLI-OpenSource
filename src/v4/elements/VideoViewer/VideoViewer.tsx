@@ -10,7 +10,7 @@ import {
 import { Typography } from '../../component/Typography/Typography';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { SvgXml } from 'react-native-svg';
-import { cross } from '../../assets/icons';
+import { cross } from '../../../core/assets/icons';
 
 type VideoViewerProps = {
   currentImageIndex: number;

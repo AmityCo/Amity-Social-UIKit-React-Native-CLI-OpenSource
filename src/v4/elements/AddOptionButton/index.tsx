@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
-import { plus } from '../../assets/icons';
+import { plus } from '../../../core/assets/icons';
 import { useAmityElement } from '../../hook';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import { Typography } from '../../component/Typography/Typography';

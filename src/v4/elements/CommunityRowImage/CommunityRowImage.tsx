@@ -6,7 +6,7 @@ import { Image, View } from 'react-native';
 import { useStyles } from './styles';
 import { Typography } from '../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
-import { community as communityIcon } from '../../assets/icons';
+import { community as communityIcon } from '../../../core/assets/icons';
 
 type CommunityRowImageyProps = {
   fileId?: string;

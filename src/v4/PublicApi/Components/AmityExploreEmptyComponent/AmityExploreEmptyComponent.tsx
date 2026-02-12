@@ -1,7 +1,7 @@
 import React, { FC, memo, useCallback } from 'react';
 import { useAmityComponent } from '../../../hook';
 import { PageID, ComponentID } from '../../../enum';
-import { emptyCommunity } from '../../../assets/icons';
+import { emptyCommunity } from '../../../../core/assets/icons';
 import TitleElement from '../../Elements/TitleElement/TitleElement';
 import DescriptionElement from '../../Elements/DescriptionElement/DescriptionElement';
 import { View } from 'react-native';

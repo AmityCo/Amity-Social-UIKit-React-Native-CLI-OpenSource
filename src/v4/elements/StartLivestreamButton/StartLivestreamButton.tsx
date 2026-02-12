@@ -4,7 +4,7 @@ import { SvgXml } from 'react-native-svg';
 import { useAmityElement } from '../../hook';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enum';
-import { startLivestream } from '../../assets/icons';
+import { startLivestream } from '../../../core/assets/icons';
 
 type StartLivestreamButtonProps = TouchableOpacityProps & {
   pageId?: PageID;
