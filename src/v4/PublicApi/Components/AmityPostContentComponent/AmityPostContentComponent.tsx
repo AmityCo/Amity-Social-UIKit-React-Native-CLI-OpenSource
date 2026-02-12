@@ -180,6 +180,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
               pageID={pageId}
               elementID={ElementID.WildCardElement}
               componentID={componentId}
+              avatarCustomUrl={creator?.avatarCustomUrl}
             />
 
             <View style={styles.fillSpace}>

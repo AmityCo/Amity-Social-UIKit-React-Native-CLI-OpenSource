@@ -415,11 +415,16 @@ export default function PostList({
     <View key={postId} style={styles.postWrap}>
       <View style={styles.headerSection}>
         <View style={styles.user}>
-          {user?.avatarFileId ? (
+          {user?.avatarCustomUrl ? (
+            <Image
+              style={styles.avatar as ImageStyle}
+              source={{ uri: user.avatarCustomUrl }}
+            />
+          ) : user?.avatarFileId ? (
             <Image
               style={styles.avatar as ImageStyle}
               source={{
-                uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user?.avatarFileId}/download`,
+                uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user.avatarFileId}/download`,
               }}
             />
           ) : (

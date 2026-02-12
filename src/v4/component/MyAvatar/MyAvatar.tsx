@@ -15,13 +15,19 @@ const MyAvatar: FC<MyAvatarProp> = (props) => {
 
   useEffect(() => {
     UserRepository.getUser(myId, async ({ data, loading, error }) => {
-      if (!loading && !error) {
-        const avatar = await getImage({
-          fileId: data?.avatarFileId,
-          imageSize: ImageSizeState.small,
-        });
-        setAvatarUrl(avatar ?? defaultAvatarUri);
+      if (loading || error || !data) return;
+
+      if (data.avatarCustomUrl) {
+        setAvatarUrl(data.avatarCustomUrl);
+        return;
       }
+
+      const avatar = await getImage({
+        fileId: data.avatarFileId,
+        imageSize: ImageSizeState.small,
+      });
+
+      setAvatarUrl(avatar ?? defaultAvatarUri);
     });
   }, [getImage, myId]);
 

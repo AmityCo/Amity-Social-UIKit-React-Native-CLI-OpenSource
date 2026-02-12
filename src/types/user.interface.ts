@@ -11,4 +11,5 @@ export interface UserInterface {
   userId: string;
   displayName: string;
   avatarFileId: string;
+  avatarCustomUrl?: string;
 }

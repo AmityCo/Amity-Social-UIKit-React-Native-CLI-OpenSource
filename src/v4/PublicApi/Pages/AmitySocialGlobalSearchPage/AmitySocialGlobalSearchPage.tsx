@@ -31,7 +31,6 @@ const AmitySocialGlobalSearchPage = () => {
       />
     </View>
   );
-
   const isCommunity = searchType === TabName.Communities;
   if (isExcluded) return null;
   return (
