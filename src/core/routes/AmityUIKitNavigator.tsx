@@ -27,7 +27,7 @@ import type { MyMD3Theme } from '../providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../assets/icons';
+import { closeIcon } from '../assets/icons/xml';
 import BackButton from '../../components/BackButton';
 import VideoPlayerFull from '../../screens/VideoPlayerFullScreen';
 import PostTypeChoiceModal from '../../components/PostTypeChoiceModal/PostTypeChoiceModal';

@@ -15,7 +15,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../../core/assets/icons';
+import { closeIcon } from '../../core/assets/icons/xml';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
 import { useTheme } from 'react-native-paper';

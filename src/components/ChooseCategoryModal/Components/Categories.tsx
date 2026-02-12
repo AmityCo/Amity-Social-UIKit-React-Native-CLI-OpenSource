@@ -2,7 +2,7 @@ import { Image, Text, TouchableOpacity } from 'react-native';
 import React, { memo } from 'react';
 import useFile from '../../../core/hooks/useFile';
 import { SvgXml } from 'react-native-svg';
-import { categoryIcon } from '../../../core/assets/icons';
+import { categoryIcon } from '../../../core/assets/icons/xml';
 import { useStyle } from '../styles';
 
 const Categories = ({

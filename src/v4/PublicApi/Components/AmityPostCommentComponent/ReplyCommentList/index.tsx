@@ -18,7 +18,7 @@ import {
   personXml,
   reportOutLine,
   threeDots,
-} from '../../../../../core/assets/icons';
+} from '../../../../../core/assets/icons/xml';
 import type { UserInterface } from '../../../../../core/types';
 import {
   addCommentReaction,

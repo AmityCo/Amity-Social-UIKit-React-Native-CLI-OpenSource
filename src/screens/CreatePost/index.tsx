@@ -22,7 +22,7 @@ import {
   closeIcon,
   galleryIcon,
   playVideoIcon,
-} from '../../core/assets/icons';
+} from '../../core/assets/icons/xml';
 import { useStyles } from './styles';
 import ImagePicker, {
   launchImageLibrary,

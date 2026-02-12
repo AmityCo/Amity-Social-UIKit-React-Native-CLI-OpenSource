@@ -10,7 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
-import { circleCloseIcon, searchIcon } from '../../core/assets/icons';
+import { circleCloseIcon, searchIcon } from '../../core/assets/icons/xml';
 import { useNavigation } from '@react-navigation/native';
 import CustomTab from '../../components/CustomTab';
 import {

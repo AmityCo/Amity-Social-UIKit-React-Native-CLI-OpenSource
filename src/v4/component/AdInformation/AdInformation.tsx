@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { infoIcon } from '../../../core/assets/icons';
+import { infoIcon } from '../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
 import { ComponentID, PageID } from '../../enum';

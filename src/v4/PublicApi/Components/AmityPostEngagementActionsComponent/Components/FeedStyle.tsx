@@ -18,7 +18,7 @@ import { useStyles } from './styles';
 import { useAmityComponent } from '../../../../hook';
 import { PageID, ComponentID } from '../../../../enum';
 import { SvgXml } from 'react-native-svg';
-import { likeReaction } from '../../../../../core/assets/icons';
+import { likeReaction } from '../../../../../core/assets/icons/xml';
 import {
   addPostReaction,
   removePostReaction,

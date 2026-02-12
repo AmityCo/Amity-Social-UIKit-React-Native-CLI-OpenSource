@@ -7,7 +7,7 @@ import {
   ImageStyle,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { arrowForward } from '../../../../core/assets/icons';
+import { arrowForward } from '../../../../core/assets/icons/xml';
 import { useStyles } from './styles';
 import { getCommunityById } from '../../../../core/legacy/community';
 import { useNavigation } from '@react-navigation/native';

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../../core/assets/icons';
+import { closeIcon } from '../../core/assets/icons/xml';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 

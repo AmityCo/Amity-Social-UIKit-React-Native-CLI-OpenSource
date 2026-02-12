@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../../core/assets/icons';
+import { closeIcon } from '../../core/assets/icons/xml';
 import { useStyles } from './styles';
 import type { IComment } from '../../v4/PublicApi/Components/AmityPostCommentComponent/CommentListItem/CommentListItem';
 import { editComment } from '../../core/legacy/comment';

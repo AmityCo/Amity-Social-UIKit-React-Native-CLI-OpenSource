@@ -34,7 +34,7 @@ import {
   flashOn,
   storyGallery,
   switchCamera,
-} from '../../../../core/assets/icons';
+} from '../../../../core/assets/icons/xml';
 import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
 import * as Progress from 'react-native-progress';
 import { msToString } from '../../../../core/utils/time';

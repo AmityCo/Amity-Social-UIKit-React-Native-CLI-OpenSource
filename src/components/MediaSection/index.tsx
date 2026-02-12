@@ -13,7 +13,7 @@ import { IVideoPost, MediaUri } from '../Social/PostList';
 import { getPostById } from '../../core/legacy/feed';
 import ImageView from '../../components/react-native-image-viewing/dist';
 import { RootState, useUIKitSelector } from '../../core/stores/store';
-import { playBtn } from '../../core/assets/icons';
+import { playBtn } from '../../core/assets/icons/xml';
 import PollSection from '../PollSection/PollSection';
 import LivestreamContent from '../../v4/component/LivestreamContent';
 

@@ -27,7 +27,7 @@ import { useStyles } from './styles';
 import Feed from '../Feed';
 import useAuth from '../../core/hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
-import { editIcon, plusIcon, primaryDot } from '../../core/assets/icons';
+import { editIcon, plusIcon, primaryDot } from '../../core/assets/icons/xml';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { amityPostsFormatter } from '../../core/utils/post';

@@ -21,7 +21,7 @@ import {
   reportOutLine,
   storyDraftDeletHyperLink,
   threeDots,
-} from '../../../../../core/assets/icons';
+} from '../../../../../core/assets/icons/xml';
 import type {
   UserInterface,
   IMentionPosition,

@@ -22,7 +22,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useAuth from '../../core/hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
-import { blockOrUnblock, editIcon } from '../../core/assets/icons';
+import { blockOrUnblock, editIcon } from '../../core/assets/icons/xml';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import FloatingButton from '../../components/FloatingButton';

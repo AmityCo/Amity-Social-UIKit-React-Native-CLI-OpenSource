@@ -4,7 +4,7 @@ import { useStyles } from './styles';
 import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
 import { useReaction } from '../../core/hooks/useReaction';
 import { SvgXml } from 'react-native-svg';
-import { fileSearch } from '../../core/assets/icons';
+import { fileSearch } from '../../core/assets/icons/xml';
 import { formatNumber } from '../../core/utils/number';
 
 const ReactionListScreen = ({ navigation, route }) => {

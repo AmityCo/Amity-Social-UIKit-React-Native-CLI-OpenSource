@@ -22,7 +22,7 @@ import {
   personXml,
   replyIcon,
   threeDots,
-} from '../../../core/assets/icons';
+} from '../../../core/assets/icons/xml';
 
 import type { UserInterface } from '../../../core/types/user';
 

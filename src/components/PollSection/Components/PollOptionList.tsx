@@ -15,7 +15,7 @@ import React, {
 } from 'react';
 import { useStyles } from '../style';
 import { SvgXml } from 'react-native-svg';
-import { radioOff, radioOn } from '../../../core/assets/icons';
+import { radioOff, radioOn } from '../../../core/assets/icons/xml';
 import PollBar from './PollBar';
 
 interface IPollOptionList {

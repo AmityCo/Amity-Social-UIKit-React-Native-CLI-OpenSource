@@ -18,7 +18,7 @@ import {
   likeXml,
   personXml,
   threeDots,
-} from '../../../core/assets/icons';
+} from '../../../core/assets/icons/xml';
 import { useStyles } from './styles';
 import type { UserInterface } from '../../../core/types/user';
 import {

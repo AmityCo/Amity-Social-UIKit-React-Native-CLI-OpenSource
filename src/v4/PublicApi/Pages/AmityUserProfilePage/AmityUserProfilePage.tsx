@@ -40,7 +40,7 @@ import {
   editIcon,
   primaryDot,
   privateUserProfile,
-} from '../../../../core/assets/icons';
+} from '../../../../core/assets/icons/xml';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import FloatingButton from '../../../../components/FloatingButton';

@@ -18,7 +18,7 @@ import { ComponentID, ElementID, PageID } from '../../../../enum';
 import { checkURLValidation } from '../../../../../core/utils/url';
 import useAuth from '../../../../../core/hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
-import { storyDraftDeletHyperLink } from '../../../../../core/assets/icons';
+import { storyDraftDeletHyperLink } from '../../../../../core/assets/icons/xml';
 
 interface IHyperLinkConfig {
   isVisibleModal: boolean;

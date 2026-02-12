@@ -4,7 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 
 import { View, Text, TouchableOpacity, Image, ImageStyle } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { personXml } from '../../../core/assets/icons';
+import { personXml } from '../../../core/assets/icons/xml';
 import { useStyles } from './styles';
 
 import type { UserInterface } from '../../../core/types/user';

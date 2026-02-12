@@ -15,7 +15,7 @@ import {
   closeIcon,
   syncIcon,
   editThumbnailIcon,
-} from '../../core/assets/icons';
+} from '../../core/assets/icons/xml';
 import { useStyles } from './styles';
 import useImagePicker from '../../core/hooks/useImagePicker';
 import { uploadImageFile } from '../../core/legacy/file';

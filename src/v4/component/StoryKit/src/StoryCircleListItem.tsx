@@ -12,7 +12,7 @@ import {
   privateIcon,
   storyCircleCreatePlusIcon,
   storyRing,
-} from '../../../../core/assets/icons';
+} from '../../../../core/assets/icons/xml';
 import useConfig from '../../../hook/useConfig';
 import { useStoryPermission } from '../../../hook/useStoryPermission';
 

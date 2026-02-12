@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { postIcon } from '../../core/assets/icons';
+import { postIcon } from '../../core/assets/icons/xml';
 import { styles } from './styles';
 
 interface IBackBtn {

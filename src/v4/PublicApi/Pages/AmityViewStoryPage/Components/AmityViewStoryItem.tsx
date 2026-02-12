@@ -23,7 +23,7 @@ import {
   storyLikeIcon,
   storyLikedIcon,
   storyThreedotsMenu,
-} from '../../../../../core/assets/icons';
+} from '../../../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import Modal from 'react-native-modalbox';
 import { ComponentID, ElementID, PageID } from '../../../../enum';

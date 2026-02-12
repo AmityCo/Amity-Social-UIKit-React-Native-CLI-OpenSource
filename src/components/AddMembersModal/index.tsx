@@ -16,7 +16,7 @@ import {
   circleCloseIcon,
   closeIcon,
   searchIcon,
-} from '../../core/assets/icons';
+} from '../../core/assets/icons/xml';
 import type { UserInterface } from '../../core/types/user';
 import UserItem from '../UserItem';
 import SectionHeader from '../ListSectionHeader';

@@ -10,7 +10,7 @@ import {
 import { useStyles } from './styles';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { SvgXml } from 'react-native-svg';
-import { arrowOutlined } from '../../core/assets/icons';
+import { arrowOutlined } from '../../core/assets/icons/xml';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 

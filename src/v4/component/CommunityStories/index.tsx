@@ -8,7 +8,7 @@ import {
   errorIcon,
   storyCircleCreatePlusIcon,
   storyRing,
-} from '../../../core/assets/icons';
+} from '../../../core/assets/icons/xml';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { useFile } from '../../hook/useFile';

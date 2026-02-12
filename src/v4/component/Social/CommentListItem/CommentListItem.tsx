@@ -18,7 +18,7 @@ import {
   likeCircle,
   personXml,
   threeDots,
-} from '../../../../core/assets/icons';
+} from '../../../../core/assets/icons/xml';
 
 import type { UserInterface, IMentionPosition } from '../../../../core/types';
 

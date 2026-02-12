@@ -5,7 +5,7 @@ import { ComponentID, PageID } from '../../enum';
 import { useStyles } from './styles';
 import PostAdHeader from './PostAdHeader';
 import { useAmityComponent } from '../../hook';
-import { infoIcon } from '../../../core/assets/icons';
+import { infoIcon } from '../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import AdInformation from '../AdInformation/AdInformation';
 import bottomSheetSlice from '../../../core/stores/slices/bottomSheetSlice';

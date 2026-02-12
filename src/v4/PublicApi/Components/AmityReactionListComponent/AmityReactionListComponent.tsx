@@ -23,7 +23,7 @@ import {
   fileSearch,
   likeReaction,
   // loveReaction,
-} from '../../../../core/assets/icons';
+} from '../../../../core/assets/icons/xml';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';

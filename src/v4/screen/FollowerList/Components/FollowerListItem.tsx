@@ -29,7 +29,7 @@ import { TabName } from '../../../enum/tabNameState';
 import { defaultAvatarUri } from '../../../assets';
 import { useFile } from '../../../hook';
 import { SvgXml } from 'react-native-svg';
-import { threeDots } from '../../../../core/assets/icons';
+import { threeDots } from '../../../../core/assets/icons/xml';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useNavigation } from '@react-navigation/native';

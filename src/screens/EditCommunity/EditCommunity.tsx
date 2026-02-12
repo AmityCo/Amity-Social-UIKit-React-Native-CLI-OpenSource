@@ -15,7 +15,7 @@ import {
   arrowOutlined,
   privateIcon,
   publicIcon,
-} from '../../core/assets/icons';
+} from '../../core/assets/icons/xml';
 import { useStyles } from './styles';
 import ChooseCategoryModal from '../../components/ChooseCategoryModal';
 import { RadioButton } from 'react-native-radio-buttons-group';

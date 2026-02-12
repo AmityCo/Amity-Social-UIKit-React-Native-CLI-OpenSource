@@ -6,7 +6,7 @@ import {
   useUIKitDispatch,
   useUIKitSelector,
 } from '../../core/stores/store';
-import { toastIcon, toastSuccess } from '../../core/assets/icons';
+import { toastIcon, toastSuccess } from '../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 
 const Toast: FC = () => {

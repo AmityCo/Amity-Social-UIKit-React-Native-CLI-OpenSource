@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useStyle } from './styles';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { arrowOutlined } from '../../core/assets/icons';
+import { arrowOutlined } from '../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';

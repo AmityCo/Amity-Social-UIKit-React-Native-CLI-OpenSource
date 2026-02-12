@@ -50,7 +50,7 @@ import {
 } from '../../core/stores/store';
 import { IMentionPosition } from '../CreatePost';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../../core/assets/icons';
+import { closeIcon } from '../../core/assets/icons/xml';
 import { amityPostsFormatter } from '../../core/utils/post';
 import { deletePostById } from '../../core/legacy/feed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

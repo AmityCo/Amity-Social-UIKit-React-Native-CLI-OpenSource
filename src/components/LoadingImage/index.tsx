@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
 import { deleteAmityFile, uploadImageFile } from '../../core/legacy/file';
-import { closeIcon } from '../../core/assets/icons';
+import { closeIcon } from '../../core/assets/icons/xml';
 import { createStyles } from './styles';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';

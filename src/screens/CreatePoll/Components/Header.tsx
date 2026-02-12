@@ -3,7 +3,7 @@ import React, { FC, memo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStyles } from '../styles';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../../../core/assets/icons';
+import { closeIcon } from '../../../core/assets/icons/xml';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 
