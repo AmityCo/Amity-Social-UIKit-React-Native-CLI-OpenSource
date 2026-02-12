@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
-import { communityIcon, userIcon } from '../../svg/svg-xml-list';
+import { communityIcon, userIcon } from '../../core/assets/icons';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import { useNavigation } from '@react-navigation/native';
 import useAuth from '../../core/hooks/useAuth';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { postIcon } from '../../../svg/svg-xml-list';
+import { postIcon } from '../../../core/assets/icons';
 import { styles } from './styles';
 
 interface IFloatingButton {

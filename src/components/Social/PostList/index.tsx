@@ -18,7 +18,7 @@ import {
   likeXml,
   personXml,
   threeDots,
-} from '../../../svg/svg-xml-list';
+} from '../../../core/assets/icons';
 import { useStyles } from './styles';
 import type { UserInterface } from '../../../types/user.interface';
 import {

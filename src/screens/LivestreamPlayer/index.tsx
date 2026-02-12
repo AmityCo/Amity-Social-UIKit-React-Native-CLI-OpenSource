@@ -10,7 +10,7 @@ import { useStyles } from './styles';
 import LivestreamEndedView from '../../v4/component/LivestreamContent/LivestreamEndedThumbnail';
 import { Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon, playIcon, stopIcon } from '../../svg/svg-xml-list';
+import { closeIcon, playIcon, stopIcon } from '../../core/assets/icons';
 import { RoomRepository } from '@amityco/ts-sdk-react-native';
 
 const LiveStreamPlayer = ({ navigation, route }) => {

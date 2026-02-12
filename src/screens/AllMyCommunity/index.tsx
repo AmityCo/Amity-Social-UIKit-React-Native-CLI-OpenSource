@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
-import { circleCloseIcon, searchIcon } from '../../svg/svg-xml-list';
+import { circleCloseIcon, searchIcon } from '../../core/assets/icons';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import type { ISearchItem } from '../../components/SearchItem';
 import SearchItem from '../../components/SearchItem';

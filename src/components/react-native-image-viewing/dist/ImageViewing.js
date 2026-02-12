@@ -17,7 +17,7 @@ import {
   Platform,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { playBtn } from '../../../svg/svg-xml-list';
+import { playBtn } from '../../../core/assets/icons';
 import ImageItem from './components/ImageItem/ImageItem';
 import ImageDefaultHeader from './components/ImageDefaultHeader';
 import StatusBarManager from './components/StatusBarManager';

@@ -29,7 +29,7 @@ import type { MyMD3Theme } from '../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import { Image, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../svg/svg-xml-list';
+import { closeIcon } from '../core/assets/icons';
 import { useStyles } from '../routes/style';
 import BackButton from '../components/BackButton';
 import CancelButton from '../components/CancelButton';

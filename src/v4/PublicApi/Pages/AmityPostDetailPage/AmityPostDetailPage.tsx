@@ -36,7 +36,7 @@ import {
 } from '../../../../v4/enum/AmityPostContentComponentStyle';
 import AmityPostCommentComponent from '../../../../v4/PublicApi/Components/AmityPostCommentComponent/AmityPostCommentComponent';
 
-import { closeIcon } from '../../../../svg/svg-xml-list';
+import { closeIcon } from '../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import { IMentionPosition } from '../../../../types';
 import uiSlice from '../../../../core/stores/slices/uiSlice';

@@ -18,7 +18,7 @@ import {
   personXml,
   reportOutLine,
   threeDots,
-} from '../../../../../svg/svg-xml-list';
+} from '../../../../../core/assets/icons';
 import type { UserInterface } from '../../../../../types';
 import {
   addCommentReaction,

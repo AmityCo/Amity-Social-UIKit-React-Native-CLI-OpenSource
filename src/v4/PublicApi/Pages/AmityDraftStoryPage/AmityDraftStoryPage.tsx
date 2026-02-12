@@ -5,7 +5,7 @@ import {
   leftLongArrow,
   rightLongArrow,
   storyHyperLinkIcon,
-} from '../../../../svg/svg-xml-list';
+} from '../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
 import {

@@ -13,7 +13,7 @@ import {
   officialIcon,
   privateIcon,
   storyRing,
-} from '../../../svg/svg-xml-list';
+} from '../../../core/assets/icons';
 import useConfig from '../../../core/hooks/useConfig';
 import { ElementID } from '../../../core/utils/enumUIKitID';
 

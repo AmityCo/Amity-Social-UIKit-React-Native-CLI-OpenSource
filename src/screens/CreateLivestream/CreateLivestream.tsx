@@ -11,7 +11,11 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon, syncIcon, editThumbnailIcon } from '../../svg/svg-xml-list';
+import {
+  closeIcon,
+  syncIcon,
+  editThumbnailIcon,
+} from '../../core/assets/icons';
 import { useStyles } from './styles';
 import useImagePicker from '../../core/hooks/useImagePicker';
 import { uploadImageFile } from '../../core/legacy/file';

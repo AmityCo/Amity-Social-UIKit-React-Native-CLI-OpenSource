@@ -5,7 +5,7 @@ import {
   communityIcon,
   officialIcon,
   privateIcon,
-} from '../../../svg/svg-xml-list';
+} from '../../../core/assets/icons';
 import { useStyle } from '../styles';
 import useFile from '../../../core/hooks/useFile';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';

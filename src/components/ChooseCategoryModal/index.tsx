@@ -10,7 +10,7 @@ import {
   type NativeScrollEvent,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../../svg/svg-xml-list';
+import { closeIcon } from '../../core/assets/icons';
 import { useStyle } from './styles';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';

@@ -11,7 +11,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { arrowOutlined, privateIcon, publicIcon } from '../../svg/svg-xml-list';
+import {
+  arrowOutlined,
+  privateIcon,
+  publicIcon,
+} from '../../core/assets/icons';
 import { useStyles } from './styles';
 import ChooseCategoryModal from '../../components/ChooseCategoryModal';
 import { RadioButton } from 'react-native-radio-buttons-group';

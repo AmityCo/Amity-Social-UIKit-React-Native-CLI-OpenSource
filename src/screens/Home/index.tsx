@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { View, TouchableOpacity, LogBox } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { plusIcon, searchIcon } from '../../svg/svg-xml-list';
+import { plusIcon, searchIcon } from '../../core/assets/icons';
 import FloatingButton from '../../components/FloatingButton';
 import useAuth from '../../core/hooks/useAuth';
 import Explore from '../../screens/Explore';

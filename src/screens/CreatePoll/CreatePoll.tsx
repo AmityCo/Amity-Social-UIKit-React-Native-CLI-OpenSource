@@ -11,7 +11,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { circleCloseIcon, plusIcon } from '../../svg/svg-xml-list';
+import { circleCloseIcon, plusIcon } from '../../core/assets/icons';
 import { useStyles } from './styles';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';

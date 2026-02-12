@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../../svg/svg-xml-list';
+import { closeIcon } from '../../core/assets/icons';
 import { useStyles } from './styles';
 import type { IDisplayImage, IMentionPosition } from '../../screens/CreatePost';
 import { editPost, getPostById } from '../../core/legacy/feed';

@@ -9,7 +9,7 @@ import {
   editIcon,
   report,
   unfollow,
-} from '../../../svg/svg-xml-list';
+} from '../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import { LoadingOverlay } from '../../../components/LoadingOverlay';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';

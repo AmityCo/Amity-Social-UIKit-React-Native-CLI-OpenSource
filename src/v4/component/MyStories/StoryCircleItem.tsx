@@ -6,7 +6,7 @@ import {
   officialIcon,
   privateIcon,
   storyRing,
-} from '../../../svg/svg-xml-list';
+} from '../../../core/assets/icons';
 import { ComponentID, ElementID, ImageSizeState, PageID } from '../../enum';
 import { useFile, useStoryPermission } from '../../hook';
 import useConfig from '../../hook/useConfig';

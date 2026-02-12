@@ -5,7 +5,7 @@ import { useStyles } from './styles';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';
 import { useAmityComponent } from '../../hook';
 import { PageID, ComponentID, ElementID } from '../../enum';
-import { star } from '../../../svg/svg-xml-list';
+import { star } from '../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import { defaultAdAvatarUri } from '../../assets';
 

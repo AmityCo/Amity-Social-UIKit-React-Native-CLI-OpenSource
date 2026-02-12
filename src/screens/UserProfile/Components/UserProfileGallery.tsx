@@ -10,7 +10,7 @@ import { useGallery } from '../../../core/hooks/useGallery';
 import GalleryTab from './GalleryTab';
 import { TabName } from '../../../core/enums';
 import { SvgXml } from 'react-native-svg';
-import { photo, playBtn, video } from '../../../svg/svg-xml-list';
+import { photo, playBtn, video } from '../../../core/assets/icons';
 import { useStyles } from '../styles';
 import ImageView from '../../../components/react-native-image-viewing/dist';
 import { FeedRefType } from '../../CommunityHome';

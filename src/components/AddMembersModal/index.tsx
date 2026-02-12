@@ -12,7 +12,11 @@ import {
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useStyle } from './styles';
-import { circleCloseIcon, closeIcon, searchIcon } from '../../svg/svg-xml-list';
+import {
+  circleCloseIcon,
+  closeIcon,
+  searchIcon,
+} from '../../core/assets/icons';
 import type { UserInterface } from '../../types/user.interface';
 import UserItem from '../UserItem';
 import SectionHeader from '../ListSectionHeader';

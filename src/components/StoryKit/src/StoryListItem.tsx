@@ -28,7 +28,7 @@ import {
   storyHyperLinkIcon,
   storyLikeIcon,
   storyLikedIcon,
-} from '../../../svg/svg-xml-list';
+} from '../../../core/assets/icons';
 import { useStyles } from './styles';
 import { useTimeDifference } from '../../../core/hooks/useTimeDifference';
 import { useStory } from '../../../core/hooks/useStory';

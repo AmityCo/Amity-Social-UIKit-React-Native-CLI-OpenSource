@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useAuth from '../../core/hooks/useAuth';
 import { SvgXml } from 'react-native-svg';
-import { communityIcon } from '../../svg/svg-xml-list';
+import { communityIcon } from '../../core/assets/icons';
 
 export default function Explore() {
   const styles = useStyles();

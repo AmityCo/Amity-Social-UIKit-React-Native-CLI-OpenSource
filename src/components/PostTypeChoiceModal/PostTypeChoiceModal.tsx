@@ -12,7 +12,7 @@ import {
   livestreamIcon,
   pollIcon,
   postIconOutlined,
-} from '../../svg/svg-xml-list';
+} from '../../core/assets/icons';
 import { useStyles } from './style';
 import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';

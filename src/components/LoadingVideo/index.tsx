@@ -10,7 +10,7 @@ import {
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
 import { deleteAmityFile, uploadVideoFile } from '../../core/legacy/file';
-import { closeIcon, playBtn } from '../../svg/svg-xml-list';
+import { closeIcon, playBtn } from '../../core/assets/icons';
 import { createStyles } from './styles';
 import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';

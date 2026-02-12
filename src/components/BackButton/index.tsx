@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { SvgXml } from 'react-native-svg';
-import { arrowBack } from '../../svg/svg-xml-list';
+import { arrowBack } from '../../core/assets/icons';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 

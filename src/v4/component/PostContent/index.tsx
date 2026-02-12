@@ -14,7 +14,7 @@ import { IVideoPost, MediaUri } from '../../../components/Social/PostList';
 import { getPostById } from '../../../core/legacy/feed';
 import ImageView from '../../../components/react-native-image-viewing/dist';
 import { RootState, useUIKitSelector } from '../../../core/stores/store';
-import { playBtn } from '../../../svg/svg-xml-list';
+import { playBtn } from '../../../core/assets/icons';
 import LivestreamContent from '../LivestreamContent';
 import { LinkPreview } from '../PreviewLink';
 import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
