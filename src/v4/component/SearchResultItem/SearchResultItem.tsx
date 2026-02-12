@@ -4,7 +4,7 @@ import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID, TabName } from '../../enum';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useBehaviour } from '../../providers/BehaviourProvider';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';

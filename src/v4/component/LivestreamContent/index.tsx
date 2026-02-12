@@ -18,7 +18,7 @@ import { RoomStatus } from '../../enum/roomStatus';
 import LiveStreamEndThumbnail from './LivestreamEndedThumbnail';
 import LiveStreamIdleThumbnail from './LivestreamIdleThumbnail';
 import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
-import { RootStackParamList } from '../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import LiveStreamTerminatedThumbnail from './LivestreamTerminatedThumbnail';
 
 interface ILivestreamContent {

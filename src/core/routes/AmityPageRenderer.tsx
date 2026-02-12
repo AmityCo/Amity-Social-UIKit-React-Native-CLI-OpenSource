@@ -9,7 +9,7 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
-import useAuth from '../../core/hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import CategoryList from '../../screens/CategorytList';
 import CommunityList from '../../screens/CommunityList';
 
@@ -24,12 +24,11 @@ import CommunitySearch from '../../screens/CommunitySearch';
 import AllMyCommunity from '../../screens/AllMyCommunity';
 import CreateCommunity from '../../v4/screen/CreateCommunity';
 import PendingPosts from '../../screens/PendingPosts';
-import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
+import type { MyMD3Theme } from '../providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../../core/assets/icons';
-import { useStyles } from '../../routes/style';
+import { closeIcon } from '../assets/icons';
 import BackButton from '../../components/BackButton';
 import VideoPlayerFull from '../../screens/VideoPlayerFullScreen';
 import PostTypeChoiceModal from '../../components/PostTypeChoiceModal/PostTypeChoiceModal';
@@ -61,11 +60,11 @@ import CommunityStoriesNotificationSetting from '../../v4/screen/CommunityStorie
 import CommunityLivestreamsNotificationSetting from '../../v4/screen/CommunityLivestreamsNotificationSetting';
 import CommunityPendingRequest from '../../v4/screen/CommunityPendingRequest';
 import CommunitySetting from '../../v4/screen/CommunitySetting';
-import AmityCommunityProfilePage from '../PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
-import LivestreamTerminated from '../screen/LivestreamTerminated';
-import PollTargetSelection from '../screen/PollTargetSelection';
-import LivestreamPostTargetSelection from '../screen/LivestreamPostTargetSelection';
-import CommunityMembership from '../screen/CommunityMembership';
+import AmityCommunityProfilePage from '../../v4/PublicApi/Pages/AmityCommunityProfilePage/AmityCommunityProfilePage';
+import LivestreamTerminated from '../../v4/screen/LivestreamTerminated';
+import PollTargetSelection from '../../v4/screen/PollTargetSelection';
+import LivestreamPostTargetSelection from '../../v4/screen/LivestreamPostTargetSelection';
+import CommunityMembership from '../../v4/screen/CommunityMembership';
 
 interface PageRendererProps {
   children: React.JSX.Element;
@@ -75,7 +74,6 @@ export default function PageRenderer({ children }: PageRendererProps) {
   const { isConnected } = useAuth();
   const theme = useTheme() as MyMD3Theme;
 
-  const styles = useStyles();
   return (
     <NavigationIndependentTree>
       <NavigationContainer>
@@ -241,7 +239,6 @@ export default function PageRenderer({ children }: PageRendererProps) {
                     onPress={() => {
                       navigation.goBack();
                     }}
-                    style={styles.btnWrap}
                   >
                     <SvgXml
                       xml={closeIcon(theme.colors.base)}

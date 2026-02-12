@@ -6,7 +6,7 @@ import { SvgXml } from 'react-native-svg';
 import { close } from '../../../assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { RoomStatus } from '../../../enum/roomStatus';
 import LiveStreamIdleThumbnail from '../../../component/LivestreamContent/LivestreamIdleThumbnail';
 import { Typography } from '../../../component/Typography/Typography';

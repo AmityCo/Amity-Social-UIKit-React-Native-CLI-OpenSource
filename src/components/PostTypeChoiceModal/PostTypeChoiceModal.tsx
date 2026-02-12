@@ -25,7 +25,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes/RouteParamList';
-import { RootStackParamList as RootStackParamListV4 } from '../../v4/routes/RouteParamList';
+import { RootStackParamList as RootStackParamListV4 } from '../../core/routes/RouteParamList';
 
 const PostTypeChoiceModal = () => {
   const styles = useStyles();

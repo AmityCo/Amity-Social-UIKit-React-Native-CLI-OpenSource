@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import Button, { BUTTON_SIZE } from '../Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 
 type PollOptionsProps = {
   post?: Amity.Post<any>;

@@ -10,7 +10,7 @@ import { SvgXml } from 'react-native-svg';
 import ExploreCreateCommunity from '../../../elements/ExploreCreateCommunity/ExploreCreateCommunity';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 
 type AmityExploreCommunityEmptyComponentProps = {
   pageId?: PageID;

@@ -17,7 +17,7 @@ import {
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 
 type CommunityNotificationSettingProps = {
   community: Amity.Community;

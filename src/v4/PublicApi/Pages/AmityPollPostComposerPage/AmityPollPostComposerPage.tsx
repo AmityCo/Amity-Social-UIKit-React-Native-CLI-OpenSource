@@ -15,7 +15,7 @@ import { text_contain_blocked_word } from '../../../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import dayjs from 'dayjs';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import globalFeedSlice from '../../../../core/stores/slices/globalfeedSlice';

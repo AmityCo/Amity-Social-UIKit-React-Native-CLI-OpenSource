@@ -9,7 +9,7 @@ import { arrowRight } from '../../../../../../v4/assets/icons';
 import { useBehaviour } from '../../../../../../v4/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
 import CategoryChip from '../../../../../../v4/component/CategoryChip/CategoryChip';
 
 type CategoriesProps = {

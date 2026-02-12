@@ -41,7 +41,7 @@ import { msToString } from '../../../../core/utils/time';
 import { StoryType } from '../../../enum';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import AmityDraftStoryPage from '../AmityDraftStoryPage/AmityDraftStoryPage';
 import { TAmityStoryMediaType } from '../../types';
 import { getMediaTypeFromUrl } from '../../../../core/utils/url';

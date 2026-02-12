@@ -9,7 +9,7 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
-import useAuth from '../../core/hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import CategoryList from '../../screens/CategorytList';
 import CommunityList from '../../screens/CommunityList';
 import CommunityMemberDetail from '../../screens/CommunityMemberDetail/CommunityMemberDetail';
@@ -23,12 +23,11 @@ import CommunitySearch from '../../screens/CommunitySearch';
 import AllMyCommunity from '../../screens/AllMyCommunity';
 import CreateCommunity from '../../v4/screen/CreateCommunity';
 import PendingPosts from '../../screens/PendingPosts';
-import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
+import type { MyMD3Theme } from '../providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { closeIcon } from '../../core/assets/icons';
-import { useStyles } from '../../routes/style';
+import { closeIcon } from '../assets/icons';
 import BackButton from '../../components/BackButton';
 import VideoPlayerFull from '../../screens/VideoPlayerFullScreen';
 import PostTypeChoiceModal from '../../components/PostTypeChoiceModal/PostTypeChoiceModal';
@@ -65,14 +64,12 @@ import CommunityCommentsNotificationSetting from '../../v4/screen/CommunityComme
 import CommunityStoriesNotificationSetting from '../../v4/screen/CommunityStoriesNotificationSetting';
 import CommunityLivestreamsNotificationSetting from '../../v4/screen/CommunityLivestreamsNotificationSetting';
 import CommunityPendingRequest from '../../v4/screen/CommunityPendingRequest';
-import { GlobalBan } from '../screen/GlobalBan';
+import { GlobalBan } from '../../v4/screen/GlobalBan';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
   const { isConnected, isGlobalBan } = useAuth();
   const theme = useTheme() as MyMD3Theme;
-
-  const styles = useStyles();
 
   if (isGlobalBan) return <GlobalBan />;
 
@@ -218,7 +215,6 @@ export default function AmitySocialUIKitV4Navigator() {
                     onPress={() => {
                       navigation.goBack();
                     }}
-                    style={styles.btnWrap}
                   >
                     <SvgXml
                       xml={closeIcon(theme.colors.base)}

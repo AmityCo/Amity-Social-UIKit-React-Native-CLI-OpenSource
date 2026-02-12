@@ -3,7 +3,7 @@ import React, { FC, memo, useCallback } from 'react';
 
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import {
   useConfigImageUri,
   useAmityComponent,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AmityCommunityAddCategoryPage from '../../../v4/PublicApi/Pages/AmityCommunityAddCategoryPage';
-import { RootStackParamList } from '../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 
 type CommunityAddCategoryProps = NativeStackScreenProps<
   RootStackParamList,

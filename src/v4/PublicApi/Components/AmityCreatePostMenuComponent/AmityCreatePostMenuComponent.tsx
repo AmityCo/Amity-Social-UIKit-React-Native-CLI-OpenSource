@@ -5,7 +5,7 @@ import { useAmityComponent, useStoryPermission } from '../../../hook';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { AmityPostTargetSelectionPageType } from '../../../enum';
 import { livestream, poll, post, story } from '../../../../v4/assets/icons';
 import MenuAction from '../../../../v4/elements/MenuAction';

@@ -3,7 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AmityCommunitySetupPage, {
   AmityCommunitySetupPageMode,
 } from '../../PublicApi/Pages/AmityCommunitySetupPage';
-import { RootStackParamList } from '../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 
 type CreateCommunityProps = NativeStackScreenProps<
   RootStackParamList,

@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { FC } from 'react';
-import { RootStackParamList } from '../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import AmityPostComposerPage from '../../PublicApi/Pages/AmityPostComposerPage/AmityPostComposerPage';
 import { AmityPostComposerMode } from '../../PublicApi/types';
 

@@ -22,7 +22,7 @@ import { AmityStoryTabComponentEnum } from '../../types';
 import { BUTTON_SIZE } from '../../../component/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { Client } from '@amityco/ts-sdk-react-native';
 
 export interface AmityCommunityHeaderRef {

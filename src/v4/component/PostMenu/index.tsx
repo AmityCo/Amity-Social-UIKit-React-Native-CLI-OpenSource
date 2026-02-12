@@ -29,7 +29,7 @@ import globalFeedSlice from '../../../core/stores/slices/globalfeedSlice';
 import { Typography } from '../../component/Typography/Typography';
 import { pen, poll, report, trash, unreport } from '../../assets/icons';
 import { useToast } from '../../../core/stores/slices/toastSlice';
-import { RootStackParamList } from '../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElement/MenuButtonIconElement';
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { ComponentID, PageID } from '../../enum';

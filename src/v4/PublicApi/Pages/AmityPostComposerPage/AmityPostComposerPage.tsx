@@ -51,7 +51,7 @@ import ImagePicker, {
 import LoadingImage from '../../../component/LoadingImage';
 import LoadingVideo from '../../../component/LoadingVideo';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { useFile } from '../../../hook';
 import useMention from '../../../hook/useMention';

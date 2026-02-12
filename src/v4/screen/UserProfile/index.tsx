@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AmityUserProfilePage from '../../PublicApi/Pages/AmityUserProfilePage';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type UserProfileProps = {

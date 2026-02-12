@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AmityPostDetailPage from '../../PublicApi/Pages/AmityPostDetailPage/AmityPostDetailPage';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type IPostDetailPage = {

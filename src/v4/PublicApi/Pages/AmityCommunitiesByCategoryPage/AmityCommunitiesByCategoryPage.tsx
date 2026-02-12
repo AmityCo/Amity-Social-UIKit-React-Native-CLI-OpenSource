@@ -8,7 +8,7 @@ import CategoryTitle from '../../../elements/CategoryTitle/CategoryTitle';
 import CommunityRowItem from '../../../component/CommunityRowItem/CommunityRowItem';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import CommunityEmptyTitle from '../../../elements/CommunityEmptyTitle/CommunityEmptyTitle';
 import CommunityEmptyImage from '../../../elements/CommunityEmptyImage/CommunityEmptyImage';
 import CommunityListSkeleton from '../../../component/CommunityListSkeleton/CommunityListSkeleton';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AmityCommunityLivestreamsNotificationSettingPage from '../../../v4/PublicApi/Pages/AmityCommunityLivestreamsNotificationSettingPage';
 

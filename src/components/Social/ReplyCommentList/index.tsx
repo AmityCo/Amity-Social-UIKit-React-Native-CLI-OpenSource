@@ -43,7 +43,7 @@ import { Typography } from '../../../v4/component/Typography/Typography';
 import { pen, trash, unreport, report } from '../../../v4/assets/icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { useTimeDifference } from '../../../v4/hook';
 import { useToast } from '../../../core/stores/slices/toastSlice';
 

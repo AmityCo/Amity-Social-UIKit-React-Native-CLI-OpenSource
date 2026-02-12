@@ -31,7 +31,7 @@ import AmityCommunityImageFeedComponent from '../../Components/AmityCommunityIma
 import AmityCommunityVideoFeedComponent from '../../Components/AmityCommunityVideoFeedComponent/AmityCommunityVideoFeedComponent';
 import CommunityCoverNavigator from '../../../elements/CommunityCover/CommunityCoverNavigator';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import CommunityCreatePostButton from '../../../elements/CommunityCreatePostButton/CommunityCreatePostButton';
 import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';

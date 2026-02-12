@@ -27,8 +27,8 @@ if (!(BackHandler as any).removeEventListener) {
 
 import AmityUiKitProvider from './core/providers/AmityUIKitProvider';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import AmityUiKitSocial from './v4/routes/AmitySocialUIKitV4Navigator';
-import AmityPageRenderer from './v4/routes/AmityPageRenderer';
+import AmityUiKitSocial from './core/routes/AmitySocialUIKitV4Navigator';
+import AmityPageRenderer from './core/routes/AmityPageRenderer';
 import PostDetail from './v4/screen/PostDetail';
 import CommunityHome from './v4/screen/CommunityHome';
 import UserProfile from './v4/screen/UserProfile';

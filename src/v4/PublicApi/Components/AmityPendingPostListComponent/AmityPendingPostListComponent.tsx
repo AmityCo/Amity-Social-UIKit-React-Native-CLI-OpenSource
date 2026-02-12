@@ -5,7 +5,7 @@ import { Typography } from '../../../../v4/component/Typography/Typography';
 import Avatar from '../../../../v4/component/Avatar';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import Timestamp from '../../../../v4/elements/Timestamp';
 import { ComponentID, ElementID, PageID } from '../../../../v4/enum';
 import MenuButton from '../../../../v4/elements/MenuButton';

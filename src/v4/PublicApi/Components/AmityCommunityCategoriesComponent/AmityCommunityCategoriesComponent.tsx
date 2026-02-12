@@ -10,7 +10,7 @@ import { useAmityComponent } from '../../../hook';
 import { useExplore } from '../../../providers/ExploreProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 
 type AmityCommunityCategoriesComponentProps = {
   pageId?: PageID;

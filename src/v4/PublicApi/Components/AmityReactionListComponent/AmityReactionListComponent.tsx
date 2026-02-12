@@ -26,7 +26,7 @@ import {
 } from '../../../../core/assets/icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { defaultAvatarUri } from '../../../assets';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { formatNumber } from '../../../../core/utils/number';

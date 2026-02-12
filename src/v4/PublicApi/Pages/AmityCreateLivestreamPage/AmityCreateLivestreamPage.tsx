@@ -21,7 +21,7 @@ import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
 import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
-import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { PostRepository, RoomRepository } from '@amityco/ts-sdk-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Button from '../../../component/Button/Button';

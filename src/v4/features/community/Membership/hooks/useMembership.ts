@@ -1,4 +1,4 @@
-import { RootStackParamList } from '../../../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';
 import { useNavigation } from '@react-navigation/native';

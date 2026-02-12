@@ -53,7 +53,7 @@ import uiSlice from '../../../../../core/stores/slices/uiSlice';
 import { useUIKitDispatch } from '../../../../../core/stores/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 
 export interface IComment {
   commentId: string;

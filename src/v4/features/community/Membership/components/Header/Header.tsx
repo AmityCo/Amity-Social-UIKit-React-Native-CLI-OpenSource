@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Title } from '../../../../../../v4/elements';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../../../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useStyles } from './styles';
 import BackButton from '../../../../../../v4/elements/BackButton';

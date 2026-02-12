@@ -21,7 +21,7 @@ import { TSearchItem, useAmityPage } from '../../../../v4/hook';
 import { useStyles } from './styles';
 import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButtonIconElement';
 import { CommonActions, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   PostRepository,

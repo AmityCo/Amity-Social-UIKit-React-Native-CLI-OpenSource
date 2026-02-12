@@ -8,7 +8,7 @@ import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButt
 import CategoryRowItem from './CategoryRowItem/CategoryRowItem';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import CategoryListSkeleton from './CategoryListSkeleton/CategoryListSkeleton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

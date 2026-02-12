@@ -15,7 +15,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { IMentionPosition } from '../../../types/type';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { ComponentID, ElementID, PageID } from '../../../enum';
 import AvatarElement from '../../Elements/CommonElements/AvatarElement';
 import { useAmityComponent, useIsCommunityModerator } from '../../../hook';

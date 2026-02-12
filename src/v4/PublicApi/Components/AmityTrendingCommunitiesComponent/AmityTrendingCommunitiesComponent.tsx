@@ -7,7 +7,7 @@ import TrendingCommunityTitleComponent from './TrendingCommunityTitle/TrendingCo
 import CommunityRowItem from '../../../component/CommunityRowItem/CommunityRowItem';
 import { useExplore } from '../../../providers/ExploreProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { useNavigation } from '@react-navigation/native';
 
 type AmityTrendingCommunitiesCommunityProps = {

@@ -6,7 +6,7 @@ import { PageID, ComponentID } from '../../../enum';
 import { useNavigation } from '@react-navigation/native';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import CommunitySearchResult from '../../../component/CommunitySearchResult/CommunitySearchResult';
 import { emptyCommunity, plus } from '../../../assets/icons';
 import { Typography } from '../../../component/Typography/Typography';

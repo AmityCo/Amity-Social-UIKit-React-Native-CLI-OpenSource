@@ -51,7 +51,7 @@ import { ComponentID } from '../../enum/enumUIKitID';
 import AmityStoryTabComponent from '../../PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../PublicApi/types/index';
 import GalleryComponent from '../../component/Gallery/GalleryComponent';
-import { RootStackParamList } from '../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import BackButton from '../../../components/BackButton';
 import { useUIKitDispatch } from '../../../core/stores/store';
 

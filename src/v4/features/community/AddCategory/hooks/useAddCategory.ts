@@ -1,7 +1,7 @@
 import { useStyles } from '../styles';
 import { useCategoryCollection } from '../../../../../v4/hook/collections/useCategoryCollection';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '../../../../../v4/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
