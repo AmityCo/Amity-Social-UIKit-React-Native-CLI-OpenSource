@@ -17,7 +17,7 @@ import {
   closeIcon,
   searchIcon,
 } from '../../core/assets/icons';
-import type { UserInterface } from '../../types/user.interface';
+import type { UserInterface } from '../../core/types/user';
 import UserItem from '../UserItem';
 import SectionHeader from '../ListSectionHeader';
 import SelectedUserHorizontal from '../SelectedUserHorizontal';

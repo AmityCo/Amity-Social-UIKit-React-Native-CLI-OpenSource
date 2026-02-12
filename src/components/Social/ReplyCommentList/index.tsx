@@ -20,7 +20,7 @@ import {
   threeDots,
 } from '../../../core/assets/icons';
 
-import type { UserInterface } from '../../../types/user.interface';
+import type { UserInterface } from '../../../core/types/user';
 
 import {
   addCommentReaction,

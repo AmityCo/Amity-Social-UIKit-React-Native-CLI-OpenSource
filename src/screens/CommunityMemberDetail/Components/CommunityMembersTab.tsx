@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import React, { memo, useCallback, useRef, useState } from 'react';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { UserInterface } from '../../../types/user.interface';
+import { UserInterface } from '../../../core/types/user';
 import UserItem from '../../../components/UserItem';
 import { useStyles } from '../styles';
 import { TabName } from '../../../core/enums';

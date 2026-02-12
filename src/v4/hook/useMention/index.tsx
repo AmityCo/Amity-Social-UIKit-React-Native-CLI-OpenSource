@@ -12,7 +12,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import useSearch from '../useSearch';
-import { IMentionPosition } from '../../../types';
+import { IMentionPosition } from '../../../core/types';
 
 type UseMentionProps = {
   value: string;

@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { UserInterface, IMentionPosition } from '../../../../types';
+import { UserInterface, IMentionPosition } from '../../../../core/types';
 import { getAmityUser } from '../../../../core/legacy/user';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import CommentListItem from './CommentListItem/CommentListItem';

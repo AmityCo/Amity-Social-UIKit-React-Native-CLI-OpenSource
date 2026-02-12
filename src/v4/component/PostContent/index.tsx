@@ -18,7 +18,7 @@ import { playBtn } from '../../../core/assets/icons';
 import LivestreamContent from '../LivestreamContent';
 import { LinkPreview } from '../PreviewLink';
 import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
-import { IMentionPosition } from '../../../types';
+import { IMentionPosition } from '../../../core/types';
 import PollContent from '../PollContent';
 
 interface IPostContent {

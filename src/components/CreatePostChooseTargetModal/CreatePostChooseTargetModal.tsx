@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { getAmityUser } from '../../core/legacy/user';
-import type { UserInterface } from '../../types/user.interface';
+import type { UserInterface } from '../../core/types/user';
 import { closeIcon } from '../../core/assets/icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';

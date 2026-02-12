@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState, type FC } from 'react';
 import { Client } from '@amityco/ts-sdk-react-native';
-import type { AuthContextInterface } from '../../types/auth.interface';
+import type { AuthContextInterface } from '../types/auth';
 import { Alert, Platform } from 'react-native';
 import type { IAmityUIkitProvider } from './AmityUIKitProvider';
 import { ERROR_CODE } from '../../v4/constants';

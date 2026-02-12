@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import RoundCheckbox from '../RoundCheckbox/index';
-import type { UserInterface } from 'src/types/user.interface';
+import type { UserInterface } from '~/core/types/user';
 import useAuth from '../../core/hooks/useAuth';
 
 export default function UserItem({

@@ -22,7 +22,7 @@ import type { RootStackParamList } from '../../routes/RouteParamList';
 import PostList from '../../components/Social/PostList';
 import { useStyles } from './styles';
 import type { IComment } from '../../components/Social/CommentList';
-import type { UserInterface } from '../../types/user.interface';
+import type { UserInterface } from '../../core/types/user';
 import { getAmityUser } from '../../core/legacy/user';
 import CommentList from '../../components/Social/CommentList';
 import {

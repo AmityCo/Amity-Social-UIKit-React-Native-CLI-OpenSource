@@ -19,7 +19,7 @@ import {
   reportOutLine,
   threeDots,
 } from '../../../../../core/assets/icons';
-import type { UserInterface } from '../../../../../types';
+import type { UserInterface } from '../../../../../core/types';
 import {
   addCommentReaction,
   removeCommentReaction,

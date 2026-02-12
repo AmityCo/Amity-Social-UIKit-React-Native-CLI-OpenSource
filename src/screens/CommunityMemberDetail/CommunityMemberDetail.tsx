@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
 import { useStyles } from './styles';
-import type { UserInterface } from '../../types/user.interface';
+import type { UserInterface } from '../../core/types/user';
 import AddMembersModal from '../../components/AddMembersModal';
 import { updateCommunityMember } from '../../core/legacy/community';
 import MemberActionModal from './Components/MemberActionModal';

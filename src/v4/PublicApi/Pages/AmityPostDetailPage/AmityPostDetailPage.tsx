@@ -38,7 +38,7 @@ import AmityPostCommentComponent from '../../../../v4/PublicApi/Components/Amity
 
 import { closeIcon } from '../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
-import { IMentionPosition } from '../../../../types';
+import { IMentionPosition } from '../../../../core/types';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
 import NetInfo from '@react-native-community/netinfo';
 import { useToast } from '../../../../core/stores/slices/toastSlice';

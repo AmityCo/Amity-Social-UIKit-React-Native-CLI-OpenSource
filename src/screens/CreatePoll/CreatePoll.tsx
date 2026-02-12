@@ -23,7 +23,7 @@ import useAuth from '../../core/hooks/useAuth';
 import { TSearchItem } from '../../core/hooks/useSearch';
 import { text_contain_blocked_word } from '../../constants';
 import useMention from '../../v4/hook/useMention';
-import { IMentionPosition } from '../../types';
+import { IMentionPosition } from '../../core/types';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 const CreatePoll = ({ navigation, route }) => {

@@ -7,7 +7,7 @@ import { SvgXml } from 'react-native-svg';
 import { personXml } from '../../../core/assets/icons';
 import { useStyles } from './styles';
 
-import type { UserInterface } from '../../../types/user.interface';
+import type { UserInterface } from '../../../core/types/user';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useAuth from '../../../core/hooks/useAuth';
