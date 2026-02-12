@@ -1,5 +1,5 @@
 import { Client } from '@amityco/ts-sdk-react-native';
-import { MemberRoles, Permissions } from '../../v4/constants';
+import { MemberRoles, Permissions } from '../../core/constants';
 
 export const checkDeleteCommunityPermission = (communityId: string) => {
   const client = Client.getActiveClient();

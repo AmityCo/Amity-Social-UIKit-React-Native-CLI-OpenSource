@@ -4,7 +4,7 @@ import { FlatList, View } from 'react-native';
 import { useCommunityMemberCollection } from '../../../../../../v4/hook/collections/useCommunityMemberCollection';
 import MemberItem from '../MemberItem';
 import MemberSkeleton from '../../../../../../v4/features/community/shared/components/MemberSkeleton';
-import { MemberRoles } from '../../../../../constants';
+import { MemberRoles } from '../../../../../../core/constants';
 
 type ModeratorListProps = {
   community: Amity.Community;

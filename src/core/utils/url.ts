@@ -1,5 +1,5 @@
 import { StoryType } from '../../v4/enum';
-import { ALLOWED_MEDIA_TYPE } from '../../constants';
+import { ALLOWED_MEDIA_TYPE } from '../constants';
 
 export const checkURLValidation = (url: string) => {
   const pattern = new RegExp(

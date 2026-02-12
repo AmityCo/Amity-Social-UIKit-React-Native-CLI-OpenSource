@@ -6,7 +6,7 @@ import { IMentionPosition } from '../../types/type';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import ReadMore from '@fawazahmed/react-native-read-more';
-import { URL_REGEX } from '../../../v4/constants';
+import { URL_REGEX } from '../../../core/constants';
 
 interface IrenderTextWithMention {
   mentionPositionArr: IMentionPosition[];

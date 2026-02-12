@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStyles } from './styles';
 import { View } from 'react-native';
-import { MAX_POLL_QUESTION_LENGTH } from '../../../constants';
+import { MAX_POLL_QUESTION_LENGTH } from '../../../../core/constants';
 import { Typography } from '../../../component/Typography/Typography';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';

@@ -46,7 +46,7 @@ import MyAvatar from '../../../../v4/component/MyAvatar/MyAvatar';
 import {
   comment_contains_inapproproate_word,
   text_contain_blocked_word,
-} from '../../../../constants';
+} from '../../../../core/constants';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorComponent from '../../../../v4/component/ErrorComponent/ErrorComponent';

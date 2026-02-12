@@ -7,7 +7,7 @@ import MenuButton from '../../../../../../v4/elements/MenuButton';
 import useAuth from '../../../../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
 import MenuAction from '../../../../../../v4/elements/MenuAction';
-import { MemberRoles } from '../../../../../../v4/constants';
+import { MemberRoles } from '../../../../../../core/constants';
 import { useToast } from '../../../../../../core/stores/slices/toastSlice';
 import {
   demote,

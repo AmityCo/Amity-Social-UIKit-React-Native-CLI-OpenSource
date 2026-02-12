@@ -33,7 +33,7 @@ import CommentList from '../../../../component/Social/CommentList/CommentList';
 import { StoryRepository } from '@amityco/ts-sdk-react-native';
 import { NextOrPrevious } from '../../../../component/StoryKit';
 import { useTimeDifference } from '../../../../../core/hooks/useTimeDifference';
-import { STORY_DEFAULT_DURATION } from '../../../../../constants';
+import { STORY_DEFAULT_DURATION } from '../../../../../core/constants';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import uiSlice from '../../../../../core/stores/slices/uiSlice';
 import { LoadingOverlay } from '../../../../../components/LoadingOverlay';

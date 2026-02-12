@@ -56,7 +56,7 @@ import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { useFile } from '../../../hook';
 import useMention from '../../../hook/useMention';
 import { getPostErrorMessage } from '../../../utils/errors';
-import { MAXIMUM_POST_CHARACTERS } from '../../../constants';
+import { MAXIMUM_POST_CHARACTERS } from '../../../../core/constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import { useUIKitDispatch } from '../../../../core/stores/store';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';

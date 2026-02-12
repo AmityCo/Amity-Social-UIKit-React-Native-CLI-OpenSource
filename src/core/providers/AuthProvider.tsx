@@ -4,7 +4,7 @@ import { Client } from '@amityco/ts-sdk-react-native';
 import type { AuthContextInterface } from '../types/auth';
 import { Alert, Platform } from 'react-native';
 import type { IAmityUIkitProvider } from './AmityUIKitProvider';
-import { ERROR_CODE } from '../../v4/constants';
+import { ERROR_CODE } from '../../core/constants';
 
 export const AuthContext = React.createContext<AuthContextInterface>({
   client: null,

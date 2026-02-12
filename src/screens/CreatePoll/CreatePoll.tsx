@@ -21,7 +21,7 @@ import { PollRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { checkCommunityPermission } from '../../core/legacy/community';
 import useAuth from '../../core/hooks/useAuth';
 import { TSearchItem } from '../../core/hooks/useSearch';
-import { text_contain_blocked_word } from '../../constants';
+import { text_contain_blocked_word } from '../../core/constants';
 import useMention from '../../v4/hook/useMention';
 import { IMentionPosition } from '../../core/types';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';

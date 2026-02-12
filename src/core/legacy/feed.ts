@@ -9,7 +9,7 @@ import {
 } from '@amityco/ts-sdk-react-native';
 import { IMentionPosition } from '../../screens/CreatePost';
 import { Alert } from 'react-native';
-import { text_contain_blocked_word } from '../../constants';
+import { text_contain_blocked_word } from '../constants';
 
 export interface IGlobalFeedRes {
   data: Amity.Post<any>[];

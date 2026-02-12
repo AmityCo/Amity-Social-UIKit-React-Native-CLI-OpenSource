@@ -1,12 +1,13 @@
-export const MemberRoles = Object.freeze({
+export const MemberRoles = {
   MEMBER: 'member',
   MODERATOR: 'moderator',
   SUPER_MODERATOR: 'super-moderator',
   COMMUNITY_MODERATOR: 'community-moderator',
   CHANNEL_MODERATOR: 'channel-moderator',
-});
+  ADMIN: 'global-admin',
+};
 
-export const Permissions = Object.freeze({
+export const Permissions = {
   EditUserPermission: 'EDIT_USER',
   BanUserPermission: 'BAN_USER',
   CreateRolePermission: 'CREATE_ROLE',
@@ -43,13 +44,80 @@ export const Permissions = Object.freeze({
   EditCommunityCategoryPermission: 'EDIT_COMMUNITY_CATEGORY',
   DeleteCommunityCategoryPermission: 'DELETE_COMMUNITY_CATEGORY',
   ManageStoryPermission: 'MANAGE_COMMUNITY_STORY',
-});
+};
+
 export const text_contain_blocked_word = 'Text contain blocked word';
+
 export const comment_contains_inapproproate_word =
   'Your comment contains inappropriate word. Please review and delete it.';
+
 export const ALLOWED_MEDIA_TYPE = {
   image: ['jpg', 'jpeg', 'png'],
   video: ['mp4', 'mov'],
 };
 
 export const STORY_DEFAULT_DURATION = 7000;
+
+export const SECOND = 1000;
+
+export const MINUTE = 60 * SECOND;
+
+export const HOUR = 60 * MINUTE;
+
+export const DAY = 24 * HOUR;
+
+export const WEEK = 7 * DAY;
+
+export const MONTH = 30 * DAY;
+
+export const YEAR = 365 * DAY;
+
+export const MAX_POLL_QUESTION_LENGTH = 500;
+
+export const MAX_POLL_ANSWER_LENGTH = 60;
+
+export const MAXIMUM_POST_CHARACTERS = 50000;
+
+export const ERROR_CODE = {
+  BLOCKED_WORD: '400308',
+  BLOCKED_URL: '400309',
+  IMAGE_NUDITY: '500000',
+  ONLY_ONE_MODERATOR: '400317',
+  ONLY_ONE_MEMBER: '400318',
+  GLOBAL_BAN: '400312',
+};
+
+export const COMMENT_ERROR_MESSAGE = {
+  BLOCKED_WORD:
+    'Your comment contains inappropriate word. Please review and delete it.',
+  BLOCKED_URL:
+    "Your comment contains a link that's not allowed. Please review and delete it.",
+  GENERIC: 'Oops, something went wrong',
+};
+
+export const POST_ERROR_MESSAGE = {
+  BLOCKED_WORD: "Your post wasn't posted as it contains an inappropriate word.",
+  BLOCKED_URL:
+    "Your post wasn't posted as it contains a link that's not allowed.",
+  GENERIC_CREATE: 'Failed to create post. Please try again.',
+  GENERIC_EDIT: 'Failed to edit post. Please try again.',
+};
+
+export const MAX_COMMUNITY_NAME_LENGTH = 30;
+
+export const MAX_COMMUNITY_DESCRIPTION_LENGTH = 180;
+
+export const QUERY_KEY = {
+  SEARCH_MEMBER_BY_DISPLAY_NAME_COLLECTION:
+    'search-member-by-display-name-collection',
+  CATEGORY_COLLECTION: 'category-collections',
+  USERS_COLLECTION: 'users-collections',
+  SEARCH_USERS_BY_DISPLAY_NAME_COLLECTION:
+    'search-users-by-display-name-collections',
+  COMMUNITY_MEMBERS_COLLECTION: 'community-members-collections',
+  POSTS_COLLECTION: 'posts-collections',
+  PINNED_POSTS_COLLECTION: 'pinned-posts-collections',
+};
+
+export const URL_REGEX =
+  /(?:(?:https?|ftp):\/\/(?:[a-zA-Z0-9.-]+|[\d.]+)(?::\d{1,5})?(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?|mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|www\.(?:[a-zA-Z0-9.-]+)(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?!\.))/g;

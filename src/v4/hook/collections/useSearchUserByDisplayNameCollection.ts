@@ -1,6 +1,6 @@
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { useLiveCollection } from './useLiveCollection';
-import { QUERY_KEY } from '../../../v4/constants';
+import { QUERY_KEY } from '../../../core/constants';
 
 type UseSearchUserByDisplayNameCollection = {
   params?: Parameters<typeof UserRepository.searchUserByDisplayName>[0];

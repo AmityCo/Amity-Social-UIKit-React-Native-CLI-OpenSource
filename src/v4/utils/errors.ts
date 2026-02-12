@@ -2,7 +2,7 @@ import {
   COMMENT_ERROR_MESSAGE,
   ERROR_CODE,
   POST_ERROR_MESSAGE,
-} from '../constants';
+} from '../../core/constants';
 
 export const getCommentErrorMessage = (error: Error): string => {
   if (error.message.includes(ERROR_CODE.BLOCKED_WORD)) {

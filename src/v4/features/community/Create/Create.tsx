@@ -11,7 +11,7 @@ import Members from './components/Members';
 import {
   MAX_COMMUNITY_DESCRIPTION_LENGTH,
   MAX_COMMUNITY_NAME_LENGTH,
-} from '../../../../v4/constants';
+} from '../../../../core/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { useCreateCommunity } from './hooks/useCreateCommunity';

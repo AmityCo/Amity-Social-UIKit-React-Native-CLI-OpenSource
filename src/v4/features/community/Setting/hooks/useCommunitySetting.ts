@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import { useMutation } from '@tanstack/react-query';
-import { ERROR_CODE } from '../../../../../v4/constants';
+import { ERROR_CODE } from '../../../../../core/constants';
 import { useStyles } from '../styles';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';
 import { useCustomRankingGlobalFeed } from '../../../../../v4/hook/useCustomRankingGlobalFeed';

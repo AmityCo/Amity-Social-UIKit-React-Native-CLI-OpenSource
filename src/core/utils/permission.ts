@@ -1,5 +1,5 @@
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { MemberRoles } from '../../constants';
+import { MemberRoles } from '../constants';
 
 const ADMIN = 'global-admin';
 const { COMMUNITY_MODERATOR, CHANNEL_MODERATOR, MODERATOR, SUPER_MODERATOR } =

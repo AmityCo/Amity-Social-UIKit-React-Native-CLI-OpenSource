@@ -11,7 +11,6 @@ import { PollRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { checkCommunityPermission } from '../../../../core/legacy/community';
 import useAuth from '../../../../core/hooks/useAuth';
 import { TSearchItem } from '../../../../core/hooks/useSearch';
-import { text_contain_blocked_word } from '../../../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -20,7 +19,11 @@ import dayjs from 'dayjs';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import globalFeedSlice from '../../../../core/stores/slices/globalfeedSlice';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
-import { DAY, MAX_POLL_ANSWER_LENGTH } from '../../../constants';
+import {
+  DAY,
+  MAX_POLL_ANSWER_LENGTH,
+  text_contain_blocked_word,
+} from '../../../../core/constants';
 import { PollHeader } from './PollHeader';
 import { PollQuestion } from './PollQuestion';
 import { PollOptions } from './PollOptions';
