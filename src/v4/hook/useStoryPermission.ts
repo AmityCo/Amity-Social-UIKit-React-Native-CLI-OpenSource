@@ -1,6 +1,6 @@
 import useAuth from '../../core/hooks/useAuth';
 import { useUser } from './useUser';
-import useSocialSettings from '../core/hooks/useSocialSettings';
+import useSocialSettings from '../../core/hooks/useSocialSettings';
 import {
   isAdmin,
   isModerator,

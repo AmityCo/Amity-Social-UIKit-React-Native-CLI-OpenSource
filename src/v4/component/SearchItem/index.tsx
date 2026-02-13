@@ -6,7 +6,10 @@ import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useFile } from '../../hook';
 import { ImageSizeState } from '../../enum';
-import { defaultAvatarUri, defaultCommunityAvatarUri } from '../../assets';
+import {
+  defaultAvatarUri,
+  defaultCommunityAvatarUri,
+} from '../../../core/assets';
 
 export interface ISearchItem {
   targetId: string;

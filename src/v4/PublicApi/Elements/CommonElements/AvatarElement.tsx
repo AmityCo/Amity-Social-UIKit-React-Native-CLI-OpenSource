@@ -1,6 +1,9 @@
 import { Image, ImageProps } from 'react-native';
 import React, { FC, useLayoutEffect, useMemo, useState } from 'react';
-import { defaultAvatarUri, defaultCommunityAvatarUri } from '../../../assets';
+import {
+  defaultAvatarUri,
+  defaultCommunityAvatarUri,
+} from '../../../../core/assets';
 import { useFile } from '../../../hook';
 import { ImageSizeState } from '../../../enum';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';

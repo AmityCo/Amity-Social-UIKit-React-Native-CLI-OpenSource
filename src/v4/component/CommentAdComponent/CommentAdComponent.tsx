@@ -8,7 +8,7 @@ import { SvgXml } from 'react-native-svg';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';
 import AdInformation from '../AdInformation/AdInformation';
 import { infoIcon } from '../../../core/assets/icons/xml';
-import { defaultAdAvatarUri } from '../../assets';
+import { defaultAdAvatarUri } from '../../../core/assets';
 import bottomSheetSlice from '../../../core/stores/slices/bottomSheetSlice';
 import AssetDownloader from '../../engine/AssetDownloader';
 import AdEngine from '../../engine/AdEngine';

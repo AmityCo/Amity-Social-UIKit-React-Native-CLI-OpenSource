@@ -3,7 +3,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useFile } from '../../../hook';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { ImageSizeState } from '../../../enum';
-import { defaultAvatarUri } from '../../../assets';
+import { defaultAvatarUri } from '../../../../core/assets';
 import { useStyles } from '../styles';
 import { Divider } from 'react-native-paper';
 

@@ -23,7 +23,7 @@ function IconElement({
     const checkImage = async () => {
       try {
         if (configIcon) {
-          const imagePath = `../../../configAssets/icons/${configIcon}.png`;
+          const imagePath = `../../../../core/assets/configs/${configIcon}.png`;
           const exists = await RNFS.exists(imagePath);
           if (exists) setImageUri(imagePath);
         }

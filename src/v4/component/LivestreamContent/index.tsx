@@ -51,7 +51,7 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
   }, [livestream, navigation, post]);
 
   const getLivestreamThumbnail = async (currentStream: Amity.Room) => {
-    const defaultThumbnail = require('../../assets/images/livestream.png');
+    const defaultThumbnail = require('../../../core/assets/images/livestream.png');
 
     if (currentStream.thumbnailFileId) {
       const file = await FileRepository.getFile(currentStream.thumbnailFileId);

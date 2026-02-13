@@ -26,7 +26,7 @@ import {
 } from '@amityco/ts-sdk-react-native';
 import { ImageSizeState } from '../../../enum';
 import { TabName } from '../../../enum/tabNameState';
-import { defaultAvatarUri } from '../../../assets';
+import { defaultAvatarUri } from '../../../../core/assets';
 import { useFile } from '../../../hook';
 import { SvgXml } from 'react-native-svg';
 import { threeDots } from '../../../../core/assets/icons/xml';

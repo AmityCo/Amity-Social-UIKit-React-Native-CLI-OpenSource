@@ -147,7 +147,7 @@ export default function CommunityHome({
           }}
         >
           <Image
-            source={require('../../assets/images/threeDot.png')}
+            source={require('../../../core/assets/images/threeDot.png')}
             style={styles.dotIcon}
           />
         </TouchableOpacity>
@@ -355,7 +355,7 @@ export default function CommunityHome({
                 ? {
                     uri: avatarUrl,
                   }
-                : require('../../assets/images/userAvatar.png')
+                : require('../../../core/assets/images/userAvatar.png')
             }
           />
           <View style={styles.darkOverlay} />

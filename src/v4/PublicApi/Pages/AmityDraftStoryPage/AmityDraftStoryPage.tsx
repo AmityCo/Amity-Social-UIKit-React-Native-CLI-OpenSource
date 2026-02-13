@@ -25,7 +25,7 @@ import { useConfigImageUri } from '../../../hook/useConfigImageUri';
 import HyperlinkConfig from './Components/HyperLinkConfig';
 import { IAmityDraftStoryPage } from '../../types';
 import { useFile } from '../../../hook/useFile';
-import { defaultAvatarUri } from '../../../assets/index';
+import { defaultAvatarUri } from '../../../../core/assets/index';
 import { getMediaTypeFromUrl } from '../../../../core/utils/url';
 import { LoadingOverlay } from '../../../../components/LoadingOverlay';
 import mime from 'mime';

@@ -48,7 +48,7 @@ import { TabName, PostTargetType } from '../../../../core/enums';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
 import GalleryComponent from '../../../component/Gallery/GalleryComponent';
 import { useFile } from '../../../hook';
-import { defaultAvatarUri } from '../../../assets';
+import { defaultAvatarUri } from '../../../../core/assets';
 import { ImageSizeState } from '../../../enum';
 
 import { useUIKitDispatch } from '../../../../core/stores/store';
@@ -145,7 +145,7 @@ function UserProfile({
           }}
         >
           <Image
-            source={require('../../../assets/images/threeDot.png')}
+            source={require('../../../../core/assets/images/threeDot.png')}
             style={styles.dotIcon}
           />
         </TouchableOpacity>
@@ -251,7 +251,7 @@ function UserProfile({
     return (
       <TouchableOpacity style={styles.followButton} onPress={onFollowTap}>
         <Image
-          source={require('../../../assets/images/followPlus.png')}
+          source={require('../../../../core/assets/images/followPlus.png')}
           style={styles.followIcon}
         />
         <Text style={styles.followText}>Follow</Text>

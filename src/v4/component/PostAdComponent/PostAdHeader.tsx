@@ -7,7 +7,7 @@ import { useAmityComponent } from '../../hook';
 import { PageID, ComponentID, ElementID } from '../../enum';
 import { star } from '../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
-import { defaultAdAvatarUri } from '../../assets';
+import { defaultAdAvatarUri } from '../../../core/assets';
 
 type PostAdHeaderType = {
   advertiser?: Amity.Ad['advertiser'];

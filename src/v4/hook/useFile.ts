@@ -1,7 +1,10 @@
 import { useCallback } from 'react';
 import { FileRepository } from '@amityco/ts-sdk-react-native';
 import { ImageSizeState, ImageSizeSubset } from '../enum/imageSizeState';
-import { defaultAvatarUri, defaultCommunityAvatarUri } from '../assets/index';
+import {
+  defaultAvatarUri,
+  defaultCommunityAvatarUri,
+} from '../../core/assets/index';
 
 interface useFileProps {
   fileId: string;
