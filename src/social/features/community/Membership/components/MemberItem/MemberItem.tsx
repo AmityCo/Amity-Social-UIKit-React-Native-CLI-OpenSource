@@ -24,7 +24,7 @@ import {
   useRolesQuery,
   useMembersQuery,
   useUserFlaggedByMeQuery,
-} from '../../../../../../v4/hook';
+} from '../../../../../hooks';
 
 type MemberItemProps = {
   member: Amity.Membership<'community'>;

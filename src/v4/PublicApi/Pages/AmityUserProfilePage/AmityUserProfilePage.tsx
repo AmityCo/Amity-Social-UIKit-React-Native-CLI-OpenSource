@@ -47,7 +47,7 @@ import FloatingButton from '../../../../components/FloatingButton';
 import { TabName, PostTargetType } from '../../../../core/enums';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
 import GalleryComponent from '../../../component/Gallery/GalleryComponent';
-import { useFile } from '../../../hook';
+import { useFile } from '../../../../social/hooks';
 import { defaultAvatarUri } from '../../../../core/assets';
 import { ImageSizeState } from '../../../enum';
 

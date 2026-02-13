@@ -1,8 +1,8 @@
 import { Text } from 'react-native';
 import React, { memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../../../enum';
-import useConfig from '../../../../hook/useConfig';
-import { useUiKitConfig } from '../../../../hook';
+import useConfig from '../../../../../social/hooks/useConfig';
+import { useUiKitConfig } from '../../../../../social/hooks';
 import { useStyles } from './styles/styles';
 
 const Title = () => {

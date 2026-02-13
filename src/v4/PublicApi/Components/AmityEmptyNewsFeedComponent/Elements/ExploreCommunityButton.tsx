@@ -1,8 +1,8 @@
 import { Image, Text, TouchableOpacity } from 'react-native';
 import React, { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../../../enum';
-import useConfig from '../../../../hook/useConfig';
-import { useConfigImageUri, useUiKitConfig } from '../../../../hook';
+import useConfig from '../../../../../social/hooks/useConfig';
+import { useConfigImageUri, useUiKitConfig } from '../../../../../social/hooks';
 import { useStyles } from './styles/styles';
 
 type ExploreCommunityButtonType = {

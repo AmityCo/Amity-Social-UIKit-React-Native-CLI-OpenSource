@@ -4,16 +4,16 @@ import { FlatList, View } from 'react-native';
 import { RefreshControl } from 'react-native';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
 import { ComponentID, PageID } from '../../../enum/enumUIKitID';
-import { useAmityComponent } from '../../../hook/useUiKitReference';
+import { useAmityComponent } from '../../../../social/hooks/useUiKitReference';
 import { AmityPostContentComponentStyleEnum } from '../../../enum/AmityPostContentComponentStyle';
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
-import { usePostImpression } from '../../../../v4/hook/usePostImpression';
+import { usePostImpression } from '../../../../social/hooks/usePostImpression';
 import { useStyle } from './styles';
 import {
   isAmityAd,
   useCustomRankingGlobalFeed,
-} from '../../../hook/useCustomRankingGlobalFeed';
+} from '../../../../social/hooks/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
 import Divider from '../../../component/Divider';
 

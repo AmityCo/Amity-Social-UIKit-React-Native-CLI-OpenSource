@@ -12,7 +12,7 @@ import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { hexToRgba } from '../../../core/utils/color';
 import { PageID, ComponentID } from '../../enum';
 import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElement/MenuButtonIconElement';
-import { useCommunity } from '../../hook';
+import { useCommunity } from '../../../social/hooks';
 
 type CommunityCoverNavigatorProps = {
   pageId?: PageID;

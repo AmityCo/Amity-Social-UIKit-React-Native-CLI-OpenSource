@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useStyles } from './style';
 import { PollFooter } from './PollFooter';
 import { PollOptions } from './PollOption';
-import { usePoll } from '../../hook/usePoll';
+import { usePoll } from '../../../social/hooks/usePoll';
 import { Typography } from '../Typography/Typography';
 
 type PollContentProps = {

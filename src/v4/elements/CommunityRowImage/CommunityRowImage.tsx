@@ -1,7 +1,11 @@
 import React, { FC, memo, useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { ComponentID, ElementID, PageID } from '../../enum';
-import { useAmityElement, useConfigImageUri, useFile } from '../../hook';
+import {
+  useAmityElement,
+  useConfigImageUri,
+  useFile,
+} from '../../../social/hooks';
 import { Image, View } from 'react-native';
 import { useStyles } from './styles';
 import { Typography } from '../../component/Typography/Typography';

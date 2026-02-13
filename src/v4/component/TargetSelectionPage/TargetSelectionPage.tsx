@@ -5,7 +5,7 @@ import {
   useAmityPage,
   useCommunities,
   useUser,
-} from '../../hook';
+} from '../../../social/hooks';
 import TargetItem from './TargetItem/TargetItem';
 import { Divider, useTheme } from 'react-native-paper';
 import useAuth from '../../../core/hooks/useAuth';

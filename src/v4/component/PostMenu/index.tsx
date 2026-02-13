@@ -18,7 +18,7 @@ import { useStyles } from './styles';
 import { getCommunityById } from '../../../core/legacy/community';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useIsCommunityModerator } from '../../hook';
+import { useIsCommunityModerator } from '../../../social/hooks';
 import {
   deletePostById,
   reportTargetById,
@@ -33,8 +33,8 @@ import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElement/MenuButtonIconElement';
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { ComponentID, PageID } from '../../enum';
-import { usePoll } from '../../hook/usePoll';
-import { useClosePoll } from '../../../v4/hook/poll';
+import { usePoll } from '../../../social/hooks/usePoll';
+import { useClosePoll } from '../../../social/hooks/poll';
 import { useUIKitDispatch } from '../../../core/stores/store';
 
 type PostMenuProps = {

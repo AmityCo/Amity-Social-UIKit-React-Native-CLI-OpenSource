@@ -58,7 +58,7 @@ import { TSearchItem } from '../../core/hooks/useSearch';
 import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
 import feedSlice from '../../core/stores/slices/feedSlice';
 import postDetailSlice from '../../core/stores/slices/postDetailSlice';
-import useMention from '../../v4/hook/useMention';
+import useMention from '../../social/hooks/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 const PostDetail = () => {

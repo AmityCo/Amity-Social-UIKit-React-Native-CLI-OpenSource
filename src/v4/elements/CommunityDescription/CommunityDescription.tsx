@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enum';
-import { useAmityElement } from '../../hook';
+import { useAmityElement } from '../../../social/hooks';
 import { StyleSheet, ViewProps } from 'react-native';
 import ReadMore from '@fawazahmed/react-native-read-more';
 import { View } from 'react-native';

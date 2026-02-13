@@ -6,7 +6,7 @@ import { ComponentID, PageID } from '../../../enum';
 import { useStyles } from './styles';
 import { Typography } from '../../../component/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent } from '../../../../social/hooks';
 import { useExplore } from '../../../../social/providers/ExploreProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

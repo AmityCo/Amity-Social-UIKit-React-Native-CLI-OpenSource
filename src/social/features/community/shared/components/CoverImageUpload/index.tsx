@@ -9,7 +9,7 @@ import { imageUpload } from '../../../../../../core/assets/icons';
 import CameraButton from '../../../../../../v4/elements/CameraButton';
 import LinearGradient from 'react-native-linear-gradient';
 import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
-import { UseImagePickerResponse } from '../../../../../../v4/hook/useImagePicker';
+import { UseImagePickerResponse } from '../../../../../hooks/useImagePicker';
 import { Image, Platform, TouchableOpacity, View } from 'react-native';
 import { CircularProgressIndicator } from '../../../../../../v4/component/CircularProgressIndicator';
 

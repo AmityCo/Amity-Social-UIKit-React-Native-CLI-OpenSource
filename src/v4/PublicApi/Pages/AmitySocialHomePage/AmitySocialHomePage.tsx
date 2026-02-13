@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { LogBox, StyleSheet } from 'react-native';
 import CustomSocialTab from '../../../../v4/component/CustomSocialTab/CustomSocialTab';
-import { useUiKitConfig } from '../../../../v4/hook';
+import { useUiKitConfig } from '../../../../social/hooks';
 import {
   ComponentID,
   ElementID,
@@ -17,7 +17,7 @@ import AmityMyCommunitiesComponent from '../../../../v4/PublicApi/Components/Ami
 import AmityNewsFeedComponent from '../../../../v4/PublicApi/Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
 import AmityExploreComponent from '../../../../v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 import NewsFeedLoadingComponent from '../../../../v4/component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
-import { useCustomRankingGlobalFeed } from '../../../../v4/hook/useCustomRankingGlobalFeed';
+import { useCustomRankingGlobalFeed } from '../../../../social/hooks/useCustomRankingGlobalFeed';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

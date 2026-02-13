@@ -46,7 +46,7 @@ import FloatingButton from '../../../components/FloatingButton';
 import useFile from '../../../core/hooks/useFile';
 import { TabName, PostTargetType } from '../../../core/enums';
 import uiSlice from '../../../core/stores/slices/uiSlice';
-import useConfig from '../../hook/useConfig';
+import useConfig from '../../../social/hooks/useConfig';
 import { ComponentID } from '../../enum/enumUIKitID';
 import AmityStoryTabComponent from '../../PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../PublicApi/types/index';

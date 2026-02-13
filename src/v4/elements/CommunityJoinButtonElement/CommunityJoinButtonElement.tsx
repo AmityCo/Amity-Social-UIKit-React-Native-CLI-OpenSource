@@ -1,10 +1,10 @@
 import React, { FC, memo } from 'react';
 import { TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
-import { useAmityElement, useJoinCommunity } from '../../hook';
+import { useAmityElement, useJoinCommunity } from '../../../social/hooks';
 import { Button, BUTTON_SIZE } from '../../component/Button/Button';
 import { plus } from '../../../core/assets/icons';
-import { useCustomRankingGlobalFeed } from '../../../v4/hook/useCustomRankingGlobalFeed';
+import { useCustomRankingGlobalFeed } from '../../../social/hooks/useCustomRankingGlobalFeed';
 
 type CommunityJoinButtonType = {
   pageId?: PageID;

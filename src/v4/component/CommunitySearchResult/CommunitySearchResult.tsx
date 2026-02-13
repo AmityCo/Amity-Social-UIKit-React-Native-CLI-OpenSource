@@ -4,7 +4,7 @@ import CommunityRowItem from '../CommunityRowItem/CommunityRowItem';
 import CommunityListSkeleton from '../CommunityListSkeleton/CommunityListSkeleton';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { ComponentID, PageID } from '../../enum';
-import { useAmityComponent } from '../../hook';
+import { useAmityComponent } from '../../../social/hooks';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { useNavigation } from '@react-navigation/native';

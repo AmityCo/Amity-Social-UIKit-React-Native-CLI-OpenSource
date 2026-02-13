@@ -8,12 +8,12 @@ import {
   useConfigImageUri,
   useAmityComponent,
   useUiKitConfig,
-} from '../../../hook';
+} from '../../../../social/hooks';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
 import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import AmityCreatePostMenuComponent from '../AmityCreatePostMenuComponent/AmityCreatePostMenuComponent';
 import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';
-import { usePopup } from '../../../hook/usePopup';
+import { usePopup } from '../../../../social/hooks/usePopup';
 import Popup from '../../../component/PopupMenu/PopupMenu';
 
 type AmitySocialHomeTopNavigationComponentType = {

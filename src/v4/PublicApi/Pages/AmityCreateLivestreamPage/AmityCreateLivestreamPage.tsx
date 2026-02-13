@@ -13,7 +13,7 @@ import {
 import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import useImagePicker from '../../../../v4/hook/useImagePicker';
+import useImagePicker from '../../../../social/hooks/useImagePicker';
 import { arrowDown, close } from '../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import { Typography } from '../../../component/Typography/Typography';
@@ -25,7 +25,7 @@ import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { PostRepository, RoomRepository } from '@amityco/ts-sdk-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Button from '../../../component/Button/Button';
-import { useRequestPermission } from '../../../../v4/hook/useCamera';
+import { useRequestPermission } from '../../../../social/hooks/useCamera';
 import NetInfo from '@react-native-community/netinfo';
 import { RoomStatus } from '../../../enum/roomStatus';
 import { AmityThumbnailActionComponent } from '../../Components/AmityThumbnailActionComponent';
@@ -40,9 +40,9 @@ import { Track, LocalVideoTrack } from 'livekit-client';
 import { LiveKitRoom, registerGlobals } from '@livekit/react-native';
 import { RoomView } from './RoomView';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
-import { useRoomSubscription } from '../../../../v4/hook/useRoomSubscription';
+import { useRoomSubscription } from '../../../../social/hooks/useRoomSubscription';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
-import { usePostSubscription } from '../../../../v4/hook';
+import { usePostSubscription } from '../../../../social/hooks';
 import { useRoom } from '../../../../social/features/room/hooks/useRoom';
 
 // Register WebRTC globals required for LiveKit

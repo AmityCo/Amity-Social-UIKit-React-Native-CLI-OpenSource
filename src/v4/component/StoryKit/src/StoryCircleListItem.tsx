@@ -13,8 +13,8 @@ import {
   storyCircleCreatePlusIcon,
   storyRing,
 } from '../../../../core/assets/icons/xml';
-import useConfig from '../../../hook/useConfig';
-import { useStoryPermission } from '../../../hook/useStoryPermission';
+import useConfig from '../../../../social/hooks/useConfig';
+import { useStoryPermission } from '../../../../social/hooks/useStoryPermission';
 
 const StoryCircleListItem = ({
   item,

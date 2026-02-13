@@ -24,7 +24,7 @@ import {
   useAmityPage,
   useIsCommunityModerator,
   useRequestPermission,
-} from '../../../hook';
+} from '../../../../social/hooks';
 import { useStyles } from './styles';
 import { AmityPostComposerMode, AmityPostComposerPageType } from '../../types';
 import { IDisplayImage, IMentionPosition } from '../../../../v4/types/type';
@@ -42,7 +42,7 @@ import {
 import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';
 import AmityMediaAttachmentComponent from '../../Components/AmityMediaAttachmentComponent/AmityMediaAttachmentComponent';
 import AmityDetailedMediaAttachmentComponent from '../../Components/AmityDetailedMediaAttachmentComponent/AmityDetailedMediaAttachmentComponent';
-import { useKeyboardStatus } from '../../../hook';
+import { useKeyboardStatus } from '../../../../social/hooks';
 import ImagePicker, {
   launchImageLibrary,
   type Asset,
@@ -53,8 +53,8 @@ import LoadingVideo from '../../../component/LoadingVideo';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
-import { useFile } from '../../../hook';
-import useMention from '../../../hook/useMention';
+import { useFile } from '../../../../social/hooks';
+import useMention from '../../../../social/hooks/useMention';
 import { getPostErrorMessage } from '../../../utils/errors';
 import { MAXIMUM_POST_CHARACTERS } from '../../../../core/constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';

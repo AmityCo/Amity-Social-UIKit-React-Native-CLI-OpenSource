@@ -1,7 +1,7 @@
 import { TextProps, Text } from 'react-native';
 import React, { FC, memo, useLayoutEffect, useState } from 'react';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
-import useConfig from '../../../hook/useConfig';
+import useConfig from '../../../../social/hooks/useConfig';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 
 type CategoryElementType = Partial<TextProps> & {

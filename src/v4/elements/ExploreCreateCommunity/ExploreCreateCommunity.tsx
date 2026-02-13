@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
-import { useAmityElement } from '../../hook';
+import { useAmityElement } from '../../../social/hooks';
 import { Button } from '../../component/Button/Button';
 import { plus } from '../../../core/assets/icons';
 

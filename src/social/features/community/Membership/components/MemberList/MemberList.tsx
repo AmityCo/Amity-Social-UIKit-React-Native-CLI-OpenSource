@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useStyles } from './styles';
 import { FlatList, View } from 'react-native';
 import SearchInput from '../../../../../../v4/component/SearchInput';
-import { useCommunityMemberCollection } from '../../../../../../v4/hook/collections/useCommunityMemberCollection';
+import { useCommunityMemberCollection } from '../../../../../hooks/collections/useCommunityMemberCollection';
 import MemberItem from '../MemberItem';
-import { useSearchMemberByDisplayNameCollection } from '../../../../../../v4/hook/collections/useSearchMemberByDisplayNameCollection';
+import { useSearchMemberByDisplayNameCollection } from '../../../../../hooks/collections/useSearchMemberByDisplayNameCollection';
 import MemberSkeleton from '../../../shared/components/MemberSkeleton';
 
 type MemberListProps = {

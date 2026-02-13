@@ -2,7 +2,7 @@ import { View, FlatList, TouchableOpacity, Pressable } from 'react-native';
 import React, { memo, useCallback } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
-import { useAmityPage, useCommunities } from '../../../hook';
+import { useAmityPage, useCommunities } from '../../../../social/hooks';
 import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButtonIconElement';
 import CategoryTitle from '../../../elements/CategoryTitle/CategoryTitle';
 import CommunityRowItem from '../../../component/CommunityRowItem/CommunityRowItem';

@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { useStyles } from './styles';
-import { useGlobalStory } from '../../hook/useGlobalStory';
+import { useGlobalStory } from '../../../social/hooks/useGlobalStory';
 import ContentLoader, { Circle } from 'react-content-loader/native';
 import StoryCircleItem from './StoryCircleItem';
 import Modal from 'react-native-modalbox';

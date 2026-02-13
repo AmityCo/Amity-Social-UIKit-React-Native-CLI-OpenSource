@@ -5,7 +5,7 @@ import {
   useRecommendedCommunities,
   useTrendingCommunities,
   useCategories,
-} from '../../v4/hook';
+} from '../hooks';
 
 interface ExploreContextType {
   refresh: () => void;

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enum';
-import { useAmityElement } from '../../hook';
+import { useAmityElement } from '../../../social/hooks';
 import { StyleSheet, TouchableOpacity, ViewProps } from 'react-native';
 import { View } from 'react-native';
 import { Typography } from '../../component/Typography/Typography';

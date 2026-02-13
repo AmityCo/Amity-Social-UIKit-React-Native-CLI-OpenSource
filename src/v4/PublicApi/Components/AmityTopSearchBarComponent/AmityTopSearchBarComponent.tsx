@@ -2,7 +2,7 @@ import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { memo, useCallback, useState } from 'react';
 import { useStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
-import { useUiKitConfig, useConfigImageUri } from '../../../hook';
+import { useUiKitConfig, useConfigImageUri } from '../../../../social/hooks';
 import { ComponentID, ElementID, PageID, TabName } from '../../../enum';
 
 type AmityTopSearchBarComponentType = {

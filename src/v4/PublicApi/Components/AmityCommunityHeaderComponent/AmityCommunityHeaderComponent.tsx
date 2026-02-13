@@ -5,7 +5,7 @@ import {
   useAmityComponent,
   useCommunity,
   useIsCommunityModerator,
-} from '../../../hook';
+} from '../../../../social/hooks';
 import { useStyles } from './styles';
 import CommunityCover from '../../../elements/CommunityCover/CommunityCover';
 import CommunityPrivateBadge from '../../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
@@ -16,7 +16,7 @@ import CommunityDescription from '../../../elements/CommunityDescription/Communi
 import CommunityInfo from '../../../elements/CommunityInfo/CommunityInfo';
 import CommunityJoinButtonElement from '../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import CommunityPendingPost from '../../../elements/CommunityPendingPost/CommunityPendingPost';
-import { usePosts } from '../../../hook/usePosts';
+import { usePosts } from '../../../../social/hooks/usePosts';
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
 import { BUTTON_SIZE } from '../../../component/Button/Button';

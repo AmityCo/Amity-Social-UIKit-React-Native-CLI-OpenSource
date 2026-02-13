@@ -15,13 +15,13 @@ import type { IComment } from '../../v4/PublicApi/Components/AmityPostCommentCom
 import { editComment } from '../../core/legacy/comment';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
-import { TSearchItem } from '../../v4/hook';
+import { TSearchItem } from '../../social/hooks';
 import { IMentionPosition } from '../../v4/types/type';
 import {
   CommunityRepository,
   UserRepository,
 } from '@amityco/ts-sdk-react-native';
-import useMention from '../../v4/hook/useMention';
+import useMention from '../../social/hooks/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 
 interface IModal {

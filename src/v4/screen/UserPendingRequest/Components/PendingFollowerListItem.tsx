@@ -1,6 +1,6 @@
 import { Alert, Image, Pressable, Text, View } from 'react-native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { useFile } from '../../../hook';
+import { useFile } from '../../../../social/hooks';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { ImageSizeState } from '../../../enum';
 import { defaultAvatarUri } from '../../../../core/assets';

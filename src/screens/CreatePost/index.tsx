@@ -41,8 +41,8 @@ import { TSearchItem } from '../../core/hooks/useSearch';
 import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
 import { amityPostsFormatter } from '../../core/utils/post';
 import feedSlice from '../../core/stores/slices/feedSlice';
-import { useRequestPermission } from '../../v4/hook/useCamera';
-import useMention from '../../v4/hook/useMention';
+import { useRequestPermission } from '../../social/hooks/useCamera';
+import useMention from '../../social/hooks/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import { useUIKitDispatch } from '../../core/stores/store';
 

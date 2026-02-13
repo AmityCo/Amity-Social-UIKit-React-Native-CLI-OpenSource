@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStyles } from './styles';
 import { FlatList, View } from 'react-native';
-import { useCommunityMemberCollection } from '../../../../../../v4/hook/collections/useCommunityMemberCollection';
+import { useCommunityMemberCollection } from '../../../../../hooks/collections/useCommunityMemberCollection';
 import MemberItem from '../MemberItem';
 import MemberSkeleton from '../../../shared/components/MemberSkeleton';
 import { MemberRoles } from '../../../../../../core/constants';

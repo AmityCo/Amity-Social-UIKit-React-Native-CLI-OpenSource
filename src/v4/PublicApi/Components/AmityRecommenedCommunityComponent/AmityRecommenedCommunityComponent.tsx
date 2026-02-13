@@ -3,7 +3,7 @@ import { Text, FlatList, View, Pressable } from 'react-native';
 import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedCommunityItems';
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../../enum';
-import { useAmityElement } from '../../../hook';
+import { useAmityElement } from '../../../../social/hooks';
 import { useExplore } from '../../../../social/providers/ExploreProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';

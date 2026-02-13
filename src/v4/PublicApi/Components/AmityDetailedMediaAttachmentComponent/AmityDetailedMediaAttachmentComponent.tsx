@@ -1,7 +1,7 @@
 import { Animated, Easing, Pressable, View } from 'react-native';
 import React, { FC, memo, useCallback, useEffect, useRef } from 'react';
 import { PageID, ComponentID, ElementID, mediaAttachment } from '../../../enum';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent } from '../../../../social/hooks';
 import { useStyles } from './styles';
 import ImageKeyElement from '../../Elements/ImageKeyElement/ImageKeyElement';
 import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';

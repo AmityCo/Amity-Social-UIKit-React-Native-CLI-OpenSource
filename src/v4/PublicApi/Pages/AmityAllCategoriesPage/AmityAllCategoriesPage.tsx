@@ -2,7 +2,7 @@ import { View, FlatList, Pressable } from 'react-native';
 import React, { memo, useCallback } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enum';
-import { useAmityPage, useCategories } from '../../../hook';
+import { useAmityPage, useCategories } from '../../../../social/hooks';
 import AllCategoriesTitle from '../../../elements/AllCategoriesTitle/AllCategoriesTitle';
 import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButtonIconElement';
 import CategoryRowItem from './CategoryRowItem/CategoryRowItem';

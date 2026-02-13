@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import React, { FC, memo, useCallback } from 'react';
 import { useStyles } from './styles';
-import { useAmityComponent, useCommunities } from '../../../hook/';
+import { useAmityComponent, useCommunities } from '../../../../social/hooks';
 import { PageID, ComponentID } from '../../../enum';
 import { useNavigation } from '@react-navigation/native';
 import { useBehaviour } from '../../../../social/providers/BehaviourProvider';

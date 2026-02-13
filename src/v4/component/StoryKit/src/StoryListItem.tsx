@@ -33,17 +33,17 @@ import {
 } from '../../../../core/assets/icons/xml';
 import { useStyles } from './styles';
 import { useTimeDifference } from '../../../../core/hooks/useTimeDifference';
-import { useStory } from '../../../hook/useStory';
+import { useStory } from '../../../../social/hooks/useStory';
 import { ElementID, ComponentID, PageID } from '../../../enum/enumUIKitID';
-import useConfig from '../../../hook/useConfig';
+import useConfig from '../../../../social/hooks/useConfig';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../routes/RouteParamList';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import { StoryRepository } from '@amityco/ts-sdk-react-native';
 import CommentList from '../../Social/CommentList/CommentList';
-import { useStoryPermission } from '../../../hook/useStoryPermission';
-import { useConfigImageUri } from '../../../hook/useConfigImageUri';
+import { useStoryPermission } from '../../../../social/hooks/useStoryPermission';
+import { useConfigImageUri } from '../../../../social/hooks/useConfigImageUri';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const StoryListItem = ({

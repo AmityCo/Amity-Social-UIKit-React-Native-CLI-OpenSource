@@ -41,7 +41,7 @@ import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useNavigation } from '@react-navigation/native';
 import ReplyCommentList from '../../../../components/Social/ReplyCommentList';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
-import { useTimeDifference } from '../../../hook/useTimeDifference';
+import { useTimeDifference } from '../../../../social/hooks/useTimeDifference';
 import { LinkPreview } from '../../PreviewLink';
 import { Typography } from '../../Typography/Typography';
 import { pen, report, trash, unreport } from '../../../../core/assets/icons';

@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
-import { useStory } from '../../hook/useStory';
+import { useStory } from '../../../social/hooks/useStory';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import {
@@ -11,10 +11,10 @@ import {
 } from '../../../core/assets/icons/xml';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
-import { useFile } from '../../hook/useFile';
+import { useFile } from '../../../social/hooks/useFile';
 import { ImageSizeState } from '../../enum/imageSizeState';
-import { useStoryPermission } from '../../hook/useStoryPermission';
-import useConfig from '../../hook/useConfig';
+import { useStoryPermission } from '../../../social/hooks/useStoryPermission';
+import useConfig from '../../../social/hooks/useConfig';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import Modal from 'react-native-modalbox';
 import AmityViewStoryPage from '../../PublicApi/Pages/AmityViewStoryPage/AmityViewStoryPage';

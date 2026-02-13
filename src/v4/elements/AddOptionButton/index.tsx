@@ -2,7 +2,7 @@ import React from 'react';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { plus } from '../../../core/assets/icons';
-import { useAmityElement } from '../../hook';
+import { useAmityElement } from '../../../social/hooks';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import { Typography } from '../../component/Typography/Typography';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';

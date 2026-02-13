@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
-import { useAmityElement, useLeaveCommunity } from '../../hook';
+import { useAmityElement, useLeaveCommunity } from '../../../social/hooks';
 import { Button, BUTTON_SIZE } from '../../component/Button/Button';
 import { check } from '../../../core/assets/icons';
 

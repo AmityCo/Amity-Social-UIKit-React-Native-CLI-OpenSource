@@ -10,7 +10,7 @@ import {
 } from './Elements';
 import Divider from '../../../component/Divider';
 import { ComponentID, PageID } from '../../../enum';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent } from '../../../../social/hooks';
 
 type AmityEmptyNewsFeedComponentType = {
   pageId?: PageID;

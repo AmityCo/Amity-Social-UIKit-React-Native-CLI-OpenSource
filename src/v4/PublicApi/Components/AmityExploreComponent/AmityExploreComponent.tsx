@@ -11,7 +11,7 @@ import AmityExploreCommunityEmptyComponent from '../AmityExploreCommunityEmptyCo
 import AmityExploreEmptyComponent from '../AmityExploreEmptyComponent/AmityExploreEmptyComponent';
 import { useExplore } from '../../../../social/providers/ExploreProvider';
 import ExploreLoadingSkeleton from './ExploreLoadingSkeleton/ExploreLoadingSkeleton';
-import { useAmityPage } from '../../../hook';
+import { useAmityPage } from '../../../../social/hooks';
 import ErrorComponent from '../../../component/ErrorComponent/ErrorComponent';
 import Divider from '../../../component/Divider';
 

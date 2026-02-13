@@ -1,6 +1,6 @@
 import React from 'react';
 import { menu } from '../../../core/assets/icons';
-import { useAmityElement } from '../../../v4/hook';
+import { useAmityElement } from '../../../social/hooks';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { ComponentID, ElementID, PageID } from '../../../v4/enum';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';

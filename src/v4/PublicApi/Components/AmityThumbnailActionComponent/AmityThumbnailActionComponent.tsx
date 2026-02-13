@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum/enumUIKitID';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent } from '../../../../social/hooks';
 import { ChangeThumbnailButton } from '../../../elements/ChangeThumbnailButton';
 import { DeleteThumbnailButton } from '../../../elements/DeleteThumbnailButton';
 import { useStyles } from './styles';

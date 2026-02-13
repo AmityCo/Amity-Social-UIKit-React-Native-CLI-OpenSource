@@ -6,8 +6,8 @@ import {
   PageID,
   UiKitConfigKeys,
 } from '../../../enum/enumUIKitID';
-import useConfig from '../../../hook/useConfig';
-import { useConfigImageUri } from '../../../hook';
+import useConfig from '../../../../social/hooks/useConfig';
+import { useConfigImageUri } from '../../../../social/hooks';
 
 type LikeButtonIconElementType = Partial<ImageProps> & {
   pageID?: PageID;

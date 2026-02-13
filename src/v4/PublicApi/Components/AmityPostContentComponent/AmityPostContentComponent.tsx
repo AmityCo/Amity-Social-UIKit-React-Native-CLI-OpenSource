@@ -18,7 +18,10 @@ import { IMentionPosition } from '../../../types/type';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { ComponentID, ElementID, PageID } from '../../../enum';
 import AvatarElement from '../../Elements/CommonElements/AvatarElement';
-import { useAmityComponent, useIsCommunityModerator } from '../../../hook';
+import {
+  useAmityComponent,
+  useIsCommunityModerator,
+} from '../../../../social/hooks';
 import ModeratorBadgeElement from '../../Elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
 import {

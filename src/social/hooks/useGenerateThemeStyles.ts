@@ -1,5 +1,5 @@
 import { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
-import { IConfigRaw } from '../types/config.interface';
+import { IConfigRaw } from '../../v4/types/config.interface';
 import { useDarkMode } from './useDarkMode';
 import { useTheme } from 'react-native-paper';
 

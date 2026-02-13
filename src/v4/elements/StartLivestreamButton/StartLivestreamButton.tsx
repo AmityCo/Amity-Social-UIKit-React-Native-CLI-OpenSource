@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
-import { useAmityElement } from '../../hook';
+import { useAmityElement } from '../../../social/hooks';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import { startLivestream } from '../../../core/assets/icons';

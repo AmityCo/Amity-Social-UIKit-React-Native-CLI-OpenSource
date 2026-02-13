@@ -23,9 +23,9 @@ import type { FeedRefType } from '../CommunityHome';
 import { deletePostById } from '../../../core/legacy/feed';
 import { amityPostsFormatter } from '../../../core/utils/post';
 import { useFocusEffect } from '@react-navigation/native';
-import { usePaginatorApi } from '../../hook/usePaginator';
-import { usePostImpression } from '../../../v4/hook/usePostImpression';
-import { isAmityAd } from '../../../v4/hook/useCustomRankingGlobalFeed';
+import { usePaginatorApi } from '../../../social/hooks/usePaginator';
+import { usePostImpression } from '../../../social/hooks/usePostImpression';
+import { isAmityAd } from '../../../social/hooks/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../component/PostAdComponent/PostAdComponent';
 
 interface IFeed {

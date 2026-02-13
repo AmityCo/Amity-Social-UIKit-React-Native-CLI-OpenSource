@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SearchItem from '../../component/SearchItem';
+import SearchItem from '../../../v4/component/SearchItem';
 import { TSearchItem } from '..';
 import { TriggersConfig, useMentions } from 'react-native-controlled-mentions';
 import { useStyles } from './styles';

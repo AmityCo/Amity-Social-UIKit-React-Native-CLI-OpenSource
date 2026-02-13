@@ -4,7 +4,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useFile } from '../../hook';
+import { useFile } from '../../../social/hooks';
 import { ImageSizeState } from '../../enum';
 import {
   defaultAvatarUri,

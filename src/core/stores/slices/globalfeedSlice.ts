@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { isAmityAd } from '../../../v4/hook/useCustomRankingGlobalFeed';
+import { isAmityAd } from '../../../social/hooks/useCustomRankingGlobalFeed';
 
 interface GlobalFeedState {
   postList: (Amity.Post<any> | Amity.Ad)[];

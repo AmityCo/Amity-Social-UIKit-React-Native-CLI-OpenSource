@@ -1,5 +1,5 @@
-import { PREFERRED_THEME, THEME_COLORS } from '../enum';
-import { IConfigRaw } from '../types/config.interface';
+import { PREFERRED_THEME, THEME_COLORS } from '../../v4/enum';
+import { IConfigRaw } from '../../v4/types/config.interface';
 
 const useValidateConfig = (config: IConfigRaw | undefined) => {
   if (!config) return false;

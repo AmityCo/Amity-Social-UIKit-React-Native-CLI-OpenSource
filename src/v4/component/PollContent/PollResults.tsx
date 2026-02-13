@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStyles } from './style';
 import { View } from 'react-native';
-import { useUser } from '../../hook';
+import { useUser } from '../../../social/hooks';
 import { ElementID } from '../../enum';
 import useAuth from '../../../core/hooks/useAuth';
 import { Typography } from '../Typography/Typography';

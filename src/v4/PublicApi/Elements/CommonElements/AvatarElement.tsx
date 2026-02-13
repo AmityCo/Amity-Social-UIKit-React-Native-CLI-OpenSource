@@ -4,10 +4,10 @@ import {
   defaultAvatarUri,
   defaultCommunityAvatarUri,
 } from '../../../../core/assets';
-import { useFile } from '../../../hook';
+import { useFile } from '../../../../social/hooks';
 import { ImageSizeState } from '../../../enum';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
-import useConfig from '../../../hook/useConfig';
+import useConfig from '../../../../social/hooks/useConfig';
 import useAuth from '../../../../core/hooks/useAuth';
 
 type AvatarElementType = Partial<ImageProps> & {

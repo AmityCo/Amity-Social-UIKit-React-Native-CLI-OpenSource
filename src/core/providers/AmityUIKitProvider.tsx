@@ -7,7 +7,7 @@ import { AmityUIKitReduxContext, store } from '../stores/store';
 import { ConfigProvider } from './ConfigProvider';
 import { IConfigRaw } from '../../v4/types/config.interface';
 import { validateConfigColor } from '../utils/color';
-import useValidateConfig from '../../v4/hook/useValidateConfig';
+import useValidateConfig from '../../social/hooks/useValidateConfig';
 import fallBackConfig from '../../../uikit.config.json';
 import { BehaviourProvider } from '../../social/providers/BehaviourProvider';
 import { ExploreProvider } from '../../social/providers/ExploreProvider';

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ViewToken } from 'react-native';
 import { isAmityAd } from './useCustomRankingGlobalFeed';
-import AdEngine from '../engine/AdEngine';
+import AdEngine from '../../v4/engine/AdEngine';
 
 export const usePostImpression = (postList?: (Amity.Post | Amity.Ad)[]) => {
   const [postViews, setPostViews] = useState<ViewToken[]>([]);

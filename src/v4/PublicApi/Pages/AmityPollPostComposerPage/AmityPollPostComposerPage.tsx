@@ -31,7 +31,7 @@ import { PollSelection } from './PollSelection';
 import { PollDuration } from './PollDuration';
 import { AndroidBottomSheet, IOSBottomSheet } from './PollDurationBottomSheet';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
-import useMention from '../../../hook/useMention';
+import useMention from '../../../../social/hooks/useMention';
 import { IMentionPosition } from '../../../../core/types';
 import { useUIKitDispatch } from '../../../../core/stores/store';
 

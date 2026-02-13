@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { TabName } from '../../../enum/enumTabName';
 import { ComponentID, PageID } from '../../../enum';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent } from '../../../../social/hooks';
 import CommunitySearchResult from '../../../component/CommunitySearchResult/CommunitySearchResult';
 
 type AmityCommunitySearchResultComponentType = {

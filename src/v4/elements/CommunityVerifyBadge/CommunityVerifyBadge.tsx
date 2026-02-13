@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enum';
-import { useAmityElement, useConfigImageUri } from '../../hook';
+import { useAmityElement, useConfigImageUri } from '../../../social/hooks';
 import { StyleSheet } from 'react-native';
 import { Image } from 'react-native';
 

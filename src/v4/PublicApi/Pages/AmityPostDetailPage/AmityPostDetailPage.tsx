@@ -17,7 +17,7 @@ import React, {
   useLayoutEffect,
 } from 'react';
 import { ComponentID, PageID } from '../../../../v4/enum/';
-import { TSearchItem, useAmityPage } from '../../../../v4/hook';
+import { TSearchItem, useAmityPage } from '../../../../social/hooks';
 import { useStyles } from './styles';
 import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButtonIconElement';
 import { CommonActions, useNavigation } from '@react-navigation/native';
@@ -53,7 +53,7 @@ import ErrorComponent from '../../../../v4/component/ErrorComponent/ErrorCompone
 import { getSkeletonBackgrounColor } from '../../../../core/utils/color';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 import { PostMenu } from '../../../../v4/component/PostMenu';
-import useMention from '../../../../v4/hook/useMention';
+import useMention from '../../../../social/hooks/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import {
   createComment,

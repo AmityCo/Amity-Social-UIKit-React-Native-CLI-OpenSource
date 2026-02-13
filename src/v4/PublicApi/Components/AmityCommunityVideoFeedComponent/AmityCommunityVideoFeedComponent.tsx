@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
 import { ComponentID, PageID } from '../../../enum';
-import { useAmityComponent, useCommunity } from '../../../hook';
-import { usePosts } from '../../../hook/usePosts';
+import { useAmityComponent, useCommunity } from '../../../../social/hooks';
+import { usePosts } from '../../../../social/hooks/usePosts';
 import { View } from 'react-native';
 import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
 import { emptyVideoPost, privateFeed } from '../../../../core/assets/icons';

@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 
 import { useStyles } from './styles';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';
-import { useAmityComponent } from '../../hook';
+import { useAmityComponent } from '../../../social/hooks';
 import { PageID, ComponentID, ElementID } from '../../enum';
 import { star } from '../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';

@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AdEngine } from '../engine/AdEngine';
-import {
-  useAdSettings,
-  useRecommendAds,
-} from '../../social/providers/AdEngineProvider';
+import { AdEngine } from '../../v4/engine/AdEngine';
+import { useAdSettings, useRecommendAds } from '../providers/AdEngineProvider';
 import { useFocusEffect } from '@react-navigation/native';
 
 type ItemWithAd<T> = [T] | [T, Amity.Ad];

@@ -19,7 +19,11 @@ import React, {
 } from 'react';
 import { useStyles } from './styles';
 import { ComponentID, PageID } from '../../../enum';
-import { useAmityPage, useCommunity, useStoryPermission } from '../../../hook';
+import {
+  useAmityPage,
+  useCommunity,
+  useStoryPermission,
+} from '../../../../social/hooks';
 import AmityCommunityHeaderComponent from '../../Components/AmityCommunityHeaderComponent/AmityCommunityHeaderComponent';
 import AmityCommunityFeedComponent, {
   AmityCommunityFeedRef,

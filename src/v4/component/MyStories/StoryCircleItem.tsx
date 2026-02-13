@@ -8,8 +8,8 @@ import {
   storyRing,
 } from '../../../core/assets/icons/xml';
 import { ComponentID, ElementID, ImageSizeState, PageID } from '../../enum';
-import { useFile, useStoryPermission } from '../../hook';
-import useConfig from '../../hook/useConfig';
+import { useFile, useStoryPermission } from '../../../social/hooks';
+import useConfig from '../../../social/hooks/useConfig';
 import { useStyles } from './styles';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { useTheme } from 'react-native-paper';

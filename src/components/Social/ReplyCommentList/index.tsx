@@ -44,7 +44,7 @@ import { pen, trash, unreport, report } from '../../../core/assets/icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
-import { useTimeDifference } from '../../../v4/hook';
+import { useTimeDifference } from '../../../social/hooks';
 import { useToast } from '../../../core/stores/slices/toastSlice';
 
 export interface IComment {

@@ -5,7 +5,7 @@ import { infoIcon } from '../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
 import { ComponentID, PageID } from '../../enum';
-import { useAmityComponent } from '../../hook';
+import { useAmityComponent } from '../../../social/hooks';
 
 type AdInformationType = {
   pageId?: PageID;

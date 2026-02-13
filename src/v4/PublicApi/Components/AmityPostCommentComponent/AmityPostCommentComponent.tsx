@@ -13,12 +13,12 @@ import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import CommentListItem from './CommentListItem/CommentListItem';
 import { deleteCommentById } from '../../../../core/legacy/comment';
 import { ComponentID, PageID } from '../../../enum';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent } from '../../../../social/hooks';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
-import { isAmityAd } from '../../../hook/useCustomRankingGlobalFeed';
+import { isAmityAd } from '../../../../social/hooks/useCustomRankingGlobalFeed';
 import CommentAdComponent from '../../../component/CommentAdComponent/CommentAdComponent';
-import { usePaginatorApi } from '../../../hook/usePaginator';
-import { useCommentAdImpression } from '../../../hook/useCommentAdImpression';
+import { usePaginatorApi } from '../../../../social/hooks/usePaginator';
+import { useCommentAdImpression } from '../../../../social/hooks/useCommentAdImpression';
 import { useStyles } from './styles';
 
 export interface IComment {

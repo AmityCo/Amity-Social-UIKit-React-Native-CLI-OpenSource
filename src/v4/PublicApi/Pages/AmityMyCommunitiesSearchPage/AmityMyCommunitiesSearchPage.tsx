@@ -2,10 +2,10 @@ import React, { memo, useState } from 'react';
 import { useStyles } from './styles';
 import AmityTopSearchBarComponent from '../../Components/AmityTopSearchBarComponent/AmityTopSearchBarComponent';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAmityGlobalSearchViewModel } from '../../../hook';
+import { useAmityGlobalSearchViewModel } from '../../../../social/hooks';
 import { TabName } from '../../../enum/enumTabName';
 import { PageID } from '../../../enum';
-import { useAmityPage } from '../../../hook';
+import { useAmityPage } from '../../../../social/hooks';
 import NoSearchResult from '../../../component/NoSearchResult/NoSearchResult';
 import CommunitySearchResult from '../../../component/CommunitySearchResult/CommunitySearchResult';
 

@@ -1,10 +1,10 @@
 import { TextProps, Text, View } from 'react-native';
 import React, { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
-import { useAmityElement } from '../../../hook';
+import { useAmityElement } from '../../../../social/hooks';
 import ImageElement from '../CommonElements/ImageElement';
 import { useStyles } from './styles';
-import { useIsCommunityModerator } from '../../../hook';
+import { useIsCommunityModerator } from '../../../../social/hooks';
 
 type ModeratorBadgeElementType = Partial<TextProps> & {
   pageID: PageID;

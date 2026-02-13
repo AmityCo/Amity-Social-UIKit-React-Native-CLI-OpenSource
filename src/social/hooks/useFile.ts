@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { FileRepository } from '@amityco/ts-sdk-react-native';
-import { ImageSizeState, ImageSizeSubset } from '../enum/imageSizeState';
+import { ImageSizeState, ImageSizeSubset } from '../../v4/enum/imageSizeState';
 import {
   defaultAvatarUri,
   defaultCommunityAvatarUri,

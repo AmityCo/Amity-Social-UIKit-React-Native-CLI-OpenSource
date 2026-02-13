@@ -1,4 +1,4 @@
-import { useAmityElement, useTimeDifference } from '../../../v4/hook';
+import { useAmityElement, useTimeDifference } from '../../../social/hooks';
 import React, { ComponentProps } from 'react';
 import { ComponentID, ElementID, PageID } from '../../../v4/enum';
 import { Typography } from '../../../v4/component/Typography/Typography';

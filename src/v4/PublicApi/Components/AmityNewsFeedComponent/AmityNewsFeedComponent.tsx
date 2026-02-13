@@ -4,7 +4,7 @@ import { ComponentID, PageID } from '../../../enum/enumUIKitID';
 import AmityGlobalFeedComponent from '../AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import { useStyles } from './styles';
 import Divider from '../../../component/Divider';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent } from '../../../../social/hooks';
 
 type AmityNewsFeedComponentType = {
   pageId?: PageID;

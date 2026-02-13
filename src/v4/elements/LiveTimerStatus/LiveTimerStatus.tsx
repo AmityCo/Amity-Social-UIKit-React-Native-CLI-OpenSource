@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
-import { useAmityElement } from '../../hook';
+import { useAmityElement } from '../../../social/hooks';
 import { ComponentID, ElementID, PageID } from '../../enum';
 import { Typography } from '../../component/Typography/Typography';
 

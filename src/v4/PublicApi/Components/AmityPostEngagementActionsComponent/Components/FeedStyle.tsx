@@ -15,7 +15,7 @@ import {
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
-import { useAmityComponent } from '../../../../hook';
+import { useAmityComponent } from '../../../../../social/hooks';
 import { PageID, ComponentID } from '../../../../enum';
 import { SvgXml } from 'react-native-svg';
 import { likeReaction } from '../../../../../core/assets/icons/xml';

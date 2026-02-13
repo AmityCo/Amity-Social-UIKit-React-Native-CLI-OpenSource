@@ -27,7 +27,7 @@ import postDetailSlice from '../../core/stores/slices/postDetailSlice';
 import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
 import feedSlice from '../../core/stores/slices/feedSlice';
 import { TSearchItem } from '../../core/hooks/useSearch';
-import useMention from '../../v4/hook/useMention';
+import useMention from '../../social/hooks/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import { useUIKitDispatch } from '../../core/stores/store';
 interface IModal {

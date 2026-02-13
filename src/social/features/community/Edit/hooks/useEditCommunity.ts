@@ -1,7 +1,7 @@
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';
-import useImagePicker from '../../../../../v4/hook/useImagePicker';
+import useImagePicker from '../../../../hooks/useImagePicker';
 import { useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AmityCommunityPrivacyEnum } from '../../shared/types';
 import { useStyles } from '../styles';
 import { useMutation } from '@tanstack/react-query';
-import useFile from '../../../../../v4/hook/files/useFile';
+import useFile from '../../../../hooks/files/useFile';
 
 const schema = z.object({
   image: z.custom<Amity.File<'image'>>().optional(),

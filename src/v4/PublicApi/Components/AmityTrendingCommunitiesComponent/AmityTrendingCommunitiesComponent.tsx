@@ -2,7 +2,7 @@ import React, { FC, memo, useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum';
 import { useStyles } from './styles';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent } from '../../../../social/hooks';
 import TrendingCommunityTitleComponent from './TrendingCommunityTitle/TrendingCommunityTitle';
 import CommunityRowItem from '../../../component/CommunityRowItem/CommunityRowItem';
 import { useExplore } from '../../../../social/providers/ExploreProvider';

@@ -26,7 +26,7 @@ import {
 } from '../../../../../core/legacy/comment';
 import { Pressable } from 'react-native';
 import useAuth from '../../../../../core/hooks/useAuth';
-import { useTimeDifference } from '../../../../hook/useTimeDifference';
+import { useTimeDifference } from '../../../../../social/hooks/useTimeDifference';
 import {
   isReportTarget,
   reportTargetById,

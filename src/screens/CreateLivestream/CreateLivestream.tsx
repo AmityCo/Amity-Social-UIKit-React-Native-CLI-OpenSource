@@ -29,7 +29,7 @@ import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 //   // @ts-ignore
 // } from '@amityco/video-broadcaster-react-native';
 
-import { useRequestPermission } from '../../../src/v4/hook/useCamera';
+import { useRequestPermission } from '../../social/hooks/useCamera';
 
 const CreateLivestream = ({ navigation, route }) => {
   const styles = useStyles();

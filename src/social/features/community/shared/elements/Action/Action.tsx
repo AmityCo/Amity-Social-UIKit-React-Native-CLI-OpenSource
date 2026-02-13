@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStyles } from './styles';
-import { useAmityElement } from '../../../../../../v4/hook';
+import { useAmityElement } from '../../../../../hooks';
 import { arrowRight } from '../../../../../../core/assets/icons';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { ComponentID, ElementID, PageID } from '../../../../../../v4/enum';

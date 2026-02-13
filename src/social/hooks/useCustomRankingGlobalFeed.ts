@@ -7,7 +7,7 @@ import {
   useUIKitDispatch,
   useUIKitSelector,
 } from '../../core/stores/store';
-import { usePaginatorApi } from '../../v4/hook/usePaginator';
+import { usePaginatorApi } from './usePaginator';
 import { IComment } from '../../components/Social/CommentList';
 import useAuth from '../../core/hooks/useAuth';
 

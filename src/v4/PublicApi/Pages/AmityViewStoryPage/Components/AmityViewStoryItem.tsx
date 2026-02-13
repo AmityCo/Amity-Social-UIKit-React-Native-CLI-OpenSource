@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import React, { FC, memo, useCallback, useRef, useState } from 'react';
-import { useConfigImageUri, useStory } from '../../../../hook';
+import { useConfigImageUri, useStory } from '../../../../../social/hooks';
 import { useStyles } from '../styles';
 import Video, { OnLoadData } from 'react-native-video';
 import {
@@ -27,7 +27,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import Modal from 'react-native-modalbox';
 import { ComponentID, ElementID, PageID } from '../../../../enum';
-import useConfig from '../../../../hook/useConfig';
+import useConfig from '../../../../../social/hooks/useConfig';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import CommentList from '../../../../component/Social/CommentList/CommentList';
 import { StoryRepository } from '@amityco/ts-sdk-react-native';

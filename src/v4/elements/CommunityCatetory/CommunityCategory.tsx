@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { CommunityCategoryChips } from '../../component/CommunityCategoryChips/CommunityCategoryChips';
 import { ComponentID, ElementID, PageID } from '../../enum';
-import { useAmityElement } from '../../hook';
+import { useAmityElement } from '../../../social/hooks';
 import { View, ViewProps } from 'react-native';
 
 type CommunityCategoryProps = ViewProps & {

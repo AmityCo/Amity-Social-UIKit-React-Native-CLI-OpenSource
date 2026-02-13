@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react';
 import { PageID, ComponentID, ElementID } from '../../enum';
-import { useAmityElement } from '../../hook';
+import { useAmityElement } from '../../../social/hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import { Image, StyleSheet, View } from 'react-native';
 import CommunityCoverNavigator from './CommunityCoverNavigator';

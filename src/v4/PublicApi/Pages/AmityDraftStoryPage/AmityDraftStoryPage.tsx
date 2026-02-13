@@ -21,10 +21,10 @@ import {
 } from '../../../enum';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
-import { useConfigImageUri } from '../../../hook/useConfigImageUri';
+import { useConfigImageUri } from '../../../../social/hooks/useConfigImageUri';
 import HyperlinkConfig from './Components/HyperLinkConfig';
 import { IAmityDraftStoryPage } from '../../types';
-import { useFile } from '../../../hook/useFile';
+import { useFile } from '../../../../social/hooks/useFile';
 import { defaultAvatarUri } from '../../../../core/assets/index';
 import { getMediaTypeFromUrl } from '../../../../core/utils/url';
 import { LoadingOverlay } from '../../../../components/LoadingOverlay';

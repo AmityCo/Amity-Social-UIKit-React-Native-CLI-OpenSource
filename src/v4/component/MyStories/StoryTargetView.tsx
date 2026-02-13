@@ -6,7 +6,7 @@ import AmityViewStoryPage from '../../PublicApi/Pages/AmityViewStoryPage/AmityVi
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
-import { useStoryPermission } from '../../hook';
+import { useStoryPermission } from '../../../social/hooks';
 import { NextOrPrevious } from '../StoryKit';
 
 interface IStorytargetView {

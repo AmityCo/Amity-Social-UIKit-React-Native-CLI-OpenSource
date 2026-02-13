@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCameraDevice } from 'react-native-vision-camera';
 import { AmityCreateStoryPage } from '../../index';
-import { useRequestPermission } from '../../hook/useCamera';
+import { useRequestPermission } from '../../../social/hooks/useCamera';
 import { Alert, Linking } from 'react-native';
 
 const CreateStoryScreen = ({ navigation, route }) => {

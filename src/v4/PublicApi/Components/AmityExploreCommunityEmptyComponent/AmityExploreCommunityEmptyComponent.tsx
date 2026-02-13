@@ -1,5 +1,5 @@
 import React, { FC, memo, useCallback } from 'react';
-import { useAmityComponent } from '../../../hook';
+import { useAmityComponent } from '../../../../social/hooks';
 import { PageID, ComponentID } from '../../../enum';
 import { emptyCommunity } from '../../../../core/assets/icons';
 import TitleElement from '../../Elements/TitleElement/TitleElement';

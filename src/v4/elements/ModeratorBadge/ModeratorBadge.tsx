@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ViewProps } from 'react-native';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { moderator } from '../../../core/assets/icons';
-import { useAmityElement } from '../../../v4/hook';
+import { useAmityElement } from '../../../social/hooks';
 import { ComponentID, ElementID, PageID } from '../../../v4/enum';
 import { useStyles } from './styles';
 

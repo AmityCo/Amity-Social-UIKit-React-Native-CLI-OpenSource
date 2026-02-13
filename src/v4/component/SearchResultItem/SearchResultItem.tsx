@@ -8,7 +8,7 @@ import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useBehaviour } from '../../../social/providers/BehaviourProvider';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';
-import { useAmityComponent } from '../../hook';
+import { useAmityComponent } from '../../../social/hooks';
 import TextElement from '../../PublicApi/Elements/CommonElements/TextElement';
 import ImageElement from '../../PublicApi/Elements/CommonElements/ImageElement';
 import { formatNumber } from '../../../core/utils/number';

@@ -44,7 +44,7 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import ReplyCommentList from '../ReplyCommentList/index';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
-import { useTimeDifference } from '../../../../hook';
+import { useTimeDifference } from '../../../../../social/hooks';
 import ModeratorBadgeElement from '../../../Elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import { ComponentID, PageID } from '../../../../enum';
 import { LinkPreview } from '../../../../component/PreviewLink/LinkPreview';

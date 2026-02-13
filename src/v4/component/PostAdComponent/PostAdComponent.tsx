@@ -4,7 +4,7 @@ import { Image, View, TouchableOpacity, Linking, Text } from 'react-native';
 import { ComponentID, PageID } from '../../enum';
 import { useStyles } from './styles';
 import PostAdHeader from './PostAdHeader';
-import { useAmityComponent } from '../../hook';
+import { useAmityComponent } from '../../../social/hooks';
 import { infoIcon } from '../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import AdInformation from '../AdInformation/AdInformation';

@@ -7,7 +7,7 @@ import {
   CameraOptions,
 } from 'react-native-image-picker';
 
-import { isValidImageType } from '../utils';
+import { isValidImageType } from '../../v4/utils';
 import { useCameraPermission } from './usePermissions';
 import { deleteAmityFile, uploadImageFile } from '../../core/legacy/file';
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Image, View } from 'react-native';
 import { ComponentID, ImageSizeState, PageID } from '../../../../enum';
-import { useFile } from '../../../../hook';
+import { useFile } from '../../../../../social/hooks';
 import { useStyles } from './styles';
 
 import CommunityJoinedButton from '../../../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';

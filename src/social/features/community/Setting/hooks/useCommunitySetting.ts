@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { ERROR_CODE } from '../../../../../core/constants';
 import { useStyles } from '../styles';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';
-import { useCustomRankingGlobalFeed } from '../../../../../v4/hook/useCustomRankingGlobalFeed';
+import { useCustomRankingGlobalFeed } from '../../../../hooks/useCustomRankingGlobalFeed';
 
 export function useCommunitySetting(community: Amity.Community) {
   const { styles } = useStyles();

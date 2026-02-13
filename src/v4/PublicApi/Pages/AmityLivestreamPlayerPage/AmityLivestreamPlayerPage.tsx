@@ -18,7 +18,7 @@ import useAuth from '../../../../core/hooks/useAuth';
 import {
   usePostSubscription,
   useRoomSubscription,
-} from '../../../../v4/hook/index';
+} from '../../../../social/hooks/index';
 import { RoomRepository } from '@amityco/ts-sdk-react-native';
 
 function AmityLiveStreamPlayerPage() {

@@ -1,7 +1,7 @@
 import { useStyles } from './styles';
 import React from 'react';
 import { ComponentID, PageID } from '../../../../v4/enum';
-import { useAmityComponent, useCommunity } from '../../../../v4/hook';
+import { useAmityComponent, useCommunity } from '../../../../social/hooks';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
 import Divider from '../../../../v4/component/Divider';
 import { View, FlatList } from 'react-native';
@@ -12,7 +12,7 @@ import {
 import EmptyComponent from '../../../../v4/component/EmptyComponent/EmptyComponent';
 import { emptyPost, privateFeed } from '../../../../core/assets/icons';
 import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';
-import { usePinnedPostCollection } from '../../../../v4/hook/collections/usePinnedPostCollection';
+import { usePinnedPostCollection } from '../../../../social/hooks/collections/usePinnedPostCollection';
 
 type AmityCommunityPinnedPostComponentProps = {
   communityId: string;

@@ -5,7 +5,7 @@ import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { Typography } from '../../../v4/component/Typography/Typography';
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../../v4/enum';
-import { useAmityElement } from '../../../v4/hook';
+import { useAmityElement } from '../../../social/hooks';
 
 type CommunityAddMemberButtonProps = TouchableOpacityProps & {
   pageId?: PageID;

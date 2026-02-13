@@ -1,8 +1,8 @@
 import { Image } from 'react-native';
 import React, { memo } from 'react';
-import { useConfigImageUri } from '../../../../hook';
+import { useConfigImageUri } from '../../../../../social/hooks';
 import { ComponentID, ElementID, PageID } from '../../../../enum';
-import useConfig from '../../../../hook/useConfig';
+import useConfig from '../../../../../social/hooks/useConfig';
 import { useStyles } from './styles/styles';
 
 const Illustration = () => {
