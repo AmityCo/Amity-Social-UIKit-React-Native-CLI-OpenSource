@@ -1,43 +1,75 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import {
+  AmityPageRenderer,
   AmityUiKitProvider,
   AmityUiKitSocial,
+  CommunityProfilePage,
+  PostDetail,
 } from '@amityco/react-native-social-uikit';
-import { OneSignal, LogLevel } from 'react-native-onesignal'; // Import OneSignal
+import { OneSignal, LogLevel } from 'react-native-onesignal';
 import config from '../uikit.config.json';
+import messaging from '@react-native-firebase/messaging';
 
 export default function App() {
-  const [pushToken, setPushToken] = useState(null);
-  console.log('pushToken: ', pushToken);
+  const [pushToken, setPushToken] = useState<string | null>(null);
+  const [initialScreen, setInitialScreen] = useState<string>('Home');
+  console.log('initialScreen: ', initialScreen);
+  const [targetId, setTargetId] = useState<string | null>(null);
 
   useEffect(() => {
-    // 1. Initialize OneSignal
+    // 🔥 Initialize OneSignal
     OneSignal.Debug.setLogLevel(LogLevel.Verbose);
-    OneSignal.initialize('128d4bfb-a7d1-4863-9267-2d79a3b5c73a'); // Replace with your App ID
+    OneSignal.initialize('128d4bfb-a7d1-4863-9267-2d79a3b5c73a');
     OneSignal.Notifications.requestPermission(true);
-    // 2. Get Push Token
+    // 🔥 Fetch push token
     const fetchToken = async () => {
       const token = await OneSignal.User.pushSubscription.getTokenAsync();
       if (token) {
         setPushToken(token);
       }
     };
-
     fetchToken();
+    OneSignal.User.pushSubscription.addEventListener('change', fetchToken);
+  }, []);
 
-    const listener = () => {
-      fetchToken();
-    };
-
-    OneSignal.User.pushSubscription.addEventListener('change', listener);
-    OneSignal.Notifications.addEventListener('click', (event) => {
-      console.log('OneSignal: notification clicked:', event);
+  useEffect(() => {
+    // When app is opened from background
+    const unsubscribe = messaging().onNotificationOpenedApp((remoteMessage) => {
+      console.log('Opened from background:', remoteMessage);
+      if (
+        remoteMessage.data.eventName === 'comment.created' ||
+        remoteMessage.data.eventName === 'post.reacted'
+      ) {
+        setTargetId(remoteMessage?.data?.postId as string);
+        setInitialScreen('postScreen');
+      }
+      if (remoteMessage.data.eventName === 'post.created') {
+        setTargetId(remoteMessage?.data?.communityId as string);
+        setInitialScreen('CommunityScreen');
+      }
     });
 
-    return () => {
-      OneSignal.User.pushSubscription.removeEventListener('change', listener);
-    };
+    messaging()
+      .getInitialNotification()
+      .then((remoteMessage) => {
+        if (remoteMessage) {
+          console.log('Opened from quit:', remoteMessage);
+          if (
+            remoteMessage.data.eventName === 'comment.created' ||
+            remoteMessage.data.eventName === 'post.reacted'
+          ) {
+            setTargetId(remoteMessage?.data?.postId as string);
+            setInitialScreen('postScreen');
+          }
+          if (remoteMessage.data.eventName === 'post.created') {
+            setTargetId(remoteMessage?.data?.communityId as string);
+            setInitialScreen('CommunityScreen');
+          }
+        }
+      });
+
+    return unsubscribe;
   }, []);
 
   if (!pushToken) return null;
@@ -52,7 +84,17 @@ export default function App() {
       apiEndpoint="https://api.us.amity.co"
       fcmToken={pushToken}
     >
-      <AmityUiKitSocial />
+      {initialScreen === 'Home' ? (
+        <AmityUiKitSocial />
+      ) : initialScreen === 'postScreen' ? (
+        <AmityPageRenderer>
+          <PostDetail defaultPostId={targetId} />
+        </AmityPageRenderer>
+      ) : initialScreen === 'CommunityScreen' ? (
+        <AmityPageRenderer>
+          <CommunityProfilePage defaultCommunityId={targetId} />
+        </AmityPageRenderer>
+      ) : null}
     </AmityUiKitProvider>
   );
 }
