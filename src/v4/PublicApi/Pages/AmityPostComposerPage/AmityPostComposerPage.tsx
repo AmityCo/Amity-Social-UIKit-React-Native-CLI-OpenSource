@@ -27,7 +27,10 @@ import {
 } from '../../../../social/hooks';
 import { useStyles } from './styles';
 import { AmityPostComposerMode, AmityPostComposerPageType } from '../../types';
-import { IDisplayImage, IMentionPosition } from '../../../../v4/types/type';
+import {
+  IDisplayImage,
+  IMentionPosition,
+} from '../../../../core/types/mention';
 import CloseButtonIconElement from '../../Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
@@ -55,7 +58,7 @@ import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { useFile } from '../../../../social/hooks';
 import useMention from '../../../../social/hooks/useMention';
-import { getPostErrorMessage } from '../../../utils/errors';
+import { getPostErrorMessage } from '../../../../social/utils/errors';
 import { MAXIMUM_POST_CHARACTERS } from '../../../../core/constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import { useUIKitDispatch } from '../../../../core/stores/store';

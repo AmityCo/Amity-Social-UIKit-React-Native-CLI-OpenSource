@@ -35,7 +35,7 @@ import {
 import EditCommentModal from '../../../../../components/EditCommentModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
-import { IMentionPosition } from '../../../../types/type';
+import { IMentionPosition } from '../../../../../core/types/mention';
 import ModeratorBadgeElement from '../../../../PublicApi/Elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import { ComponentID, PageID } from '../../../../../social/enums';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';

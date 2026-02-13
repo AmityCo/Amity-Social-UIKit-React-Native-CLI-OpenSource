@@ -1,4 +1,5 @@
 export * from './auth';
-export * from './config';
+export * from './behaviour';
 export * from './mention';
 export * from './user';
+export * from './config';

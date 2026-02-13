@@ -3,7 +3,7 @@ import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import { PreviewDataImage } from './types';
 import { getPreviewData } from './utils';
-import { IMentionPosition } from '../../types/type';
+import { IMentionPosition } from '../../../core/types/mention';
 import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
 
 export interface LinkPreviewProps {

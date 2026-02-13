@@ -5,7 +5,7 @@ import {
   isAdmin,
   isModerator,
   checkStoryPermission,
-} from '../../v4/utils/permissions';
+} from '../utils/permissions';
 
 export function useStoryPermission(communityId?: string) {
   const { client } = useAuth();

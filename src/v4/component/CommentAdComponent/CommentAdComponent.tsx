@@ -10,8 +10,8 @@ import AdInformation from '../AdInformation/AdInformation';
 import { infoIcon } from '../../../core/assets/icons/xml';
 import { defaultAdAvatarUri } from '../../../core/assets';
 import bottomSheetSlice from '../../../core/stores/slices/bottomSheetSlice';
-import AssetDownloader from '../../engine/AssetDownloader';
-import AdEngine from '../../engine/AdEngine';
+import AssetDownloader from '../../../core/engines/AssetDownloader';
+import AdEngine from '../../../core/engines/AdEngine';
 import { Linking } from 'react-native';
 import { useUIKitDispatch } from '../../../core/stores/store';
 

@@ -1,5 +1,5 @@
 import React, { ReactNode, createContext, useContext, useMemo } from 'react';
-import { IBehaviour } from '../../v4/types/behaviour.interface';
+import { IBehaviour } from '../../core/types/behaviour';
 
 const BehaviourContext = createContext<IBehaviour>(undefined);
 

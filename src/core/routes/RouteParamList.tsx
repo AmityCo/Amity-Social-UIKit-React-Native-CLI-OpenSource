@@ -6,7 +6,7 @@ import { AmityPostTargetSelectionPageType } from '../../social/enums';
 import {
   AddCategoryPageContext,
   AddMemberPageContext,
-} from '../../v4/types/behaviour.interface';
+} from '../types/behaviour';
 import { AmityPostCategory } from '../../social/enums/AmityPostContentComponentStyle';
 
 export type RootStackParamList = {

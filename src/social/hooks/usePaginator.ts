@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AdEngine } from '../../v4/engine/AdEngine';
+import { AdEngine } from '../../core/engines/AdEngine';
 import { useAdSettings, useRecommendAds } from '../providers/AdEngineProvider';
 import { useFocusEffect } from '@react-navigation/native';
 

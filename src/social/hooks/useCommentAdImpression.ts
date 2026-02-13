@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ViewToken } from 'react-native';
-import AdEngine from '../../v4/engine/AdEngine';
+import AdEngine from '../../core/engines/AdEngine';
 import { isAmityAd } from './useCustomRankingGlobalFeed';
 
 export const useCommentAdImpression = () => {

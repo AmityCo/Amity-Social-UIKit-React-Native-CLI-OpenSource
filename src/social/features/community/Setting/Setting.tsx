@@ -18,7 +18,7 @@ import CloseCommunityDescription from './elements/CloseCommunityDescription';
 import {
   checkDeleteCommunityPermission,
   checkEditCommunityPermission,
-} from '../../../../v4/utils/permissions';
+} from '../../../utils/permissions';
 import { useCommunitySetting } from './hooks/useCommunitySetting';
 
 type CommunitySettingProps = {

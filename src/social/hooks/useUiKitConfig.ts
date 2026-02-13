@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { IUIKitConfigOptions } from '../../v4/types/config.interface';
+import { IUIKitConfigOptions } from '../../core/types/config';
 import useConfig from './useConfig';
 import { UiKitConfigKeys } from '../enums/enumUIKitID';
 

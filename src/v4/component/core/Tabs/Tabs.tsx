@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { Typography } from '../../../../v4/component/Typography/Typography';
 import { useStyles } from './styles';
-import { capitalize } from '../../../../v4/utils';
+import { capitalize } from '../../../../social/utils';
 
 type TabsContextType<T> = {
   variant: 'chip' | 'underline' | 'icon';

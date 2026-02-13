@@ -13,7 +13,7 @@ import { category } from '../../../core/assets/icons';
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
 import ModeratorBadge from '../../../v4/elements/ModeratorBadge';
-import { isModerator } from '../../../v4/utils/permissions';
+import { isModerator } from '../../../social/utils/permissions';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';

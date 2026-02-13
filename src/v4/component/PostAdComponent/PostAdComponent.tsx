@@ -9,8 +9,8 @@ import { infoIcon } from '../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import AdInformation from '../AdInformation/AdInformation';
 import bottomSheetSlice from '../../../core/stores/slices/bottomSheetSlice';
-import AdEngine from '../../engine/AdEngine';
-import AssetDownloader from '../../engine/AssetDownloader';
+import AdEngine from '../../../core/engines/AdEngine';
+import AssetDownloader from '../../../core/engines/AssetDownloader';
 import { useUIKitDispatch } from '../../../core/stores/store';
 
 type PostAdComponentType = {

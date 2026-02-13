@@ -19,7 +19,7 @@ import {
 import {
   checkEditRolePermission,
   isModerator,
-} from '../../../../../../v4/utils/permissions';
+} from '../../../../../utils/permissions';
 import {
   useRolesQuery,
   useMembersQuery,

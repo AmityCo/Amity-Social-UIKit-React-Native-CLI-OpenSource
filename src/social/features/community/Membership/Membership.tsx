@@ -6,7 +6,7 @@ import { useStyles } from './styles';
 import Tabs from '../../../../v4/component/core/Tabs';
 import MemberList from './components/MemberList';
 import ModeratorList from './components/ModeratorList';
-import { checkEditCommunityPermission } from '../../../../v4/utils/permissions';
+import { checkEditCommunityPermission } from '../../../utils/permissions';
 
 type CommunityMembershipProps = {
   community: Amity.Community;

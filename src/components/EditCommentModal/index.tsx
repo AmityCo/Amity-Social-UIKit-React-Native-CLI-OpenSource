@@ -16,7 +16,7 @@ import { editComment } from '../../core/legacy/comment';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../core/providers/AmityUIKitProvider';
 import { TSearchItem } from '../../social/hooks';
-import { IMentionPosition } from '../../v4/types/type';
+import { IMentionPosition } from '../../core/types/mention';
 import {
   CommunityRepository,
   UserRepository,

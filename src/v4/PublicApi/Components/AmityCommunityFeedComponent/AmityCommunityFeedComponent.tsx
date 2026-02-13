@@ -18,7 +18,7 @@ import EmptyComponent from '../../../../v4/component/EmptyComponent/EmptyCompone
 import { emptyPost, privateFeed } from '../../../../core/assets/icons';
 import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';
 import { usePinnedPostCollection } from '../../../../social/hooks/collections/usePinnedPostCollection';
-import { isPinnedPost } from '../../../../v4/utils';
+import { isPinnedPost } from '../../../../social/utils';
 
 export interface AmityCommunityFeedRef {
   handleLoadMore: () => void;

@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState, useUIKitDispatch, useUIKitSelector } from '../store';
-import { getCommentErrorMessage } from '../../../v4/utils/errors';
+import { getCommentErrorMessage } from '../../../social/utils/errors';
 type ToastState = {
   visible?: boolean;
   message: string;

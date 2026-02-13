@@ -4,7 +4,7 @@ import { PageID } from '../../../../../enums';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { ImageButton } from '../../../../../../v4/elements';
-import { getFileUrlWithSize } from '../../../../../../v4/utils';
+import { getFileUrlWithSize } from '../../../../../utils';
 import { imageUpload } from '../../../../../../core/assets/icons';
 import CameraButton from '../../../../../../v4/elements/CameraButton';
 import LinearGradient from 'react-native-linear-gradient';

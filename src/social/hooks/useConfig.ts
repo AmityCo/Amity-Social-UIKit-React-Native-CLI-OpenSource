@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { ConfigContext } from '../../core/providers/ConfigProvider';
-import { IUIKitConfigOptions } from '../../v4/types/config.interface';
+import { IUIKitConfigOptions } from '../../core/types/config';
 
 interface IUIKitConfig {
   preferred_theme: 'light' | 'dark' | 'default';

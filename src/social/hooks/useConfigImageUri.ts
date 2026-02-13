@@ -2,7 +2,7 @@ import { Image, ImageURISource } from 'react-native';
 import { defaultAvatarUri } from '../../core/assets';
 import { useMemo } from 'react';
 import useConfig from './useConfig';
-import { IUIKitConfigOptions } from '../../v4/types/config.interface';
+import { IUIKitConfigOptions } from '../../core/types/config';
 import { UiKitConfigKeys } from '../enums';
 import { useDarkMode } from './useDarkMode';
 
