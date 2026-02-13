@@ -5,7 +5,7 @@ import {
   ElementID,
   PageID,
   UiKitConfigKeys,
-} from '../../../enum/enumUIKitID';
+} from '../../../enums/enumUIKitID';
 import { useAmityElement, useConfigImageUri } from '../../../../social/hooks';
 
 type CloseButtonIconElementType = Partial<ImageProps> & {

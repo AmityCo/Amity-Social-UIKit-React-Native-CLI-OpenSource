@@ -1,4 +1,4 @@
-import { TabName } from '../enum';
+import { TabName } from '../enums';
 
 export type AddCategoryPageContext = {
   categories: Amity.Category[];

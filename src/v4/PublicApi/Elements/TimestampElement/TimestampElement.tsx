@@ -1,6 +1,6 @@
 import { TextProps, Text } from 'react-native';
 import React, { FC, memo } from 'react';
-import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
+import { ComponentID, ElementID, PageID } from '../../../enums/enumUIKitID';
 import useConfig from '../../../../social/hooks/useConfig';
 import { useTimeDifference } from '../../../../social/hooks';
 

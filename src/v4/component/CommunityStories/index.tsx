@@ -12,10 +12,10 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { useFile } from '../../../social/hooks/useFile';
-import { ImageSizeState } from '../../enum/imageSizeState';
+import { ImageSizeState } from '../../enums/imageSizeState';
 import { useStoryPermission } from '../../../social/hooks/useStoryPermission';
 import useConfig from '../../../social/hooks/useConfig';
-import { ComponentID, ElementID, PageID } from '../../enum';
+import { ComponentID, ElementID, PageID } from '../../enums';
 import Modal from 'react-native-modalbox';
 import AmityViewStoryPage from '../../PublicApi/Pages/AmityViewStoryPage/AmityViewStoryPage';
 import { Typography } from '../Typography/Typography';

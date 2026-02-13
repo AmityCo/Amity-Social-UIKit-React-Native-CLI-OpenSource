@@ -2,7 +2,7 @@ import React from 'react';
 import { SvgXml } from 'react-native-svg';
 import { useAmityElement } from '../../../social/hooks';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
-import { ComponentID, ElementID, PageID } from '../../enum';
+import { ComponentID, ElementID, PageID } from '../../enums';
 import { rotate } from '../../../core/assets/icons';
 
 type SwitchCameraButtonProps = TouchableOpacityProps & {

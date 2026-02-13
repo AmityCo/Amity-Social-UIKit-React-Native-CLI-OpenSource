@@ -9,7 +9,7 @@ import {
   CreateCommunityButton,
 } from './Elements';
 import Divider from '../../../component/Divider';
-import { ComponentID, PageID } from '../../../enum';
+import { ComponentID, PageID } from '../../../enums';
 import { useAmityComponent } from '../../../../social/hooks';
 
 type AmityEmptyNewsFeedComponentType = {

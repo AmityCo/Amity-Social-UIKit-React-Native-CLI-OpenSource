@@ -2,7 +2,7 @@ import React, { FC, memo, useCallback } from 'react';
 import { Text, FlatList, View, Pressable } from 'react-native';
 import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedCommunityItems';
 import { useStyles } from './styles';
-import { ComponentID, ElementID, PageID } from '../../../enum';
+import { ComponentID, ElementID, PageID } from '../../../enums';
 import { useAmityElement } from '../../../../social/hooks';
 import { useExplore } from '../../../../social/providers/ExploreProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

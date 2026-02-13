@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
 import { useAmityElement } from '../../../social/hooks';
-import { ComponentID, ElementID, PageID } from '../../enum';
+import { ComponentID, ElementID, PageID } from '../../enums';
 import { Typography } from '../../component/Typography/Typography';
 
 type LiveTimerStatusProps = {

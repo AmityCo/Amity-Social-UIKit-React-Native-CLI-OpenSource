@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Image, View } from 'react-native';
-import { ComponentID, ImageSizeState, PageID } from '../../../../enum';
+import { ComponentID, ImageSizeState, PageID } from '../../../../enums';
 import { useFile } from '../../../../../social/hooks';
 import { useStyles } from './styles';
 

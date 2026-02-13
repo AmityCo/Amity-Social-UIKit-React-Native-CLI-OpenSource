@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { ComponentID, ElementID, PageID } from '../../enum';
+import { ComponentID, ElementID, PageID } from '../../enums';
 import { useAmityElement } from '../../../social/hooks';
 import { StyleSheet, TouchableOpacity, ViewProps } from 'react-native';
 import { View } from 'react-native';

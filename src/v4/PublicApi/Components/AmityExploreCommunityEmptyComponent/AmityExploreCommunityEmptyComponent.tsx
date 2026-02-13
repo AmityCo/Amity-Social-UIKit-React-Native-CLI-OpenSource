@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback } from 'react';
 import { useAmityComponent } from '../../../../social/hooks';
-import { PageID, ComponentID } from '../../../enum';
+import { PageID, ComponentID } from '../../../enums';
 import { emptyCommunity } from '../../../../core/assets/icons';
 import TitleElement from '../../Elements/TitleElement/TitleElement';
 import DescriptionElement from '../../Elements/DescriptionElement/DescriptionElement';

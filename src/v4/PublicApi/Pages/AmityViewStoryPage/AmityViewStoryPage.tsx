@@ -8,7 +8,7 @@ import {
 import { useStyles } from './styles';
 import { isCommunityModerator } from '../../../../core/utils/permission';
 import useAuth from '../../../../core/hooks/useAuth';
-import { ImageSizeState } from '../../../enum';
+import { ImageSizeState } from '../../../enums';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { NextOrPrevious } from '../../../component/StoryKit';
 import AmityViewStoryItem from './Components/AmityViewStoryItem';

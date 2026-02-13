@@ -1,6 +1,6 @@
 import { TextProps, Text, View } from 'react-native';
 import React, { FC, memo } from 'react';
-import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
+import { ComponentID, ElementID, PageID } from '../../../enums/enumUIKitID';
 import { useAmityElement } from '../../../../social/hooks';
 import ImageElement from '../CommonElements/ImageElement';
 import { useStyles } from './styles';

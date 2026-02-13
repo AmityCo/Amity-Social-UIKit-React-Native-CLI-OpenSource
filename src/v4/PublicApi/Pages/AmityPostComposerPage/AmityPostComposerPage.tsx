@@ -18,7 +18,7 @@ import {
   ImageSizeState,
   PageID,
   mediaAttachment,
-} from '../../../enum';
+} from '../../../enums';
 import {
   TSearchItem,
   useAmityPage,

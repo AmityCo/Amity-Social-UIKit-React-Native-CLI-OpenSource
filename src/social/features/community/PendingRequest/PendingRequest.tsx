@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Tabs from '../../../../v4/component/core/Tabs';
 import PendingPostList from '../../../../v4/PublicApi/Components/AmityPendingPostListComponent';
 import { useAmityElement } from '../../../hooks';
-import { ComponentID, ElementID, PageID } from '../../../../v4/enum';
+import { ComponentID, ElementID, PageID } from '../../../../v4/enums';
 
 type CommunityPendingRequestProps = {
   community: Amity.Community;

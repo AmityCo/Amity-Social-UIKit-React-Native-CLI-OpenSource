@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
-import { ElementID, PageID } from '../../../../../../v4/enum';
+import { ElementID, PageID } from '../../../../../../v4/enums';
 import FormLabel from '../../../../../../v4/elements/FormLabel';
 import { useNavigation } from '@react-navigation/native';
 import { useBehaviour } from '../../../../../providers/BehaviourProvider';

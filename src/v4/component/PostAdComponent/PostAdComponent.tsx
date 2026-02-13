@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { Image, View, TouchableOpacity, Linking, Text } from 'react-native';
 
-import { ComponentID, PageID } from '../../enum';
+import { ComponentID, PageID } from '../../enums';
 import { useStyles } from './styles';
 import PostAdHeader from './PostAdHeader';
 import { useAmityComponent } from '../../../social/hooks';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacityProps } from 'react-native';
 import { useAmityElement } from '../../../../../hooks';
-import { ComponentID, ElementID, PageID } from '../../../../../../v4/enum';
+import { ComponentID, ElementID, PageID } from '../../../../../../v4/enums';
 import { useStyles } from './styles';
 import { Typography } from '../../../../../../v4/component/Typography/Typography';
 

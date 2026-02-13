@@ -1,5 +1,5 @@
 import React, { FC, memo } from 'react';
-import { ComponentID, ElementID, PageID } from '../../../../enum';
+import { ComponentID, ElementID, PageID } from '../../../../enums';
 import { Typography } from '../../../../component/Typography/Typography';
 import { useStyles } from './styles';
 import { useAmityElement } from '../../../../../social/hooks';

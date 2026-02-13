@@ -7,7 +7,7 @@ import {
   privateIcon,
   storyRing,
 } from '../../../core/assets/icons/xml';
-import { ComponentID, ElementID, ImageSizeState, PageID } from '../../enum';
+import { ComponentID, ElementID, ImageSizeState, PageID } from '../../enums';
 import { useFile, useStoryPermission } from '../../../social/hooks';
 import useConfig from '../../../social/hooks/useConfig';
 import { useStyles } from './styles';

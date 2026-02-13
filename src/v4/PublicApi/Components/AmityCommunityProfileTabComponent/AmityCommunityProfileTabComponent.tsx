@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { feed, image, pin, video } from '../../../../core/assets/icons';
 import IconTab from '../../../../v4/component/IconTab/IconTab';
-import { ComponentID, ElementID, PageID } from '../../../../v4/enum';
+import { ComponentID, ElementID, PageID } from '../../../enums';
 import { useAmityElement } from '../../../../social/hooks';
 
 export const enum CommunityProfileTab {

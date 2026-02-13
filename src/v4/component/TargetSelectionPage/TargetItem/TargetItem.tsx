@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
-import { ComponentID, PageID, ElementID } from '../../../enum';
+import { ComponentID, PageID, ElementID } from '../../../enums';
 import AvatarElement from '../../../PublicApi/Elements/CommonElements/AvatarElement';
 import ImageElement from '../../../PublicApi/Elements/CommonElements/ImageElement';
 import TextKeyElement from '../../../PublicApi/Elements/TextKeyElement/TextKeyElement';

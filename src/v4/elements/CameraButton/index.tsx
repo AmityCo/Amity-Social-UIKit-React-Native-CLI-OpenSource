@@ -4,7 +4,7 @@ import { SvgXml } from 'react-native-svg';
 import { camera } from '../../../core/assets/icons';
 import { useAmityElement } from '../../../social/hooks';
 import { useStyles } from './styles';
-import { ComponentID, ElementID, PageID } from '../../../v4/enum';
+import { ComponentID, ElementID, PageID } from '../../enums';
 import { Typography } from '../../../v4/component/Typography/Typography';
 
 type CameraButtonProps = TouchableOpacityProps & {

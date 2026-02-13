@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { View } from 'react-native';
-import { ComponentID, PageID } from '../../../enum/enumUIKitID';
+import { ComponentID, PageID } from '../../../enums/enumUIKitID';
 import AmityGlobalFeedComponent from '../AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import { useStyles } from './styles';
 import Divider from '../../../component/Divider';

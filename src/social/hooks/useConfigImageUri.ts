@@ -3,7 +3,7 @@ import { defaultAvatarUri } from '../../core/assets';
 import { useMemo } from 'react';
 import useConfig from './useConfig';
 import { IUIKitConfigOptions } from '../../v4/types/config.interface';
-import { UiKitConfigKeys } from '../../v4/enum';
+import { UiKitConfigKeys } from '../../v4/enums';
 import { useDarkMode } from './useDarkMode';
 
 export const useConfigImageUri = ({

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { ComponentID, PageID } from '../../../enum/enumUIKitID';
+import { ComponentID, PageID } from '../../../enums/enumUIKitID';
 import { useAmityComponent } from '../../../../social/hooks';
 import { ChangeThumbnailButton } from '../../../elements/ChangeThumbnailButton';
 import { DeleteThumbnailButton } from '../../../elements/DeleteThumbnailButton';

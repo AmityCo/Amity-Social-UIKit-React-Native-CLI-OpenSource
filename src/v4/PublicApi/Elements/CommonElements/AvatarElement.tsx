@@ -5,8 +5,8 @@ import {
   defaultCommunityAvatarUri,
 } from '../../../../core/assets';
 import { useFile } from '../../../../social/hooks';
-import { ImageSizeState } from '../../../enum';
-import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
+import { ImageSizeState } from '../../../enums';
+import { ComponentID, ElementID, PageID } from '../../../enums/enumUIKitID';
 import useConfig from '../../../../social/hooks/useConfig';
 import useAuth from '../../../../core/hooks/useAuth';
 

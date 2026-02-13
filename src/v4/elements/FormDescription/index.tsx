@@ -3,7 +3,7 @@ import { useStyles } from './styles';
 import { TextProps } from 'react-native';
 import { useAmityElement } from '../../../social/hooks';
 import { Typography } from '../../component/Typography/Typography';
-import { ComponentID, ElementID, PageID } from '../../enum/enumUIKitID';
+import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 
 type FormDescriptionProps = Partial<TextProps> & {
   pageId?: PageID;

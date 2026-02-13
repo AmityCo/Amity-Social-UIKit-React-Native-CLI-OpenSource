@@ -3,7 +3,7 @@ import { useStyles } from './styles';
 import { useAmityElement } from '../../../../../hooks';
 import { arrowRight } from '../../../../../../core/assets/icons';
 import { SvgXml, XmlProps } from 'react-native-svg';
-import { ComponentID, ElementID, PageID } from '../../../../../../v4/enum';
+import { ComponentID, ElementID, PageID } from '../../../../../../v4/enums';
 import { Typography } from '../../../../../../v4/component/Typography/Typography';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 

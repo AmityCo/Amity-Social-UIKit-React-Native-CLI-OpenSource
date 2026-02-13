@@ -3,7 +3,7 @@ import { View, Switch } from 'react-native';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';
 import FormLabel from '../../../elements/FormLabel';
-import { ElementID, PageID } from '../../../enum';
+import { ElementID, PageID } from '../../../enums';
 import FormDescription from '../../../elements/FormDescription';
 
 export function PollSelection() {

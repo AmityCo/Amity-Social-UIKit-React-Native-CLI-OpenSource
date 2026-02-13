@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStyles } from './styles';
 import { useAmityElement } from '../../../social/hooks';
-import { ComponentID, ElementID, PageID } from '../../enum';
+import { ComponentID, ElementID, PageID } from '../../enums';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { Typography } from '../../component/Typography/Typography';
 

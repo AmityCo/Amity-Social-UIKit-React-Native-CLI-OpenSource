@@ -8,7 +8,7 @@ import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { ban, terminated, trash, warning } from '../../../../core/assets/icons';
 import { LivestreamTerminatedActionButton } from '../../../elements/LivestreamTerminatedActionButton';
-import { PageID } from '../../../enum';
+import { PageID } from '../../../enums';
 
 function AmityLivestreamTerminatedPage() {
   const { styles, theme } = useStyles();

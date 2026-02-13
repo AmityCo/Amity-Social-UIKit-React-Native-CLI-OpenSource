@@ -7,7 +7,7 @@ import { MAX_POLL_ANSWER_LENGTH } from '../../../../core/constants';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';
 import FormLabel from '../../../elements/FormLabel';
-import { ElementID, PageID } from '../../../enum';
+import { ElementID, PageID } from '../../../enums';
 import FormDescription from '../../../elements/FormDescription';
 import AddOptionButton from '../../../elements/AddOptionButton';
 

@@ -4,7 +4,7 @@ import useAuth from '../../../core/hooks/useAuth';
 import { useFile } from '../../../social/hooks';
 import { defaultAvatarUri } from '../../../core/assets';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
-import { ImageSizeState } from '../../enum';
+import { ImageSizeState } from '../../enums';
 
 type MyAvatarProp = Partial<ImageProps>;
 const MyAvatar: FC<MyAvatarProp> = (props) => {

@@ -1,8 +1,8 @@
 import { FlatList, StyleSheet, View } from 'react-native';
 import React, { FC, memo } from 'react';
-import { TabName } from '../../../enum/enumTabName';
+import { TabName } from '../../../enums/enumTabName';
 import SearchResultItem from '../../../component/SearchResultItem/SearchResultItem';
-import { ComponentID, PageID } from '../../../enum';
+import { ComponentID, PageID } from '../../../enums';
 import { useAmityComponent } from '../../../../social/hooks';
 
 type AmityUserSearchResultComponentType = {

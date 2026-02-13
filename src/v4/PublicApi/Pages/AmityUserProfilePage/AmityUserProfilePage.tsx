@@ -49,7 +49,7 @@ import uiSlice from '../../../../core/stores/slices/uiSlice';
 import GalleryComponent from '../../../component/Gallery/GalleryComponent';
 import { useFile } from '../../../../social/hooks';
 import { defaultAvatarUri } from '../../../../core/assets';
-import { ImageSizeState } from '../../../enum';
+import { ImageSizeState } from '../../../enums';
 
 import { useUIKitDispatch } from '../../../../core/stores/store';
 import BackButton from '../../../../components/BackButton';

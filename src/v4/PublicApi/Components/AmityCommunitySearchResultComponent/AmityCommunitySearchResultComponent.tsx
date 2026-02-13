@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
-import { TabName } from '../../../enum/enumTabName';
-import { ComponentID, PageID } from '../../../enum';
+import { TabName } from '../../../enums/enumTabName';
+import { ComponentID, PageID } from '../../../enums';
 import { useAmityComponent } from '../../../../social/hooks';
 import CommunitySearchResult from '../../../component/CommunitySearchResult/CommunitySearchResult';
 

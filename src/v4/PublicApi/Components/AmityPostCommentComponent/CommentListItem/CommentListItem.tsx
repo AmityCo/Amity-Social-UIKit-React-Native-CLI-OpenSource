@@ -46,7 +46,7 @@ import ReplyCommentList from '../ReplyCommentList/index';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../../../social/hooks';
 import ModeratorBadgeElement from '../../../Elements/ModeratorBadgeElement/ModeratorBadgeElement';
-import { ComponentID, PageID } from '../../../../enum';
+import { ComponentID, PageID } from '../../../../enums';
 import { LinkPreview } from '../../../../component/PreviewLink/LinkPreview';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';
 import uiSlice from '../../../../../core/stores/slices/uiSlice';

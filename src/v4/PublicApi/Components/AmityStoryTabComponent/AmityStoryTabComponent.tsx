@@ -7,7 +7,7 @@ import MyStories from '../../../component/MyStories';
 import CommunityStories from '../../../component/CommunityStories';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import useConfig from '../../../../social/hooks/useConfig';
-import { ComponentID } from '../../../enum';
+import { ComponentID } from '../../../enums';
 
 const AmityStoryTabComponent: FC<AmityStoryTabComponentType> = ({
   type,

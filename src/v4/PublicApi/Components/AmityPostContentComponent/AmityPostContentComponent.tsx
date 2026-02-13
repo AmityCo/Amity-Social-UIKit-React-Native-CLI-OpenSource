@@ -16,7 +16,7 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { IMentionPosition } from '../../../types/type';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import { ComponentID, ElementID, PageID } from '../../../enum';
+import { ComponentID, ElementID, PageID } from '../../../enums';
 import AvatarElement from '../../Elements/CommonElements/AvatarElement';
 import {
   useAmityComponent,
@@ -27,7 +27,7 @@ import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsCo
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
-} from '../../../enum/AmityPostContentComponentStyle';
+} from '../../../enums/AmityPostContentComponentStyle';
 import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
 import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import PostContent from '../../../component/PostContent';

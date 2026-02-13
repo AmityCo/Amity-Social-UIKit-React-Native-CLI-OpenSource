@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { View, ScrollView, RefreshControl } from 'react-native';
 import { useStyles } from './styles';
-import { PageID } from '../../../enum';
+import { PageID } from '../../../enums';
 
 import AmityRecommendedCommunityComponent from '../AmityRecommenedCommunityComponent/AmityRecommenedCommunityComponent';
 import AmityCommunityCategoriesComponent from '../AmityCommunityCategoriesComponent/AmityCommunityCategoriesComponent';

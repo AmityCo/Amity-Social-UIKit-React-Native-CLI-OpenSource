@@ -1,7 +1,7 @@
 import React, { memo, FC } from 'react';
 import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import CommunityRowImage from '../../elements/CommunityRowImage/CommunityRowImage';
-import { ComponentID, PageID } from '../../enum';
+import { ComponentID, PageID } from '../../enums';
 import { View } from 'react-native';
 import CommunityJoinedButtonElement from '../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
 import CommunityJoinButtonElement from '../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';

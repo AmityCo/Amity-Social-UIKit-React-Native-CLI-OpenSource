@@ -24,8 +24,8 @@ import {
   deleteReport,
   isReportedByMe,
 } from '@amityco/ts-sdk-react-native';
-import { ImageSizeState } from '../../../enum';
-import { TabName } from '../../../enum/tabNameState';
+import { ImageSizeState } from '../../../enums';
+import { TabName } from '../../../enums/tabNameState';
 import { defaultAvatarUri } from '../../../../core/assets';
 import { useFile } from '../../../../social/hooks';
 import { SvgXml } from 'react-native-svg';
@@ -34,7 +34,7 @@ import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 
 type FollowerListItemType = {
   userId: string;

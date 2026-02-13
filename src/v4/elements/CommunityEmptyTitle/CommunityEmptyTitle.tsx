@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Typography } from '../../component/Typography/Typography';
 
 import { useAmityElement } from '../../../social/hooks';
-import { PageID, ComponentID, ElementID } from '../../enum';
+import { PageID, ComponentID, ElementID } from '../../enums';
 
 type CommunityEmptyTitleProps = {
   pageId?: PageID;

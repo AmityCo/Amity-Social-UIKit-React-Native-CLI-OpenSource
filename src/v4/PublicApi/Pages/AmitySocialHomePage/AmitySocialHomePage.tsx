@@ -3,11 +3,7 @@ import { useCallback, useState } from 'react';
 import { LogBox, StyleSheet } from 'react-native';
 import CustomSocialTab from '../../../../v4/component/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../../../social/hooks';
-import {
-  ComponentID,
-  ElementID,
-  PageID,
-} from '../../../../v4/enum/enumUIKitID';
+import { ComponentID, ElementID, PageID } from '../../../enums/enumUIKitID';
 
 import { useTheme } from 'react-native-paper';
 import { useBehaviour } from '../../../../social/providers/BehaviourProvider';

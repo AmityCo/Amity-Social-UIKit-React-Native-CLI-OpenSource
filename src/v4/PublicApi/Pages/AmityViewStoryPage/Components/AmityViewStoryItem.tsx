@@ -26,7 +26,7 @@ import {
 } from '../../../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import Modal from 'react-native-modalbox';
-import { ComponentID, ElementID, PageID } from '../../../../enum';
+import { ComponentID, ElementID, PageID } from '../../../../enums';
 import useConfig from '../../../../../social/hooks/useConfig';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import CommentList from '../../../../component/Social/CommentList/CommentList';

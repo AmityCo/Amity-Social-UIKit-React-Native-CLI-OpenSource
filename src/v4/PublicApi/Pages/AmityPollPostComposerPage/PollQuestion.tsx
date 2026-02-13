@@ -6,7 +6,7 @@ import { Typography } from '../../../component/Typography/Typography';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import FormLabel from '../../../elements/FormLabel';
-import { ElementID, PageID } from '../../../enum';
+import { ElementID, PageID } from '../../../enums';
 
 type PollQuestionProps = {
   renderInput?: (props: any) => React.ReactNode;

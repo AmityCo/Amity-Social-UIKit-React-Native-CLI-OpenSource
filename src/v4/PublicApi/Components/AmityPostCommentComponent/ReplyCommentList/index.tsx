@@ -37,7 +37,7 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { IMentionPosition } from '../../../../types/type';
 import ModeratorBadgeElement from '../../../../PublicApi/Elements/ModeratorBadgeElement/ModeratorBadgeElement';
-import { ComponentID, PageID } from '../../../../enum';
+import { ComponentID, PageID } from '../../../../enums';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';
 import RenderTextWithMention from '../../../../component/RenderTextWithMention/RenderTextWithMention';
 import uiSlice from '../../../../../core/stores/slices/uiSlice';

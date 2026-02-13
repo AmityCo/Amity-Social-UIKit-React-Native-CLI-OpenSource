@@ -5,7 +5,7 @@ import {
   ElementID,
   PageID,
   UiKitConfigKeys,
-} from '../../../enum/enumUIKitID';
+} from '../../../enums/enumUIKitID';
 import useConfig from '../../../../social/hooks/useConfig';
 import { useConfigImageUri } from '../../../../social/hooks';
 

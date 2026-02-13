@@ -9,7 +9,7 @@ import {
   useAmityComponent,
   useUiKitConfig,
 } from '../../../../social/hooks';
-import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
+import { ComponentID, ElementID, PageID } from '../../../enums/enumUIKitID';
 import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import AmityCreatePostMenuComponent from '../AmityCreatePostMenuComponent/AmityCreatePostMenuComponent';
 import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';

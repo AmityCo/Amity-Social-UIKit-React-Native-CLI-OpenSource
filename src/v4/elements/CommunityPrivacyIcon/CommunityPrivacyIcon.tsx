@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ViewProps } from 'react-native';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { useAmityElement } from '../../../social/hooks';
-import { ComponentID, ElementID, PageID } from '../../enum';
+import { ComponentID, ElementID, PageID } from '../../enums';
 import { useStyles } from './styles';
 
 type CommunityPrivacyIconProps = ViewProps & {

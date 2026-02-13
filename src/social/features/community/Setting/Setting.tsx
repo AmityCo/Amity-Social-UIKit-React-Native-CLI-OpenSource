@@ -11,7 +11,7 @@ import {
   story,
 } from '../../../../core/assets/icons';
 import Action from '../shared/elements/Action';
-import { ElementID, PageID } from '../../../../v4/enum';
+import { ElementID, PageID } from '../../../../v4/enums';
 import LeaveCommunity from './elements/LeaveCommunity/LeaveCommunity';
 import CloseCommunity from './elements/CloseCommunity';
 import CloseCommunityDescription from './elements/CloseCommunityDescription';

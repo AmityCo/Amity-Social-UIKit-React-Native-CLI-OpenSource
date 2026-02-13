@@ -3,7 +3,7 @@ import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { photo } from '../../../core/assets/icons';
 import { useAmityElement } from '../../../social/hooks';
-import { ComponentID, ElementID, PageID } from '../../../v4/enum';
+import { ComponentID, ElementID, PageID } from '../../enums';
 import { useStyles } from './styles';
 import { Typography } from '../../../v4/component/Typography/Typography';
 

@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { CommunityCategoryChips } from '../../component/CommunityCategoryChips/CommunityCategoryChips';
-import { ComponentID, ElementID, PageID } from '../../enum';
+import { ComponentID, ElementID, PageID } from '../../enums';
 import { useAmityElement } from '../../../social/hooks';
 import { View, ViewProps } from 'react-native';
 
