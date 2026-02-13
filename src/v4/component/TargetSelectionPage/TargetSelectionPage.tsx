@@ -11,7 +11,7 @@ import { Divider, useTheme } from 'react-native-paper';
 import useAuth from '../../../core/hooks/useAuth';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import CloseButtonIconElement from '../../PublicApi/Elements/CloseButtonIconElement/CloseButtonIconElement';
-import { PageID, ComponentID, ElementID } from '../../enums';
+import { PageID, ComponentID, ElementID } from '../../../social/enums';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TextKeyElement from '../../PublicApi/Elements/TextKeyElement/TextKeyElement';
 import { Typography } from '../Typography/Typography';

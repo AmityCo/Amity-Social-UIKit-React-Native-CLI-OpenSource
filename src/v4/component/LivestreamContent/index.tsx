@@ -14,7 +14,7 @@ import { SvgXml } from 'react-native-svg';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { play } from '../../../core/assets/icons';
 import { Typography } from '../Typography/Typography';
-import { RoomStatus } from '../../enums/roomStatus';
+import { RoomStatus } from '../../../social/enums/roomStatus';
 import LiveStreamEndThumbnail from './LivestreamEndedThumbnail';
 import LiveStreamIdleThumbnail from './LivestreamIdleThumbnail';
 import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';

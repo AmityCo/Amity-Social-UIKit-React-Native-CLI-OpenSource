@@ -18,7 +18,7 @@ import React, {
   useState,
 } from 'react';
 import { useStyles } from './styles';
-import { ComponentID, PageID } from '../../../enums';
+import { ComponentID, PageID } from '../../../../social/enums';
 import {
   useAmityPage,
   useCommunity,

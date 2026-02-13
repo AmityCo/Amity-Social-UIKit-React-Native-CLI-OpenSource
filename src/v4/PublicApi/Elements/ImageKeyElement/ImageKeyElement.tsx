@@ -5,7 +5,7 @@ import {
   ElementID,
   PageID,
   UiKitConfigKeys,
-} from '../../../enums/enumUIKitID';
+} from '../../../../social/enums/enumUIKitID';
 import { useAmityElement, useConfigImageUri } from '../../../../social/hooks';
 
 type ImageKeyElementType = Partial<ImageProps> & {

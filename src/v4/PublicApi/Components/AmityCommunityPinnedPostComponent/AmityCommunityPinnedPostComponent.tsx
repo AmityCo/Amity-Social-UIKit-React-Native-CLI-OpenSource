@@ -1,6 +1,6 @@
 import { useStyles } from './styles';
 import React from 'react';
-import { ComponentID, PageID } from '../../../enums';
+import { ComponentID, PageID } from '../../../../social/enums';
 import { useAmityComponent, useCommunity } from '../../../../social/hooks';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
 import Divider from '../../../../v4/component/Divider';
@@ -8,7 +8,7 @@ import { View, FlatList } from 'react-native';
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
-} from '../../../enums/AmityPostContentComponentStyle';
+} from '../../../../social/enums/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../../v4/component/EmptyComponent/EmptyComponent';
 import { emptyPost, privateFeed } from '../../../../core/assets/icons';
 import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';

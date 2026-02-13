@@ -3,7 +3,7 @@ import {
   UserRepository,
 } from '@amityco/ts-sdk-react-native';
 import { useState, useEffect } from 'react';
-import { TabName } from '../../v4/enums/enumTabName';
+import { TabName } from '../enums/enumTabName';
 
 export const useAmityGlobalSearchViewModel = (
   searchValue: string,

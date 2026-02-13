@@ -1,5 +1,9 @@
 import React, { FC, memo } from 'react';
-import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
+import {
+  ComponentID,
+  ElementID,
+  PageID,
+} from '../../../social/enums/enumUIKitID';
 import { useAmityElement } from '../../../social/hooks';
 import { Button, BUTTON_SIZE } from '../../component/Button/Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

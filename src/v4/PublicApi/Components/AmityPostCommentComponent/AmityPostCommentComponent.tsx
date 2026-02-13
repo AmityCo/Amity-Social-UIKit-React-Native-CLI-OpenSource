@@ -12,7 +12,7 @@ import { getAmityUser } from '../../../../core/legacy/user';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import CommentListItem from './CommentListItem/CommentListItem';
 import { deleteCommentById } from '../../../../core/legacy/comment';
-import { ComponentID, PageID } from '../../../enums';
+import { ComponentID, PageID } from '../../../../social/enums';
 import { useAmityComponent } from '../../../../social/hooks';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 import { isAmityAd } from '../../../../social/hooks/useCustomRankingGlobalFeed';

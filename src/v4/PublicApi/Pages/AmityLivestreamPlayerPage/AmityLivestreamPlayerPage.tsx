@@ -7,7 +7,7 @@ import { close } from '../../../../core/assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import { RoomStatus } from '../../../enums/roomStatus';
+import { RoomStatus } from '../../../../social/enums/roomStatus';
 import LiveStreamIdleThumbnail from '../../../component/LivestreamContent/LivestreamIdleThumbnail';
 import { Typography } from '../../../component/Typography/Typography';
 import { SafeAreaView } from 'react-native-safe-area-context';

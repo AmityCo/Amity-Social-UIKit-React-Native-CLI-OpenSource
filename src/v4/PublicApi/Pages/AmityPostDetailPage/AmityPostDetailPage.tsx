@@ -16,7 +16,7 @@ import React, {
   useState,
   useLayoutEffect,
 } from 'react';
-import { ComponentID, PageID } from '../../../enums';
+import { ComponentID, PageID } from '../../../../social/enums';
 import { TSearchItem, useAmityPage } from '../../../../social/hooks';
 import { useStyles } from './styles';
 import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButtonIconElement';
@@ -33,7 +33,7 @@ import AmityPostContentComponent from '../../../../v4/PublicApi/Components/Amity
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
-} from '../../../enums/AmityPostContentComponentStyle';
+} from '../../../../social/enums/AmityPostContentComponentStyle';
 import AmityPostCommentComponent from '../../../../v4/PublicApi/Components/AmityPostCommentComponent/AmityPostCommentComponent';
 
 import { closeIcon } from '../../../../core/assets/icons/xml';

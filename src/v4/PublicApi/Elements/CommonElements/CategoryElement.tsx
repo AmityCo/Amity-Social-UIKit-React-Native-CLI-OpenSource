@@ -1,6 +1,10 @@
 import { TextProps, Text } from 'react-native';
 import React, { FC, memo, useLayoutEffect, useState } from 'react';
-import { ComponentID, ElementID, PageID } from '../../../enums/enumUIKitID';
+import {
+  ComponentID,
+  ElementID,
+  PageID,
+} from '../../../../social/enums/enumUIKitID';
 import useConfig from '../../../../social/hooks/useConfig';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 

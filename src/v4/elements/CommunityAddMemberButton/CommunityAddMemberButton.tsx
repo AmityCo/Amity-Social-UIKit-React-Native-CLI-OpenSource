@@ -4,7 +4,7 @@ import { plus } from '../../../core/assets/icons';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { Typography } from '../../../v4/component/Typography/Typography';
 import { useStyles } from './styles';
-import { ComponentID, ElementID, PageID } from '../../enums';
+import { ComponentID, ElementID, PageID } from '../../../social/enums';
 import { useAmityElement } from '../../../social/hooks';
 
 type CommunityAddMemberButtonProps = TouchableOpacityProps & {

@@ -9,7 +9,7 @@ import {
 import { AmityPostEngagementActionsSubComponentType } from './type';
 import { useStyles } from './styles';
 import { useAmityComponent } from '../../../../../social/hooks';
-import { PageID, ComponentID } from '../../../../enums';
+import { PageID, ComponentID } from '../../../../../social/enums';
 import { SvgXml } from 'react-native-svg';
 import { likeReaction } from '../../../../../core/assets/icons/xml';
 import {

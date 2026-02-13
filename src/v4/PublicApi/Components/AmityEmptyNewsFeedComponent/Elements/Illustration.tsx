@@ -1,7 +1,7 @@
 import { Image } from 'react-native';
 import React, { memo } from 'react';
 import { useConfigImageUri } from '../../../../../social/hooks';
-import { ComponentID, ElementID, PageID } from '../../../../enums';
+import { ComponentID, ElementID, PageID } from '../../../../../social/enums';
 import useConfig from '../../../../../social/hooks/useConfig';
 import { useStyles } from './styles/styles';
 

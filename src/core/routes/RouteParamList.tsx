@@ -2,12 +2,12 @@ import {
   AmityPostComposerPageType,
   AmityStoryTabComponentEnum,
 } from '../../v4/PublicApi/types';
-import { AmityPostTargetSelectionPageType } from '../../v4/enums';
+import { AmityPostTargetSelectionPageType } from '../../social/enums';
 import {
   AddCategoryPageContext,
   AddMemberPageContext,
 } from '../../v4/types/behaviour.interface';
-import { AmityPostCategory } from '../../v4/enums/AmityPostContentComponentStyle';
+import { AmityPostCategory } from '../../social/enums/AmityPostContentComponentStyle';
 
 export type RootStackParamList = {
   AmitySocialHomePage: { postIdCallBack?: string };

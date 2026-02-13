@@ -5,8 +5,12 @@ import {
   defaultCommunityAvatarUri,
 } from '../../../../core/assets';
 import { useFile } from '../../../../social/hooks';
-import { ImageSizeState } from '../../../enums';
-import { ComponentID, ElementID, PageID } from '../../../enums/enumUIKitID';
+import { ImageSizeState } from '../../../../social/enums';
+import {
+  ComponentID,
+  ElementID,
+  PageID,
+} from '../../../../social/enums/enumUIKitID';
 import useConfig from '../../../../social/hooks/useConfig';
 import useAuth from '../../../../core/hooks/useAuth';
 

@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { useConfigImageUri } from '../../../social/hooks/useConfigImageUri';
 import { useAmityElement } from '../../../social/hooks';
-import { PageID, ComponentID, ElementID } from '../../enums';
+import { PageID, ComponentID, ElementID } from '../../../social/enums';
 
 type CommunityEmptyImageProps = {
   pageId?: PageID;

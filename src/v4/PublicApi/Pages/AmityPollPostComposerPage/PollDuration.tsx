@@ -8,7 +8,7 @@ import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';
 import { AndroidPollDurationPicker } from './PollDurationPicker';
 import FormLabel from '../../../elements/FormLabel';
-import { ElementID, PageID } from '../../../enums';
+import { ElementID, PageID } from '../../../../social/enums';
 import FormDescription from '../../../elements/FormDescription';
 
 export function PollDuration() {

@@ -1,4 +1,4 @@
-import { ComponentID, PageID } from '../../../v4/enums';
+import { ComponentID, PageID } from '../../../social/enums';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState, useUIKitDispatch, useUIKitSelector } from '../store';
 

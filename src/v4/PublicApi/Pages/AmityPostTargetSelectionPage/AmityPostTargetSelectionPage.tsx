@@ -1,5 +1,8 @@
 import React from 'react';
-import { PageID, AmityPostTargetSelectionPageType } from '../../../enums';
+import {
+  PageID,
+  AmityPostTargetSelectionPageType,
+} from '../../../../social/enums';
 import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 
 import TargetSelectionPage, {

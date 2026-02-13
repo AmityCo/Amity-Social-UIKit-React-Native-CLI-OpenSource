@@ -1,7 +1,11 @@
 import React, { FC, memo } from 'react';
 import { Typography } from '../../../component/Typography/Typography';
 import { StyleSheet, TextProps } from 'react-native';
-import { ComponentID, ElementID, PageID } from '../../../enums/enumUIKitID';
+import {
+  ComponentID,
+  ElementID,
+  PageID,
+} from '../../../../social/enums/enumUIKitID';
 import { useAmityElement } from '../../../../social/hooks';
 
 type TitleElementType = Partial<TextProps> & {

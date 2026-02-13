@@ -34,7 +34,11 @@ import {
 import { useStyles } from './styles';
 import { useTimeDifference } from '../../../../core/hooks/useTimeDifference';
 import { useStory } from '../../../../social/hooks/useStory';
-import { ElementID, ComponentID, PageID } from '../../../enums/enumUIKitID';
+import {
+  ElementID,
+  ComponentID,
+  PageID,
+} from '../../../../social/enums/enumUIKitID';
 import useConfig from '../../../../social/hooks/useConfig';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

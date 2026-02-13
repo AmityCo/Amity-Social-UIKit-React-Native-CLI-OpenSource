@@ -1,6 +1,6 @@
 import React, { useCallback, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ComponentID, PageID } from '../../../enums/enumUIKitID';
+import { ComponentID, PageID } from '../../../../social/enums/enumUIKitID';
 import {
   useAmityComponent,
   useStoryPermission,
@@ -9,7 +9,7 @@ import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import { AmityPostTargetSelectionPageType } from '../../../enums';
+import { AmityPostTargetSelectionPageType } from '../../../../social/enums';
 import { livestream, poll, post, story } from '../../../../core/assets/icons';
 import MenuAction from '../../../../v4/elements/MenuAction';
 

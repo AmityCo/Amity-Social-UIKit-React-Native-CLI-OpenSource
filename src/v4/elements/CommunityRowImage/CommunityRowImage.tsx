@@ -1,6 +1,6 @@
 import React, { FC, memo, useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import { ComponentID, ElementID, PageID } from '../../enums';
+import { ComponentID, ElementID, PageID } from '../../../social/enums';
 import {
   useAmityElement,
   useConfigImageUri,

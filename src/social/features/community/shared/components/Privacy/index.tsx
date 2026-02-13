@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
 import { Radio } from '../../../../../../v4/component/core/Radio';
-import { ElementID, PageID } from '../../../../../../v4/enums';
+import { ElementID, PageID } from '../../../../../enums';
 import FormLabel from '../../../../../../v4/elements/FormLabel';
 import { AmityCommunityPrivacyEnum } from '../../types';
 import {

@@ -3,7 +3,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useStyle } from './styles';
 import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { useAmityElement, useConfigImageUri } from '../../../../social/hooks';
-import { PageID, ComponentID, ElementID } from '../../../enums';
+import { PageID, ComponentID, ElementID } from '../../../../social/enums';
 
 interface ButtonWithIconElementProps {
   pageId?: PageID;

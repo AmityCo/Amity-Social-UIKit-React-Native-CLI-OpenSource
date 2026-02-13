@@ -2,7 +2,7 @@ import React from 'react';
 import { useStyles } from './style';
 import { View } from 'react-native';
 import { useUser } from '../../../social/hooks';
-import { ElementID } from '../../enums';
+import { ElementID } from '../../../social/enums';
 import useAuth from '../../../core/hooks/useAuth';
 import { Typography } from '../Typography/Typography';
 import AvatarElement from '../../PublicApi/Elements/CommonElements/AvatarElement';

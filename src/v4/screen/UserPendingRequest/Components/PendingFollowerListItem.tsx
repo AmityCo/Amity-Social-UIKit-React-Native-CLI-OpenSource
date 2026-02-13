@@ -2,7 +2,7 @@ import { Alert, Image, Pressable, Text, View } from 'react-native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useFile } from '../../../../social/hooks';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
-import { ImageSizeState } from '../../../enums';
+import { ImageSizeState } from '../../../../social/enums';
 import { defaultAvatarUri } from '../../../../core/assets';
 import { useStyles } from '../styles';
 import { Divider } from 'react-native-paper';

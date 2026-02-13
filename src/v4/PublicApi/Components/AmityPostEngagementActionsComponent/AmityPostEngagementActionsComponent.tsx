@@ -1,9 +1,9 @@
 import React, { FC, memo, useEffect, useState } from 'react';
-import { AmityPostContentComponentStyleEnum } from '../../../enums/AmityPostContentComponentStyle';
+import { AmityPostContentComponentStyleEnum } from '../../../../social/enums/AmityPostContentComponentStyle';
 import { AmityPostEngagementActionsSubComponent } from './Components';
 import { PostTargetType } from '../../../../core/enums';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { ComponentID, PageID } from '../../../enums';
+import { ComponentID, PageID } from '../../../../social/enums';
 
 type AmityPostEngagementActionsComponentType = {
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, { FC, memo } from 'react';
 import { useStyles } from './styles';
-import { TabName } from '../../enums/enumTabName';
+import { TabName } from '../../../social/enums/enumTabName';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 

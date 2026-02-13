@@ -4,7 +4,7 @@ import { Text } from 'react-native-paper';
 import { infoIcon } from '../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
-import { ComponentID, PageID } from '../../enums';
+import { ComponentID, PageID } from '../../../social/enums';
 import { useAmityComponent } from '../../../social/hooks';
 
 type AdInformationType = {

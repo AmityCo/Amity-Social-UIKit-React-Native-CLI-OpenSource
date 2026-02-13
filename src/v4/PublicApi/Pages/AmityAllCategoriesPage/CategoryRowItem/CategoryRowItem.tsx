@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import React, { FC, memo } from 'react';
 import { useStyles } from './styles';
-import { PageID } from '../../../../enums';
+import { PageID } from '../../../../../social/enums';
 import { arrowRight } from '../../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
 import CategoryRowImage from '../../../../elements/CategoryRowImage/CategoryRowImage';

@@ -1,6 +1,6 @@
 import React, { memo, useState, FC } from 'react';
 import { View } from 'react-native';
-import { ComponentID, PageID } from '../../../enums';
+import { ComponentID, PageID } from '../../../../social/enums';
 import {
   useAmityComponent,
   useCommunity,

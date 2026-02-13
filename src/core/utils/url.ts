@@ -1,4 +1,4 @@
-import { StoryType } from '../../v4/enums';
+import { StoryType } from '../../social/enums';
 import { ALLOWED_MEDIA_TYPE } from '../constants';
 
 export const checkURLValidation = (url: string) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAmityElement } from '../../../social/hooks';
-import { ComponentID, ElementID, PageID } from '../../enums';
+import { ComponentID, ElementID, PageID } from '../../../social/enums';
 import Button, {
   BUTTON_SIZE,
   ButtonProps,

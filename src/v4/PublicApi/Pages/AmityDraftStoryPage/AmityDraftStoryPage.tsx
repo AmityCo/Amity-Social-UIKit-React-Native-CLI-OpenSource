@@ -18,7 +18,7 @@ import {
   PageID,
   StoryType,
   ImageSizeState,
-} from '../../../enums';
+} from '../../../../social/enums';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { useConfigImageUri } from '../../../../social/hooks/useConfigImageUri';

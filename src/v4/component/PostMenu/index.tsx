@@ -32,7 +32,7 @@ import { useToast } from '../../../core/stores/slices/toastSlice';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import MenuButtonIconElement from '../../PublicApi/Elements/MenuButtonIconElement/MenuButtonIconElement';
 import { PostRepository } from '@amityco/ts-sdk-react-native';
-import { ComponentID, PageID } from '../../enums';
+import { ComponentID, PageID } from '../../../social/enums';
 import { usePoll } from '../../../social/hooks/usePoll';
 import { useClosePoll } from '../../../social/hooks/poll';
 import { useUIKitDispatch } from '../../../core/stores/store';

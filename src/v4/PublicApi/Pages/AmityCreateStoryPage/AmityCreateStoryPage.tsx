@@ -38,7 +38,7 @@ import {
 import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
 import * as Progress from 'react-native-progress';
 import { msToString } from '../../../../core/utils/time';
-import { StoryType } from '../../../enums';
+import { StoryType } from '../../../../social/enums';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';

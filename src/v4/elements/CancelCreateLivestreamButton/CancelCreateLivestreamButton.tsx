@@ -3,7 +3,7 @@ import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { close } from '../../../core/assets/icons';
 import { useAmityElement } from '../../../social/hooks';
-import { ComponentID, ElementID, PageID } from '../../enums';
+import { ComponentID, ElementID, PageID } from '../../../social/enums';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
 type CancelCreateLivestreamButtonProps = TouchableOpacityProps & {

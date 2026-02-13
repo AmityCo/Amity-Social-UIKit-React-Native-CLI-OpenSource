@@ -3,7 +3,12 @@ import React, { memo, useCallback, useState } from 'react';
 import { useStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { useUiKitConfig, useConfigImageUri } from '../../../../social/hooks';
-import { ComponentID, ElementID, PageID, TabName } from '../../../enums';
+import {
+  ComponentID,
+  ElementID,
+  PageID,
+  TabName,
+} from '../../../../social/enums';
 
 type AmityTopSearchBarComponentType = {
   setSearchValue: (arg: string) => void;

@@ -6,7 +6,7 @@ import { RootStackParamList } from '../../../../../../core/routes/RouteParamList
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useStyles } from './styles';
 import BackButton from '../../../../../../v4/elements/BackButton';
-import { PageID } from '../../../../../../v4/enums';
+import { PageID } from '../../../../../enums';
 
 function Header() {
   const { styles } = useStyles();

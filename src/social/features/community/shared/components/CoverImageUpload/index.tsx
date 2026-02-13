@@ -1,6 +1,6 @@
 import React from 'react';
 import { rgba } from 'polished';
-import { PageID } from '../../../../../../v4/enums';
+import { PageID } from '../../../../../enums';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { ImageButton } from '../../../../../../v4/elements';

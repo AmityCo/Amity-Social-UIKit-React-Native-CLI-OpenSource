@@ -63,6 +63,6 @@ export { default as AmityPendingPostListComponent } from './PublicApi/Components
 export {
   AmityPostTargetSelectionPageType,
   PostTargetType as AmityPostTargetType,
-} from './enums';
+} from '../social/enums';
 
 export { default as AmityPostEngagementContentComponent } from './PublicApi/Components/AmityPostEngagementContentComponent';

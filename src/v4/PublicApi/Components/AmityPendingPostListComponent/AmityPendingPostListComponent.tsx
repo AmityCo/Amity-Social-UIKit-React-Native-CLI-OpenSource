@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import Timestamp from '../../../../v4/elements/Timestamp';
-import { ComponentID, ElementID, PageID } from '../../../enums';
+import { ComponentID, ElementID, PageID } from '../../../../social/enums';
 import MenuButton from '../../../../v4/elements/MenuButton';
 import useAuth from '../../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';

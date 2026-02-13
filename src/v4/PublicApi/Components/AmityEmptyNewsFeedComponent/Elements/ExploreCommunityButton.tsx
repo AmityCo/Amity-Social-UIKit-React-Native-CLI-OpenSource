@@ -1,6 +1,6 @@
 import { Image, Text, TouchableOpacity } from 'react-native';
 import React, { FC, memo } from 'react';
-import { ComponentID, ElementID, PageID } from '../../../../enums';
+import { ComponentID, ElementID, PageID } from '../../../../../social/enums';
 import useConfig from '../../../../../social/hooks/useConfig';
 import { useConfigImageUri, useUiKitConfig } from '../../../../../social/hooks';
 import { useStyles } from './styles/styles';

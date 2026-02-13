@@ -47,7 +47,7 @@ import useFile from '../../../core/hooks/useFile';
 import { TabName, PostTargetType } from '../../../core/enums';
 import uiSlice from '../../../core/stores/slices/uiSlice';
 import useConfig from '../../../social/hooks/useConfig';
-import { ComponentID } from '../../enums/enumUIKitID';
+import { ComponentID } from '../../../social/enums/enumUIKitID';
 import AmityStoryTabComponent from '../../PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../PublicApi/types/index';
 import GalleryComponent from '../../component/Gallery/GalleryComponent';

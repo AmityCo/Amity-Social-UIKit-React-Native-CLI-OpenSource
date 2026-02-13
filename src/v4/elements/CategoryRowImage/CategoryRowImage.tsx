@@ -1,7 +1,7 @@
 import React, { FC, memo, useEffect } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { useAmityElement, useFile } from '../../../social/hooks';
-import { PageID, ComponentID, ElementID } from '../../enums';
+import { PageID, ComponentID, ElementID } from '../../../social/enums';
 import { SvgXml } from 'react-native-svg';
 import { category as categoryIcon } from '../../../core/assets/icons';
 

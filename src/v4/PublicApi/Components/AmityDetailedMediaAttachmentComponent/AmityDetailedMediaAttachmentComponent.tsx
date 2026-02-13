@@ -5,7 +5,7 @@ import {
   ComponentID,
   ElementID,
   mediaAttachment,
-} from '../../../enums';
+} from '../../../../social/enums';
 import { useAmityComponent } from '../../../../social/hooks';
 import { useStyles } from './styles';
 import ImageKeyElement from '../../Elements/ImageKeyElement/ImageKeyElement';

@@ -1,4 +1,4 @@
-import { TabName } from '../enums';
+import { TabName } from '../../social/enums';
 
 export type AddCategoryPageContext = {
   categories: Amity.Category[];

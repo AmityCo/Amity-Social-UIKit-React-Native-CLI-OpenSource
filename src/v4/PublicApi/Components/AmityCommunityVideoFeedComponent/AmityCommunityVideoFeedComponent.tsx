@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
-import { ComponentID, PageID } from '../../../enums';
+import { ComponentID, PageID } from '../../../../social/enums';
 import { useAmityComponent, useCommunity } from '../../../../social/hooks';
 import { usePosts } from '../../../../social/hooks/usePosts';
 import { View } from 'react-native';

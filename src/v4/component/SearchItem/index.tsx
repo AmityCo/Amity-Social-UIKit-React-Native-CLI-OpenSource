@@ -5,7 +5,7 @@ import { useStyles } from './styles';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useFile } from '../../../social/hooks';
-import { ImageSizeState } from '../../enums';
+import { ImageSizeState } from '../../../social/enums';
 import {
   defaultAvatarUri,
   defaultCommunityAvatarUri,

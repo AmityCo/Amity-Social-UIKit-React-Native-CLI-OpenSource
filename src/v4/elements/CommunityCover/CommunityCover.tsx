@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from 'react';
-import { PageID, ComponentID, ElementID } from '../../enums';
+import { PageID, ComponentID, ElementID } from '../../../social/enums';
 import { useAmityElement } from '../../../social/hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import { Image, StyleSheet, View } from 'react-native';

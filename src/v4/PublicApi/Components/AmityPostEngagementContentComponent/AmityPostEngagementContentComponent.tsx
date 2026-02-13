@@ -2,8 +2,8 @@ import React from 'react';
 import { useStyles } from './styles';
 import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
 import { PostTargetType } from '../../../../core/enums';
-import { AmityPostContentComponentStyleEnum } from '../../../enums/AmityPostContentComponentStyle';
-import { ComponentID, PageID } from '../../../enums';
+import { AmityPostContentComponentStyleEnum } from '../../../../social/enums/AmityPostContentComponentStyle';
+import { ComponentID, PageID } from '../../../../social/enums';
 import CommentList from '../../../component/Social/CommentList/CommentList';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { Controller } from 'react-hook-form';
 import CoverImage from '../shared/components/CoverImageUpload';
-import { ElementID, PageID } from '../../../../v4/enums';
+import { ElementID, PageID } from '../../../enums';
 import FormInput from '../../../../v4/component/FormInput';
 import Categories from '../shared/components/Categories';
 import { AmityCommunityPrivacyEnum } from '../shared/types';

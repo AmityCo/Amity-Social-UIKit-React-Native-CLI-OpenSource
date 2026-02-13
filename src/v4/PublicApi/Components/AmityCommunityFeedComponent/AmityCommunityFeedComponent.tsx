@@ -1,6 +1,6 @@
 import { useStyles } from './styles';
 import React, { forwardRef, useImperativeHandle } from 'react';
-import { ComponentID, PageID } from '../../../enums';
+import { ComponentID, PageID } from '../../../../social/enums';
 import { useAmityComponent, useCommunity } from '../../../../social/hooks';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
 import { usePosts } from '../../../../social/hooks/usePosts';
@@ -13,7 +13,7 @@ import { usePostImpression } from '../../../../social/hooks/usePostImpression';
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
-} from '../../../enums/AmityPostContentComponentStyle';
+} from '../../../../social/enums/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../../v4/component/EmptyComponent/EmptyComponent';
 import { emptyPost, privateFeed } from '../../../../core/assets/icons';
 import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';

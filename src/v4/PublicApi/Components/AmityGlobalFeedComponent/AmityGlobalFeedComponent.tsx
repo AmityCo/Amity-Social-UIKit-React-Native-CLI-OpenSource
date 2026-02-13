@@ -3,9 +3,9 @@ import { FlatList, View } from 'react-native';
 
 import { RefreshControl } from 'react-native';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
-import { ComponentID, PageID } from '../../../enums/enumUIKitID';
+import { ComponentID, PageID } from '../../../../social/enums/enumUIKitID';
 import { useAmityComponent } from '../../../../social/hooks/useUiKitReference';
-import { AmityPostContentComponentStyleEnum } from '../../../enums/AmityPostContentComponentStyle';
+import { AmityPostContentComponentStyleEnum } from '../../../../social/enums/AmityPostContentComponentStyle';
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
 import { usePostImpression } from '../../../../social/hooks/usePostImpression';

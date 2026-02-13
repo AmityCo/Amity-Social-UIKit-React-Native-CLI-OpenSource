@@ -1,6 +1,10 @@
 import React, { FC, memo } from 'react';
 import { TouchableOpacityProps } from 'react-native';
-import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
+import {
+  ComponentID,
+  ElementID,
+  PageID,
+} from '../../../social/enums/enumUIKitID';
 import { useAmityElement, useJoinCommunity } from '../../../social/hooks';
 import { Button, BUTTON_SIZE } from '../../component/Button/Button';
 import { plus } from '../../../core/assets/icons';

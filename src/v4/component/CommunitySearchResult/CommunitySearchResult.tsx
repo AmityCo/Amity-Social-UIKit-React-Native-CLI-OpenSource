@@ -3,7 +3,7 @@ import { View, FlatList, Pressable } from 'react-native';
 import CommunityRowItem from '../CommunityRowItem/CommunityRowItem';
 import CommunityListSkeleton from '../CommunityListSkeleton/CommunityListSkeleton';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
-import { ComponentID, PageID } from '../../enums';
+import { ComponentID, PageID } from '../../../social/enums';
 import { useAmityComponent } from '../../../social/hooks';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';

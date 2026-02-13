@@ -1,6 +1,10 @@
 import { TextProps, Text } from 'react-native';
 import React, { FC, memo } from 'react';
-import { ComponentID, ElementID, PageID } from '../../../enums/enumUIKitID';
+import {
+  ComponentID,
+  ElementID,
+  PageID,
+} from '../../../../social/enums/enumUIKitID';
 import { useAmityElement, useUiKitConfig } from '../../../../social/hooks';
 
 type TextElementType = Partial<TextProps> & {

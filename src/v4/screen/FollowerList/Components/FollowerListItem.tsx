@@ -24,8 +24,8 @@ import {
   deleteReport,
   isReportedByMe,
 } from '@amityco/ts-sdk-react-native';
-import { ImageSizeState } from '../../../enums';
-import { TabName } from '../../../enums/tabNameState';
+import { ImageSizeState } from '../../../../social/enums';
+import { TabName } from '../../../../social/enums/tabNameState';
 import { defaultAvatarUri } from '../../../../core/assets';
 import { useFile } from '../../../../social/hooks';
 import { SvgXml } from 'react-native-svg';

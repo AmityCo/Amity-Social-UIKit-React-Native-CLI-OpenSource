@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageID } from '../../../enums';
+import { PageID } from '../../../../social/enums';
 import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';

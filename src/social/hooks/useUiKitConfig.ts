@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { IUIKitConfigOptions } from '../../v4/types/config.interface';
 import useConfig from './useConfig';
-import { UiKitConfigKeys } from '../../v4/enums/enumUIKitID';
+import { UiKitConfigKeys } from '../enums/enumUIKitID';
 
 type UIKitConfigT = IUIKitConfigOptions & { keys: (keyof UiKitConfigKeys)[] };
 

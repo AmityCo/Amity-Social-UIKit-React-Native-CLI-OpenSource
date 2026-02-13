@@ -1,4 +1,4 @@
-import { ComponentID, ElementID, PageID } from '../../v4/enums';
+import { ComponentID, ElementID, PageID } from '../enums';
 import useConfig from './useConfig';
 import { useGenerateThemeStyles } from './useGenerateThemeStyles';
 

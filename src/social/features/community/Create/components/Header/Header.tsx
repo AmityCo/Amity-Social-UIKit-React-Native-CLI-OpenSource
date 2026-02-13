@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageID } from '../../../../../../v4/enums';
+import { PageID } from '../../../../../enums';
 import { Alert, View } from 'react-native';
 import { Title, CloseButton } from '../../../../../../v4/elements';
 import { useNavigation } from '@react-navigation/native';

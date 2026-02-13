@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Typography } from '../../component/Typography/Typography';
 
 import { useAmityElement } from '../../../social/hooks';
-import { PageID, ComponentID, ElementID } from '../../enums';
+import { PageID, ComponentID, ElementID } from '../../../social/enums';
 
 type CategoryRowNameProps = {
   name: string;
