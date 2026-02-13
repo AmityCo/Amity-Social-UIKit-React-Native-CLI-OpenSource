@@ -1,5 +1,5 @@
 import React from 'react';
-import StoriesNotificationSetting from '../../../../v4/features/community/StoriesNotificationSetting';
+import StoriesNotificationSetting from '../../../../social/features/community/StoriesNotificationSetting';
 
 type AmityCommunityStoriesNotificationSettingPageProps = {
   community: Amity.Community;

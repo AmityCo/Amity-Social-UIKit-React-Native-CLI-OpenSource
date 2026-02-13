@@ -1,5 +1,5 @@
 import React from 'react';
-import CommentsNotificationSetting from '../../../../v4/features/community/CommentsNotificationSetting';
+import CommentsNotificationSetting from '../../../../social/features/community/CommentsNotificationSetting';
 
 type AmityCommunityCommentsNotificationSettingPageProps = {
   community: Amity.Community;

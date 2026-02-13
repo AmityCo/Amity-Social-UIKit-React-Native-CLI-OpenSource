@@ -1,36 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useStyles } from './styles';
 import { FlatList, View } from 'react-native';
+import SearchInput from '../../../../../../v4/component/SearchInput';
 import { useCommunityMemberCollection } from '../../../../../../v4/hook/collections/useCommunityMemberCollection';
 import MemberItem from '../MemberItem';
-import MemberSkeleton from '../../../../../../v4/features/community/shared/components/MemberSkeleton';
-import { MemberRoles } from '../../../../../../core/constants';
+import { useSearchMemberByDisplayNameCollection } from '../../../../../../v4/hook/collections/useSearchMemberByDisplayNameCollection';
+import MemberSkeleton from '../../../shared/components/MemberSkeleton';
 
-type ModeratorListProps = {
+type MemberListProps = {
   community: Amity.Community;
 };
 
-function useModeratorList({ community }: ModeratorListProps) {
+function useMemberList({ community }: MemberListProps) {
   const { styles, theme } = useStyles();
+  const [search, setSearch] = useState('');
   const memberCollection = useCommunityMemberCollection({
     enabled: !!community,
     params: {
       communityId: community?.communityId,
-      roles: [MemberRoles.COMMUNITY_MODERATOR],
+      memberships: ['member'],
       limit: 20,
     },
   });
 
-  return { styles, theme, collection: memberCollection };
+  const searchMemberCollection = useSearchMemberByDisplayNameCollection({
+    params: {
+      search,
+      communityId: community?.communityId,
+    },
+    enabled: !!search?.trim() && !!community,
+  });
+
+  const collection = search?.trim() ? searchMemberCollection : memberCollection;
+
+  return { styles, theme, search, setSearch, collection };
 }
 
-const ModeratorList = ({ community }: ModeratorListProps) => {
-  const { styles, collection } = useModeratorList({
+const MemberList = ({ community }: MemberListProps) => {
+  const { search, setSearch, styles, collection } = useMemberList({
     community,
   });
 
   return (
-    <View style={styles.container}>
+    <View>
+      <View style={styles.searchContainer}>
+        <SearchInput
+          inputProps={{
+            value: search,
+            onChangeText: setSearch,
+            placeholder: 'Search member',
+          }}
+        />
+      </View>
       {collection.isLoading && (
         <View style={styles.skeletonContainer}>
           <MemberSkeleton />
@@ -68,4 +89,4 @@ const ModeratorList = ({ community }: ModeratorListProps) => {
   );
 };
 
-export default ModeratorList;
+export default MemberList;

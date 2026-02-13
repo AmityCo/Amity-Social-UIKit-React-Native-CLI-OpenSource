@@ -1,5 +1,5 @@
 import React from 'react';
-import AddMember from '../../../../v4/features/community/AddMember';
+import AddMember from '../../../../social/features/community/AddMember';
 
 const AmityCommunityAddMemberPage = () => {
   return <AddMember />;

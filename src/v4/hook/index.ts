@@ -24,7 +24,7 @@ export * from './useLeaveCommunity';
 export * from './useRecommenedCommunities';
 export * from './useTrendingCommunities';
 export * from './useCategories';
-export * from '../features/community/Create/components/Header/Header';
+export * from '../../social/features/community/Create/components/Header/Header';
 export * from './usePermissions';
 export * from './usePendingPostQuery';
 export * from './useMembersQuery';

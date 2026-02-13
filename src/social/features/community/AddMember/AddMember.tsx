@@ -17,7 +17,7 @@ import SearchInput from '../../../../v4/component/SearchInput';
 import { MemberChip } from '../../../../v4/component/MemberChip/MemberChip';
 import MemberSkeleton from '../shared/components/MemberSkeleton';
 import LimitCharacterSearch from '../../../../v4/component/LimitCharacterSearch';
-import NoResult from '../../../component/NoResult';
+import NoResult from '../../../../v4/component/NoResult';
 import EmptyList from '../../../../v4/component/EmptyList';
 import ActionButton from '../../../../v4/elements/ActionButton';
 

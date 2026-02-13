@@ -1,5 +1,5 @@
 import React from 'react';
-import StorySetting from '../../../../v4/features/community/StorySetting';
+import StorySetting from '../../../../social/features/community/StorySetting';
 
 type AmityCommunityStorySettingPageProps = {
   community: Amity.Community;

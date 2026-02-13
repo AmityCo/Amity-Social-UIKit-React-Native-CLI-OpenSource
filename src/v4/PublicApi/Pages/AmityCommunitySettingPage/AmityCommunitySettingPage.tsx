@@ -1,5 +1,5 @@
 import React from 'react';
-import CommunitySetting from '../../../../v4/features/community/Setting/Setting';
+import CommunitySetting from '../../../../social/features/community/Setting/Setting';
 
 type AmityCommunitySettingPageProps = {
   community: Amity.Community;

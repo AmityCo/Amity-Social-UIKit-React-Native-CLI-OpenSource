@@ -1,6 +1,6 @@
 import React from 'react';
-import CreateCommunity from '../../../../v4/features/community/Create';
-import EditCommunity from '../../../../v4/features/community/Edit';
+import CreateCommunity from '../../../../social/features/community/Create';
+import EditCommunity from '../../../../social/features/community/Edit';
 
 export enum AmityCommunitySetupPageMode {
   CREATE = 'create',
