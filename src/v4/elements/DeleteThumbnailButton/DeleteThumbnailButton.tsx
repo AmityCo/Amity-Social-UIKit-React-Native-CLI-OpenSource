@@ -7,7 +7,7 @@ import {
 } from '../../../social/enums/enumUIKitID';
 import { useAmityElement } from '../../../social/hooks';
 import { useStyles } from './styles';
-import { Typography } from '../../component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 import { trash } from '../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
 

@@ -29,16 +29,16 @@ import Modal from 'react-native-modalbox';
 import { ComponentID, ElementID, PageID } from '../../../../../social/enums';
 import useConfig from '../../../../../social/hooks/useConfig';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
-import CommentList from '../../../../component/Social/CommentList/CommentList';
+import CommentList from '../../../../../social/components/Social/CommentList/CommentList';
 import { StoryRepository } from '@amityco/ts-sdk-react-native';
-import { NextOrPrevious } from '../../../../component/StoryKit';
+import { NextOrPrevious } from '../../../../../social/components/StoryKit';
 import { useTimeDifference } from '../../../../../core/hooks/useTimeDifference';
 import { STORY_DEFAULT_DURATION } from '../../../../../core/constants';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import uiSlice from '../../../../../core/stores/slices/uiSlice';
 import { LoadingOverlay } from '../../../../../components/LoadingOverlay';
 import Toast from '../../../../../components/Toast/Toast';
-import { Typography } from '../../../../component/Typography/Typography';
+import { Typography } from '../../../../../social/components/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../../core/providers/AmityUIKitProvider';
 import { useUIKitDispatch } from '../../../../../core/stores/store';
@@ -357,7 +357,13 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
                     ? currentStory?.data?.fileData
                     : ''),
               }}
-              style={[styles.image, isFailedImageUpload && { opacity: 0.6 }]}
+              style={[
+                styles.image,
+                // eslint-disable-next-line react-native/no-inline-styles
+                isFailedImageUpload && {
+                  opacity: 0.6,
+                },
+              ]}
               resizeMode="contain"
             />
           ) : null}
@@ -375,6 +381,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
               <View key={story.storyId} style={[styles.animationBackground]}>
                 <Animated.View
                   style={[
+                    // eslint-disable-next-line react-native/no-inline-styles
                     {
                       flex:
                         current === index ? progress : storyData[index].finish,
@@ -417,7 +424,12 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
                 {communityData?.displayName}
               </Text>
               <View style={styles.flexRowCenter}>
-                <Text style={[styles.avatarSubText, { marginLeft: 10 }]}>
+                <Text
+                  style={[
+                    styles.avatarSubText, // eslint-disable-next-line react-native/no-inline-styles
+                    { marginLeft: 10 },
+                  ]}
+                >
                   {timeDifference} .{' '}
                 </Text>
                 <Text style={styles.avatarSubText}>

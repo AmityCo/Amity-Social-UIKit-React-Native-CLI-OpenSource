@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { arrowRight } from '../../../../core/assets/icons';
 import { Radio } from '../../../../core/components/Radio';
-import { Typography } from '../../../component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 import { IOSPollDurationPicker } from './PollDurationPicker';
 import { useStyles } from './styles';
 import {

@@ -3,7 +3,7 @@ import Avatar from '../Avatar';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useStyles } from './styles';
 import { CloseButton } from '../../../v4/elements';
-import { Typography } from '../../../v4/component/Typography/Typography';
+import { Typography } from '../Typography/Typography';
 
 type MemberChipProps = {
   style?: StyleProp<ViewStyle>;

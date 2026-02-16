@@ -5,7 +5,7 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import { Typography } from '../../../v4/component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 import { useStyles } from './styles';
 import { capitalize } from '../../../social/utils';
 

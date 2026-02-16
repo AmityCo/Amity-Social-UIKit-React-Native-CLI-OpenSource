@@ -3,7 +3,7 @@ import { ComponentID, ElementID, PageID } from '../../../social/enums';
 import { useAmityElement } from '../../../social/hooks';
 import { StyleSheet, TouchableOpacity, ViewProps } from 'react-native';
 import { View } from 'react-native';
-import { Typography } from '../../component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 
 type CommunityInfoProps = ViewProps & {
   community: Amity.Community;

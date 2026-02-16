@@ -14,7 +14,7 @@ import {
   isAmityAd,
   useCustomRankingGlobalFeed,
 } from '../../../../social/hooks/useCustomRankingGlobalFeed';
-import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
+import PostAdComponent from '../../../../social/components/PostAdComponent/PostAdComponent';
 import Divider from '../../../../social/components/Divider';
 
 type AmityGlobalFeedComponentType = {

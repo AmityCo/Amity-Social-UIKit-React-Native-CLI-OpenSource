@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { useStyle } from './styles';
 import { View } from 'react-native';
-import { Typography } from '../../../v4/component/Typography/Typography';
+import { Typography } from '../Typography/Typography';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { SvgXml } from 'react-native-svg';
 import { errorPage } from '../../../core/assets/icons';

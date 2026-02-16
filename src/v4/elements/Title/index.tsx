@@ -2,7 +2,7 @@ import React from 'react';
 import { useStyles } from './styles';
 import { TextProps } from 'react-native';
 import { useAmityElement } from '../../../social/hooks';
-import { Typography } from '../../component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 import {
   ComponentID,
   ElementID,

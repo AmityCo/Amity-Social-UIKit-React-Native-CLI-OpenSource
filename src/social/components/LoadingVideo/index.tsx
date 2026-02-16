@@ -87,8 +87,8 @@ const LoadingVideo = ({
   };
 
   const processThumbNail = async () => {
-    const thumbNail = await createVideoThumbnail(source);
-    setThumbNailImage(thumbNail.path);
+    const generatedThumbNail = await createVideoThumbnail(source);
+    setThumbNailImage(generatedThumbNail.path);
   };
   useEffect(() => {
     processThumbNail();

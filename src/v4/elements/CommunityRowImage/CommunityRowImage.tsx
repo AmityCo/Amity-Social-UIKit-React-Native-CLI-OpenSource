@@ -8,7 +8,7 @@ import {
 } from '../../../social/hooks';
 import { Image, View } from 'react-native';
 import { useStyles } from './styles';
-import { Typography } from '../../component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { community as communityIcon } from '../../../core/assets/icons';
 

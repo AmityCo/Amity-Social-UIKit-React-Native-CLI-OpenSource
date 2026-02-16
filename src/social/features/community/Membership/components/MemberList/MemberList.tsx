@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStyles } from './styles';
 import { FlatList, View } from 'react-native';
-import SearchInput from '../../../../../../v4/component/SearchInput';
+import SearchInput from '../../../../../components/SearchInput';
 import { useCommunityMemberCollection } from '../../../../../hooks/collections/useCommunityMemberCollection';
 import MemberItem from '../MemberItem';
 import { useSearchMemberByDisplayNameCollection } from '../../../../../hooks/collections/useSearchMemberByDisplayNameCollection';

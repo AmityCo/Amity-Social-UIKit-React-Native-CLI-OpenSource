@@ -7,7 +7,7 @@ import {
   TouchableOpacityProps,
 } from 'react-native';
 
-import { Typography } from '../../../v4/component/Typography/Typography';
+import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
 import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { SvgXml, XmlProps } from 'react-native-svg';

@@ -30,11 +30,11 @@ import {
 } from '../../../../social/enums/AmityPostContentComponentStyle';
 import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
 import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
-import PostContent from '../../../component/PostContent';
-import { PostMenu } from '../../../component/PostMenu';
+import PostContent from '../../../../social/components/PostContent';
+import { PostMenu } from '../../../../social/components/PostMenu';
 import PinBadge from '../../../../v4/elements/PinBadge';
 import AnnouncementBadge from '../../../../v4/elements/AnnouncementBadge';
-import { Typography } from '../../../../v4/component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 
 type AmityPostContentComponentProps = {
   post: Amity.Post;

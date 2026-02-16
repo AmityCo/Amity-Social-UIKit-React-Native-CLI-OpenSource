@@ -14,8 +14,8 @@ import useAuth from '../../../core/hooks/useAuth';
 import MediaSection from '../../../components/MediaSection';
 import { IMentionPosition } from '../../../screens/CreatePost';
 import { PostRepository } from '@amityco/ts-sdk-react-native';
-import { LinkPreview } from '../../../v4/component/PreviewLink/LinkPreview';
-import RenderTextWithMention from '../../../v4/component/RenderTextWithMention/RenderTextWithMention';
+import { LinkPreview } from '../../../social/components/PreviewLink/LinkPreview';
+import RenderTextWithMention from '../../../social/components/RenderTextWithMention/RenderTextWithMention';
 
 export interface IPost {
   postId: string;

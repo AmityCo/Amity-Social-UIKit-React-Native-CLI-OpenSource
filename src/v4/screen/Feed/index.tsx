@@ -26,7 +26,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { usePaginatorApi } from '../../../social/hooks/usePaginator';
 import { usePostImpression } from '../../../social/hooks/usePostImpression';
 import { isAmityAd } from '../../../social/hooks/useCustomRankingGlobalFeed';
-import PostAdComponent from '../../component/PostAdComponent/PostAdComponent';
+import PostAdComponent from '../../../social/components/PostAdComponent/PostAdComponent';
 
 interface IFeed {
   targetId: string;

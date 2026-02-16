@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useStyles } from './styles';
 import { useAmityElement } from '../../../social/hooks';
 import { ComponentID, ElementID, PageID } from '../../../social/enums';
-import { Typography } from '../../component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 
 type LiveTimerStatusProps = {
   time?: string;

@@ -1,13 +1,13 @@
 import { Platform } from 'react-native';
 import React, { FC, useCallback, useLayoutEffect, useRef } from 'react';
-import AndroidCubeEffect from '../../../v4/component/StoryKit/src/components/AndroidCubeEffect';
-import CubeNavigationHorizontal from '../../../v4/component/StoryKit/src/components/CubeNavigationHorizontal';
+import AndroidCubeEffect from '../StoryKit/src/components/AndroidCubeEffect';
+import CubeNavigationHorizontal from '../StoryKit/src/components/CubeNavigationHorizontal';
 import AmityViewStoryPage from '../../../v4/PublicApi/Pages/AmityViewStoryPage/AmityViewStoryPage';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { useStoryPermission } from '../../hooks';
-import { NextOrPrevious } from '../../../v4/component/StoryKit';
+import { NextOrPrevious } from '../StoryKit';
 
 interface IStorytargetView {
   currentCommunityIndex: number;

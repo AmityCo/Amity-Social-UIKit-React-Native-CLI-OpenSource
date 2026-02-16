@@ -16,7 +16,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../../social/hooks/useImagePicker';
 import { arrowDown, close } from '../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
-import { Typography } from '../../../component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
@@ -472,6 +472,7 @@ function AmityCreateLivestreamPage() {
             <View style={styles.camera}>
               {cameraDevice && (
                 <Camera
+                  // eslint-disable-next-line react-native/no-inline-styles
                   style={{ flex: 1 }}
                   device={cameraDevice}
                   isActive={true}

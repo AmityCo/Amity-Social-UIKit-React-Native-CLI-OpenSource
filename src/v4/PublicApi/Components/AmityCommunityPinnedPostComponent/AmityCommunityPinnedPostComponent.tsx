@@ -11,7 +11,7 @@ import {
 } from '../../../../social/enums/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../../social/components/EmptyComponent/EmptyComponent';
 import { emptyPost, privateFeed } from '../../../../core/assets/icons';
-import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';
+import PostFeedSkeleton from '../../../../social/components/PostFeedSkeleton';
 import { usePinnedPostCollection } from '../../../../social/hooks/collections/usePinnedPostCollection';
 
 type AmityCommunityPinnedPostComponentProps = {

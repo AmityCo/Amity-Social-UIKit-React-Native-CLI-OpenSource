@@ -9,7 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { RoomStatus } from '../../../../social/enums/roomStatus';
 import LiveStreamIdleThumbnail from '../../../../social/components/LivestreamContent/LivestreamIdleThumbnail';
-import { Typography } from '../../../component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NetInfo from '@react-native-community/netinfo';
 import { CircularProgressIndicator } from '../../../../social/components/CircularProgressIndicator';

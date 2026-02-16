@@ -3,7 +3,7 @@ import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import { Typography } from '../../../component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { ban, terminated, trash, warning } from '../../../../core/assets/icons';

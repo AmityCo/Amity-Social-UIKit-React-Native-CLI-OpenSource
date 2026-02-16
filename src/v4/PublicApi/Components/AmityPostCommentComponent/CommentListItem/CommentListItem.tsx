@@ -47,7 +47,7 @@ import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../../../social/hooks';
 import ModeratorBadgeElement from '../../../Elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import { ComponentID, PageID } from '../../../../../social/enums';
-import { LinkPreview } from '../../../../component/PreviewLink/LinkPreview';
+import { LinkPreview } from '../../../../../social/components/PreviewLink/LinkPreview';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';
 import uiSlice from '../../../../../core/stores/slices/uiSlice';
 import { useUIKitDispatch } from '../../../../../core/stores/store';
@@ -362,6 +362,7 @@ const CommentListItem = ({
               <Text style={styles.headerText}>{user?.displayName}</Text>
             </TouchableOpacity>
             {targetType === 'community' && targetId && (
+              // eslint-disable-next-line react-native/no-inline-styles
               <View style={{ marginVertical: 6 }}>
                 <ModeratorBadgeElement
                   pageID={PageID.WildCardPage}
@@ -419,6 +420,7 @@ const CommentListItem = ({
                 >
                   <Text style={styles.btnText}>{likeReaction}</Text>
                   <SvgXml
+                    // eslint-disable-next-line react-native/no-inline-styles
                     style={{ marginLeft: 4 }}
                     xml={likeCircle}
                     width="20"

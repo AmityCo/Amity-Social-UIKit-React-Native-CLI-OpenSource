@@ -5,7 +5,7 @@ import { camera } from '../../../core/assets/icons';
 import { useAmityElement } from '../../../social/hooks';
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../../social/enums';
-import { Typography } from '../../../v4/component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 
 type CameraButtonProps = TouchableOpacityProps & {
   pageId?: PageID;

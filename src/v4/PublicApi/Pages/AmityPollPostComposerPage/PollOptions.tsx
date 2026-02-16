@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TextInput } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { trash } from '../../../../core/assets/icons';
-import { Typography } from '../../../component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 import { MAX_POLL_ANSWER_LENGTH } from '../../../../core/constants';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';

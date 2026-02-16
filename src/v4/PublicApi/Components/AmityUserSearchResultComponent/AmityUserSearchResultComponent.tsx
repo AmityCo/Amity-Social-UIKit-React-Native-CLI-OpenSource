@@ -1,7 +1,7 @@
 import { FlatList, StyleSheet, View } from 'react-native';
 import React, { FC, memo } from 'react';
 import { TabName } from '../../../../social/enums/enumTabName';
-import SearchResultItem from '../../../component/SearchResultItem/SearchResultItem';
+import SearchResultItem from '../../../../social/components/SearchResultItem/SearchResultItem';
 import { ComponentID, PageID } from '../../../../social/enums';
 import { useAmityComponent } from '../../../../social/hooks';
 

@@ -9,11 +9,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { CheckBox } from '../../../../core/components/CheckBox';
-import { Typography } from '../../../../v4/component/Typography/Typography';
+import { Typography } from '../../../components/Typography/Typography';
 import Avatar from '../../../components/Avatar';
 import { Controller } from 'react-hook-form';
 import useAddMember from './hooks/useAddMember';
-import SearchInput from '../../../../v4/component/SearchInput';
+import SearchInput from '../../../components/SearchInput';
 import { MemberChip } from '../../../components/MemberChip/MemberChip';
 import MemberSkeleton from '../shared/components/MemberSkeleton';
 import LimitCharacterSearch from '../../../components/LimitCharacterSearch';

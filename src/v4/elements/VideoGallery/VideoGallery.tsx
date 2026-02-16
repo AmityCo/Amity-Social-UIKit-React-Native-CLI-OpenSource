@@ -11,7 +11,7 @@ import {
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 
 import { formatDuration } from '../../../core/utils/time';
-import { Typography } from '../../component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 import VideoPlayer from 'react-native-video-controls';
 import ImageFeedSkeleton from '../../../social/components/ImageFeedSkeleton/ImageFeedSkeleton';
 

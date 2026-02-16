@@ -5,7 +5,7 @@ import { photo } from '../../../core/assets/icons';
 import { useAmityElement } from '../../../social/hooks';
 import { ComponentID, ElementID, PageID } from '../../../social/enums';
 import { useStyles } from './styles';
-import { Typography } from '../../../v4/component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 
 type ImageButtonProps = TouchableOpacityProps & {
   pageId?: PageID;

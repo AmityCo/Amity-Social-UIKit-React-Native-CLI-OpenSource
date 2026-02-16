@@ -39,7 +39,7 @@ import { IMentionPosition } from '../../../../../core/types/mention';
 import ModeratorBadgeElement from '../../../../PublicApi/Elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import { ComponentID, PageID } from '../../../../../social/enums';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';
-import RenderTextWithMention from '../../../../component/RenderTextWithMention/RenderTextWithMention';
+import RenderTextWithMention from '../../../../../social/components/RenderTextWithMention/RenderTextWithMention';
 import uiSlice from '../../../../../core/stores/slices/uiSlice';
 import { useUIKitDispatch } from '../../../../../core/stores/store';
 import { useNavigation } from '@react-navigation/native';
@@ -256,6 +256,7 @@ const ReplyCommentList = ({
               <Text style={styles.headerText}>{user?.displayName}</Text>
             </TouchableOpacity>
             {targetType === 'community' && targetId && (
+              // eslint-disable-next-line react-native/no-inline-styles
               <View style={{ marginVertical: 6 }}>
                 <ModeratorBadgeElement
                   communityId={targetId}
@@ -310,6 +311,7 @@ const ReplyCommentList = ({
               >
                 <Text style={styles.btnText}>{likeReaction}</Text>
                 <SvgXml
+                  // eslint-disable-next-line react-native/no-inline-styles
                   style={{ marginLeft: 4 }}
                   xml={likeCircle}
                   width="20"

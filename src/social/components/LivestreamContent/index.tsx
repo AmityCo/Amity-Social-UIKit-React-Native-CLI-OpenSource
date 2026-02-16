@@ -13,11 +13,11 @@ import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { play } from '../../../core/assets/icons';
-import { Typography } from '../../../v4/component/Typography/Typography';
+import { Typography } from '../Typography/Typography';
 import { RoomStatus } from '../../enums/roomStatus';
 import LiveStreamEndThumbnail from './LivestreamEndedThumbnail';
 import LiveStreamIdleThumbnail from './LivestreamIdleThumbnail';
-import RenderTextWithMention from '../../../v4/component/RenderTextWithMention/RenderTextWithMention';
+import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import LiveStreamTerminatedThumbnail from './LivestreamTerminatedThumbnail';
 

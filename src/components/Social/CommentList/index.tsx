@@ -47,7 +47,7 @@ import { useNavigation } from '@react-navigation/native';
 import ReplyCommentList from '../ReplyCommentList';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../core/hooks/useTimeDifference';
-import { LinkPreview } from '../../../v4/component/PreviewLink/LinkPreview';
+import { LinkPreview } from '../../../social/components/PreviewLink/LinkPreview';
 export interface IComment {
   commentId: string;
   data: Record<string, any>;

@@ -1,7 +1,7 @@
 import { useAmityElement, useTimeDifference } from '../../../social/hooks';
 import React, { ComponentProps } from 'react';
 import { ComponentID, ElementID, PageID } from '../../../social/enums';
-import { Typography } from '../../../v4/component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 import { useStyles } from './styles';
 
 type TimestampProps = ComponentProps<typeof Typography> & {

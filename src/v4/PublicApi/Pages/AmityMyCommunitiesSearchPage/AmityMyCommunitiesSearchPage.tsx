@@ -6,7 +6,7 @@ import { useAmityGlobalSearchViewModel } from '../../../../social/hooks';
 import { TabName } from '../../../../social/enums/enumTabName';
 import { PageID } from '../../../../social/enums';
 import { useAmityPage } from '../../../../social/hooks';
-import NoSearchResult from '../../../component/NoSearchResult/NoSearchResult';
+import NoSearchResult from '../../../../social/components/NoSearchResult/NoSearchResult';
 import CommunitySearchResult from '../../../../social/components/CommunitySearchResult/CommunitySearchResult';
 
 const AmityMyCommunitiesSearchPage = () => {

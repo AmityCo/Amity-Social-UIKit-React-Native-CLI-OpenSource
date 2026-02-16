@@ -2,7 +2,7 @@ import React from 'react';
 import { SvgXml } from 'react-native-svg';
 import { search } from '../../../core/assets/icons';
 import { View, ViewProps } from 'react-native';
-import { Typography } from '../../../v4/component/Typography/Typography';
+import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
 
 type LimitCharacterSearchProps = ViewProps;

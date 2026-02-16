@@ -4,7 +4,7 @@ import { useAmityElement } from '../../../../../hooks';
 import { arrowRight } from '../../../../../../core/assets/icons';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { ComponentID, ElementID, PageID } from '../../../../../enums';
-import { Typography } from '../../../../../../v4/component/Typography/Typography';
+import { Typography } from '../../../../../components/Typography/Typography';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
 type ActionProps = TouchableOpacityProps & {

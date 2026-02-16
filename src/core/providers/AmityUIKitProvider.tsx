@@ -15,7 +15,7 @@ import { IBehaviour } from '../types/behaviour';
 import { lighten, darken, parseToHsl, hslToColorString } from 'polished';
 import { AdEngineProvider } from '../../social/providers/AdEngineProvider';
 import BottomSheetComponent from '../../social/components/BottomSheetComponent/BottomSheetComponent';
-import Toast from '../../v4/component/Toast';
+import Toast from '../../social/components/Toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ErrorBoundary } from '../../components/ErrorBoundary';

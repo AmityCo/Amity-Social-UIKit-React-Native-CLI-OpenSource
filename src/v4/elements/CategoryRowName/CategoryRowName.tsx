@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { StyleSheet } from 'react-native';
-import { Typography } from '../../component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 
 import { useAmityElement } from '../../../social/hooks';
 import { PageID, ComponentID, ElementID } from '../../../social/enums';

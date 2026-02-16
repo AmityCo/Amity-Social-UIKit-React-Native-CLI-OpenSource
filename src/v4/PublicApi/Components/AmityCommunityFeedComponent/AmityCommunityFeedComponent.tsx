@@ -7,7 +7,7 @@ import { usePosts } from '../../../../social/hooks/usePosts';
 import Divider from '../../../../social/components/Divider';
 import { View, FlatList } from 'react-native';
 import { isAmityAd } from '../../../../social/hooks/useCustomRankingGlobalFeed';
-import PostAdComponent from '../../../../v4/component/PostAdComponent/PostAdComponent';
+import PostAdComponent from '../../../../social/components/PostAdComponent/PostAdComponent';
 import { usePaginatorApi } from '../../../../social/hooks/usePaginator';
 import { usePostImpression } from '../../../../social/hooks/usePostImpression';
 import {
@@ -16,7 +16,7 @@ import {
 } from '../../../../social/enums/AmityPostContentComponentStyle';
 import EmptyComponent from '../../../../social/components/EmptyComponent/EmptyComponent';
 import { emptyPost, privateFeed } from '../../../../core/assets/icons';
-import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';
+import PostFeedSkeleton from '../../../../social/components/PostFeedSkeleton';
 import { usePinnedPostCollection } from '../../../../social/hooks/collections/usePinnedPostCollection';
 import { isPinnedPost } from '../../../../social/utils';
 

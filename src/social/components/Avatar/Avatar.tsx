@@ -10,7 +10,7 @@ import { useTheme } from 'react-native-paper';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { category } from '../../../core/assets/icons';
-import { Typography } from '../../../v4/component/Typography/Typography';
+import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
 import ModeratorBadge from '../../../v4/elements/ModeratorBadge';
 import { isModerator } from '../../utils/permissions';

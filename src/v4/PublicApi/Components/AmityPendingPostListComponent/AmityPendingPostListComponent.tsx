@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useStyles } from './styles';
 import { Alert, FlatList, TouchableOpacity, View } from 'react-native';
-import { Typography } from '../../../../v4/component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 import Avatar from '../../../../social/components/Avatar';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -13,7 +13,7 @@ import useAuth from '../../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
 import { firework, trash } from '../../../../core/assets/icons';
 import MenuAction from '../../../../v4/elements/MenuAction';
-import PostContent from '../../../../v4/component/PostContent';
+import PostContent from '../../../../social/components/PostContent';
 import FormDescription from '../../../../v4/elements/FormDescription';
 import { usePostCollection } from '../../../../social/hooks/collections/usePostCollection';
 import ActionButton from '../../../../v4/elements/ActionButton';
@@ -21,7 +21,7 @@ import { useIsCommunityModerator } from '../../../../social/hooks';
 import { usePendingPostQuery } from '../../../../social/hooks/usePendingPostQuery';
 import { SvgXml } from 'react-native-svg';
 import { Title } from '../../../../v4/elements';
-import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';
+import PostFeedSkeleton from '../../../../social/components/PostFeedSkeleton';
 
 type PendingPostListProps = {
   community: Amity.Community;

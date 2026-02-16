@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
 import { arrowLeft } from '../../../../core/assets/icons';
-import { Typography } from '../../../component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 import dayjs from 'dayjs';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {

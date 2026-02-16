@@ -5,7 +5,7 @@ import { useAmityElement } from '../../../social/hooks';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../../social/enums';
 import { thumbnail } from '../../../core/assets/icons';
-import { Typography } from '../../component/Typography/Typography';
+import { Typography } from '../../../social/components/Typography/Typography';
 
 type AddThumbnailButtonProps = TouchableOpacityProps & {
   pageId?: PageID;

@@ -41,7 +41,7 @@ import feedSlice from '../../../core/stores/slices/feedSlice';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { useTimeDifference } from '../../../core/hooks/useTimeDifference';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import PostContent from '../../../v4/component/PostContent';
+import PostContent from '../../../social/components/PostContent';
 import { useUIKitDispatch } from '../../../core/stores/store';
 
 export interface IPost {

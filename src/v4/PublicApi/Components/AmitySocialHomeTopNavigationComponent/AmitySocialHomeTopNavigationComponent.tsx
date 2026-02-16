@@ -18,7 +18,7 @@ import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import AmityCreatePostMenuComponent from '../AmityCreatePostMenuComponent/AmityCreatePostMenuComponent';
 import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';
 import { usePopup } from '../../../../social/hooks/usePopup';
-import Popup from '../../../component/PopupMenu/PopupMenu';
+import Popup from '../../../../social/components/PopupMenu/PopupMenu';
 
 type AmitySocialHomeTopNavigationComponentType = {
   activeTab: string;

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import Avatar from '../../../../../components/Avatar';
 import { useStyles } from './style';
-import { Typography } from '../../../../../../v4/component/Typography/Typography';
+import { Typography } from '../../../../../components/Typography/Typography';
 import MenuButton from '../../../../../../v4/elements/MenuButton';
 import useAuth from '../../../../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';

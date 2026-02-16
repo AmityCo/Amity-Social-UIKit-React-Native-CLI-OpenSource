@@ -7,7 +7,7 @@ import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 
 import TargetSelectionPage, {
   FeedParams,
-} from '../../../component/TargetSelectionPage/TargetSelectionPage';
+} from '../../../../social/components/TargetSelectionPage/TargetSelectionPage';
 
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';

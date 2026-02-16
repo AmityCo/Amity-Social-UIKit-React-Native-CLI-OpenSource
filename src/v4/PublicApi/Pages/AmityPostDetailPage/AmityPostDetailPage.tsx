@@ -52,7 +52,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorComponent from '../../../../social/components/ErrorComponent/ErrorComponent';
 import { getSkeletonBackgrounColor } from '../../../../core/utils/color';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
-import { PostMenu } from '../../../../v4/component/PostMenu';
+import { PostMenu } from '../../../../social/components/PostMenu';
 import useMention from '../../../../social/hooks/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import {

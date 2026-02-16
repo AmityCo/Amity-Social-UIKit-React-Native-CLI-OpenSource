@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { close } from '../../../../core/assets/icons';
-import { Typography } from '../../../component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 import { useStyles } from './styles';
 
 type PollHeaderProps = {

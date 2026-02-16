@@ -1,5 +1,5 @@
 import React, { FC, memo } from 'react';
-import { Typography } from '../../../component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 import { StyleSheet, TextProps } from 'react-native';
 import {
   ComponentID,

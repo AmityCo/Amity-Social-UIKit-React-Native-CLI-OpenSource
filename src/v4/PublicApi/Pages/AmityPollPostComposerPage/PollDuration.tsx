@@ -3,7 +3,7 @@ import React from 'react';
 import { View, TouchableOpacity, Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { arrowDown } from '../../../../core/assets/icons';
-import { Typography } from '../../../component/Typography/Typography';
+import { Typography } from '../../../../social/components/Typography/Typography';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';
 import { AndroidPollDurationPicker } from './PollDurationPicker';

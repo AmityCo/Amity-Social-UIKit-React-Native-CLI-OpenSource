@@ -10,7 +10,7 @@ import { isCommunityModerator } from '../../../../core/utils/permission';
 import useAuth from '../../../../core/hooks/useAuth';
 import { ImageSizeState } from '../../../../social/enums';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { NextOrPrevious } from '../../../component/StoryKit';
+import { NextOrPrevious } from '../../../../social/components/StoryKit';
 import AmityViewStoryItem from './Components/AmityViewStoryItem';
 
 interface IAmityViewStoryPage {

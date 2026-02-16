@@ -3,7 +3,7 @@ import { FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { CheckBox } from '../../../../core/components/CheckBox';
-import { Typography } from '../../../../v4/component/Typography/Typography';
+import { Typography } from '../../../components/Typography/Typography';
 import Avatar from '../../../components/Avatar';
 import CategoryChip from '../../../components/CategoryChip/CategoryChip';
 import { Controller } from 'react-hook-form';
