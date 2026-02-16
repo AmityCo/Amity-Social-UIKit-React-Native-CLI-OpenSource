@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useStyles } from './styles';
 import { Alert, FlatList, TouchableOpacity, View } from 'react-native';
 import { Typography } from '../../../../v4/component/Typography/Typography';
-import Avatar from '../../../../v4/component/Avatar';
+import Avatar from '../../../../social/components/Avatar';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';

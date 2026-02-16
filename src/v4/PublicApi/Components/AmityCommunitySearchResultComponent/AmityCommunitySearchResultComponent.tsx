@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react';
 import { TabName } from '../../../../social/enums/enumTabName';
 import { ComponentID, PageID } from '../../../../social/enums';
 import { useAmityComponent } from '../../../../social/hooks';
-import CommunitySearchResult from '../../../component/CommunitySearchResult/CommunitySearchResult';
+import CommunitySearchResult from '../../../../social/components/CommunitySearchResult/CommunitySearchResult';
 
 type AmityCommunitySearchResultComponentType = {
   pageId?: PageID;

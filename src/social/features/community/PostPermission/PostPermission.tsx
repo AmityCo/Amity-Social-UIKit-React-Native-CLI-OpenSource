@@ -11,7 +11,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Radio } from '../../../../v4/component/core/Radio';
+import { Radio } from '../../../../core/components/Radio';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { useNavigation } from '@react-navigation/native';

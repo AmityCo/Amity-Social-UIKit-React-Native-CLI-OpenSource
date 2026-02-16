@@ -7,7 +7,7 @@ import PostAdHeader from './PostAdHeader';
 import { useAmityComponent } from '../../../social/hooks';
 import { infoIcon } from '../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
-import AdInformation from '../AdInformation/AdInformation';
+import AdInformation from '../../../social/components/AdInformation/AdInformation';
 import bottomSheetSlice from '../../../core/stores/slices/bottomSheetSlice';
 import AdEngine from '../../../core/engines/AdEngine';
 import AssetDownloader from '../../../core/engines/AssetDownloader';

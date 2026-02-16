@@ -4,7 +4,7 @@ import { ComponentID, ElementID, PageID } from '../../../social/enums';
 import Button, {
   BUTTON_SIZE,
   ButtonProps,
-} from '../../../v4/component/Button/Button';
+} from '../../../social/components/Button/Button';
 import { useStyles } from './styles';
 
 type ActionButtonProps = ButtonProps & {

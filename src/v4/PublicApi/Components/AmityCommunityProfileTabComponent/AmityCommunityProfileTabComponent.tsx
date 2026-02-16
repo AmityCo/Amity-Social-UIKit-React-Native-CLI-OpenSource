@@ -2,7 +2,7 @@ import React, { memo, FC, useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { feed, image, pin, video } from '../../../../core/assets/icons';
-import IconTab from '../../../../v4/component/IconTab/IconTab';
+import IconTab from '../../../../social/components/IconTab/IconTab';
 import { ComponentID, ElementID, PageID } from '../../../../social/enums';
 import { useAmityElement } from '../../../../social/hooks';
 

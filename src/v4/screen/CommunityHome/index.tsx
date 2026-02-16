@@ -50,7 +50,7 @@ import useConfig from '../../../social/hooks/useConfig';
 import { ComponentID } from '../../../social/enums/enumUIKitID';
 import AmityStoryTabComponent from '../../PublicApi/Components/AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../PublicApi/types/index';
-import GalleryComponent from '../../component/Gallery/GalleryComponent';
+import GalleryComponent from '../../../social/components/Gallery/GalleryComponent';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import BackButton from '../../../components/BackButton';
 import { useUIKitDispatch } from '../../../core/stores/store';

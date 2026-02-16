@@ -15,7 +15,7 @@ import { getPostById } from '../../../core/legacy/feed';
 import ImageView from '../../../components/react-native-image-viewing/dist';
 import { RootState, useUIKitSelector } from '../../../core/stores/store';
 import { playBtn } from '../../../core/assets/icons/xml';
-import LivestreamContent from '../LivestreamContent';
+import LivestreamContent from '../../../social/components/LivestreamContent';
 import { LinkPreview } from '../PreviewLink';
 import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
 import { IMentionPosition } from '../../../core/types';

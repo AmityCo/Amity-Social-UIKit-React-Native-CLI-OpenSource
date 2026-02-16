@@ -25,10 +25,10 @@ import { closeIcon } from '../../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import { usePaginatorApi } from '../../../../social/hooks/usePaginator';
 import { isAmityAd } from '../../../../social/hooks/useCustomRankingGlobalFeed';
-import CommentAdComponent from '../../CommentAdComponent/CommentAdComponent';
+import CommentAdComponent from '../../../../social/components/CommentAdComponent/CommentAdComponent';
 import useMention from '../../../../social/hooks/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
-import MyAvatar from '../../MyAvatar/MyAvatar';
+import MyAvatar from '../../../../social/components/MyAvatar/MyAvatar';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
 
 interface ICommentListProp {

@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { Tab, useMembership } from './hooks/useMembership';
 import { useStyles } from './styles';
-import Tabs from '../../../../v4/component/core/Tabs';
+import Tabs from '../../../../core/components/Tabs';
 import MemberList from './components/MemberList';
 import ModeratorList from './components/ModeratorList';
 import { checkEditCommunityPermission } from '../../../utils/permissions';

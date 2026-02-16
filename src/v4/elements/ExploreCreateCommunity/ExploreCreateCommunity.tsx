@@ -6,7 +6,7 @@ import {
   PageID,
 } from '../../../social/enums/enumUIKitID';
 import { useAmityElement } from '../../../social/hooks';
-import { Button } from '../../component/Button/Button';
+import { Button } from '../../../social/components/Button/Button';
 import { plus } from '../../../core/assets/icons';
 
 type ExploreCreateCommunityType = {

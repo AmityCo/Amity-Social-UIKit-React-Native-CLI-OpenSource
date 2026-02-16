@@ -5,7 +5,7 @@ import { useToast } from '../../../core/stores/slices/toastSlice';
 import React, { memo, useEffect, useRef } from 'react';
 import { Typography } from '../Typography/Typography';
 import { informative, failed, success } from '../../../core/assets/icons';
-import { CircularProgressIndicator } from '../CircularProgressIndicator';
+import { CircularProgressIndicator } from '../../../social/components/CircularProgressIndicator';
 
 const Toast = () => {
   const { hideToast, toast } = useToast();

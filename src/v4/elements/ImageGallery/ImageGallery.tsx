@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import ImageViewer from '../ImageViewer/ImageViewer';
-import ImageFeedSkeleton from '../../component/ImageFeedSkeleton/ImageFeedSkeleton';
+import ImageFeedSkeleton from '../../../social/components/ImageFeedSkeleton/ImageFeedSkeleton';
 
 type ImageGalleryProps = {
   themeStyles?: MyMD3Theme;

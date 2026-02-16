@@ -10,7 +10,7 @@ import { useBehaviour } from '../../../../../providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
-import CategoryChip from '../../../../../../v4/component/CategoryChip/CategoryChip';
+import CategoryChip from '../../../../../components/CategoryChip/CategoryChip';
 
 type CategoriesProps = {
   categories: Amity.Category[];

@@ -11,7 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
 import { UseImagePickerResponse } from '../../../../../hooks/useImagePicker';
 import { Image, Platform, TouchableOpacity, View } from 'react-native';
-import { CircularProgressIndicator } from '../../../../../../v4/component/CircularProgressIndicator';
+import { CircularProgressIndicator } from '../../../../../components/CircularProgressIndicator';
 
 type CoverImageUploadProps = Pick<
   UseImagePickerResponse,

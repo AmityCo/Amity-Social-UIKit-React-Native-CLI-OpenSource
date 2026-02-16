@@ -15,7 +15,7 @@ import ImageView from '../../components/react-native-image-viewing/dist';
 import { RootState, useUIKitSelector } from '../../core/stores/store';
 import { playBtn } from '../../core/assets/icons/xml';
 import PollSection from '../PollSection/PollSection';
-import LivestreamContent from '../../v4/component/LivestreamContent';
+import LivestreamContent from '../../social/components/LivestreamContent';
 
 interface IMediaSection {
   childrenPosts: string[];

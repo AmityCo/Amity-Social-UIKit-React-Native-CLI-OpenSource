@@ -15,7 +15,7 @@ import {
   useCustomRankingGlobalFeed,
 } from '../../../../social/hooks/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../component/PostAdComponent/PostAdComponent';
-import Divider from '../../../component/Divider';
+import Divider from '../../../../social/components/Divider';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;

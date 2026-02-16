@@ -6,7 +6,7 @@ import {
   PageID,
 } from '../../../social/enums/enumUIKitID';
 import { useAmityElement, useJoinCommunity } from '../../../social/hooks';
-import { Button, BUTTON_SIZE } from '../../component/Button/Button';
+import { Button, BUTTON_SIZE } from '../../../social/components/Button/Button';
 import { plus } from '../../../core/assets/icons';
 import { useCustomRankingGlobalFeed } from '../../../social/hooks/useCustomRankingGlobalFeed';
 

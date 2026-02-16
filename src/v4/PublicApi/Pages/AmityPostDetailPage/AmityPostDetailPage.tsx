@@ -42,14 +42,14 @@ import { IMentionPosition } from '../../../../core/types';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
 import NetInfo from '@react-native-community/netinfo';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
-import MyAvatar from '../../../../v4/component/MyAvatar/MyAvatar';
+import MyAvatar from '../../../../social/components/MyAvatar/MyAvatar';
 import {
   comment_contains_inapproproate_word,
   text_contain_blocked_word,
 } from '../../../../core/constants';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ErrorComponent from '../../../../v4/component/ErrorComponent/ErrorComponent';
+import ErrorComponent from '../../../../social/components/ErrorComponent/ErrorComponent';
 import { getSkeletonBackgrounColor } from '../../../../core/utils/color';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 import { PostMenu } from '../../../../v4/component/PostMenu';

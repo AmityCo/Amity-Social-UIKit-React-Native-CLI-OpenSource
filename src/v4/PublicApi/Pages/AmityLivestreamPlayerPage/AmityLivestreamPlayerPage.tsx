@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, TouchableOpacity, Platform } from 'react-native';
 import { useStyles } from './styles';
-import LiveStreamEndThumbnail from '../../../component/LivestreamContent/LivestreamEndedThumbnail';
+import LiveStreamEndThumbnail from '../../../../social/components/LivestreamContent/LivestreamEndedThumbnail';
 import { SvgXml } from 'react-native-svg';
 import { close } from '../../../../core/assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { RoomStatus } from '../../../../social/enums/roomStatus';
-import LiveStreamIdleThumbnail from '../../../component/LivestreamContent/LivestreamIdleThumbnail';
+import LiveStreamIdleThumbnail from '../../../../social/components/LivestreamContent/LivestreamIdleThumbnail';
 import { Typography } from '../../../component/Typography/Typography';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NetInfo from '@react-native-community/netinfo';
-import { CircularProgressIndicator } from '../../../component/CircularProgressIndicator';
+import { CircularProgressIndicator } from '../../../../social/components/CircularProgressIndicator';
 import Video from 'react-native-video';
 import useAuth from '../../../../core/hooks/useAuth';
 import {

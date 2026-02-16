@@ -7,7 +7,7 @@ import { TabName } from '../../../../social/enums/enumTabName';
 import { PageID } from '../../../../social/enums';
 import { useAmityPage } from '../../../../social/hooks';
 import NoSearchResult from '../../../component/NoSearchResult/NoSearchResult';
-import CommunitySearchResult from '../../../component/CommunitySearchResult/CommunitySearchResult';
+import CommunitySearchResult from '../../../../social/components/CommunitySearchResult/CommunitySearchResult';
 
 const AmityMyCommunitiesSearchPage = () => {
   const pageId = PageID.social_global_search_page;

@@ -5,7 +5,7 @@ import {
   PageID,
 } from '../../../social/enums/enumUIKitID';
 import { useAmityElement } from '../../../social/hooks';
-import { Button, BUTTON_SIZE } from '../../component/Button/Button';
+import { Button, BUTTON_SIZE } from '../../../social/components/Button/Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { useNavigation } from '@react-navigation/native';

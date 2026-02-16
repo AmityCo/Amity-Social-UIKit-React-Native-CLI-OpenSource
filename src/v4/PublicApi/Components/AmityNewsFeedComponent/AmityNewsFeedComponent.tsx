@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../../social/enums/enumUIKitID';
 import AmityGlobalFeedComponent from '../AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import { useStyles } from './styles';
-import Divider from '../../../component/Divider';
+import Divider from '../../../../social/components/Divider';
 import { useAmityComponent } from '../../../../social/hooks';
 
 type AmityNewsFeedComponentType = {

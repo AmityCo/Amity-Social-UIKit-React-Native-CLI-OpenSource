@@ -3,8 +3,8 @@ import {
   AmityStoryTabComponentEnum,
   AmityStoryTabComponentType,
 } from '../../types';
-import MyStories from '../../../component/MyStories';
-import CommunityStories from '../../../component/CommunityStories';
+import MyStories from '../../../../social/components/MyStories';
+import CommunityStories from '../../../../social/components/CommunityStories';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import useConfig from '../../../../social/hooks/useConfig';
 import { ComponentID } from '../../../../social/enums';

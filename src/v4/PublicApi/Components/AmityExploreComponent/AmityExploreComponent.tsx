@@ -12,8 +12,8 @@ import AmityExploreEmptyComponent from '../AmityExploreEmptyComponent/AmityExplo
 import { useExplore } from '../../../../social/providers/ExploreProvider';
 import ExploreLoadingSkeleton from './ExploreLoadingSkeleton/ExploreLoadingSkeleton';
 import { useAmityPage } from '../../../../social/hooks';
-import ErrorComponent from '../../../component/ErrorComponent/ErrorComponent';
-import Divider from '../../../component/Divider';
+import ErrorComponent from '../../../../social/components/ErrorComponent/ErrorComponent';
+import Divider from '../../../../social/components/Divider';
 
 type AmityExploreComponentProps = {
   pageId?: PageID;

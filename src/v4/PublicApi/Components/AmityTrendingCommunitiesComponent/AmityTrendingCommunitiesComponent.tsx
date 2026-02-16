@@ -4,7 +4,7 @@ import { ComponentID, PageID } from '../../../../social/enums';
 import { useStyles } from './styles';
 import { useAmityComponent } from '../../../../social/hooks';
 import TrendingCommunityTitleComponent from './TrendingCommunityTitle/TrendingCommunityTitle';
-import CommunityRowItem from '../../../component/CommunityRowItem/CommunityRowItem';
+import CommunityRowItem from '../../../../social/components/CommunityRowItem/CommunityRowItem';
 import { useExplore } from '../../../../social/providers/ExploreProvider';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';

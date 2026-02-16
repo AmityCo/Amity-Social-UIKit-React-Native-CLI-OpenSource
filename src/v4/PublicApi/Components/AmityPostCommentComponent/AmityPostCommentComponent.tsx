@@ -16,7 +16,7 @@ import { ComponentID, PageID } from '../../../../social/enums';
 import { useAmityComponent } from '../../../../social/hooks';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
 import { isAmityAd } from '../../../../social/hooks/useCustomRankingGlobalFeed';
-import CommentAdComponent from '../../../component/CommentAdComponent/CommentAdComponent';
+import CommentAdComponent from '../../../../social/components/CommentAdComponent/CommentAdComponent';
 import { usePaginatorApi } from '../../../../social/hooks/usePaginator';
 import { useCommentAdImpression } from '../../../../social/hooks/useCommentAdImpression';
 import { useStyles } from './styles';

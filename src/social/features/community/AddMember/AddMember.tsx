@@ -8,17 +8,17 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
-import { CheckBox } from '../../../../v4/component/core/CheckBox';
+import { CheckBox } from '../../../../core/components/CheckBox';
 import { Typography } from '../../../../v4/component/Typography/Typography';
-import Avatar from '../../../../v4/component/Avatar';
+import Avatar from '../../../components/Avatar';
 import { Controller } from 'react-hook-form';
 import useAddMember from './hooks/useAddMember';
 import SearchInput from '../../../../v4/component/SearchInput';
-import { MemberChip } from '../../../../v4/component/MemberChip/MemberChip';
+import { MemberChip } from '../../../components/MemberChip/MemberChip';
 import MemberSkeleton from '../shared/components/MemberSkeleton';
-import LimitCharacterSearch from '../../../../v4/component/LimitCharacterSearch';
-import NoResult from '../../../../v4/component/NoResult';
-import EmptyList from '../../../../v4/component/EmptyList';
+import LimitCharacterSearch from '../../../components/LimitCharacterSearch';
+import NoResult from '../../../components/NoResult';
+import EmptyList from '../../../components/EmptyList';
 import ActionButton from '../../../../v4/elements/ActionButton';
 
 const AddMember = () => {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { LogBox, StyleSheet } from 'react-native';
-import CustomSocialTab from '../../../../v4/component/CustomSocialTab/CustomSocialTab';
+import CustomSocialTab from '../../../../social/components/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../../../social/hooks';
 import {
   ComponentID,
@@ -16,7 +16,7 @@ import AmityEmptyNewsFeedComponent from '../../../../v4/PublicApi/Components/Ami
 import AmityMyCommunitiesComponent from '../../../../v4/PublicApi/Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
 import AmityNewsFeedComponent from '../../../../v4/PublicApi/Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
 import AmityExploreComponent from '../../../../v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
-import NewsFeedLoadingComponent from '../../../../v4/component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
+import NewsFeedLoadingComponent from '../../../../social/components/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
 import { useCustomRankingGlobalFeed } from '../../../../social/hooks/useCustomRankingGlobalFeed';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';

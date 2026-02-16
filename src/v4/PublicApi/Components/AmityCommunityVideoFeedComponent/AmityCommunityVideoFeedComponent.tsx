@@ -3,12 +3,12 @@ import { ComponentID, PageID } from '../../../../social/enums';
 import { useAmityComponent, useCommunity } from '../../../../social/hooks';
 import { usePosts } from '../../../../social/hooks/usePosts';
 import { View } from 'react-native';
-import EmptyComponent from '../../../component/EmptyComponent/EmptyComponent';
+import EmptyComponent from '../../../../social/components/EmptyComponent/EmptyComponent';
 import { emptyVideoPost, privateFeed } from '../../../../core/assets/icons';
 import VideoGallery from '../../../elements/VideoGallery/VideoGallery';
 import { useStyles } from './styles';
 import { AmityCommunityFeedRef } from '../AmityCommunityFeedComponent/AmityCommunityFeedComponent';
-import ImageFeedSkeleton from '../../../component/ImageFeedSkeleton/ImageFeedSkeleton';
+import ImageFeedSkeleton from '../../../../social/components/ImageFeedSkeleton/ImageFeedSkeleton';
 
 type AmityCommunityVideoFeedComponentProps = {
   pageId?: PageID;

@@ -4,7 +4,7 @@ import { ComponentID, PageID } from '../../../../social/enums';
 import { useAmityComponent, useCommunity } from '../../../../social/hooks';
 import AmityPostContentComponent from '../AmityPostContentComponent/AmityPostContentComponent';
 import { usePosts } from '../../../../social/hooks/usePosts';
-import Divider from '../../../../v4/component/Divider';
+import Divider from '../../../../social/components/Divider';
 import { View, FlatList } from 'react-native';
 import { isAmityAd } from '../../../../social/hooks/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../../v4/component/PostAdComponent/PostAdComponent';
@@ -14,7 +14,7 @@ import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
 } from '../../../../social/enums/AmityPostContentComponentStyle';
-import EmptyComponent from '../../../../v4/component/EmptyComponent/EmptyComponent';
+import EmptyComponent from '../../../../social/components/EmptyComponent/EmptyComponent';
 import { emptyPost, privateFeed } from '../../../../core/assets/icons';
 import PostFeedSkeleton from '../../../../v4/component/PostFeedSkeleton';
 import { usePinnedPostCollection } from '../../../../social/hooks/collections/usePinnedPostCollection';

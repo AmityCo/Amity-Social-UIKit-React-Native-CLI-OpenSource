@@ -5,7 +5,7 @@ import { useStyles } from './styles';
 import { View } from 'react-native';
 import { getSkeletonBackgrounColor } from '../../../../../core/utils/color';
 import { Path } from 'react-native-svg';
-import CommunityListSkeleton from '../../../../component/CommunityListSkeleton/CommunityListSkeleton';
+import CommunityListSkeleton from '../../../../../social/components/CommunityListSkeleton/CommunityListSkeleton';
 
 type ExploreLoadingSkeletonProps = {
   themeStyles: MyMD3Theme;

@@ -46,7 +46,7 @@ import { useTheme } from 'react-native-paper';
 import FloatingButton from '../../../../components/FloatingButton';
 import { TabName, PostTargetType } from '../../../../core/enums';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
-import GalleryComponent from '../../../component/Gallery/GalleryComponent';
+import GalleryComponent from '../../../../social/components/Gallery/GalleryComponent';
 import { useFile } from '../../../../social/hooks';
 import { defaultAvatarUri } from '../../../../core/assets';
 import { ImageSizeState } from '../../../../social/enums';

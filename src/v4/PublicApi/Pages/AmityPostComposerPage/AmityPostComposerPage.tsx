@@ -51,8 +51,8 @@ import ImagePicker, {
   type Asset,
   launchCamera,
 } from 'react-native-image-picker';
-import LoadingImage from '../../../component/LoadingImage';
-import LoadingVideo from '../../../component/LoadingVideo';
+import LoadingImage from '../../../../social/components/LoadingImage';
+import LoadingVideo from '../../../../social/components/LoadingVideo';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';

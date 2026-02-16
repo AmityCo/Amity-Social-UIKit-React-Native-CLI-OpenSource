@@ -19,7 +19,7 @@ import CommunityPendingPost from '../../../elements/CommunityPendingPost/Communi
 import { usePosts } from '../../../../social/hooks/usePosts';
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';
-import { BUTTON_SIZE } from '../../../component/Button/Button';
+import { BUTTON_SIZE } from '../../../../social/components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';

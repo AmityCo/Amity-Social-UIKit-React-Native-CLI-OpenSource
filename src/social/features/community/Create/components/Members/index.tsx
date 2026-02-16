@@ -6,7 +6,7 @@ import FormLabel from '../../../../../../v4/elements/FormLabel';
 import { useNavigation } from '@react-navigation/native';
 import { useBehaviour } from '../../../../../providers/BehaviourProvider';
 import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
-import { MemberChip } from '../../../../../../v4/component/MemberChip/MemberChip';
+import { MemberChip } from '../../../../../components/MemberChip/MemberChip';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import CommunityAddMemberButton from '../../../../../../v4/elements/CommunityAddMemberButton';
 

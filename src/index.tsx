@@ -100,7 +100,7 @@ import {
   AmityPostComposerMode,
   mediaAttachment,
 } from './v4/PublicApi/types';
-import { AmityGlobalStoryTabWrapper } from './v4/component/MyStories';
+import { AmityGlobalStoryTabWrapper } from './social/components/MyStories';
 
 const LINKING_ERROR =
   `The package 'amity-react-native-social-ui-kit' doesn't seem to be linked. Make sure: \n\n` +

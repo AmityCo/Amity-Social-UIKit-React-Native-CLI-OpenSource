@@ -1,11 +1,11 @@
-import { Radio } from '../core/Radio';
+import { Radio } from '../../../core/components/Radio';
 import { useStyles } from './style';
-import { CheckBox } from '../core/CheckBox';
+import { CheckBox } from '../../../core/components/CheckBox';
 import { PollResults } from './PollResults';
 import { Typography } from '../Typography/Typography';
 import { TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
-import Button, { BUTTON_SIZE } from '../Button/Button';
+import Button, { BUTTON_SIZE } from '../../../social/components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';

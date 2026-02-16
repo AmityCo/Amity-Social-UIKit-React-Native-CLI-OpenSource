@@ -6,7 +6,7 @@ import { RootStackParamList } from '../../../../../../core/routes/RouteParamList
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useStyles } from './styles';
 import BackButton from '../../../../../../v4/elements/BackButton';
-import Button from '../../../../../../v4/component/Button/Button';
+import Button from '../../../../../components/Button/Button';
 
 type HeaderProps = {
   onSave: () => void;

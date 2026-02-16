@@ -8,7 +8,7 @@ import {
   ExploreCommunityButton,
   CreateCommunityButton,
 } from './Elements';
-import Divider from '../../../component/Divider';
+import Divider from '../../../../social/components/Divider';
 import { ComponentID, PageID } from '../../../../social/enums';
 import { useAmityComponent } from '../../../../social/hooks';
 

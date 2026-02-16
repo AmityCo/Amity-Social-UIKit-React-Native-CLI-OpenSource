@@ -1,5 +1,5 @@
 import React, { FC, memo } from 'react';
-import { CommunityCategoryChips } from '../../component/CommunityCategoryChips/CommunityCategoryChips';
+import { CommunityCategoryChips } from '../../../social/components/CommunityCategoryChips/CommunityCategoryChips';
 import { ComponentID, ElementID, PageID } from '../../../social/enums';
 import { useAmityElement } from '../../../social/hooks';
 import { View, ViewProps } from 'react-native';

@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { useStyles } from './styles';
 
-import LivestreamEndedView from '../../v4/component/LivestreamContent/LivestreamEndedThumbnail';
+import LivestreamEndedView from '../../social/components/LivestreamContent/LivestreamEndedThumbnail';
 import { Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon, playIcon, stopIcon } from '../../core/assets/icons/xml';

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
-import Avatar from '../../../../../../v4/component/Avatar';
+import Avatar from '../../../../../components/Avatar';
 import { useStyles } from './style';
 import { Typography } from '../../../../../../v4/component/Typography/Typography';
 import MenuButton from '../../../../../../v4/elements/MenuButton';

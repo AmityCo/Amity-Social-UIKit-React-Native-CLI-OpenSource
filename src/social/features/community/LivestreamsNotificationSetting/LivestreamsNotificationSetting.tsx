@@ -10,7 +10,7 @@ import { Typography } from '../../../../v4/component/Typography/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import { Radio } from '../../../../v4/component/core/Radio';
+import { Radio } from '../../../../core/components/Radio';
 import { useMutation } from '@tanstack/react-query';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { useToast } from '../../../../core/stores/slices/toastSlice';

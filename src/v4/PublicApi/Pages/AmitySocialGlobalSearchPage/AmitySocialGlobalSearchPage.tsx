@@ -4,12 +4,12 @@ import AmityTopSearchBarComponent from '../../Components/AmityTopSearchBarCompon
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAmityGlobalSearchViewModel } from '../../../../social/hooks';
 import { TabName } from '../../../../social/enums/enumTabName';
-import CustomTab from '../../../component/CustomTab';
+import CustomTab from '../../../../social/components/CustomTab';
 import AmityCommunitySearchResultComponent from '../../Components/AmityCommunitySearchResultComponent/AmityCommunitySearchResultComponent';
 import { PageID } from '../../../../social/enums';
 import { useAmityPage } from '../../../../social/hooks';
 import AmityUserSearchResultComponent from '../../Components/AmityUserSearchResultComponent/AmityUserSearchResultComponent';
-import CommunityListSkeleton from '../../../component/CommunityListSkeleton/CommunityListSkeleton';
+import CommunityListSkeleton from '../../../../social/components/CommunityListSkeleton/CommunityListSkeleton';
 import { View } from 'react-native';
 
 const AmitySocialGlobalSearchPage = () => {
