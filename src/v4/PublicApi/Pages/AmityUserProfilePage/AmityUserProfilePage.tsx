@@ -105,11 +105,11 @@ function UserProfile({
     });
   };
   const onFollowTap = async () => {
-    const { data: followStatus } = await UserRepository.Relationship.follow(
+    const { data: followResult } = await UserRepository.Relationship.follow(
       userId
     );
-    if (followStatus) {
-      setFollowStatus(followStatus.status);
+    if (followResult) {
+      setFollowStatus(followResult.status);
     }
   };
   const onUnblockUser = async () => {
@@ -150,6 +150,7 @@ function UserProfile({
           />
         </TouchableOpacity>
       ),
+      // eslint-disable-next-line react/no-unstable-nested-components
       headerLeft: () => {
         return isShowBackButton ? (
           <BackButton goBack={false} onPress={handleGoBack} />
@@ -386,6 +387,7 @@ function UserProfile({
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
+        // eslint-disable-next-line react-native/no-inline-styles
         style={{ flex: 1, backgroundColor: theme.colors.baseShade4 }}
         ref={scrollViewRef}
         onScroll={handleScroll}

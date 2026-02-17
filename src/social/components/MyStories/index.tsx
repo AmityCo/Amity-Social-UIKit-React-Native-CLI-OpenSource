@@ -50,6 +50,7 @@ const MyStories = () => {
       <View style={styles.skeletonContainer}>
         {Array.from({ length: 6 }, (_, index) => {
           return (
+            // eslint-disable-next-line react-native/no-inline-styles
             <View style={{ padding: 10 }} key={index}>
               <ContentLoader
                 height={70}

@@ -281,6 +281,7 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
         onRequestClose={() => setIsVisibleFullImage(false)}
         isVideoButton={videoPosts.length > 0 ? true : false}
         videoPosts={videoPosts}
+        // eslint-disable-next-line react/no-unstable-nested-components
         HeaderComponent={({ imageIndex: imgIndex }) => (
           <View style={styles.headerContainer}>
             <View style={styles.flexWidth}>

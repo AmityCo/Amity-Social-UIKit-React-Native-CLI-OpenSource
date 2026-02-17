@@ -134,8 +134,10 @@ export default function CommunityHome({
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      // eslint-disable-next-line react/no-unstable-nested-components
       headerLeft: () => <BackButton onPress={onClickBack} goBack={false} />,
       title: communityName,
+      // eslint-disable-next-line react/no-unstable-nested-components
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
@@ -375,6 +377,7 @@ export default function CommunityHome({
             <View style={styles.verticalLine} />
             <TouchableOpacity
               onPress={() => handleMembersPress()}
+              // eslint-disable-next-line react-native/no-inline-styles
               style={[styles.rowItem, { paddingLeft: 10 }]}
             >
               <Text style={styles.rowNumber}>
