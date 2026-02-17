@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import BackButtonIconElement from '../../../v4/PublicApi/Elements/BackButtonIconElement/BackButtonIconElement';
+import BackButtonIconElement from '../../legacy/Elements/BackButtonIconElement/BackButtonIconElement';
 import {
   CommonActions,
   RouteProp,
@@ -11,7 +11,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { hexToRgba } from '../../../core/utils/color';
 import { PageID, ComponentID } from '../../enums';
-import MenuButtonIconElement from '../../../v4/PublicApi/Elements/MenuButtonIconElement/MenuButtonIconElement';
+import MenuButtonIconElement from '../../legacy/Elements/MenuButtonIconElement/MenuButtonIconElement';
 import { useCommunity } from '../../hooks';
 
 type CommunityCoverNavigatorProps = {

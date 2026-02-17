@@ -93,13 +93,13 @@ import {
   AmityCommunityLivestreamsNotificationSettingPage,
   AmityCommunityPinnedPostComponent,
   AmityPendingPostListComponent,
-} from './v4';
+} from './social/legacy';
 
 import {
   AmityStoryTabComponentEnum,
   AmityPostComposerMode,
   mediaAttachment,
-} from './v4/PublicApi/types';
+} from './social/legacy/types';
 import { AmityGlobalStoryTabWrapper } from './social/components/MyStories';
 
 const LINKING_ERROR =

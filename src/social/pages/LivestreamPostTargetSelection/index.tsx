@@ -1,6 +1,6 @@
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import AmityLivestreamPostTargetSelectionPage from '../../../v4/PublicApi/Pages/AmityLivestreamPostTargetSelectionPage';
+import AmityLivestreamPostTargetSelectionPage from '../../legacy/Pages/AmityLivestreamPostTargetSelectionPage';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 
 type LivestreamPostTargetSelectionProps = NativeStackScreenProps<

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import AmityCreateLivestreamPage from '../../../v4/PublicApi/Pages/AmityCreateLivestreamPage';
+import AmityCreateLivestreamPage from '../../legacy/Pages/AmityCreateLivestreamPage';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 
 type CreateLivestreamProps = NativeStackScreenProps<

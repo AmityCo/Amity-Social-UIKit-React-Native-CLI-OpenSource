@@ -1,7 +1,7 @@
 import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
-import { globalFeedPageLimit } from '../../v4/PublicApi/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
+import { globalFeedPageLimit } from '../legacy/Components/AmityGlobalFeedComponent/AmityGlobalFeedComponent';
 import {
   RootState,
   useUIKitDispatch,

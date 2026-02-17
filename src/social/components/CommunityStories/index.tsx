@@ -17,7 +17,7 @@ import { useStoryPermission } from '../../hooks/useStoryPermission';
 import useConfig from '../../hooks/useConfig';
 import { ComponentID, ElementID, PageID } from '../../enums';
 import Modal from 'react-native-modalbox';
-import AmityViewStoryPage from '../../../v4/PublicApi/Pages/AmityViewStoryPage/AmityViewStoryPage';
+import AmityViewStoryPage from '../../legacy/Pages/AmityViewStoryPage/AmityViewStoryPage';
 import { Typography } from '../Typography/Typography';
 
 interface ICommunityStories {

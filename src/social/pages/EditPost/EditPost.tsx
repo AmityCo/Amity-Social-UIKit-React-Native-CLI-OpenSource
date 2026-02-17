@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { FC } from 'react';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
-import AmityPostComposerPage from '../../../v4/PublicApi/Pages/AmityPostComposerPage/AmityPostComposerPage';
-import { AmityPostComposerMode } from '../../../v4/PublicApi/types';
+import AmityPostComposerPage from '../../legacy/Pages/AmityPostComposerPage/AmityPostComposerPage';
+import { AmityPostComposerMode } from '../../legacy/types';
 
 type IEditPost = NativeStackScreenProps<RootStackParamList, 'EditPost'>;
 

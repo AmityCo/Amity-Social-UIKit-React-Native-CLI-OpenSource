@@ -1,7 +1,7 @@
 import React from 'react';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import AmityPollPostComposerPage from '../../../v4/PublicApi/Pages/AmityPollPostComposerPage';
+import AmityPollPostComposerPage from '../../legacy/Pages/AmityPollPostComposerPage';
 
 type PollPostComposerProps = NativeStackScreenProps<
   RootStackParamList,

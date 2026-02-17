@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCameraDevice } from 'react-native-vision-camera';
-import { AmityCreateStoryPage } from '../../../v4/index';
+import { AmityCreateStoryPage } from '../../legacy/index';
 import { useRequestPermission } from '../../hooks/useCamera';
 import { Alert, Linking } from 'react-native';
 

@@ -10,13 +10,13 @@ import TargetItem from './TargetItem/TargetItem';
 import { Divider, useTheme } from 'react-native-paper';
 import useAuth from '../../../core/hooks/useAuth';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
-import CloseButtonIconElement from '../../../v4/PublicApi/Elements/CloseButtonIconElement/CloseButtonIconElement';
+import CloseButtonIconElement from '../../legacy/Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { PageID, ComponentID, ElementID } from '../../enums';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import TextKeyElement from '../../../v4/PublicApi/Elements/TextKeyElement/TextKeyElement';
+import TextKeyElement from '../../legacy/Elements/TextKeyElement/TextKeyElement';
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
-import { Illustration } from '../../../v4/PublicApi/Components/AmityEmptyNewsFeedComponent/Elements';
+import { Illustration } from '../../legacy/Components/AmityEmptyNewsFeedComponent/Elements';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 

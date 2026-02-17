@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import AmityUserProfilePage from '../../../v4/PublicApi/Pages/AmityUserProfilePage';
+import AmityUserProfilePage from '../../legacy/Pages/AmityUserProfilePage';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

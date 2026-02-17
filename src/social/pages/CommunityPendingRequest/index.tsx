@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import AmityCommunityPendingRequestPage from '../../../v4/PublicApi/Pages/AmityCommunityPendingRequestPage';
+import AmityCommunityPendingRequestPage from '../../legacy/Pages/AmityCommunityPendingRequestPage';
 
 type CommunityPendingRequestProps = NativeStackScreenProps<
   RootStackParamList,

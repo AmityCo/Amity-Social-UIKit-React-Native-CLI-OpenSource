@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import AmityCommunityMembershipPage from '../../../v4/PublicApi/Pages/AmityCommunityMembershipPage';
+import AmityCommunityMembershipPage from '../../legacy/Pages/AmityCommunityMembershipPage';
 
 type CommunityMembershipProps = NativeStackScreenProps<
   RootStackParamList,

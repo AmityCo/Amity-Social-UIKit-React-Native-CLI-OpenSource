@@ -7,10 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useBehaviour } from '../../providers/BehaviourProvider';
-import AvatarElement from '../../../v4/PublicApi/Elements/CommonElements/AvatarElement';
+import AvatarElement from '../../legacy/Elements/CommonElements/AvatarElement';
 import { useAmityComponent } from '../../hooks';
-import TextElement from '../../../v4/PublicApi/Elements/CommonElements/TextElement';
-import ImageElement from '../../../v4/PublicApi/Elements/CommonElements/ImageElement';
+import TextElement from '../../legacy/Elements/CommonElements/TextElement';
+import ImageElement from '../../legacy/Elements/CommonElements/ImageElement';
 import { formatNumber } from '../../../core/utils/number';
 type SearchResultItemType = {
   pageId?: PageID;
