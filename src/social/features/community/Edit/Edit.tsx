@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { useEditCommunity } from './hooks/useEditCommunity';
-import ActionButton from '../../../../v4/elements/ActionButton';
+import ActionButton from '../../../elements/ActionButton';
 
 type EditCommunity = {
   community: Amity.Community;

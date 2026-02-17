@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Switch } from 'react-native';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';
-import FormLabel from '../../../elements/FormLabel';
+import FormLabel from '../../../../social/elements/FormLabel';
 import { ElementID, PageID } from '../../../../social/enums';
-import FormDescription from '../../../elements/FormDescription';
+import FormDescription from '../../../../social/elements/FormDescription';
 
 export function PollSelection() {
   const { styles, theme } = useStyles();

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
 import Avatar from '../Avatar';
-import { CloseButton } from '../../../v4/elements';
+import { CloseButton } from '../../elements';
 
 type CategoryChipProps = {
   category: Amity.Category;

@@ -15,7 +15,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { useCreateCommunity } from './hooks/useCreateCommunity';
-import ActionButton from '../../../../v4/elements/ActionButton';
+import ActionButton from '../../../elements/ActionButton';
 import { plus } from '../../../../core/assets/icons';
 
 function CreateCommunity() {

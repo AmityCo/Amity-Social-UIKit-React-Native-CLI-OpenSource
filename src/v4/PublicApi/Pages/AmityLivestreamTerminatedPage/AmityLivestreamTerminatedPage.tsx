@@ -7,7 +7,7 @@ import { Typography } from '../../../../social/components/Typography/Typography'
 import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { ban, terminated, trash, warning } from '../../../../core/assets/icons';
-import { LivestreamTerminatedActionButton } from '../../../elements/LivestreamTerminatedActionButton';
+import { LivestreamTerminatedActionButton } from '../../../../social/elements/LivestreamTerminatedActionButton';
 import { PageID } from '../../../../social/enums';
 
 function AmityLivestreamTerminatedPage() {

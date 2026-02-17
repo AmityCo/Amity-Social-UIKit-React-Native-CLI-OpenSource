@@ -7,9 +7,9 @@ import { Typography } from '../../../../social/components/Typography/Typography'
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';
 import { AndroidPollDurationPicker } from './PollDurationPicker';
-import FormLabel from '../../../elements/FormLabel';
+import FormLabel from '../../../../social/elements/FormLabel';
 import { ElementID, PageID } from '../../../../social/enums';
-import FormDescription from '../../../elements/FormDescription';
+import FormDescription from '../../../../social/elements/FormDescription';
 
 export function PollDuration() {
   const { styles, theme } = useStyles();

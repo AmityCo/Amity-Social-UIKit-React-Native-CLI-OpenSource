@@ -2,13 +2,13 @@ import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
 import { ElementID, PageID } from '../../../../../enums';
-import FormLabel from '../../../../../../v4/elements/FormLabel';
+import FormLabel from '../../../../../elements/FormLabel';
 import { useNavigation } from '@react-navigation/native';
 import { useBehaviour } from '../../../../../providers/BehaviourProvider';
 import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
 import { MemberChip } from '../../../../../components/MemberChip/MemberChip';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import CommunityAddMemberButton from '../../../../../../v4/elements/CommunityAddMemberButton';
+import CommunityAddMemberButton from '../../../../../elements/CommunityAddMemberButton';
 
 type MembersProps = {
   value: Amity.User[];

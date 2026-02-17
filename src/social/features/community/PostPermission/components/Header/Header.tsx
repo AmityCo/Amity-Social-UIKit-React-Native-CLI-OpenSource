@@ -1,11 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Title } from '../../../../../../v4/elements';
+import { Title } from '../../../../../elements';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useStyles } from './styles';
-import BackButton from '../../../../../../v4/elements/BackButton';
+import BackButton from '../../../../../elements/BackButton';
 import Button from '../../../../../components/Button/Button';
 
 type HeaderProps = {

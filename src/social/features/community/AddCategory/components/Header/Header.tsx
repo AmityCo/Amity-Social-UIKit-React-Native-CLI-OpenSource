@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Title, CloseButton } from '../../../../../../v4/elements';
+import { Title, CloseButton } from '../../../../../elements';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

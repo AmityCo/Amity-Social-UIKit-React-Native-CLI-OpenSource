@@ -6,21 +6,21 @@ import Avatar from '../../../../social/components/Avatar';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import Timestamp from '../../../../v4/elements/Timestamp';
+import Timestamp from '../../../../social/elements/Timestamp';
 import { ComponentID, ElementID, PageID } from '../../../../social/enums';
-import MenuButton from '../../../../v4/elements/MenuButton';
+import MenuButton from '../../../../social/elements/MenuButton';
 import useAuth from '../../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
 import { firework, trash } from '../../../../core/assets/icons';
-import MenuAction from '../../../../v4/elements/MenuAction';
+import MenuAction from '../../../../social/elements/MenuAction';
 import PostContent from '../../../../social/components/PostContent';
-import FormDescription from '../../../../v4/elements/FormDescription';
+import FormDescription from '../../../../social/elements/FormDescription';
 import { usePostCollection } from '../../../../social/hooks/collections/usePostCollection';
-import ActionButton from '../../../../v4/elements/ActionButton';
+import ActionButton from '../../../../social/elements/ActionButton';
 import { useIsCommunityModerator } from '../../../../social/hooks';
 import { usePendingPostQuery } from '../../../../social/hooks/usePendingPostQuery';
 import { SvgXml } from 'react-native-svg';
-import { Title } from '../../../../v4/elements';
+import { Title } from '../../../../social/elements';
 import PostFeedSkeleton from '../../../../social/components/PostFeedSkeleton';
 
 type PendingPostListProps = {

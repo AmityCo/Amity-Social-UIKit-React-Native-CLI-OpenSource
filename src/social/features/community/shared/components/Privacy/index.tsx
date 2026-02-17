@@ -3,15 +3,15 @@ import { View } from 'react-native';
 import { useStyles } from './styles';
 import { Radio } from '../../../../../../core/components/Radio';
 import { ElementID, PageID } from '../../../../../enums';
-import FormLabel from '../../../../../../v4/elements/FormLabel';
+import FormLabel from '../../../../../elements/FormLabel';
 import { AmityCommunityPrivacyEnum } from '../../types';
 import {
   public as $public,
   private as $private,
 } from '../../../../../../core/assets/icons';
-import { Title } from '../../../../../../v4/elements';
-import FormDescription from '../../../../../../v4/elements/FormDescription';
-import CommunityPrivacyIcon from '../../../../../../v4/elements/CommunityPrivacyIcon';
+import { Title } from '../../../../../elements';
+import FormDescription from '../../../../../elements/FormDescription';
+import CommunityPrivacyIcon from '../../../../../elements/CommunityPrivacyIcon';
 
 type PrivacyProps = {
   value: AmityCommunityPrivacyEnum;

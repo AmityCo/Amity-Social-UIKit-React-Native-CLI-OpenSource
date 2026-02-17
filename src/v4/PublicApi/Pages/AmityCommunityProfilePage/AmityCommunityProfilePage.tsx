@@ -33,10 +33,10 @@ import AmityCommunityProfileTabComponent, {
 } from '../../Components/AmityCommunityProfileTabComponent/AmityCommunityProfileTabComponent';
 import AmityCommunityImageFeedComponent from '../../Components/AmityCommunityImageFeedComponent/AmityCommunityImageFeedComponent';
 import AmityCommunityVideoFeedComponent from '../../Components/AmityCommunityVideoFeedComponent/AmityCommunityVideoFeedComponent';
-import CommunityCoverNavigator from '../../../elements/CommunityCover/CommunityCoverNavigator';
+import CommunityCoverNavigator from '../../../../social/elements/CommunityCover/CommunityCoverNavigator';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import CommunityCreatePostButton from '../../../elements/CommunityCreatePostButton/CommunityCreatePostButton';
+import CommunityCreatePostButton from '../../../../social/elements/CommunityCreatePostButton/CommunityCreatePostButton';
 import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import { livestream, poll, post, story } from '../../../../core/assets/icons';

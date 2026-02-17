@@ -4,8 +4,8 @@ import { useStyles } from './styles';
 import { PageID } from '../../../../../social/enums';
 import { arrowRight } from '../../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
-import CategoryRowImage from '../../../../elements/CategoryRowImage/CategoryRowImage';
-import CategoryRowName from '../../../../elements/CategoryRowName/CategoryRowName';
+import CategoryRowImage from '../../../../../social/elements/CategoryRowImage/CategoryRowImage';
+import CategoryRowName from '../../../../../social/elements/CategoryRowName/CategoryRowName';
 
 type CategoryRowItemProps = {
   pageId?: PageID;

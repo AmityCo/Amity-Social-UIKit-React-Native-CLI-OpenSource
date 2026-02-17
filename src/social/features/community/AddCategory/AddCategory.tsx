@@ -9,7 +9,7 @@ import CategoryChip from '../../../components/CategoryChip/CategoryChip';
 import { Controller } from 'react-hook-form';
 import useAddCategory from './hooks/useAddCategory';
 import MemberSkeleton from '../shared/components/MemberSkeleton';
-import ActionButton from '../../../../v4/elements/ActionButton';
+import ActionButton from '../../../elements/ActionButton';
 
 const AddCategory = () => {
   const {

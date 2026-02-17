@@ -6,7 +6,7 @@ import { View } from 'react-native';
 import EmptyComponent from '../../../../social/components/EmptyComponent/EmptyComponent';
 import { emptyImagePost, privateFeed } from '../../../../core/assets/icons';
 import { useStyles } from './styles';
-import ImageGallery from '../../../elements/ImageGallery/ImageGallery';
+import ImageGallery from '../../../../social/elements/ImageGallery/ImageGallery';
 import { AmityCommunityFeedRef } from '../AmityCommunityFeedComponent/AmityCommunityFeedComponent';
 import ImageFeedSkeleton from '../../../../social/components/ImageFeedSkeleton/ImageFeedSkeleton';
 

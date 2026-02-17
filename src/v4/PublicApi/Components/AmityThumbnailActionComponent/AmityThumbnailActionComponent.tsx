@@ -2,8 +2,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../../social/enums/enumUIKitID';
 import { useAmityComponent } from '../../../../social/hooks';
-import { ChangeThumbnailButton } from '../../../elements/ChangeThumbnailButton';
-import { DeleteThumbnailButton } from '../../../elements/DeleteThumbnailButton';
+import { ChangeThumbnailButton } from '../../../../social/elements/ChangeThumbnailButton';
+import { DeleteThumbnailButton } from '../../../../social/elements/DeleteThumbnailButton';
 import { useStyles } from './styles';
 
 type AmityThumbnailActionComponentProps = {

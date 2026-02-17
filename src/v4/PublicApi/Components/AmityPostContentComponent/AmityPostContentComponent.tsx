@@ -32,8 +32,8 @@ import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
 import { useBehaviour } from '../../../../social/providers/BehaviourProvider';
 import PostContent from '../../../../social/components/PostContent';
 import { PostMenu } from '../../../../social/components/PostMenu';
-import PinBadge from '../../../../v4/elements/PinBadge';
-import AnnouncementBadge from '../../../../v4/elements/AnnouncementBadge';
+import PinBadge from '../../../../social/elements/PinBadge';
+import AnnouncementBadge from '../../../../social/elements/AnnouncementBadge';
 import { Typography } from '../../../../social/components/Typography/Typography';
 
 type AmityPostContentComponentProps = {

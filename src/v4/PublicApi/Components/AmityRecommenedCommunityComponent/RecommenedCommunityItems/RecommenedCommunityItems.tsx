@@ -8,15 +8,15 @@ import {
 import { useFile } from '../../../../../social/hooks';
 import { useStyles } from './styles';
 
-import CommunityJoinedButton from '../../../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
-import CommunityJoinButton from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
+import CommunityJoinedButton from '../../../../../social/elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
+import CommunityJoinButton from '../../../../../social/elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import { SvgXml } from 'react-native-svg';
 import { community as communityIcon } from '../../../../../core/assets/icons';
-import CommunityPrivateBadge from '../../../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
-import CommunityOfficialBadge from '../../../../elements/CommunityOfficialBadge/CommunityOfficialBadge';
-import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityCategory';
-import CommunityMemeberCount from '../../../../elements/CommunityMemeberCount/CommunityMemeberCount';
-import CommunityDisplayname from '../../../../elements/CommunityDisplayname/CommunityDisplayname';
+import CommunityPrivateBadge from '../../../../../social/elements/CommunityPrivateBadge/CommunityPrivateBadge';
+import CommunityOfficialBadge from '../../../../../social/elements/CommunityOfficialBadge/CommunityOfficialBadge';
+import CommunityCategory from '../../../../../social/elements/CommunityCatetory/CommunityCategory';
+import CommunityMemeberCount from '../../../../../social/elements/CommunityMemeberCount/CommunityMemeberCount';
+import CommunityDisplayname from '../../../../../social/elements/CommunityDisplayname/CommunityDisplayname';
 
 type RecommendedCommunityItemProps = {
   pageId?: PageID;

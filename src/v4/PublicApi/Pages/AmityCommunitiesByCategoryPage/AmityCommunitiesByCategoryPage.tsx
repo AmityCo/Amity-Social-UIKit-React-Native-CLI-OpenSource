@@ -4,13 +4,13 @@ import { useStyles } from './styles';
 import { PageID } from '../../../../social/enums';
 import { useAmityPage, useCommunities } from '../../../../social/hooks';
 import BackButtonIconElement from '../../Elements/BackButtonIconElement/BackButtonIconElement';
-import CategoryTitle from '../../../elements/CategoryTitle/CategoryTitle';
+import CategoryTitle from '../../../../social/elements/CategoryTitle/CategoryTitle';
 import CommunityRowItem from '../../../../social/components/CommunityRowItem/CommunityRowItem';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import CommunityEmptyTitle from '../../../elements/CommunityEmptyTitle/CommunityEmptyTitle';
-import CommunityEmptyImage from '../../../elements/CommunityEmptyImage/CommunityEmptyImage';
+import CommunityEmptyTitle from '../../../../social/elements/CommunityEmptyTitle/CommunityEmptyTitle';
+import CommunityEmptyImage from '../../../../social/elements/CommunityEmptyImage/CommunityEmptyImage';
 import CommunityListSkeleton from '../../../../social/components/CommunityListSkeleton/CommunityListSkeleton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

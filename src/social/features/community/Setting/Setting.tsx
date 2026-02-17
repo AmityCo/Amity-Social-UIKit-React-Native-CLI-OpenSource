@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './components/Header';
-import { Title } from '../../../../v4/elements';
+import { Title } from '../../../elements';
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {

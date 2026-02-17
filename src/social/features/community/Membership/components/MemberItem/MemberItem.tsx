@@ -3,10 +3,10 @@ import { View } from 'react-native';
 import Avatar from '../../../../../components/Avatar';
 import { useStyles } from './style';
 import { Typography } from '../../../../../components/Typography/Typography';
-import MenuButton from '../../../../../../v4/elements/MenuButton';
+import MenuButton from '../../../../../elements/MenuButton';
 import useAuth from '../../../../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
-import MenuAction from '../../../../../../v4/elements/MenuAction';
+import MenuAction from '../../../../../elements/MenuAction';
 import { MemberRoles } from '../../../../../../core/constants';
 import { useToast } from '../../../../../../core/stores/slices/toastSlice';
 import {

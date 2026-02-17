@@ -19,7 +19,7 @@ import MemberSkeleton from '../shared/components/MemberSkeleton';
 import LimitCharacterSearch from '../../../components/LimitCharacterSearch';
 import NoResult from '../../../components/NoResult';
 import EmptyList from '../../../components/EmptyList';
-import ActionButton from '../../../../v4/elements/ActionButton';
+import ActionButton from '../../../elements/ActionButton';
 
 const AddMember = () => {
   const {

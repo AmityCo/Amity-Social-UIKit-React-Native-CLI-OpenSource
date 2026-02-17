@@ -6,10 +6,10 @@ import { Typography } from '../../../../social/components/Typography/Typography'
 import { MAX_POLL_ANSWER_LENGTH } from '../../../../core/constants';
 import { usePollPostComposerContext } from './AmityPollPostComposerPage';
 import { useStyles } from './styles';
-import FormLabel from '../../../elements/FormLabel';
+import FormLabel from '../../../../social/elements/FormLabel';
 import { ElementID, PageID } from '../../../../social/enums';
-import FormDescription from '../../../elements/FormDescription';
-import AddOptionButton from '../../../elements/AddOptionButton';
+import FormDescription from '../../../../social/elements/FormDescription';
+import AddOptionButton from '../../../../social/elements/AddOptionButton';
 
 type PollOptionsProps = {
   onPressAddOption: () => void;

@@ -7,15 +7,15 @@ import {
   useIsCommunityModerator,
 } from '../../../../social/hooks';
 import { useStyles } from './styles';
-import CommunityCover from '../../../elements/CommunityCover/CommunityCover';
-import CommunityPrivateBadge from '../../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
-import CommunityName from '../../../elements/CommunityName/CommunityName';
-import CommunityVerifyBadge from '../../../elements/CommunityVerifyBadge/CommunityVerifyBadge';
-import CommunityCategory from '../../../elements/CommunityCatetory/CommunityCategory';
-import CommunityDescription from '../../../elements/CommunityDescription/CommunityDescription';
-import CommunityInfo from '../../../elements/CommunityInfo/CommunityInfo';
-import CommunityJoinButtonElement from '../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
-import CommunityPendingPost from '../../../elements/CommunityPendingPost/CommunityPendingPost';
+import CommunityCover from '../../../../social/elements/CommunityCover/CommunityCover';
+import CommunityPrivateBadge from '../../../../social/elements/CommunityPrivateBadge/CommunityPrivateBadge';
+import CommunityName from '../../../../social/elements/CommunityName/CommunityName';
+import CommunityVerifyBadge from '../../../../social/elements/CommunityVerifyBadge/CommunityVerifyBadge';
+import CommunityCategory from '../../../../social/elements/CommunityCatetory/CommunityCategory';
+import CommunityDescription from '../../../../social/elements/CommunityDescription/CommunityDescription';
+import CommunityInfo from '../../../../social/elements/CommunityInfo/CommunityInfo';
+import CommunityJoinButtonElement from '../../../../social/elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
+import CommunityPendingPost from '../../../../social/elements/CommunityPendingPost/CommunityPendingPost';
 import { usePosts } from '../../../../social/hooks/usePosts';
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../types';

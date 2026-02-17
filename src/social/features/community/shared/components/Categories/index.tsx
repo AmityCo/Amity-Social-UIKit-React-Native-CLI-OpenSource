@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import FormLabel from '../../../../../../v4/elements/FormLabel';
+import FormLabel from '../../../../../elements/FormLabel';
 import { useStyles } from './styles';
 import { ElementID, PageID } from '../../../../../enums';
 import { Typography } from '../../../../../components/Typography/Typography';

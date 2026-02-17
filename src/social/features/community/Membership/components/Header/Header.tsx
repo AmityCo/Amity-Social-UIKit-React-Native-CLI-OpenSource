@@ -1,11 +1,11 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { Title } from '../../../../../../v4/elements';
+import { Title } from '../../../../../elements';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useStyles } from './styles';
-import BackButton from '../../../../../../v4/elements/BackButton';
+import BackButton from '../../../../../elements/BackButton';
 import { SvgXml } from 'react-native-svg';
 import { plus } from '../../../../../../core/assets/icons';
 import { useBehaviour } from '../../../../../providers/BehaviourProvider';

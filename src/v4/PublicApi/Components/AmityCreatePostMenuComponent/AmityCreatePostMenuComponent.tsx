@@ -11,7 +11,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { AmityPostTargetSelectionPageType } from '../../../../social/enums';
 import { livestream, poll, post, story } from '../../../../core/assets/icons';
-import MenuAction from '../../../../v4/elements/MenuAction';
+import MenuAction from '../../../../social/elements/MenuAction';
 
 interface AmityCreatePostMenuComponentProps {
   pageId?: PageID;

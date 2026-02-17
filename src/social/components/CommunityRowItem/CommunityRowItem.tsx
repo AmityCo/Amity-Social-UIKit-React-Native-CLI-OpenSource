@@ -1,16 +1,16 @@
 import React, { memo, FC } from 'react';
 import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
-import CommunityRowImage from '../../../v4/elements/CommunityRowImage/CommunityRowImage';
+import CommunityRowImage from '../../elements/CommunityRowImage/CommunityRowImage';
 import { ComponentID, PageID } from '../../enums';
 import { View } from 'react-native';
-import CommunityJoinedButtonElement from '../../../v4/elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
-import CommunityJoinButtonElement from '../../../v4/elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
-import CommunityDisplayname from '../../../v4/elements/CommunityDisplayname/CommunityDisplayname';
-import CommunityCategory from '../../../v4/elements/CommunityCatetory/CommunityCategory';
-import CommunityMemeberCount from '../../../v4/elements/CommunityMemeberCount/CommunityMemeberCount';
+import CommunityJoinedButtonElement from '../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
+import CommunityJoinButtonElement from '../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
+import CommunityDisplayname from '../../elements/CommunityDisplayname/CommunityDisplayname';
+import CommunityCategory from '../../elements/CommunityCatetory/CommunityCategory';
+import CommunityMemeberCount from '../../elements/CommunityMemeberCount/CommunityMemeberCount';
 import { useStyles } from './styles';
-import CommunityPrivateBadge from '../../../v4/elements/CommunityPrivateBadge/CommunityPrivateBadge';
-import CommunityOfficialBadge from '../../../v4/elements/CommunityOfficialBadge/CommunityOfficialBadge';
+import CommunityPrivateBadge from '../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
+import CommunityOfficialBadge from '../../elements/CommunityOfficialBadge/CommunityOfficialBadge';
 
 type CommunityRowItemProps = {
   pageId?: PageID;
