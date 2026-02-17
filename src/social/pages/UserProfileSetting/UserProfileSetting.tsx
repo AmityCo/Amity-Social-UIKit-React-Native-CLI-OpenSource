@@ -14,7 +14,8 @@ import { SvgXml } from 'react-native-svg';
 import { LoadingOverlay } from '../../../components/LoadingOverlay';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from 'src/routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function UserProfileSetting({
   navigation,
@@ -149,16 +150,18 @@ export default function UserProfileSetting({
   );
 
   return (
-    <View style={styles.container}>
-      <LoadingOverlay isLoading={showLoadingIndicator} loadingText={null} />
-      <SectionList
-        sections={settingData}
-        renderItem={renderSectionItem}
-        keyExtractor={(_, index) => index.toString()}
-        renderSectionHeader={({ section: { title } }) => {
-          return <Text style={styles.sectionHeader}>{title}</Text>;
-        }}
-      />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <LoadingOverlay isLoading={showLoadingIndicator} loadingText={null} />
+        <SectionList
+          sections={settingData}
+          renderItem={renderSectionItem}
+          keyExtractor={(_, index) => index.toString()}
+          renderSectionHeader={({ section: { title } }) => {
+            return <Text style={styles.sectionHeader}>{title}</Text>;
+          }}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
