@@ -23,9 +23,9 @@ import {
   getMyFollowingsTopic,
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
-import Feed from '../../../screen/Feed';
+import Feed from '../../../../social/pages/Feed';
 import CustomTab from '../../../../components/CustomTab';
-import type { FeedRefType } from '../../../screen/CommunityHome';
+import type { FeedRefType } from '../../../../social/pages/CommunityHome';
 import {
   CommonActions,
   useFocusEffect,

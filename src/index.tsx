@@ -29,9 +29,9 @@ import AmityUiKitProvider from './core/providers/AmityUIKitProvider';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import AmityUiKitSocial from './core/routes/AmityUIKitNavigator';
 import AmityPageRenderer from './core/routes/AmityPageRenderer';
-import PostDetail from './v4/screen/PostDetail';
-import CommunityHome from './v4/screen/CommunityHome';
-import UserProfile from './v4/screen/UserProfile';
+import PostDetail from './social/pages/PostDetail';
+import CommunityHome from './social/pages/CommunityHome';
+import UserProfile from './social/pages/UserProfile';
 import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
