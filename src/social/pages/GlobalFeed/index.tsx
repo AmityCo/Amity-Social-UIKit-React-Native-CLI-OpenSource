@@ -5,7 +5,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { deletePostById, getGlobalFeed } from '../../../core/legacy/feed';
 import useAuth from '../../../core/hooks/useAuth';
-import PostList from '../../../components/Social/PostList';
+import PostList from '../../components/legacy/Social/PostList';
 import { useStyle } from './styles';
 import { amityPostsFormatter } from '../../../core/utils/post';
 import globalFeedSlice from '../../../core/stores/slices/globalfeedSlice';
@@ -16,7 +16,7 @@ import {
 } from '../../../core/stores/store';
 import { useFocusEffect } from '@react-navigation/native';
 import { RefreshControl } from 'react-native';
-import MyStories from '../../../components/MyStories';
+import MyStories from '../../components/legacy/MyStories';
 
 export default function GlobalFeed() {
   const { postList } = useUIKitSelector((state: RootState) => state.globalFeed);

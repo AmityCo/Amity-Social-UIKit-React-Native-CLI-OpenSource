@@ -1,0 +1,16 @@
+import React from 'react';
+
+import { TouchableOpacity } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import { closeIcon } from '../../../../core/assets/icons/xml';
+import { useTheme } from 'react-native-paper';
+import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
+
+export default function CloseButton({ onPress }: { onPress: () => void }) {
+  const theme = useTheme() as MyMD3Theme;
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <SvgXml xml={closeIcon(theme.colors.baseShade2)} width={24} />
+    </TouchableOpacity>
+  );
+}

@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useStyles } from './styles';
-import CloseButton from '../../../components/BackButton';
+import CloseButton from '../../components/legacy/BackButton';
 import useAuth from '../../../core/hooks/useAuth';
 
 export default function CommunityList({ navigation, route }: any) {
@@ -24,27 +24,32 @@ export default function CommunityList({ navigation, route }: any) {
   const onNextPageRef = useRef<(() => void) | null>(null);
   const isFetchingRef = useRef(false);
   const onEndReachedCalledDuringMomentumRef = useRef(true);
+  const renderHeaderLeft = React.useCallback(() => <CloseButton />, []);
   React.useLayoutEffect(() => {
-    // Set the headerRight component to a TouchableOpacity
     navigation.setOptions({
-      headerLeft: () => <CloseButton />,
+      headerLeft: renderHeaderLeft,
       title: categoryName,
     });
-  }, [navigation]);
+  }, [navigation, renderHeaderLeft, categoryName]);
   useEffect(() => {
     const loadCommunities = async () => {
       setPaginateLoading(true);
       try {
         const unsubscribe = CommunityRepository.getCommunities(
           { categoryId: categoryId },
-          ({ data: communities, onNextPage, hasNextPage, loading }) => {
+          ({
+            data: communityData,
+            onNextPage: nextPage,
+            hasNextPage: hasMore,
+            loading,
+          }) => {
             if (!loading) {
               setCommunities((prevCommunities) => [
                 ...prevCommunities,
-                ...communities,
+                ...communityData,
               ]);
-              setHasNextPage(hasNextPage);
-              onNextPageRef.current = onNextPage;
+              setHasNextPage(hasMore);
+              onNextPageRef.current = nextPage;
               isFetchingRef.current = false;
               unsubscribe();
             }

@@ -2,7 +2,7 @@ import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import { FlatList, View, Text, Image, TouchableOpacity } from 'react-native';
 import { useStyles } from './styles';
-import CloseButton from '../../../components/BackButton';
+import CloseButton from '../../components/legacy/BackButton';
 import useAuth from '../../../core/hooks/useAuth';
 
 export default function CategoryList({ navigation }: any) {
@@ -14,11 +14,12 @@ export default function CategoryList({ navigation }: any) {
   const styles = useStyles();
 
   const onEndReachedCalledDuringMomentumRef = useRef(true);
+  const renderHeaderLeft = React.useCallback(() => <CloseButton />, []);
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: () => <CloseButton />,
+      headerLeft: renderHeaderLeft,
     });
-  }, [navigation]);
+  }, [navigation, renderHeaderLeft]);
   useEffect(() => {
     const loadCategories = async () => {
       try {

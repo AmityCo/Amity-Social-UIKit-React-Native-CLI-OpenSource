@@ -11,7 +11,7 @@ import { useStyles } from './styles';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
-import CustomTab from '../../../components/CustomTab';
+import CustomTab from '../../components/legacy/CustomTab';
 import { TabName } from '../../enums/tabNameState';
 import FollowerListItem from './Components/FollowerListItem';
 import { SafeAreaView } from 'react-native-safe-area-context';

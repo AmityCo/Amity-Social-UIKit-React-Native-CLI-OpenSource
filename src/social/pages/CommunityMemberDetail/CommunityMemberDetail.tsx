@@ -2,10 +2,10 @@ import React, { useState, useLayoutEffect } from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
 import { useStyles } from './styles';
 import type { UserInterface } from '../../../core/types/user';
-import AddMembersModal from '../../../components/AddMembersModal';
+import AddMembersModal from '../../components/legacy/AddMembersModal';
 import { updateCommunityMember } from '../../../core/legacy/community';
 import MemberActionModal from './Components/MemberActionModal';
-import CustomTab from '../../../components/CustomTab';
+import CustomTab from '../../components/legacy/CustomTab';
 import { TabName } from '../../../core/enums';
 import CommunityMembersTab from './Components/CommunityMembersTab';
 

@@ -7,7 +7,7 @@ import {
   PostRepository,
   ReactionRepository,
 } from '@amityco/ts-sdk-react-native';
-import { IMentionPosition } from '../../screens/CreatePost';
+import { IMentionPosition } from '../../core/types';
 import { Alert } from 'react-native';
 import { text_contain_blocked_word } from '../constants';
 

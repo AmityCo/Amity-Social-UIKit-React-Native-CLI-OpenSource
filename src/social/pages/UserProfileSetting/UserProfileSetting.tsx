@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, SectionList } from 'react-native';
 import { UserRepository, createReport } from '@amityco/ts-sdk-react-native';
-import CloseButton from '../../../components/BackButton';
+import CloseButton from '../../components/legacy/BackButton';
 import { useStyles } from './styles';
 import {
   arrowOutlined,
@@ -11,7 +11,7 @@ import {
   unfollow,
 } from '../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
-import { LoadingOverlay } from '../../../components/LoadingOverlay';
+import { LoadingOverlay } from '../../components/legacy/LoadingOverlay';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
@@ -32,13 +32,14 @@ export default function UserProfileSetting({
   const isMyProfile = !followStatus;
   const isBlocked = followStatus === 'blocked';
   const isFollowed = followStatus === 'accepted';
+  const renderHeaderLeft = React.useCallback(() => <CloseButton />, []);
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: () => <CloseButton />,
+      headerLeft: renderHeaderLeft,
       title: displayName,
       headerTitleAlign: 'center',
     });
-  }, [displayName, navigation]);
+  }, [displayName, navigation, renderHeaderLeft]);
 
   const handleReportUserPress = useCallback(async () => {
     setShowLoadingIndicator(true);

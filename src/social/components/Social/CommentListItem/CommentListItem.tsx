@@ -35,11 +35,11 @@ import {
   reportTargetById,
   unReportTargetById,
 } from '../../../../core/legacy/feed';
-import EditCommentModal from '../../../../components/EditCommentModal';
+import EditCommentModal from '../../legacy/EditCommentModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useNavigation } from '@react-navigation/native';
-import ReplyCommentList from '../../../../components/Social/ReplyCommentList';
+import ReplyCommentList from '../../legacy/Social/ReplyCommentList';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../hooks/useTimeDifference';
 import { LinkPreview } from '../../PreviewLink';

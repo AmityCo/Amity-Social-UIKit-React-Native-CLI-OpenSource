@@ -24,7 +24,7 @@ import {
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
 import Feed from '../../../pages/Feed';
-import CustomTab from '../../../../components/CustomTab';
+import CustomTab from '../../../components/legacy/CustomTab';
 import type { FeedRefType } from '../../../pages/CommunityHome';
 import {
   CommonActions,
@@ -43,7 +43,7 @@ import {
 } from '../../../../core/assets/icons/xml';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
-import FloatingButton from '../../../../components/FloatingButton';
+import FloatingButton from '../../../components/legacy/FloatingButton';
 import { TabName, PostTargetType } from '../../../../core/enums';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
 import GalleryComponent from '../../../components/Gallery/GalleryComponent';
@@ -52,7 +52,7 @@ import { defaultAvatarUri } from '../../../../core/assets';
 import { ImageSizeState } from '../../../enums';
 
 import { useUIKitDispatch } from '../../../../core/stores/store';
-import BackButton from '../../../../components/BackButton';
+import BackButton from '../../../components/legacy/BackButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type UserProfilePageProps = {

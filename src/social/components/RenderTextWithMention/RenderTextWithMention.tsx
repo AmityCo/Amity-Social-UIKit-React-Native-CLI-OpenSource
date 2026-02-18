@@ -2,7 +2,7 @@ import { Text, Linking, TouchableOpacity } from 'react-native';
 import { useStyles } from './styles';
 import React, { memo, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { IMentionPosition } from '../../../core/types/mention';
+import { IMentionPosition } from '../../../core/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import ReadMore from '@fawazahmed/react-native-read-more';

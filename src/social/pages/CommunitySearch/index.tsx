@@ -12,13 +12,13 @@ import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { circleCloseIcon, searchIcon } from '../../../core/assets/icons/xml';
 import { useNavigation } from '@react-navigation/native';
-import CustomTab from '../../../components/CustomTab';
+import CustomTab from '../../components/legacy/CustomTab';
 import {
   CommunityRepository,
   UserRepository,
 } from '@amityco/ts-sdk-react-native';
-import type { ISearchItem } from '../../../components/SearchItem';
-import SearchItem from '../../../components/SearchItem';
+import type { ISearchItem } from '../../components/legacy/SearchItem';
+import SearchItem from '../../components/legacy/SearchItem';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { TabName } from '../../../core/enums';

@@ -7,7 +7,7 @@ import {
 import React, { memo, useCallback, useRef, useState } from 'react';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { UserInterface } from '../../../../core/types/user';
-import UserItem from '../../../../components/UserItem';
+import UserItem from '../../../components/legacy/UserItem';
 import { useStyles } from '../styles';
 import { TabName } from '../../../../core/enums';
 import { useFocusEffect } from '@react-navigation/native';

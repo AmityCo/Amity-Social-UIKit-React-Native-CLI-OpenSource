@@ -39,7 +39,7 @@ import {
   reportTargetById,
   unReportTargetById,
 } from '../../../../../core/legacy/feed';
-import EditCommentModal from '../../../../../components/EditCommentModal';
+import EditCommentModal from '../../../../components/legacy/EditCommentModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import ReplyCommentList from '../ReplyCommentList/index';

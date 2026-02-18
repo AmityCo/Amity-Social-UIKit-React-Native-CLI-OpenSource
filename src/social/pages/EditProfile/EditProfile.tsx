@@ -19,9 +19,9 @@ import {
   type ImagePickerResponse,
 } from 'react-native-image-picker';
 import { useStyles } from './styles';
-import CloseButton from '../../../components/BackButton/index';
-import DoneButton from '../../../components/DoneButton/index';
-import { LoadingOverlay } from '../../../components/LoadingOverlay/index';
+import CloseButton from '../../components/legacy/BackButton/index';
+import DoneButton from '../../components/legacy/DoneButton/index';
+import { LoadingOverlay } from '../../components/legacy/LoadingOverlay/index';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import useAuth from '../../../core/hooks/useAuth';
 import { uploadImageFile } from '../../../core/legacy/file';

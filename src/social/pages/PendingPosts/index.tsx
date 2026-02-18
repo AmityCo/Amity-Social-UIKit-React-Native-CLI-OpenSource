@@ -4,10 +4,10 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, View, Text } from 'react-native';
 import { useStyles } from './styles';
 import useAuth from '../../../core/hooks/useAuth';
-import { RootStackParamList } from '../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { amityPostsFormatter } from '../../../core/utils/post';
-import PendingPostList from '../../../components/Social/PendingPostList';
+import PendingPostList from '../../components/legacy/Social/PendingPostList';
 export default function PendingPosts() {
   const route = useRoute<RouteProp<RootStackParamList, 'PendingPosts'>>();
 

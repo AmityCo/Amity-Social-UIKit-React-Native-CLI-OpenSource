@@ -24,7 +24,7 @@ import {
   type NativeScrollEvent,
   Pressable,
 } from 'react-native';
-import CustomTab from '../../../components/CustomTab';
+import CustomTab from '../../components/legacy/CustomTab';
 import { useStyles } from './styles';
 import Feed from '../Feed';
 import useAuth from '../../../core/hooks/useAuth';
@@ -42,7 +42,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import FloatingButton from '../../../components/FloatingButton';
+import FloatingButton from '../../components/legacy/FloatingButton';
 import useFile from '../../../core/hooks/useFile';
 import { TabName, PostTargetType } from '../../../core/enums';
 import uiSlice from '../../../core/stores/slices/uiSlice';
@@ -52,7 +52,7 @@ import AmityStoryTabComponent from '../../legacy/Components/AmityStoryTabCompone
 import { AmityStoryTabComponentEnum } from '../../legacy/types/index';
 import GalleryComponent from '../../components/Gallery/GalleryComponent';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
-import BackButton from '../../../components/BackButton';
+import BackButton from '../../components/legacy/BackButton';
 import { useUIKitDispatch } from '../../../core/stores/store';
 
 export type FeedRefType = {

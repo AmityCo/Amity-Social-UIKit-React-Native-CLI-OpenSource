@@ -18,7 +18,7 @@ import BottomSheetComponent from '../../social/components/BottomSheetComponent/B
 import Toast from '../../social/components/Toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {

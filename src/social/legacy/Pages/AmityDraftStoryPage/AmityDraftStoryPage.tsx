@@ -27,7 +27,7 @@ import { IAmityDraftStoryPage } from '../../types';
 import { useFile } from '../../../hooks/useFile';
 import { defaultAvatarUri } from '../../../../core/assets/index';
 import { getMediaTypeFromUrl } from '../../../../core/utils/url';
-import { LoadingOverlay } from '../../../../components/LoadingOverlay';
+import { LoadingOverlay } from '../../../components/legacy/LoadingOverlay';
 import mime from 'mime';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -75,9 +75,9 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
       return setCommunityAvatarUrl(defaultAvatarUri);
     CommunityRepository.getCommunity(
       targetId,
-      async ({ error, loading, data }) => {
+      async ({ error, loading: isLoading, data }) => {
         if (error) return;
-        if (!loading) {
+        if (!isLoading) {
           const image = await getImage({
             fileId: data.avatarFileId,
             imageSize: ImageSizeState.small,

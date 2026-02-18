@@ -10,9 +10,9 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from './styles';
 import useAuth from '../../../core/hooks/useAuth';
-import { IVideoPost, MediaUri } from '../../../components/Social/PostList';
+import { IVideoPost, MediaUri } from '../legacy/Social/PostList';
 import { getPostById } from '../../../core/legacy/feed';
-import ImageView from '../../../components/react-native-image-viewing/dist';
+import ImageView from '../legacy/react-native-image-viewing/dist';
 import { RootState, useUIKitSelector } from '../../../core/stores/store';
 import { playBtn } from '../../../core/assets/icons/xml';
 import LivestreamContent from '../LivestreamContent';

@@ -2,7 +2,7 @@ import {
   CommentRepository,
   ReactionRepository,
 } from '@amityco/ts-sdk-react-native';
-import { IMentionPosition } from '../../screens/CreatePost';
+import { IMentionPosition } from '../../core/types';
 
 export interface ICommentRes {
   data: Amity.Comment[];

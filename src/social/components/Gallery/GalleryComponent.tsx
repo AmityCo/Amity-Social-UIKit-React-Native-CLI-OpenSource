@@ -11,7 +11,7 @@ import { TabName } from '../../../core/enums';
 import { SvgXml } from 'react-native-svg';
 import { photo, playBtn, video } from '../../../core/assets/icons/xml';
 import { useStyles } from './styles';
-import ImageView from '../../../components/react-native-image-viewing/dist';
+import ImageView from '../legacy/react-native-image-viewing/dist';
 import { FeedRefType } from '../../pages/CommunityHome';
 import GalleryTab from './GalleryTab';
 

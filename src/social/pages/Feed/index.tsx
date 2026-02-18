@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 
 import { FlatList, View } from 'react-native';
-import PostList from '../../../components/Social/PostList';
+import PostList from '../../components/legacy/Social/PostList';
 import { useStyles } from './styles';
 import {
   CommunityRepository,

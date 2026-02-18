@@ -8,7 +8,7 @@ import {
   useUIKitSelector,
 } from '../../core/stores/store';
 import { usePaginatorApi } from './usePaginator';
-import { IComment } from '../../components/Social/CommentList';
+import { IComment } from '../components/legacy/Social/CommentList';
 import useAuth from '../../core/hooks/useAuth';
 
 export const isAmityAd = (

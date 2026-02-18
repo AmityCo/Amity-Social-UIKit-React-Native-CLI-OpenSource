@@ -32,10 +32,10 @@ import {
   reportTargetById,
   unReportTargetById,
 } from '../../../../../core/legacy/feed';
-import EditCommentModal from '../../../../../components/EditCommentModal';
+import EditCommentModal from '../../../../components/legacy/EditCommentModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
-import { IMentionPosition } from '../../../../../core/types/mention';
+import { IMentionPosition } from '../../../../../core/types';
 import ModeratorBadgeElement from '../../../Elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import { ComponentID, PageID } from '../../../../enums';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';

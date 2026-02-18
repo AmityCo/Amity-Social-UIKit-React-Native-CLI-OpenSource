@@ -27,10 +27,7 @@ import {
 } from '../../../hooks';
 import { useStyles } from './styles';
 import { AmityPostComposerMode, AmityPostComposerPageType } from '../../types';
-import {
-  IDisplayImage,
-  IMentionPosition,
-} from '../../../../core/types/mention';
+import { IDisplayImage, IMentionPosition } from '../../../../core/types';
 import CloseButtonIconElement from '../../Elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
