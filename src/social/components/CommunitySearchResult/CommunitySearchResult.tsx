@@ -6,7 +6,7 @@ import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { ComponentID, PageID } from '../../enums';
 import { useAmityComponent } from '../../hooks';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { useNavigation } from '@react-navigation/native';
 
 type CommunitySearchResultProps = {

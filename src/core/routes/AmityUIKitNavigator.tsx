@@ -10,19 +10,14 @@ import {
 } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
 import useAuth from '../hooks/useAuth';
-import CategoryList from '../../social/pages/CategorytList';
-import CommunityList from '../../social/pages/CommunityList';
-import CommunityMemberDetail from '../../social/pages/CommunityMemberDetail/CommunityMemberDetail';
 import AmitySocialHomePage from '../../social/legacy/Pages/AmitySocialHomePage/AmitySocialHomePage';
 import PostDetail from '../../social/pages/PostDetail';
 import CreatePost from '../../social/pages/CreatePost';
 import UserProfile from '../../social/pages/UserProfile';
 import { EditProfile } from '../../social/pages/EditProfile/EditProfile';
 import UserProfileSetting from '../../social/pages/UserProfileSetting/UserProfileSetting';
-import CommunitySearch from '../../social/pages/CommunitySearch';
 import AllMyCommunity from '../../social/pages/AllMyCommunity';
 import CreateCommunity from '../../social/pages/CreateCommunity';
-import PendingPosts from '../../social/pages/PendingPosts';
 import type { MyMD3Theme } from '../providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
@@ -66,300 +61,244 @@ import CommunityLivestreamsNotificationSetting from '../../social/pages/Communit
 import CommunityPendingRequest from '../../social/pages/CommunityPendingRequest';
 import { GlobalBan } from '../../social/pages/GlobalBan';
 
+const Stack = createNativeStackNavigator<
+  RootStackParamList,
+  'AmitySocialUIKit'
+>();
+
 export default function AmitySocialUIKitV4Navigator() {
-  const Stack = createNativeStackNavigator<RootStackParamList>();
-  const { isConnected, isGlobalBan } = useAuth();
-  const theme = useTheme() as MyMD3Theme;
+  const theme = useTheme<MyMD3Theme>();
+  const { isGlobalBan } = useAuth();
 
   if (isGlobalBan) return <GlobalBan />;
 
   return (
     <NavigationIndependentTree>
       <NavigationContainer>
-        {isConnected && (
-          <Stack.Navigator
-            id={undefined}
+        <Stack.Navigator
+          id="AmitySocialUIKit"
+          screenOptions={{
+            headerShown: false,
+            headerShadowVisible: false,
+            contentStyle: {
+              backgroundColor: theme.colors.background,
+            },
+            headerStyle: {
+              backgroundColor: theme.colors.background,
+            },
+            headerTitleStyle: {
+              color: theme.colors.base,
+            },
+          }}
+        >
+          {/* --- Social Home --- */}
+          <Stack.Screen
+            name="AmitySocialHomePage"
+            component={AmitySocialHomePage}
+          />
+          <Stack.Screen
+            name="AmitySocialGlobalSearchPage"
+            component={AmitySocialGlobalSearchPage}
+          />
+          <Stack.Screen
+            name="AmityMyCommunitiesSearchPage"
+            component={AmityMyCommunitiesSearchPage}
+          />
+          <Stack.Screen
+            name="AmityExploreComponent"
+            component={AmityExploreComponent}
+          />
+          <Stack.Screen
+            name="AllMyCommunity"
+            component={AllMyCommunity}
+            options={({
+              navigation,
+            }: {
+              navigation: NativeStackNavigationProp<any>;
+            }) => ({
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
+                >
+                  <SvgXml
+                    xml={closeIcon(theme.colors.base)}
+                    width="15"
+                    height="15"
+                  />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+
+          {/* --- Category --- */}
+          <Stack.Screen
+            name="AllCategoriesPage"
+            component={AmityAllCategoriesPage}
+          />
+          <Stack.Screen
+            name="CommunitiesByCategoryPage"
+            component={AmityCommunitiesByCategoryPage}
+          />
+
+          {/* --- COMMUNITY --- */}
+          <Stack.Screen name="CreateCommunity" component={CreateCommunity} />
+          <Stack.Screen
+            name="CommunityAddCategory"
+            component={CommunityAddCategory}
+          />
+          <Stack.Screen
+            name="CommunityAddMember"
+            component={CommunityAddMember}
+          />
+          <Stack.Screen
+            name="CommunityProfilePage"
+            component={AmityCommunityProfilePage}
+          />
+          <Stack.Screen
+            name="CommunityPendingRequest"
+            component={CommunityPendingRequest}
+          />
+          <Stack.Screen name="CommunitySetting" component={CommunitySetting} />
+          <Stack.Screen name="EditCommunity" component={EditCommunity} />
+          <Stack.Screen
+            name="CommunityMembership"
+            component={CommunityMembership}
+          />
+          <Stack.Screen
+            name="CommunityPostPermission"
+            component={CommunityPostPermission}
+          />
+          <Stack.Screen
+            name="CommunityStorySetting"
+            component={CommunityStorySetting}
+          />
+          <Stack.Screen
+            name="CommunityNotificationSetting"
+            component={CommunityNotificationSetting}
+          />
+          <Stack.Screen
+            name="CommunityPostsNotificationSetting"
+            component={CommunityPostsNotificationSetting}
+          />
+          <Stack.Screen
+            name="CommunityCommentsNotificationSetting"
+            component={CommunityCommentsNotificationSetting}
+          />
+          <Stack.Screen
+            name="CommunityStoriesNotificationSetting"
+            component={CommunityStoriesNotificationSetting}
+          />
+          <Stack.Screen
+            name="CommunityLivestreamsNotificationSetting"
+            component={CommunityLivestreamsNotificationSetting}
+          />
+
+          {/* --- POST --- */}
+          <Stack.Screen name="CreatePost" component={CreatePost} />
+          <Stack.Screen name="EditPost" component={EditPost} />
+          <Stack.Screen name="PostDetail" component={PostDetail} />
+
+          {/* --- POLL --- */}
+          <Stack.Screen name="PollPostComposer" component={PollPostComposer} />
+
+          {/* --- User --- */}
+          <Stack.Screen
+            name="UserProfile"
+            component={UserProfile}
+            options={{
+              headerShown: true,
+              headerLeft: () => <BackButton />,
+              headerTitleAlign: 'center',
+              title: 'Member',
+            }}
+          />
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
+            options={{
+              headerShown: true,
+            }}
+          />
+          <Stack.Screen
+            name="UserProfileSetting"
+            component={UserProfileSetting}
+            options={{
+              headerShown: true,
+            }}
+          />
+          <Stack.Screen
+            name="UserPendingRequest"
+            component={UserPendingRequest}
+            options={{
+              title: 'Follow Requests',
+              headerLeft: () => <BackButton />,
+            }}
+          />
+          <Stack.Screen
+            name="FollowerList"
+            component={FollowerList}
+            options={({
+              route: {
+                params: { displayName },
+              },
+            }: any) => ({
+              title: displayName,
+              headerLeft: () => <BackButton />,
+            })}
+          />
+
+          <Stack.Screen name="VideoPlayer" component={VideoPlayerFull} />
+
+          <Stack.Group
             screenOptions={{
               headerShown: false,
-              headerShadowVisible: false,
-              contentStyle: {
-                backgroundColor: 'white',
-              },
-              headerStyle: {
-                backgroundColor: theme.colors.background,
-              },
-              headerTitleStyle: {
-                color: theme.colors.base,
-              },
+              animation: 'slide_from_bottom',
             }}
           >
             <Stack.Screen
-              name="AmitySocialHomePage"
-              component={AmitySocialHomePage}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="AmitySocialGlobalSearchPage"
-              component={AmitySocialGlobalSearchPage}
-              options={{
-                headerShown: false, // Remove the back button
-              }}
-            />
-            <Stack.Screen
-              name="AmityMyCommunitiesSearchPage"
-              component={AmityMyCommunitiesSearchPage}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="AmityExploreComponent"
-              component={AmityExploreComponent}
-            />
-            <Stack.Screen
-              name="PostDetail"
-              component={PostDetail}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="CategoryList"
-              component={CategoryList}
-              options={({}) => ({
-                title: 'Category',
-              })}
-            />
-            <Stack.Screen
-              name="PendingPosts"
-              component={PendingPosts}
-              options={{ title: 'Pending Posts' }}
-            />
-            <Stack.Screen
-              name="CommunitySearch"
-              component={CommunitySearch}
-              options={{
-                headerShown: false, // Remove the back button
-              }}
-            />
-            <Stack.Screen
-              name="CommunityMemberDetail"
-              component={CommunityMemberDetail}
-              // options={{
-              //   headerLeft: () => <BackButton />,
-              //   headerTitleAlign: 'center',
-              //   title: 'Member',
-              // }}
-            />
-            <Stack.Screen
-              name="CommunityPendingRequest"
-              component={CommunityPendingRequest}
-            />
-            <Stack.Screen
-              name="CommunitySetting"
-              component={CommunitySetting}
-            />
-            <Stack.Screen
-              name="CommunityMembership"
-              component={CommunityMembership}
-            />
-            <Stack.Screen
-              name="CommunityPostPermission"
-              component={CommunityPostPermission}
-            />
-            <Stack.Screen
-              name="CommunityStorySetting"
-              component={CommunityStorySetting}
-            />
-            <Stack.Screen
-              name="CommunityNotificationSetting"
-              component={CommunityNotificationSetting}
-            />
-            <Stack.Screen
-              name="CommunityPostsNotificationSetting"
-              component={CommunityPostsNotificationSetting}
-            />
-            <Stack.Screen
-              name="CommunityCommentsNotificationSetting"
-              component={CommunityCommentsNotificationSetting}
-            />
-            <Stack.Screen
-              name="CommunityStoriesNotificationSetting"
-              component={CommunityStoriesNotificationSetting}
-            />
-            <Stack.Screen
-              name="CommunityLivestreamsNotificationSetting"
-              component={CommunityLivestreamsNotificationSetting}
-            />
-            <Stack.Screen name="CreateCommunity" component={CreateCommunity} />
-            <Stack.Screen
-              name="CommunityAddCategory"
-              component={CommunityAddCategory}
-            />
-            <Stack.Screen
-              name="CommunityAddMember"
-              component={CommunityAddMember}
-            />
-            <Stack.Screen name="EditCommunity" component={EditCommunity} />
-            <Stack.Screen name="CommunityList" component={CommunityList} />
-            <Stack.Screen
-              name="AllMyCommunity"
-              component={AllMyCommunity}
-              options={({
-                navigation,
-              }: {
-                navigation: NativeStackNavigationProp<any>;
-              }) => ({
-                headerLeft: () => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.goBack();
-                    }}
-                  >
-                    <SvgXml
-                      xml={closeIcon(theme.colors.base)}
-                      width="15"
-                      height="15"
-                    />
-                  </TouchableOpacity>
-                ),
-              })}
-            />
-            <Stack.Screen
-              name="CreatePost"
-              component={CreatePost}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="EditPost"
-              component={EditPost}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="PollPostComposer"
-              component={PollPostComposer}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="UserProfile"
-              component={UserProfile}
+              name="ReactionList"
+              component={ReactionListScreen}
               options={{
                 headerShown: true,
-                headerLeft: () => <BackButton />,
-                headerTitleAlign: 'center',
-                title: 'Member',
-              }}
-            />
-            <Stack.Screen
-              name="EditProfile"
-              component={EditProfile}
-              options={{
-                headerShown: true,
-              }}
-            />
-            <Stack.Screen
-              name="UserProfileSetting"
-              component={UserProfileSetting}
-              options={{
-                headerShown: true,
-              }}
-            />
-            <Stack.Screen
-              name="VideoPlayer"
-              component={VideoPlayerFull}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="UserPendingRequest"
-              component={UserPendingRequest}
-              options={{
-                title: 'Follow Requests',
+                title: 'Reactions',
                 headerLeft: () => <BackButton />,
               }}
             />
+            <Stack.Screen name="CreateStory" component={CreateStoryScreen} />
             <Stack.Screen
-              name="FollowerList"
-              component={FollowerList}
-              options={({
-                route: {
-                  params: { displayName },
-                },
-              }: any) => ({
-                title: displayName,
-                headerLeft: () => <BackButton />,
-              })}
+              name="PostTargetSelection"
+              component={PostTargetSelection}
             />
             <Stack.Screen
-              name="AllCategoriesPage"
-              component={AmityAllCategoriesPage}
-              options={{
-                headerShown: false,
-              }}
+              name="PollTargetSelection"
+              component={PollTargetSelection}
             />
             <Stack.Screen
-              name="CommunitiesByCategoryPage"
-              component={AmityCommunitiesByCategoryPage}
-              options={{
-                headerShown: false,
-              }}
+              name="StoryTargetSelection"
+              component={StoryTargetSelection}
+            />
+
+            {/* --- Livestream --- */}
+            <Stack.Screen
+              name="LivestreamPostTargetSelection"
+              component={LivestreamPostTargetSelection}
             />
             <Stack.Screen
-              name="CommunityProfilePage"
-              component={AmityCommunityProfilePage}
-              options={{
-                headerShown: false,
-              }}
+              name="CreateLivestream"
+              component={CreateLivestream}
             />
-            <Stack.Group
-              screenOptions={{
-                headerShown: false,
-                animation: 'slide_from_bottom',
-              }}
-            >
-              <Stack.Screen
-                name="ReactionList"
-                component={ReactionListScreen}
-                options={{
-                  headerShown: true,
-                  title: 'Reactions',
-                  headerLeft: () => <BackButton />,
-                }}
-              />
-              <Stack.Screen name="CreateStory" component={CreateStoryScreen} />
-              <Stack.Screen
-                name="PostTargetSelection"
-                component={PostTargetSelection}
-              />
-              <Stack.Screen
-                name="StoryTargetSelection"
-                component={StoryTargetSelection}
-              />
-              <Stack.Screen
-                name="LivestreamPostTargetSelection"
-                component={LivestreamPostTargetSelection}
-              />
-              <Stack.Screen
-                name="CreateLivestream"
-                component={CreateLivestream}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="LivestreamPlayer"
-                component={LivestreamPlayer}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="LivestreamTerminated"
-                component={LivestreamTerminated}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="PollTargetSelection"
-                component={PollTargetSelection}
-              />
-            </Stack.Group>
-          </Stack.Navigator>
-        )}
+            <Stack.Screen
+              name="LivestreamPlayer"
+              component={LivestreamPlayer}
+            />
+            <Stack.Screen
+              name="LivestreamTerminated"
+              component={LivestreamTerminated}
+            />
+          </Stack.Group>
+        </Stack.Navigator>
         <PostTypeChoiceModal />
         <Toast />
       </NavigationContainer>

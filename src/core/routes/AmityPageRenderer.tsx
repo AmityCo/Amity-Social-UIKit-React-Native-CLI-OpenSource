@@ -10,20 +10,14 @@ import {
 } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
 import useAuth from '../hooks/useAuth';
-import CategoryList from '../../social/pages/CategorytList';
-import CommunityList from '../../social/pages/CommunityList';
-
-import CommunityMemberDetail from '../../social/pages/CommunityMemberDetail/CommunityMemberDetail';
 import AmitySocialHomePage from '../../social/legacy/Pages/AmitySocialHomePage/AmitySocialHomePage';
 import PostDetail from '../../social/pages/PostDetail';
 import CreatePost from '../../social/pages/CreatePost';
 import UserProfile from '../../social/pages/UserProfile';
 import { EditProfile } from '../../social/pages/EditProfile/EditProfile';
 import UserProfileSetting from '../../social/pages/UserProfileSetting/UserProfileSetting';
-import CommunitySearch from '../../social/pages/CommunitySearch';
 import AllMyCommunity from '../../social/pages/AllMyCommunity';
 import CreateCommunity from '../../social/pages/CreateCommunity';
-import PendingPosts from '../../social/pages/PendingPosts';
 import type { MyMD3Theme } from '../providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
@@ -101,88 +95,64 @@ export default function PageRenderer({ children }: PageRendererProps) {
             <Stack.Screen
               name="AmityStoryTabComponent"
               children={() => children}
-              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="AmityPostEngagementContentComponent"
               children={() => children}
-              options={{ headerShown: false }}
             />
+
+            {/* --- Social Home --- */}
             <Stack.Screen
               name="AmitySocialHomePage"
               component={AmitySocialHomePage}
-              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="AmitySocialGlobalSearchPage"
               component={AmitySocialGlobalSearchPage}
-              options={{
-                headerShown: false, // Remove the back button
-              }}
             />
             <Stack.Screen
               name="AmityMyCommunitiesSearchPage"
               component={AmityMyCommunitiesSearchPage}
-              options={{
-                headerShown: false,
-              }}
             />
             <Stack.Screen
               name="AmityExploreComponent"
               component={AmityExploreComponent}
-              options={{
-                headerShown: false,
-              }}
             />
             <Stack.Screen
-              name="PostDetail"
-              options={{
-                headerShown: false,
-              }}
-              children={() => <PostDetail {...children.props} />}
-            />
-
-            <Stack.Screen
-              name="CategoryList"
-              component={CategoryList}
-              options={({}) => ({
-                title: 'Category',
+              name="AllMyCommunity"
+              component={AllMyCommunity}
+              options={({
+                navigation,
+              }: {
+                navigation: NativeStackNavigationProp<any>;
+              }) => ({
+                headerLeft: () => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  >
+                    <SvgXml
+                      xml={closeIcon(theme.colors.base)}
+                      width="15"
+                      height="15"
+                    />
+                  </TouchableOpacity>
+                ),
               })}
             />
+
+            {/* --- Category --- */}
             <Stack.Screen
-              name="CommunityProfilePage"
-              children={() => <AmityCommunityProfilePage {...children.props} />}
-              options={{ headerShown: false }}
+              name="AllCategoriesPage"
+              component={AmityAllCategoriesPage}
             />
             <Stack.Screen
-              name="PendingPosts"
-              component={PendingPosts}
-              options={{ title: 'Pending Posts' }}
+              name="CommunitiesByCategoryPage"
+              component={AmityCommunitiesByCategoryPage}
             />
-            <Stack.Screen
-              name="CommunitySearch"
-              component={CommunitySearch}
-              options={{
-                headerShown: false, // Remove the back button
-              }}
-            />
-            <Stack.Screen
-              name="CommunityMemberDetail"
-              component={CommunityMemberDetail}
-              options={{
-                headerLeft: () => <BackButton />,
-                headerTitleAlign: 'center',
-                title: 'Member',
-              }}
-            />
-            <Stack.Screen
-              name="CommunitySetting"
-              component={CommunitySetting}
-            />
-            <Stack.Screen
-              name="CommunityPendingRequest"
-              component={CommunityPendingRequest}
-            />
+
+            {/* --- COMMUNITY --- */}
             <Stack.Screen name="CreateCommunity" component={CreateCommunity} />
             <Stack.Screen
               name="CommunityAddCategory"
@@ -192,6 +162,19 @@ export default function PageRenderer({ children }: PageRendererProps) {
               name="CommunityAddMember"
               component={CommunityAddMember}
             />
+            <Stack.Screen
+              name="CommunityProfilePage"
+              children={() => <AmityCommunityProfilePage {...children.props} />}
+            />
+            <Stack.Screen
+              name="CommunityPendingRequest"
+              component={CommunityPendingRequest}
+            />
+            <Stack.Screen
+              name="CommunitySetting"
+              component={CommunitySetting}
+            />
+            <Stack.Screen name="EditCommunity" component={EditCommunity} />
             <Stack.Screen
               name="CommunityMembership"
               component={CommunityMembership}
@@ -224,45 +207,22 @@ export default function PageRenderer({ children }: PageRendererProps) {
               name="CommunityLivestreamsNotificationSetting"
               component={CommunityLivestreamsNotificationSetting}
             />
-            <Stack.Screen name="EditCommunity" component={EditCommunity} />
-            <Stack.Screen name="CommunityList" component={CommunityList} />
+
+            {/* --- POST --- */}
+            <Stack.Screen name="CreatePost" component={CreatePost} />
+            <Stack.Screen name="EditPost" component={EditPost} />
             <Stack.Screen
-              name="AllMyCommunity"
-              component={AllMyCommunity}
-              options={({
-                navigation,
-              }: {
-                navigation: NativeStackNavigationProp<any>;
-              }) => ({
-                headerLeft: () => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.goBack();
-                    }}
-                  >
-                    <SvgXml
-                      xml={closeIcon(theme.colors.base)}
-                      width="15"
-                      height="15"
-                    />
-                  </TouchableOpacity>
-                ),
-              })}
+              name="PostDetail"
+              children={() => <PostDetail {...children.props} />}
             />
-            <Stack.Screen
-              name="CreatePost"
-              component={CreatePost}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="EditPost"
-              component={EditPost}
-              options={{ headerShown: false }}
-            />
+
+            {/* --- POLL --- */}
             <Stack.Screen
               name="PollPostComposer"
               component={PollPostComposer}
             />
+
+            {/* --- User --- */}
             <Stack.Screen
               name="UserProfile"
               children={() => <UserProfile {...children.props} />}
@@ -275,11 +235,6 @@ export default function PageRenderer({ children }: PageRendererProps) {
             <Stack.Screen
               name="UserProfileSetting"
               component={UserProfileSetting}
-            />
-            <Stack.Screen
-              name="VideoPlayer"
-              component={VideoPlayerFull}
-              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="UserPendingRequest"
@@ -301,20 +256,9 @@ export default function PageRenderer({ children }: PageRendererProps) {
                 headerLeft: () => <BackButton />,
               })}
             />
-            <Stack.Screen
-              name="AllCategoriesPage"
-              component={AmityAllCategoriesPage}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="CommunitiesByCategoryPage"
-              component={AmityCommunitiesByCategoryPage}
-              options={{
-                headerShown: false,
-              }}
-            />
+
+            <Stack.Screen name="VideoPlayer" component={VideoPlayerFull} />
+
             <Stack.Group
               screenOptions={{
                 headerShown: false,
@@ -336,8 +280,18 @@ export default function PageRenderer({ children }: PageRendererProps) {
                 component={PostTargetSelection}
               />
               <Stack.Screen
+                name="PollTargetSelection"
+                component={PollTargetSelection}
+              />
+              <Stack.Screen
                 name="StoryTargetSelection"
                 component={StoryTargetSelection}
+              />
+
+              {/* --- Livestream --- */}
+              <Stack.Screen
+                name="LivestreamPostTargetSelection"
+                component={LivestreamPostTargetSelection}
               />
               <Stack.Screen
                 name="CreateLivestream"
@@ -353,14 +307,6 @@ export default function PageRenderer({ children }: PageRendererProps) {
                 name="LivestreamTerminated"
                 component={LivestreamTerminated}
                 options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="PollTargetSelection"
-                component={PollTargetSelection}
-              />
-              <Stack.Screen
-                name="LivestreamPostTargetSelection"
-                component={LivestreamPostTargetSelection}
               />
             </Stack.Group>
           </Stack.Navigator>

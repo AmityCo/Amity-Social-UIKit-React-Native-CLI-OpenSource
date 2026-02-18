@@ -13,22 +13,13 @@ export type RootStackParamList = {
   AmitySocialHomePage: { postIdCallBack?: string };
   AmitySocialGlobalSearchPage: undefined;
   AmityMyCommunitiesSearchPage: undefined;
-  CommunitySearch: undefined;
-  CommunityMemberDetail: {
-    communityId: string;
-  };
-  CommunityList: {
-    categoryId: string;
-  };
   CommunityHome: {
     communityId: string;
     communityName: string;
     isModerator?: boolean;
   };
-  MemberDetail: undefined;
   Community: undefined;
   AmityExploreComponent: undefined;
-  CategoryList: undefined;
   CreatePost: AmityPostComposerPageType;
   EditPost: AmityPostComposerPageType;
   PostDetail: {
@@ -50,7 +41,6 @@ export type RootStackParamList = {
 
   AllMyCommunity: undefined;
   VideoPlayer: { source: string };
-  PendingPosts: { communityId: string; isModerator: boolean };
   ReactionList: { referenceId: string; referenceType: string };
   CreateStory: {
     targetId: string;

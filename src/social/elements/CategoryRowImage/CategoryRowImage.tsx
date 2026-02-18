@@ -74,7 +74,10 @@ const CategoryRowImage: FC<CategoryRowImageProps> = ({
         />
       ) : (
         <View style={styles.placeholder}>
-          <SvgXml xml={categoryIcon()} />
+          <SvgXml
+            xml={categoryIcon()}
+            color={themeStyles?.colors.primaryShade2}
+          />
         </View>
       )}
     </View>
