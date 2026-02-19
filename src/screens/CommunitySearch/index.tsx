@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import CustomTab from '../../components/CustomTab';
 import {
   CommunityRepository,
+  SearchUsersByEnum,
   UserRepository,
 } from '@amityco/ts-sdk-react-native';
 import type { ISearchItem } from '../../components/SearchItem';
@@ -83,7 +84,11 @@ export default function CommunitySearch() {
   const searchAccounts = (text: string = '') => {
     if (text.length > 2) {
       const unsubscribe = UserRepository.searchUserByDisplayName(
-        { displayName: text, limit: 20 },
+        {
+          displayName: text,
+          limit: 20,
+          searchBy: [SearchUsersByEnum.DISPLAY_NAME],
+        },
         (data) => {
           setUsersObject(data);
         }
