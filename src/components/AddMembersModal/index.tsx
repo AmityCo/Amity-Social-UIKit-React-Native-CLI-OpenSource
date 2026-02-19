@@ -1,4 +1,7 @@
-import { UserRepository } from '@amityco/ts-sdk-react-native';
+import {
+  SearchUsersByEnum,
+  UserRepository,
+} from '@amityco/ts-sdk-react-native';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   TouchableOpacity,
@@ -54,7 +57,11 @@ const AddMembersModal = ({
   const queryAccounts = useCallback(
     (text: string = '') => {
       const unsubscribe = UserRepository.searchUserByDisplayName(
-        { displayName: text, limit: 20 },
+        {
+          displayName: text,
+          limit: 20,
+          searchBy: [SearchUsersByEnum.DISPLAY_NAME],
+        },
         ({ data, onNextPage }) => {
           userNextPageRef.current = onNextPage;
           setSectionedGroupUserList(null);

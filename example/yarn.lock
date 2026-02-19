@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@7.13.0":
-  version "7.13.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.13.0.tgz#fdc021744d4c10b6a286ca11707e1dcfc8d66a29"
-  integrity sha512-WtGk3fJdc1mzMUeCvqA9MWbL0YF1oQEcv+ozXCI4Jd5Cbcv2VaP0ShwlFOJKhgkHQ4xp8QhuQSx9wNzY3SD8vA==
+"@amityco/ts-sdk-react-native@^7.15.0":
+  version "7.15.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.15.0.tgz#f84ae247bf01ab9c2ad905f34bcfdfb262d68dad"
+  integrity sha512-nLldJyWNavg9WkfdP8GZgu1PqfrAwcK1G1lK8YSV1JM5QbDPs6cpJqgse2fIYSpVUW3ybmnB9SW8Td5+3ZUE7w==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
@@ -7004,9 +7004,9 @@ selfsigned@^2.4.1:
     node-forge "^1"
 
 semver@7.x:
-  version "7.7.3"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.3.tgz#4b5f4143d007633a8dc671cd0a6ef9147b8bb946"
-  integrity sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==
+  version "7.7.4"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.4.tgz#28464e36060e991fa7a11d0279d2d3f3b57a7e8a"
+  integrity sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==
 
 semver@^5.6.0:
   version "5.7.2"

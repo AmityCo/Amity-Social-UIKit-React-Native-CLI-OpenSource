@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useUserCollection } from '../../../../../v4/hook/collections/useUserCollection';
 import { useSearchUserByDisplayNameCollection } from '../../../../../v4/hook/collections/useSearchUserByDisplayNameCollection';
+import { SearchUsersByEnum } from '@amityco/ts-sdk-react-native';
 
 type UseAddMemberProps = {
   communityId?: string;
@@ -47,6 +48,7 @@ function useAddMember({ communityId }: UseAddMemberProps = {}) {
     params: {
       displayName: values.search,
       limit: 20,
+      searchBy: [SearchUsersByEnum.DISPLAY_NAME],
     },
     enabled: !!values.search && !communityId,
   });
