@@ -26,8 +26,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
-import LikeButtonIconElement from '../../../Elements/LikeButtonIconElement/LikeButtonIconElement';
-import CommentButtonIconElement from '../../../Elements/CommentButtonIconElement/CommentButtonIconElement';
+import LikeButtonIconElement from '../../../../elements/LikeButtonIconElement/LikeButtonIconElement';
+import CommentButtonIconElement from '../../../../elements/CommentButtonIconElement/CommentButtonIconElement';
 import { useBehaviour } from '../../../../providers/BehaviourProvider';
 import { formatNumber } from '../../../../../core/utils/number';
 

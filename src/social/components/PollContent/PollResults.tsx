@@ -5,7 +5,7 @@ import { useUser } from '../../hooks';
 import { ElementID } from '../../enums';
 import useAuth from '../../../core/hooks/useAuth';
 import { Typography } from '../Typography/Typography';
-import AvatarElement from '../../legacy/Elements/CommonElements/AvatarElement';
+import AvatarElement from '../../elements/CommonElements/AvatarElement';
 import { formatVoteCount } from '../../../core/utils/time';
 
 type PollResultsProps = {

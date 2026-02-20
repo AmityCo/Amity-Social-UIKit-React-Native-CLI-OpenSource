@@ -17,15 +17,15 @@ import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { IMentionPosition } from '../../../../core/types';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { ComponentID, ElementID, PageID } from '../../../enums';
-import AvatarElement from '../../Elements/CommonElements/AvatarElement';
+import AvatarElement from '../../../elements/CommonElements/AvatarElement';
 import { useAmityComponent, useIsCommunityModerator } from '../../../hooks';
-import ModeratorBadgeElement from '../../Elements/ModeratorBadgeElement/ModeratorBadgeElement';
+import ModeratorBadgeElement from '../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
 } from '../../../enums/AmityPostContentComponentStyle';
-import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
+import TimestampElement from '../../../elements/TimestampElement/TimestampElement';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import PostContent from '../../../components/PostContent';
 import { PostMenu } from '../../../components/PostMenu';

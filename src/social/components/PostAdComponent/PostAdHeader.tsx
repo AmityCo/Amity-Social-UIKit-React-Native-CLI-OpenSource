@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react';
 import { View, Text } from 'react-native';
 
 import { useStyles } from './styles';
-import AvatarElement from '../../legacy/Elements/CommonElements/AvatarElement';
+import AvatarElement from '../../elements/CommonElements/AvatarElement';
 import { useAmityComponent } from '../../hooks';
 import { PageID, ComponentID, ElementID } from '../../enums';
 import { star } from '../../../core/assets/icons/xml';

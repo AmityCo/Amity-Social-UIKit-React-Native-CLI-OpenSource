@@ -19,7 +19,7 @@ import React, {
 import { ComponentID, PageID } from '../../../enums';
 import { TSearchItem, useAmityPage } from '../../../hooks';
 import { useStyles } from './styles';
-import BackButtonIconElement from '../../../legacy/Elements/BackButtonIconElement/BackButtonIconElement';
+import BackButtonIconElement from '../../../elements/BackButtonIconElement/BackButtonIconElement';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

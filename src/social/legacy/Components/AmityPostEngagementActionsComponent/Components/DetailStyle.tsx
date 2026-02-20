@@ -16,8 +16,8 @@ import {
   addPostReaction,
   removePostReaction,
 } from '../../../../../core/legacy/feed';
-import LikeButtonIconElement from '../../../Elements/LikeButtonIconElement/LikeButtonIconElement';
-import CommentButtonIconElement from '../../../Elements/CommentButtonIconElement/CommentButtonIconElement';
+import LikeButtonIconElement from '../../../../elements/LikeButtonIconElement/LikeButtonIconElement';
+import CommentButtonIconElement from '../../../../elements/CommentButtonIconElement/CommentButtonIconElement';
 import AmityReactionListComponent from '../../AmityReactionListComponent/AmityReactionListComponent';
 import { formatNumber } from '../../../../../core/utils/number';
 

@@ -8,7 +8,7 @@ import {
 } from '../../../enums';
 import { useAmityComponent } from '../../../hooks';
 import { useStyles } from './styles';
-import ImageKeyElement from '../../Elements/ImageKeyElement/ImageKeyElement';
+import ImageKeyElement from '../../../elements/ImageKeyElement/ImageKeyElement';
 
 type AmityMediaAttachmentComponentType = {
   onPressCamera: () => void;

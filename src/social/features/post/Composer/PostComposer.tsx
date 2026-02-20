@@ -31,7 +31,7 @@ import {
   AmityPostComposerPageType,
 } from '../../../types';
 import { IDisplayImage, IMentionPosition } from '../../../../core/types';
-import CloseButtonIconElement from '../../../legacy/Elements/CloseButtonIconElement/CloseButtonIconElement';
+import CloseButtonIconElement from '../../../elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
 import { amityPostsFormatter } from '../../../../core/utils/post';
@@ -42,7 +42,7 @@ import {
   editPost,
   getPostById,
 } from '../../../../core/legacy/feed';
-import TextKeyElement from '../../../legacy/Elements/TextKeyElement/TextKeyElement';
+import TextKeyElement from '../../../elements/TextKeyElement/TextKeyElement';
 import AmityMediaAttachmentComponent from '../../../legacy/Components/AmityMediaAttachmentComponent/AmityMediaAttachmentComponent';
 import AmityDetailedMediaAttachmentComponent from '../../../legacy/Components/AmityDetailedMediaAttachmentComponent/AmityDetailedMediaAttachmentComponent';
 import { useKeyboardStatus } from '../../../hooks';

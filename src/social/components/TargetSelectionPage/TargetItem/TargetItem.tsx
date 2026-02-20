@@ -3,10 +3,10 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { ComponentID, PageID, ElementID } from '../../../enums';
-import AvatarElement from '../../../legacy/Elements/CommonElements/AvatarElement';
-import ImageElement from '../../../legacy/Elements/CommonElements/ImageElement';
-import TextKeyElement from '../../../legacy/Elements/TextKeyElement/TextKeyElement';
-import TextElement from '../../../legacy/Elements/CommonElements/TextElement';
+import AvatarElement from '../../../elements/CommonElements/AvatarElement';
+import ImageElement from '../../../elements/CommonElements/ImageElement';
+import TextKeyElement from '../../../elements/TextKeyElement/TextKeyElement';
+import TextElement from '../../../elements/CommonElements/TextElement';
 
 interface ITargetItem {
   pageId?: PageID;

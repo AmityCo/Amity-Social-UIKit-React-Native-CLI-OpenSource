@@ -12,7 +12,7 @@ import {
 import { ComponentID, ElementID, PageID } from '../../../enums/enumUIKitID';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import AmityCreatePostMenuComponent from '../AmityCreatePostMenuComponent/AmityCreatePostMenuComponent';
-import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';
+import TextKeyElement from '../../../elements/TextKeyElement/TextKeyElement';
 import { usePopup } from '../../../hooks/usePopup';
 import Popup from '../../../components/PopupMenu/PopupMenu';
 

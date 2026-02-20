@@ -3,7 +3,7 @@ import React, { memo, useCallback } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../enums';
 import { useAmityPage, useCommunities } from '../../hooks';
-import BackButtonIconElement from '../../legacy/Elements/BackButtonIconElement/BackButtonIconElement';
+import BackButtonIconElement from '../../elements/BackButtonIconElement/BackButtonIconElement';
 import CategoryTitle from '../../elements/CategoryTitle/CategoryTitle';
 import CommunityRowItem from '../../components/CommunityRowItem/CommunityRowItem';
 import { useNavigation } from '@react-navigation/native';

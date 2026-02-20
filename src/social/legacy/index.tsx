@@ -51,7 +51,7 @@ export { default as AmityPostEngagementActionsComponent } from './Components/Ami
 export { default as AmityUserSearchResultComponent } from './Components/AmityUserSearchResultComponent/AmityUserSearchResultComponent';
 export { default as AmityReactionListComponent } from './Components/AmityReactionListComponent/AmityReactionListComponent';
 export { default as AmityCommunityFeedComponent } from './Components/AmityCommunityFeedComponent/AmityCommunityFeedComponent';
-export { default as AmityCommunityHeaderComponent } from './Components/AmityCommunityHeaderComponent/AmityCommunityHeaderComponent';
+export { default as AmityCommunityHeaderComponent } from '../screens/CommunityProfile/components/Header';
 export { default as AmityCommunityImageFeedComponent } from './Components/AmityCommunityImageFeedComponent/AmityCommunityImageFeedComponent';
 export { default as AmityCommunityVideoFeedComponent } from './Components/AmityCommunityVideoFeedComponent/AmityCommunityVideoFeedComponent';
 export { AmityThumbnailActionComponent } from './Components/AmityThumbnailActionComponent';

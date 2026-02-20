@@ -4,7 +4,7 @@ import { useStyles } from './styles';
 import { PageID } from '../../enums';
 import { useAmityPage, useCategories } from '../../hooks';
 import AllCategoriesTitle from '../../elements/AllCategoriesTitle/AllCategoriesTitle';
-import BackButtonIconElement from '../../legacy/Elements/BackButtonIconElement/BackButtonIconElement';
+import BackButtonIconElement from '../../elements/BackButtonIconElement/BackButtonIconElement';
 import CategoryRowItem from './CategoryRowItem/CategoryRowItem';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

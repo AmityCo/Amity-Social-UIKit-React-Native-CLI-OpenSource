@@ -30,7 +30,7 @@ import { Typography } from '../../components/Typography/Typography';
 import { pen, poll, report, trash, unreport } from '../../../core/assets/icons';
 import { useToast } from '../../../core/stores/slices/toastSlice';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
-import MenuButtonIconElement from '../../legacy/Elements/MenuButtonIconElement/MenuButtonIconElement';
+import MenuButtonIconElement from '../../elements/MenuButtonIconElement/MenuButtonIconElement';
 import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { ComponentID, PageID } from '../../enums';
 import { usePoll } from '../../hooks/usePoll';
