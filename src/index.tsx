@@ -1,30 +1,4 @@
 import { NativeModules, Platform, BackHandler } from 'react-native';
-
-// Polyfill for BackHandler compatibility with older libraries like react-native-modalbox
-// In React Native 0.65+, BackHandler.removeEventListener was removed
-// This polyfill maintains backward compatibility
-if (!(BackHandler as any).removeEventListener) {
-  const listeners = new Map();
-  const originalAddEventListener = BackHandler.addEventListener;
-
-  BackHandler.addEventListener = (eventName, handler) => {
-    const subscription = originalAddEventListener(eventName, handler);
-    listeners.set(handler, subscription);
-    return subscription;
-  };
-
-  (BackHandler as any).removeEventListener = (
-    _eventName: string,
-    handler: () => boolean
-  ) => {
-    const subscription = listeners.get(handler);
-    if (subscription) {
-      subscription.remove();
-      listeners.delete(handler);
-    }
-  };
-}
-
 import AmityUiKitProvider from './core/providers/AmityUIKitProvider';
 import { ErrorBoundary } from './core/components/ErrorBoundary';
 import AmityUiKitSocial from './core/routes/AmityUIKitNavigator';
@@ -93,14 +67,38 @@ import {
   AmityCommunityLivestreamsNotificationSettingPage,
   AmityCommunityPinnedPostComponent,
   AmityPendingPostListComponent,
-} from './social/legacy';
-
+} from './public-api';
 import {
   AmityStoryTabComponentEnum,
   AmityPostComposerMode,
   mediaAttachment,
 } from './social/types';
 import { AmityGlobalStoryTabWrapper } from './social/components/MyStories';
+
+// Polyfill for BackHandler compatibility with older libraries like react-native-modalbox
+// In React Native 0.65+, BackHandler.removeEventListener was removed
+// This polyfill maintains backward compatibility
+if (!(BackHandler as any).removeEventListener) {
+  const listeners = new Map();
+  const originalAddEventListener = BackHandler.addEventListener;
+
+  BackHandler.addEventListener = (eventName, handler) => {
+    const subscription = originalAddEventListener(eventName, handler);
+    listeners.set(handler, subscription);
+    return subscription;
+  };
+
+  (BackHandler as any).removeEventListener = (
+    _eventName: string,
+    handler: () => boolean
+  ) => {
+    const subscription = listeners.get(handler);
+    if (subscription) {
+      subscription.remove();
+      listeners.delete(handler);
+    }
+  };
+}
 
 const LINKING_ERROR =
   `The package 'amity-react-native-social-ui-kit' doesn't seem to be linked. Make sure: \n\n` +
@@ -122,6 +120,7 @@ const AmityReactNativeSocialUiKit = NativeModules.AmityReactNativeSocialUiKit
 export function multiply(a: number, b: number): Promise<number> {
   return AmityReactNativeSocialUiKit.multiply(a, b + 2 + 3);
 }
+
 export {
   AmityUiKitProvider,
   ErrorBoundary,

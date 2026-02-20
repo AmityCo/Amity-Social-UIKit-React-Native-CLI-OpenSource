@@ -1,0 +1,103 @@
+import { View } from 'react-native';
+import React, { FC, memo, useCallback } from 'react';
+import { useStyles } from './styles';
+import { useAmityComponent, useCommunities } from '../../../../hooks';
+import { PageID, ComponentID } from '../../../../enums';
+import { useNavigation } from '@react-navigation/native';
+import { useBehaviour } from '../../../../providers/BehaviourProvider';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
+import CommunitySearchResult from '../../../../components/CommunitySearchResult/CommunitySearchResult';
+import { emptyCommunity, plus } from '../../../../../core/assets/icons';
+import { Typography } from '../../../../components/Typography/Typography';
+import { SvgXml } from 'react-native-svg';
+import { Button } from '../../../../components/Button/Button';
+import Divider from '../../../../components/Divider';
+
+type AmityMyCommunitiesComponentType = {
+  pageId?: PageID;
+  componentId?: ComponentID;
+};
+
+const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
+  pageId = PageID.WildCardPage,
+}) => {
+  const componentId = ComponentID.my_communities;
+  const { isExcluded, accessibilityId, themeStyles } = useAmityComponent({
+    pageId,
+    componentId,
+  });
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { AmityMyCommunitiesComponentBehaviour } = useBehaviour();
+  const styles = useStyles(themeStyles);
+  const { communities, onNextCommunityPage, loading } = useCommunities();
+
+  const onPressCommunity = useCallback(
+    ({ communityId }: { communityId: string }) => {
+      if (AmityMyCommunitiesComponentBehaviour.onPressCommunity)
+        return AmityMyCommunitiesComponentBehaviour.onPressCommunity();
+      navigation.navigate('CommunityProfilePage', {
+        communityId,
+      });
+    },
+    [navigation, AmityMyCommunitiesComponentBehaviour]
+  );
+
+  const onPressCreateCommunity = useCallback(() => {
+    navigation.navigate('CreateCommunity');
+  }, [navigation]);
+
+  // Empty state cannot be customized
+  const renderEmptyState = useCallback(() => {
+    return (
+      <View style={styles.emptyContainer}>
+        <SvgXml xml={emptyCommunity({})} />
+        <Typography.BodyBold style={styles.emptyTitleText}>
+          {'No community yet'}
+        </Typography.BodyBold>
+        <Typography.Caption style={styles.emptyDescriptionText}>
+          {"Let's create your own communities"}
+        </Typography.Caption>
+        <Button
+          type="primary"
+          icon={plus()}
+          themeStyle={themeStyles}
+          style={styles.createCommunityButton}
+          onPress={onPressCreateCommunity}
+        >
+          <Typography.BodyBold style={styles.createCommunityButtonText}>
+            {'Create community'}
+          </Typography.BodyBold>
+        </Button>
+      </View>
+    );
+  }, [styles, themeStyles, onPressCreateCommunity]);
+
+  if (isExcluded) return null;
+
+  return (
+    <View
+      style={styles.container}
+      testID={accessibilityId}
+      accessibilityLabel={accessibilityId}
+    >
+      <Divider themeStyles={themeStyles} />
+      {!loading && communities?.length === 0 ? (
+        renderEmptyState()
+      ) : (
+        <CommunitySearchResult
+          pageId={pageId}
+          componentId={componentId}
+          isFirstTimeLoading={loading && !communities}
+          isLoading={loading}
+          communities={communities}
+          onPressCommunity={onPressCommunity}
+          onNextPage={onNextCommunityPage}
+        />
+      )}
+    </View>
+  );
+};
+
+export default memo(AmityMyCommunitiesComponent);

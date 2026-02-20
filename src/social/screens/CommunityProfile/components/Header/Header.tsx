@@ -17,7 +17,7 @@ import CommunityInfo from '../../../../elements/CommunityInfo/CommunityInfo';
 import CommunityJoinButtonElement from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import CommunityPendingPost from '../../../../elements/CommunityPendingPost/CommunityPendingPost';
 import { usePosts } from '../../../../hooks/usePosts';
-import AmityStoryTabComponent from '../../../../legacy/Components/AmityStoryTabComponent/AmityStoryTabComponent';
+import AmityStoryTabComponent from '../../../../features/story/components/AmityStoryTabComponent/AmityStoryTabComponent';
 import { AmityStoryTabComponentEnum } from '../../../../types';
 import { BUTTON_SIZE } from '../../../../components/Button/Button';
 import { useNavigation } from '@react-navigation/native';

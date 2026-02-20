@@ -3,7 +3,7 @@ import { useStyles } from './styles';
 import Header from './components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Tabs from '../../../../core/components/Tabs';
-import PendingPostList from '../../../legacy/Components/AmityPendingPostListComponent';
+import PendingPostList from './components/PendingPostList';
 import { useAmityElement } from '../../../hooks';
 import { ComponentID, ElementID, PageID } from '../../../enums';
 

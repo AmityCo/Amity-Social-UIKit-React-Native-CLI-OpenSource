@@ -23,12 +23,12 @@ import { useAmityPage, useCommunity, useStoryPermission } from '../../hooks';
 import AmityCommunityHeaderComponent from './components/Header';
 import AmityCommunityFeedComponent, {
   AmityCommunityFeedRef,
-} from '../../legacy/Components/AmityCommunityFeedComponent/AmityCommunityFeedComponent';
+} from './components/Feed/Feed';
 import AmityCommunityProfileTabComponent, {
   CommunityProfileTab,
-} from '../../legacy/Components/AmityCommunityProfileTabComponent/AmityCommunityProfileTabComponent';
-import AmityCommunityImageFeedComponent from '../../legacy/Components/AmityCommunityImageFeedComponent/AmityCommunityImageFeedComponent';
-import AmityCommunityVideoFeedComponent from '../../legacy/Components/AmityCommunityVideoFeedComponent/AmityCommunityVideoFeedComponent';
+} from './components/Tab';
+import AmityCommunityImageFeedComponent from './components/ImageFeed';
+import AmityCommunityVideoFeedComponent from './components/VideoFeed';
 import CommunityCoverNavigator from '../../elements/CommunityCover/CommunityCoverNavigator';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
@@ -40,7 +40,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
-import AmityCommunityPinnedPostComponent from '../../legacy/Components/AmityCommunityPinnedPostComponent/AmityCommunityPinnedPostComponent';
+import AmityCommunityPinnedPostComponent from './components/PinnedPost/PinnedPost';
 
 type ICommunityProfilePage = {
   defaultCommunityId?: string;

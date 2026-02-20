@@ -43,8 +43,8 @@ import {
   getPostById,
 } from '../../../../core/legacy/feed';
 import TextKeyElement from '../../../elements/TextKeyElement/TextKeyElement';
-import AmityMediaAttachmentComponent from '../../../legacy/Components/AmityMediaAttachmentComponent/AmityMediaAttachmentComponent';
-import AmityDetailedMediaAttachmentComponent from '../../../legacy/Components/AmityDetailedMediaAttachmentComponent/AmityDetailedMediaAttachmentComponent';
+import AmityMediaAttachmentComponent from '../components/MediaAttachment';
+import AmityDetailedMediaAttachmentComponent from '../components/DetailedMediaAttachment';
 import { useKeyboardStatus } from '../../../hooks';
 import ImagePicker, {
   launchImageLibrary,

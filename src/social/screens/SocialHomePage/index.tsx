@@ -7,11 +7,11 @@ import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 
 import { useTheme } from 'react-native-paper';
 import { useBehaviour } from '../../providers/BehaviourProvider';
-import AmitySocialHomeTopNavigationComponent from '../../legacy/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
-import AmityEmptyNewsFeedComponent from '../../legacy/Components/AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
-import AmityMyCommunitiesComponent from '../../legacy/Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
-import AmityNewsFeedComponent from '../../legacy/Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
-import AmityExploreComponent from '../../legacy/Components/AmityExploreComponent/AmityExploreComponent';
+import AmitySocialHomeTopNavigationComponent from '../../features/feed/components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
+import AmityEmptyNewsFeedComponent from '../../features/feed/components/AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
+import AmityMyCommunitiesComponent from '../../features/feed/components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
+import AmityNewsFeedComponent from '../../features/feed/components/AmityNewsFeedComponent/AmityNewsFeedComponent';
+import AmityExploreComponent from '../../features/feed/components/AmityExploreComponent/AmityExploreComponent';
 import NewsFeedLoadingComponent from '../../components/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
 import { useCustomRankingGlobalFeed } from '../../hooks/useCustomRankingGlobalFeed';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';

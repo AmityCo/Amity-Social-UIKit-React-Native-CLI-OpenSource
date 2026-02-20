@@ -1,14 +1,14 @@
 import React, { memo, useState } from 'react';
 import { useStyles } from './styles';
-import AmityTopSearchBarComponent from '../../legacy/Components/AmityTopSearchBarComponent/AmityTopSearchBarComponent';
+import AmityTopSearchBarComponent from '../../features/search/components/AmityTopSearchBarComponent/AmityTopSearchBarComponent';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAmityGlobalSearchViewModel } from '../../hooks';
 import { TabName } from '../../enums/enumTabName';
 import CustomTab from '../../components/CustomTab';
-import AmityCommunitySearchResultComponent from '../../legacy/Components/AmityCommunitySearchResultComponent/AmityCommunitySearchResultComponent';
+import AmityCommunitySearchResultComponent from '../../features/search/components/AmityCommunitySearchResultComponent/AmityCommunitySearchResultComponent';
 import { PageID } from '../../enums';
 import { useAmityPage } from '../../hooks';
-import AmityUserSearchResultComponent from '../../legacy/Components/AmityUserSearchResultComponent/AmityUserSearchResultComponent';
+import AmityUserSearchResultComponent from '../../features/search/components/AmityUserSearchResultComponent/AmityUserSearchResultComponent';
 import CommunityListSkeleton from '../../components/CommunityListSkeleton/CommunityListSkeleton';
 import { View } from 'react-native';
 

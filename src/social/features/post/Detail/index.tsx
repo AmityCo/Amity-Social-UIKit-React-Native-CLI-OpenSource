@@ -29,12 +29,12 @@ import {
   getPostTopic,
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
-import AmityPostContentComponent from '../../../legacy/Components/AmityPostContentComponent/AmityPostContentComponent';
+import AmityPostContentComponent from '../components/Content/Content';
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
 } from '../../../enums/AmityPostContentComponentStyle';
-import AmityPostCommentComponent from '../../../legacy/Components/AmityPostCommentComponent/AmityPostCommentComponent';
+import AmityPostCommentComponent from '../../comment/AmityPostCommentComponent/AmityPostCommentComponent';
 
 import { closeIcon } from '../../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
