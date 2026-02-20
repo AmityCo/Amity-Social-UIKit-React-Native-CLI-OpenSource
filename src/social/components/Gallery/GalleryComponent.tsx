@@ -12,7 +12,7 @@ import { SvgXml } from 'react-native-svg';
 import { photo, playBtn, video } from '../../../core/assets/icons/xml';
 import { useStyles } from './styles';
 import ImageView from '../legacy/react-native-image-viewing/dist';
-import { FeedRefType } from '../../pages/CommunityHome';
+import { FeedRefType } from '../../screens/CommunityHome';
 import GalleryTab from './GalleryTab';
 
 interface IGalleryComponent {

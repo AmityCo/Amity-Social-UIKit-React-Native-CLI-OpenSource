@@ -10,14 +10,14 @@ import {
   storyRing,
 } from '../../../core/assets/icons/xml';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { useFile } from '../../hooks/useFile';
 import { ImageSizeState } from '../../enums/imageSizeState';
 import { useStoryPermission } from '../../hooks/useStoryPermission';
 import useConfig from '../../hooks/useConfig';
 import { ComponentID, ElementID, PageID } from '../../enums';
 import Modal from 'react-native-modalbox';
-import AmityViewStoryPage from '../../legacy/Pages/AmityViewStoryPage/AmityViewStoryPage';
+import AmityViewStoryPage from '../../features/story/View/View';
 import { Typography } from '../Typography/Typography';
 
 interface ICommunityStories {

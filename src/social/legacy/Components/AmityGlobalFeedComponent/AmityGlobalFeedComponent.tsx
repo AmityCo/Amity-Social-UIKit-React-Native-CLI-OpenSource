@@ -7,7 +7,7 @@ import { ComponentID, PageID } from '../../../enums/enumUIKitID';
 import { useAmityComponent } from '../../../hooks/useUiKitReference';
 import { AmityPostContentComponentStyleEnum } from '../../../enums/AmityPostContentComponentStyle';
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
-import { AmityStoryTabComponentEnum } from '../../types';
+import { AmityStoryTabComponentEnum } from '../../../types';
 import { usePostImpression } from '../../../hooks/usePostImpression';
 import { useStyle } from './styles';
 import {

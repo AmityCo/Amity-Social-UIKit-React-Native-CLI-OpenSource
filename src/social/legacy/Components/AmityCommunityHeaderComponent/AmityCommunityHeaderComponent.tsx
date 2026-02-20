@@ -18,7 +18,7 @@ import CommunityJoinButtonElement from '../../../elements/CommunityJoinButtonEle
 import CommunityPendingPost from '../../../elements/CommunityPendingPost/CommunityPendingPost';
 import { usePosts } from '../../../hooks/usePosts';
 import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabComponent';
-import { AmityStoryTabComponentEnum } from '../../types';
+import { AmityStoryTabComponentEnum } from '../../../types';
 import { BUTTON_SIZE } from '../../../components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

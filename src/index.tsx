@@ -29,9 +29,9 @@ import AmityUiKitProvider from './core/providers/AmityUIKitProvider';
 import { ErrorBoundary } from './core/components/ErrorBoundary';
 import AmityUiKitSocial from './core/routes/AmityUIKitNavigator';
 import AmityPageRenderer from './core/routes/AmityPageRenderer';
-import PostDetail from './social/pages/PostDetail';
-import CommunityHome from './social/pages/CommunityHome';
-import UserProfile from './social/pages/UserProfile';
+import PostDetail from './social/screens/PostDetail';
+import CommunityHome from './social/screens/CommunityHome';
+import UserProfile from './social/screens/UserProfile';
 import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
@@ -99,7 +99,7 @@ import {
   AmityStoryTabComponentEnum,
   AmityPostComposerMode,
   mediaAttachment,
-} from './social/legacy/types';
+} from './social/types';
 import { AmityGlobalStoryTabWrapper } from './social/components/MyStories';
 
 const LINKING_ERROR =

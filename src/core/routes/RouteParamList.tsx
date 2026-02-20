@@ -1,7 +1,7 @@
 import {
   AmityPostComposerPageType,
   AmityStoryTabComponentEnum,
-} from '../../social/legacy/types';
+} from '../../social/types';
 import { AmityPostTargetSelectionPageType } from '../../social/enums';
 import {
   AddCategoryPageContext,
