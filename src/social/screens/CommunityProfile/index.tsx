@@ -360,6 +360,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
         animationType="fade"
         visible={isBottomSheetVisible}
         onRequestClose={closeBottomSheet}
+        statusBarTranslucent
       >
         <Pressable onPress={closeBottomSheet} style={styles.modalOverlay}>
           <Animated.View style={styles.modalContent}>

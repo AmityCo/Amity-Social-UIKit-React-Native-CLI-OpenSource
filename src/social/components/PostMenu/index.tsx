@@ -239,6 +239,7 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
         visible={isVisible}
         animationType="fade"
         onRequestClose={closeModal}
+        statusBarTranslucent
       >
         <Pressable onPress={closeModal} style={styles.modal}>
           <Animated.View
