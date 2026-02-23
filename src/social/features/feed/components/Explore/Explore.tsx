@@ -4,11 +4,11 @@ import { View, ScrollView, RefreshControl } from 'react-native';
 import { useStyles } from './styles';
 import { PageID } from '../../../../enums';
 
-import AmityRecommendedCommunityComponent from '../AmityRecommenedCommunityComponent/AmityRecommenedCommunityComponent';
+import AmityRecommendedCommunityComponent from '../RecommendedCommunities';
 import AmityCommunityCategoriesComponent from '../Categories';
-import AmityTrendingCommunitiesComponent from '../AmityTrendingCommunitiesComponent/AmityTrendingCommunitiesComponent';
-import AmityExploreCommunityEmptyComponent from '../AmityExploreCommunityEmptyComponent/AmityExploreCommunityEmptyComponent';
-import AmityExploreEmptyComponent from '../AmityExploreEmptyComponent/AmityExploreEmptyComponent';
+import AmityTrendingCommunitiesComponent from '../TrendingCommunities';
+import AmityExploreCommunityEmptyComponent from '../ExploreCommunityEmpty';
+import AmityExploreEmptyComponent from '../ExploreEmpty';
 import { useExplore } from '../../../../providers/ExploreProvider';
 import ExploreLoadingSkeleton from './ExploreLoadingSkeleton/ExploreLoadingSkeleton';
 import { useAmityPage } from '../../../../hooks';

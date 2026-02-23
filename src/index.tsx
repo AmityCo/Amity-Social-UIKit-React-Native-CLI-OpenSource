@@ -1,11 +1,10 @@
 import { BackHandler } from 'react-native';
-import AmityUiKitProvider from './core/providers/AmityUIKitProvider';
-import { ErrorBoundary } from './core/components/ErrorBoundary';
-import AmityUiKitSocial from './core/routes/AmityUIKitNavigator';
-import AmityPageRenderer from './core/routes/AmityPageRenderer';
-import PostDetail from './social/screens/PostDetail';
-import CommunityHome from './social/screens/CommunityHome';
-import UserProfile from './social/screens/UserProfile';
+import {
+  AmityPageRenderer,
+  AmityUiKitProvider,
+  AmityUiKitSocial,
+  ErrorBoundary,
+} from './core';
 import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
@@ -67,13 +66,14 @@ import {
   AmityCommunityLivestreamsNotificationSettingPage,
   AmityCommunityPinnedPostComponent,
   AmityPendingPostListComponent,
-} from './public-api';
-import {
-  AmityStoryTabComponentEnum,
+  AmityGlobalStoryTabWrapper,
   AmityPostComposerMode,
+  AmityStoryTabComponentEnum,
   mediaAttachment,
-} from './social/types';
-import { AmityGlobalStoryTabWrapper } from './social/components/MyStories';
+  CommunityHome,
+  PostDetail,
+  UserProfile,
+} from './social';
 
 // Polyfill for BackHandler compatibility with older libraries like react-native-modalbox
 // In React Native 0.65+, BackHandler.removeEventListener was removed

@@ -29,7 +29,7 @@ import StoryTargetSelection from '../../social/features/story/TargetSelection/Ta
 import AmityAllCategoriesPage from '../../social/screens/AllCategories';
 import AmityCommunitiesByCategoryPage from '../../social/screens/CommunitiesByCategory';
 import EditPost from '../../social/screens/EditPost/EditPost';
-import AmityExploreComponent from '../../social/features/feed/components/AmityExploreComponent/AmityExploreComponent';
+import AmityExploreComponent from '../../social/features/feed/components/Explore';
 import PollPostComposer from '../../social/screens/PollPostComposer';
 import CommunityAddCategory from '../../social/screens/CommunityAddCategory';
 import CommunityAddMember from '../../social/screens/CommunityAddMember';
