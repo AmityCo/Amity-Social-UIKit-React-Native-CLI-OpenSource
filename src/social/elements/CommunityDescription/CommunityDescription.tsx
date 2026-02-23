@@ -46,8 +46,9 @@ const CommunityDescription: FC<CommunityDescriptionProps> = ({
       <ReadMore
         style={styles.description}
         numberOfLines={4}
-        expandOnly={true}
         seeMoreStyle={styles.seeMore}
+        seeLessText=""
+        seeLessStyle={styles.seeMore}
       >
         {description}
       </ReadMore>
