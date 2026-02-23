@@ -38,7 +38,7 @@ export { default as AmityCommunityLivestreamsNotificationSettingPage } from './f
 
 // Components
 
-export { default as AmityStoryTabComponent } from './features/story/components/AmityStoryTabComponent/AmityStoryTabComponent';
+export { default as AmityStoryTabComponent } from './features/story/components/Tab/Tab';
 export { default as AmitySocialHomeTopNavigationComponent } from './features/feed/components/TopNavigation/TopNavigation';
 export { default as AmityCommunitySearchResultComponent } from './features/search/components/AmityCommunitySearchResultComponent/AmityCommunitySearchResultComponent';
 export { default as AmityTopSearchBarComponent } from './features/search/components/AmityTopSearchBarComponent/AmityTopSearchBarComponent';

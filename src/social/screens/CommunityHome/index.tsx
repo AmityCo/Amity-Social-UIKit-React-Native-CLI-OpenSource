@@ -48,7 +48,7 @@ import { TabName, PostTargetType } from '../../../core/enums';
 import uiSlice from '../../../core/stores/slices/uiSlice';
 import useConfig from '../../hooks/useConfig';
 import { ComponentID } from '../../enums/enumUIKitID';
-import AmityStoryTabComponent from '../../features/story/components/AmityStoryTabComponent/AmityStoryTabComponent';
+import AmityStoryTabComponent from '../../features/story/components/Tab/Tab';
 import { AmityStoryTabComponentEnum } from '../../types/index';
 import GalleryComponent from '../../components/Gallery/GalleryComponent';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
