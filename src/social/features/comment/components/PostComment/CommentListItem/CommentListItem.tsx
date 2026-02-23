@@ -21,39 +21,39 @@ import {
   reportOutLine,
   storyDraftDeletHyperLink,
   threeDots,
-} from '../../../../../core/assets/icons/xml';
+} from '../../../../../../core/assets/icons/xml';
 import type {
   UserInterface,
   IMentionPosition,
-} from '../../../../../core/types';
+} from '../../../../../../core/types';
 
 import {
   addCommentReaction,
   removeCommentReaction,
-} from '../../../../../core/legacy/comment';
-import { getAmityUser } from '../../../../../core/legacy/user';
+} from '../../../../../../core/legacy/comment';
+import { getAmityUser } from '../../../../../../core/legacy/user';
 import { Pressable } from 'react-native';
-import useAuth from '../../../../../core/hooks/useAuth';
+import useAuth from '../../../../../../core/hooks/useAuth';
 import {
   isReportTarget,
   reportTargetById,
   unReportTargetById,
-} from '../../../../../core/legacy/feed';
-import EditCommentModal from '../../../../components/legacy/EditCommentModal';
+} from '../../../../../../core/legacy/feed';
+import EditCommentModal from '../../../../../components/legacy/EditCommentModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import ReplyCommentList from '../ReplyCommentList/index';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
-import { useTimeDifference } from '../../../../hooks';
-import ModeratorBadgeElement from '../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
-import { ComponentID, PageID } from '../../../../enums';
-import { LinkPreview } from '../../../../components/PreviewLink/LinkPreview';
-import AmityReactionListComponent from '../../../reaction/List';
-import uiSlice from '../../../../../core/stores/slices/uiSlice';
-import { useUIKitDispatch } from '../../../../../core/stores/store';
+import { useTimeDifference } from '../../../../../hooks';
+import ModeratorBadgeElement from '../../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
+import { ComponentID, PageID } from '../../../../../enums';
+import { LinkPreview } from '../../../../../components/PreviewLink/LinkPreview';
+import AmityReactionListComponent from '../../../../reaction/components/List';
+import uiSlice from '../../../../../../core/stores/slices/uiSlice';
+import { useUIKitDispatch } from '../../../../../../core/stores/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
 
 export interface IComment {
   commentId: string;

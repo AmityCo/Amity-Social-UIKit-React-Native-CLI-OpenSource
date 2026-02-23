@@ -34,7 +34,7 @@ import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
 } from '../../../enums/AmityPostContentComponentStyle';
-import AmityPostCommentComponent from '../../comment/AmityPostCommentComponent/AmityPostCommentComponent';
+import AmityPostCommentComponent from '../../comment/components/PostComment';
 
 import { closeIcon } from '../../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';

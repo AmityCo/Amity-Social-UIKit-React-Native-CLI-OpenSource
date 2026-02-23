@@ -11,7 +11,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../../../core/assets/icons/xml';
 import { useStyles } from './styles';
-import type { IComment } from '../../../features/comment/AmityPostCommentComponent/CommentListItem/CommentListItem';
+import type { IComment } from '../../../features/comment/components/PostComment/CommentListItem/CommentListItem';
 import { editComment } from '../../../../core/legacy/comment';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';

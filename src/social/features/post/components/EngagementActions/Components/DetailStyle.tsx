@@ -18,7 +18,7 @@ import {
 } from '../../../../../../core/legacy/feed';
 import LikeButtonIconElement from '../../../../../elements/LikeButtonIconElement/LikeButtonIconElement';
 import CommentButtonIconElement from '../../../../../elements/CommentButtonIconElement/CommentButtonIconElement';
-import AmityReactionListComponent from '../../../../reaction/List';
+import AmityReactionListComponent from '../../../../reaction/components/List';
 import { formatNumber } from '../../../../../../core/utils/number';
 
 const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({

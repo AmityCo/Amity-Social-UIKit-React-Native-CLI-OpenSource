@@ -18,33 +18,33 @@ import {
   personXml,
   reportOutLine,
   threeDots,
-} from '../../../../../core/assets/icons/xml';
-import type { UserInterface } from '../../../../../core/types';
+} from '../../../../../../core/assets/icons/xml';
+import type { UserInterface } from '../../../../../../core/types';
 import {
   addCommentReaction,
   removeCommentReaction,
-} from '../../../../../core/legacy/comment';
+} from '../../../../../../core/legacy/comment';
 import { Pressable } from 'react-native';
-import useAuth from '../../../../../core/hooks/useAuth';
-import { useTimeDifference } from '../../../../hooks/useTimeDifference';
+import useAuth from '../../../../../../core/hooks/useAuth';
+import { useTimeDifference } from '../../../../../hooks/useTimeDifference';
 import {
   isReportTarget,
   reportTargetById,
   unReportTargetById,
-} from '../../../../../core/legacy/feed';
-import EditCommentModal from '../../../../components/legacy/EditCommentModal';
+} from '../../../../../../core/legacy/feed';
+import EditCommentModal from '../../../../../components/legacy/EditCommentModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
-import { IMentionPosition } from '../../../../../core/types';
-import ModeratorBadgeElement from '../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
-import { ComponentID, PageID } from '../../../../enums';
-import AmityReactionListComponent from '../../../reaction/List';
-import RenderTextWithMention from '../../../../components/RenderTextWithMention/RenderTextWithMention';
-import uiSlice from '../../../../../core/stores/slices/uiSlice';
-import { useUIKitDispatch } from '../../../../../core/stores/store';
+import { IMentionPosition } from '../../../../../../core/types';
+import ModeratorBadgeElement from '../../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
+import { ComponentID, PageID } from '../../../../../enums';
+import AmityReactionListComponent from '../../../../reaction/components/List';
+import RenderTextWithMention from '../../../../../components/RenderTextWithMention/RenderTextWithMention';
+import uiSlice from '../../../../../../core/stores/slices/uiSlice';
+import { useUIKitDispatch } from '../../../../../../core/stores/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
+import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
 
 export interface IComment {
   commentId: string;

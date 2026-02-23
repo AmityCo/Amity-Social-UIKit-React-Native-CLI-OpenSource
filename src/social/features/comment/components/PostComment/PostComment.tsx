@@ -7,18 +7,18 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { UserInterface, IMentionPosition } from '../../../../core/types';
-import { getAmityUser } from '../../../../core/legacy/user';
+import { UserInterface, IMentionPosition } from '../../../../../core/types';
+import { getAmityUser } from '../../../../../core/legacy/user';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import CommentListItem from './CommentListItem/CommentListItem';
-import { deleteCommentById } from '../../../../core/legacy/comment';
-import { ComponentID, PageID } from '../../../enums';
-import { useAmityComponent } from '../../../hooks';
+import { deleteCommentById } from '../../../../../core/legacy/comment';
+import { ComponentID, PageID } from '../../../../enums';
+import { useAmityComponent } from '../../../../hooks';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
-import { isAmityAd } from '../../../hooks/useCustomRankingGlobalFeed';
-import CommentAdComponent from '../../../components/CommentAdComponent/CommentAdComponent';
-import { usePaginatorApi } from '../../../hooks/usePaginator';
-import { useCommentAdImpression } from '../../../hooks/useCommentAdImpression';
+import { isAmityAd } from '../../../../hooks/useCustomRankingGlobalFeed';
+import CommentAdComponent from '../../../../components/CommentAdComponent/CommentAdComponent';
+import { usePaginatorApi } from '../../../../hooks/usePaginator';
+import { useCommentAdImpression } from '../../../../hooks/useCommentAdImpression';
 import { useStyles } from './styles';
 
 export interface IComment {

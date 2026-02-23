@@ -40,8 +40,8 @@ export { default as AmityCommunityLivestreamsNotificationSettingPage } from './f
 
 export { default as AmityStoryTabComponent } from './features/story/components/Tab/Tab';
 export { default as AmitySocialHomeTopNavigationComponent } from './features/feed/components/TopNavigation/TopNavigation';
-export { default as AmityCommunitySearchResultComponent } from './features/search/components/AmityCommunitySearchResultComponent/AmityCommunitySearchResultComponent';
-export { default as AmityTopSearchBarComponent } from './features/search/components/AmityTopSearchBarComponent/AmityTopSearchBarComponent';
+export { default as AmityCommunitySearchResultComponent } from './features/search/components/CommunitySearchResult';
+export { default as AmityTopSearchBarComponent } from './features/search/components/TopSearchBar';
 export { default as AmityEmptyNewsFeedComponent } from './features/feed/components/EmptyNewsFeed';
 export { default as AmityGlobalFeedComponent } from './features/feed/components/GlobalFeed/GlobalFeed';
 export { default as AmityMyCommunitiesComponent } from './features/feed/components/MyCommunities/MyCommunities';
@@ -50,10 +50,10 @@ export { default as AmityPostContentComponent } from './features/post/components
 export { default as AmityCreatePostMenuComponent } from './features/feed/components/CreatePostMenu';
 export { default as AmityMediaAttachmentComponent } from './features/post/components/MediaAttachment';
 export { default as AmityDetailedMediaAttachmentComponent } from './features/post/components/DetailedMediaAttachment';
-export { default as AmityPostCommentComponent } from './features/comment/AmityPostCommentComponent/AmityPostCommentComponent';
+export { default as AmityPostCommentComponent } from './features/comment/components/PostComment';
 export { default as AmityPostEngagementActionsComponent } from './features/post/components/EngagementActions';
-export { default as AmityUserSearchResultComponent } from './features/search/components/AmityUserSearchResultComponent/AmityUserSearchResultComponent';
-export { default as AmityReactionListComponent } from './features/reaction/List';
+export { default as AmityUserSearchResultComponent } from './features/search/components/UserSearchResult';
+export { default as AmityReactionListComponent } from './features/reaction/components/List';
 export { default as AmityCommunityFeedComponent } from './screens/CommunityProfile/components/Feed';
 export { default as AmityCommunityHeaderComponent } from './screens/CommunityProfile/components/Header';
 export { default as AmityCommunityImageFeedComponent } from './screens/CommunityProfile/components/ImageFeed';
@@ -78,7 +78,5 @@ export {
 export { AmityGlobalStoryTabWrapper } from './components/MyStories';
 
 export { default as PostDetail } from './screens/PostDetail';
-
-export { default as CommunityHome } from './screens/CommunityHome';
 
 export { default as UserProfile } from './screens/UserProfile';

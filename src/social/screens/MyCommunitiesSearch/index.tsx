@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 import { useStyles } from './styles';
-import AmityTopSearchBarComponent from '../../features/search/components/AmityTopSearchBarComponent/AmityTopSearchBarComponent';
+import AmityTopSearchBarComponent from '../../features/search/components/TopSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAmityGlobalSearchViewModel } from '../../hooks';
 import { TabName } from '../../enums/enumTabName';

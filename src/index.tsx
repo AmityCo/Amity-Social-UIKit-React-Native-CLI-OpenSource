@@ -70,7 +70,6 @@ import {
   AmityPostComposerMode,
   AmityStoryTabComponentEnum,
   mediaAttachment,
-  CommunityHome,
   PostDetail,
   UserProfile,
 } from './social';
@@ -137,7 +136,6 @@ export {
   AmityExploreComponent,
   AmityPageRenderer,
   PostDetail,
-  CommunityHome,
   UserProfile,
   AmityAllCategoriesPage,
   AmityCommunitiesByCategoryPage,

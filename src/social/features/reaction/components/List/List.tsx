@@ -16,22 +16,22 @@ import React, {
 } from 'react';
 import { useStyles } from './styles';
 import Modal from 'react-native-modalbox';
-import { useReaction } from '../../../hooks';
+import { useReaction } from '../../../../hooks';
 import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
 import { SvgXml } from 'react-native-svg';
 import {
   fileSearch,
   likeReaction,
   // loveReaction,
-} from '../../../../core/assets/icons/xml';
+} from '../../../../../core/assets/icons/xml';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import { defaultAvatarUri } from '../../../../core/assets';
+import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
+import { defaultAvatarUri } from '../../../../../core/assets';
 import { UserRepository } from '@amityco/ts-sdk-react-native';
-import { formatNumber } from '../../../../core/utils/number';
+import { formatNumber } from '../../../../../core/utils/number';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
+import { MyMD3Theme } from '../../../../../core/providers/AmityUIKitProvider';
 
 type AmityReactionListComponentType = {
   referenceId: string;
