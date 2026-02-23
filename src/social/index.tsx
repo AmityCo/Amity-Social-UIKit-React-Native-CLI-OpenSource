@@ -58,7 +58,7 @@ export { default as AmityCommunityFeedComponent } from './screens/CommunityProfi
 export { default as AmityCommunityHeaderComponent } from './screens/CommunityProfile/components/Header';
 export { default as AmityCommunityImageFeedComponent } from './screens/CommunityProfile/components/ImageFeed';
 export { default as AmityCommunityVideoFeedComponent } from './screens/CommunityProfile/components/VideoFeed';
-export { AmityThumbnailActionComponent } from './features/livestream/components/AmityThumbnailActionComponent';
+export { AmityThumbnailActionComponent } from './features/livestream/components/ThumbnailAction';
 export { default as AmityExploreComponent } from './features/feed/components/Explore/Explore';
 export { default as AmityCommunityPinnedPostComponent } from './screens/CommunityProfile/components/PinnedPost';
 export { default as AmityPendingPostListComponent } from './features/community/PendingRequest/components/PendingPostList';

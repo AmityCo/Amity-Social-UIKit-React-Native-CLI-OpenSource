@@ -28,7 +28,7 @@ import Button from '../../../components/Button/Button';
 import { useRequestPermission } from '../../../hooks/useCamera';
 import NetInfo from '@react-native-community/netinfo';
 import { RoomStatus } from '../../../enums/roomStatus';
-import { AmityThumbnailActionComponent } from '../components/AmityThumbnailActionComponent';
+import { AmityThumbnailActionComponent } from '../components/ThumbnailAction';
 import { StartLivestreamButton } from '../../../elements/StartLivestreamButton';
 import { PageID } from '../../../enums';
 import { LiveTimerStatus } from '../../../elements/LiveTimerStatus';
