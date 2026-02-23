@@ -48,7 +48,7 @@ import { useTimeDifference } from '../../../../hooks';
 import ModeratorBadgeElement from '../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import { ComponentID, PageID } from '../../../../enums';
 import { LinkPreview } from '../../../../components/PreviewLink/LinkPreview';
-import AmityReactionListComponent from '../../../reaction/AmityReactionListComponent/AmityReactionListComponent';
+import AmityReactionListComponent from '../../../reaction/List';
 import uiSlice from '../../../../../core/stores/slices/uiSlice';
 import { useUIKitDispatch } from '../../../../../core/stores/store';
 import { useNavigation } from '@react-navigation/native';

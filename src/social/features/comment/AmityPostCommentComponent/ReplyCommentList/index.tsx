@@ -38,7 +38,7 @@ import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { IMentionPosition } from '../../../../../core/types';
 import ModeratorBadgeElement from '../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import { ComponentID, PageID } from '../../../../enums';
-import AmityReactionListComponent from '../../../reaction/AmityReactionListComponent/AmityReactionListComponent';
+import AmityReactionListComponent from '../../../reaction/List';
 import RenderTextWithMention from '../../../../components/RenderTextWithMention/RenderTextWithMention';
 import uiSlice from '../../../../../core/stores/slices/uiSlice';
 import { useUIKitDispatch } from '../../../../../core/stores/store';

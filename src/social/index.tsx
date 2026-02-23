@@ -53,7 +53,7 @@ export { default as AmityDetailedMediaAttachmentComponent } from './features/pos
 export { default as AmityPostCommentComponent } from './features/comment/AmityPostCommentComponent/AmityPostCommentComponent';
 export { default as AmityPostEngagementActionsComponent } from './features/post/components/EngagementActions';
 export { default as AmityUserSearchResultComponent } from './features/search/components/AmityUserSearchResultComponent/AmityUserSearchResultComponent';
-export { default as AmityReactionListComponent } from './features/reaction/AmityReactionListComponent/AmityReactionListComponent';
+export { default as AmityReactionListComponent } from './features/reaction/List';
 export { default as AmityCommunityFeedComponent } from './screens/CommunityProfile/components/Feed';
 export { default as AmityCommunityHeaderComponent } from './screens/CommunityProfile/components/Header';
 export { default as AmityCommunityImageFeedComponent } from './screens/CommunityProfile/components/ImageFeed';
