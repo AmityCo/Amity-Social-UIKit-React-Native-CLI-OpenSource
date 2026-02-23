@@ -51,7 +51,7 @@ export { default as AmityCreatePostMenuComponent } from './features/feed/compone
 export { default as AmityMediaAttachmentComponent } from './features/post/components/MediaAttachment';
 export { default as AmityDetailedMediaAttachmentComponent } from './features/post/components/DetailedMediaAttachment';
 export { default as AmityPostCommentComponent } from './features/comment/AmityPostCommentComponent/AmityPostCommentComponent';
-export { default as AmityPostEngagementActionsComponent } from './features/post/components/AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
+export { default as AmityPostEngagementActionsComponent } from './features/post/components/EngagementActions';
 export { default as AmityUserSearchResultComponent } from './features/search/components/AmityUserSearchResultComponent/AmityUserSearchResultComponent';
 export { default as AmityReactionListComponent } from './features/reaction/AmityReactionListComponent/AmityReactionListComponent';
 export { default as AmityCommunityFeedComponent } from './screens/CommunityProfile/components/Feed';
@@ -62,7 +62,7 @@ export { AmityThumbnailActionComponent } from './features/livestream/components/
 export { default as AmityExploreComponent } from './features/feed/components/Explore/Explore';
 export { default as AmityCommunityPinnedPostComponent } from './screens/CommunityProfile/components/PinnedPost';
 export { default as AmityPendingPostListComponent } from './features/community/PendingRequest/components/PendingPostList';
-export { default as AmityPostEngagementContentComponent } from './features/post/components/AmityPostEngagementContentComponent';
+export { default as AmityPostEngagementContentComponent } from './features/post/components/EngagementContent';
 
 export {
   AmityPostTargetSelectionPageType,

@@ -20,7 +20,7 @@ import { ComponentID, ElementID, PageID } from '../../../../enums';
 import AvatarElement from '../../../../elements/CommonElements/AvatarElement';
 import { useAmityComponent, useIsCommunityModerator } from '../../../../hooks';
 import ModeratorBadgeElement from '../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
-import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
+import AmityPostEngagementActionsComponent from '../EngagementActions';
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,

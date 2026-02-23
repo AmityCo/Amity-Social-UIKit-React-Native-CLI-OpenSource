@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStyles } from './styles';
-import AmityPostEngagementActionsComponent from '../AmityPostEngagementActionsComponent/AmityPostEngagementActionsComponent';
+import AmityPostEngagementActionsComponent from '../EngagementActions/EngagementActions';
 import { PostTargetType } from '../../../../../core/enums';
 import { AmityPostContentComponentStyleEnum } from '../../../../enums/AmityPostContentComponentStyle';
 import { ComponentID, PageID } from '../../../../enums';
