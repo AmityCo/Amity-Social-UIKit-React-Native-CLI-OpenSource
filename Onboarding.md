@@ -247,16 +247,6 @@ import { AmityUiKitProvider, AmityPageRenderer, AmityCommunityProfilePage } from
 
 Pass a modified copy (or a fully custom object) as `configs` to `AmityUiKitProvider`.
 
-### 4. SDK initialization
-
-`AmityUiKitProvider` internally calls `@amityco/ts-sdk-react-native`. Consumers only need to supply:
-
-- `apiKey` and `apiRegion` for environment routing.
-- `userId` and `displayName` to log in.
-- Optional `authToken` / `sessionHandler` callback for secure auth token rotation.
-
----
-
 ## Adding New Screens
 
 1. **Create the screen** in `src/social/screens/YourScreenName/index.tsx`.
@@ -266,66 +256,11 @@ Pass a modified copy (or a fully custom object) as `configs` to `AmityUiKitProvi
 
 ---
 
-## Adding New Features
-
-Follow the same tier structure used by existing features:
-
-1. **Elements** — add atomic UI to `src/social/elements/`.
-2. **Components** — compose elements into reusable components in `src/social/components/`.
-3. **Feature module** — create `src/social/features/yourFeature/` with sub-folders for components, hooks, and types scoped to that domain.
-4. **Screens** — if the feature needs a full page, add it under `src/social/screens/`.
-5. **Hooks** — add domain-specific hooks to `src/social/hooks/`. For paginated SDK collections, add to `src/social/hooks/collections/`.
-6. **Enums / Types** — add to `src/social/enums/` and `src/social/types/` as needed.
-
----
-
-## Dependencies Overview
-
-### Runtime
-
-Refer to `/package.json > dependencies`.
-
-Key runtime dependencies:
-
-- `@amityco/ts-sdk-react-native` — Amity platform SDK
-- `@reduxjs/toolkit` + `react-redux` — UI state management
-- `@tanstack/react-query` — Server state & caching
-- `react-hook-form` + `@hookform/resolvers` + `zod` — Form validation
-- `react-native-paper` — Material Design component baseline
-- `i18next` + `react-i18next` — Internationalization
-- `dayjs` — Date/time formatting
-- `@livekit/react-native` — Livestream transport
-- `react-native-vision-camera` — Camera capture
-- `react-native-linear-gradient` — Gradient rendering
-
-### Peer Dependencies
-
-Must be provided by the host app. Refer to `/package.json > peerDependencies`.
-
-- **Navigation:** `@react-navigation/native`, `.../stack`, `.../native-stack`
-- **Gestures / safe area:** `react-native-gesture-handler`, `react-native-screens`, `react-native-safe-area-context`
-- **Media:** `react-native-image-picker`, `react-native-video`, `react-native-video-controls`, `react-native-compressor`, `react-native-fs`, `react-native-svg`, `@react-native-community/datetimepicker`
-- **Storage / network:** `@react-native-async-storage/async-storage`, `@react-native-community/netinfo`, `react-native-get-random-values`
-- **Build tools:** `@babel/plugin-transform-export-namespace-from`, `metro-react-native-babel-preset`
-
----
-
 ## Assets Handling
 
 - Icons and images live in `src/core/assets/icons/` and `src/core/assets/images/`.
-- Config asset maps (theme-specific icon/color overrides) are in `src/core/assets/configs/`.
+- Config assets are deprecated
 
 > **Icons are JavaScript functions** that return an SVG string and are rendered via `react-native-svg`. This allows runtime color and size customization without bundling raster images.
 
 ---
-
-## TypeScript Path Aliases
-
-Defined in `tsconfig.json`:
-
-| Alias                                | Resolves to                             |
-| ------------------------------------ | --------------------------------------- |
-| `@amityco/react-native-social-uikit` | `src/index.tsx` (the public surface)    |
-| `~/*`                                | `src/*` (internal cross-module imports) |
-
-Use `~/social/...` or `~/core/...` for internal imports. Never use relative paths that traverse the `core` ↔ `social` boundary directly.
