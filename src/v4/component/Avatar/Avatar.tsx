@@ -54,7 +54,7 @@ function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
         {...imageProps}
         onError={() => setImageError(true)}
       />
-      {userAvatarProps.roles && isModerator(userAvatarProps.roles) && (
+      {userAvatarProps?.roles && isModerator(userAvatarProps?.roles) && (
         <ModeratorBadge style={styles.moderatorBadge} />
       )}
     </TouchableOpacity>
@@ -62,7 +62,7 @@ function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
     <SvgXml {...iconProps} />
   ) : (
     <TouchableOpacity
-      style={[styles.defaultUserAvatar, userAvatarProps.style]}
+      style={[styles.defaultUserAvatar, userAvatarProps?.style]}
       activeOpacity={0.7}
       onPress={() => {
         if (userAvatarProps?.shouldRedirectToUserProfile) {
@@ -75,7 +75,7 @@ function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
       <Typography.Body style={styles.firstChar}>
         {userAvatarProps.userName?.trim()?.charAt(0).toUpperCase()}
       </Typography.Body>
-      {userAvatarProps.roles && isModerator(userAvatarProps.roles) && (
+      {userAvatarProps?.roles && isModerator(userAvatarProps.roles) && (
         <ModeratorBadge style={styles.moderatorBadge} />
       )}
     </TouchableOpacity>
