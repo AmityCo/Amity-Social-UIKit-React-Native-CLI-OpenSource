@@ -41,6 +41,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 import AmityCommunityPinnedPostComponent from '../../../../v4/PublicApi/Components/AmityCommunityPinnedPostComponent/AmityCommunityPinnedPostComponent';
+import { usePostPermission } from '../../../../v4/hook/usePostPermission';
 
 type ICommunityProfilePage = {
   defaultCommunityId?: string;
@@ -273,6 +274,8 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
 
   const hasStoryPermission = useStoryPermission(communityId);
 
+  const hasPostPermission = usePostPermission({ community });
+
   const openBottomSheet = () => setIsBottomSheetVisible(true);
 
   const closeBottomSheet = () => setIsBottomSheetVisible(false);
@@ -350,7 +353,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
-  if (!community?.isJoined) return null;
+  if (!hasPostPermission) return null;
 
   return (
     <Fragment>

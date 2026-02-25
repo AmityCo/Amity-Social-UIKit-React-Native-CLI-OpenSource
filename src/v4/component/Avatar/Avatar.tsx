@@ -54,6 +54,9 @@ function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
         {...imageProps}
         onError={() => setImageError(true)}
       />
+      {userAvatarProps.roles && isModerator(userAvatarProps.roles) && (
+        <ModeratorBadge style={styles.moderatorBadge} />
+      )}
     </TouchableOpacity>
   ) : iconProps ? (
     <SvgXml {...iconProps} />
