@@ -221,6 +221,7 @@ function MemberItem({ member, communityId, refreshMembers }: MemberItemProps) {
           uri={member.user?.avatarCustomUrl}
           roles={member.roles}
           userName={member.user?.displayName ?? member.user?.userId}
+          userId={member.userId}
         />
         <Typography.BodyBold
           style={styles.userName}

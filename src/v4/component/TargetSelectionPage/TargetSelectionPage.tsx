@@ -19,6 +19,8 @@ import { useStyles } from './styles';
 import { Illustration } from '../../../v4/PublicApi/Components/AmityEmptyNewsFeedComponent/Elements';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { CommunityPostSettings } from '@amityco/ts-sdk-react-native';
+import { usePostPermission } from '../../../v4/hook/usePostPermission';
 
 export type FeedParams = {
   targetId: string;
@@ -76,7 +78,7 @@ const TargetSelectionPage = ({
   });
 
   const renderItem = ({ item }: { item: Amity.Community }) => {
-    return (
+    const target = (
       <TargetItem
         key={item.communityId}
         displayName={item.displayName}
@@ -88,12 +90,20 @@ const TargetSelectionPage = ({
             targetName: item.displayName,
             targetType: 'community',
             community: item,
+            postSetting: item.postSetting,
+            isPublic: item.isPublic,
           })
         }
         avatarElementId={ElementID.community_avatar}
         avatarFileId={item.avatarFileId}
       />
     );
+
+    if (item?.postSetting === CommunityPostSettings.ONLY_ADMIN_CAN_POST) {
+      return <AdminOnlyCommunity community={item}>{target}</AdminOnlyCommunity>;
+    }
+
+    return target;
   };
 
   return (
@@ -166,3 +176,14 @@ const TargetSelectionPage = ({
 };
 
 export default React.memo(TargetSelectionPage);
+
+type AdminOnlyCommunityProps = {
+  community: Amity.Community;
+  children: React.ReactNode;
+};
+
+function AdminOnlyCommunity({ community, children }: AdminOnlyCommunityProps) {
+  const hasPostPermission = usePostPermission({ community });
+
+  return hasPostPermission ? children : null;
+}
