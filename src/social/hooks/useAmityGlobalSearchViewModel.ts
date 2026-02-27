@@ -1,5 +1,6 @@
 import {
   CommunityRepository,
+  SearchUsersByEnum,
   UserRepository,
 } from '@amityco/ts-sdk-react-native';
 import { useState, useEffect } from 'react';
@@ -65,7 +66,11 @@ export const useAmityGlobalSearchViewModel = (
     } else if (searchType === TabName.Users && searchValue?.length >= 3) {
       setSearchResult(null);
       const unsubscribeUser = UserRepository.searchUserByDisplayName(
-        { displayName: searchValue, limit: 20 },
+        {
+          displayName: searchValue,
+          limit: 20,
+          searchBy: [SearchUsersByEnum.DISPLAY_NAME],
+        },
         ({ error, loading, data, hasNextPage, onNextPage }) => {
           if (error) return setSearchResult(null);
           if (!loading) {

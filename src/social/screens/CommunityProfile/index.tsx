@@ -37,10 +37,10 @@ import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../providers/BehaviourProvider';
 import { livestream, poll, post, story } from '../../../core/assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import AmityCommunityPinnedPostComponent from './components/PinnedPost/PinnedPost';
+import { usePostPermission } from '../../../social/hooks/usePostPermission';
 
 type ICommunityProfilePage = {
   defaultCommunityId?: string;
@@ -273,6 +273,8 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
 
   const hasStoryPermission = useStoryPermission(communityId);
 
+  const hasPostPermission = usePostPermission({ community });
+
   const openBottomSheet = () => setIsBottomSheetVisible(true);
 
   const closeBottomSheet = () => setIsBottomSheetVisible(false);
@@ -350,7 +352,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
-  if (!community?.isJoined) return null;
+  if (!hasPostPermission) return null;
 
   return (
     <Fragment>
