@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { useAmityElement, useFile } from '../../hooks';
 import { PageID, ComponentID, ElementID } from '../../enums';
@@ -24,7 +24,7 @@ const CategoryRowImage: FC<CategoryRowImageProps> = ({
     elementId,
   });
 
-  const [imageUri, setImageUri] = React.useState<string | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
 
   const styles = StyleSheet.create({
     contianer: {

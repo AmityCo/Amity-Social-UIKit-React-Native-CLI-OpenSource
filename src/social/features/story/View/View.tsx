@@ -1,5 +1,5 @@
 import { ActivityIndicator, View } from 'react-native';
-import React, { FC, memo, useCallback, useLayoutEffect, useState } from 'react';
+import { FC, memo, useCallback, useLayoutEffect, useState } from 'react';
 import { useFile, useStory, useStoryPermission } from '../../../hooks';
 import { useStyles } from './styles';
 import { isCommunityModerator } from '../../../../core/utils/permission';

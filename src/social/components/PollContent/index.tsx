@@ -1,4 +1,3 @@
-import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './style';
 import { PollFooter } from './PollFooter';

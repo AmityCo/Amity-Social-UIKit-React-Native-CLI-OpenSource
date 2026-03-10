@@ -1,8 +1,8 @@
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DimensionValue, Text, View } from 'react-native';
 import { useStyles } from '../styles';
-import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
+import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 
 type CommunityCategoryChipProps = {
   categoryId: string;

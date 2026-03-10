@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import { useStory } from '../../hooks/useStory';

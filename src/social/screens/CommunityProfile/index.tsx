@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import React, {
+import {
   Fragment,
   memo,
   useCallback,

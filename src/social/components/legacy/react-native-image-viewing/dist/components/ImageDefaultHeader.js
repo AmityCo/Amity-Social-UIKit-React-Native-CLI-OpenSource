@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import React from 'react';
 import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from 'react-native';
 const HIT_SLOP = { top: 16, left: 16, bottom: 16, right: 16 };
 const ImageDefaultHeader = ({ onRequestClose }) => (

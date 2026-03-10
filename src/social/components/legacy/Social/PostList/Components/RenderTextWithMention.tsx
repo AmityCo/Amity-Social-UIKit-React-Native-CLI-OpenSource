@@ -1,6 +1,6 @@
 import { Text } from 'react-native';
 import { useStyles } from '../styles';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { IMentionPosition } from '../../../../../../core/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

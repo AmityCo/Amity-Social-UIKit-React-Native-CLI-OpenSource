@@ -1,10 +1,4 @@
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   TouchableOpacity,

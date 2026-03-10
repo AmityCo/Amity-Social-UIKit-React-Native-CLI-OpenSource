@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../../enums';
 import { arrowRight } from '../../../../core/assets/icons';

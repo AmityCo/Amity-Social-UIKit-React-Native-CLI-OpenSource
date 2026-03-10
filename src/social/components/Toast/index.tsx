@@ -2,7 +2,7 @@ import { useStyles } from './styles';
 import { Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useToast } from '../../../core/stores/slices/toastSlice';
-import React, { memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { Typography } from '../../../core/components/Typography/Typography';
 import { informative, failed, success } from '../../../core/assets/icons';
 import { CircularProgressIndicator } from '../CircularProgressIndicator';

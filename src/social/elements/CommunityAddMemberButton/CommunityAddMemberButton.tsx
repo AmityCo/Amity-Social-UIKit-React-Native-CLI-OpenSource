@@ -1,4 +1,3 @@
-import React from 'react';
 import { SvgXml } from 'react-native-svg';
 import { plus } from '../../../core/assets/icons';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';

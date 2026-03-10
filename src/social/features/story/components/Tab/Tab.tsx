@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import {
   AmityStoryTabComponentEnum,
   AmityStoryTabComponentType,

@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 // import { useTranslation } from 'react-i18next';
 
 import { View, Text, TouchableOpacity, Image, ImageStyle } from 'react-native';

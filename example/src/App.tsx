@@ -110,6 +110,7 @@ export default function App() {
       fcmToken={fcmToken} // android:fcm iOS:APN
     >
       <AmityUiKitSocial />
+      <NetworkLogger />
     </AmityUiKitProvider>
   );
 }

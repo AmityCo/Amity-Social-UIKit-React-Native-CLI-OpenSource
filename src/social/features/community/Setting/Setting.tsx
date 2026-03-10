@@ -1,4 +1,3 @@
-import React from 'react';
 import Header from './components/Header';
 import { Title } from '../../../elements';
 import { View, ScrollView } from 'react-native';

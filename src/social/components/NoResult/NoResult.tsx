@@ -1,4 +1,3 @@
-import React from 'react';
 import { SvgXml } from 'react-native-svg';
 import { noResult } from '../../../core/assets/icons';
 import { View, ViewProps } from 'react-native';

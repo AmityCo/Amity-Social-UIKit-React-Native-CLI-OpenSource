@@ -1,5 +1,4 @@
 import * as z from 'zod';
-import React from 'react';
 import { useStyles } from './styles';
 import Header from './components/Header';
 import { Switch, View } from 'react-native';

@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useState } from 'react';
+import { FC, memo, useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modalbox';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
+import { MyMD3Theme } from '../../../../../core/providers/AmityUIKitProvider';
 import { useStyles } from '../styles';
 import useConfig from '../../../../hooks/useConfig';
 import { ComponentID, ElementID, PageID } from '../../../../enums';

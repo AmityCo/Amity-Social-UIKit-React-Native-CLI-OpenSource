@@ -1,4 +1,3 @@
-import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from '../styles';

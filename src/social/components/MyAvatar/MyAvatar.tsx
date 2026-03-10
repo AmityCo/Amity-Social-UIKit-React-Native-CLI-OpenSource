@@ -1,5 +1,5 @@
 import { Image, ImageProps, StyleSheet } from 'react-native';
-import React, { FC, memo, useEffect, useState } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import useAuth from '../../../core/hooks/useAuth';
 import { useFile } from '../../hooks';
 import { defaultAvatarUri } from '../../../core/assets';

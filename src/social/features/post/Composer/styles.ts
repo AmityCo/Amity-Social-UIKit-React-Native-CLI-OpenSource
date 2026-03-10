@@ -1,5 +1,5 @@
 import { StyleSheet, useWindowDimensions } from 'react-native';
-import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
+import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const useStyles = (theme: MyMD3Theme) => {

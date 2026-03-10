@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Switch } from 'react-native';
 import { usePollPostComposerContext } from '../PollPostComposer';
 import { useStyles } from '../styles';

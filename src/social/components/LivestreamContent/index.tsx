@@ -6,7 +6,7 @@ import {
   Pressable,
   ImageStyle,
 } from 'react-native';
-import React, { useEffect, useState, useCallback, Fragment } from 'react';
+import { useEffect, useState, useCallback, Fragment, memo } from 'react';
 import { FileRepository, RoomRepository } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
@@ -189,4 +189,4 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
   );
 };
 
-export default React.memo(LivestreamContent);
+export default memo(LivestreamContent);

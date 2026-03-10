@@ -1,4 +1,3 @@
-import React from 'react';
 import { View } from 'react-native';
 import { Typography } from '../../../core/components/Typography/Typography';
 import { useStyles } from './styles';

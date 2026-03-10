@@ -1,12 +1,5 @@
 import { FlatList, View } from 'react-native';
-import React, {
-  FC,
-  useState,
-  useRef,
-  memo,
-  useEffect,
-  useCallback,
-} from 'react';
+import { FC, useState, useRef, memo, useEffect, useCallback } from 'react';
 import { UserInterface, IMentionPosition } from '../../../../../core/types';
 import { getAmityUser } from '../../../../../core/legacy/user';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';

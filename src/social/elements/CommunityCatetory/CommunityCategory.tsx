@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { CommunityCategoryChips } from '../../components/CommunityCategoryChips/CommunityCategoryChips';
 import { ComponentID, ElementID, PageID } from '../../enums';
 import { useAmityElement } from '../../hooks';

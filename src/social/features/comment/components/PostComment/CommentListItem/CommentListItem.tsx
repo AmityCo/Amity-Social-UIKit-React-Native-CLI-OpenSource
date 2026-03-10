@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import {
   View,
@@ -41,7 +40,7 @@ import {
 } from '../../../../../../core/legacy/feed';
 import EditCommentModal from '../../../../../components/legacy/EditCommentModal';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
+import type { MyMD3Theme } from '../../../../../../core/providers/AmityUIKitProvider';
 import ReplyCommentList from '../ReplyCommentList/index';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../../../hooks';

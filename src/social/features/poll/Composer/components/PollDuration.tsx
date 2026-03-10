@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import React from 'react';
 import { View, TouchableOpacity, Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { arrowDown } from '../../../../../core/assets/icons';

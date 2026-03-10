@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useStyles } from './styles';
 import Header from './components/Header';
 import { ScrollView, View } from 'react-native';

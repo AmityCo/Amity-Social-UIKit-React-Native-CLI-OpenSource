@@ -11,7 +11,7 @@ import {
   StatusBar,
   Linking,
 } from 'react-native';
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useState } from 'react';
 import {
   ComponentID,
   ElementID,

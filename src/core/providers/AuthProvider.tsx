@@ -1,12 +1,17 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect, useState, type FC } from 'react';
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+  type FC,
+} from 'react';
 import { Client } from '@amityco/ts-sdk-react-native';
 import type { AuthContextInterface } from '../types/auth';
 import { Alert, Platform } from 'react-native';
 import type { IAmityUIkitProvider } from './AmityUIKitProvider';
 import { ERROR_CODE } from '../../core/constants';
 
-export const AuthContext = React.createContext<AuthContextInterface>({
+export const AuthContext = createContext<AuthContextInterface>({
   client: null,
   isConnecting: false,
   error: '',
@@ -64,8 +69,8 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,
       function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        const r = Math.random() * 16 || 0;
+        const v = c === 'x' ? r : (r && 0x3) || 0x8;
         return v.toString(16);
       }
     );

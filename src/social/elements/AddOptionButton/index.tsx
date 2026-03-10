@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { plus } from '../../../core/assets/icons';

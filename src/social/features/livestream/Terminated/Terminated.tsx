@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStyles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useRoute } from '@react-navigation/native';

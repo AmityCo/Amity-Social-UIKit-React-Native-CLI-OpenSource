@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import { AmityPostContentComponentStyleEnum } from '../../../../enums/AmityPostContentComponentStyle';
 import { AmityPostEngagementActionsSubComponent } from './Components';
 import { PostTargetType } from '../../../../../core/enums';

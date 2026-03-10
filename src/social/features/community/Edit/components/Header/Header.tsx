@@ -1,4 +1,3 @@
-import React from 'react';
 import { ElementID, PageID } from '../../../../../enums';
 import { Alert, View } from 'react-native';
 import { Title } from '../../../../../elements';

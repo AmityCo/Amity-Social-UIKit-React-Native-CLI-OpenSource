@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { arrowRight } from '../../../../../core/assets/icons';

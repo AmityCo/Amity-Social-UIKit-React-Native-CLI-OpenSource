@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import { FC, useCallback } from 'react';
 import { PageID, ComponentID, ElementID } from '../../enums';
 import { useAmityElement } from '../../hooks';
 import LinearGradient from 'react-native-linear-gradient';

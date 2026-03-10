@@ -1,5 +1,5 @@
 import { Image } from 'react-native';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useConfigImageUri } from '../../../../../hooks';
 import { ComponentID, ElementID, PageID } from '../../../../../enums';
 import useConfig from '../../../../../hooks/useConfig';

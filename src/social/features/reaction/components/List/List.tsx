@@ -6,14 +6,7 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useStyles } from './styles';
 import Modal from 'react-native-modalbox';
 import { useReaction } from '../../../../hooks';

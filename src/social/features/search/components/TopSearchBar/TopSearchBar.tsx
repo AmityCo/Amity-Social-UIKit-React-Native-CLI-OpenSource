@@ -1,5 +1,5 @@
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { useUiKitConfig, useConfigImageUri } from '../../../../hooks';

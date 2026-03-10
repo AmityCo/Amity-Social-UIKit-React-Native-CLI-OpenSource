@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useRef, useState } from 'react';
+import { FC, memo, useCallback, useRef, useState } from 'react';
 import { FlatList, View } from 'react-native';
 
 import { RefreshControl } from 'react-native';

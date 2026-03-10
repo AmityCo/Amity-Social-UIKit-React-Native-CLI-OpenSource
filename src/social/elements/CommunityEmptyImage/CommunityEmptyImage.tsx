@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { useConfigImageUri } from '../../hooks/useConfigImageUri';
 import { useAmityElement } from '../../hooks';

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import BackButtonIconElement from '../BackButtonIconElement/BackButtonIconElement';
 import {

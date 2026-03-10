@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { useStyles } from './styles';
 import { useGlobalStory } from '../../hooks/useGlobalStory';

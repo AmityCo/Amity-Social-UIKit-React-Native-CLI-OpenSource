@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStyles } from './styles';
 import AmityPostEngagementActionsComponent from '../EngagementActions/EngagementActions';
 import { PostTargetType } from '../../../../../core/enums';

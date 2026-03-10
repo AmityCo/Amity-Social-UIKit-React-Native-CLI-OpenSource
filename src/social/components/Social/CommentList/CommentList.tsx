@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { FC, useEffect, useState, useRef, memo } from 'react';
+import { FC, useEffect, useState, useRef, memo } from 'react';
 import { UserInterface, IMentionPosition } from '../../../../core/types';
 import { getAmityUser } from '../../../../core/legacy/user';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
@@ -125,7 +125,6 @@ const CommentList: FC<ICommentListProp> = ({
     });
     setMentionNames(checkMentionNames);
     setMentionsPosition(checkMentionPosition);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputMessage]);
 
   const queryComment = async (comments: Amity.InternalComment[]) => {

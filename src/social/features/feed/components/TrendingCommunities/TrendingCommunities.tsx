@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import { ComponentID, PageID } from '../../../../enums';
 import { useStyles } from './styles';

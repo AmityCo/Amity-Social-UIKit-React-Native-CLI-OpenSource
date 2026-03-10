@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { View, TouchableOpacity, Platform } from 'react-native';
 import { useStyles } from './styles';
 import LiveStreamEndThumbnail from '../../../components/LivestreamContent/LivestreamEndedThumbnail';

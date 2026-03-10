@@ -62,7 +62,6 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
         <Button
           type="primary"
           icon={plus()}
-          themeStyle={themeStyles}
           style={styles.createCommunityButton}
           onPress={onPressCreateCommunity}
         >

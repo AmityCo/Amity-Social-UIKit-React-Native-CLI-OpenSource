@@ -1,5 +1,5 @@
 import { StyleSheet, Text, Animated, ActivityIndicator } from 'react-native';
-import React, { FC, memo, useEffect, useRef } from 'react';
+import { FC, memo, useEffect, useRef } from 'react';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
 import {
   RootState,

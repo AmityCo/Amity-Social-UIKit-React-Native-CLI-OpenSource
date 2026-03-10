@@ -1,6 +1,6 @@
 import { useStyles } from './styles';
 import { Circle, Svg } from 'react-native-svg';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { StyleSheet, View, Animated } from 'react-native';
 
 type CircularProgressIndicatorProps = {

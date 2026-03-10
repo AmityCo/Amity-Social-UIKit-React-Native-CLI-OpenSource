@@ -1,4 +1,3 @@
-import React from 'react';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import { useAmityElement } from '../../hooks';

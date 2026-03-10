@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-import React, { FC, memo, useState, useCallback, useEffect } from 'react';
+import { FC, memo, useState, useCallback, useEffect } from 'react';
 import {
   PostRepository,
   SubscriptionLevels,

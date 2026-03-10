@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Animated,
   Image,
@@ -312,7 +312,7 @@ export const StoryListItem = ({
     );
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (onStorySeen && currentPage === index) {
       onStorySeen({
         user_id: userId,

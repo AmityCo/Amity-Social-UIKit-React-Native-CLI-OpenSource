@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStyles } from './styles';
 import { useAmityElement } from '../../hooks';
 import { ComponentID, ElementID, PageID } from '../../enums';

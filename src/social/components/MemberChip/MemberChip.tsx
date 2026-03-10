@@ -1,4 +1,3 @@
-import React from 'react';
 import Avatar from '../Avatar';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useStyles } from './styles';

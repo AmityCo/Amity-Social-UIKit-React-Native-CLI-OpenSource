@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Animated,
   Image,
@@ -81,7 +80,7 @@ export const StoryListItem = ({
   const { handleReaction } = useStory();
   const prevCurrentPage = usePrevious(currentPage);
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       const unsubscribe = StoryRepository.getStoryByStoryId(
         storyId,
         ({ error, loading, data }) => {
@@ -232,7 +231,7 @@ export const StoryListItem = ({
     }
   }, [storyHyperLink?.url]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (onStorySeen && currentPage === index) {
       onStorySeen({
         user_id: userId,

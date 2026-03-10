@@ -1,4 +1,4 @@
-import React, { useCallback, memo } from 'react';
+import { useCallback, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ComponentID, PageID } from '../../../../enums/enumUIKitID';
 import { useAmityComponent, useStoryPermission } from '../../../../hooks';

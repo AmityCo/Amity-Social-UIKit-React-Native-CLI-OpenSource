@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../../../../enums';
 import { Typography } from '../../../../../../core/components/Typography/Typography';
 import { useStyles } from './styles';

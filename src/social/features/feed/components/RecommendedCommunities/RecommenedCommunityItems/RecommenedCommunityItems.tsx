@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Image, View } from 'react-native';
 import { ComponentID, ImageSizeState, PageID } from '../../../../../enums';
 import { useFile } from '../../../../../hooks';
@@ -25,7 +25,7 @@ export const RecommendedCommunityItem: React.FC<
   const { getImage } = useFile();
   const componentId = ComponentID.recommended_communities;
   const styles = useStyles();
-  const [imageUrl, setImageUrl] = React.useState<string | undefined>(undefined);
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const fetchImage = async () => {

@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { Typography } from '../../../core/components/Typography/Typography';
 import { StyleSheet, TextProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';

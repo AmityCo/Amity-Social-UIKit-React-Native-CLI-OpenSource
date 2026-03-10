@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStyles } from './styles';
 import { useAmityElement } from '../../../../../hooks';
 import { arrowRight } from '../../../../../../core/assets/icons';

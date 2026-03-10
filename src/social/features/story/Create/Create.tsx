@@ -9,14 +9,7 @@ import {
   useWindowDimensions,
   ViewStyle,
 } from 'react-native';
-import React, {
-  useCallback,
-  useState,
-  useRef,
-  useEffect,
-  FC,
-  memo,
-} from 'react';
+import { useCallback, useState, useRef, useEffect, FC, memo } from 'react';
 import {
   useCameraDevice,
   Camera,

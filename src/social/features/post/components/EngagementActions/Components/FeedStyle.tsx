@@ -1,12 +1,5 @@
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-} from 'react';
+import { FC, memo, useCallback, useEffect, useState, useRef } from 'react';
 import { AmityPostEngagementActionsSubComponentType } from './type';
 import {
   PostRepository,

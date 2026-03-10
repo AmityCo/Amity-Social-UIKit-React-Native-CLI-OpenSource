@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback } from 'react';
 import { FlatList, Pressable, View } from 'react-native';
 import { arrowRight } from '../../../../../core/assets/icons';
 import CategoryChip from '../../../../components/CategoryChip/CategoryChip';

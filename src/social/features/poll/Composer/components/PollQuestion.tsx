@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStyles } from '../styles';
 import { View } from 'react-native';
 import { MAX_POLL_QUESTION_LENGTH } from '../../../../../core/constants';

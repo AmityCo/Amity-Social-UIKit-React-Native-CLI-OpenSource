@@ -1,4 +1,3 @@
-import React from 'react';
 import { PageID } from '../../../../../enums';
 import { Alert, View } from 'react-native';
 import { Title, CloseButton } from '../../../../../elements';

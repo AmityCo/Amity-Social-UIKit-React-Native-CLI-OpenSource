@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStyles } from './style';
 import { TouchableOpacity, View } from 'react-native';
 import { Typography } from '../../../core/components/Typography/Typography';

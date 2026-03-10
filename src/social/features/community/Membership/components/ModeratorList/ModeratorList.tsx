@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStyles } from './styles';
 import { FlatList, View } from 'react-native';
 import { useCommunityMemberCollection } from '../../../../../hooks/collections/community/useCommunityMemberCollection';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStyles } from './styles';
 import { TextProps } from 'react-native';
 import { useAmityElement } from '../../hooks';

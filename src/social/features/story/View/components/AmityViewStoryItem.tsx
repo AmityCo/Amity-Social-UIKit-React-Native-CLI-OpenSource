@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, { FC, memo, useCallback, useRef, useState } from 'react';
+import { FC, memo, useCallback, useRef, useState } from 'react';
 import { useConfigImageUri, useStory } from '../../../../hooks';
 import { useStyles } from '../styles';
 import Video, { OnLoadData } from 'react-native-video';

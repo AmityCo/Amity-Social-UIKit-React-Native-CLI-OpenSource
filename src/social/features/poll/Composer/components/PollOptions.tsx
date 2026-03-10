@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, TextInput } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { trash } from '../../../../../core/assets/icons';

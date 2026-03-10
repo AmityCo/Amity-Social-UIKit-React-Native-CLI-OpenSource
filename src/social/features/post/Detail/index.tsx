@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import React, {
+import {
   FC,
   memo,
   useCallback,
@@ -164,7 +164,6 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     });
     setMentionNames(checkMentionNames);
     setMentionsPosition(checkMentionPosition);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputMessage]);
 
   const onPressBack = useCallback(() => {
