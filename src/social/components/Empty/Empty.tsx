@@ -1,8 +1,7 @@
 import { useStyle } from './styles';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, View, ViewProps } from 'react-native';
 import { Typography } from '../../../core/components/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
-import { ViewProps } from 'react-native-svg/lib/typescript/fabric/utils';
 import emptyList from '../../../core/assets/icons/emptyList';
 import {
   block,
@@ -20,8 +19,6 @@ export type EmptyProps = {
 export function Empty({ heightPercent = 0.3, children, ...props }: EmptyProps) {
   const { styles } = useStyle();
   const dimension = Dimensions.get('window');
-
-  console.log('heightPercent', heightPercent, dimension.height * heightPercent);
 
   return (
     <View
