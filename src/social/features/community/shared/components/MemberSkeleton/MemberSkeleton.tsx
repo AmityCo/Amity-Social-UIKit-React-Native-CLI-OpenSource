@@ -1,4 +1,3 @@
-import React from 'react';
 import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
 import { useStyles } from './styles';
 

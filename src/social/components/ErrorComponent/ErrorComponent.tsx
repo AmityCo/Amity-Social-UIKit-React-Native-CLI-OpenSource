@@ -1,7 +1,7 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { useStyle } from './styles';
 import { View } from 'react-native';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { SvgXml } from 'react-native-svg';
 import { errorPage } from '../../../core/assets/icons';
@@ -40,7 +40,6 @@ const ErrorComponent: FC<ErrorComponentProps> = ({
           type="primary"
           onPress={onPress}
           style={styles.button}
-          themeStyle={themeStyle}
           size={BUTTON_SIZE.LARGE}
         >
           Go back

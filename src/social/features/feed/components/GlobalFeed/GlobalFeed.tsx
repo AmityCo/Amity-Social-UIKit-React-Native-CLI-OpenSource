@@ -33,7 +33,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   const { itemWithAds, refresh, loading, onNextPage } =
     useCustomRankingGlobalFeed();
   const componentId = ComponentID.global_feed_component;
-  const { isExcluded, themeStyles, accessibilityId } = useAmityComponent({
+  const { isExcluded, accessibilityId } = useAmityComponent({
     pageId,
     componentId,
   });
@@ -71,7 +71,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       renderItem={({ item, index }) => {
         return (
           <>
-            {index !== 0 && <Divider themeStyles={themeStyles} />}
+            {index !== 0 && <Divider />}
             {isAmityAd(item) ? (
               <PostAdComponent ad={item as Amity.Ad} />
             ) : (

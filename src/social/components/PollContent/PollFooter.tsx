@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStyles } from './style';
 import { TouchableOpacity, View } from 'react-native';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { Client } from '@amityco/ts-sdk-react-native';
 import { formatTimeLeft } from '../../../core/utils/time';
 

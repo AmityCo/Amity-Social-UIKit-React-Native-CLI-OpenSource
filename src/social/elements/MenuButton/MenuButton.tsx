@@ -1,4 +1,3 @@
-import React from 'react';
 import { menu } from '../../../core/assets/icons';
 import { useAmityElement } from '../../hooks';
 import { SvgXml, XmlProps } from 'react-native-svg';

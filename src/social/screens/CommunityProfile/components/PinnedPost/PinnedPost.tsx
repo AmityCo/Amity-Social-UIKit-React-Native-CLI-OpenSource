@@ -1,5 +1,4 @@
 import { useStyles } from './styles';
-import React from 'react';
 import { ComponentID, PageID } from '../../../../enums';
 import { useAmityComponent, useCommunity } from '../../../../hooks';
 import AmityPostContentComponent from '../../../../features/post/components/Content/Content';
@@ -9,10 +8,9 @@ import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
 } from '../../../../enums/AmityPostContentComponentStyle';
-import EmptyComponent from '../../../../components/EmptyComponent/EmptyComponent';
-import { emptyPost, privateFeed } from '../../../../../core/assets/icons';
+import { Empty } from '../../../../components';
 import PostFeedSkeleton from '../../../../components/PostFeedSkeleton';
-import { usePinnedPostCollection } from '../../../../hooks/collections/usePinnedPostCollection';
+import { usePinnedPostCollection } from '../../../../hooks/collections/post/usePinnedPostCollection';
 
 type AmityCommunityPinnedPostComponentProps = {
   communityId: string;
@@ -22,7 +20,7 @@ function AmityCommunityPinnedPostComponent({
   communityId,
 }: AmityCommunityPinnedPostComponentProps) {
   const styles = useStyles();
-  const { accessibilityId, themeStyles } = useAmityComponent({
+  const { accessibilityId } = useAmityComponent({
     pageId: PageID.community_profile_page,
     componentId: ComponentID.community_pin,
   });
@@ -38,14 +36,13 @@ function AmityCommunityPinnedPostComponent({
 
   if (!community?.isJoined && !community?.isPublic) {
     return (
-      <View style={styles.listContainer}>
-        <EmptyComponent
-          icon={privateFeed}
-          themeStyle={themeStyles}
+      <Empty heightPercent={0.3}>
+        <Empty.Content
+          icon="private"
           title="This community is private"
           description="Join this community to see its content and members."
         />
-      </View>
+      </Empty>
     );
   }
 
@@ -91,13 +88,9 @@ function AmityCommunityPinnedPostComponent({
           : pinnedPosts),
       ]}
       ListEmptyComponent={
-        <View style={styles.listContainer}>
-          <EmptyComponent
-            icon={emptyPost}
-            themeStyle={themeStyles}
-            title="No pinned post yet"
-          />
-        </View>
+        <Empty heightPercent={0.3}>
+          <Empty.Content icon="post" title="No pinned post yet" />
+        </Empty>
       }
       onEndReached={() => {
         if (
@@ -112,7 +105,7 @@ function AmityCommunityPinnedPostComponent({
       renderItem={({ item, index }) => {
         return (
           <View>
-            {index !== 0 && <Divider themeStyles={themeStyles} />}
+            {index !== 0 && <Divider />}
             <AmityPostContentComponent
               post={item.post}
               category={

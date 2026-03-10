@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useContext, useMemo } from 'react';
+import { ReactNode, createContext, useContext, useMemo } from 'react';
 import { IBehaviour } from '../../core/types/behaviour';
 
 const BehaviourContext = createContext<IBehaviour>(undefined);
@@ -32,6 +32,12 @@ export const BehaviourProvider = ({
       AmityCommunityMembershipPageBehavior: {},
       AmityCommunityNotificationSettingPageBehavior: {},
       AmityPostComposerPageBehavior: {},
+      AmityUserProfilePageBehavior: {},
+      AmityBlockedUsersPageBehavior: {},
+      AmityUserRelationshipPageBehavior: {},
+      AmityUserProfileHeaderComponentBehavior: {},
+      AmityUserPendingFollowRequestsPageBehavior: {},
+      AmityUserFeedComponentBehavior: {},
     }),
     []
   );

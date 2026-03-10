@@ -1,13 +1,14 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
 import {
   TouchableOpacity,
   TouchableOpacityProps,
   View,
   ViewProps,
 } from 'react-native';
-import { Typography } from '../../../social/components/Typography/Typography';
+import { Typography } from '../Typography/Typography';
 import { useStyles } from './styles';
 import { capitalize } from '../../../social/utils';
+import { SvgXml, XmlProps } from 'react-native-svg';
 
 type TabsContextType<T> = {
   variant: 'chip' | 'underline' | 'icon';
@@ -15,11 +16,18 @@ type TabsContextType<T> = {
   onChangeTab: (val: T) => void;
 };
 
-const TabContext = createContext<TabsContextType<any> | null>(null);
+const defaultTabContext: TabsContextType<any> = {
+  variant: 'chip',
+  activeTab: '',
+  onChangeTab: () => {},
+};
+
+const TabContext = createContext<TabsContextType<any>>(defaultTabContext);
 
 function useTabContext<T>() {
-  const context = useContext<TabsContextType<T> | null>(TabContext);
-  return context;
+  return useContext<TabsContextType<T>>(
+    TabContext as React.Context<TabsContextType<T>>
+  );
 }
 
 type TabsProps<T extends string> = TabsContextType<T> & {
@@ -42,7 +50,8 @@ function Tabs<T extends string>({
 type TabListProps = ViewProps;
 
 function TabList({ children, style, ...props }: TabListProps) {
-  const { styles } = useStyles();
+  const { styles: baseStyles } = useStyles();
+  const styles = baseStyles as Record<string, any>;
   const { variant } = useTabContext();
 
   return (
@@ -55,19 +64,22 @@ function TabList({ children, style, ...props }: TabListProps) {
 type TabProps<T> = TouchableOpacityProps & {
   value: T;
   type?: 'title' | 'body';
+  iconProps?: Pick<XmlProps, 'width' | 'height' | 'xml'>;
 };
 
-function Tab<T>({ value, children, type = 'title', ...props }: TabProps<T>) {
-  const { styles } = useStyles();
+function Tab<T>({
+  value,
+  children,
+  type = 'title',
+  iconProps,
+  ...props
+}: TabProps<T>) {
+  const { styles: baseStyles } = useStyles();
+  const styles = baseStyles as Record<string, any>;
   const { activeTab, onChangeTab, variant } = useTabContext<T>();
 
   const isActive = activeTab === value;
-  const Label =
-    type === 'body'
-      ? Typography.BodyBold
-      : isActive
-      ? Typography.TitleBold
-      : Typography.Title;
+  const Label = type === 'body' ? Typography.BodyBold : Typography.TitleBold;
 
   return (
     <TouchableOpacity
@@ -79,14 +91,27 @@ function Tab<T>({ value, children, type = 'title', ...props }: TabProps<T>) {
       ]}
       {...props}
     >
-      <Label
-        style={[
-          styles[`${variant}TabText`],
-          isActive && [styles[`active${capitalize(variant)}TabText`]],
-        ]}
-      >
-        {children}
-      </Label>
+      {variant === 'icon' ? (
+        <SvgXml
+          width={iconProps?.width || 24}
+          height={iconProps?.height || 24}
+          xml={iconProps?.xml ?? ''}
+          color={
+            isActive
+              ? styles[`active${capitalize(variant)}TabText`].color
+              : styles[`${variant}TabText`].color
+          }
+        />
+      ) : (
+        <Label
+          style={[
+            styles[`${variant}TabText`],
+            isActive && [styles[`active${capitalize(variant)}TabText`]],
+          ]}
+        >
+          {children}
+        </Label>
+      )}
     </TouchableOpacity>
   );
 }

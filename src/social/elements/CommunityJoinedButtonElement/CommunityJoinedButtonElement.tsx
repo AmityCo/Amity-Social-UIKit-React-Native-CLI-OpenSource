@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import { useAmityElement, useLeaveCommunity } from '../../hooks';
 import { Button, BUTTON_SIZE } from '../../components/Button/Button';
@@ -38,13 +38,12 @@ const CommunityJoinedButton: FC<CommunityJoinedButtonType> = ({
       icon={check(
         themeStyles.isDarkTheme ? themeStyles.colors.baseShade1 : undefined
       )}
-      themeStyle={themeStyles}
       onPress={handleLeaveCommunity}
       disabled={isPending}
       size={BUTTON_SIZE.SMALL}
       {...props}
     >
-      {(config?.text as string) || 'Joined'}
+      {config?.text || 'Joined'}
     </Button>
   );
 };

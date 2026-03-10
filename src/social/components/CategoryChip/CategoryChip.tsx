@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { useStyles } from './styles';
 import Avatar from '../Avatar';
 import { CloseButton } from '../../elements';

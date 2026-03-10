@@ -1,5 +1,5 @@
 import { useStyles } from './styles';
-import React, { forwardRef, useImperativeHandle } from 'react';
+import { forwardRef, useImperativeHandle } from 'react';
 import { ComponentID, PageID } from '../../../../enums';
 import { useAmityComponent, useCommunity } from '../../../../hooks';
 import AmityPostContentComponent from '../../../../features/post/components/Content/Content';
@@ -14,10 +14,9 @@ import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
 } from '../../../../enums/AmityPostContentComponentStyle';
-import EmptyComponent from '../../../../components/EmptyComponent/EmptyComponent';
-import { emptyPost, privateFeed } from '../../../../../core/assets/icons';
+import { Empty } from '../../../../components';
 import PostFeedSkeleton from '../../../../components/PostFeedSkeleton';
-import { usePinnedPostCollection } from '../../../../hooks/collections/usePinnedPostCollection';
+import { usePinnedPostCollection } from '../../../../hooks/collections/post/usePinnedPostCollection';
 import { isPinnedPost } from '../../../../utils';
 
 export interface AmityCommunityFeedRef {
@@ -37,7 +36,7 @@ const AmityCommunityFeedComponent = forwardRef<
 >(({ pageId = PageID.WildCardPage, communityId }, ref) => {
   const componentId = ComponentID.community_feed;
   const { community } = useCommunity(communityId);
-  const { accessibilityId, themeStyles } = useAmityComponent({
+  const { accessibilityId } = useAmityComponent({
     pageId,
     componentId,
   });
@@ -102,14 +101,13 @@ const AmityCommunityFeedComponent = forwardRef<
 
   if (!community?.isJoined && !community?.isPublic) {
     return (
-      <View style={styles.listContainer}>
-        <EmptyComponent
+      <Empty heightPercent={0.3}>
+        <Empty.Content
           title="This community is private"
           description="Join this community to see its content and members."
-          icon={privateFeed}
-          themeStyle={themeStyles}
+          icon="private"
         />
-      </View>
+      </Empty>
     );
   }
 
@@ -119,13 +117,9 @@ const AmityCommunityFeedComponent = forwardRef<
 
   if (!loading && itemWithAds?.length === 0) {
     return (
-      <View style={styles.listContainer}>
-        <EmptyComponent
-          title="No posts yet"
-          icon={emptyPost}
-          themeStyle={themeStyles}
-        />
-      </View>
+      <Empty heightPercent={0.3}>
+        <Empty.Content title="No posts yet" icon="post" />
+      </Empty>
     );
   }
 
@@ -168,7 +162,7 @@ const AmityCommunityFeedComponent = forwardRef<
       renderItem={({ item, index }) => {
         return (
           <View>
-            {index !== 0 && <Divider themeStyles={themeStyles} />}
+            {index !== 0 && <Divider />}
             {isPinnedPost(item) ? (
               <AmityPostContentComponent
                 post={item.post}

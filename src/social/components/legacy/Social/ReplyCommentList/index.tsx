@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 // import { useTranslation } from 'react-i18next';
 
@@ -39,7 +38,7 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../../core/providers/AmityUIKitProvider';
 import { IMentionPosition } from '../../../../../core/types';
 import { LinkPreview } from '../../../PreviewLink/LinkPreview';
-import { Typography } from '../../../Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { pen, trash, unreport, report } from '../../../../../core/assets/icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

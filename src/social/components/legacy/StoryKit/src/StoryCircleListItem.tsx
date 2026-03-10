@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, Image, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
@@ -15,7 +14,7 @@ import {
   storyRing,
 } from '../../../../../core/assets/icons/xml';
 import useConfig from '../../../../../core/hooks/useConfig';
-import { ElementID } from '../../../../../core/utils/enumUIKitID';
+import { ElementID } from '../../../../../core/enums/customization';
 
 const StoryCircleListItem = ({
   item,

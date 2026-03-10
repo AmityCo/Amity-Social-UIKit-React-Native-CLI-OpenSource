@@ -52,6 +52,12 @@ export const useBottomSheet = () => {
     clearContent,
   } = bottomSheetSlice.actions;
 
+  const bottomSheetHeight = {
+    1: 150,
+    2: 180,
+    3: 210,
+  };
+
   const {
     content: $content,
     open: $open,
@@ -77,5 +83,6 @@ export const useBottomSheet = () => {
     closeBottomSheet,
     content: $content,
     open: $open,
+    bottomSheetHeight,
   };
 };

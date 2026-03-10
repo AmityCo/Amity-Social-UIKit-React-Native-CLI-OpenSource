@@ -1,8 +1,8 @@
 import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { useEffect, useState } from 'react';
 
-export const useUser = (userId: string) => {
-  const [user, setUser] = useState<Amity.User>(null);
+export const useUser = (userId?: string) => {
+  const [user, setUser] = useState<Amity.User | null>(null);
   useEffect(() => {
     if (!userId) return;
     UserRepository.getUser(userId, ({ data, loading, error }) => {

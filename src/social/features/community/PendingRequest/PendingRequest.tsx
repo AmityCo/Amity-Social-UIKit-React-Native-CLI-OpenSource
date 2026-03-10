@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useStyles } from './styles';
 import Header from './components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -56,7 +56,7 @@ const CommunityPendingRequest = ({
             value="posts"
             testID={postsButtonTabElement.accessibilityId}
           >
-            {postsButtonTabElement.config?.text as string} (
+            {postsButtonTabElement.config?.text} (
             {pendingPostCount > 10 ? `10+` : pendingPostCount})
           </Tabs.Tab>
         </Tabs.List>

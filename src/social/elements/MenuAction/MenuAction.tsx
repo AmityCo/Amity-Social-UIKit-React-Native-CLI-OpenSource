@@ -1,17 +1,23 @@
-import React from 'react';
 import { SvgXml, XmlProps } from 'react-native-svg';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { useStyles } from './styles';
 
-type MenuActionProps = TouchableOpacityProps & {
+export type MenuActionProps = TouchableOpacityProps & {
   label?: string;
   danger?: boolean;
   iconProps?: XmlProps;
+  gap?: 'small' | 'medium';
 };
 
-function MenuAction({ label, danger, iconProps, ...props }: MenuActionProps) {
-  const { theme, styles } = useStyles();
+function MenuAction({
+  label,
+  danger,
+  iconProps,
+  gap = 'medium',
+  ...props
+}: MenuActionProps) {
+  const { theme, styles } = useStyles({ gap });
 
   return (
     <TouchableOpacity style={[styles.container, props.style]} {...props}>

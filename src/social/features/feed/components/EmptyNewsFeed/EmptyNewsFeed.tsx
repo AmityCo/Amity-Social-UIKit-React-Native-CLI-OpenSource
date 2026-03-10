@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { useStyles } from './styles';
 import {
   Illustration,
@@ -24,7 +24,7 @@ const AmityEmptyNewsFeedComponent: FC<AmityEmptyNewsFeedComponentType> = ({
   const styles = useStyles();
   const componentId = ComponentID.empty_newsfeed;
 
-  const { themeStyles, accessibilityId, isExcluded } = useAmityComponent({
+  const { accessibilityId, isExcluded } = useAmityComponent({
     pageId,
     componentId,
   });
@@ -33,7 +33,7 @@ const AmityEmptyNewsFeedComponent: FC<AmityEmptyNewsFeedComponentType> = ({
 
   return (
     <>
-      <Divider themeStyles={themeStyles} />
+      <Divider />
       <View
         style={styles.container}
         testID={accessibilityId}

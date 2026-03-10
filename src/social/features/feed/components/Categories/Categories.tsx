@@ -4,7 +4,7 @@ import { arrowRight } from '../../../../../core/assets/icons';
 import CategoryChip from '../../../../components/CategoryChip/CategoryChip';
 import { ComponentID, PageID } from '../../../../enums';
 import { useStyles } from './styles';
-import { Typography } from '../../../../components/Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { useAmityComponent } from '../../../../hooks';
 import { useExplore } from '../../../../providers/ExploreProvider';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Image,
   ImageProps,
@@ -10,7 +10,7 @@ import { useTheme } from 'react-native-paper';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { category } from '../../../core/assets/icons';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { useStyles } from './styles';
 import ModeratorBadge from '../../elements/ModeratorBadge';
 import { isModerator } from '../../utils/permissions';
@@ -28,6 +28,7 @@ type AvatarProps = {
     style?: StyleProp<ImageStyle>;
     roles?: string[];
     shouldRedirectToUserProfile?: boolean;
+    viewable?: boolean;
   };
 };
 
@@ -37,40 +38,38 @@ function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const handlePress = () => {
+    if (userAvatarProps?.viewable && uri) {
+      navigation.navigate('ImageViewer', { images: [{ uri }] });
+    } else if (userAvatarProps?.shouldRedirectToUserProfile) {
+      navigation.navigate('UserProfile', { userId: userAvatarProps?.userId });
+    }
+  };
+
   return uri && !imageError ? (
-    <TouchableOpacity
-      style={imageProps.style}
-      activeOpacity={0.7}
-      onPress={() => {
-        if (userAvatarProps?.shouldRedirectToUserProfile) {
-          navigation.navigate('UserProfile', {
-            userId: userAvatarProps?.userId,
-          });
-        }
-      }}
-    >
-      <Image
-        source={{ uri }}
-        {...imageProps}
-        onError={() => setImageError(true)}
-      />
-      {userAvatarProps?.roles && isModerator(userAvatarProps?.roles) && (
-        <ModeratorBadge style={styles.moderatorBadge} />
-      )}
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity
+        style={imageProps.style}
+        activeOpacity={0.7}
+        onPress={handlePress}
+      >
+        <Image
+          source={{ uri }}
+          {...imageProps}
+          onError={() => setImageError(true)}
+        />
+        {userAvatarProps?.roles && isModerator(userAvatarProps?.roles) && (
+          <ModeratorBadge style={styles.moderatorBadge} />
+        )}
+      </TouchableOpacity>
+    </>
   ) : iconProps ? (
     <SvgXml {...iconProps} />
   ) : (
     <TouchableOpacity
       style={[styles.defaultUserAvatar, userAvatarProps?.style]}
       activeOpacity={0.7}
-      onPress={() => {
-        if (userAvatarProps?.shouldRedirectToUserProfile) {
-          navigation.navigate('UserProfile', {
-            userId: userAvatarProps?.userId,
-          });
-        }
-      }}
+      onPress={handlePress}
     >
       <Typography.Body style={styles.firstChar}>
         {userAvatarProps.userName?.trim()?.charAt(0).toUpperCase()}
@@ -115,6 +114,7 @@ type UserAvatarProps = {
   userId?: string;
   roles?: string[];
   userName?: string;
+  viewable?: boolean;
   imageStyle?: StyleProp<ImageStyle>;
   shouldRedirectToUserProfile?: boolean;
 };
@@ -124,6 +124,7 @@ function UserAvatar({
   roles,
   userId,
   userName,
+  viewable,
   imageStyle,
   shouldRedirectToUserProfile,
 }: UserAvatarProps) {
@@ -136,6 +137,7 @@ function UserAvatar({
         userName,
         style: imageStyle,
         shouldRedirectToUserProfile,
+        viewable: viewable,
       }}
       imageProps={{
         style: imageStyle,

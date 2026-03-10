@@ -29,6 +29,7 @@ export * from './usePermissions';
 export * from './usePendingPostQuery';
 export * from './useMembersQuery';
 export * from './useRolesQuery';
-export * from './useFlagUserQuery';
+export * from './queries/useFlagUserQuery';
+export * from './queries/useBlockUser';
 export * from './usePostSubscription';
 export * from './useRoomSubscription';

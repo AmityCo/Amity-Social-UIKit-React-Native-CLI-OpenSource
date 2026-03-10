@@ -1,6 +1,9 @@
 import { useContext } from 'react';
 import { ConfigContext } from '../../core/providers/ConfigProvider';
-import { IUIKitConfigOptions } from '../../core/types/config';
+import {
+  IUIKitConfigOptions,
+  UIKitElementConfig,
+} from '../../core/types/config';
 
 interface IUIKitConfig {
   preferred_theme: 'light' | 'dark' | 'default';
@@ -8,9 +11,7 @@ interface IUIKitConfig {
   excludes: string[];
   getConfig: (key: string) => any;
   getDefaultConfig: (key: string) => any;
-  getUiKitConfig: (
-    arg: IUIKitConfigOptions
-  ) => Record<string, string | string[] | Record<string, string>> | null;
+  getUiKitConfig: (arg: IUIKitConfigOptions) => UIKitElementConfig | undefined;
 }
 const useConfig = (): IUIKitConfig => {
   const {

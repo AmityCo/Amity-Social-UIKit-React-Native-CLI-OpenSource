@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 import {
   NavigationContainer,
   NavigationIndependentTree,
@@ -10,19 +9,20 @@ import useAuth from '../hooks/useAuth';
 import AmitySocialHomePage from '../../social/screens/SocialHomePage';
 import PostDetail from '../../social/screens/PostDetail';
 import CreatePost from '../../social/screens/CreatePost';
-import UserProfile from '../../social/screens/UserProfile';
-import { EditProfile } from '../../social/screens/EditProfile/EditProfile';
-import UserProfileSetting from '../../social/screens/UserProfileSetting/UserProfileSetting';
+import {
+  UserProfileScreen,
+  EditUserScreen,
+  UserRelationshipScreen,
+  BlockedUsersScreen,
+  UserPendingFollowRequests,
+} from '../../social/screens';
 import CreateCommunity from '../../social/screens/CreateCommunity';
 import type { MyMD3Theme } from '../providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
-import BackButton from '../../social/components/legacy/BackButton';
 import PostTypeChoiceModal from '../../social/components/legacy/PostTypeChoiceModal/PostTypeChoiceModal';
 import CreateStoryScreen from '../../social/screens/CreateStory/CreateStoryScreen';
 import Toast from '../../social/components/legacy/Toast/Toast';
 import AmitySocialGlobalSearchPage from '../../social/screens/SocialGlobalSearch';
-import UserPendingRequest from '../../social/screens/UserPendingRequest/UserPendingRequest';
-import FollowerList from '../../social/screens/FollowerList/FollowerList';
 import AmityMyCommunitiesSearchPage from '../../social/screens/MyCommunitiesSearch';
 import PostTargetSelection from '../../social/screens/PostTargetSelection';
 import StoryTargetSelection from '../../social/features/story/TargetSelection/TargetSelection';
@@ -202,38 +202,16 @@ export default function PageRenderer({ children }: PageRendererProps) {
             />
 
             {/* --- User --- */}
+            <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+            <Stack.Screen name="EditUser" component={EditUserScreen} />
             <Stack.Screen
-              name="UserProfile"
-              children={() => <UserProfile {...children.props} />}
-              options={{
-                headerTitleAlign: 'center',
-                title: '',
-              }}
+              name="UserRelationship"
+              component={UserRelationshipScreen}
             />
-            <Stack.Screen name="EditProfile" component={EditProfile} />
+            <Stack.Screen name="BlockedUsers" component={BlockedUsersScreen} />
             <Stack.Screen
-              name="UserProfileSetting"
-              component={UserProfileSetting}
-            />
-            <Stack.Screen
-              name="UserPendingRequest"
-              component={UserPendingRequest}
-              options={{
-                title: 'Follow Requests',
-                headerLeft: () => <BackButton />,
-              }}
-            />
-            <Stack.Screen
-              name="FollowerList"
-              component={FollowerList}
-              options={({
-                route: {
-                  params: { displayName },
-                },
-              }: any) => ({
-                title: displayName,
-                headerLeft: () => <BackButton />,
-              })}
+              name="UserPendingFollowRequests"
+              component={UserPendingFollowRequests}
             />
 
             {/* --- Story --- */}

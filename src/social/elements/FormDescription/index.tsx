@@ -2,7 +2,7 @@ import React from 'react';
 import { useStyles } from './styles';
 import { TextProps } from 'react-native';
 import { useAmityElement } from '../../hooks';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 
 type FormDescriptionProps = Partial<TextProps> & {
@@ -33,7 +33,7 @@ function FormDescription({
       style={[styles.formDescription, props.style]}
       {...props}
     >
-      {config?.text as string}
+      {config?.text}
     </Typography.Caption>
   );
 }

@@ -18,7 +18,7 @@ import useConfig from '../../hooks/useConfig';
 import { ComponentID, ElementID, PageID } from '../../enums';
 import Modal from 'react-native-modalbox';
 import AmityViewStoryPage from '../../features/story/View/View';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 
 interface ICommunityStories {
   communityId: string;

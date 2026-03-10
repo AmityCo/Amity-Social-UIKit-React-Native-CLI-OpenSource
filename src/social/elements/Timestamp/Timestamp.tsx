@@ -1,7 +1,7 @@
 import { useAmityElement, useTimeDifference } from '../../hooks';
 import React, { ComponentProps } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enums';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { useStyles } from './styles';
 
 type TimestampProps = ComponentProps<typeof Typography> & {

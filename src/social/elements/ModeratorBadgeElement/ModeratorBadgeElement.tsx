@@ -33,7 +33,7 @@ const ModeratorBadgeElement: FC<ModeratorBadgeElementType> = ({
   const styles = useStyles(themeStyles);
   if (isExcluded) return null;
   if (!isCommunityModerator || !communityId || !userId) return null;
-  const text = (config?.text as string) ?? '';
+  const text = config?.text ?? '';
 
   return (
     <View style={styles.moderatorRow}>

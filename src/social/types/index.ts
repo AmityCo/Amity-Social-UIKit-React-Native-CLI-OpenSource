@@ -54,3 +54,8 @@ export interface IAmityDraftStoryPage {
   onCreateStory?: () => void;
   onDiscardStory?: () => void;
 }
+
+export enum UserRelationshipTab {
+  following = 'following',
+  follower = 'follower',
+}

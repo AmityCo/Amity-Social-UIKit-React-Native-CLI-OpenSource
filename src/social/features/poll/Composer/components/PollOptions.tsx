@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TextInput } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { trash } from '../../../../../core/assets/icons';
-import { Typography } from '../../../../components/Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { MAX_POLL_ANSWER_LENGTH } from '../../../../../core/constants';
 import { usePollPostComposerContext } from '../PollPostComposer';
 import { useStyles } from '../styles';

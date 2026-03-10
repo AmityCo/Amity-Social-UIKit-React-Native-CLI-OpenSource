@@ -14,13 +14,13 @@ import CloseButtonIconElement from '../../elements/CloseButtonIconElement/CloseB
 import { PageID, ComponentID, ElementID } from '../../enums';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TextKeyElement from '../../elements/TextKeyElement/TextKeyElement';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { useStyles } from './styles';
 import { Illustration } from '../../features/feed/components/EmptyNewsFeed/Elements';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CommunityPostSettings } from '@amityco/ts-sdk-react-native';
-import { usePostPermission } from '../../../v4/hook/usePostPermission';
+import { usePostPermission } from '../../hooks/usePostPermission';
 
 export type FeedParams = {
   targetId: string;
@@ -64,7 +64,7 @@ const TargetSelectionPage = ({
 
   const defaultTheme = useTheme() as MyMD3Theme;
 
-  const user = useUser((client as Amity.Client).userId);
+  const user = useUser(client?.userId);
   const { communities, onNextCommunityPage, loading } = useCommunities();
   const { themeStyles, accessibilityId } = useAmityPage({ pageId });
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -136,12 +136,13 @@ const TargetSelectionPage = ({
           <TargetItem
             pageId={pageId}
             displayNameElementId={ElementID.my_timeline_text}
-            displayName={(myTimelineConfig?.text as string) || 'My timeline'}
+            displayName={myTimelineConfig?.text || 'My timeline'}
             avatarElementId={ElementID.my_timeline_avatar}
             onSelect={() =>
+              user &&
               onSelectFeed({
-                targetId: user.userId,
-                targetName: (myTimelineConfig?.text as string) || 'My timeline',
+                targetId: user?.userId,
+                targetName: myTimelineConfig?.text || 'My timeline',
                 targetType: 'user',
               })
             }

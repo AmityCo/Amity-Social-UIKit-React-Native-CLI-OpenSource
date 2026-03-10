@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   AmityUiKitProvider,
   AmityUiKitSocial,
@@ -7,6 +6,7 @@ import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
+import NetworkLogger from 'react-native-network-logger';
 
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
   console.log('Background notification:', remoteMessage);

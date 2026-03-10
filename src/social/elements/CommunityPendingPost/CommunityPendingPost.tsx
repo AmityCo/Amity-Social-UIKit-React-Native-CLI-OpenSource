@@ -3,7 +3,7 @@ import { ComponentID, ElementID, PageID } from '../../enums';
 import { useAmityElement } from '../../hooks';
 import { StyleSheet, TouchableOpacity, ViewProps } from 'react-native';
 import { View } from 'react-native';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { dot } from '../../../core/assets/icons';
 

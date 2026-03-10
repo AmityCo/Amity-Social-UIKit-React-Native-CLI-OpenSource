@@ -44,7 +44,7 @@ export function limitDecimalsWithoutRounding(val: number, decimals: number) {
   return parseFloat(parts[0] + '.' + fractionalPart);
 }
 
-export const formatVoteCount = (count: number): string => {
+export const formatCount = (count: number): string => {
   const ONE_MILLION = 1000000;
   const ONE_THOUSAND = 1000;
 
@@ -58,7 +58,7 @@ export const formatVoteCount = (count: number): string => {
     let thousands = count / ONE_THOUSAND;
     return thousands % 1 === 0
       ? `${thousands}K`
-      : `${limitDecimalsWithoutRounding(thousands, 1)}K`;
+      : `${limitDecimalsWithoutRounding(thousands, 1)}k`;
   }
   return count.toString();
 };

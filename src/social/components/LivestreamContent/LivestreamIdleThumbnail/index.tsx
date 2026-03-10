@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
-import { Typography } from '../../Typography/Typography';
+import { Typography } from '../../../../core/components/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { exclamation } from '../../../../core/assets/icons';
 

@@ -3,7 +3,7 @@ import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import { useAmityElement } from '../../hooks';
 import { useStyles } from './styles';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { trash } from '../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
 
@@ -34,7 +34,7 @@ const ChangeThumbnailButton = ({
         color={themeStyles.colors.alert}
       />
       <Typography.BodyBold style={styles.label}>
-        {(config.text as string) || 'Delete thumbnail'}
+        {config.text || 'Delete thumbnail'}
       </Typography.BodyBold>
     </TouchableOpacity>
   );

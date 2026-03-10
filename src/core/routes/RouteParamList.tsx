@@ -1,6 +1,7 @@
 import {
   AmityPostComposerPageType,
   AmityStoryTabComponentEnum,
+  UserRelationshipTab,
 } from '../../social/types';
 import { AmityPostTargetSelectionPageType } from '../../social/enums';
 import {
@@ -28,25 +29,13 @@ export type RootStackParamList = {
     category?: AmityPostCategory;
     isDeleted?: boolean;
   };
-  UserProfile: {
-    userId: string;
-  };
-  UserProfileSetting: {
-    user: Amity.User;
-    follow: string;
-  };
-  EditProfile: {
-    user: Amity.User;
-  };
 
   AllMyCommunity: undefined;
-  VideoPlayer: { source: string };
   ReactionList: { referenceId: string; referenceType: string };
   CreateStory: {
     targetId: string;
     targetType: Amity.StoryTargetType;
   };
-  UserPendingRequest: undefined;
   FollowerList: Amity.User;
   PostTargetSelection: { postType: AmityPostTargetSelectionPageType };
   StoryTargetSelection: undefined;
@@ -141,5 +130,30 @@ export type RootStackParamList = {
     postId: string;
     targetId: string;
     targetType: Amity.PostTargetType;
+  };
+
+  UserProfile: {
+    userId: string;
+  };
+
+  EditUser: {
+    userId: string;
+  };
+
+  UserRelationship: {
+    userId: string;
+    selectedTab?: UserRelationshipTab;
+  };
+
+  BlockedUsers: undefined;
+
+  UserPendingFollowRequests: undefined;
+
+  ImageViewer: {
+    images: { uri: string }[];
+  };
+
+  VideoPlayer: {
+    source: string;
   };
 };

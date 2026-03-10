@@ -1,11 +1,12 @@
-import React from 'react';
-import { TouchableOpacityProps } from 'react-native';
 import { useAmityElement } from '../../../../../hooks';
 import { ComponentID, ElementID, PageID } from '../../../../../enums';
 import { useStyles } from './styles';
-import { Typography } from '../../../../../components/Typography/Typography';
+import {
+  Typography,
+  TypographyProps,
+} from '../../../../../../core/components/Typography/Typography';
 
-type CloseCommunityDescriptionProps = TouchableOpacityProps & {
+type CloseCommunityDescriptionProps = TypographyProps & {
   pageId?: PageID;
   componentId?: ComponentID;
   elementId?: ElementID;
@@ -32,7 +33,7 @@ function CloseCommunityDescription({
       testID={accessibilityId}
       {...props}
     >
-      {config?.text as string}
+      {config?.text}
     </Typography.Caption>
   );
 }

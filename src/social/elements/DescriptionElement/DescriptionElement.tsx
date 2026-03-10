@@ -1,5 +1,5 @@
 import React, { FC, memo } from 'react';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { StyleSheet, TextProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import { useAmityElement } from '../../hooks';
@@ -37,7 +37,7 @@ const DescriptionElement: FC<DescriptionElementType> = ({
       style={[styles.descriptionText, style]}
       {...props}
     >
-      {config.text as string}
+      {config.text}
     </Typography.Caption>
   );
 };

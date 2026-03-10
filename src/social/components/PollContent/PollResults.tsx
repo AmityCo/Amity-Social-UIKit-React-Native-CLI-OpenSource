@@ -1,12 +1,11 @@
-import React from 'react';
 import { useStyles } from './style';
 import { View } from 'react-native';
 import { useUser } from '../../hooks';
 import { ElementID } from '../../enums';
 import useAuth from '../../../core/hooks/useAuth';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import AvatarElement from '../../elements/CommonElements/AvatarElement';
-import { formatVoteCount } from '../../../core/utils/time';
+import { formatCount } from '../../../core/utils/time';
 
 type PollResultsProps = {
   totalVotes: number;
@@ -35,12 +34,12 @@ export function PollResults({ options, totalVotes }: PollResultsProps) {
       const otherVotes = voteCount - 1;
       if (otherVotes === 0) return 'Voted by you';
 
-      const formattedCount = formatVoteCount(otherVotes);
+      const formattedCount = formatCount(otherVotes);
       const plural = otherVotes > 1 ? 's' : '';
       return `Voted by ${formattedCount} participant${plural} and you`;
     }
 
-    const formattedCount = formatVoteCount(voteCount);
+    const formattedCount = formatCount(voteCount);
     const plural = voteCount > 1 ? 's' : '';
     return `Voted by ${formattedCount} participant${plural}`;
   };

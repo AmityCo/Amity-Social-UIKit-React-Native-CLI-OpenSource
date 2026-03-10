@@ -1,7 +1,6 @@
-import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStyles } from './styles';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { warning } from '../../../core/assets/icons';

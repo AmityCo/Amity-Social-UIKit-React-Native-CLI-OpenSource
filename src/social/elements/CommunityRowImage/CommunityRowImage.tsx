@@ -4,7 +4,7 @@ import { ComponentID, ElementID, PageID } from '../../enums';
 import { useAmityElement, useConfigImageUri, useFile } from '../../hooks';
 import { Image, View } from 'react-native';
 import { useStyles } from './styles';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { community as communityIcon } from '../../../core/assets/icons';
 

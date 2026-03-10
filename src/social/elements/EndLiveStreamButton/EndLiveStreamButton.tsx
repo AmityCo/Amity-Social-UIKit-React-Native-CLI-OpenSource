@@ -3,7 +3,7 @@ import { useStyles } from './styles';
 import { useAmityElement } from '../../hooks';
 import { ComponentID, ElementID, PageID } from '../../enums';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 
 type EndLiveStreamButtonProps = TouchableOpacityProps & {
   pageId?: PageID;

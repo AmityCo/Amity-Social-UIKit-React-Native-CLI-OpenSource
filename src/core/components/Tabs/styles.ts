@@ -56,6 +56,35 @@ export const useStyles = () => {
     activeUnderlineTabText: {
       color: theme.colors.primary,
     },
+
+    iconTabList: {
+      gap: 20,
+      paddingTop: 16,
+      paddingHorizontal: 16,
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      borderBottomColor: theme.colors.baseShade4,
+      borderBottomWidth: 1,
+      backgroundColor: theme.colors.background,
+    },
+    iconTab: {
+      paddingBottom: 14,
+      paddingHorizontal: 38,
+      backgroundColor: theme.colors.background,
+      borderBottomWidth: 2,
+      borderBottomColor: 'transparent',
+    },
+    activeIconTab: {
+      borderBottomWidth: 2,
+      borderBottomColor: theme.colors.primary,
+    },
+    iconTabText: {
+      color: theme.colors.baseShade2,
+    },
+    activeIconTabText: {
+      color: theme.colors.base,
+    },
   });
 
   return {

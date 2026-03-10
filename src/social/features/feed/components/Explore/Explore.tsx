@@ -79,7 +79,7 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
         />
       }
     >
-      <Divider themeStyles={themeStyles} />
+      <Divider />
       {isLoading && <ExploreLoadingSkeleton themeStyles={themeStyles} />}
       {isNothingToShow ? (
         <View style={styles.emptyContainer}>

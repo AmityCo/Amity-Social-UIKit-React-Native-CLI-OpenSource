@@ -5,7 +5,7 @@ import { camera } from '../../../core/assets/icons';
 import { useAmityElement } from '../../hooks';
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../enums';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 
 type CameraButtonProps = TouchableOpacityProps & {
   pageId?: PageID;
@@ -42,7 +42,7 @@ function CameraButton({
           color={theme.colors.base}
         />
       </View>
-      <Typography.BodyBold>{config?.text as string}</Typography.BodyBold>
+      <Typography.BodyBold>{config?.text}</Typography.BodyBold>
     </TouchableOpacity>
   );
 }

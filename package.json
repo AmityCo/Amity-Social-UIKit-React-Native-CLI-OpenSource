@@ -59,6 +59,7 @@
   "devDependencies": {
     "@amityco/ts-sdk-react-native": "^7.15.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
+    "@react-native/babel-preset": "0.82.1",
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.2.2",
     "@livekit/react-native": "^2.9.6",
@@ -181,6 +182,8 @@
       "prettier"
     ],
     "rules": {
+      "react/react-in-jsx-scope": "off",
+      "react-hooks/exhaustive-deps": "off",
       "prettier/prettier": [
         "error",
         {
@@ -233,6 +236,7 @@
     "react-hook-form": "^7.49.3",
     "react-i18next": "12.1.5",
     "react-native-controlled-mentions": "^3.1.0",
+    "react-native-image-viewing": "^0.2.2",
     "react-native-insta-story": "^1.1.9",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-modal-selector": "^2.1.2",

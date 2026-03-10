@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Typography } from '../../../components/Typography/Typography';
+import { Typography } from '../../../../core/components/Typography/Typography';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 
 type CommunityStorySettingProps = {

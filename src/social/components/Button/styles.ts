@@ -1,17 +1,20 @@
 import { StyleSheet } from 'react-native';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
+import { useTheme } from 'react-native-paper';
 
-export const useStyles = (theme: MyMD3Theme) => {
+export const useStyles = () => {
+  const theme = useTheme<MyMD3Theme>();
   const styles = StyleSheet.create({
     button: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: 8,
     },
 
     buttonSmall: {
+      borderRadius: 4,
       paddingVertical: 5,
+      paddingHorizontal: 8,
     },
     smallWithIcon: {
       gap: 4,
@@ -22,6 +25,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       padding: 4,
     },
     buttonLarge: {
+      borderRadius: 8,
       paddingVertical: 10,
       paddingHorizontal: 16,
     },
@@ -78,5 +82,5 @@ export const useStyles = (theme: MyMD3Theme) => {
       height: 20,
     },
   });
-  return styles;
+  return { styles, theme };
 };

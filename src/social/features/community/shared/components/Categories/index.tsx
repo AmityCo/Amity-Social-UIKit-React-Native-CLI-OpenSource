@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from 'react-native';
 import FormLabel from '../../../../../elements/FormLabel';
 import { useStyles } from './styles';
 import { ElementID, PageID } from '../../../../../enums';
-import { Typography } from '../../../../../components/Typography/Typography';
+import { Typography } from '../../../../../../core/components/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { arrowRight } from '../../../../../../core/assets/icons';
 import { useBehaviour } from '../../../../../providers/BehaviourProvider';

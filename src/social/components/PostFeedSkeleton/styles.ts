@@ -11,9 +11,16 @@ export const useStyles = () => {
       paddingVertical: 12,
       paddingHorizontal: 16,
     },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      marginBottom: 24,
+    },
+    title: {
+      gap: 8,
+    },
     divider: {
-      marginBottom: 8,
-      paddingBottom: 8,
       borderBottomWidth: 8,
       borderBottomColor: theme.colors.secondaryShade4,
     },

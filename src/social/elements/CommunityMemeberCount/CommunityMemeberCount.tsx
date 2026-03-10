@@ -1,5 +1,5 @@
 import React, { FC, memo } from 'react';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { ComponentID, ElementID, PageID } from '../../enums';
 import { useAmityElement } from '../../hooks';
 import { formatNumber } from '../../../core/utils/number';

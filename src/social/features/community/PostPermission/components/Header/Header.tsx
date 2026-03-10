@@ -1,4 +1,3 @@
-import React from 'react';
 import { View } from 'react-native';
 import { Title } from '../../../../../elements';
 import { useNavigation } from '@react-navigation/native';
@@ -14,7 +13,7 @@ type HeaderProps = {
 };
 
 function Header({ onSave, disabled }: HeaderProps) {
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -24,12 +23,7 @@ function Header({ onSave, disabled }: HeaderProps) {
       <Title numberOfLines={1} ellipsizeMode="tail" style={styles.title}>
         Post permissions
       </Title>
-      <Button
-        type="inline"
-        onPress={onSave}
-        themeStyle={theme}
-        disabled={disabled}
-      >
+      <Button type="inline" onPress={onSave} disabled={disabled}>
         Save
       </Button>
     </View>

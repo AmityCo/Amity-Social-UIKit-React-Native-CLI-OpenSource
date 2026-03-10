@@ -82,9 +82,13 @@ export const ERROR_CODE = {
   BLOCKED_WORD: '400308',
   BLOCKED_URL: '400309',
   IMAGE_NUDITY: '500000',
+  VIOLENCE: '400314',
   ONLY_ONE_MODERATOR: '400317',
   ONLY_ONE_MEMBER: '400318',
   GLOBAL_BAN: '400312',
+  INVALID_IMAGE:
+    'Amity SDK (500000): Image uploading failed: Request has invalid image format',
+  DISPLAY_NAME_UPDATE: '400301',
 };
 
 export const COMMENT_ERROR_MESSAGE = {
@@ -103,9 +107,12 @@ export const POST_ERROR_MESSAGE = {
   GENERIC_EDIT: 'Failed to edit post. Please try again.',
 };
 
-export const MAX_COMMUNITY_NAME_LENGTH = 30;
-
-export const MAX_COMMUNITY_DESCRIPTION_LENGTH = 180;
+export const CHARACTER_LIMIT = {
+  USER_DISPLAY_NAME: 100,
+  USER_DESCRIPTION: 180,
+  COMMUNITY_NAME: 30,
+  COMMUNITY_DESCRIPTION: 180,
+};
 
 export const QUERY_KEY = {
   SEARCH_MEMBER_BY_DISPLAY_NAME_COLLECTION:
@@ -121,3 +128,70 @@ export const QUERY_KEY = {
 
 export const URL_REGEX =
   /(?:(?:https?|ftp):\/\/(?:[a-zA-Z0-9.-]+|[\d.]+)(?::\d{1,5})?(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?|mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|www\.(?:[a-zA-Z0-9.-]+)(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?!\.))/g;
+
+export const TOAST = {
+  USER: {
+    REPORT: {
+      SUCCESS: 'User reported.',
+      FAILED: 'Failed to report user. Please try again.',
+    },
+    UNREPORT: {
+      SUCCESS: 'User unreported.',
+      FAILED: 'Failed to unreport user. Please try again.',
+    },
+    BLOCK: {
+      SUCCESS: 'User blocked.',
+      FAILED: 'Failed to block user. Please try again.',
+    },
+    UNBLOCK: {
+      SUCCESS: 'User unblocked.',
+      FAILED: 'Failed to unblock user. Please try again.',
+    },
+    UNFOLLOW: {
+      FAILED: 'Oops, something went wrong.',
+    },
+    RELATIONSHIP: {
+      FOLLOW_TO_INTERACT: 'Follow user to interact.',
+    },
+    FOLLOW_REQUEST: {
+      ACCEPT: {
+        SUCCESS: (displayName: string) =>
+          `${displayName} is now following you.`,
+      },
+      DECLINE: {
+        SUCCESS: 'Following request declined.',
+      },
+    },
+  },
+};
+
+export const ALERT = {
+  ACTION: {
+    OK: 'OK',
+    CANCEL: 'Cancel',
+    BLOCK: 'Block',
+    UNBLOCK: 'Unblock',
+    UNFOLLOW: 'Unfollow',
+  },
+  USER: {
+    BLOCK: {
+      TITLE: 'Block user?',
+      MESSAGE: (displayName: string) =>
+        `${displayName} won't be able to see posts and comments that you've created. They won't be notified that you've blocked them.`,
+    },
+    UNBLOCK: {
+      TITLE: 'Unblock user?',
+      MESSAGE: (displayName: string) =>
+        `${displayName} will now be able to see posts and comments that you've created. They won't be notified that you've unblocked them.`,
+    },
+    FOLLOW: {
+      TITLE: 'Unable to follow this user',
+      MESSAGE: 'Oops! something went wrong. Please try again later.',
+    },
+    UNFOLLOW: {
+      TITLE: 'Unfollow this user?',
+      MESSAGE:
+        "If you change your mind, you'll have to request to follow them again.",
+    },
+  },
+};

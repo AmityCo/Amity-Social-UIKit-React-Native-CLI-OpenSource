@@ -1,11 +1,10 @@
-import React from 'react';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { useAmityElement } from '../../hooks';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enums';
 import { thumbnail } from '../../../core/assets/icons';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 
 type AddThumbnailButtonProps = TouchableOpacityProps & {
   pageId?: PageID;

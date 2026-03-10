@@ -1,9 +1,8 @@
-import React from 'react';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { useAmityElement } from '../../../../../hooks';
 import { ComponentID, ElementID, PageID } from '../../../../../enums';
 import { useStyles } from './styles';
-import { Typography } from '../../../../../components/Typography/Typography';
+import { Typography } from '../../../../../../core/components/Typography/Typography';
 
 type CloseCommunityProps = TouchableOpacityProps & {
   pageId?: PageID;
@@ -33,7 +32,7 @@ function CloseCommunity({
       {...props}
     >
       <Typography.BodyBold style={styles.alertText}>
-        {config?.text as string}
+        {config?.text}
       </Typography.BodyBold>
     </TouchableOpacity>
   );

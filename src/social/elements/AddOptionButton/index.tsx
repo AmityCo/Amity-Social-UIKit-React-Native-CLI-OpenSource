@@ -4,7 +4,7 @@ import { SvgXml } from 'react-native-svg';
 import { plus } from '../../../core/assets/icons';
 import { useAmityElement } from '../../hooks';
 import { ComponentID, ElementID, PageID } from '../../enums';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
 type AddOptionButtonProps = TouchableOpacityProps & {
@@ -38,7 +38,7 @@ function AddOptionButton({
         color={themeStyles.colors.base}
       />
       <Typography.BodyBold style={styles.addOptionLabel}>
-        {config?.text as string}
+        {config?.text}
       </Typography.BodyBold>
     </TouchableOpacity>
   );

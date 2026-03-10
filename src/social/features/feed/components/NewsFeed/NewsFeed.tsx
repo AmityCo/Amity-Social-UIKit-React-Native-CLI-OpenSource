@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../../enums/enumUIKitID';
 import AmityGlobalFeedComponent from '../GlobalFeed/GlobalFeed';
@@ -14,7 +14,7 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
   pageId = PageID.WildCardPage,
 }) => {
   const componentId = ComponentID.newsfeed_component;
-  const { themeStyles, accessibilityId, isExcluded } = useAmityComponent({
+  const { accessibilityId, isExcluded } = useAmityComponent({
     pageId,
     componentId,
   });
@@ -28,7 +28,7 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
     >
-      <Divider themeStyles={themeStyles} />
+      <Divider />
       <AmityGlobalFeedComponent pageId={pageId} />
     </View>
   );

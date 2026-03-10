@@ -1,8 +1,7 @@
-import React from 'react';
 import { useStyles } from './styles';
 import { TextProps } from 'react-native';
 import { useAmityElement } from '../../hooks';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 
 type TitleProps = Partial<TextProps> & {
@@ -39,7 +38,7 @@ function Title({
       style={[styles.title, props.style]}
       {...props}
     >
-      {(config?.text as string) ?? children}
+      {config?.text ?? children}
     </$Typography>
   );
 }

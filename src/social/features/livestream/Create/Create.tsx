@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Image,
@@ -16,7 +16,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../hooks/useImagePicker';
 import { arrowDown, close } from '../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
-import { Typography } from '../../../components/Typography/Typography';
+import { Typography } from '../../../../core/components/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
@@ -262,7 +262,6 @@ function AmityCreateLivestreamPage() {
         timerRef.current = intervalId;
       }
     } catch (error) {
-      console.log('startLiveStream error', error);
       setIsLive(false);
       setIsConnecting(false);
       Alert.alert(
@@ -489,11 +488,7 @@ function AmityCreateLivestreamPage() {
           <Typography.Body style={styles.permissionDescription}>
             This lets you record and live stream {'\n'} from this device.
           </Typography.Body>
-          <Button
-            type="primary"
-            themeStyle={theme}
-            onPress={() => Linking.openSettings()}
-          >
+          <Button type="primary" onPress={() => Linking.openSettings()}>
             <Typography.BodyBold style={styles.text}>
               Open settings
             </Typography.BodyBold>

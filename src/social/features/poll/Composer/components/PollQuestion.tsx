@@ -2,7 +2,7 @@ import React from 'react';
 import { useStyles } from '../styles';
 import { View } from 'react-native';
 import { MAX_POLL_QUESTION_LENGTH } from '../../../../../core/constants';
-import { Typography } from '../../../../components/Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { usePollPostComposerContext } from '../PollPostComposer';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import FormLabel from '../../../../elements/FormLabel';

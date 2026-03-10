@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 
 import {
@@ -43,7 +42,7 @@ import ReplyCommentList from '../../legacy/Social/ReplyCommentList';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../hooks/useTimeDifference';
 import { LinkPreview } from '../../PreviewLink';
-import { Typography } from '../../Typography/Typography';
+import { Typography } from '../../../../core/components/Typography/Typography';
 import { pen, report, trash, unreport } from '../../../../core/assets/icons';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
 export interface IComment {

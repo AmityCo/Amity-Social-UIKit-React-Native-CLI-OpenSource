@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useColorScheme } from 'react-native';
 import { Provider } from 'react-redux';
 import AuthContextProvider from './AuthProvider';
@@ -54,6 +53,9 @@ export interface CustomColors {
   baseShade4?: string;
   alert?: string;
   live?: string;
+  transparentBlack?: string;
+  black?: string;
+  white?: string;
 }
 export interface MyMD3Theme extends MD3Theme {
   isDarkTheme: boolean;
@@ -141,6 +143,9 @@ export default function AmityUiKitProvider({
       baseShade4: validateConfigColor(themeColor?.base_shade4_color),
       alert: validateConfigColor(themeColor?.alert_color),
       live: validateConfigColor(themeColor?.live_color),
+      transparentBlack: 'rgba(0,0,0,0.5)',
+      black: '#000000',
+      white: '#FFFFFF',
     },
   };
 

@@ -7,7 +7,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { SvgXml } from 'react-native-svg';
 import { cross } from '../../../core/assets/icons';

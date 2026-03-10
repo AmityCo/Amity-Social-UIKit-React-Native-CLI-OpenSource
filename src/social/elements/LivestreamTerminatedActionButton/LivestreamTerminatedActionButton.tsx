@@ -1,9 +1,9 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import { useAmityElement } from '../../hooks';
 import { Button, BUTTON_SIZE } from '../../components/Button/Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { useNavigation } from '@react-navigation/native';
 
 type LivestreamTerminatedActionButtonType = {
@@ -17,7 +17,7 @@ const LivestreamTerminatedActionButton: FC<
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
 }) => {
-  const { accessibilityId, themeStyles } = useAmityElement({
+  const { accessibilityId } = useAmityElement({
     pageId,
     componentId,
     elementId: ElementID.livestream_terminated_action_button,
@@ -30,7 +30,6 @@ const LivestreamTerminatedActionButton: FC<
     <Button
       type="primary"
       testID={accessibilityId}
-      themeStyle={themeStyles}
       size={BUTTON_SIZE.LARGE}
       onPress={() => navigation.goBack()}
     >

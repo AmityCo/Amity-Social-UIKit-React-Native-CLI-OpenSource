@@ -1,8 +1,7 @@
-import React from 'react';
 import { useStyles } from './styles';
 import { TextProps } from 'react-native';
 import { useAmityElement } from '../../hooks';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 
 type FormLabelProps = Partial<TextProps> & {
@@ -35,7 +34,7 @@ function FormLabel({
       style={[styles.formLabel, props.style]}
       {...props}
     >
-      {config?.text as string}{' '}
+      {config?.text}{' '}
       {optional && (
         <Typography.Caption style={styles.optional}>
           (Optional)

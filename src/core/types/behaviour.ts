@@ -1,4 +1,6 @@
 import { TabName } from '../../social/enums';
+import { UserProfilePageProps } from '../../social/features/user/Profile/Profile';
+import { RootStackParamList } from '../routes/RouteParamList';
 
 export type AddCategoryPageContext = {
   categories: Amity.Category[];
@@ -12,10 +14,6 @@ export type AddMemberPageContext = {
 
 export type CommunitySettingPageContext = {
   community: Amity.Community;
-};
-
-export type UserProfilePageContext = {
-  userId: string;
 };
 
 export interface IBehaviour {
@@ -162,7 +160,7 @@ export interface IBehaviour {
   };
   AmityCommunityMembershipPageBehavior?: {
     goToAddMemberPage?: (context: AddMemberPageContext) => void;
-    goToUserProfilePage?: (context: UserProfilePageContext) => void;
+    goToUserProfilePage?: (context: UserProfilePageProps) => void;
   };
   AmityCommunityNotificationSettingPageBehavior?: {
     goToPostsNotificationSettingPage?: (
@@ -180,5 +178,34 @@ export interface IBehaviour {
     goToLivestreamsNotificationSettingPage?: (
       context: CommunitySettingPageContext
     ) => void;
+  };
+  AmityUserProfilePageBehavior?: {
+    goToPostComposerPage?: (context: RootStackParamList['CreatePost']) => void;
+    goToPollPostComposerPage?: (
+      context: RootStackParamList['PollPostComposer']
+    ) => void;
+    goToCreateLivestreamPage?: (
+      context: RootStackParamList['CreateLivestream']
+    ) => void;
+    goToEditUserPage?: (context: RootStackParamList['EditUser']) => void;
+    goToBlockedUsersPage?: () => void;
+  };
+  AmityBlockedUsersPageBehavior?: {
+    goToUserProfilePage?: (context: RootStackParamList['UserProfile']) => void;
+  };
+  AmityUserRelationshipPageBehavior?: {
+    goToUserProfilePage?: (context: RootStackParamList['UserProfile']) => void;
+  };
+  AmityUserProfileHeaderComponentBehavior?: {
+    goToUserRelationshipPage?: (
+      context: RootStackParamList['UserRelationship']
+    ) => void;
+    goToPendingFollowRequestPage?: () => void;
+  };
+  AmityUserPendingFollowRequestsPageBehavior?: {
+    goToUserProfilePage?: (context: RootStackParamList['UserProfile']) => void;
+  };
+  AmityUserFeedComponentBehavior?: {
+    goToPostDetailPage?: (arg?: string) => void;
   };
 }

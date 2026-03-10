@@ -4,7 +4,7 @@ import { useAmityElement } from '../../../../../hooks';
 import { arrowRight } from '../../../../../../core/assets/icons';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { ComponentID, ElementID, PageID } from '../../../../../enums';
-import { Typography } from '../../../../../components/Typography/Typography';
+import { Typography } from '../../../../../../core/components/Typography/Typography';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
 type ActionProps = TouchableOpacityProps & {
@@ -60,7 +60,7 @@ function Action({
             />
           </View>
         )}
-        <Typography.Body>{label ?? (config?.text as string)}</Typography.Body>
+        <Typography.Body>{label ?? config?.text}</Typography.Body>
       </View>
       <View style={styles.labelContainer}>
         {description && (

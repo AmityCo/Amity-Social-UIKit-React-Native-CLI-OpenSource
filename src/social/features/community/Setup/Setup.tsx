@@ -1,4 +1,3 @@
-import React from 'react';
 import CreateCommunity from '../Create';
 import EditCommunity from '../Edit';
 

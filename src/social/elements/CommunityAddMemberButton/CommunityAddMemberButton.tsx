@@ -2,7 +2,7 @@ import React from 'react';
 import { SvgXml } from 'react-native-svg';
 import { plus } from '../../../core/assets/icons';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID } from '../../enums';
 import { useAmityElement } from '../../hooks';
@@ -44,7 +44,7 @@ function CommunityAddMemberButton({
         />
       </View>
       <Typography.Caption style={styles.addButtonLabel}>
-        {config?.text as string}
+        {config?.text}
       </Typography.Caption>
     </TouchableOpacity>
   );

@@ -1,11 +1,8 @@
-import React, { memo, useMemo, forwardRef, useImperativeHandle } from 'react';
+import { memo, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { ComponentID, PageID } from '../../../../enums';
 import { useAmityComponent, useCommunity } from '../../../../hooks';
 import { usePosts } from '../../../../hooks/usePosts';
-import { View } from 'react-native';
-import EmptyComponent from '../../../../components/EmptyComponent/EmptyComponent';
-import { emptyImagePost, privateFeed } from '../../../../../core/assets/icons';
-import { useStyles } from './styles';
+import { Empty } from '../../../../components';
 import ImageGallery from '../../../../elements/ImageGallery/ImageGallery';
 import { AmityCommunityFeedRef } from '../Feed';
 import ImageFeedSkeleton from '../../../../components/ImageFeedSkeleton/ImageFeedSkeleton';
@@ -47,18 +44,15 @@ const AmityCommunityImageFeedComponent = forwardRef<
     handleLoadMore,
   }));
 
-  const styles = useStyles();
-
   if (!community?.isJoined && !community?.isPublic) {
     return (
-      <View style={styles.otherStatesContainer}>
-        <EmptyComponent
+      <Empty heightPercent={0.3}>
+        <Empty.Content
           title="This community is private"
           description="Join this community to see its content and members."
-          icon={privateFeed}
-          themeStyle={themeStyles}
+          icon="private"
         />
-      </View>
+      </Empty>
     );
   }
 
@@ -68,13 +62,9 @@ const AmityCommunityImageFeedComponent = forwardRef<
 
   if (!loading && posts?.length === 0) {
     return (
-      <View style={styles.otherStatesContainer}>
-        <EmptyComponent
-          title="No photos yet"
-          icon={emptyImagePost}
-          themeStyle={themeStyles}
-        />
-      </View>
+      <Empty heightPercent={0.3}>
+        <Empty.Content title="No photos yet" icon="image" />
+      </Empty>
     );
   }
 

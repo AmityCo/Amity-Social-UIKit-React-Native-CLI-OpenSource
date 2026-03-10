@@ -4,8 +4,8 @@ import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useUserCollection } from '../../../../hooks/collections/useUserCollection';
-import { useSearchUserByDisplayNameCollection } from '../../../../hooks/collections/useSearchUserByDisplayNameCollection';
+import { useUserCollection } from '../../../../hooks/collections/user/useUserCollection';
+import { useSearchUserByDisplayNameCollection } from '../../../../hooks/collections/search/useSearchUserByDisplayNameCollection';
 import { SearchUsersByEnum } from '@amityco/ts-sdk-react-native';
 
 type UseAddMemberProps = {
