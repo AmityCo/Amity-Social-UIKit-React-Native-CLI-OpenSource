@@ -17,6 +17,13 @@ import Video from 'react-native-video';
 import useAuth from '../../../../core/hooks/useAuth';
 import { usePostSubscription, useRoomSubscription } from '../../../hooks/index';
 import { RoomRepository } from '@amityco/ts-sdk-react-native';
+import { useShareableLink } from '../../../../core/hooks/useShareableLink';
+import { ShareableLinkModel } from '../../../types';
+import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
+import MenuButton from '../../../elements/MenuButton/MenuButton';
+import { CopyLinkAction } from '../../../elements/CopyLinkAction';
+import { ShareAction } from '../../../elements/ShareAction';
+import { PageID } from '../../../enums';
 
 function AmityLiveStreamPlayerPage() {
   const { styles, theme } = useStyles();
@@ -34,6 +41,40 @@ function AmityLiveStreamPlayerPage() {
 
   const { roomId, post } = route.params;
   const { subscribedPost } = usePostSubscription(post?.postId);
+
+  const { getShareLink } = useShareableLink();
+  const { openBottomSheet, bottomSheetHeight } = useBottomSheet();
+
+  const canShare =
+    post?.targetType === 'user' ||
+    (post?.targetType === 'community' &&
+      post?.targetCommunity?.isPublic === true);
+
+  const shareLink = canShare
+    ? getShareLink(ShareableLinkModel.livestreams, roomId)
+    : null;
+
+  const handleSharePress = () => {
+    if (!shareLink) return;
+    openBottomSheet({
+      dark: true,
+      height: bottomSheetHeight[2],
+      content: (
+        <View>
+          <CopyLinkAction
+            dark
+            link={shareLink}
+            pageId={PageID.livestream_player_page}
+          />
+          <ShareAction
+            dark
+            link={shareLink}
+            pageId={PageID.livestream_player_page}
+          />
+        </View>
+      ),
+    });
+  };
   useRoomSubscription({ room });
 
   const { client } = useAuth();
@@ -153,15 +194,21 @@ function AmityLiveStreamPlayerPage() {
         <View style={styles.container}>
           {(room.status === RoomStatus.live ||
             room.status === RoomStatus.waitingReconnect) && (
-            <View style={styles.indicator}>
+            <View style={styles.liveRow}>
               <View style={styles.status}>
                 <Typography.CaptionBold style={styles.live}>
                   LIVE
                 </Typography.CaptionBold>
               </View>
+              {shareLink && (
+                <MenuButton
+                  pageId={PageID.livestream_player_page}
+                  variant="vertical"
+                  onPress={handleSharePress}
+                />
+              )}
             </View>
           )}
-
           {!shouldShowEndThumbnail && (
             <Video
               key={

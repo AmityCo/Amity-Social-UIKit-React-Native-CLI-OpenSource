@@ -33,3 +33,5 @@ export * from './queries/useFlagUserQuery';
 export * from './queries/useBlockUser';
 export * from './usePostSubscription';
 export * from './useRoomSubscription';
+export * from './queries/useFlagPost';
+export * from './queries/useClosePoll';

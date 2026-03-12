@@ -67,3 +67,8 @@ export { default as brand } from './brand';
 export { default as pending } from './pending';
 export { default as following } from './following';
 export { default as unfollow } from './unfollow';
+export { default as share } from './share';
+export { default as link } from './link';
+export { default as settings } from './settings';
+export { default as people } from './people';
+export { default as verticalMenu } from './verticalMenu';

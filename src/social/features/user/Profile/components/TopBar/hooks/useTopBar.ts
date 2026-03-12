@@ -8,6 +8,8 @@ import {
   report,
   unreport,
 } from '../../../../../../../core/assets/icons';
+import { useShareableLink } from '../../../../../../../core/hooks/useShareableLink';
+import { ShareableLinkModel } from '../../../../../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../../../core/routes/RouteParamList';
 import { useBottomSheet } from '../../../../../../../core/stores/slices/bottomSheetSlice';
@@ -29,6 +31,10 @@ export function useTopBar({
   isFromComponent,
 }: UseTopBarParams) {
   const { styles } = useStyles();
+  const { getShareLink } = useShareableLink();
+  const shareLink = userId
+    ? getShareLink(ShareableLinkModel.users, userId)
+    : null;
   const pageId = PageID.user_profile_page;
   const { accessibilityId: backButtonId } = useAmityElement({
     pageId,
@@ -151,6 +157,7 @@ export function useTopBar({
   return {
     styles,
     actions,
+    shareLink,
     openBottomSheet,
     bottomSheetHeight,
     handleGoBack,

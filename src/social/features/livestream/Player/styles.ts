@@ -19,11 +19,14 @@ export const useStyles = () => {
       justifyContent: 'center',
       backgroundColor: '#000000',
     },
-    indicator: {
-      left: 16,
-      zIndex: 1,
-      top: 20,
+    liveRow: {
       position: 'absolute',
+      right: 16,
+      top: 20,
+      zIndex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
     },
     status: {
       borderRadius: 4,

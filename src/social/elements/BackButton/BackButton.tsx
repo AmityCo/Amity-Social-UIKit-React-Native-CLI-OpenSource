@@ -29,7 +29,7 @@ function BackButton({
   if (isExcluded) return null;
 
   return (
-    <TouchableOpacity {...props} testID={accessibilityId}>
+    <TouchableOpacity {...props} testID={accessibilityId} hitSlop={20}>
       <SvgXml
         width="24"
         height="24"

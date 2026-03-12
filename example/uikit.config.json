@@ -750,6 +750,46 @@
     },
     "blocked_users_page/*/unblock_user_button": {
       "text": "Unblock"
+    },
+    "community_profile_page/*/share_link": {
+      "image": "icon",
+      "text": "Share to"
+    },
+    "community_profile_page/*/copy_link": {
+      "image": "icon",
+      "text": "Copy profile link"
+    },
+    "user_profile_page/*/copy_link": {
+      "image": "icon",
+      "text": "Copy profile link"
+    },
+    "user_profile_page/*/share_link": {
+      "image": "icon",
+      "text": "Share to"
+    },
+    "livestream_player_page/*/share_link": {
+      "image": "icon",
+      "text": "Share to"
+    },
+    "livestream_player_page/*/copy_link": {
+      "image": "icon",
+      "text": "Copy live stream link"
+    },
+    "create_livestream_page/*/share_link": {
+      "image": "icon",
+      "text": "Share to"
+    },
+    "create_livestream_page/*/copy_link": {
+      "image": "icon",
+      "text": "Copy live stream link"
+    },
+    "*/post_content/share_link": {
+      "image": "icon",
+      "text": "Share to"
+    },
+    "*/post_content/copy_link": {
+      "image": "icon",
+      "text": "Copy post link"
     }
   }
 }

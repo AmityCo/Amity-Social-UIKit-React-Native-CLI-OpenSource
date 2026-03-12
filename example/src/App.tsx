@@ -14,6 +14,7 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
 
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
+  const logger = false;
   const [permissionGranted, setPermissionGranted] = useState(false);
   useEffect(() => {
     let granted: boolean;
@@ -110,7 +111,7 @@ export default function App() {
       fcmToken={fcmToken} // android:fcm iOS:APN
     >
       <AmityUiKitSocial />
-      <NetworkLogger />
+      {logger && <NetworkLogger />}
     </AmityUiKitProvider>
   );
 }

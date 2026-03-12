@@ -20,6 +20,8 @@ import LikeButtonIconElement from '../../../../../elements/LikeButtonIconElement
 import CommentButtonIconElement from '../../../../../elements/CommentButtonIconElement/CommentButtonIconElement';
 import AmityReactionListComponent from '../../../../reaction/components/List';
 import { formatNumber } from '../../../../../../core/utils/number';
+import { usePostShareAction } from './usePostShareAction';
+import { ShareButton } from '../../../../../elements/ShareButton';
 
 const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   community,
@@ -33,6 +35,13 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   });
   const styles = useStyles(themeStyles);
   const [postData, setPostData] = useState<Amity.Post>(null);
+
+  const { shareLink, handleSharePress } = usePostShareAction({
+    postId,
+    postData,
+    pageId,
+  });
+
   const [isLike, setIsLike] = useState(false);
   const [totalReactions, setTotalReactions] = useState(0);
   const [isReactionListVisible, setIsReactionListVisible] = useState(false);
@@ -157,18 +166,15 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
             <Text style={styles.btnText}>Comment</Text>
           </View>
         </View>
-        <View style={styles.commentBtn} />
-        {/* commented out now for later use */}
-        {/* <TouchableOpacity style={styles.commentBtn}>
-        <ShareButtonIconElement
-          pageID={pageId}
-          componentID={componentId}
-          width={20}
-          height={20}
-          resizeMode="contain"
-        />
-        <Text style={styles.btnText}>Share</Text>
-      </TouchableOpacity> */}
+        {shareLink && (
+          <View style={styles.commentBtn}>
+            <ShareButton
+              pageId={pageId}
+              componentId={componentId}
+              onPress={handleSharePress}
+            />
+          </View>
+        )}
         {isReactionListVisible && (
           <AmityReactionListComponent
             referenceId={postId}

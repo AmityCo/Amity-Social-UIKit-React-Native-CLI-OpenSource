@@ -29,7 +29,7 @@ import AmityCommunityProfileTabComponent, {
 } from './components/Tab';
 import AmityCommunityImageFeedComponent from './components/ImageFeed';
 import AmityCommunityVideoFeedComponent from './components/VideoFeed';
-import CommunityCoverNavigator from '../../elements/CommunityCover/CommunityCoverNavigator';
+import { TopBar } from './components';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import CommunityCreatePostButton from '../../elements/CommunityCreatePostButton/CommunityCreatePostButton';
@@ -192,7 +192,7 @@ const AmityCommunityProfilePage: React.FC<ICommunityProfilePage> = ({
     <View style={styles.container}>
       {isScrolling && !isScrolledPastHeader && (
         <View style={styles.smallHeaderNavigationWrap}>
-          <CommunityCoverNavigator
+          <TopBar
             pageId={pageId}
             componentId={ComponentID.community_header}
             communityId={communityId}

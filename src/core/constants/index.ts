@@ -130,6 +130,11 @@ export const URL_REGEX =
   /(?:(?:https?|ftp):\/\/(?:[a-zA-Z0-9.-]+|[\d.]+)(?::\d{1,5})?(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?|mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|www\.(?:[a-zA-Z0-9.-]+)(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?!\.))/g;
 
 export const TOAST = {
+  SHARE: {
+    COPY: {
+      SUCCESS: 'Link copied',
+    },
+  },
   USER: {
     REPORT: {
       SUCCESS: 'User reported.',
@@ -163,6 +168,22 @@ export const TOAST = {
       },
     },
   },
+  POST: {
+    REPORT: {
+      SUCCESS: 'Post reported.',
+      FAILED: 'Failed to report post. Please try again.',
+    },
+    UNREPORT: {
+      SUCCESS: 'Post unreported.',
+      FAILED: 'Failed to unreport post. Please try again.',
+    },
+  },
+  POLL: {
+    CLOSE: {
+      SUCCESS: 'Post closed.',
+      FAILED: 'Oops, something went wrong.',
+    },
+  },
 };
 
 export const ALERT = {
@@ -192,6 +213,14 @@ export const ALERT = {
       TITLE: 'Unfollow this user?',
       MESSAGE:
         "If you change your mind, you'll have to request to follow them again.",
+    },
+  },
+  POLL: {
+    CLOSE: {
+      TITLE: 'Close poll?',
+      MESSAGE:
+        "The poll duration you've set will be ignored and your poll will be closed immediately.",
+      ACTION: 'Close poll',
     },
   },
 };

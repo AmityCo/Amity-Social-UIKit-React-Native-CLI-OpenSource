@@ -31,6 +31,12 @@ import { RoomStatus } from '../../../enums/roomStatus';
 import { AmityThumbnailActionComponent } from '../components/ThumbnailAction';
 import { StartLivestreamButton } from '../../../elements/StartLivestreamButton';
 import { PageID } from '../../../enums';
+import { useShareableLink } from '../../../../core/hooks/useShareableLink';
+import { ShareableLinkModel } from '../../../types';
+import { useCommunity } from '../../../hooks/useCommunity';
+import MenuButton from '../../../elements/MenuButton/MenuButton';
+import { CopyLinkAction } from '../../../elements/CopyLinkAction';
+import { ShareAction } from '../../../elements/ShareAction';
 import { LiveTimerStatus } from '../../../elements/LiveTimerStatus';
 import { CancelCreateLivestreamButton } from '../../../elements/CancelCreateLivestreamButton';
 import { EndLiveStreamButton } from '../../../elements/EndLiveStreamButton';
@@ -116,7 +122,47 @@ function AmityCreateLivestreamPage() {
   } = useImagePicker();
 
   const { targetId, targetType, targetName, pop } = route.params;
-  const { openBottomSheet, closeBottomSheet } = useBottomSheet();
+
+  const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
+    useBottomSheet();
+
+  const { getShareLink } = useShareableLink();
+
+  const { community } = useCommunity(
+    targetType === 'community' ? targetId : undefined
+  );
+
+  const canShare =
+    targetType === 'user' ||
+    (targetType === 'community' && community?.isPublic === true);
+
+  const shareLink =
+    roomId && canShare
+      ? getShareLink(ShareableLinkModel.livestreams, roomId)
+      : null;
+
+  const handleSharePress = () => {
+    if (!shareLink) return;
+    openBottomSheet({
+      height: bottomSheetHeight[2],
+      dark: true,
+      content: (
+        <View>
+          <CopyLinkAction
+            dark
+            link={shareLink}
+            pageId={PageID.create_livestream_page}
+          />
+          <ShareAction
+            dark
+            link={shareLink}
+            pageId={PageID.create_livestream_page}
+          />
+        </View>
+      ),
+    });
+  };
+
   const disabled = !title?.trim() || isConnecting || isLoading;
   const hasPermission =
     (Platform.OS === 'android' && androidPermission) ||
@@ -539,12 +585,18 @@ function AmityCreateLivestreamPage() {
                 color={theme.colors.background}
               />
             </TouchableOpacity>
-
-            <View style={styles.timer}>
+            <View style={styles.liveRow}>
               <LiveTimerStatus
                 time={calculateTime(time)}
                 pageId={PageID.create_livestream_page}
               />
+              {shareLink && (
+                <MenuButton
+                  pageId={PageID.create_livestream_page}
+                  variant="vertical"
+                  onPress={handleSharePress}
+                />
+              )}
             </View>
             {countdown !== null && (
               <View style={styles.countdownOverlay}>

@@ -164,11 +164,14 @@ export const useStyles = () => {
       position: 'absolute',
       top: 20 + insets.top,
     },
-    timer: {
-      right: 16,
-      zIndex: 100,
+    liveRow: {
       position: 'absolute',
+      right: 16,
       top: 20 + insets.top,
+      zIndex: 100,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
     },
     permission: {
       flex: 1,

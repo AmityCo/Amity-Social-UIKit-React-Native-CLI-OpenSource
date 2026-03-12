@@ -1,35 +1,24 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Pressable,
-  Modal,
-  Animated,
-  Alert,
-} from 'react-native';
-import { SvgXml } from 'react-native-svg';
-import { useStyles } from './styles';
+import { useEffect, useState } from 'react';
+import { Alert, View } from 'react-native';
 import { getCommunityById } from '../../../core/legacy/community';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useIsCommunityModerator } from '../../hooks';
-import {
-  deletePostById,
-  reportTargetById,
-  unReportTargetById,
-} from '../../../core/legacy/feed';
+import { useFlagPost, useIsCommunityModerator } from '../../hooks';
+import { deletePostById } from '../../../core/legacy/feed';
 import useAuth from '../../../core/hooks/useAuth';
 import globalFeedSlice from '../../../core/stores/slices/globalfeedSlice';
-import { Typography } from '../../../core/components/Typography/Typography';
 import { pen, poll, report, trash, unreport } from '../../../core/assets/icons';
 import { useToast } from '../../../core/stores/slices/toastSlice';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
-import MenuButtonIconElement from '../../elements/MenuButtonIconElement/MenuButtonIconElement';
-import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { ComponentID, PageID } from '../../enums';
-import { usePoll } from '../../hooks/usePoll';
-import { useClosePoll } from '../../hooks/poll';
+import { useClosePoll } from '../../hooks/queries/useClosePoll';
 import { useUIKitDispatch } from '../../../core/stores/store';
+import { CopyLinkAction } from '../../elements/CopyLinkAction';
+import { ShareAction } from '../../elements/ShareAction';
+import MenuButton from '../../elements/MenuButton/MenuButton';
+import MenuAction from '../../elements/MenuAction/MenuAction';
+import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
+import { usePostShareAction } from '../../features/post/components/EngagementActions/Components/usePostShareAction';
 
 type PostMenuProps = {
   pageId?: PageID;
@@ -39,35 +28,30 @@ type PostMenuProps = {
 
 export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   const { showToast } = useToast();
-  const { styles, theme } = useStyles();
-  const { closePoll, isLoading: isClosePollLoading } = useClosePoll();
+  const { closePoll } = useClosePoll();
   const { client } = useAuth();
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const { deleteByPostId } = globalFeedSlice.actions;
   const dispatch = useUIKitDispatch();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [isVisible, setIsVisible] = useState(false);
-  const [isReportByMe, setIsReportByMe] = useState(false);
-
-  const [childrenPost, setChildrenPost] = useState<Amity.Post<any> | null>(
-    null
-  );
-
-  const { poll: pollData } = usePoll(
-    (childrenPost as Amity.Post<'poll'>)?.data?.pollId
-  );
-
-  const slideAnimation = useRef(new Animated.Value(0)).current;
+  const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
+    useBottomSheet();
+  const { isFlaggedByMe, reportPost, unreportPost } = useFlagPost({
+    postId: post?.postId,
+  });
 
   const { postId, targetType, targetId } = post ?? {};
-
   const myId = (client as Amity.Client).userId;
+
+  const { shareLink } = usePostShareAction({ postId, postData: post, pageId });
 
   const { isCommunityModerator: isIAmModerator } = useIsCommunityModerator({
     communityId: targetType === 'community' && targetId,
     userId: myId,
   });
+
+  const childrenPost = post?.childrenPosts?.[0];
 
   useEffect(() => {
     if (targetType === 'community' && targetId) {
@@ -85,41 +69,9 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   }
 
   const goToEditPost = () => {
-    closeModal();
+    closeBottomSheet();
     navigation.navigate('EditPost', { post, community: communityData });
   };
-
-  const openModal = () => setIsVisible(true);
-
-  const closeModal = () => {
-    Animated.timing(slideAnimation, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: true,
-    }).start(() => setIsVisible(false));
-  };
-
-  const checkIsReport = useCallback(async () => {
-    const isReport = await PostRepository.isPostFlaggedByMe(postId);
-    setIsReportByMe(!!isReport);
-  }, [postId]);
-
-  const getChildrenPost = useCallback(async () => {
-    const unsubscribe = PostRepository.getPost(
-      post?.children?.[0],
-      ({ data, loading }) => {
-        if (!loading) setChildrenPost(data);
-      }
-    );
-    return () => unsubscribe();
-  }, [post]);
-
-  useEffect(() => {
-    if (isVisible) {
-      checkIsReport();
-      getChildrenPost();
-    }
-  }, [checkIsReport, getChildrenPost, isVisible]);
 
   const deletePost = async () => {
     try {
@@ -137,7 +89,7 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   };
 
   const onDeletePost = () => {
-    setIsVisible(false);
+    closeBottomSheet();
     Alert.alert(
       'Delete this post',
       `This post will be permanently deleted. You'll no longer see and find this post`,
@@ -158,171 +110,120 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
     );
   };
 
-  const onClosePoll = () => {
-    setIsVisible(false);
-    Alert.alert(
-      'Close poll?',
-      "The poll duration you've set will be ignored and your poll will be closed immediately.",
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Close poll',
-          style: 'destructive',
-          onPress: () => {
-            if (!isClosePollLoading) {
-              closePoll({
-                pollId: (childrenPost as Amity.Post<'poll'>)?.data?.pollId,
-                onSuccess: () => {
-                  showToast({ message: 'Post closed.', type: 'success' });
-                },
-                onError: () => {
-                  showToast({
-                    type: 'failed',
-                    message: 'Oops, something went wrong.',
-                  });
-                },
-              });
-            }
-          },
-        },
-      ]
-    );
-    setIsVisible(false);
-  };
-
-  const reportPostObject = async () => {
-    setIsVisible(false);
-    if (isReportByMe) {
-      try {
-        await unReportTargetById('post', postId);
-        showToast({ message: 'Post unreported', type: 'success' });
-      } catch (error) {
-        showToast({
-          message: 'Failed to unreport post. Please try again.',
-          type: 'failed',
-        });
-      }
-    } else {
-      try {
-        await reportTargetById('post', postId);
-        showToast({ message: 'Post reported', type: 'success' });
-      } catch (error) {
-        showToast({
-          message: 'Failed to report post. Please try again.',
-          type: 'failed',
-        });
-      }
-    }
-    checkIsReport();
-  };
+  const actions = [
+    {
+      show: post?.creator?.userId !== myId && !isFlaggedByMe,
+      action: (
+        <MenuAction
+          key="report"
+          gap="small"
+          label={'Report post'}
+          iconProps={{ xml: report() }}
+          onPress={() => {
+            closeBottomSheet();
+            reportPost(postId);
+          }}
+        />
+      ),
+    },
+    {
+      show: post?.creator?.userId !== myId && isFlaggedByMe,
+      action: (
+        <MenuAction
+          key="unreport"
+          gap="small"
+          iconProps={{ xml: unreport() }}
+          label={'Unreport post'}
+          onPress={() => {
+            closeBottomSheet();
+            unreportPost(postId);
+          }}
+        />
+      ),
+    },
+    {
+      show:
+        post?.creator?.userId === myId &&
+        childrenPost?.dataType !== 'room' &&
+        childrenPost?.dataType !== 'poll',
+      action: (
+        <MenuAction
+          key="edit"
+          gap="small"
+          iconProps={{ xml: pen() }}
+          label="Edit post"
+          onPress={goToEditPost}
+        />
+      ),
+    },
+    {
+      show: !!shareLink,
+      action: (
+        <CopyLinkAction
+          key="copy"
+          link={shareLink}
+          pageId={pageId}
+          componentId={ComponentID.post_content}
+          onPress={closeBottomSheet}
+        />
+      ),
+    },
+    {
+      show: !!shareLink,
+      action: (
+        <ShareAction
+          key="share"
+          link={shareLink}
+          pageId={pageId}
+          componentId={ComponentID.post_content}
+          onPress={closeBottomSheet}
+        />
+      ),
+    },
+    {
+      show:
+        post?.creator?.userId === myId &&
+        childrenPost?.dataType === 'poll' &&
+        (childrenPost as Amity.Post<'poll'>)?.getPollInfo()?.status === 'open',
+      action: (
+        <MenuAction
+          key="close-poll"
+          gap="small"
+          iconProps={{ xml: poll() }}
+          label="Close poll"
+          onPress={() => {
+            closeBottomSheet();
+            closePoll((childrenPost as Amity.Post<'poll'>)?.data?.pollId);
+          }}
+        />
+      ),
+    },
+    {
+      show: post?.creator?.userId === myId || isIAmModerator,
+      action: (
+        <MenuAction
+          key="delete"
+          gap="small"
+          danger
+          iconProps={{ xml: trash() }}
+          label="Delete post"
+          onPress={onDeletePost}
+        />
+      ),
+    },
+  ].filter(({ show }) => show);
 
   return (
-    <Fragment>
-      <Pressable onPress={openModal} hitSlop={12}>
-        <MenuButtonIconElement
-          pageID={pageId}
-          style={styles.menuIcon}
-          componentID={componentId}
-        />
-      </Pressable>
-      <Modal
-        transparent={true}
-        visible={isVisible}
-        animationType="fade"
-        onRequestClose={closeModal}
-        statusBarTranslucent
-      >
-        <Pressable onPress={closeModal} style={styles.modal}>
-          <Animated.View
-            style={[
-              styles.modalContent,
-              {
-                transform: [
-                  {
-                    translateY: slideAnimation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [580, 0],
-                    }),
-                  },
-                ],
-              },
-              (post?.creator?.userId === myId || isIAmModerator) &&
-                ((childrenPost?.dataType !== 'room' &&
-                  childrenPost?.dataType !== 'poll') ||
-                  (childrenPost?.dataType === 'poll' &&
-                    pollData?.status === 'open')) &&
-                styles.twoOptions,
-            ]}
-          >
-            <View style={styles.handleBar} />
-            {post?.creator?.userId !== myId && (
-              <TouchableOpacity
-                style={styles.menuItem}
-                onPress={reportPostObject}
-              >
-                <SvgXml
-                  width="24"
-                  height="24"
-                  color={theme.colors.base}
-                  xml={isReportByMe ? unreport() : report()}
-                />
-                <Typography.BodyBold style={styles.base}>
-                  {isReportByMe ? 'Unreport post' : 'Report post'}
-                </Typography.BodyBold>
-              </TouchableOpacity>
-            )}
-            {post?.creator?.userId === myId &&
-              childrenPost?.dataType !== 'room' &&
-              childrenPost?.dataType !== 'poll' && (
-                <TouchableOpacity
-                  onPress={goToEditPost}
-                  style={styles.menuItem}
-                >
-                  <SvgXml
-                    width="24"
-                    height="24"
-                    xml={pen()}
-                    color={theme.colors.base}
-                  />
-                  <Typography.BodyBold style={styles.base}>
-                    Edit post
-                  </Typography.BodyBold>
-                </TouchableOpacity>
-              )}
-            {post?.creator?.userId === myId &&
-              childrenPost?.dataType === 'poll' &&
-              pollData?.status === 'open' && (
-                <TouchableOpacity onPress={onClosePoll} style={styles.menuItem}>
-                  <SvgXml
-                    width="24"
-                    height="24"
-                    xml={poll()}
-                    color={theme.colors.base}
-                  />
-                  <Typography.BodyBold style={styles.base}>
-                    Close poll
-                  </Typography.BodyBold>
-                </TouchableOpacity>
-              )}
-            {(post?.creator?.userId === myId || isIAmModerator) && (
-              <TouchableOpacity style={styles.menuItem} onPress={onDeletePost}>
-                <SvgXml
-                  width="24"
-                  height="24"
-                  xml={trash()}
-                  color={theme.colors.alert}
-                />
-                <Typography.BodyBold style={styles.alert}>
-                  Delete post
-                </Typography.BodyBold>
-              </TouchableOpacity>
-            )}
-          </Animated.View>
-        </Pressable>
-      </Modal>
-    </Fragment>
+    <MenuButton
+      pageId={pageId}
+      componentId={componentId}
+      hitSlop={12}
+      onPress={() => {
+        openBottomSheet({
+          height: bottomSheetHeight[actions.length],
+          content: <View>{actions.map(({ action }) => action)}</View>,
+        });
+      }}
+    />
   );
 }

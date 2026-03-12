@@ -7,7 +7,7 @@ import {
   useIsCommunityModerator,
 } from '../../../../hooks';
 import { useStyles } from './styles';
-import CommunityCover from '../../../../elements/CommunityCover/CommunityCover';
+import { CommunityCover } from '../../elements/CommunityCover/CommunityCover';
 import CommunityPrivateBadge from '../../../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
 import CommunityName from '../../../../elements/CommunityName/CommunityName';
 import CommunityVerifyBadge from '../../../../elements/CommunityVerifyBadge/CommunityVerifyBadge';
