@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Image, View } from 'react-native';
-import { ComponentID, ImageSizeState, PageID } from '../../../../enum';
-import { useFile } from '../../../../hook';
+import { ComponentID, PageID } from '../../../../enum';
 import { useStyles } from './styles';
 
 import CommunityJoinedButton from '../../../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
@@ -13,6 +12,7 @@ import CommunityOfficialBadge from '../../../../elements/CommunityOfficialBadge/
 import CommunityCategory from '../../../../elements/CommunityCatetory/CommunityCategory';
 import CommunityMemeberCount from '../../../../elements/CommunityMemeberCount/CommunityMemeberCount';
 import CommunityDisplayname from '../../../../elements/CommunityDisplayname/CommunityDisplayname';
+import { getFileUrlWithSize } from '../../../../utils';
 
 type RecommendedCommunityItemProps = {
   pageId?: PageID;
@@ -22,31 +22,15 @@ type RecommendedCommunityItemProps = {
 export const RecommendedCommunityItem: React.FC<
   RecommendedCommunityItemProps
 > = ({ community, pageId = PageID.WildCardPage }) => {
-  const { getImage } = useFile();
   const componentId = ComponentID.recommended_communities;
   const styles = useStyles();
-  const [imageUrl, setImageUrl] = React.useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const fetchImage = async () => {
-      if (!community.avatarFileId) return;
-
-      const url = await getImage({
-        fileId: community.avatarFileId,
-        imageSize: ImageSizeState.large,
-      });
-
-      setImageUrl(url);
-    };
-    fetchImage();
-  }, [community.avatarFileId, getImage]);
 
   return (
     <View style={styles.container}>
-      {community.avatarFileId && imageUrl ? (
+      {community.avatar?.fileUrl ? (
         <Image
           style={styles.image}
-          source={{ uri: imageUrl }}
+          source={{ uri: getFileUrlWithSize(community.avatar?.fileUrl) }}
           resizeMode="cover"
         />
       ) : (

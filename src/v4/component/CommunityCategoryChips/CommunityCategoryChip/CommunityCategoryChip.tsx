@@ -22,8 +22,13 @@ export const CommunityCategoryChip: React.FC<CommunityCategoryChipProps> = ({
 
   useEffect(() => {
     const fetch = async () => {
-      const result = await CategoryRepository.getCategory(categoryId);
-      setCategory(result.data);
+      const cache = CategoryRepository.getCategory.locally(categoryId);
+      if (cache?.data) {
+        setCategory(cache.data);
+      } else {
+        const result = await CategoryRepository.getCategory(categoryId);
+        setCategory(result.data);
+      }
     };
 
     fetch();

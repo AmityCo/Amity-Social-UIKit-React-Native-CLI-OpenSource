@@ -34,7 +34,7 @@ const CommunityRowItem: FC<CommunityRowItemProps> = ({
       <CommunityRowImage
         pageId={pageId}
         componentId={componentId}
-        fileId={community.avatarFileId}
+        fileUrl={community.avatar?.fileUrl}
         label={label}
       />
       <View style={styles.detailWrap}>

@@ -18,7 +18,7 @@ export function useCommunitySetting(community: Amity.Community) {
     >();
   const { AmityCommunitySettingPageBehavior } = useBehaviour();
   const { showToast } = useToast();
-  const { refresh } = useCustomRankingGlobalFeed();
+  const { refresh } = useCustomRankingGlobalFeed({ enabled: false });
 
   const { mutate: leaveCommunity } = useMutation({
     mutationFn: async () =>

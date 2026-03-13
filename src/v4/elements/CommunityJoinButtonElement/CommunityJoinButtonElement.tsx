@@ -27,7 +27,7 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
     elementId: ElementID.community_join_button,
   });
 
-  const { refresh } = useCustomRankingGlobalFeed();
+  const { refresh } = useCustomRankingGlobalFeed({ enabled: false });
   const { joinCommunity, isPending } = useJoinCommunity({
     onSuccess: () => setTimeout(() => refresh(), 3000),
   });

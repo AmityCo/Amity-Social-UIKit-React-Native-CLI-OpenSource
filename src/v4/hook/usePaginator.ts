@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { AdEngine } from '../engine/AdEngine';
 import {
   useAdSettings,
   useRecommendAds,
 } from '../../v4/providers/AdEngineProvider';
-import { useFocusEffect } from '@react-navigation/native';
 
 type ItemWithAd<T> = [T] | [T, Amity.Ad];
 
@@ -41,21 +40,19 @@ export const usePaginatorCore = <T>({
     newItems: T[],
     newItemIds: Set<string>
   ): Array<ItemWithAd<T>> => {
+    const newItemsMap = new Map<string, T>(
+      newItems.map((item) => [getItemId(item), item])
+    );
     return (itemWithAdsRef.current || [])
       .map((itemWithAd) => {
         const itemId = getItemId(itemWithAd[0]);
 
-        // Skip items not in new items list
         if (!newItemIds.has(itemId)) {
           return null;
         }
 
-        // Find the updated version of this item
-        const updatedItem = newItems.find(
-          (newItem) => getItemId(newItem) === itemId
-        );
+        const updatedItem = newItemsMap.get(itemId);
 
-        // Update the item while preserving its ad (if any)
         if (updatedItem) {
           if (itemWithAd.length === 1) {
             return [updatedItem] as [T];
@@ -86,13 +83,14 @@ export const usePaginatorCore = <T>({
     topIndex: number,
     prevItems: Array<ItemWithAd<T>>
   ): T[] => {
-    return newItems.slice(topIndex).filter((newItem) => {
-      const itemId = getItemId(newItem);
-      return !prevItems.some(
-        (prevItem) =>
-          prevItem && prevItem[0] && getItemId(prevItem[0]) === itemId
-      );
-    });
+    const prevItemIds = new Set<string>(
+      prevItems
+        .filter((item) => item && item[0])
+        .map((item) => getItemId(item[0]))
+    );
+    return newItems
+      .slice(topIndex)
+      .filter((newItem) => !prevItemIds.has(getItemId(newItem)));
   };
 
   const frequency = AdEngine.instance.getAdFrequencyByPlacement(placement);
@@ -256,6 +254,7 @@ export const usePaginatorApi = <T>(params: {
   const [itemWithAds, setItemWithAds] = useState<
     (Amity.Ad | T)[] | undefined
   >();
+  const [_, startTransition] = useTransition();
 
   const { items, isLoading, ...rest } = params;
   const {
@@ -275,16 +274,14 @@ export const usePaginatorApi = <T>(params: {
     setHasAppenedFirstRoundAds(false);
   }, [coreReset]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (!adsLoaded || isLoading) return;
-
+  useEffect(() => {
+    if (!adsLoaded || isLoading) return;
+    startTransition(() => {
       const newItems = combineItemsWithAds(items);
-
       setItemWithAds(newItems);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [adsLoaded, items, isLoading])
-  );
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adsLoaded, items, isLoading]);
 
   return { itemWithAds, reset };
 };
