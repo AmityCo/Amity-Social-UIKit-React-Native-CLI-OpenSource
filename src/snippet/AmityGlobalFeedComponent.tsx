@@ -25,6 +25,11 @@ import config from '../../uikit.config.json';
     },
   }}
 >
-  <AmityGlobalFeedComponent />
+  <AmityGlobalFeedComponent
+    itemWithAds={[]}
+    refresh={() => Promise.resolve()}
+    loading={false}
+    onNextPage={() => null}
+  />
 </AmityUiKitProvider>;
 /* end_sample_code */
