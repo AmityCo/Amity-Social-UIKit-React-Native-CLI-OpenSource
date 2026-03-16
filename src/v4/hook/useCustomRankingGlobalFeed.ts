@@ -53,7 +53,7 @@ export const useCustomRankingGlobalFeed = ({
   const fetchCustomRanking = useCallback(() => {
     if (!isConnected) return null;
 
-    return FeedRepository.getCustomRankingGlobalFeed(
+    return FeedRepository.getGlobalFeed(
       { limit: globalFeedPageLimit },
       ({ data, loading: isLoading, error: $error, onNextPage }) => {
         if (isLoading) {

@@ -18,6 +18,7 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
   pageId = PageID.WildCardPage,
   onPressExploreCommunity,
 }) => {
+  const styles = useStyles();
   const componentId = ComponentID.newsfeed_component;
   const { themeStyles, accessibilityId, isExcluded } = useAmityComponent({
     pageId,
@@ -27,7 +28,6 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
   const { itemWithAds, refresh, globalFeedPosts, loading, onNextPage } =
     useCustomRankingGlobalFeed();
 
-  const styles = useStyles();
   if (isExcluded) return null;
 
   if (loading || (globalFeedPosts?.length > 0 && !itemWithAds?.length))

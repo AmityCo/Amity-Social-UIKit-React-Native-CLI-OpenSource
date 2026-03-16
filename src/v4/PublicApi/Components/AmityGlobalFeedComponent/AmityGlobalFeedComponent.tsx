@@ -66,7 +66,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
 
   return (
     <FlatList
-      initialNumToRender={5}
+      initialNumToRender={20}
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
       style={styles.feedWrap}

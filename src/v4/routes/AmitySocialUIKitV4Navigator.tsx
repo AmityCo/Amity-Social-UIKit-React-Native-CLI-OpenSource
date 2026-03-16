@@ -289,6 +289,7 @@ export default function AmitySocialUIKitV4Navigator() {
                   params: { displayName },
                 },
               }: any) => ({
+                headerShown: true,
                 title: displayName,
                 headerLeft: () => <BackButton />,
               })}
