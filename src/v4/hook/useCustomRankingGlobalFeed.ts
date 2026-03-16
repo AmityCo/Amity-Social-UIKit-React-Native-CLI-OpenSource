@@ -22,12 +22,12 @@ export const isAmityAd = (
 };
 
 type UseCustomRankingGlobalFeed = {
-  enabled: boolean;
+  enabled?: boolean;
 };
 
 export const useCustomRankingGlobalFeed = ({
   enabled = true,
-}: UseCustomRankingGlobalFeed) => {
+}: UseCustomRankingGlobalFeed = {}) => {
   const { isConnected } = useAuth();
   const dispatch = useUIKitDispatch();
   const unsubscribeRef = useRef<() => void | null>(null);
@@ -51,7 +51,7 @@ export const useCustomRankingGlobalFeed = ({
   });
 
   const fetchCustomRanking = useCallback(() => {
-    if (!isConnected || !enabled) return null;
+    if (!isConnected) return null;
 
     return FeedRepository.getCustomRankingGlobalFeed(
       { limit: globalFeedPageLimit },
@@ -71,30 +71,36 @@ export const useCustomRankingGlobalFeed = ({
               post.structureType !== PostStructureType.FILE &&
               post.structureType !== PostStructureType.MIXED
           );
+          interactionHandleRef.current?.cancel();
           interactionHandleRef.current =
             InteractionManager.runAfterInteractions(() => {
               dispatch(setNewGlobalFeed(filtered));
               setFetching(false);
+              interactionHandleRef.current = null;
             });
         } else {
           setFetching(false);
         }
       }
     );
-  }, [dispatch, setNewGlobalFeed, isConnected, enabled]);
+  }, [dispatch, setNewGlobalFeed, isConnected]);
 
   useEffect(() => {
+    if (!enabled) return undefined;
+
     unsubscribeRef.current = fetchCustomRanking();
 
     return () => {
       unsubscribeRef.current?.();
       interactionHandleRef.current?.cancel();
+      interactionHandleRef.current = null;
     };
-  }, [fetchCustomRanking]);
+  }, [fetchCustomRanking, enabled]);
 
   const refresh = useCallback(() => {
     if (unsubscribeRef.current) unsubscribeRef.current?.();
     interactionHandleRef.current?.cancel();
+    interactionHandleRef.current = null;
     onNextPageRef.current = null;
 
     unsubscribeRef.current = fetchCustomRanking();

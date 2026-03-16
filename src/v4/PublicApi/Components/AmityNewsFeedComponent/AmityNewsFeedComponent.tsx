@@ -25,7 +25,7 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
   });
 
   const { itemWithAds, refresh, globalFeedPosts, loading, onNextPage } =
-    useCustomRankingGlobalFeed({ enabled: true });
+    useCustomRankingGlobalFeed();
 
   const styles = useStyles();
   if (isExcluded) return null;
