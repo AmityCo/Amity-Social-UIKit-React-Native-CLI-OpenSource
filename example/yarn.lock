@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@7.13.0":
-  version "7.13.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.13.0.tgz#fdc021744d4c10b6a286ca11707e1dcfc8d66a29"
-  integrity sha512-WtGk3fJdc1mzMUeCvqA9MWbL0YF1oQEcv+ozXCI4Jd5Cbcv2VaP0ShwlFOJKhgkHQ4xp8QhuQSx9wNzY3SD8vA==
+"@amityco/ts-sdk-react-native@7.15.1-60e034d4.0":
+  version "7.15.1-60e034d4.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.15.1-60e034d4.0.tgz#c1a4f9619512466ff56554a402fede3aff444b60"
+  integrity sha512-I8divb+HKWkpM5ppoldZn5nyQOlM8RYSl8ZPuWXZBxvJd7PRLbNpZgCH42dJXydi1QwldhmLlzzJ2sXttqkO6w==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
