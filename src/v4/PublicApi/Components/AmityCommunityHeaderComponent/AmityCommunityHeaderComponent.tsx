@@ -11,7 +11,6 @@ import CommunityCover from '../../../elements/CommunityCover/CommunityCover';
 import CommunityPrivateBadge from '../../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
 import CommunityName from '../../../elements/CommunityName/CommunityName';
 import CommunityVerifyBadge from '../../../elements/CommunityVerifyBadge/CommunityVerifyBadge';
-import CommunityCategory from '../../../elements/CommunityCatetory/CommunityCategory';
 import CommunityDescription from '../../../elements/CommunityDescription/CommunityDescription';
 import CommunityInfo from '../../../elements/CommunityInfo/CommunityInfo';
 import CommunityJoinButtonElement from '../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
@@ -24,6 +23,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../v4/routes/RouteParamList';
 import { Client } from '@amityco/ts-sdk-react-native';
+import { CommunityCategories } from '../../../../v4/features/feed/components';
 
 export interface AmityCommunityHeaderRef {
   height: number;
@@ -135,10 +135,10 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
               <CommunityVerifyBadge pageId={pageId} componentId={componentId} />
             )}
           </View>
-          <CommunityCategory
+          <CommunityCategories
             pageId={pageId}
             componentId={componentId}
-            categoryIds={community.categoryIds}
+            categories={community.categories}
             allVisible={true}
             style={styles.categoryWrap}
           />

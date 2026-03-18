@@ -1,26 +1,26 @@
 import React from 'react';
 import { Text, View, ViewProps, ScrollView } from 'react-native';
-import { CommunityCategoryChip } from './CommunityCategoryChip/CommunityCategoryChip';
-import type { MyMD3Theme } from 'src/providers/amity-ui-kit-provider';
+import { CommunityCategory } from '../../elements/CommunityCategory/CommunityCategory';
 import { useStyles } from './styles';
+import { ComponentID, PageID } from '../../../../enum';
 
-type CommunityCategoryChipsProps = ViewProps & {
-  themeStyles: MyMD3Theme;
-  categoryIds: string[];
+type CommunityCategoriesProps = ViewProps & {
+  categories: Amity.Category[];
+  pageId?: PageID;
+  componentId?: ComponentID;
   allVisible?: boolean;
 };
 
 const MAX_VISIBLE_CATEGORIES = 2;
 
-export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
-  categoryIds,
-  themeStyles,
+export function CommunityCategories({
+  categories,
   allVisible,
   ...props
-}) => {
-  const styles = useStyles(themeStyles);
-  const visibleCategories = categoryIds.slice(0, MAX_VISIBLE_CATEGORIES);
-  const hiddenCategoriesCount = categoryIds.length - MAX_VISIBLE_CATEGORIES;
+}: CommunityCategoriesProps) {
+  const { styles } = useStyles();
+  const visibleCategories = categories.slice(0, MAX_VISIBLE_CATEGORIES);
+  const hiddenCategoriesCount = categories.length - MAX_VISIBLE_CATEGORIES;
   const showMoreText =
     hiddenCategoriesCount > 0 ? `+${hiddenCategoriesCount}` : '';
   const showMore = hiddenCategoriesCount > 0;
@@ -51,7 +51,7 @@ export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
   };
 
   // Choose all categories or just the visible ones based on allVisible
-  const displayCategories = allVisible ? categoryIds : visibleCategories;
+  const displayCategories = allVisible ? categories : visibleCategories;
   // Only show more indicator if not showing all categories
   const displayShowMore = !allVisible && showMore;
 
@@ -63,23 +63,21 @@ export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.scrollableContainer}
         >
-          {displayCategories.map((id, index) => (
-            <CommunityCategoryChip
+          {displayCategories.map((category, index) => (
+            <CommunityCategory
               key={index}
-              categoryId={id}
+              categoryName={category.name}
               maxWidth={getMaxWidthForItem(displayCategories.length)}
-              themeStyles={themeStyles}
             />
           ))}
         </ScrollView>
       ) : (
         <>
-          {displayCategories.map((id, index) => (
-            <CommunityCategoryChip
+          {displayCategories.map((category, index) => (
+            <CommunityCategory
               key={index}
-              categoryId={id}
+              categoryName={category.name}
               maxWidth={getMaxWidthForItem(displayCategories.length)}
-              themeStyles={themeStyles}
             />
           ))}
           {displayShowMore && (
@@ -91,4 +89,4 @@ export const CommunityCategoryChips: React.FC<CommunityCategoryChipsProps> = ({
       )}
     </View>
   );
-};
+}

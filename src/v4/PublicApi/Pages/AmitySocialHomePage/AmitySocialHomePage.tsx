@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useCallback, useState } from 'react';
-import { LogBox, SafeAreaView, StyleSheet } from 'react-native';
+import { useCallback, useRef, useState } from 'react';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import CustomSocialTab from '../../../../v4/component/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../../../v4/hook';
 import {
@@ -12,15 +12,11 @@ import {
 import { useTheme } from 'react-native-paper';
 import { useBehaviour } from '../../../../v4/providers/BehaviourProvider';
 import AmitySocialHomeTopNavigationComponent from '../../../../v4/PublicApi/Components/AmitySocialHomeTopNavigationComponent/AmitySocialHomeTopNavigationComponent';
-import AmityEmptyNewsFeedComponent from '../../../../v4/PublicApi/Components/AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
 import AmityMyCommunitiesComponent from '../../../../v4/PublicApi/Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
 import AmityNewsFeedComponent from '../../../../v4/PublicApi/Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
 import AmityExploreComponent from '../../../../v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
-import NewsFeedLoadingComponent from '../../../../v4/component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
-import { useCustomRankingGlobalFeed } from '../../../../v4/hook/useCustomRankingGlobalFeed';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
 
-LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {
   const theme = useTheme() as MyMD3Theme;
   const styles = StyleSheet.create({
@@ -31,8 +27,6 @@ const AmitySocialHomePage = () => {
   });
 
   const { AmitySocialHomePageBehaviour } = useBehaviour();
-  const { itemWithAds: globalFeedPosts, loading } =
-    useCustomRankingGlobalFeed();
 
   const [newsFeedTab] = useUiKitConfig({
     page: PageID.social_home_page,
@@ -56,11 +50,13 @@ const AmitySocialHomePage = () => {
   }) as string[];
 
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
+  const visitedTabs = useRef<Set<string>>(new Set([newsFeedTab]));
 
   const onTabChange = useCallback(
     (tabName: string) => {
       if (AmitySocialHomePageBehaviour.onChooseTab)
         return AmitySocialHomePageBehaviour.onChooseTab(tabName);
+      visitedTabs.current.add(tabName);
       setActiveTab(tabName);
     },
     [AmitySocialHomePageBehaviour]
@@ -70,30 +66,10 @@ const AmitySocialHomePage = () => {
     onTabChange(exploreTab);
   }, [exploreTab, onTabChange]);
 
-  const renderNewsFeed = () => {
-    if (loading) return <NewsFeedLoadingComponent />;
-    if (activeTab === exploreTab)
-      return <AmityExploreComponent pageId={PageID.social_home_page} />;
-
-    if (activeTab === newsFeedTab) {
-      if (!loading && globalFeedPosts?.length === 0)
-        return (
-          <AmityEmptyNewsFeedComponent
-            pageId={PageID.social_home_page}
-            onPressExploreCommunity={onPressExploreCommunity}
-          />
-        );
-      return <AmityNewsFeedComponent pageId={PageID.social_home_page} />;
-    }
-    if (activeTab === myCommunitiesTab)
-      return (
-        <AmityMyCommunitiesComponent
-          pageId={PageID.social_home_page}
-          componentId={ComponentID.my_communities}
-        />
-      );
-    return null;
-  };
+  const tabStyle = (tab: string) => ({
+    flex: 1,
+    display: activeTab === tab ? ('flex' as const) : ('none' as const),
+  });
 
   return (
     <SafeAreaView
@@ -108,7 +84,25 @@ const AmitySocialHomePage = () => {
         onTabChange={onTabChange}
         activeTab={activeTab}
       />
-      {renderNewsFeed()}
+      <View style={tabStyle(newsFeedTab)}>
+        <AmityNewsFeedComponent
+          pageId={PageID.social_home_page}
+          onPressExploreCommunity={onPressExploreCommunity}
+        />
+      </View>
+      {visitedTabs.current.has(exploreTab) && (
+        <View style={tabStyle(exploreTab)}>
+          <AmityExploreComponent pageId={PageID.social_home_page} />
+        </View>
+      )}
+      {visitedTabs.current.has(myCommunitiesTab) && (
+        <View style={tabStyle(myCommunitiesTab)}>
+          <AmityMyCommunitiesComponent
+            pageId={PageID.social_home_page}
+            componentId={ComponentID.my_communities}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

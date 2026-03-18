@@ -70,7 +70,7 @@ const FollowerListItem: FC<FollowerListItemType> = ({
           fileId: data.avatarFileId,
           imageSize: ImageSizeState.small,
         });
-        setAvatar(userAvatar ?? defaultAvatarUri);
+        setAvatar(data?.avatarCustomUrl ?? userAvatar ?? defaultAvatarUri);
       }
     });
   }, [getImage, userId]);

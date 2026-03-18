@@ -6,11 +6,11 @@ import { View } from 'react-native';
 import CommunityJoinedButtonElement from '../../elements/CommunityJoinedButtonElement/CommunityJoinedButtonElement';
 import CommunityJoinButtonElement from '../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import CommunityDisplayname from '../../elements/CommunityDisplayname/CommunityDisplayname';
-import CommunityCategory from '../../elements/CommunityCatetory/CommunityCategory';
 import CommunityMemeberCount from '../../elements/CommunityMemeberCount/CommunityMemeberCount';
 import { useStyles } from './styles';
 import CommunityPrivateBadge from '../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
 import CommunityOfficialBadge from '../../elements/CommunityOfficialBadge/CommunityOfficialBadge';
+import { CommunityCategories } from '../../../v4/features/feed/components';
 
 type CommunityRowItemProps = {
   pageId?: PageID;
@@ -34,7 +34,7 @@ const CommunityRowItem: FC<CommunityRowItemProps> = ({
       <CommunityRowImage
         pageId={pageId}
         componentId={componentId}
-        fileId={community.avatarFileId}
+        fileUrl={community.avatar?.fileUrl}
         label={label}
       />
       <View style={styles.detailWrap}>
@@ -54,8 +54,8 @@ const CommunityRowItem: FC<CommunityRowItemProps> = ({
         </View>
         <View style={styles.detailBottomWrap}>
           <View style={styles.detailBottomWrapLeft}>
-            <CommunityCategory
-              categoryIds={community.categoryIds}
+            <CommunityCategories
+              categories={community.categories}
               pageId={pageId}
               componentId={componentId}
             />

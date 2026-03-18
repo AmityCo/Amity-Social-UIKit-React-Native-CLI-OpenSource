@@ -129,7 +129,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
             height={20}
             resizeMode="contain"
           />
-          <Text style={styles.btnText}>{postData?.commentsCount}</Text>
+          <Text style={styles.btnText}>{postData?.localCommentCount}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.commentBtn} />

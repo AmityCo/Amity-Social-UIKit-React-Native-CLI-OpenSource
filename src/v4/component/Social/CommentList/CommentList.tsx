@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import React, { FC, useEffect, useState, useRef, memo } from 'react';
 import { UserInterface, IMentionPosition } from '../../../../types';
-import { getAmityUser } from '../../../../providers/user-provider';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import CommentListItem from '../CommentListItem/CommentListItem';
 import {
@@ -103,10 +102,10 @@ const CommentList: FC<ICommentListProp> = ({
         referenceType: postType,
         limit: commentListLimit,
       },
-      async ({ error, loading, data, hasNextPage, onNextPage }) => {
+      ({ error, loading, data, hasNextPage, onNextPage }) => {
         if (error) return;
         if (!loading) {
-          data && data.length > 0 && (await queryComment(data));
+          data && data.length > 0 && queryComment(data);
           onNextPageRef.current = hasNextPage ? onNextPage : null;
         }
       }
@@ -129,34 +128,31 @@ const CommentList: FC<ICommentListProp> = ({
   }, [inputMessage]);
 
   const queryComment = async (comments: Amity.InternalComment[]) => {
-    const formattedCommentList = await Promise.all(
-      comments.map(async (item: Amity.Comment) => {
-        const { userObject } = await getAmityUser(item.userId);
-        let formattedUserObject: UserInterface;
+    const formattedCommentList = comments.map((item: Amity.Comment) => {
+      let formattedUserObject: UserInterface;
 
-        formattedUserObject = {
-          userId: userObject.data.userId,
-          displayName: userObject.data.displayName,
-          avatarFileId: userObject.data.avatarFileId,
-        };
+      formattedUserObject = {
+        userId: item?.creator?.userId,
+        displayName: item?.creator?.displayName,
+        avatarFileId: item?.creator?.avatarFileId,
+      };
 
-        return {
-          commentId: item.commentId,
-          data: item.data as Record<string, any>,
-          dataType: item.dataType || 'text',
-          myReactions: item.myReactions as string[],
-          reactions: item.reactions as Record<string, number>,
-          user: formattedUserObject as UserInterface,
-          updatedAt: item.updatedAt,
-          editedAt: item.editedAt,
-          createdAt: item.createdAt,
-          childrenComment: item.children,
-          childrenNumber: item.childrenNumber,
-          referenceId: item.referenceId,
-          mentionPosition: item?.metadata?.mentioned ?? [],
-        };
-      })
-    );
+      return {
+        commentId: item.commentId,
+        data: item.data as Record<string, any>,
+        dataType: item.dataType || 'text',
+        myReactions: item.myReactions as string[],
+        reactions: item.reactions as Record<string, number>,
+        user: formattedUserObject as UserInterface,
+        updatedAt: item.updatedAt,
+        editedAt: item.editedAt,
+        createdAt: item.createdAt,
+        childrenComment: item.children,
+        childrenNumber: item.childrenNumber,
+        referenceId: item.referenceId,
+        mentionPosition: item?.metadata?.mentioned ?? [],
+      };
+    });
     setCommentList([...formattedCommentList]);
   };
 

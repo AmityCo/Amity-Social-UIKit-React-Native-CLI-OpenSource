@@ -5,22 +5,41 @@ import AmityGlobalFeedComponent from '../AmityGlobalFeedComponent/AmityGlobalFee
 import { useStyles } from './styles';
 import Divider from '../../../component/Divider';
 import { useAmityComponent } from '../../../hook';
+import { useCustomRankingGlobalFeed } from '../../../hook/useCustomRankingGlobalFeed';
+import NewsFeedLoadingComponent from '../../../component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
+import AmityEmptyNewsFeedComponent from '../AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
 
 type AmityNewsFeedComponentType = {
   pageId?: PageID;
+  onPressExploreCommunity?: () => void;
 };
 
 const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
   pageId = PageID.WildCardPage,
+  onPressExploreCommunity,
 }) => {
+  const styles = useStyles();
   const componentId = ComponentID.newsfeed_component;
   const { themeStyles, accessibilityId, isExcluded } = useAmityComponent({
     pageId,
     componentId,
   });
 
-  const styles = useStyles();
+  const { itemWithAds, refresh, globalFeedPosts, loading, onNextPage } =
+    useCustomRankingGlobalFeed();
+
   if (isExcluded) return null;
+
+  if (loading || (globalFeedPosts?.length > 0 && !itemWithAds?.length))
+    return <NewsFeedLoadingComponent />;
+
+  if (!loading && !globalFeedPosts?.length)
+    return (
+      <AmityEmptyNewsFeedComponent
+        pageId={pageId}
+        onPressExploreCommunity={onPressExploreCommunity}
+      />
+    );
 
   return (
     <View
@@ -29,7 +48,13 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
       accessibilityLabel={accessibilityId}
     >
       <Divider themeStyles={themeStyles} />
-      <AmityGlobalFeedComponent pageId={pageId} />
+      <AmityGlobalFeedComponent
+        pageId={pageId}
+        itemWithAds={itemWithAds}
+        refresh={refresh}
+        loading={loading}
+        onNextPage={onNextPage}
+      />
     </View>
   );
 };

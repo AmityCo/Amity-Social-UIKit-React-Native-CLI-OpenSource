@@ -69,6 +69,9 @@ const AmityCommunityProfilePage: React.FC<ICommunityProfilePage> = ({
 
   const animatedOpacity = useRef(new Animated.Value(0)).current;
   const animatedTranslateY = useRef(new Animated.Value(15)).current;
+  const stickyHeaderAnimation = useRef<Animated.CompositeAnimation | null>(
+    null
+  );
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const feedRef = useRef<AmityCommunityFeedRef>(null);
@@ -94,7 +97,7 @@ const AmityCommunityProfilePage: React.FC<ICommunityProfilePage> = ({
       animatedTranslateY.setValue(15);
 
       // Run entrance animation
-      Animated.parallel([
+      stickyHeaderAnimation.current = Animated.parallel([
         Animated.timing(animatedOpacity, {
           toValue: 1,
           duration: 200,
@@ -106,8 +109,12 @@ const AmityCommunityProfilePage: React.FC<ICommunityProfilePage> = ({
           easing: Easing.out(Easing.ease),
           useNativeDriver: true,
         }),
-      ]).start();
+      ]);
+      stickyHeaderAnimation.current.start();
     }
+    return () => {
+      stickyHeaderAnimation.current?.stop();
+    };
   }, [isScrolledPastHeader, animatedOpacity, animatedTranslateY]);
 
   const handleLoadMore = useCallback(() => {
