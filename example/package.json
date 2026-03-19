@@ -13,7 +13,7 @@
     "android:release": "cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
-    "@amityco/ts-sdk-react-native": "^7.15.0",
+    "@amityco/ts-sdk-react-native": "7.15.2-9c10dc7b.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
     "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",
