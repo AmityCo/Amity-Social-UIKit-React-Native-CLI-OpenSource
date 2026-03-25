@@ -146,6 +146,7 @@ const TargetSelectionPage = ({
                 targetType: 'user',
               })
             }
+            avatarCustomUrl={user?.avatarCustomUrl}
             avatarFileId={user?.avatarFileId}
           />
           <View style={styles.divider}>

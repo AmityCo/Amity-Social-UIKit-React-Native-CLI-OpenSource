@@ -1,7 +1,11 @@
-import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
+import {
+  FeedRepository,
+  PostStructureType,
+} from '@amityco/ts-sdk-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
 import { globalFeedPageLimit } from '../features/feed/components/GlobalFeed/GlobalFeed';
+import { InteractionManager } from 'react-native';
 import {
   RootState,
   useUIKitDispatch,
@@ -17,11 +21,18 @@ export const isAmityAd = (
   return (item as Amity.Ad)?.adId !== undefined;
 };
 
-export const useCustomRankingGlobalFeed = () => {
+type UseCustomRankingGlobalFeed = {
+  enabled?: boolean;
+};
+
+export const useCustomRankingGlobalFeed = ({
+  enabled = true,
+}: UseCustomRankingGlobalFeed = {}) => {
   const { isConnected } = useAuth();
   const dispatch = useUIKitDispatch();
   const unsubscribeRef = useRef<() => void | null>(null);
   const onNextPageRef = useRef<() => void | null>(null);
+  const interactionHandleRef = useRef<{ cancel: () => void } | null>(null);
 
   const { setNewGlobalFeed } = globalFeedSlice.actions;
 
@@ -39,69 +50,57 @@ export const useCustomRankingGlobalFeed = () => {
     getItemId: (item) => (item as Amity.Post).postId.toString(),
   });
 
-  const processPosts = async (posts: Amity.Post[]) => {
-    const results = await Promise.all(
-      posts.map((post) => {
-        if (post?.children.length > 0) {
-          return new Promise((resolve) => {
-            const unsubscribe = PostRepository.getPost(
-              post?.children[0],
-              ({ error: $error, loading, data }) => {
-                if (!$error && !loading) {
-                  if (
-                    data?.dataType === 'image' ||
-                    data?.dataType === 'video' ||
-                    data?.dataType === 'room' ||
-                    data?.dataType === 'poll'
-                  ) {
-                    resolve(post);
-                  } else {
-                    resolve(null);
-                  }
-                } else {
-                  resolve(null);
-                }
-              }
-            );
-
-            unsubscribe();
-          });
-        } else {
-          return post;
-        }
-      })
-    );
-
-    return results.filter((result) => result !== null) as Amity.Post<any>[];
-  };
-
   const fetchCustomRanking = useCallback(() => {
     if (!isConnected) return null;
 
-    return FeedRepository.getCustomRankingGlobalFeed(
+    return FeedRepository.getGlobalFeed(
       { limit: globalFeedPageLimit },
-      ({ data, loading, error: $error, onNextPage }) => {
-        setFetching(loading);
-
-        if (!loading && data) {
-          processPosts(data).then((posts) => dispatch(setNewGlobalFeed(posts)));
+      ({ data, loading: isLoading, error: $error, onNextPage }) => {
+        if (isLoading) {
+          setFetching(true);
+          return;
         }
 
         if (onNextPage) onNextPageRef.current = onNextPage;
-
         if ($error) setError($error);
+
+        if (data) {
+          const filtered = data.filter(
+            (post) =>
+              post.structureType !== PostStructureType.AUDIO &&
+              post.structureType !== PostStructureType.FILE &&
+              post.structureType !== PostStructureType.MIXED
+          );
+          interactionHandleRef.current?.cancel();
+          interactionHandleRef.current =
+            InteractionManager.runAfterInteractions(() => {
+              dispatch(setNewGlobalFeed(filtered));
+              setFetching(false);
+              interactionHandleRef.current = null;
+            });
+        } else {
+          setFetching(false);
+        }
       }
     );
   }, [dispatch, setNewGlobalFeed, isConnected]);
 
   useEffect(() => {
+    if (!enabled) return undefined;
+
     unsubscribeRef.current = fetchCustomRanking();
 
-    return () => unsubscribeRef.current?.();
-  }, [fetchCustomRanking]);
+    return () => {
+      unsubscribeRef.current?.();
+      interactionHandleRef.current?.cancel();
+      interactionHandleRef.current = null;
+    };
+  }, [fetchCustomRanking, enabled]);
 
   const refresh = useCallback(() => {
     if (unsubscribeRef.current) unsubscribeRef.current?.();
+    interactionHandleRef.current?.cancel();
+    interactionHandleRef.current = null;
     onNextPageRef.current = null;
 
     unsubscribeRef.current = fetchCustomRanking();
@@ -113,5 +112,6 @@ export const useCustomRankingGlobalFeed = () => {
     itemWithAds,
     onNextPage: onNextPageRef.current,
     error,
+    globalFeedPosts: postList,
   };
 };

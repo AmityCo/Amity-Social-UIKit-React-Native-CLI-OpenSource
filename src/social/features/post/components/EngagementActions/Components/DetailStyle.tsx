@@ -130,8 +130,8 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
           </Text>
         )}
         <Text style={styles.commentCountText}>
-          {formatNumber(postData?.commentsCount)}{' '}
-          {renderCommentText(postData?.commentsCount)}
+          {formatNumber(postData?.localCommentCount)}{' '}
+          {renderCommentText(postData?.localCommentCount)}
         </Text>
       </View>
       <View style={[styles.actionSection, styles.detailActionSection]}>
