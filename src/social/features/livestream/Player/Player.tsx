@@ -47,8 +47,7 @@ function AmityLiveStreamPlayerPage() {
 
   const canShare =
     post?.targetType === 'user' ||
-    (post?.targetType === 'community' &&
-      post?.targetCommunity?.isPublic === true);
+    (post?.targetType === 'community' && !!post?.targetCommunity?.isPublic);
 
   const shareLink = canShare
     ? getShareLink(ShareableLinkModel.livestreams, roomId)

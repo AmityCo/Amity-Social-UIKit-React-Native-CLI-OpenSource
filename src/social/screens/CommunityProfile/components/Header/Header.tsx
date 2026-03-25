@@ -23,7 +23,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import { Client } from '@amityco/ts-sdk-react-native';
-import { CommunityCategories } from '../../../../components/CommunityCategoryChips/CommunityCategoryChips';
+import { CommunityCategories } from '../../../../features/feed';
 
 export interface AmityCommunityHeaderRef {
   height: number;

@@ -85,7 +85,7 @@ export const useBottomSheet = () => {
     dispatch($closeBottomSheet());
     setTimeout(() => {
       dispatch(clearContent());
-    }, 500);
+    }, 300);
   };
 
   return {
