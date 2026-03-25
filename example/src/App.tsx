@@ -7,10 +7,13 @@ import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
 import NetworkLogger from 'react-native-network-logger';
+import { LogBox } from 'react-native';
 
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
   console.log('Background notification:', remoteMessage);
 });
+
+LogBox.ignoreAllLogs(true);
 
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
