@@ -13,7 +13,6 @@ import { useExplore } from '../../../../providers/ExploreProvider';
 import ExploreLoadingSkeleton from './ExploreLoadingSkeleton/ExploreLoadingSkeleton';
 import { useAmityPage } from '../../../../hooks';
 import ErrorComponent from '../../../../components/ErrorComponent/ErrorComponent';
-import Divider from '../../../../components/Divider';
 
 type AmityExploreComponentProps = {
   pageId?: PageID;
@@ -79,7 +78,6 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
         />
       }
     >
-      <Divider />
       {isLoading && <ExploreLoadingSkeleton themeStyles={themeStyles} />}
       {isNothingToShow ? (
         <View style={styles.emptyContainer}>

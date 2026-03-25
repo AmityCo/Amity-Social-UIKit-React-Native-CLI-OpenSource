@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../../enums/enumUIKitID';
 import AmityGlobalFeedComponent from '../GlobalFeed/GlobalFeed';
 import { useStyles } from './styles';
-import Divider from '../../../../components/Divider';
 import { useAmityComponent } from '../../../../hooks';
 import { useCustomRankingGlobalFeed } from '../../../../hooks/useCustomRankingGlobalFeed';
 import NewsFeedLoadingComponent from '../../../../components/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
@@ -47,7 +46,6 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
     >
-      <Divider />
       <AmityGlobalFeedComponent
         pageId={pageId}
         itemWithAds={itemWithAds}

@@ -15,15 +15,10 @@ import { feed, image, video } from '../../../../core/assets/icons';
 
 export type UserProfilePageProps = {
   userId: string;
-  isFromComponent?: boolean;
-  isShowBackButton?: boolean;
+  inline?: boolean;
 };
 
-function UserProfile({
-  userId,
-  isFromComponent,
-  isShowBackButton,
-}: UserProfilePageProps) {
+function UserProfile({ userId, inline }: UserProfilePageProps) {
   const {
     user,
     styles,
@@ -43,14 +38,19 @@ function UserProfile({
   } = useUserProfile(userId);
 
   return (
-    <SafeAreaView testID={accessibilityId} style={styles.container}>
-      <TopBar
-        userId={userId}
-        displayName={user?.displayName}
-        isShownDisplayName={isTabSticky}
-        isFromComponent={isFromComponent}
-        isShowBackButton={isShowBackButton}
-      />
+    <SafeAreaView
+      testID={accessibilityId}
+      style={styles.container}
+      edges={inline ? [] : undefined}
+    >
+      {!inline && (
+        <TopBar
+          userId={userId}
+          displayName={user?.displayName}
+          isShownDisplayName={isTabSticky}
+          inline={inline}
+        />
+      )}
       <Tabs<UserProfileTab>
         variant="icon"
         activeTab={activeTab}
@@ -79,7 +79,7 @@ function UserProfile({
             {isUserLoading || !user ? (
               <Header.Skeleton />
             ) : (
-              <Header user={user} />
+              <Header user={user} inline={inline} />
             )}
           </View>
           <Tabs.List>
@@ -113,7 +113,7 @@ function UserProfile({
           </Tabs.Content>
         </ScrollView>
       </Tabs>
-      <Action userId={userId} />
+      {!inline && <Action userId={userId} />}
     </SafeAreaView>
   );
 }

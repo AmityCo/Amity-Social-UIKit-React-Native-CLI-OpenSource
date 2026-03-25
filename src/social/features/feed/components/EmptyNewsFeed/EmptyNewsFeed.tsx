@@ -8,7 +8,6 @@ import {
   ExploreCommunityButton,
   CreateCommunityButton,
 } from './Elements';
-import Divider from '../../../../components/Divider';
 import { ComponentID, PageID } from '../../../../enums';
 import { useAmityComponent } from '../../../../hooks';
 
@@ -33,7 +32,6 @@ const AmityEmptyNewsFeedComponent: FC<AmityEmptyNewsFeedComponentType> = ({
 
   return (
     <>
-      <Divider />
       <View
         style={styles.container}
         testID={accessibilityId}
