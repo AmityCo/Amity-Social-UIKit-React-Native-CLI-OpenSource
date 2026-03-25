@@ -15,7 +15,7 @@ import {
   PendingFollowRequestsBanner,
 } from '../../elements';
 import MenuAction from '../../../../../elements/MenuAction';
-import { Menu } from '../Menu';
+import { Menu } from '../../elements';
 
 type HeaderProps = {
   user?: Amity.User;

@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import BackButton from '../../../../../elements/BackButton';
 import { Typography } from '../../../../../../core/components/Typography/Typography';
 import { useTopBar } from './hooks/useTopBar';
-import { Menu } from '../Menu';
+import { Menu } from '../../elements';
 
 type TopBarProps = {
   userId?: string;
