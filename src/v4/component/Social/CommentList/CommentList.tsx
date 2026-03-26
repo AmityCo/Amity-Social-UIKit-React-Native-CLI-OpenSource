@@ -29,6 +29,8 @@ import useMention from '../../../hook/useMention';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import MyAvatar from '../../MyAvatar/MyAvatar';
 import { useToast } from '../../../../v4/stores/slices/toast';
+import { Typography } from '../../Typography/Typography';
+import { lock } from '../../../../v4/assets/icons';
 
 interface ICommentListProp {
   postId: string;
@@ -36,6 +38,7 @@ interface ICommentListProp {
   disabledInteraction?: boolean;
   onNavigate?: () => void;
   withAvatar?: boolean;
+  disabledComment?: boolean;
 }
 
 interface IComment {
@@ -63,6 +66,7 @@ const CommentList: FC<ICommentListProp> = ({
   disabledInteraction,
   onNavigate,
   withAvatar,
+  disabledComment,
 }) => {
   const styles = useStyles();
   const theme = useTheme() as MyMD3Theme;
@@ -247,35 +251,47 @@ const CommentList: FC<ICommentListProp> = ({
             </TouchableOpacity>
           </View>
         )}
-        {!disabledInteraction && (
-          <View style={styles.inputWrap}>
-            {withAvatar && <MyAvatar />}
-            <View style={styles.inputContainer}>
-              {renderInput({
-                multiline: true,
-                style: styles.textInput,
-                placeholder: 'Say something nice...',
-                placeholderTextColor: theme.colors.baseShade3,
-              })}
+        {!disabledInteraction &&
+          (disabledComment ? (
+            <View style={styles.disabledCommentWrap}>
+              <SvgXml
+                width={20}
+                height={20}
+                xml={lock()}
+                color={theme.colors.baseShade2}
+              />
+              <Typography.Body style={styles.disabledCommentText}>
+                Comments are disabled for this story
+              </Typography.Body>
             </View>
-
-            <TouchableOpacity
-              disabled={inputMessage.length > 0 ? false : true}
-              onPress={handleSend}
-              style={styles.postBtn}
-            >
-              <Text
-                style={
-                  inputMessage.length > 0
-                    ? styles.postBtnText
-                    : styles.postDisabledBtn
-                }
+          ) : (
+            <View style={styles.inputWrap}>
+              {withAvatar && <MyAvatar />}
+              <View style={styles.inputContainer}>
+                {renderInput({
+                  multiline: true,
+                  style: styles.textInput,
+                  placeholder: 'Say something nice...',
+                  placeholderTextColor: theme.colors.baseShade3,
+                })}
+              </View>
+              <TouchableOpacity
+                disabled={inputMessage.length > 0 ? false : true}
+                onPress={handleSend}
+                style={styles.postBtn}
               >
-                Post
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
+                <Text
+                  style={
+                    inputMessage.length > 0
+                      ? styles.postBtnText
+                      : styles.postDisabledBtn
+                  }
+                >
+                  Post
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ))}
       </KeyboardAvoidingView>
     );
   };
@@ -295,6 +311,7 @@ const CommentList: FC<ICommentListProp> = ({
               commentDetail={item}
               onClickReply={handleClickReply}
               postType={postType}
+              disabledComment={disabledComment}
               disabledInteraction={disabledInteraction}
               onNavigate={onNavigate}
             />
