@@ -49,7 +49,7 @@ const ENVIRONMENTS: Record<EnvironmentKey, EnvironmentConfig> = {
   },
   travel: {
     label: '✈️  Travel',
-    apiKey: 'b0e9be093adef2641f35894f5b0f158bd50f84e2ee613e24',
+    apiKey: 'b0e9be093adef66d4c3f8c1d065b408e840bdde2e8666f79',
     apiRegion: 'eu',
     apiEndpoint: 'https://api.eu.amity.co',
   },
@@ -100,8 +100,8 @@ export default function App() {
   // ── Login state ──
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
-  const [userId, setUserId] = useState('');
-  const [displayName, setDisplayName] = useState('');
+  const [userId, setUserId] = useState('johnwick');
+  const [displayName, setDisplayName] = useState('John Wick');
   const [selectedEnv, setSelectedEnv] = useState<EnvironmentKey>('financial');
   const [customApiKey, setCustomApiKey] = useState('');
   const [customApiRegion, setCustomApiRegion] = useState('');
