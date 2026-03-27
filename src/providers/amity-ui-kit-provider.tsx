@@ -103,7 +103,9 @@ export default function AmityUiKitProvider({
 
   const isDarkTheme =
     configData?.preferred_theme === 'dark' ||
-    (configData?.preferred_theme === 'default' && colorScheme === 'dark');
+    (configData?.preferred_theme !== 'light' &&
+      configData?.preferred_theme === 'default' &&
+      colorScheme === 'dark');
 
   const themeColor = isDarkTheme
     ? configData.theme.dark
