@@ -68,6 +68,7 @@ export interface ICommentList {
   onClickReply: (user: UserInterface, commentId: string) => void;
   postType: Amity.CommentReferenceType;
   disabledInteraction?: boolean;
+  disabledComment?: boolean;
   onNavigate?: () => void;
 }
 
@@ -78,6 +79,7 @@ const CommentListItem = ({
   postType,
   disabledInteraction,
   onNavigate,
+  disabledComment,
 }: ICommentList) => {
   const theme = useTheme() as MyMD3Theme;
   const styles = useStyles();
@@ -344,7 +346,7 @@ const CommentListItem = ({
                   </Typography.CaptionBold>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={onHandleReply}
+                  onPress={disabledComment ? undefined : onHandleReply}
                   style={styles.likeBtn}
                 >
                   <Typography.CaptionBold style={styles.btnText}>

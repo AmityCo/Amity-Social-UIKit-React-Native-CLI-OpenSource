@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@^7.15.1":
-  version "7.15.1"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.15.1.tgz#7a972486f928b6d027d9b56e22755cc9276eebbb"
-  integrity sha512-+iImFG+dxRwB/LZp+3jhaCpewHuPjAmAFH1H8wY1xRQaIuaqjr+00aSucaFv5bIVAJv5vLaYezb0QILE/DJlRw==
+"@amityco/ts-sdk-react-native@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.17.0.tgz#940838ffaf090c56013577eb8a3d8a148f5c7663"
+  integrity sha512-K2u9SKvQVvqCWX/836haJucdz/dbRG8U3xF2ykr/lwhVqijZdWSBEualecuBuKD7Ylf02MlqIVFAUp6FNAvdGw==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
@@ -6218,9 +6218,9 @@ react-native-url-polyfill@^1.3.0:
     whatwg-url-without-unicode "8.0.0-3"
 
 react-native-uuid@^2.0.1:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-2.0.3.tgz#f85f8a8d68e52e3f1c18ba0f02ec7776f9d4a0da"
-  integrity sha512-f/YfIS2f5UB+gut7t/9BKGSCYbRA9/74A5R1MDp+FLYsuS+OSWoiM/D8Jko6OJB6Jcu3v6ONuddvZKHdIGpeiw==
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-2.0.4.tgz#0c4f345523c5feac0282d3a51fe19887727df988"
+  integrity sha512-LSJNeh559qC17fgVPBsWuTSW/OygFp2dwTcf94IQBLYft5FzIQS9pCsuT36OPvyvDOMb6yiGr6TafaJDnz9PPQ==
 
 react-native-video-controls@^2.8.1:
   version "2.8.1"
