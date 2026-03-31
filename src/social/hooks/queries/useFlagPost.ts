@@ -16,7 +16,7 @@ type UnflagPostPayload = Awaited<ReturnType<typeof PostRepository.unflagPost>>;
 
 type UnflagPostParam = Parameters<typeof PostRepository.unflagPost>[0];
 
-export const useFlagPost = ({ postId, enabled }: UseFlagPost) => {
+export const useFlagPost = ({ postId, enabled = true }: UseFlagPost) => {
   const { showToast } = useToast();
 
   const {
