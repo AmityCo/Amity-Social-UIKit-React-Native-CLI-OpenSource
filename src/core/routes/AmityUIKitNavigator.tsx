@@ -2,6 +2,7 @@ import {
   NavigationContainer,
   NavigationIndependentTree,
 } from '@react-navigation/native';
+import { navigationRef, onNavigationReady } from './navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
 import useAuth from '../hooks/useAuth';
@@ -65,7 +66,7 @@ export default function AmitySocialUIKitV4Navigator() {
 
   return (
     <NavigationIndependentTree>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef} onReady={onNavigationReady}>
         <Stack.Navigator
           id="AmitySocialUIKit"
           screenOptions={{

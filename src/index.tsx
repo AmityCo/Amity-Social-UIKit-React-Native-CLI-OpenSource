@@ -4,6 +4,7 @@ import {
   AmityUiKitProvider,
   AmityUiKitSocial,
   ErrorBoundary,
+  navigate,
 } from './core';
 import {
   AmityStoryTabComponent,
@@ -174,4 +175,5 @@ export {
   AmityCommunityPinnedPostComponent,
   AmityPendingPostListComponent,
   AmityGlobalStoryTabWrapper,
+  navigate,
 };
