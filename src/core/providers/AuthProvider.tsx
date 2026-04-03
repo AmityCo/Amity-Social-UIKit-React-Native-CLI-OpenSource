@@ -10,6 +10,7 @@ import type { AuthContextInterface } from '../types/auth';
 import { Alert } from 'react-native';
 import type { IAmityUIkitProvider } from './AmityUIKitProvider';
 import { ERROR_CODE } from '../../core/constants';
+import { onSdkReady } from '../routes/navigation';
 
 export const AuthContext = createContext<AuthContextInterface>({
   client: null,
@@ -62,6 +63,7 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
   useEffect(() => {
     if (sessionState === 'established') {
       setIsConnected(true);
+      onSdkReady();
     }
   }, [sessionState]);
 

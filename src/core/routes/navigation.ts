@@ -11,12 +11,13 @@ type Notification = {
 }[keyof RootStackParamList];
 
 let notification: Notification | null = null;
+let isSdkReady = false;
 
 export function navigate<T extends keyof RootStackParamList>(
   name: T,
   params: RootStackParamList[T]
 ) {
-  if (navigationRef.isReady()) {
+  if (navigationRef.isReady() && isSdkReady) {
     (navigationRef.navigate as typeof navigate)(name, params);
   } else {
     notification = { name, params } as Notification;
@@ -24,6 +25,17 @@ export function navigate<T extends keyof RootStackParamList>(
 }
 
 export function onNavigationReady() {
+  if (notification && navigationRef.isReady() && isSdkReady) {
+    (navigationRef.navigate as typeof navigate)(
+      notification.name,
+      notification.params
+    );
+    notification = null;
+  }
+}
+
+export function onSdkReady() {
+  isSdkReady = true;
   if (notification && navigationRef.isReady()) {
     (navigationRef.navigate as typeof navigate)(
       notification.name,
