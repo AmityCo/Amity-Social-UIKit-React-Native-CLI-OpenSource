@@ -2,34 +2,31 @@
 
 ---
 
-## System Designs
+## System Design
 
 ```
-┌─────────────────────────────────────┐
-│        Client Native App            │
-│  (Swift / Kotlin)                   │
-│  - Registers Firebase/OneSignal     │
-│  - Receives push notification       │
-│  - Creates RCTRootView              │
-└────────────────┬────────────────────┘
-                 │ initialProperties / native bridge
-                 ▼
-┌─────────────────────────────────────┐
-│     Example App  (Brownfield)       │
-│  (XCFramework / AAR)                │
-│  - React Native root component      │
-│  - Handles FCM token + permissions  │
-│  - Calls navigate() on tap           │
-└────────────────┬────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│                  Example App (App.tsx)               │
+│  - Root React Native component                       │
+│  - Handles FCM token + permissions                   │
+│  - Calls navigate() on notification tap              │
+│  - Renders AmityUiKitProvider + AmityUiKitSocial     │
+└────────────────┬────────────────────────────────────┘
                  │ navigate() → immediate or queue
                  ▼
-┌─────────────────────────────────────┐
-│         UIKit  (src/)               │
-│  - AmityUiKitSocial                 │
-│  - NavigationContainer + ref        │
-│  - onReady → onNavigationReady      │
-└─────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│               UIKit (src/)                           │
+│  - AmityUiKitSocial                                  │
+│  - AmityUIKitNavigator (NavigationContainer + ref)   │
+│  - onReady → onNavigationReady                       │
+│  - onSdkReady → flushes pending notification         │
+└─────────────────────────────────────────────────────┘
 ```
+
+**Gate conditions** — `navigate()` executes immediately only when **both** are true:
+
+- `navigationRef.isReady()` — `NavigationContainer` has mounted
+- `isSdkReady` — Amity SDK client has initialised
 
 ---
 
@@ -37,88 +34,51 @@
 
 `handleNotificationNavigation(remoteMessage)` routes by `data.eventName`. Returns early if no `data`.
 
-| `eventName`                                          | Screen                 | Params                              |
-| ---------------------------------------------------- | ---------------------- | ----------------------------------- |
-| `post.created`                                       | `CommunityProfilePage` | `{ communityId: data.communityId }` |
-| `post.reacted`, `comment.created`, `comment.reacted` | `PostDetail`           | `{ postId: data.postId }`           |
-| `follow.created`                                     | `UserProfile`          | `{ userId: data.publicId }`         |
+| `eventName`                                                                                                                                                                                                       | Screen                 | Params                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ----------------------------------- |
+| `post.created`, `post.approved`, `post.need-reviewing`                                                                                                                                                            | `CommunityProfilePage` | `{ communityId: data.communityId }` |
+| `post.reacted`, `comment.created`, `comment.replied`, `comment.reacted`, `text-mention-post.created`, `text-mention-user-feed-post.created`, `text-mention-comment.created`, `text-mention-comment.replied`, etc. | `PostDetail`           | `{ postId: data.postId }`           |
+| `follow.created`, `follow.accepted`, `follow.requested`                                                                                                                                                           | `UserProfile`          | `{ userId: data.publicId }`         |
 
 ---
 
-## Flow 1 — Background, UIKit Already Mounted (Happy Path)
+## Flow 1 — Background, App Already Running (Happy Path)
 
-> User was on a UIKit screen, backgrounded the app, taps notification
+> User was using the app, backgrounded it, taps a notification
 
 ```
-Client Native App
-  [push arrives, user taps]
+[push arrives, user taps notification]
         ↓
-OS brings app to foreground
+OS brings Example App to foreground
         ↓
-Example App
+App.tsx
   onNotificationOpenedApp fires
   handleNotificationNavigation(remoteMessage)
         ↓
   data.eventName = "comment.created"
   → navigate('PostDetail', { postId: data.postId })
         ↓
-  navigationRef.isReady() = true  ← UIKit already mounted
-  navigationRef.navigate('PostDetail', { postId }) immediately
+  navigationRef.isReady() = true   ← NavigationContainer already mounted
+  isSdkReady = true                ← SDK already initialised
+  → navigationRef.navigate('PostDetail', { postId }) immediately
         ↓
-UIKit
-  navigates to PostDetail ✅
+UIKit navigates to PostDetail ✅
 ```
 
 ---
 
-## Flow 2 — Background, UIKit NOT Mounted (Client on Other Screen)
-
-> User was on a client native screen (not UIKit), backgrounded, taps notification
-
-```
-Client Native App
-  [push arrives, user taps]
-        ↓
-OS brings app to foreground
-        ↓
-Example App
-  onNotificationOpenedApp fires
-  handleNotificationNavigation(remoteMessage)
-        ↓
-  data.eventName = "post.created"
-  → navigate('CommunityProfilePage', { communityId: data.communityId })
-        ↓
-  navigationRef.isReady() = false  ← UIKit not mounted yet
-  → pendingRoute queued
-        ↓
-Client navigates their own stack to UIKit screen
-  → AmityUiKitSocial mounts
-        ↓
-UIKit
-  NavigationContainer fires onReady
-  onNavigationReady()
-  → pendingRoute exists
-  → navigationRef.navigate('CommunityProfilePage', { communityId })
-  → pendingRoute = null
-  navigates to CommunityProfilePage ✅
-```
-
----
-
-## Flow 3 — Cold Start, App Was Killed
+## Flow 2 — Cold Start, App Was Killed
 
 > User taps notification, app launches from scratch
 
 ```
-Client Native App
-  [user taps notification, app cold starts]
+[user taps notification, app cold starts]
         ↓
-RCTRootView created
+React Native bootstraps, App.tsx mounts
         ↓
-Example App mounts
-  fcmToken not yet available → renders null
-  permission check + token fetch runs
-  fcmToken set → renders AmityUiKitSocial
+App.tsx
+  permission check runs
+  fcmToken not yet set → renders null (AmityUiKitSocial not mounted)
 
   getInitialNotification() resolves
   handleNotificationNavigation(remoteMessage)
@@ -126,31 +86,33 @@ Example App mounts
   data.eventName = "follow.created"
   → navigate('UserProfile', { userId: data.publicId })
         ↓
-  navigationRef.isReady() = false  ← UIKit not mounted yet
-  → pendingRoute queued
+  navigationRef.isReady() = false  ← NavigationContainer not yet mounted
+  (or isSdkReady = false)
+  → notification queued as pending
         ↓
-AmityUiKitSocial mounts
+fcmToken set → AmityUiKitProvider + AmityUiKitSocial mount
         ↓
 UIKit
-  NavigationContainer fires onReady
-  onNavigationReady()
-  → pendingRoute exists
-  → navigationRef.navigate('UserProfile', { userId })
-  → pendingRoute = null
-  navigates to UserProfile ✅
+  SDK client initialises → onSdkReady()
+  NavigationContainer mounts → onNavigationReady()
+
+  Both gates pass → navigationRef.navigate('UserProfile', { userId })
+  notification = null
+        ↓
+UIKit navigates to UserProfile ✅
 ```
 
 ---
 
-## Flow 4 — Foreground, User Receives Notification (No Auto-Navigate)
+## Flow 3 — Foreground, User Receives Notification (No Auto-Navigate)
 
-> User is actively using the app — we do NOT auto-navigate (disruptive UX)
+> User is actively using the app — no auto-navigation to avoid disrupting UX
 
 ```
-Example App
+App.tsx
   onMessage fires (foreground notification)
         ↓
-  console.log only — no navigation
+  console.log only — no navigation called
   (optionally: show in-app banner, user taps → call navigate())
         ↓
 UIKit stays on current screen ✅
@@ -158,38 +120,41 @@ UIKit stays on current screen ✅
 
 ---
 
-## Pending Queue — How It Works
+## Pending Notification Queue — How It Works
 
 ```
 navigate(name, params)
         │
-        ├─ isReady() = true  ──▶  navigationRef.navigate() immediately
+        ├─ isReady() && isSdkReady ──▶  navigationRef.navigate() immediately
         │
-        └─ isReady() = false ──▶  pendingRoute = { name, params }
-                                         │
-                                         │  (UIKit mounts)
-                                         ▼
-                              NavigationContainer onReady
-                                         │
-                                  onNavigationReady()
-                                         │
-                              pendingRoute exists?
-                                         │
+        └─ either gate false ────────▶  notification = { name, params }
+                                               │
+                              ┌────────────────┴────────────────┐
+                              │                                 │
+                    NavigationContainer                    SDK client
+                      onReady fires                       initialises
+                    onNavigationReady()                   onSdkReady()
+                              │                                 │
+                              └────────────┬────────────────────┘
+                                           │
+                                  both gates pass?
+                                           │
                               YES ──▶  navigationRef.navigate()
-                                       pendingRoute = null
+                                       notification = null
 ```
 
 ---
 
 ## What Was Built
 
-### 1. `src/core/routes/navigation.ts` (renamed from `navigationRef.ts`)
+### 1. `src/core/routes/navigation.ts`
 
-- `navigationRef` — internal, attached to `NavigationContainer`, not exported publicly
-- `navigate<T>(name, params)` — public API; navigates immediately if ready, queues if not
-- `onNavigationReady()` — internal; flushes pending route on UIKit mount
-- `PendingRoute` — discriminated union mapped type keeping `name`/`params` correlated
-- Cast: `navigationRef.navigate as typeof navigate` — resolves React Navigation's overloaded signature without `string` or `any`
+- `navigationRef` — attached to `NavigationContainer`, not exported publicly
+- `navigate<T>(name, params)` — public API; fires immediately when both gates pass, otherwise queues
+- `onNavigationReady()` — called by `NavigationContainer.onReady`; flushes pending notification if SDK is also ready
+- `onSdkReady()` — called after Amity SDK initialises; flushes pending notification if nav is also ready
+- `isSdkReady` — internal flag; ensures navigation doesn't fire before SDK client is ready
+- `PendingRoute` (`Notification`) — discriminated union keeping `name`/`params` correlated
 
 ### 2. `src/core/routes/AmityUIKitNavigator.tsx`
 
@@ -198,25 +163,28 @@ navigate(name, params)
 
 ### 3. `src/core/index.tsx` + `src/index.tsx`
 
-- Exports `navigate` publicly
+- Exports `navigate` + `onSdkReady` publicly
 - `onNavigationReady` and `navigationRef` are internal only
 
 ### 4. `example/src/App.tsx`
 
 - Imports `navigate` from the UIKit package
 - `handleNotificationNavigation(remoteMessage)` — returns early if no `data`
-- Routes entirely by `data.eventName` — no fallback body text check
-- `onNotificationOpenedApp` + `getInitialNotification` both pass full `remoteMessage`
+- Routes entirely by `data.eventName`
+- `onNotificationOpenedApp` + `getInitialNotification` both call `handleNotificationNavigation`
 - `onMessage` present but only logs — no navigation (foreground UX intentionally unchanged)
+- Renders `null` until `fcmToken` is available, then mounts `AmityUiKitProvider` + `AmityUiKitSocial`
 
 ---
 
 ## Edge Cases
 
-| Scenario                              | Behavior                                          |
-| ------------------------------------- | ------------------------------------------------- |
-| Multiple notifications tapped quickly | Last one wins (pendingRoute is overwritten)       |
-| UIKit unmounts and remounts           | onReady fires again, no pendingRoute → no-op      |
-| navigate called, UIKit never mounts   | pendingRoute sits in memory, never fires          |
-| UIKit already on target screen        | React Navigation deduplicates same route          |
-| fcmToken not yet available            | App renders null, handlers run after token is set |
+| Scenario                                     | Behavior                                                              |
+| -------------------------------------------- | --------------------------------------------------------------------- |
+| Multiple notifications tapped quickly        | Last one wins — `notification` is overwritten                         |
+| UIKit unmounts and remounts                  | `onReady` fires again; `notification = null` → no-op                  |
+| `navigate` called, UIKit never mounts        | `notification` sits in memory, never fires                            |
+| UIKit already on target screen               | React Navigation deduplicates the same route                          |
+| fcmToken not yet available                   | App renders `null`; handlers run, notification queued until SDK ready |
+| SDK initialises before `NavigationContainer` | `onSdkReady` sets flag; `onNavigationReady` flushes when nav mounts   |
+| `NavigationContainer` mounts before SDK      | `onNavigationReady` no-ops; `onSdkReady` flushes when SDK is ready    |

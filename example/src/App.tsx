@@ -16,22 +16,33 @@ function handleNotificationNavigation(remoteMessage: {
   const { data } = remoteMessage;
   if (!data) return;
 
-  if (data.eventName === 'post.created') {
+  if (
+    data.eventName === 'post.created' ||
+    data.eventName === 'post.approved' ||
+    data.eventName === 'post.need-reviewing'
+  ) {
     navigate('CommunityProfilePage', { communityId: data.communityId });
   } else if (
     data.eventName === 'post.reacted' ||
+    data.eventName === 'text-mention-post.created' ||
+    data.eventName === 'text-mention-user-feed-post.created' ||
     data.eventName === 'comment.created' ||
-    data.eventName === 'comment.reacted'
+    data.eventName === 'comment.replied' ||
+    data.eventName === 'comment.reacted' ||
+    data.eventName === 'text-mention-comment.created' ||
+    data.eventName === 'text-mention-comment.replied' ||
+    data.eventName === 'text-mention-user-feed-comment.created' ||
+    data.eventName === 'text-mention-user-feed-comment.replied'
   ) {
     navigate('PostDetail', { postId: data.postId });
-  } else if (data.eventName === 'follow.created') {
+  } else if (
+    data.eventName === 'follow.created' ||
+    data.eventName === 'follow.accepted' ||
+    data.eventName === 'follow.requested'
+  ) {
     navigate('UserProfile', { userId: data.publicId });
   }
 }
-
-// messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-//   console.log('Background notification:', remoteMessage);
-// });
 
 LogBox.ignoreAllLogs(true);
 
