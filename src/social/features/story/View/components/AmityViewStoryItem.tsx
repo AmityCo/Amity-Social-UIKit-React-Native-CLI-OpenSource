@@ -607,6 +607,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
             <CommentList
               postId={currentStory?.storyId}
               postType="story"
+              disabledComment={!communityData?.allowCommentInStory}
               disabledInteraction={!communityData?.isJoined}
               onNavigate={onClose}
             />

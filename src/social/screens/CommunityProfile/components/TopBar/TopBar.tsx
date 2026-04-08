@@ -52,8 +52,6 @@ export function TopBar({
 
   const isModerator = checkEditCommunityPermission(community?.communityId);
 
-  console.log(isModerator);
-
   const canShare =
     !!shareLink &&
     (community?.isPublic || community?.isDiscoverable || isModerator);

@@ -85,7 +85,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
       },
       ({ loading, data, hasNextPage, onNextPage }) => {
         if (!loading) {
-          queryComment(data);
+          data && data.length > 0 && queryComment(data);
           onNextPageRef.current = hasNextPage ? onNextPage : null;
           setTimeout(() => {
             setIsLoading(false);
@@ -94,6 +94,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
       }
     );
     return () => {
+      setCommentList([]);
       unsubComment();
     };
   }, [postId, postType]);

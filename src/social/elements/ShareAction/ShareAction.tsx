@@ -37,7 +37,7 @@ export function ShareAction({
       label={config?.text ?? 'Share to'}
       onPress={() => {
         onPress ? onPress() : closeBottomSheet();
-        Share.share({ url: link, message: link });
+        Share.share({ message: link });
       }}
     />
   );
