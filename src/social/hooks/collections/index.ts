@@ -4,7 +4,6 @@ export * from './post/usePinnedPostCollection';
 export * from './category/useCategoryCollection';
 export * from './search/useSearchMemberByDisplayNameCollection';
 export * from './community/useCommunityMemberCollection';
-export * from './search/useSearchMemberByDisplayNameCollection';
 export * from './search/useSearchUserByDisplayNameCollection';
 export * from './user/useUserCollection';
 export * from './user/useFollowerCollection';
