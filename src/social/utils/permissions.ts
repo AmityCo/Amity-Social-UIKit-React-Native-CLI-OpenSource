@@ -16,6 +16,7 @@ export const checkEditCommunityPermission = (communityId?: string) => {
   const communityPermission = client
     .hasPermission(Permissions.EditCommunityPermission)
     .community(communityId);
+
   return !!communityPermission;
 };
 

@@ -1,4 +1,4 @@
-import { menu } from '../../../core/assets/icons';
+import { menu, verticalMenu } from '../../../core/assets/icons';
 import { useAmityElement } from '../../hooks';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { ComponentID, ElementID, PageID } from '../../enums';
@@ -9,32 +9,44 @@ type MenuButtonProps = TouchableOpacityProps & {
   pageId?: PageID;
   componentId?: ComponentID;
   elementId?: ElementID;
+  variant?: 'default' | 'filled' | 'vertical';
   iconProps?: Pick<XmlProps, 'width' | 'height' | 'color'>;
 };
 
 function MenuButton({
+  iconProps,
+  variant = 'default',
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   elementId = ElementID.menu_button,
-  iconProps,
   ...props
 }: MenuButtonProps) {
-  const { themeStyles, isExcluded, accessibilityId } = useAmityElement({
+  const { isExcluded, accessibilityId } = useAmityElement({
     pageId,
     componentId,
     elementId,
   });
-  const { theme } = useStyles(themeStyles);
+
+  const { theme, styles } = useStyles();
 
   if (isExcluded) return null;
 
   return (
-    <TouchableOpacity {...props} testID={accessibilityId}>
+    <TouchableOpacity
+      {...props}
+      hitSlop={16}
+      testID={accessibilityId}
+      style={[variant === 'filled' && styles.filledContainer, props.style]}
+    >
       <SvgXml
         width="24"
         height="24"
-        xml={menu()}
-        color={theme.colors.base}
+        xml={variant === 'vertical' ? verticalMenu() : menu()}
+        color={
+          variant === 'filled' || variant === 'vertical'
+            ? theme.colors.white
+            : theme.colors.base
+        }
         {...iconProps}
       />
     </TouchableOpacity>

@@ -1,10 +1,10 @@
-import { FC, useCallback } from 'react';
-import { PageID, ComponentID, ElementID } from '../../enums';
-import { useAmityElement } from '../../hooks';
+import { useCallback } from 'react';
+import { PageID, ComponentID, ElementID } from '../../../../enums';
+import { useAmityElement } from '../../../../hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import { Image, StyleSheet, View } from 'react-native';
-import CommunityCoverNavigator from './CommunityCoverNavigator';
-import useAuth from '../../../core/hooks/useAuth';
+import { TopBar } from '../../components';
+import useAuth from '../../../../../core/hooks/useAuth';
 
 type CommunityCoverProps = {
   pageId?: PageID;
@@ -15,14 +15,14 @@ type CommunityCoverProps = {
   isFromComponent?: boolean;
 };
 
-const CommunityCover: FC<CommunityCoverProps> = ({
+export function CommunityCover({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   community,
   smallHeader = false,
   hideButtons = false,
   isFromComponent,
-}) => {
+}: CommunityCoverProps) {
   const { apiRegion } = useAuth();
   const elementId = ElementID.community_cover;
   const { accessibilityId, themeStyles } = useAmityElement({
@@ -75,7 +75,7 @@ const CommunityCover: FC<CommunityCoverProps> = ({
     <View testID={accessibilityId}>
       {renderImage()}
       {!hideButtons && (
-        <CommunityCoverNavigator
+        <TopBar
           pageId={pageId}
           componentId={componentId}
           communityId={community.communityId}
@@ -84,6 +84,4 @@ const CommunityCover: FC<CommunityCoverProps> = ({
       )}
     </View>
   );
-};
-
-export default CommunityCover;
+}

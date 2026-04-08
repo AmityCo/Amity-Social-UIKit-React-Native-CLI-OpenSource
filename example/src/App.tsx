@@ -1,20 +1,56 @@
 import {
   AmityUiKitProvider,
   AmityUiKitSocial,
+  navigate,
 } from '@amityco/react-native-social-uikit';
 import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
 import NetworkLogger from 'react-native-network-logger';
+import { LogBox } from 'react-native';
 
-messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  console.log('Background notification:', remoteMessage);
-});
+function handleNotificationNavigation(remoteMessage: {
+  data?: Record<string, any>;
+}) {
+  const { data } = remoteMessage;
+  if (!data) return;
+
+  if (
+    data.eventName === 'post.created' ||
+    data.eventName === 'post.approved' ||
+    data.eventName === 'post.need-reviewing'
+  ) {
+    navigate('CommunityProfilePage', { communityId: data.communityId });
+  } else if (
+    data.eventName === 'post.reacted' ||
+    data.eventName === 'text-mention-post.created' ||
+    data.eventName === 'text-mention-user-feed-post.created' ||
+    data.eventName === 'comment.created' ||
+    data.eventName === 'comment.replied' ||
+    data.eventName === 'comment.reacted' ||
+    data.eventName === 'text-mention-comment.created' ||
+    data.eventName === 'text-mention-comment.replied' ||
+    data.eventName === 'text-mention-user-feed-comment.created' ||
+    data.eventName === 'text-mention-user-feed-comment.replied'
+  ) {
+    navigate('PostDetail', { postId: data.postId });
+  } else if (
+    data.eventName === 'follow.created' ||
+    data.eventName === 'follow.accepted' ||
+    data.eventName === 'follow.requested'
+  ) {
+    navigate('UserProfile', { userId: data.publicId });
+  }
+}
+
+LogBox.ignoreAllLogs(true);
 
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
+  const logger = false;
   const [permissionGranted, setPermissionGranted] = useState(false);
+
   useEffect(() => {
     let granted: boolean;
     messaging()
@@ -74,20 +110,14 @@ export default function App() {
         });
 
       messaging().onNotificationOpenedApp((remoteMessage) => {
-        console.log(
-          'Notification caused app to open from background state:',
-          remoteMessage.notification
-        );
+        handleNotificationNavigation(remoteMessage);
       });
 
       messaging()
         .getInitialNotification()
         .then((remoteMessage) => {
           if (remoteMessage) {
-            console.log(
-              'Notification caused app to open from quit state:',
-              remoteMessage.notification
-            );
+            handleNotificationNavigation(remoteMessage);
           }
         });
       unsubscribe = messaging().onMessage(async (remoteMessage) => {
@@ -110,7 +140,7 @@ export default function App() {
       fcmToken={fcmToken} // android:fcm iOS:APN
     >
       <AmityUiKitSocial />
-      <NetworkLogger />
+      {logger && <NetworkLogger />}
     </AmityUiKitProvider>
   );
 }

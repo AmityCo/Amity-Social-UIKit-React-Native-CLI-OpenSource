@@ -10,10 +10,7 @@ import AmityStoryTabComponent from '../../../story/components/Tab/Tab';
 import { AmityStoryTabComponentEnum } from '../../../../types';
 import { usePostImpression } from '../../../../hooks/usePostImpression';
 import { useStyle } from './styles';
-import {
-  isAmityAd,
-  useCustomRankingGlobalFeed,
-} from '../../../../hooks/useCustomRankingGlobalFeed';
+import { isAmityAd } from '../../../../hooks/useCustomRankingGlobalFeed';
 import PostAdComponent from '../../../../components/PostAdComponent/PostAdComponent';
 import Divider from '../../../../components/Divider';
 
@@ -21,6 +18,10 @@ type AmityGlobalFeedComponentType = {
   pageId?: PageID;
   isShowStoryTab?: boolean;
   GlobalFeedHeaderComponent?: React.ReactElement;
+  itemWithAds: (Amity.Post | Amity.Ad)[] | undefined;
+  refresh: () => void;
+  loading: boolean;
+  onNextPage: (() => void) | null;
 };
 
 export const globalFeedPageLimit = 20;
@@ -29,9 +30,11 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
   isShowStoryTab = true,
   GlobalFeedHeaderComponent,
+  itemWithAds,
+  refresh,
+  loading,
+  onNextPage,
 }) => {
-  const { itemWithAds, refresh, loading, onNextPage } =
-    useCustomRankingGlobalFeed();
   const componentId = ComponentID.global_feed_component;
   const { isExcluded, accessibilityId } = useAmityComponent({
     pageId,

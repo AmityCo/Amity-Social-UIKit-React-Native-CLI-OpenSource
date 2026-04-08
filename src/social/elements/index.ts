@@ -4,3 +4,5 @@ export { default as ImageButton } from './ImageButton';
 export { default as CameraButton } from './CameraButton';
 export { default as BackButton } from './BackButton';
 export { BrandBadge } from './BrandBadge';
+export { CopyLinkAction } from './CopyLinkAction';
+export { ShareAction } from './ShareAction';

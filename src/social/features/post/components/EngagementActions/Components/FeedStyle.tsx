@@ -23,6 +23,8 @@ import LikeButtonIconElement from '../../../../../elements/LikeButtonIconElement
 import CommentButtonIconElement from '../../../../../elements/CommentButtonIconElement/CommentButtonIconElement';
 import { useBehaviour } from '../../../../../providers/BehaviourProvider';
 import { formatNumber } from '../../../../../../core/utils/number';
+import { usePostShareAction } from './usePostShareAction';
+import { ShareButton } from '../../../../../elements/ShareButton';
 
 const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   community,
@@ -42,6 +44,13 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   const [isLike, setIsLike] = useState(false);
   const [totalReactions, setTotalReactions] = useState(0);
   const unsubscribeRef = useRef<() => void>(null);
+
+  const { shareLink, handleSharePress } = usePostShareAction({
+    postId,
+    postData,
+    pageId,
+  });
+
   useEffect(() => {
     PostRepository.getPost(postId, ({ error, loading, data }) => {
       if (!error && !loading) {
@@ -122,21 +131,18 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
             height={20}
             resizeMode="contain"
           />
-          <Text style={styles.btnText}>{postData?.commentsCount}</Text>
+          <Text style={styles.btnText}>{postData?.localCommentCount}</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.commentBtn} />
-      {/* commented out now for later use */}
-      {/* <TouchableOpacity style={styles.commentBtn}>
-        <ShareButtonIconElement
-          pageID={pageId}
-          componentID={componentId}
-          width={20}
-          height={20}
-          resizeMode="contain"
-        />
-        <Text style={styles.btnText}>Share</Text>
-      </TouchableOpacity> */}
+      {shareLink && (
+        <View style={styles.commentBtn}>
+          <ShareButton
+            pageId={pageId}
+            componentId={componentId}
+            onPress={handleSharePress}
+          />
+        </View>
+      )}
     </Pressable>
   );
 };

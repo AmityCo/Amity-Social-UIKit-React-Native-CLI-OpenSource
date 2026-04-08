@@ -18,6 +18,7 @@ interface ITargetItem {
   isBadgeShow?: boolean;
   isPrivate?: boolean;
   onSelect: () => void;
+  avatarCustomUrl?: string;
 }
 
 const TargetItem = ({
@@ -30,6 +31,7 @@ const TargetItem = ({
   isBadgeShow,
   isPrivate,
   onSelect,
+  avatarCustomUrl,
 }: ITargetItem) => {
   const theme = useTheme() as MyMD3Theme;
 
@@ -72,6 +74,7 @@ const TargetItem = ({
         elementID={avatarElementId}
         avatarId={avatarFileId}
         targetType="community"
+        avatarCustomUrl={avatarCustomUrl}
       />
       {isPrivate && (
         <ImageElement

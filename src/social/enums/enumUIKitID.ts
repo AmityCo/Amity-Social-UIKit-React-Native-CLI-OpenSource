@@ -226,6 +226,8 @@ export enum ElementID {
   private_user_video_feed_info = 'private_user_video_feed_info',
   blocked_user_video_feed = 'blocked_user_video_feed',
   blocked_user_video_feed_info = 'blocked_user_video_feed_info',
+  copy_link = 'copy_link',
+  share_link = 'share_link',
 }
 
 export interface UiKitConfigKeys {

@@ -1,6 +1,6 @@
 {
   "name": "@amityco/react-native-social-uikit",
-  "version": "4.0.0-RC18",
+  "version": "4.0.0-RC20",
   "description": "Social UIKit",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -57,19 +57,20 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@amityco/ts-sdk-react-native": "^7.15.0",
+    "@amityco/ts-sdk-react-native": "^7.17.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
-    "@react-native/babel-preset": "0.82.1",
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.2.2",
     "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",
     "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/datetimepicker": "^8.4.4",
     "@react-native-community/eslint-config": "^3.0.2",
     "@react-native-community/netinfo": "^11.4.1",
     "@react-native-firebase/app": "^20.1.0",
     "@react-native-firebase/messaging": "^20.1.0",
+    "@react-native/babel-preset": "0.82.1",
     "@react-navigation/native": "^7.1.8",
     "@react-navigation/native-stack": "^7.3.12",
     "@react-navigation/stack": "^7.3.1",
@@ -97,6 +98,7 @@
     "react-native-fs": "2.20.0",
     "react-native-gesture-handler": "^2.28.0",
     "react-native-get-random-values": "^1.11.0",
+    "react-native-haptic-feedback": "^2.3.3",
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-safe-area-context": "^5.6.2",
@@ -117,7 +119,7 @@
     "@types/react": "^19.1.0"
   },
   "peerDependencies": {
-    "@amityco/ts-sdk-react-native": "^7.15.0",
+    "@amityco/ts-sdk-react-native": "^7.17.0",
     "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
@@ -134,6 +136,7 @@
     "react-native-fs": "2.20.0",
     "react-native-gesture-handler": "^2.28.0",
     "react-native-get-random-values": "^1.11.0",
+    "react-native-haptic-feedback": "^2.3.3",
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-netinfo": "^1.1.0",
@@ -141,7 +144,8 @@
     "react-native-screens": "^4.18.0",
     "react-native-svg": "^15.15.1",
     "react-native-video": "^6.18.0",
-    "react-native-vision-camera": "^4.7.3"
+    "react-native-vision-camera": "^4.7.3",
+    "@react-native-clipboard/clipboard": "^1.16.3"
   },
   "engines": {
     "node": ">=20"
