@@ -16,9 +16,14 @@ import { feed, image, video } from '../../../../core/assets/icons';
 export type UserProfilePageProps = {
   userId: string;
   inline?: boolean;
+  stickyTab?: boolean;
 };
 
-function UserProfile({ userId, inline }: UserProfilePageProps) {
+function UserProfile({
+  userId,
+  inline,
+  stickyTab = true,
+}: UserProfilePageProps) {
   const {
     user,
     styles,
@@ -63,7 +68,7 @@ function UserProfile({ userId, inline }: UserProfilePageProps) {
         <ScrollView
           ref={scrollRef}
           scrollEventThrottle={50}
-          stickyHeaderIndices={[1]}
+          stickyHeaderIndices={stickyTab ? [1] : []}
           onScroll={(e) => {
             const { contentOffset, layoutMeasurement, contentSize } =
               e.nativeEvent;

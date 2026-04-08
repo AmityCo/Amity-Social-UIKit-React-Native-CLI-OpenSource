@@ -109,7 +109,7 @@ const AmitySocialHomePage = () => {
       )}
       {visitedTabs.current.has(PROFILE_TAB) && (
         <View style={tabStyle(PROFILE_TAB)}>
-          <UserProfile inline userId={client?.userId ?? ''} />
+          <UserProfile inline stickyTab={false} userId={client?.userId ?? ''} />
         </View>
       )}
     </SafeAreaView>
