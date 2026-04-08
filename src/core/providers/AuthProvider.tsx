@@ -7,9 +7,10 @@ import {
 } from 'react';
 import { Client } from '@amityco/ts-sdk-react-native';
 import type { AuthContextInterface } from '../types/auth';
-import { Alert, Platform } from 'react-native';
+import { Alert } from 'react-native';
 import type { IAmityUIkitProvider } from './AmityUIKitProvider';
 import { ERROR_CODE } from '../../core/constants';
+import { onSdkReady } from '../routes/navigation';
 
 export const AuthContext = createContext<AuthContextInterface>({
   client: null,
@@ -62,26 +63,16 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
   useEffect(() => {
     if (sessionState === 'established') {
       setIsConnected(true);
+      onSdkReady();
     }
   }, [sessionState]);
-
-  const generateUUID = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = Math.random() * 16 || 0;
-        const v = c === 'x' ? r : (r && 0x3) || 0x8;
-        return v.toString(16);
-      }
-    );
-  };
 
   const handleConnect = useCallback(async () => {
     let loginParam;
 
     loginParam = {
       userId: userId,
-      displayName: displayName, // optional
+      displayName: displayName,
     };
     if (authToken?.length > 0) {
       loginParam = { ...loginParam, authToken: authToken };
@@ -95,26 +86,9 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
       }
     }
 
-    // setupAmityVideoPlayer();
-
     if (fcmToken) {
       try {
-        // await Client.registerPushNotification(fcmToken);
-        // below is work around solution
-        fetch(`${apiEndpoint}/v1/notification`, {
-          method: 'POST',
-          headers: {
-            'X-API-KEY': apiKey,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            deviceId: generateUUID(),
-            platform: Platform.OS,
-            userId: userId,
-            token: fcmToken,
-          }),
-        }).catch((err) => console.error(err));
+        await Client.registerPushNotification(fcmToken);
       } catch (err) {
         console.log(err);
       }
@@ -125,13 +99,13 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     setError('');
     setLoading(true);
     try {
-      handleConnect();
+      await handleConnect();
     } catch (e) {
       const errorText =
         (e as Error)?.message ?? 'Error while handling request!';
 
       setError(errorText);
-      throw error;
+      throw e;
     } finally {
       setLoading(false);
     }
@@ -140,7 +114,6 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     login();
   }, [userId]);
 
-  // TODO
   const logout = async () => {
     try {
       Client.stopUnreadSync();
