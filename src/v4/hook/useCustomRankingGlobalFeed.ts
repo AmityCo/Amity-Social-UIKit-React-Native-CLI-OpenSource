@@ -50,14 +50,21 @@ export const useCustomRankingGlobalFeed = ({
     getItemId: (item) => (item as Amity.Post).postId.toString(),
   });
 
+  const hasInitialDataRef = useRef(false);
+
   const fetchCustomRanking = useCallback(() => {
     if (!isConnected) return null;
+
+    hasInitialDataRef.current = false;
 
     return FeedRepository.getGlobalFeed(
       { limit: globalFeedPageLimit },
       ({ data, loading: isLoading, error: $error, onNextPage }) => {
         if (isLoading) {
-          setFetching(true);
+          // Only show loading state on initial fetch, not on pagination
+          if (!hasInitialDataRef.current) {
+            setFetching(true);
+          }
           return;
         }
 
@@ -76,6 +83,7 @@ export const useCustomRankingGlobalFeed = ({
             InteractionManager.runAfterInteractions(() => {
               dispatch(setNewGlobalFeed(filtered));
               setFetching(false);
+              hasInitialDataRef.current = true;
               interactionHandleRef.current = null;
             });
         } else {
@@ -102,6 +110,7 @@ export const useCustomRankingGlobalFeed = ({
     interactionHandleRef.current?.cancel();
     interactionHandleRef.current = null;
     onNextPageRef.current = null;
+    hasInitialDataRef.current = false;
 
     unsubscribeRef.current = fetchCustomRanking();
   }, [fetchCustomRanking]);
