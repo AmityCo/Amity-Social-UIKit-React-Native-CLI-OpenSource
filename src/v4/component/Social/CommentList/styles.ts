@@ -123,6 +123,18 @@ export const useStyles = () => {
     commentListFooter: {
       width: width,
     },
+    disabledCommentWrap: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 16,
+      gap: 8,
+      borderTopWidth: 1,
+      borderTopColor: theme.colors.baseShade4,
+    },
+    disabledCommentText: {
+      color: theme.colors.baseShade2,
+    },
   });
 
   return styles;

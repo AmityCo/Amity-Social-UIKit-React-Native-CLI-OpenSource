@@ -5,4 +5,5 @@ export const RoomStatus = {
   ended: 'ended',
   waitingReconnect: 'waitingReconnect',
   terminated: 'terminated',
+  error: 'error',
 } as const satisfies Record<Amity.RoomStatus, Amity.RoomStatus>;
