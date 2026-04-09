@@ -57,8 +57,8 @@ const AmitySocialHomePage = () => {
 
   const onTabChange = useCallback(
     (tabName: string) => {
-      if (AmitySocialHomePageBehaviour.onChooseTab)
-        return AmitySocialHomePageBehaviour.onChooseTab(tabName);
+      if (AmitySocialHomePageBehaviour?.onChooseTab)
+        return AmitySocialHomePageBehaviour?.onChooseTab(tabName);
       visitedTabs.current.add(tabName);
       setActiveTab(tabName);
     },
