@@ -5,14 +5,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useMemo,
-  useState,
-  useEffect,
-} from 'react';
+import { FC, memo, useCallback, useMemo, useState, useEffect } from 'react';
 import { useStyles } from '../style';
 import { SvgXml } from 'react-native-svg';
 import { radioOff, radioOn } from '../../../../../core/assets/icons/xml';

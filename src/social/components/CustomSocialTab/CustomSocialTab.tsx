@@ -6,7 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { useStyles } from './styles';
 import { TabName } from '../../enums/enumTabName';
 import { useTheme } from 'react-native-paper';

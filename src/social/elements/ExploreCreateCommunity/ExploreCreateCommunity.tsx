@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import { useAmityElement } from '../../hooks';
@@ -15,7 +15,7 @@ const ExploreCreateCommunity: FC<ExploreCreateCommunityType> = ({
   componentId = ComponentID.WildCardComponent,
   ...props
 }) => {
-  const { config, accessibilityId, isExcluded, themeStyles } = useAmityElement({
+  const { config, accessibilityId, isExcluded } = useAmityElement({
     pageId,
     componentId,
     elementId: ElementID.explore_create_community,
@@ -24,14 +24,8 @@ const ExploreCreateCommunity: FC<ExploreCreateCommunityType> = ({
   if (isExcluded) return null;
 
   return (
-    <Button
-      testID={accessibilityId}
-      type="primary"
-      icon={plus()}
-      themeStyle={themeStyles}
-      {...props}
-    >
-      {(config?.text as string) || 'Create community'}
+    <Button testID={accessibilityId} type="primary" icon={plus()} {...props}>
+      {config?.text || 'Create community'}
     </Button>
   );
 };

@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, ViewProps } from 'react-native';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { moderator } from '../../../core/assets/icons';

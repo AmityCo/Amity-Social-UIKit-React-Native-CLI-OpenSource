@@ -12,15 +12,31 @@ export { default as AmityAllCategoriesPage } from './screens/AllCategories';
 export { default as AmityCommunitiesByCategoryPage } from './screens/CommunitiesByCategory';
 
 export { default as AmityLivestreamPostTargetSelectionPage } from './features/livestream/TargetSelection';
+
 export { default as AmityCreateLivestreamPage } from './features/livestream/Create';
 export { default as AmityLivestreamTerminatedPage } from './features/livestream/Terminated';
 export { default as AmityLivestreamPlayerPage } from './features/livestream/Player';
 
-export { default as AmityUserProfilePage } from './features/user/Profile';
+// User
 
+export {
+  UserRelationshipScreen as AmityUserRelationshipPage,
+  EditUserScreen as AmityEditUserProfilePage,
+  UserProfileScreen as AmityUserProfilePage,
+  BlockedUsersScreen as AmityBlockedUsersPage,
+  UserPendingFollowRequests as AmityUserPendingFollowRequestsPage,
+} from './screens';
+
+export { Header as AmityUserProfileHeaderComponent } from './features/user/Profile/components/Header';
+export { Feed as AmityUserFeedComponent } from './features/user/Profile/components/Feed';
+export { ImageFeed as AmityUserImageFeedComponent } from './features/user/Profile/components/ImageFeed';
+export { VideoFeed as AmityUserVideoFeedComponent } from './features/user/Profile/components/VideoFeed';
+
+// Poll
 export { default as AmityPollTargetSelectionPage } from './features/poll/TargetSelection';
 export { default as AmityPollPostComposerPage } from './features/poll/Composer';
 
+// Community
 export { default as AmityCommunityProfilePage } from './screens/CommunityProfile';
 export { default as AmityCommunitySetupPage } from './features/community/Setup';
 export { default as AmityCommunityAddCategoryPage } from './features/community/AddCategory';
@@ -37,7 +53,6 @@ export { default as AmityCommunityStoriesNotificationSettingPage } from './featu
 export { default as AmityCommunityLivestreamsNotificationSettingPage } from './features/community/LivestreamsNotificationSetting';
 
 // Components
-
 export { default as AmityStoryTabComponent } from './features/story/components/Tab/Tab';
 export { default as AmitySocialHomeTopNavigationComponent } from './features/feed/components/TopNavigation/TopNavigation';
 export { default as AmityCommunitySearchResultComponent } from './features/search/components/CommunitySearchResult';
@@ -58,6 +73,7 @@ export { default as AmityCommunityFeedComponent } from './screens/CommunityProfi
 export { default as AmityCommunityHeaderComponent } from './screens/CommunityProfile/components/Header';
 export { default as AmityCommunityImageFeedComponent } from './screens/CommunityProfile/components/ImageFeed';
 export { default as AmityCommunityVideoFeedComponent } from './screens/CommunityProfile/components/VideoFeed';
+
 export { AmityThumbnailActionComponent } from './features/livestream/components/ThumbnailAction';
 export { default as AmityExploreComponent } from './features/feed/components/Explore/Explore';
 export { default as AmityCommunityPinnedPostComponent } from './screens/CommunityProfile/components/PinnedPost';
@@ -78,5 +94,3 @@ export {
 export { AmityGlobalStoryTabWrapper } from './components/MyStories';
 
 export { default as PostDetail } from './screens/PostDetail';
-
-export { default as UserProfile } from './screens/UserProfile';

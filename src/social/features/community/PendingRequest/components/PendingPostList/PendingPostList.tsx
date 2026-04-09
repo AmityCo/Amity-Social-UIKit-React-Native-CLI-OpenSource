@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useStyles } from './styles';
 import { Alert, FlatList, TouchableOpacity, View } from 'react-native';
-import { Typography } from '../../../../../components/Typography/Typography';
+import { Typography } from '../../../../../../core/components/Typography/Typography';
 import Avatar from '../../../../../components/Avatar';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -15,7 +15,7 @@ import { firework, trash } from '../../../../../../core/assets/icons';
 import MenuAction from '../../../../../elements/MenuAction';
 import PostContent from '../../../../../components/PostContent';
 import FormDescription from '../../../../../elements/FormDescription';
-import { usePostCollection } from '../../../../../hooks/collections/usePostCollection';
+import { usePostCollection } from '../../../../../hooks/collections/post/usePostCollection';
 import ActionButton from '../../../../../elements/ActionButton';
 import { useIsCommunityModerator } from '../../../../../hooks';
 import { usePendingPostQuery } from '../../../../../hooks/usePendingPostQuery';

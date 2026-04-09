@@ -1,5 +1,5 @@
 import { Pressable, View, Animated, Easing } from 'react-native';
-import React, { FC, memo, useCallback, useEffect, useRef } from 'react';
+import { FC, memo, useCallback, useEffect, useRef } from 'react';
 import {
   PageID,
   ComponentID,

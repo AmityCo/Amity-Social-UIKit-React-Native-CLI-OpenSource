@@ -1,5 +1,5 @@
 import { Image, ImageProps } from 'react-native';
-import React, { FC, useLayoutEffect, useMemo, useState } from 'react';
+import { FC, useLayoutEffect, useMemo, useState } from 'react';
 import {
   defaultAvatarUri,
   defaultCommunityAvatarUri,

@@ -1,10 +1,9 @@
-import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './style';
 import { PollFooter } from './PollFooter';
 import { PollOptions } from './PollOption';
 import { usePoll } from '../../hooks/usePoll';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 
 type PollContentProps = {
   pollId: string;

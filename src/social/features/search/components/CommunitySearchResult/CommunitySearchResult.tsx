@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { TabName } from '../../../../enums/enumTabName';
 import { ComponentID, PageID } from '../../../../enums';
 import { useAmityComponent } from '../../../../hooks';

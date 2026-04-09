@@ -6,14 +6,14 @@ import {
   Pressable,
   ImageStyle,
 } from 'react-native';
-import React, { useEffect, useState, useCallback, Fragment } from 'react';
+import { useEffect, useState, useCallback, Fragment, memo } from 'react';
 import { FileRepository, RoomRepository } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { play } from '../../../core/assets/icons';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { RoomStatus } from '../../enums/roomStatus';
 import LiveStreamEndThumbnail from './LivestreamEndedThumbnail';
 import LiveStreamIdleThumbnail from './LivestreamIdleThumbnail';
@@ -189,4 +189,4 @@ const LivestreamContent: React.FC<ILivestreamContent> = ({
   );
 };
 
-export default React.memo(LivestreamContent);
+export default memo(LivestreamContent);

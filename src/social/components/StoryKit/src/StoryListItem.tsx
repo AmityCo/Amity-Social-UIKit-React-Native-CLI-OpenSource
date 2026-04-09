@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Animated,
   Image,
@@ -38,7 +37,7 @@ import { ElementID, ComponentID, PageID } from '../../../enums/enumUIKitID';
 import useConfig from '../../../hooks/useConfig';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../routes/RouteParamList';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import { StoryRepository } from '@amityco/ts-sdk-react-native';
 import CommentList from '../../Social/CommentList/CommentList';
@@ -64,30 +63,30 @@ export const StoryListItem = ({
   const hasStoryPermission = useStoryPermission(userId);
   const { getUiKitConfig } = useConfig();
   const storyReactionBgColor =
-    (getUiKitConfig({
+    getUiKitConfig({
       element: ElementID.StoryRing,
       component: ComponentID.WildCardComponent,
       page: PageID.StoryPage,
-    })?.background_color as string) ?? '#2b2b2b';
+    })?.background_color ?? '#2b2b2b';
   const storyCommentBgColor =
-    (getUiKitConfig({
+    getUiKitConfig({
       page: PageID.StoryPage,
       component: ComponentID.WildCardComponent,
       element: ElementID.StoryCommentBtn,
-    })?.background_color as string) ?? '#2b2b2b';
+    })?.background_color ?? '#2b2b2b';
   const storyViewerBgColor =
-    (getUiKitConfig({
+    getUiKitConfig({
       page: PageID.StoryPage,
       component: ComponentID.WildCardComponent,
       element: ElementID.StoryImpressionBtn,
-    })?.background_color as string) ?? '#2b2b2b';
+    })?.background_color ?? '#2b2b2b';
 
   const storyPlusBgColor =
-    (getUiKitConfig({
+    getUiKitConfig({
       page: PageID.StoryPage,
       component: ComponentID.WildCardComponent,
       element: ElementID.StoryHyperLinkBtn,
-    })?.background_color as string) ?? '#ffffff';
+    })?.background_color ?? '#ffffff';
 
   const [load, setLoad] = useState<boolean>(true);
   const [pressed, setPressed] = useState<boolean>(false);
@@ -313,7 +312,7 @@ export const StoryListItem = ({
     );
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (onStorySeen && currentPage === index) {
       onStorySeen({
         user_id: userId,
@@ -346,7 +345,7 @@ export const StoryListItem = ({
 
   return (
     <>
-      <View key={barIndex} style={[styles.container]}>
+      <View style={[styles.container]}>
         <SafeAreaView>
           <View style={styles.backgroundContainer}>
             {content[current].story_type === 'video' ? (

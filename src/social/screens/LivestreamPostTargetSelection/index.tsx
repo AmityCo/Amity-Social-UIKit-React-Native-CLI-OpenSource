@@ -1,4 +1,3 @@
-import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AmityLivestreamPostTargetSelectionPage from '../../features/livestream/TargetSelection';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';

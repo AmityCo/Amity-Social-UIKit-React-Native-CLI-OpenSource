@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import SearchItem from '../../components/SearchItem';
 import { TSearchItem } from '..';
 import { TriggersConfig, useMentions } from 'react-native-controlled-mentions';

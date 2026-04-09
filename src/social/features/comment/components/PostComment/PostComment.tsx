@@ -1,14 +1,6 @@
 import { FlatList, View } from 'react-native';
-import React, {
-  FC,
-  useState,
-  useRef,
-  memo,
-  useEffect,
-  useCallback,
-} from 'react';
+import { FC, useState, useRef, memo, useEffect, useCallback } from 'react';
 import { UserInterface, IMentionPosition } from '../../../../../core/types';
-import { getAmityUser } from '../../../../../core/legacy/user';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import CommentListItem from './CommentListItem/CommentListItem';
 import { deleteCommentById } from '../../../../../core/legacy/comment';
@@ -91,9 +83,9 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         referenceType: postType,
         limit: commentListLimit,
       },
-      async ({ loading, data, hasNextPage, onNextPage }) => {
+      ({ loading, data, hasNextPage, onNextPage }) => {
         if (!loading) {
-          data && data.length > 0 && (await queryComment(data));
+          data && data.length > 0 && queryComment(data);
           onNextPageRef.current = hasNextPage ? onNextPage : null;
           setTimeout(() => {
             setIsLoading(false);
@@ -107,38 +99,33 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
     };
   }, [postId, postType]);
 
-  const queryComment = async (comments: Amity.InternalComment[]) => {
-    const formattedCommentList = await Promise.all(
-      comments.map(async (item: Amity.Comment) => {
-        const { userObject } = await getAmityUser(item.userId);
-        let formattedUserObject: UserInterface;
+  const queryComment = (comments: Amity.InternalComment[]) => {
+    const formattedCommentList = comments.map((item: Amity.Comment) => {
+      const formattedUserObject = {
+        userId: item.creator?.userId,
+        displayName: item.creator?.displayName,
+        avatarFileId: item.creator?.avatarFileId,
+        avatarCustomUrl: item.creator?.avatarCustomUrl,
+      };
 
-        formattedUserObject = {
-          userId: userObject.data.userId,
-          displayName: userObject.data.displayName,
-          avatarFileId: userObject.data?.avatarFileId,
-          avatarCustomUrl: userObject.data?.avatarCustomUrl,
-        };
-
-        return {
-          targetType: item.targetType,
-          targetId: item.targetId,
-          commentId: item.commentId,
-          data: item.data as Record<string, any>,
-          dataType: item?.dataType || 'text',
-          myReactions: item.myReactions as string[],
-          reactions: item.reactions as Record<string, number>,
-          user: formattedUserObject as UserInterface,
-          updatedAt: item.updatedAt,
-          editedAt: item.editedAt,
-          createdAt: item.createdAt,
-          childrenComment: item.children,
-          childrenNumber: item.childrenNumber,
-          referenceId: item.referenceId,
-          mentionPosition: item?.metadata?.mentioned ?? [],
-        };
-      })
-    );
+      return {
+        targetType: item.targetType,
+        targetId: item.targetId,
+        commentId: item.commentId,
+        data: item.data as Record<string, any>,
+        dataType: item?.dataType || 'text',
+        myReactions: item.myReactions as string[],
+        reactions: item.reactions as Record<string, number>,
+        user: formattedUserObject as UserInterface,
+        updatedAt: item.updatedAt,
+        editedAt: item.editedAt,
+        createdAt: item.createdAt,
+        childrenComment: item.children,
+        childrenNumber: item.childrenNumber,
+        referenceId: item.referenceId,
+        mentionPosition: item?.metadata?.mentioned ?? [],
+      };
+    });
     setCommentList([...formattedCommentList]);
   };
 

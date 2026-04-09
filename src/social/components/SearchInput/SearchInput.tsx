@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { TextInput, TextInputProps, View, ViewProps } from 'react-native';
 import { useStyles } from './styles';
 import { SvgXml, XmlProps } from 'react-native-svg';

@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { View } from 'react-native';
 import Avatar from '../../../../../components/Avatar';
 import { useStyles } from './style';
-import { Typography } from '../../../../../components/Typography/Typography';
+import { Typography } from '../../../../../../core/components/Typography/Typography';
 import MenuButton from '../../../../../elements/MenuButton';
 import useAuth from '../../../../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
@@ -46,9 +46,8 @@ function useMemberItem({
   const {
     isFlaggedByMe,
     isLoading: isFlaggedByMeLoading,
-    flagUser,
-    unflagUser,
-    refetch,
+    reportUser,
+    unreportUser,
   } = useUserFlaggedByMeQuery({
     userId: member.userId,
     enabled: open,
@@ -106,41 +105,8 @@ function useMemberItem({
     );
   };
 
-  const flag = () => {
-    flagUser(member.userId, {
-      onSuccess: () => {
-        refetch();
-        showToast({
-          type: 'success',
-          message: 'User reported.',
-        });
-      },
-      onError: () => {
-        showToast({
-          type: 'informative',
-          message: 'Failed to report user. Please try again.',
-        });
-      },
-    });
-  };
-
-  const unflag = () => {
-    unflagUser(member.userId, {
-      onSuccess: () => {
-        refetch();
-        showToast({
-          type: 'success',
-          message: 'User unreported.',
-        });
-      },
-      onError: () => {
-        showToast({
-          type: 'informative',
-          message: 'Failed to unreport user. Please try again.',
-        });
-      },
-    });
-  };
+  const flag = () => reportUser(member.userId);
+  const unflag = () => unreportUser(member.userId);
 
   const removeMember = () => {
     removeMembers(
@@ -221,6 +187,7 @@ function MemberItem({ member, communityId, refreshMembers }: MemberItemProps) {
           uri={member.user?.avatarCustomUrl}
           roles={member.roles}
           userName={member.user?.displayName ?? member.user?.userId}
+          userId={member.userId}
         />
         <Typography.BodyBold
           style={styles.userName}

@@ -1,5 +1,5 @@
 import { useStyles } from '../styles';
-import { useCategoryCollection } from '../../../../hooks/collections/useCategoryCollection';
+import { useCategoryCollection } from '../../../../hooks/collections/category/useCategoryCollection';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import * as z from 'zod';

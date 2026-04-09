@@ -1,4 +1,3 @@
-import React from 'react';
 import { rgba } from 'polished';
 import { PageID } from '../../../../../enums';
 import { useStyles } from './styles';

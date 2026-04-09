@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Image,
@@ -16,7 +16,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import useImagePicker from '../../../hooks/useImagePicker';
 import { arrowDown, close } from '../../../../core/assets/icons';
 import { SvgXml } from 'react-native-svg';
-import { Typography } from '../../../components/Typography/Typography';
+import { Typography } from '../../../../core/components/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
@@ -31,6 +31,12 @@ import { RoomStatus } from '../../../enums/roomStatus';
 import { AmityThumbnailActionComponent } from '../components/ThumbnailAction';
 import { StartLivestreamButton } from '../../../elements/StartLivestreamButton';
 import { PageID } from '../../../enums';
+import { useShareableLink } from '../../../../core/hooks/useShareableLink';
+import { ShareableLinkModel } from '../../../types';
+import { useCommunity } from '../../../hooks/useCommunity';
+import MenuButton from '../../../elements/MenuButton/MenuButton';
+import { CopyLinkAction } from '../../../elements/CopyLinkAction';
+import { ShareAction } from '../../../elements/ShareAction';
 import { LiveTimerStatus } from '../../../elements/LiveTimerStatus';
 import { CancelCreateLivestreamButton } from '../../../elements/CancelCreateLivestreamButton';
 import { EndLiveStreamButton } from '../../../elements/EndLiveStreamButton';
@@ -116,7 +122,47 @@ function AmityCreateLivestreamPage() {
   } = useImagePicker();
 
   const { targetId, targetType, targetName, pop } = route.params;
-  const { openBottomSheet, closeBottomSheet } = useBottomSheet();
+
+  const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
+    useBottomSheet();
+
+  const { getShareLink } = useShareableLink();
+
+  const { community } = useCommunity(
+    targetType === 'community' ? targetId : undefined
+  );
+
+  const canShare =
+    targetType === 'user' ||
+    (targetType === 'community' && community?.isPublic === true);
+
+  const shareLink =
+    roomId && canShare
+      ? getShareLink(ShareableLinkModel.livestreams, roomId)
+      : null;
+
+  const handleSharePress = () => {
+    if (!shareLink) return;
+    openBottomSheet({
+      height: bottomSheetHeight[2],
+      dark: true,
+      content: (
+        <View>
+          <CopyLinkAction
+            dark
+            link={shareLink}
+            pageId={PageID.create_livestream_page}
+          />
+          <ShareAction
+            dark
+            link={shareLink}
+            pageId={PageID.create_livestream_page}
+          />
+        </View>
+      ),
+    });
+  };
+
   const disabled = !title?.trim() || isConnecting || isLoading;
   const hasPermission =
     (Platform.OS === 'android' && androidPermission) ||
@@ -262,7 +308,6 @@ function AmityCreateLivestreamPage() {
         timerRef.current = intervalId;
       }
     } catch (error) {
-      console.log('startLiveStream error', error);
       setIsLive(false);
       setIsConnecting(false);
       Alert.alert(
@@ -489,11 +534,7 @@ function AmityCreateLivestreamPage() {
           <Typography.Body style={styles.permissionDescription}>
             This lets you record and live stream {'\n'} from this device.
           </Typography.Body>
-          <Button
-            type="primary"
-            themeStyle={theme}
-            onPress={() => Linking.openSettings()}
-          >
+          <Button type="primary" onPress={() => Linking.openSettings()}>
             <Typography.BodyBold style={styles.text}>
               Open settings
             </Typography.BodyBold>
@@ -544,12 +585,18 @@ function AmityCreateLivestreamPage() {
                 color={theme.colors.background}
               />
             </TouchableOpacity>
-
-            <View style={styles.timer}>
+            <View style={styles.liveRow}>
               <LiveTimerStatus
                 time={calculateTime(time)}
                 pageId={PageID.create_livestream_page}
               />
+              {shareLink && (
+                <MenuButton
+                  pageId={PageID.create_livestream_page}
+                  variant="vertical"
+                  onPress={handleSharePress}
+                />
+              )}
             </View>
             {countdown !== null && (
               <View style={styles.countdownOverlay}>

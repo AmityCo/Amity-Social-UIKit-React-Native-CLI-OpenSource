@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import React, { FC, useCallback, useLayoutEffect, useRef } from 'react';
+import { FC, useCallback, useLayoutEffect, useRef } from 'react';
 import AndroidCubeEffect from '../StoryKit/src/components/AndroidCubeEffect';
 import CubeNavigationHorizontal from '../StoryKit/src/components/CubeNavigationHorizontal';
 import AmityViewStoryPage from '../../features/story/View/View';

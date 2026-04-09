@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { CheckBox } from '../../../../core/components/CheckBox';
-import { Typography } from '../../../components/Typography/Typography';
+import { Typography } from '../../../../core/components/Typography/Typography';
 import Avatar from '../../../components/Avatar';
 import { Controller } from 'react-hook-form';
 import useAddMember from './hooks/useAddMember';
@@ -18,8 +18,8 @@ import { MemberChip } from '../../../components/MemberChip/MemberChip';
 import MemberSkeleton from '../shared/components/MemberSkeleton';
 import LimitCharacterSearch from '../../../components/LimitCharacterSearch';
 import NoResult from '../../../components/NoResult';
-import EmptyList from '../../../components/EmptyList';
 import ActionButton from '../../../elements/ActionButton';
+import { Empty } from '../../../components';
 
 const AddMember = () => {
   const {
@@ -127,7 +127,7 @@ const AddMember = () => {
                   keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 24}
                 >
                   <View style={styles.limitCharacterSearchContainer}>
-                    <EmptyList />
+                    <Empty.Content icon="list" title="No users available" />
                   </View>
                 </KeyboardAvoidingView>
               )}

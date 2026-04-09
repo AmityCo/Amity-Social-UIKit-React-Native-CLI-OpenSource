@@ -1,5 +1,5 @@
 import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
-import React, { FC, useCallback, useState, useEffect, memo } from 'react';
+import { FC, useCallback, useState, useEffect, memo } from 'react';
 import Video from 'react-native-video';
 import {
   leftLongArrow,
@@ -20,7 +20,7 @@ import {
   ImageSizeState,
 } from '../../../enums';
 import { useTheme } from 'react-native-paper';
-import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
+import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useConfigImageUri } from '../../../hooks/useConfigImageUri';
 import HyperlinkConfig from './components/HyperLinkConfig';
 import { IAmityDraftStoryPage } from '../../../types';

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -80,12 +80,7 @@ export interface IVideoPost {
     original: string;
   };
 }
-export default function PostList({
-  postDetail,
-  postIndex,
-  onDelete,
-  isGlobalfeed,
-}: IPostList) {
+export default function PostList({ postDetail, onDelete }: IPostList) {
   const theme = useTheme() as MyMD3Theme;
   const { client, apiRegion } = useAuth();
   const styles = useStyles();
@@ -266,8 +261,6 @@ export default function PostList({
     );
     navigation.navigate('PostDetail', {
       postId: postDetail.postId,
-      postIndex: postIndex,
-      isFromGlobalfeed: isGlobalfeed,
     });
   }
   const handleDisplayNamePress = () => {
@@ -406,8 +399,6 @@ export default function PostList({
   const onPressPost = () => {
     navigation.navigate('PostDetail', {
       postId: postDetail.postId,
-      postIndex: postIndex,
-      isFromGlobalfeed: isGlobalfeed,
     });
   };
 

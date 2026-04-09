@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { getSkeletonBackgrounColor } from '../../../../core/utils/color';

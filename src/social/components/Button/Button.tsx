@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   TouchableOpacity,
   StyleProp,
@@ -7,9 +6,8 @@ import {
   TouchableOpacityProps,
 } from 'react-native';
 
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { useStyles } from './styles';
-import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
 import { SvgXml, XmlProps } from 'react-native-svg';
 
 export const enum BUTTON_SIZE {
@@ -25,7 +23,6 @@ export type ButtonProps = TouchableOpacityProps & {
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
-  themeStyle?: MyMD3Theme;
 };
 
 export const Button = ({
@@ -36,11 +33,10 @@ export const Button = ({
   size = BUTTON_SIZE.LARGE,
   type = 'primary',
   textStyle,
-  themeStyle,
   disabled,
   ...props
 }: ButtonProps) => {
-  const styles = useStyles(themeStyle);
+  const { styles, theme } = useStyles();
 
   const buttonStyles =
     type === 'inline'
@@ -62,8 +58,8 @@ export const Button = ({
   const textStyles = [styles[`text${capitalize(type)}`], textStyle];
 
   const iconColor = {
-    primary: themeStyle?.colors.background,
-    secondary: themeStyle?.colors.secondary,
+    primary: theme.colors.background,
+    secondary: theme.colors.secondary,
   };
 
   const renderChildren = () => {

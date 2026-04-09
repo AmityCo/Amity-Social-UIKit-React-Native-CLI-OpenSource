@@ -1,5 +1,5 @@
-import React, { FC, memo } from 'react';
-import { Typography } from '../../components/Typography/Typography';
+import { FC, memo } from 'react';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { StyleSheet, TextProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import { useAmityElement } from '../../hooks';
@@ -37,7 +37,7 @@ const TitleElement: FC<TitleElementType> = ({
       style={[styles.titleText, style]}
       {...props}
     >
-      {config.text as string}
+      {config.text}
     </Typography.BodyBold>
   );
 };

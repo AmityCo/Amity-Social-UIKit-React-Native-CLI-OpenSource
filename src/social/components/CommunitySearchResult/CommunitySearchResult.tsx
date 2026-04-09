@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import { FC, useCallback } from 'react';
 import { View, FlatList, Pressable } from 'react-native';
 import CommunityRowItem from '../CommunityRowItem/CommunityRowItem';
 import CommunityListSkeleton from '../CommunityListSkeleton/CommunityListSkeleton';

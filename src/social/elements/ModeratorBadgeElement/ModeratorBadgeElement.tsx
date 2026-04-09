@@ -1,5 +1,5 @@
 import { TextProps, Text, View } from 'react-native';
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import { useAmityElement } from '../../hooks';
 import ImageElement from '../CommonElements/ImageElement';
@@ -33,7 +33,7 @@ const ModeratorBadgeElement: FC<ModeratorBadgeElementType> = ({
   const styles = useStyles(themeStyles);
   if (isExcluded) return null;
   if (!isCommunityModerator || !communityId || !userId) return null;
-  const text = (config?.text as string) ?? '';
+  const text = config?.text ?? '';
 
   return (
     <View style={styles.moderatorRow}>

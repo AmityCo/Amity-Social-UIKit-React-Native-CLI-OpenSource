@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
+import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 
 const { width, height } = Dimensions.get('window');
 

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import React, {
+import {
   Fragment,
   memo,
   useCallback,
@@ -29,7 +29,7 @@ import AmityCommunityProfileTabComponent, {
 } from './components/Tab';
 import AmityCommunityImageFeedComponent from './components/ImageFeed';
 import AmityCommunityVideoFeedComponent from './components/VideoFeed';
-import CommunityCoverNavigator from '../../elements/CommunityCover/CommunityCoverNavigator';
+import { TopBar } from './components';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import CommunityCreatePostButton from '../../elements/CommunityCreatePostButton/CommunityCreatePostButton';
@@ -37,10 +37,10 @@ import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../providers/BehaviourProvider';
 import { livestream, poll, post, story } from '../../../core/assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import AmityCommunityPinnedPostComponent from './components/PinnedPost/PinnedPost';
+import { usePostPermission } from '../../../social/hooks/usePostPermission';
 
 type ICommunityProfilePage = {
   defaultCommunityId?: string;
@@ -68,6 +68,9 @@ const AmityCommunityProfilePage: React.FC<ICommunityProfilePage> = ({
 
   const animatedOpacity = useRef(new Animated.Value(0)).current;
   const animatedTranslateY = useRef(new Animated.Value(15)).current;
+  const stickyHeaderAnimation = useRef<Animated.CompositeAnimation | null>(
+    null
+  );
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const feedRef = useRef<AmityCommunityFeedRef>(null);
@@ -93,7 +96,7 @@ const AmityCommunityProfilePage: React.FC<ICommunityProfilePage> = ({
       animatedTranslateY.setValue(15);
 
       // Run entrance animation
-      Animated.parallel([
+      stickyHeaderAnimation.current = Animated.parallel([
         Animated.timing(animatedOpacity, {
           toValue: 1,
           duration: 200,
@@ -105,8 +108,12 @@ const AmityCommunityProfilePage: React.FC<ICommunityProfilePage> = ({
           easing: Easing.out(Easing.ease),
           useNativeDriver: true,
         }),
-      ]).start();
+      ]);
+      stickyHeaderAnimation.current.start();
     }
+    return () => {
+      stickyHeaderAnimation.current?.stop();
+    };
   }, [isScrolledPastHeader, animatedOpacity, animatedTranslateY]);
 
   const handleLoadMore = useCallback(() => {
@@ -192,7 +199,7 @@ const AmityCommunityProfilePage: React.FC<ICommunityProfilePage> = ({
     <View style={styles.container}>
       {isScrolling && !isScrolledPastHeader && (
         <View style={styles.smallHeaderNavigationWrap}>
-          <CommunityCoverNavigator
+          <TopBar
             pageId={pageId}
             componentId={ComponentID.community_header}
             communityId={communityId}
@@ -273,6 +280,8 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
 
   const hasStoryPermission = useStoryPermission(communityId);
 
+  const hasPostPermission = usePostPermission({ community });
+
   const openBottomSheet = () => setIsBottomSheetVisible(true);
 
   const closeBottomSheet = () => setIsBottomSheetVisible(false);
@@ -350,7 +359,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
-  if (!community?.isJoined) return null;
+  if (!hasPostPermission) return null;
 
   return (
     <Fragment>

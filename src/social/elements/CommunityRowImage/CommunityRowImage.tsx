@@ -1,67 +1,40 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import { FC, memo } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { ComponentID, ElementID, PageID } from '../../enums';
-import { useAmityElement, useConfigImageUri, useFile } from '../../hooks';
 import { Image, View } from 'react-native';
 import { useStyles } from './styles';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { community as communityIcon } from '../../../core/assets/icons';
+import { getFileUrlWithSize } from '../../utils';
+import { useAmityElement } from '../../hooks';
 
 type CommunityRowImageyProps = {
-  fileId?: string;
+  fileUrl?: string;
   pageId?: PageID;
   componentId?: ComponentID;
   label?: string;
 };
 
 const CommunityRowImagey: FC<CommunityRowImageyProps> = ({
-  fileId,
+  fileUrl,
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   label,
 }) => {
-  // TODO: add state loading and loading skeleton
   const elementId = ElementID.community_row_image;
   const styles = useStyles();
-  const [image, setImage] = useState<string | undefined>(undefined);
   const { accessibilityId } = useAmityElement({
     pageId,
     componentId,
     elementId,
   });
 
-  const { uri } = useConfigImageUri({
-    configPath: {
-      page: pageId,
-      component: componentId,
-      element: elementId,
-    },
-    configKey: 'image',
-  });
-
-  const { getImage } = useFile();
-
-  useEffect(() => {
-    const getImageUrl = async () => {
-      if (!fileId) return;
-
-      if (!fileId && uri) {
-        setImage(uri);
-      } else if (fileId) {
-        const url = await getImage({ fileId });
-        setImage(url);
-      }
-    };
-
-    getImageUrl();
-  }, [uri, fileId, getImage]);
-
   return (
     <View testID={accessibilityId} style={styles.container}>
-      {image ? (
+      {fileUrl ? (
         <Image
-          source={{ uri: image as string }}
+          source={{ uri: getFileUrlWithSize(fileUrl) }}
           style={styles.image}
           resizeMode="cover"
         />

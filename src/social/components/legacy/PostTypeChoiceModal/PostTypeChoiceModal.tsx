@@ -5,7 +5,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import CreatePostChooseTargetModal from '../CreatePostChooseTargetModal/CreatePostChooseTargetModal';
 import {
@@ -14,7 +14,7 @@ import {
   postIconOutlined,
 } from '../../../../core/assets/icons/xml';
 import { useStyles } from './style';
-import { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
+import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
 import {
@@ -25,7 +25,6 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import { RootStackParamList as RootStackParamListV4 } from '../../../../core/routes/RouteParamList';
 
 const PostTypeChoiceModal = () => {
   const styles = useStyles();
@@ -33,50 +32,39 @@ const PostTypeChoiceModal = () => {
   const dispatch = useUIKitDispatch();
   const navigation =
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
-  const navigationV4 =
-    useNavigation() as NativeStackNavigationProp<RootStackParamListV4>;
   const { closePostTypeChoiceModal } = uiSlice.actions;
-  const {
-    showPostTypeChoiceModal,
-    userId,
-    targetId,
-    targetName,
-    targetType,
-    postSetting,
-    needApprovalOnPostCreation,
-    isPublic,
-  } = useUIKitSelector((state: RootState) => state.ui);
+  const { showPostTypeChoiceModal, userId, targetId, targetName, targetType } =
+    useUIKitSelector((state: RootState) => state.ui);
   const [postType, setPostType] = useState<string>();
   const [createPostModalVisible, setCreatePostModalVisible] = useState(false);
 
   const onChooseType = (type: string) => {
-    if (targetId && targetName && targetType) {
-      const targetscreen =
-        type === 'post'
-          ? 'CreatePost'
-          : type === 'livestream'
-          ? 'CreateLivestream'
-          : null;
-      targetscreen &&
-        navigation.navigate(targetscreen, {
-          targetId,
-          targetName,
-          targetType,
-          postSetting,
-          needApprovalOnPostCreation,
-          isPublic,
-        });
-      type === 'poll' &&
-        navigationV4.navigate('PollPostComposer', {
-          targetId,
-          targetName,
-          targetType,
-        });
-      closeCreatePostModal();
-    } else {
+    if (!(targetId && targetName && targetType)) {
       setPostType(type);
       setCreatePostModalVisible(true);
+      return;
     }
+
+    if (type === 'post') {
+      navigation.navigate('CreatePost', {
+        targetId,
+        targetType,
+      });
+    } else if (type === 'livestream') {
+      navigation.navigate('CreateLivestream', {
+        targetId,
+        targetName,
+        targetType,
+      });
+    } else if (type === 'poll') {
+      navigation.navigate('PollPostComposer', {
+        targetId,
+        targetName,
+        targetType,
+      });
+    }
+
+    closeCreatePostModal();
   };
   const closeCreatePostModal = () => {
     setCreatePostModalVisible(false);

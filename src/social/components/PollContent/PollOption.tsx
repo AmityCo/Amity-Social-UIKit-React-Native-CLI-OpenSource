@@ -2,9 +2,9 @@ import { Radio } from '../../../core/components/Radio';
 import { useStyles } from './style';
 import { CheckBox } from '../../../core/components/CheckBox';
 import { PollResults } from './PollResults';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button, { BUTTON_SIZE } from '../Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -41,7 +41,7 @@ export function PollOptions({
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
   const [selectedOption, setSelectedOption] = useState<Amity.PollAnswer[]>([]);
 
   const btnDisabled = selectedOption.length === 0;
@@ -129,7 +129,6 @@ export function PollOptions({
       {!showedAllOptions && hiddenOptions > 0 && (
         <Button
           type="secondary"
-          themeStyle={theme}
           size={BUTTON_SIZE.LARGE}
           style={styles.seeMoreOptionsBtn}
           onPress={() =>

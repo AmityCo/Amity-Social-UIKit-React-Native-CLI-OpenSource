@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, { FC, memo, useCallback, useRef, useState } from 'react';
+import { FC, memo, useCallback, useRef, useState } from 'react';
 import { useConfigImageUri, useStory } from '../../../../hooks';
 import { useStyles } from '../styles';
 import Video, { OnLoadData } from 'react-native-video';
@@ -38,7 +38,7 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import uiSlice from '../../../../../core/stores/slices/uiSlice';
 import { LoadingOverlay } from '../../../../components/legacy/LoadingOverlay';
 import Toast from '../../../../components/legacy/Toast/Toast';
-import { Typography } from '../../../../components/Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../../core/providers/AmityUIKitProvider';
 import { useUIKitDispatch } from '../../../../../core/stores/store';
@@ -103,32 +103,32 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
   const { showToastMessage } = uiSlice.actions;
 
   const storyViewerBgColor =
-    (getUiKitConfig({
+    getUiKitConfig({
       page: PageID.StoryPage,
       component: ComponentID.WildCardComponent,
       element: ElementID.StoryImpressionBtn,
-    })?.background_color as string) ?? '#2b2b2b';
+    })?.background_color ?? '#2b2b2b';
 
   const storyCommentBgColor =
-    (getUiKitConfig({
+    getUiKitConfig({
       page: PageID.StoryPage,
       component: ComponentID.WildCardComponent,
       element: ElementID.StoryCommentBtn,
-    })?.background_color as string) ?? '#2b2b2b';
+    })?.background_color ?? '#2b2b2b';
 
   const storyReactionBgColor =
-    (getUiKitConfig({
+    getUiKitConfig({
       element: ElementID.StoryRing,
       component: ComponentID.WildCardComponent,
       page: PageID.StoryPage,
-    })?.background_color as string) ?? '#2b2b2b';
+    })?.background_color ?? '#2b2b2b';
 
   const storyPlusBgColor =
-    (getUiKitConfig({
+    getUiKitConfig({
       page: PageID.StoryPage,
       component: ComponentID.WildCardComponent,
       element: ElementID.StoryHyperLinkBtn,
-    })?.background_color as string) ?? '#ffffff';
+    })?.background_color ?? '#ffffff';
 
   const muteIcon = useConfigImageUri({
     configPath: {
@@ -607,6 +607,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
             <CommentList
               postId={currentStory?.storyId}
               postType="story"
+              disabledComment={!communityData?.allowCommentInStory}
               disabledInteraction={!communityData?.isJoined}
               onNavigate={onClose}
             />

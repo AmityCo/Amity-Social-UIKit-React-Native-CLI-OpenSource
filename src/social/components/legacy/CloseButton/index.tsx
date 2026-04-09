@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../../../core/assets/icons/xml';

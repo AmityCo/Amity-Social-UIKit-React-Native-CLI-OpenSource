@@ -1,5 +1,5 @@
 import { View, FlatList, TouchableOpacity, Pressable } from 'react-native';
-import React, { memo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { useStyles } from './styles';
 import { PageID } from '../../enums';
 import { useAmityPage, useCommunities } from '../../hooks';

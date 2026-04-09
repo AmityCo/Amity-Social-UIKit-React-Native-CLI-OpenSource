@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
@@ -114,7 +114,6 @@ const LoadingImage = ({
     } else {
       uploadFileToAmity();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUploaded, source]);
 
   const onRetryUpload = () => {

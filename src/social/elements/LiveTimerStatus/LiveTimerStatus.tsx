@@ -1,9 +1,8 @@
-import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
 import { useAmityElement } from '../../hooks';
 import { ComponentID, ElementID, PageID } from '../../enums';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 
 type LiveTimerStatusProps = {
   time?: string;

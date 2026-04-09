@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { View } from 'react-native';
 import { Track } from 'livekit-client';
 import { VideoTrack, useLocalParticipant } from '@livekit/react-native';

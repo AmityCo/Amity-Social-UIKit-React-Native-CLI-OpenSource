@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { infoIcon } from '../../../core/assets/icons/xml';

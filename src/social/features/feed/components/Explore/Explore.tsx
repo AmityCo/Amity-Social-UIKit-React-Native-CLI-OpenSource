@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { View, ScrollView, RefreshControl } from 'react-native';
 import { useStyles } from './styles';
@@ -53,7 +53,7 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
     isTrendingCommunitiesEmpty &&
     !isCategoryEmpty;
 
-  const renderError = React.useCallback(() => {
+  const renderError = useCallback(() => {
     return (
       <ErrorComponent
         themeStyle={themeStyles}
@@ -79,7 +79,7 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
         />
       }
     >
-      <Divider themeStyles={themeStyles} />
+      <Divider />
       {isLoading && <ExploreLoadingSkeleton themeStyles={themeStyles} />}
       {isNothingToShow ? (
         <View style={styles.emptyContainer}>

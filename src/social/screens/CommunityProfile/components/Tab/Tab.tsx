@@ -1,4 +1,4 @@
-import React, { memo, FC, useCallback } from 'react';
+import { memo, FC, useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { feed, image, pin, video } from '../../../../../core/assets/icons';
@@ -70,10 +70,11 @@ const AmityCommunityProfileTabComponent: FC<
           themeStyles={themeStyles}
           icon={
             <SvgXml
-              xml={feed(
-                getActiveColor(
-                  currentTab === CommunityProfileTab.community_feed
-                )
+              xml={feed()}
+              width={24}
+              height={24}
+              color={getActiveColor(
+                currentTab === CommunityProfileTab.community_feed
               )}
             />
           }
@@ -85,8 +86,11 @@ const AmityCommunityProfileTabComponent: FC<
           themeStyles={themeStyles}
           icon={
             <SvgXml
-              xml={pin(
-                getActiveColor(currentTab === CommunityProfileTab.community_pin)
+              width={24}
+              height={24}
+              xml={pin()}
+              color={getActiveColor(
+                currentTab === CommunityProfileTab.community_pin
               )}
             />
           }
@@ -100,10 +104,11 @@ const AmityCommunityProfileTabComponent: FC<
           themeStyles={themeStyles}
           icon={
             <SvgXml
-              xml={image(
-                getActiveColor(
-                  currentTab === CommunityProfileTab.community_image_feed
-                )
+              width={24}
+              height={24}
+              xml={image()}
+              color={getActiveColor(
+                currentTab === CommunityProfileTab.community_image_feed
               )}
             />
           }
@@ -117,10 +122,11 @@ const AmityCommunityProfileTabComponent: FC<
           themeStyles={themeStyles}
           icon={
             <SvgXml
-              xml={video(
-                getActiveColor(
-                  currentTab === CommunityProfileTab.community_video_feed
-                )
+              width={24}
+              height={24}
+              xml={video()}
+              color={getActiveColor(
+                currentTab === CommunityProfileTab.community_video_feed
               )}
             />
           }

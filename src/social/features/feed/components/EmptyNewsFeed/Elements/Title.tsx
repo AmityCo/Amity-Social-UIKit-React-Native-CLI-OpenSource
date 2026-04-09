@@ -1,5 +1,5 @@
 import { Text } from 'react-native';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../../../../enums';
 import useConfig from '../../../../../hooks/useConfig';
 import { useUiKitConfig } from '../../../../../hooks';

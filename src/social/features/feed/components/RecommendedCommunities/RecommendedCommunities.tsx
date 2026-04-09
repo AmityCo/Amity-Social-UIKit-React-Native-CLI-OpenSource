@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback } from 'react';
 import { Text, FlatList, View, Pressable } from 'react-native';
 import { RecommendedCommunityItem } from './RecommenedCommunityItems/RecommenedCommunityItems';
 import { useStyles } from './styles';
@@ -44,7 +44,7 @@ const AmityRecommendedCommunityComponent: FC<
   return (
     <View testID={accessibilityId}>
       <Text style={styles.headerText}>
-        {(config?.text as string) || 'Recommended for you'}
+        {config?.text || 'Recommended for you'}
       </Text>
       <FlatList
         horizontal={true}

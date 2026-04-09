@@ -1,6 +1,6 @@
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
+import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 export const useStyles = () => {
   const { width, height } = useWindowDimensions();
   const theme = useTheme() as MyMD3Theme;

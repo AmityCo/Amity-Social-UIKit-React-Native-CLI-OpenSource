@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStyles } from './styles';
 import { Dimensions, View } from 'react-native';
 import ContentLoader, { Rect } from 'react-content-loader/native';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { PageID } from '../../../enums';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +6,7 @@ import TargetSelectionPage, {
   FeedParams,
 } from '../../../components/TargetSelectionPage/TargetSelectionPage';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
+import React from 'react';
 
 const AmityLivestreamPostTargetSelectionPage = () => {
   const { AmityLivestreamPostTargetSelectionPageBehavior } = useBehaviour();

@@ -1,26 +1,45 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../../enums/enumUIKitID';
 import AmityGlobalFeedComponent from '../GlobalFeed/GlobalFeed';
 import { useStyles } from './styles';
 import Divider from '../../../../components/Divider';
 import { useAmityComponent } from '../../../../hooks';
+import { useCustomRankingGlobalFeed } from '../../../../hooks/useCustomRankingGlobalFeed';
+import NewsFeedLoadingComponent from '../../../../components/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
+import { AmityEmptyNewsFeedComponent } from '../../../..';
 
 type AmityNewsFeedComponentType = {
   pageId?: PageID;
+  onPressExploreCommunity?: () => void;
 };
 
 const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
   pageId = PageID.WildCardPage,
+  onPressExploreCommunity,
 }) => {
+  const styles = useStyles();
   const componentId = ComponentID.newsfeed_component;
-  const { themeStyles, accessibilityId, isExcluded } = useAmityComponent({
+  const { accessibilityId, isExcluded } = useAmityComponent({
     pageId,
     componentId,
   });
 
-  const styles = useStyles();
+  const { itemWithAds, refresh, globalFeedPosts, loading, onNextPage } =
+    useCustomRankingGlobalFeed();
+
   if (isExcluded) return null;
+
+  if (loading || (globalFeedPosts?.length > 0 && !itemWithAds?.length))
+    return <NewsFeedLoadingComponent />;
+
+  if (!loading && !globalFeedPosts?.length)
+    return (
+      <AmityEmptyNewsFeedComponent
+        pageId={pageId}
+        onPressExploreCommunity={onPressExploreCommunity}
+      />
+    );
 
   return (
     <View
@@ -28,8 +47,14 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
     >
-      <Divider themeStyles={themeStyles} />
-      <AmityGlobalFeedComponent pageId={pageId} />
+      <Divider />
+      <AmityGlobalFeedComponent
+        pageId={pageId}
+        itemWithAds={itemWithAds}
+        refresh={refresh}
+        loading={loading}
+        onNextPage={onNextPage}
+      />
     </View>
   );
 };

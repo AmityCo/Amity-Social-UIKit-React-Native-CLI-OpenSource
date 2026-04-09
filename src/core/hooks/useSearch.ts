@@ -1,5 +1,6 @@
 import {
   CommunityRepository,
+  SearchUsersByEnum,
   UserRepository,
 } from '@amityco/ts-sdk-react-native';
 import { useCallback, useEffect, useState, useRef } from 'react';
@@ -45,7 +46,11 @@ const useSearch = (
 
   const searchAllUsers = useCallback((text: string) => {
     return UserRepository.searchUserByDisplayName(
-      { displayName: text, limit: 5 },
+      {
+        displayName: text,
+        limit: 5,
+        searchBy: [SearchUsersByEnum.DISPLAY_NAME],
+      },
       ({ data, error, hasNextPage, onNextPage }) => {
         if (error) return null;
         hasNextPage

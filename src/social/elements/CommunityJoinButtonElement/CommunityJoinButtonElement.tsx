@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import { useAmityElement, useJoinCommunity } from '../../hooks';
@@ -27,9 +27,13 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
     elementId: ElementID.community_join_button,
   });
 
-  const { refresh } = useCustomRankingGlobalFeed();
+  const { refresh, globalFeedPosts } = useCustomRankingGlobalFeed({
+    enabled: false,
+  });
   const { joinCommunity, isPending } = useJoinCommunity({
-    onSuccess: () => setTimeout(() => refresh(), 3000),
+    onSuccess: () => {
+      globalFeedPosts.length === 0 && refresh();
+    },
   });
 
   const handleJoinCommunity = () => {
@@ -50,13 +54,12 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
           ? themeStyles.colors.base
           : themeStyles.colors.baseShade4,
       }}
-      themeStyle={themeStyles}
       onPress={handleJoinCommunity}
       disabled={isPending}
       size={size}
       {...props}
     >
-      {(config?.text as string) || 'Join'}
+      {config?.text || 'Join'}
     </Button>
   );
 };

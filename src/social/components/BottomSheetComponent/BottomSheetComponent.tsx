@@ -1,13 +1,13 @@
 import { useStyles } from './styles';
-import React, { memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 
 const BottomSheetComponent = () => {
   const sheetRef = useRef<BottomSheetMethods>(null);
-  const { closeBottomSheet, content, open, height } = useBottomSheet();
+  const { closeBottomSheet, content, open, height, dark } = useBottomSheet();
 
-  const { styles } = useStyles();
+  const { styles } = useStyles({ dark });
 
   useEffect(() => {
     open ? sheetRef.current.open() : sheetRef.current.close();

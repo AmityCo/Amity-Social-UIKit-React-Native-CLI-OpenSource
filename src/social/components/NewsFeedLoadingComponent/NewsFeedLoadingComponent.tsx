@@ -1,5 +1,4 @@
 import { View, useWindowDimensions } from 'react-native';
-import React from 'react';
 import { useStyles } from './styles';
 import ContentLoader, {
   Circle,
@@ -8,7 +7,7 @@ import ContentLoader, {
 } from 'react-content-loader/native';
 import { Divider } from 'react-native-paper';
 import { useTheme } from 'react-native-paper';
-import type { MyMD3Theme } from '~/core/providers/AmityUIKitProvider';
+import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 
 const NewsFeedLoadingComponent = () => {
   const styles = useStyles();

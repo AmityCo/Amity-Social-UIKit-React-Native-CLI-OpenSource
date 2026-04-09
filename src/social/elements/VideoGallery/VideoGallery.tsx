@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -11,7 +11,7 @@ import {
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 
 import { formatDuration } from '../../../core/utils/time';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import VideoPlayer from 'react-native-video-controls';
 import ImageFeedSkeleton from '../../components/ImageFeedSkeleton/ImageFeedSkeleton';
 

@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, Fragment, memo } from 'react';
 import ContentLoader, { Rect } from 'react-content-loader/native';
 import { MyMD3Theme } from '../../../../../../core/providers/AmityUIKitProvider';
 import { useStyles } from './styles';
@@ -72,7 +72,7 @@ const ExploreLoadingSkeleton: FC<ExploreLoadingSkeletonProps> = ({
           <Rect x="0" y="0" width="156" height="12" rx="6" ry="6" />
           {Array.from({ length: 2 }, (_, index) => {
             return (
-              <React.Fragment key={index}>
+              <Fragment key={index}>
                 <Rect
                   x={index * (width + gap)}
                   y={titleHeight}
@@ -132,7 +132,7 @@ const ExploreLoadingSkeleton: FC<ExploreLoadingSkeletonProps> = ({
                   rx="6"
                   ry="6"
                 />
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </ContentLoader>

@@ -18,7 +18,9 @@ export function useCommunitySetting(community: Amity.Community) {
     >();
   const { AmityCommunitySettingPageBehavior } = useBehaviour();
   const { showToast } = useToast();
-  const { refresh } = useCustomRankingGlobalFeed();
+  const { refresh, globalFeedPosts } = useCustomRankingGlobalFeed({
+    enabled: false,
+  });
 
   const { mutate: leaveCommunity } = useMutation({
     mutationFn: async () =>
@@ -26,7 +28,7 @@ export function useCommunitySetting(community: Amity.Community) {
     onSuccess: () => {
       navigation.goBack();
       showToast({ message: 'Successfully left the group', type: 'success' });
-      setTimeout(() => refresh(), 3000);
+      globalFeedPosts.length === 0 && setTimeout(() => refresh(), 3000);
     },
     onError: (error) => {
       if (error.message.includes(ERROR_CODE.ONLY_ONE_MODERATOR)) {

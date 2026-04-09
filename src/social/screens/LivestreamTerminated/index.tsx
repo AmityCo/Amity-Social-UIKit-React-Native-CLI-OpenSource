@@ -1,4 +1,3 @@
-import React from 'react';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AmityLivestreamTerminatedPage from '../../features/livestream/Terminated';

@@ -6,10 +6,10 @@ import {
   launchCamera,
   CameraOptions,
 } from 'react-native-image-picker';
-
 import { isValidImageType } from '../utils';
 import { useCameraPermission } from './usePermissions';
-import { deleteAmityFile, uploadImageFile } from '../../core/legacy/file';
+import { deleteAmityFile } from '../../core/legacy/file';
+import { useUpload } from '../../core/hooks';
 
 export type UseImagePickerResponse = {
   progress: number;
@@ -26,25 +26,24 @@ export type UseImagePickerResponse = {
 const useImagePicker = (): UseImagePickerResponse => {
   const { getCameraPermission } = useCameraPermission();
   const [progress, setProgress] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [uploadedImage, setUploadedImage] =
     useState<Amity.File<'image'> | null>(null);
+  const { uploadImage, isImageUploading } = useUpload();
 
   const uploadFileToAmity = async (path: string) => {
     try {
       setImageUri(path);
-      setIsLoading(true);
-      const uploadedImages = await uploadImageFile(path, setProgress);
-      setUploadedImage(uploadedImages[0]);
-      setIsLoading(false);
+      const { data } = await uploadImage({
+        file: path,
+        onProgress: setProgress,
+      });
+      setUploadedImage(data[0]);
       setProgress(0);
-      return uploadedImages[0];
+      return data[0];
     } catch (error) {
-      Alert.alert('Upload failed', 'Please try again.', [{ text: 'OK' }]);
       return null;
     } finally {
-      setIsLoading(false);
       setProgress(0);
     }
   };
@@ -90,7 +89,7 @@ const useImagePicker = (): UseImagePickerResponse => {
   };
 
   return {
-    isLoading,
+    isLoading: isImageUploading,
     imageUri,
     progress,
     uploadedImage,

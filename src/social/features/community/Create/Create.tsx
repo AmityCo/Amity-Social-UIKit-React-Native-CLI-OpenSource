@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { Controller } from 'react-hook-form';
 import CoverImage from '../shared/components/CoverImageUpload';
@@ -8,10 +7,7 @@ import Categories from '../shared/components/Categories';
 import { AmityCommunityPrivacyEnum } from '../shared/types';
 import Privacy from '../shared/components/Privacy';
 import Members from './components/Members';
-import {
-  MAX_COMMUNITY_DESCRIPTION_LENGTH,
-  MAX_COMMUNITY_NAME_LENGTH,
-} from '../../../../core/constants';
+import { CHARACTER_LIMIT } from '../../../../core/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { useCreateCommunity } from './hooks/useCreateCommunity';
@@ -63,7 +59,7 @@ function CreateCommunity() {
                 onChangeText={onChange}
                 placeholder="Name your community"
                 pageId={PageID.community_setup_page}
-                maxLength={MAX_COMMUNITY_NAME_LENGTH}
+                maxLength={CHARACTER_LIMIT.COMMUNITY_NAME}
                 elementId={ElementID.community_name_title}
               />
             )}
@@ -81,7 +77,7 @@ function CreateCommunity() {
                 placeholder="Enter description"
                 pageId={PageID.community_setup_page}
                 elementId={ElementID.community_about_title}
-                maxLength={MAX_COMMUNITY_DESCRIPTION_LENGTH}
+                maxLength={CHARACTER_LIMIT.COMMUNITY_DESCRIPTION}
               />
             )}
           />

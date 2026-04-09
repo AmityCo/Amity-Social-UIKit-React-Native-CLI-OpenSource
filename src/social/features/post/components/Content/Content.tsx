@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -31,7 +31,7 @@ import PostContent from '../../../../components/PostContent';
 import { PostMenu } from '../../../../components/PostMenu';
 import PinBadge from '../../../../elements/PinBadge';
 import AnnouncementBadge from '../../../../elements/AnnouncementBadge';
-import { Typography } from '../../../../components/Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 
 type AmityPostContentComponentProps = {
   post: Amity.Post;
@@ -63,6 +63,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     AmityPostContentComponentBehavior,
     AmityGlobalFeedComponentBehavior,
     AmityCommunityProfilePageBehavior,
+    AmityUserFeedComponentBehavior,
   } = useBehaviour();
   const componentId = ComponentID.post_content;
   const { accessibilityId, themeStyles } = useAmityComponent({
@@ -151,6 +152,9 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     }
     if (AmityCommunityProfilePageBehavior.goToPostDetailPage) {
       return AmityCommunityProfilePageBehavior.goToPostDetailPage(postId);
+    }
+    if (AmityUserFeedComponentBehavior?.goToPostDetailPage) {
+      return AmityUserFeedComponentBehavior.goToPostDetailPage(postId);
     }
     return navigation.navigate('PostDetail', {
       postId: postId,

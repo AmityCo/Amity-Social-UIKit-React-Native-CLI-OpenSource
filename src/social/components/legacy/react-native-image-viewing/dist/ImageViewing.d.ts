@@ -7,7 +7,7 @@
  */
 import { ComponentType } from 'react';
 import { ModalProps } from 'react-native';
-import type { IVideoPost } from '~/social/components/legacy/Social/PostList';
+import type { IVideoPost } from '../../../../social/components/legacy/Social/PostList';
 import { ImageSource } from './@types';
 declare type Props = {
   images: ImageSource[];

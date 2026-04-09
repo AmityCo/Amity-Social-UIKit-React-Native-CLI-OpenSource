@@ -4,6 +4,7 @@ import {
   AmityUiKitProvider,
   AmityUiKitSocial,
   ErrorBoundary,
+  navigate,
 } from './core';
 import {
   AmityStoryTabComponent,
@@ -48,7 +49,6 @@ import {
   AmityCommunityImageFeedComponent,
   AmityCommunityVideoFeedComponent,
   AmityThumbnailActionComponent,
-  AmityUserProfilePage,
   AmityPostEngagementContentComponent,
   AmityPostTargetType,
   AmityCommunitySetupPage,
@@ -71,7 +71,10 @@ import {
   AmityStoryTabComponentEnum,
   mediaAttachment,
   PostDetail,
-  UserProfile,
+  AmityUserProfilePage,
+  AmityEditUserProfilePage,
+  AmityUserRelationshipPage,
+  AmityBlockedUsersPage,
 } from './social';
 
 // Polyfill for BackHandler compatibility with older libraries like react-native-modalbox
@@ -136,7 +139,10 @@ export {
   AmityExploreComponent,
   AmityPageRenderer,
   PostDetail,
-  UserProfile,
+  AmityUserProfilePage,
+  AmityEditUserProfilePage,
+  AmityUserRelationshipPage,
+  AmityBlockedUsersPage,
   AmityAllCategoriesPage,
   AmityCommunitiesByCategoryPage,
   CommunityProfilePage,
@@ -151,7 +157,6 @@ export {
   AmityCommunityImageFeedComponent,
   AmityCommunityVideoFeedComponent,
   AmityThumbnailActionComponent,
-  AmityUserProfilePage,
   AmityPostEngagementContentComponent,
   AmityPostTargetType,
   AmityCommunitySetupPage,
@@ -170,4 +175,5 @@ export {
   AmityCommunityPinnedPostComponent,
   AmityPendingPostListComponent,
   AmityGlobalStoryTabWrapper,
+  navigate,
 };

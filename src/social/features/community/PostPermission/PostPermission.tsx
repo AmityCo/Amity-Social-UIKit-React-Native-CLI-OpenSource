@@ -1,8 +1,7 @@
-import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 import { useStyles } from './styles';
-import { Typography } from '../../../components/Typography/Typography';
+import { Typography } from '../../../../core/components/Typography/Typography';
 import { View } from 'react-native';
 import {
   CommunityPostSettings,

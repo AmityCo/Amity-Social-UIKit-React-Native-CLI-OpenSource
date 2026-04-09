@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, memo, useCallback, useEffect, useState } from 'react';
 import {
   Image,
   Pressable,
@@ -364,4 +364,4 @@ const PostContent: React.FC<IPostContent> = ({
   );
 };
 
-export default React.memo(PostContent);
+export default memo(PostContent);

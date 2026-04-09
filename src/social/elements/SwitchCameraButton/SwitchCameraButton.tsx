@@ -1,4 +1,3 @@
-import React from 'react';
 import { SvgXml } from 'react-native-svg';
 import { useAmityElement } from '../../hooks';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';

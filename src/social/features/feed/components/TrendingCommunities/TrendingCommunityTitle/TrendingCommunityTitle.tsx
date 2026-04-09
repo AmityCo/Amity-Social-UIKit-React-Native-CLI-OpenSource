@@ -1,6 +1,6 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { ComponentID, ElementID, PageID } from '../../../../../enums';
-import { Typography } from '../../../../../components/Typography/Typography';
+import { Typography } from '../../../../../../core/components/Typography/Typography';
 import { useStyles } from './styles';
 import { useAmityElement } from '../../../../../hooks';
 import { View } from 'react-native';
@@ -25,7 +25,7 @@ const TrendingCommunityTitleComponent: FC<TrendingCommunityTitleProps> = ({
   return (
     <View style={styles.titleContainer}>
       <Typography.TitleBold testID={accessibilityId} style={styles.titleText}>
-        {(config?.text as string) || 'Trending now'}
+        {config?.text || 'Trending now'}
       </Typography.TitleBold>
     </View>
   );

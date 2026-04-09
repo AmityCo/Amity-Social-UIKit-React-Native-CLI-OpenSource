@@ -1,6 +1,11 @@
-import React, { createContext, ReactNode } from 'react';
+import { createContext, ReactNode } from 'react';
 import defaultConfig from '../../../uikit.config.json';
-import { IConfigRaw, IUIKitConfig, IUIKitConfigOptions } from '../types/config';
+import {
+  IConfigRaw,
+  IUIKitConfig,
+  IUIKitConfigOptions,
+  UIKitElementConfig,
+} from '../types/config';
 
 interface IConfigProviderProps {
   children: ReactNode;
@@ -44,9 +49,11 @@ export const ConfigProvider = ({ children, configs }: IConfigProviderProps) => {
 
   const getCorrectConfig = (
     possibleIDs: string[]
-  ): Record<string, string | string[] | Record<string, string>> | undefined => {
+  ): UIKitElementConfig | undefined => {
     const correctId = possibleIDs.find((id) => !!configs.customizations[id]);
-    const correctConfig = configs.customizations[correctId];
+    const correctConfig = configs.customizations[correctId] as
+      | UIKitElementConfig
+      | undefined;
     if (correctConfig) return correctConfig;
     return undefined;
   };

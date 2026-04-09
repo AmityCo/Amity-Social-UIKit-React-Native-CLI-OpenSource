@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { Image, View, TouchableOpacity, Linking, Text } from 'react-native';
 
 import { ComponentID, PageID } from '../../enums';

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { ComponentID, ElementID, PageID } from '../../enums';
 import { useAmityElement } from '../../hooks';
 import { StyleSheet, ViewProps } from 'react-native';

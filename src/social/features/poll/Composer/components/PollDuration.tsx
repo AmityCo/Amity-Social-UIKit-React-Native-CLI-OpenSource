@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
-import React from 'react';
 import { View, TouchableOpacity, Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { arrowDown } from '../../../../../core/assets/icons';
-import { Typography } from '../../../../components/Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { usePollPostComposerContext } from '../PollPostComposer';
 import { useStyles } from '../styles';
 import { AndroidPollDurationPicker } from './PollDurationPicker';

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState } from 'react';
+import { createContext, useContext, useRef, useState } from 'react';
 import {
   View,
   ScrollView,

@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback } from 'react';
 import { useAmityComponent } from '../../../../hooks';
 import { PageID, ComponentID } from '../../../../enums';
 import { emptyCommunity } from '../../../../../core/assets/icons';

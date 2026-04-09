@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';

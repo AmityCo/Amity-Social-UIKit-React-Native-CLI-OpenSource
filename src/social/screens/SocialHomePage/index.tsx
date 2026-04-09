@@ -1,23 +1,18 @@
 import * as React from 'react';
-import { useCallback, useState } from 'react';
-import { LogBox, StyleSheet } from 'react-native';
+import { useCallback, useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import CustomSocialTab from '../../components/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../hooks';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
-
 import { useTheme } from 'react-native-paper';
 import { useBehaviour } from '../../providers/BehaviourProvider';
 import AmitySocialHomeTopNavigationComponent from '../../features/feed/components/TopNavigation';
-import AmityEmptyNewsFeedComponent from '../../features/feed/components/EmptyNewsFeed';
 import AmityMyCommunitiesComponent from '../../features/feed/components/MyCommunities';
 import AmityNewsFeedComponent from '../../features/feed/components/NewsFeed';
 import AmityExploreComponent from '../../features/feed/components/Explore';
-import NewsFeedLoadingComponent from '../../components/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
-import { useCustomRankingGlobalFeed } from '../../hooks/useCustomRankingGlobalFeed';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {
   const theme = useTheme() as MyMD3Theme;
   const styles = StyleSheet.create({
@@ -28,8 +23,6 @@ const AmitySocialHomePage = () => {
   });
 
   const { AmitySocialHomePageBehaviour } = useBehaviour();
-  const { itemWithAds: globalFeedPosts, loading } =
-    useCustomRankingGlobalFeed();
 
   const [newsFeedTab] = useUiKitConfig({
     page: PageID.social_home_page,
@@ -53,11 +46,13 @@ const AmitySocialHomePage = () => {
   }) as string[];
 
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
+  const visitedTabs = useRef<Set<string>>(new Set([newsFeedTab]));
 
   const onTabChange = useCallback(
     (tabName: string) => {
       if (AmitySocialHomePageBehaviour.onChooseTab)
         return AmitySocialHomePageBehaviour.onChooseTab(tabName);
+      visitedTabs.current.add(tabName);
       setActiveTab(tabName);
     },
     [AmitySocialHomePageBehaviour]
@@ -67,30 +62,10 @@ const AmitySocialHomePage = () => {
     onTabChange(exploreTab);
   }, [exploreTab, onTabChange]);
 
-  const renderNewsFeed = () => {
-    if (loading) return <NewsFeedLoadingComponent />;
-    if (activeTab === exploreTab)
-      return <AmityExploreComponent pageId={PageID.social_home_page} />;
-
-    if (activeTab === newsFeedTab) {
-      if (!loading && globalFeedPosts?.length === 0)
-        return (
-          <AmityEmptyNewsFeedComponent
-            pageId={PageID.social_home_page}
-            onPressExploreCommunity={onPressExploreCommunity}
-          />
-        );
-      return <AmityNewsFeedComponent pageId={PageID.social_home_page} />;
-    }
-    if (activeTab === myCommunitiesTab)
-      return (
-        <AmityMyCommunitiesComponent
-          pageId={PageID.social_home_page}
-          componentId={ComponentID.my_communities}
-        />
-      );
-    return null;
-  };
+  const tabStyle = (tab: string) => ({
+    flex: 1,
+    display: activeTab === tab ? ('flex' as const) : ('none' as const),
+  });
 
   return (
     <SafeAreaView
@@ -105,7 +80,25 @@ const AmitySocialHomePage = () => {
         onTabChange={onTabChange}
         activeTab={activeTab}
       />
-      {renderNewsFeed()}
+      <View style={tabStyle(newsFeedTab)}>
+        <AmityNewsFeedComponent
+          pageId={PageID.social_home_page}
+          onPressExploreCommunity={onPressExploreCommunity}
+        />
+      </View>
+      {visitedTabs.current.has(exploreTab) && (
+        <View style={tabStyle(exploreTab)}>
+          <AmityExploreComponent pageId={PageID.social_home_page} />
+        </View>
+      )}
+      {visitedTabs.current.has(myCommunitiesTab) && (
+        <View style={tabStyle(myCommunitiesTab)}>
+          <AmityMyCommunitiesComponent
+            pageId={PageID.social_home_page}
+            componentId={ComponentID.my_communities}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

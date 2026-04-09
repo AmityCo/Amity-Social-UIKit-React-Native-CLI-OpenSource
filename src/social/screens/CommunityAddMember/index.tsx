@@ -1,4 +1,3 @@
-import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import AddMember from '../../features/community/AddMember';

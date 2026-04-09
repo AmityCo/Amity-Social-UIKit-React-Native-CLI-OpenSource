@@ -6,6 +6,7 @@ export interface BottomSheetState {
   open: boolean;
   content: React.JSX.Element | null;
   height?: number;
+  dark?: boolean;
   pageId?: PageID;
   componentId?: ComponentID;
 }
@@ -13,6 +14,7 @@ export interface BottomSheetState {
 type OpenBottomSheetPayload = {
   content: React.JSX.Element;
   height?: number;
+  dark?: boolean;
 };
 
 const initialState: BottomSheetState = {
@@ -31,12 +33,14 @@ const bottomSheetSlice = createSlice({
       state.open = true;
       state.content = action.payload.content;
       state.height = action.payload.height || 200;
+      state.dark = action.payload.dark ?? false;
     },
     closeBottomSheet: (state) => {
       state.open = false;
       state.height = 0;
     },
     clearContent: (state) => {
+      state.dark = false;
       state.content = null;
     },
   },
@@ -52,23 +56,36 @@ export const useBottomSheet = () => {
     clearContent,
   } = bottomSheetSlice.actions;
 
+  const bottomSheetHeight = {
+    1: 150,
+    2: 180,
+    3: 220,
+    4: 270,
+    5: 300,
+  };
+
   const {
     content: $content,
     open: $open,
     height: $height,
+    dark: $dark,
   } = useUIKitSelector<RootState, BottomSheetState>(
     (state) => state.bottomSheet
   );
 
-  const openBottomSheet = ({ content, height }: OpenBottomSheetPayload) => {
-    dispatch($openBottomSheet({ content, height }));
+  const openBottomSheet = ({
+    dark,
+    height,
+    content,
+  }: OpenBottomSheetPayload) => {
+    dispatch($openBottomSheet({ content, height, dark }));
   };
 
   const closeBottomSheet = () => {
     dispatch($closeBottomSheet());
     setTimeout(() => {
       dispatch(clearContent());
-    }, 500);
+    }, 300);
   };
 
   return {
@@ -77,5 +94,7 @@ export const useBottomSheet = () => {
     closeBottomSheet,
     content: $content,
     open: $open,
+    dark: $dark,
+    bottomSheetHeight,
   };
 };

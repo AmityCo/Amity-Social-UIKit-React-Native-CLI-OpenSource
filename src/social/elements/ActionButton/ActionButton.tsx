@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAmityElement } from '../../hooks';
 import { ComponentID, ElementID, PageID } from '../../enums';
 import Button, {
@@ -35,13 +34,12 @@ function ActionButton({
   return (
     <Button
       type="primary"
-      themeStyle={themeStyles}
       testID={accessibilityId}
       size={BUTTON_SIZE.LARGE}
       style={[fullWidth && styles.fullWidth, props.style]}
       {...props}
     >
-      {label ?? (config?.text as string)}
+      {label ?? config?.text}
     </Button>
   );
 }

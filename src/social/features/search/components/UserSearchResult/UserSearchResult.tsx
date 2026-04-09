@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, View } from 'react-native';
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { TabName } from '../../../../enums/enumTabName';
 import SearchResultItem from '../../../../components/SearchResultItem/SearchResultItem';
 import { ComponentID, PageID } from '../../../../enums';

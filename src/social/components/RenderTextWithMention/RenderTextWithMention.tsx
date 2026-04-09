@@ -1,6 +1,6 @@
 import { Text, Linking, TouchableOpacity } from 'react-native';
 import { useStyles } from './styles';
-import React, { memo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { IMentionPosition } from '../../../core/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

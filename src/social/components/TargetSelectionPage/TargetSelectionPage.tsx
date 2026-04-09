@@ -14,11 +14,13 @@ import CloseButtonIconElement from '../../elements/CloseButtonIconElement/CloseB
 import { PageID, ComponentID, ElementID } from '../../enums';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TextKeyElement from '../../elements/TextKeyElement/TextKeyElement';
-import { Typography } from '../Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 import { useStyles } from './styles';
 import { Illustration } from '../../features/feed/components/EmptyNewsFeed/Elements';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { CommunityPostSettings } from '@amityco/ts-sdk-react-native';
+import { usePostPermission } from '../../hooks/usePostPermission';
 
 export type FeedParams = {
   targetId: string;
@@ -62,7 +64,7 @@ const TargetSelectionPage = ({
 
   const defaultTheme = useTheme() as MyMD3Theme;
 
-  const user = useUser((client as Amity.Client).userId);
+  const user = useUser(client?.userId);
   const { communities, onNextCommunityPage, loading } = useCommunities();
   const { themeStyles, accessibilityId } = useAmityPage({ pageId });
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -76,7 +78,7 @@ const TargetSelectionPage = ({
   });
 
   const renderItem = ({ item }: { item: Amity.Community }) => {
-    return (
+    const target = (
       <TargetItem
         key={item.communityId}
         displayName={item.displayName}
@@ -88,12 +90,20 @@ const TargetSelectionPage = ({
             targetName: item.displayName,
             targetType: 'community',
             community: item,
+            postSetting: item.postSetting,
+            isPublic: item.isPublic,
           })
         }
         avatarElementId={ElementID.community_avatar}
         avatarFileId={item.avatarFileId}
       />
     );
+
+    if (item?.postSetting === CommunityPostSettings.ONLY_ADMIN_CAN_POST) {
+      return <AdminOnlyCommunity community={item}>{target}</AdminOnlyCommunity>;
+    }
+
+    return target;
   };
 
   return (
@@ -126,15 +136,17 @@ const TargetSelectionPage = ({
           <TargetItem
             pageId={pageId}
             displayNameElementId={ElementID.my_timeline_text}
-            displayName={(myTimelineConfig?.text as string) || 'My timeline'}
+            displayName={myTimelineConfig?.text || 'My timeline'}
             avatarElementId={ElementID.my_timeline_avatar}
             onSelect={() =>
+              user &&
               onSelectFeed({
-                targetId: user.userId,
-                targetName: (myTimelineConfig?.text as string) || 'My timeline',
+                targetId: user?.userId,
+                targetName: myTimelineConfig?.text || 'My timeline',
                 targetType: 'user',
               })
             }
+            avatarCustomUrl={user?.avatarCustomUrl}
             avatarFileId={user?.avatarFileId}
           />
           <View style={styles.divider}>
@@ -166,3 +178,14 @@ const TargetSelectionPage = ({
 };
 
 export default React.memo(TargetSelectionPage);
+
+type AdminOnlyCommunityProps = {
+  community: Amity.Community;
+  children: React.ReactNode;
+};
+
+function AdminOnlyCommunity({ community, children }: AdminOnlyCommunityProps) {
+  const hasPostPermission = usePostPermission({ community });
+
+  return hasPostPermission ? children : null;
+}

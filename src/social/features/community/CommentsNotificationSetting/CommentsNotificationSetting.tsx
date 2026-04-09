@@ -1,12 +1,12 @@
 import * as z from 'zod';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useStyles } from './styles';
 import Header from './components/Header';
 import { ScrollView, View } from 'react-native';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Typography } from '../../../components/Typography/Typography';
+import { Typography } from '../../../../core/components/Typography/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';

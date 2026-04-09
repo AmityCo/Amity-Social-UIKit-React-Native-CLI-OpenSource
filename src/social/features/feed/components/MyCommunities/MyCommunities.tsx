@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React, { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback } from 'react';
 import { useStyles } from './styles';
 import { useAmityComponent, useCommunities } from '../../../../hooks';
 import { PageID, ComponentID } from '../../../../enums';
@@ -9,7 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import CommunitySearchResult from '../../../../components/CommunitySearchResult/CommunitySearchResult';
 import { emptyCommunity, plus } from '../../../../../core/assets/icons';
-import { Typography } from '../../../../components/Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { SvgXml } from 'react-native-svg';
 import { Button } from '../../../../components/Button/Button';
 import Divider from '../../../../components/Divider';
@@ -62,7 +62,6 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
         <Button
           type="primary"
           icon={plus()}
-          themeStyle={themeStyles}
           style={styles.createCommunityButton}
           onPress={onPressCreateCommunity}
         >
@@ -82,7 +81,7 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
     >
-      <Divider themeStyles={themeStyles} />
+      <Divider />
       {!loading && communities?.length === 0 ? (
         renderEmptyState()
       ) : (

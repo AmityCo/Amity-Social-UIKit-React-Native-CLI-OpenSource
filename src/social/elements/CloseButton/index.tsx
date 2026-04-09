@@ -1,4 +1,3 @@
-import React from 'react';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { close } from '../../../core/assets/icons';

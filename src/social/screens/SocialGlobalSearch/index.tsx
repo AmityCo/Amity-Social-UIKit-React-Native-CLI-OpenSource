@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
 import { useStyles } from './styles';
 import AmityTopSearchBarComponent from '../../features/search/components/TopSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';

@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useStyles } from './styles';
 import { ComponentID, ElementID, PageID, TabName } from '../../enums';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';

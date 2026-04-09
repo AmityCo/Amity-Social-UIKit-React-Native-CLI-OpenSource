@@ -1,4 +1,3 @@
-import React from 'react';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { SvgXml, XmlProps } from 'react-native-svg';
 import { arrowLeft } from '../../../core/assets/icons';
@@ -30,7 +29,7 @@ function BackButton({
   if (isExcluded) return null;
 
   return (
-    <TouchableOpacity {...props} testID={accessibilityId}>
+    <TouchableOpacity {...props} testID={accessibilityId} hitSlop={20}>
       <SvgXml
         width="24"
         height="24"

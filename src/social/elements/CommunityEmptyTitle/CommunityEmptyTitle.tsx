@@ -1,6 +1,6 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { StyleSheet } from 'react-native';
-import { Typography } from '../../components/Typography/Typography';
+import { Typography } from '../../../core/components/Typography/Typography';
 
 import { useAmityElement } from '../../hooks';
 import { PageID, ComponentID, ElementID } from '../../enums';
@@ -29,7 +29,7 @@ const CommunityEmptyTitle: FC<CommunityEmptyTitleProps> = ({
 
   return (
     <Typography.TitleBold style={styles.title} numberOfLines={1}>
-      {(config?.text as string) || 'No community yet'}
+      {config?.text || 'No community yet'}
     </Typography.TitleBold>
   );
 };

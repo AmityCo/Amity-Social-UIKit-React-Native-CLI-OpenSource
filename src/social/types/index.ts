@@ -54,3 +54,15 @@ export interface IAmityDraftStoryPage {
   onCreateStory?: () => void;
   onDiscardStory?: () => void;
 }
+
+export enum UserRelationshipTab {
+  following = 'following',
+  follower = 'follower',
+}
+
+export enum ShareableLinkModel {
+  posts = 'posts',
+  communities = 'communities',
+  users = 'users',
+  livestreams = 'livestreams',
+}

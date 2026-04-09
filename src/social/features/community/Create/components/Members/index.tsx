@@ -1,4 +1,3 @@
-import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
 import { ElementID, PageID } from '../../../../../enums';

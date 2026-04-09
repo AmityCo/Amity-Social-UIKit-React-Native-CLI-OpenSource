@@ -1,7 +1,6 @@
-import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
-import { Typography } from '../../Typography/Typography';
+import { Typography } from '../../../../core/components/Typography/Typography';
 
 const LiveStreamEndThumbnail = () => {
   const styles = useStyles();
