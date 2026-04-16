@@ -12,9 +12,16 @@ import AmityNewsFeedComponent from '../../features/feed/components/NewsFeed';
 import AmityExploreComponent from '../../features/feed/components/Explore';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import UserProfile from '../../features/user/Profile';
+import useAuth from '../../../core/hooks/useAuth';
+import Divider from '../../components/Divider';
+
+const PROFILE_TAB = 'Profile';
 
 const AmitySocialHomePage = () => {
   const theme = useTheme() as MyMD3Theme;
+  const { client } = useAuth();
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -50,8 +57,8 @@ const AmitySocialHomePage = () => {
 
   const onTabChange = useCallback(
     (tabName: string) => {
-      if (AmitySocialHomePageBehaviour.onChooseTab)
-        return AmitySocialHomePageBehaviour.onChooseTab(tabName);
+      if (AmitySocialHomePageBehaviour?.onChooseTab)
+        return AmitySocialHomePageBehaviour?.onChooseTab(tabName);
       visitedTabs.current.add(tabName);
       setActiveTab(tabName);
     },
@@ -76,10 +83,11 @@ const AmitySocialHomePage = () => {
     >
       <AmitySocialHomeTopNavigationComponent activeTab={activeTab} />
       <CustomSocialTab
-        tabNames={[newsFeedTab, exploreTab, myCommunitiesTab]}
-        onTabChange={onTabChange}
         activeTab={activeTab}
+        onTabChange={onTabChange}
+        tabNames={[newsFeedTab, exploreTab, myCommunitiesTab, PROFILE_TAB]}
       />
+      <Divider />
       <View style={tabStyle(newsFeedTab)}>
         <AmityNewsFeedComponent
           pageId={PageID.social_home_page}
@@ -97,6 +105,11 @@ const AmitySocialHomePage = () => {
             pageId={PageID.social_home_page}
             componentId={ComponentID.my_communities}
           />
+        </View>
+      )}
+      {visitedTabs.current.has(PROFILE_TAB) && (
+        <View style={tabStyle(PROFILE_TAB)}>
+          <UserProfile inline stickyTab={false} userId={client?.userId ?? ''} />
         </View>
       )}
     </SafeAreaView>

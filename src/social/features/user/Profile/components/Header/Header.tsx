@@ -15,12 +15,14 @@ import {
   PendingFollowRequestsBanner,
 } from '../../elements';
 import MenuAction from '../../../../../elements/MenuAction';
+import { Menu } from '../../elements';
 
 type HeaderProps = {
   user?: Amity.User;
+  inline?: boolean;
 };
 
-export function Header({ user }: HeaderProps) {
+export function Header({ user, inline }: HeaderProps) {
   const {
     styles,
     showBadge,
@@ -66,6 +68,9 @@ export function Header({ user }: HeaderProps) {
             </View>
           )}
         </View>
+        {inline && (
+          <Menu userId={user?.userId} displayName={user?.displayName} />
+        )}
       </View>
       {!!user?.description && (
         <View style={styles.descriptionContainer}>
