@@ -22,10 +22,15 @@ const config = {
       (m) => new RegExp(`^${escape(path.join(root, 'node_modules', m))}\\/.*$`)
     ),
 
-    extraNodeModules: modules.reduce((acc, name) => {
-      acc[name] = path.join(__dirname, 'node_modules', name);
-      return acc;
-    }, {}),
+    extraNodeModules: modules.reduce(
+      (acc, name) => {
+        acc[name] = path.join(__dirname, 'node_modules', name);
+        return acc;
+      },
+      {
+        [pak.name]: root,
+      }
+    ),
   },
 
   transformer: {

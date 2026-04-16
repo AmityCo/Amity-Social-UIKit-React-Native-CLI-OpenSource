@@ -13,11 +13,12 @@
     "android:release": "cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
-    "@amityco/ts-sdk-react-native": "7.13.0",
+    "@amityco/ts-sdk-react-native": "^7.17.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
     "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",
     "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/datetimepicker": "^8.4.4",
     "@react-native-community/netinfo": "^11.3.1",
     "@react-native-firebase/app": "^20.1.0",
@@ -32,7 +33,9 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.28.0",
     "react-native-get-random-values": "^1.11.0",
+    "react-native-haptic-feedback": "^2.3.3",
     "react-native-image-picker": "^8.2.1",
+    "react-native-image-viewing": "^0.2.2",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-netinfo": "^1.1.0",
     "react-native-network-logger": "^2.0.1",

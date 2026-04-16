@@ -1,0 +1,636 @@
+import {
+  ActivityIndicator,
+  Alert,
+  Animated,
+  Image,
+  KeyboardAvoidingView,
+  Linking,
+  Platform,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import { FC, memo, useCallback, useRef, useState } from 'react';
+import { useConfigImageUri, useStory } from '../../../../hooks';
+import { useStyles } from '../styles';
+import Video, { OnLoadData } from 'react-native-video';
+import {
+  seenIcon,
+  storyCircleCreatePlusIcon,
+  storyCommentIcon,
+  storyHyperLinkIcon,
+  storyLikeIcon,
+  storyLikedIcon,
+  storyThreedotsMenu,
+} from '../../../../../core/assets/icons/xml';
+import { SvgXml } from 'react-native-svg';
+import Modal from 'react-native-modalbox';
+import { ComponentID, ElementID, PageID } from '../../../../enums';
+import useConfig from '../../../../hooks/useConfig';
+import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import CommentList from '../../../../components/Social/CommentList/CommentList';
+import { StoryRepository } from '@amityco/ts-sdk-react-native';
+import { NextOrPrevious } from '../../../../components/StoryKit';
+import { useTimeDifference } from '../../../../../core/hooks/useTimeDifference';
+import { STORY_DEFAULT_DURATION } from '../../../../../core/constants';
+import GestureRecognizer from 'react-native-swipe-gestures';
+import uiSlice from '../../../../../core/stores/slices/uiSlice';
+import { LoadingOverlay } from '../../../../components/legacy/LoadingOverlay';
+import Toast from '../../../../components/legacy/Toast/Toast';
+import { Typography } from '../../../../../core/components/Typography/Typography';
+import { useTheme } from 'react-native-paper';
+import { MyMD3Theme } from '../../../../../core/providers/AmityUIKitProvider';
+import { useUIKitDispatch } from '../../../../../core/stores/store';
+import { informative } from '../../../../../core/assets/icons/toast';
+import { close as closeIcon } from '../../../../../core/assets/icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+interface IAmityViewStoryItem {
+  communityData: Amity.Community;
+  communityAvatar: string;
+  storyData: IStoryData[];
+  hasStoryImpressionPermission: boolean;
+  close: (state: NextOrPrevious) => void;
+  onClose: () => void;
+  setCurrent: (arg: number) => void;
+  current: number;
+  hasStoryPermission: boolean;
+  onPressAvatar?: () => void;
+  onPressCommunityName?: () => void;
+}
+
+interface IStoryData extends Amity.Story {
+  finish: number;
+}
+
+const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
+  communityAvatar,
+  communityData,
+  storyData,
+  hasStoryImpressionPermission,
+  close,
+  onClose,
+  setCurrent,
+  current,
+  hasStoryPermission,
+  onPressAvatar,
+  onPressCommunityName,
+}) => {
+  const styles = useStyles();
+  const theme = useTheme<MyMD3Theme>();
+  const { getUiKitConfig } = useConfig();
+  const progress = useRef(new Animated.Value(0)).current;
+  const sheetRef = useRef<BottomSheetMethods>(null);
+  const { handleReaction } = useStory();
+  const currentStory = storyData[current];
+  const storyHyperLink = currentStory?.items[0]?.data || undefined;
+  const timeDifference = useTimeDifference(currentStory?.createdAt, true);
+  const reachCount = currentStory?.reach ?? 0;
+  const reactionsCounts = currentStory?.reactionsCount ?? 0;
+  const commentsCounts = currentStory?.commentsCount ?? 0;
+  const myReactions = currentStory?.myReactions;
+  const [pressed, setPressed] = useState(false);
+  const [muted, setMuted] = useState(false);
+  const [storyDuration, setStoryDuration] = useState(STORY_DEFAULT_DURATION);
+  const [currentSeek, setCurrentSeek] = useState(0);
+  const [totalReaction, setTotalReaction] = useState(reactionsCounts);
+  const [isLiked, setIsLiked] = useState<boolean>(myReactions?.length > 0);
+  const [openCommentSheet, setOpenCommentSheet] = useState(false);
+  const [load, setLoad] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useUIKitDispatch();
+  const { showToastMessage } = uiSlice.actions;
+
+  const storyViewerBgColor =
+    getUiKitConfig({
+      page: PageID.StoryPage,
+      component: ComponentID.WildCardComponent,
+      element: ElementID.StoryImpressionBtn,
+    })?.background_color ?? '#2b2b2b';
+
+  const storyCommentBgColor =
+    getUiKitConfig({
+      page: PageID.StoryPage,
+      component: ComponentID.WildCardComponent,
+      element: ElementID.StoryCommentBtn,
+    })?.background_color ?? '#2b2b2b';
+
+  const storyReactionBgColor =
+    getUiKitConfig({
+      element: ElementID.StoryRing,
+      component: ComponentID.WildCardComponent,
+      page: PageID.StoryPage,
+    })?.background_color ?? '#2b2b2b';
+
+  const storyPlusBgColor =
+    getUiKitConfig({
+      page: PageID.StoryPage,
+      component: ComponentID.WildCardComponent,
+      element: ElementID.StoryHyperLinkBtn,
+    })?.background_color ?? '#ffffff';
+
+  const muteIcon = useConfigImageUri({
+    configPath: {
+      page: PageID.StoryPage,
+      component: ComponentID.WildCardComponent,
+      element: ElementID.SpeakerBtn,
+    },
+    configKey: 'mute_icon',
+  });
+  const unmuteIcon = useConfigImageUri({
+    configPath: {
+      page: PageID.StoryPage,
+      component: ComponentID.WildCardComponent,
+      element: ElementID.SpeakerBtn,
+    },
+    configKey: 'unmute_icon',
+  });
+
+  const handleLoadVideo = (data: OnLoadData) => {
+    setStoryDuration(data.duration * 1000);
+  };
+
+  const next = useCallback(() => {
+    setCurrentSeek(0);
+    setLoad(true);
+    if (current !== storyData.length - 1) {
+      let data = [...storyData];
+      data[current].finish = 1;
+      setCurrent(current + 1);
+      progress.setValue(0);
+    } else {
+      close('next');
+    }
+  }, [close, current, progress, setCurrent, setLoad, storyData]);
+
+  const startAnimation = useCallback(() => {
+    Animated.timing(progress, {
+      toValue: 1,
+      duration: storyDuration - currentSeek * 1000,
+      useNativeDriver: false,
+    }).start(({ finished }) => {
+      if (finished) {
+        next();
+      }
+    });
+  }, [currentSeek, next, progress, storyDuration]);
+
+  const start = useCallback(() => {
+    setLoad(false);
+    startAnimation();
+  }, [setLoad, startAnimation]);
+
+  const previous = useCallback(() => {
+    setCurrentSeek(0);
+    setLoad(true);
+    if (current - 1 >= 0) {
+      let data = [...storyData];
+      data[current].finish = 0;
+      setCurrent(current - 1);
+      progress.setValue(0);
+    } else {
+      close('previous');
+    }
+  }, [close, current, progress, setCurrent, storyData]);
+
+  const onPressComment = useCallback(() => {
+    progress.stopAnimation(() => setPressed(true));
+    return setOpenCommentSheet(true);
+  }, [progress]);
+
+  const onPressReaction = useCallback(() => {
+    if (communityData?.isJoined) {
+      handleReaction({
+        targetId: currentStory?.storyId,
+        reactionName: 'like',
+        isLiked,
+      });
+      setTotalReaction((prev) => (isLiked ? prev - 1 : prev + 1));
+      setIsLiked((prev) => !prev);
+      return;
+    }
+    progress.stopAnimation(() => setPressed(true));
+    Alert.alert('Join community to interact with all stories', null, [
+      {
+        text: 'OK',
+        onPress: () => {
+          startAnimation();
+          setPressed(false);
+        },
+      },
+    ]);
+  }, [
+    communityData?.isJoined,
+    currentStory?.storyId,
+    handleReaction,
+    isLiked,
+    progress,
+    startAnimation,
+  ]);
+
+  const onCloseBottomSheet = useCallback(() => {
+    startAnimation();
+    setPressed(false);
+  }, [startAnimation]);
+
+  const onClosedCommentSheet = useCallback(() => {
+    setOpenCommentSheet(false);
+    startAnimation();
+    setPressed(false);
+  }, [startAnimation]);
+
+  const deleteStory = useCallback(async () => {
+    setLoading(true);
+    try {
+      current > 0 && previous();
+      const deleted = await StoryRepository.softDeleteStory(
+        currentStory?.storyId
+      );
+      if (deleted) {
+        current === 0 && previous();
+        dispatch(
+          showToastMessage({
+            toastMessage: 'Story deleted',
+            isSuccessToast: true,
+          })
+        );
+      }
+    } catch (err) {
+      dispatch(
+        showToastMessage({
+          toastMessage: 'Failed to delete story. Please try again.',
+          isSuccessToast: false,
+        })
+      );
+    } finally {
+      setLoading(false);
+      sheetRef?.current?.close();
+    }
+  }, [current, currentStory?.storyId, dispatch, previous, showToastMessage]);
+
+  const onPressDelete = useCallback(() => {
+    Alert.alert(
+      'Delete this story?',
+      "This story will be permanently deleted. You'll no longer to see and find this story",
+      [
+        { text: 'Cancel', onPress: () => sheetRef?.current?.close() },
+        { text: 'Delete', style: 'destructive', onPress: deleteStory },
+      ]
+    );
+  }, [deleteStory]);
+
+  const onPressHyperLink = useCallback(async () => {
+    currentStory?.analytics.markLinkAsClicked();
+    const hyperlinkUrl = storyHyperLink?.url?.includes('http')
+      ? storyHyperLink?.url
+      : `https://${storyHyperLink?.url}`;
+    await Linking.openURL('https://google.com');
+    const supported = await Linking.canOpenURL(hyperlinkUrl);
+    if (supported) {
+      await Linking.openURL(hyperlinkUrl);
+    } else {
+      Alert.alert(`Cannot open : ${hyperlinkUrl}`);
+    }
+  }, [currentStory?.analytics, storyHyperLink?.url]);
+
+  const onPressMenu = useCallback(() => {
+    progress.stopAnimation(() => setPressed(true));
+    sheetRef.current?.open();
+  }, [progress]);
+
+  const onPressMenuButtonFailed = useCallback(() => {
+    progress.stopAnimation(() => setPressed(true));
+    Alert.alert(
+      'Failed to upload story',
+      'Would you like to discard uploading?',
+      [
+        { text: 'Cancel', onPress: () => sheetRef?.current?.close() },
+        { text: 'Delete', style: 'destructive', onPress: deleteStory },
+      ]
+    );
+  }, [deleteStory, progress]);
+
+  const isFailedImageUpload =
+    currentStory?.dataType === 'image' &&
+    (currentStory?.syncState === 'error' ||
+      currentStory?.syncState === 'syncing' ||
+      !currentStory?.imageData?.fileUrl);
+
+  const isFailedVideoUpload =
+    currentStory?.dataType === 'video' &&
+    (currentStory?.syncState === 'error' ||
+      currentStory?.syncState === 'syncing' ||
+      !currentStory?.videoData?.fileUrl);
+
+  return (
+    <View style={[styles.container]}>
+      <SafeAreaView>
+        <View style={styles.backgroundContainer}>
+          {currentStory?.dataType === 'video' ? (
+            <Video
+              onLoadStart={() => setLoad(true)}
+              onProgress={({ currentTime }) => setCurrentSeek(currentTime)}
+              source={{
+                uri:
+                  currentStory?.videoData?.fileUrl ||
+                  (typeof currentStory?.data?.fileData === 'string'
+                    ? currentStory?.data?.fileData
+                    : ''),
+              }}
+              style={styles.video}
+              resizeMode="contain"
+              controls={false}
+              onReadyForDisplay={() => start()}
+              paused={pressed}
+              onLoad={handleLoadVideo}
+              muted={muted}
+            />
+          ) : currentStory?.dataType === 'image' ? (
+            <Image
+              onLoadStart={() => setLoad(true)}
+              onLoadEnd={() => start()}
+              source={{
+                uri:
+                  currentStory?.imageData?.fileUrl ||
+                  (typeof currentStory?.data?.fileData === 'string'
+                    ? currentStory?.data?.fileData
+                    : ''),
+              }}
+              style={[
+                styles.image,
+                // eslint-disable-next-line react-native/no-inline-styles
+                isFailedImageUpload && {
+                  opacity: 0.6,
+                },
+              ]}
+              resizeMode="contain"
+            />
+          ) : null}
+          {load && (
+            <View style={styles.spinnerContainer}>
+              <ActivityIndicator size="large" color={'white'} />
+            </View>
+          )}
+        </View>
+      </SafeAreaView>
+      <GestureRecognizer onSwipeUp={onPressComment} style={styles.flexCol}>
+        <View style={[styles.animationBarContainer]}>
+          {storyData.map((story, index) => {
+            return (
+              <View key={story.storyId} style={[styles.animationBackground]}>
+                <Animated.View
+                  style={[
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    {
+                      flex:
+                        current === index ? progress : storyData[index].finish,
+                      height: 2,
+                      backgroundColor: 'white',
+                    },
+                  ]}
+                />
+              </View>
+            );
+          })}
+        </View>
+        <View style={[styles.userContainer]}>
+          <View style={styles.flexRowCenter}>
+            <TouchableOpacity
+              onPress={() => {
+                onPressAvatar && onPressAvatar();
+              }}
+              hitSlop={10}
+            >
+              <Image
+                style={[styles.avatarImage]}
+                source={{ uri: communityAvatar }}
+              />
+              {hasStoryPermission && (
+                <SvgXml
+                  height={12}
+                  width={12}
+                  style={styles.storyCreateIcon}
+                  xml={storyCircleCreatePlusIcon(storyPlusBgColor)}
+                />
+              )}
+            </TouchableOpacity>
+
+            <View>
+              <Text
+                onPress={() => onPressCommunityName && onPressCommunityName()}
+                style={styles.avatarText}
+              >
+                {communityData?.displayName}
+              </Text>
+              <View style={styles.flexRowCenter}>
+                <Text
+                  style={[
+                    styles.avatarSubText, // eslint-disable-next-line react-native/no-inline-styles
+                    { marginLeft: 10 },
+                  ]}
+                >
+                  {timeDifference} .{' '}
+                </Text>
+                <Text style={styles.avatarSubText}>
+                  By {currentStory?.creator.displayName}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.closeIconContainer}>
+            <View style={styles.menuCloseContaier}>
+              {hasStoryPermission && (
+                <TouchableOpacity
+                  hitSlop={5}
+                  style={styles.threeDotsMenu}
+                  onPress={onPressMenu}
+                >
+                  <SvgXml xml={storyThreedotsMenu()} width="25" height="25" />
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity hitSlop={5} onPress={() => onClose()}>
+                <SvgXml
+                  xml={closeIcon()}
+                  width="28"
+                  height="28"
+                  color="white"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <View style={styles.pressContainer}>
+          <TouchableWithoutFeedback
+            onPressIn={() => progress.stopAnimation()}
+            onLongPress={() => setPressed(true)}
+            delayLongPress={300}
+            onPressOut={() => {
+              setPressed(false);
+              startAnimation();
+            }}
+            onPress={() => {
+              if (!pressed) {
+                previous();
+              }
+            }}
+          >
+            <View style={styles.flex} />
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPressIn={() => progress.stopAnimation()}
+            onLongPress={() => setPressed(true)}
+            delayLongPress={300}
+            onPressOut={() => {
+              setPressed(false);
+              startAnimation();
+            }}
+            onPress={() => {
+              if (!pressed) {
+                next();
+              }
+            }}
+          >
+            <View style={styles.flex} />
+          </TouchableWithoutFeedback>
+        </View>
+        {storyHyperLink && (
+          <TouchableOpacity
+            style={styles.hyperlinkContainer}
+            onPress={onPressHyperLink}
+          >
+            <SvgXml
+              xml={storyHyperLinkIcon(theme.colors.primary)}
+              width="20"
+              height="20"
+            />
+            <Typography.Body style={styles.hyperlinkText}>
+              {storyHyperLink.customText || storyHyperLink.url}
+            </Typography.Body>
+          </TouchableOpacity>
+        )}
+        {currentStory?.dataType === 'video' && (
+          <TouchableOpacity
+            style={styles.muteBtn}
+            onPress={() => setMuted((prev) => !prev)}
+          >
+            <Image
+              source={muted ? muteIcon : unmuteIcon}
+              style={styles.muteIcon}
+            />
+          </TouchableOpacity>
+        )}
+      </GestureRecognizer>
+      {(isFailedImageUpload || isFailedVideoUpload) && hasStoryPermission ? (
+        <View style={styles.errorContainer}>
+          <View style={styles.errorContainerLeft}>
+            <SvgXml xml={informative('white')} width="20" height="20" />
+            <Typography.Body style={styles.errorText}>
+              Failed to upload story
+            </Typography.Body>
+          </View>
+          {
+            <TouchableOpacity
+              hitSlop={5}
+              style={styles.threeDotsMenu}
+              onPress={onPressMenuButtonFailed}
+            >
+              <SvgXml xml={storyThreedotsMenu()} width="20" height="20" />
+            </TouchableOpacity>
+          }
+        </View>
+      ) : (
+        <View style={styles.footer}>
+          {hasStoryImpressionPermission ? (
+            <TouchableOpacity
+              style={[
+                styles.seenContainer,
+                { backgroundColor: storyViewerBgColor },
+              ]}
+            >
+              <SvgXml xml={seenIcon()} width="25" height="25" />
+              <Text style={styles.seen}>{reachCount}</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.seenContainer} />
+          )}
+          <View style={styles.seenContainer}>
+            <TouchableOpacity
+              style={[
+                styles.iconContainer,
+                { backgroundColor: storyCommentBgColor },
+              ]}
+              onPress={onPressComment}
+            >
+              <SvgXml xml={storyCommentIcon()} width="25" height="25" />
+              <Text style={styles.seen}>{commentsCounts}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.iconContainer,
+                {
+                  backgroundColor: storyReactionBgColor,
+                },
+              ]}
+              onPress={onPressReaction}
+            >
+              <SvgXml
+                xml={isLiked ? storyLikedIcon : storyLikeIcon}
+                width="25"
+                height="25"
+              />
+              <Text style={styles.seen}>{totalReaction}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
+      {openCommentSheet && (
+        <Modal
+          style={styles.bottomSheet}
+          isOpen={openCommentSheet}
+          onClosed={onClosedCommentSheet}
+          position="bottom"
+          swipeToClose
+          swipeArea={250}
+          backButtonClose
+          coverScreen={true}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.commentBottomSheet}
+          >
+            <View style={styles.handleBar} />
+            <Text style={styles.commentTitle}>Comments</Text>
+
+            <View style={styles.horizontalSperator} />
+            <CommentList
+              postId={currentStory?.storyId}
+              postType="story"
+              disabledComment={!communityData?.allowCommentInStory}
+              disabledInteraction={!communityData?.isJoined}
+              onNavigate={onClose}
+            />
+          </KeyboardAvoidingView>
+        </Modal>
+      )}
+      <BottomSheet
+        ref={sheetRef}
+        onClose={onCloseBottomSheet}
+        closeOnDragDown
+        height={120}
+        style={styles.deleteBottomSheet}
+      >
+        <View style={styles.deleteBottomSheet}>
+          <TouchableOpacity style={styles.deleteBtn} onPress={onPressDelete}>
+            <Text style={styles.deleteStoryTxt}>Delete story</Text>
+          </TouchableOpacity>
+        </View>
+      </BottomSheet>
+      <LoadingOverlay isLoading={loading} />
+      <Toast />
+    </View>
+  );
+};
+
+export default memo(AmityViewStoryItem);

@@ -619,6 +619,177 @@
     },
     "pending_request_page/join_request_content/join_decline_button": {
       "text": "Decline"
+    },
+    "user_profile_page/*/*": {},
+    "user_profile_page/*/back_button": {
+      "image": "value"
+    },
+    "user_profile_page/*/menu_button": {
+      "image": "value"
+    },
+    "user_profile_page/*/user_feed_tab_button": {
+      "text": "Posts"
+    },
+    "user_profile_page/*/user_image_feed_tab_button": {
+      "text": "Images"
+    },
+    "user_profile_page/*/user_video_feed_tab_button": {
+      "text": "Videos"
+    },
+
+    "user_profile_page/user_profile_header/follow_user_button": {
+      "text": "Follow",
+      "image": "value"
+    },
+    "user_profile_page/user_profile_header/following_user_button": {
+      "text": "Following",
+      "image": "value"
+    },
+    "user_profile_page/user_profile_header/pending_user_button": {
+      "text": "Cancel request",
+      "image": "value"
+    },
+    "user_profile_page/user_profile_header/unblock_user_button": {
+      "text": "Unblock",
+      "image": "value"
+    },
+    "user_profile_page/user_profile_header/user_avatar": {},
+    "user_profile_page/user_profile_header/user_name": {},
+    "user_profile_page/user_profile_header/user_description": {},
+    "user_profile_page/user_profile_header/user_following": {
+      "text": "value"
+    },
+    "user_profile_page/user_profile_header/user_follower": {
+      "text": "value"
+    },
+
+    "user_profile_page/user_feed/*": {},
+    "user_profile_page/user_feed/empty_user_feed": {
+      "text": "No posts yet"
+    },
+    "user_profile_page/user_feed/private_user_feed": {
+      "text": "This account is private"
+    },
+    "user_profile_page/user_feed/private_user_feed_info": {
+      "text": "Follow this user to see their posts."
+    },
+    "user_profile_page/user_feed/blocked_user_feed": {
+      "text": "You've blocked this user"
+    },
+    "user_profile_page/user_feed/blocked_user_feed_info": {
+      "text": "Unblock to see their posts."
+    },
+
+    "user_profile_page/user_image_feed/*": {},
+    "user_profile_page/user_image_feed/empty_user_image_feed": {
+      "text": "No images yet"
+    },
+    "user_profile_page/user_image_feed/private_user_image_feed": {
+      "text": "This account is private"
+    },
+    "user_profile_page/user_image_feed/private_user_image_feed_info": {
+      "text": "Follow this user to see their images."
+    },
+    "user_profile_page/user_image_feed/blocked_user_image_feed": {
+      "text": "You've blocked this user"
+    },
+    "user_profile_page/user_image_feed/blocked_user_image_feed_info": {
+      "text": "Unblock to see their images."
+    },
+
+    "user_profile_page/user_video_feed/*": {},
+    "user_profile_page/user_video_feed/empty_user_video_feed": {
+      "text": "No videos yet"
+    },
+    "user_profile_page/user_video_feed/private_user_video_feed": {
+      "text": "This account is private"
+    },
+    "user_profile_page/user_video_feed/private_user_video_feed_info": {
+      "text": "Follow this user to see their videos."
+    },
+    "user_profile_page/user_video_feed/blocked_user_video_feed": {
+      "text": "You've blocked this user"
+    },
+    "user_profile_page/user_video_feed/blocked_user_video_feed_info": {
+      "text": "Unblock to see their videos."
+    },
+
+    "user_relationship_page/*/*": {},
+    "user_relationship_page/*/back_button": {
+      "image": "value"
+    },
+
+    "user_pending_follow_request_page/*/*": {},
+    "user_pending_follow_request_page/*/back_button": {
+      "image": "value"
+    },
+
+    "edit_user_profile_page/*/*": {},
+    "edit_user_profile_page/*/back_button": {
+      "image": "value"
+    },
+    "edit_user_profile_page/*/title": {
+      "text": "Edit profile"
+    },
+    "edit_user_profile_page/*/user_display_name_title": {
+      "text": "Display name"
+    },
+    "edit_user_profile_page/*/user_about_title": {
+      "text": "About"
+    },
+    "edit_user_profile_page/*/update_user_profile_button": {
+      "text": "Save"
+    },
+
+    "blocked_users_page/*/*": {},
+    "blocked_users_page/*/back_button": {
+      "image": "value"
+    },
+    "blocked_users_page/*/title": {
+      "text": "Manage blocked users"
+    },
+    "blocked_users_page/*/unblock_user_button": {
+      "text": "Unblock"
+    },
+    "community_profile_page/*/share_link": {
+      "image": "icon",
+      "text": "Share to"
+    },
+    "community_profile_page/*/copy_link": {
+      "image": "icon",
+      "text": "Copy profile link"
+    },
+    "user_profile_page/*/copy_link": {
+      "image": "icon",
+      "text": "Copy profile link"
+    },
+    "user_profile_page/*/share_link": {
+      "image": "icon",
+      "text": "Share to"
+    },
+    "livestream_player_page/*/share_link": {
+      "image": "icon",
+      "text": "Share to"
+    },
+    "livestream_player_page/*/copy_link": {
+      "image": "icon",
+      "text": "Copy live stream link"
+    },
+    "create_livestream_page/*/share_link": {
+      "image": "icon",
+      "text": "Share to"
+    },
+    "create_livestream_page/*/copy_link": {
+      "image": "icon",
+      "text": "Copy live stream link"
+    },
+    "*/post_content/share_link": {
+      "image": "icon",
+      "text": "Share to"
+    },
+    "*/post_content/copy_link": {
+      "image": "icon",
+      "text": "Copy post link"
     }
   }
 }

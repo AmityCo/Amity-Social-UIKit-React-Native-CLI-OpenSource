@@ -2,66 +2,265 @@
 
 This guide helps client-side engineers understand how the UIKit is structured, where to extend it, and how it integrates with native layers. Pair it with the public README for installation steps.
 
+---
+
 ## Architecture
 
-- **Library target:** The entire repo `amity-react-native-social-ui-kit` is a React Native CLI project that exports UIKit library prebuilt with social features.
-- **Sample app:** `/example` folder is a sample with **Entry point** which demonstrates integration, Firebase push notifications, and UIKit configuration overrides.
-- **State & data:** Combines `Redux Toolkit` stores (under `src/redux`) with `React Query` for server caching and the Amity TS SDK for network operations.
+- **Library target:** The entire repo (`@amityco/react-native-social-uikit`) is a React Native CLI project that exports a prebuilt UIKit library with social features. The compiled output is in `/lib`.
+- **Sample app:** The `/example` folder is a runnable sample app demonstrating integration, Firebase push notifications, and UIKit configuration overrides.
+- **Two-module split:** Source code is divided into two top-level modules — `src/core` (infrastructure) and `src/social` (feature implementation). They are re-exported together via `src/index.tsx`.
+- **State & data:** Combines `Redux Toolkit` (isolated to a custom context in `src/core/stores`) with `@tanstack/react-query` for server-side caching and the Amity TS SDK for network operations.
 
-## Project Layout & Responsibilities
+---
 
-Even though the UIKit project is still supporting v3 and v4, you can focus folders under `/v4` only. The folder structure is nearly the same with the recommended docs.
+## Top-Level Directory Structure
 
-| Path                   | Purpose                                                                                                      |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `src/index.tsx`        | Top-level export surface; ensures backward compatibility (BackHandler polyfill) and re-exports public atoms. |
-| `src/v4/`              | Core UIKit implementation for version 4 (navigators, screens, feature modules, public APIs).                 |
-| `src/v4/assets/`       | Packaged icons, illustrations, and static imagery consumed across the experience.                            |
-| `src/v4/component/`    | Cross-feature React components reused throughout the UIKit.                                                  |
-| `src/v4/configAssets/` | Theme and localization asset maps consumed by the config system.                                             |
-| `src/v4/constants/`    | Shared constant values (colors, feature flags, copy keys).                                                   |
-| `src/v4/core/`         | Core business logic and base orchestration classes.                                                          |
-| `src/v4/elements/`     | Low-level UI primitives that power higher-level components.                                                  |
-| `src/v4/engine/`       | Rendering utilities and supporting engines (e.g., stories).                                                  |
-| `src/v4/enum/`         | Shared enumerations available to every feature module.                                                       |
-| `src/v4/features/`     | Feature domains (feeds, stories, community, etc.) grouped by responsibility.                                 |
-| `src/v4/hook/`         | Reusable hooks bridging the Amity SDK, storage, and UI concerns.                                             |
-| `src/v4/providers/`    | Context providers (auth, config, media, user) applied globally.                                              |
-| `src/v4/PublicApi/`    | Public pages and components safe to consume as standalone modules.                                           |
-| `src/v4/routes/`       | Navigation stacks, independent navigators, and route helpers.                                                |
-| `src/v4/screen/`       | Screen implementations wired into routes and exported for reuse.                                             |
-| `src/v4/stores/`       | Redux Toolkit store configuration, slices, and selectors.                                                    |
-| `src/v4/types/`        | Shared TypeScript type definitions and interfaces.                                                           |
-| `src/v4/utils/`        | Pure utility helpers (formatters, mappers, validators).                                                      |
+```text
+/
+├── android/              # Android native bridge modules
+├── assets/               # Root-level static assets
+├── example/              # Runnable sample / integration app
+├── ios/                  # iOS native bridge modules
+├── lib/                  # Compiled output (commonjs, esm, typescript declarations)
+├── scripts/              # Build and release utility scripts
+├── src/                  # All TypeScript source code
+│   ├── core/             # Infrastructure: providers, routes, stores, hooks, utils
+│   ├── social/           # Feature implementation: screens, features, components, elements
+│   └── index.tsx         # Single public entry point — re-exports everything
+├── uikit.config.json     # Default theme, colors, and per-component customization
+├── package.json
+├── tsconfig.json
+└── babel.config.js
+```
+
+---
+
+## Source Code Layout (`src/`)
+
+### `src/index.tsx` — Public Entry Point
+
+The single surface exposed to consumers. It:
+
+1. Imports everything from `./core` and `./social`.
+2. Applies a `BackHandler.removeEventListener` polyfill for React Native 0.65+ compatibility.
+3. Re-exports every public API (providers, pages, components, enums, types).
+
+> **Rule:** Never import from `src/core` or `src/social` directly in consumer code. Always go through the package root.
+
+---
+
+### `src/core/` — Infrastructure Module
+
+Owns the foundational pieces that every feature depends on. It has no knowledge of specific feature domains.
+
+| Path                   | Purpose                                                                                                                      |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `src/core/index.tsx`   | Exports `AmityUiKitProvider`, `AmityUiKitSocial`, `AmityPageRenderer`, `ErrorBoundary`                                       |
+| `src/core/assets/`     | Shared icons (60+ SVG components), images (36 groups), and config asset maps (32 files)                                      |
+| `src/core/components/` | Foundational UI primitives: `Tabs`, `Radio`, `CheckBox`, `ErrorBoundary`                                                     |
+| `src/core/enums/`      | Enum definitions used across both modules                                                                                    |
+| `src/core/engines/`    | `AdEngine`, `AdSupplier`, `AdAssetCache`, `AssetDownloader`, `TimeWindowTracker`                                             |
+| `src/core/hooks/`      | 10 cross-feature hooks: auth, config, file, gallery, image picker, reaction, search, social settings, story, time difference |
+| `src/core/legacy/`     | Backward-compatible shims: `user`, `community`, `feed`, `file`, `comment`                                                    |
+| `src/core/providers/`  | `AmityUIKitProvider` (root), `AuthProvider`, `ConfigProvider`                                                                |
+| `src/core/routes/`     | `AmityUIKitNavigator` (full nav stack), `AmityPageRenderer`, `RouteParamList` (all route types)                              |
+| `src/core/stores/`     | Redux store configuration and all slice definitions                                                                          |
+| `src/core/types/`      | Shared TS interfaces: `config`, `user`, `auth`, `behaviour`, `mention`                                                       |
+| `src/core/utils/`      | Pure helpers: `api`, `color`, `enumUIKitID`, `number`, `permission`, `post`, `postType`, `role`, `time`, `url`               |
+
+#### Providers (`src/core/providers/`)
+
+| File                     | Responsibility                                                                                                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AmityUIKitProvider.tsx` | Root provider. Initializes auth via `@amityco/ts-sdk-react-native`, applies theme (light/dark), merges `uikit.config.json` overrides, wraps the Redux store, and sets up React Query. |
+| `AuthProvider.tsx`       | Manages auth state and token refresh callbacks.                                                                                                                                       |
+| `ConfigProvider.tsx`     | Distributes parsed config down the tree.                                                                                                                                              |
+
+#### Redux Store (`src/core/stores/`)
+
+The store uses a **custom React context** (`AmityUIKitReduxContext`) to avoid collisions with host app Redux stores.
+
+```text
+src/core/stores/
+├── store/
+│   └── index.ts           # configureStore, AmityUIKitReduxContext, useUIKitStore/Dispatch/Selector hooks
+└── slices/
+    ├── globalfeedSlice.ts
+    ├── feedSlice.ts
+    ├── postDetailSlice.ts
+    ├── uiSlice.ts
+    ├── bottomSheetSlice.ts
+    └── toastSlice.ts
+```
+
+> **Important:** Always use `useUIKitStore`, `useUIKitDispatch`, and `useUIKitSelector` (exported from `src/core/stores/store`) instead of the standard `react-redux` hooks. This ensures isolation from the host app's store.
+
+#### Navigation (`src/core/routes/`)
+
+| File                      | Purpose                                                                                                                                                     |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AmityUIKitNavigator.tsx` | Native stack navigator mounting all 38+ screens. Used internally by `AmityUiKitSocial`.                                                                     |
+| `AmityPageRenderer.tsx`   | Wraps a standalone page/component with the necessary navigation context. Required when embedding a single page outside of the full `AmityUiKitSocial` flow. |
+| `RouteParamList.tsx`      | `RootStackParamList` — TypeScript type map of every route name to its params. Extend this when adding a new screen.                                         |
+
+---
+
+### `src/social/` — Feature Implementation Module
+
+Owns everything related to social feature UX. Organized in four tiers from the most atomic to the most composite.
+
+```text
+src/social/
+├── index.tsx         # All public feature exports
+├── elements/         # Tier 1 — atomic UI building blocks (68 directories)
+├── components/       # Tier 2 — reusable cross-feature components (53 directories)
+├── features/         # Tier 3 — domain-scoped feature modules (12 domains)
+├── screens/          # Tier 4 — full-page screens wired into navigation (38 screens)
+├── hooks/            # Social-specific custom hooks (48+ hooks)
+├── enums/            # Feature-level enumerations
+├── providers/        # Feature-level context providers
+├── types/            # Feature-specific TS types
+└── utils/            # Feature-specific pure utilities
+```
+
+#### Tier 1 — Elements (`src/social/elements/`)
+
+Fine-grained, single-purpose UI atoms. These should have no business logic.
+
+Examples: `ActionButton`, `BackButton`, `CameraButton`, `CommunityOfficialBadge`, `CommunityPrivateBadge`, `CommunityVerifyBadge`, `LikeButtonIconElement`, `ModeratorBadge`, `PinBadge`, `ShareButtonIconElement`, `TimestampElement`, `TitleElement`, `ImageGallery`, `VideoGallery`, `ImageViewer`, `VideoViewer`
+
+#### Tier 2 — Components (`src/social/components/`)
+
+Medium-level, reusable components that compose elements and may contain minor local state. They are usable across multiple feature domains.
+
+Examples: `Avatar`, `Button`, `Gallery`, `PopupMenu`, `PostContent`, `Toast`, `Typography`, `SearchInput`, `EmptyList`, `CircularProgressIndicator`, `PostFeedSkeleton`, `PollContent`, `LivestreamContent`
+
+> Legacy components live in `src/social/components/legacy/` (26 sub-directories) for backward compatibility. Prefer the non-legacy equivalents for new work.
+
+#### Tier 3 — Features (`src/social/features/`)
+
+Domain-scoped modules. Each feature folder owns its own sub-components, types, and hooks relevant only to that domain.
+
+| Feature       | Key Contents                                                                                                                                    |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `comment/`    | `components/PostComment`                                                                                                                        |
+| `community/`  | `AddCategory`, `AddMember`, `PendingRequest`, `Membership`, `PostPermission`, `StorySetting`, `Setup`, `Setting`, `NotificationSetting`         |
+| `feed/`       | `TopNavigation`, `EmptyNewsFeed`, `GlobalFeed`, `MyCommunities`, `NewsFeed`, `CreatePostMenu`, `Explore`                                        |
+| `livestream/` | `Create`, `Player`, `TargetSelection`, `Terminated`, `components/ThumbnailAction`                                                               |
+| `poll/`       | `Composer`, `TargetSelection`                                                                                                                   |
+| `post/`       | `Composer`, `Detail`, `TargetSelection`, `components/{Content, EngagementActions, EngagementContent, MediaAttachment, DetailedMediaAttachment}` |
+| `reaction/`   | `components/List`                                                                                                                               |
+| `room/`       | Chat room support                                                                                                                               |
+| `search/`     | `CommunitySearchResult`, `UserSearchResult`, `TopSearchBar`                                                                                     |
+| `story/`      | `Create`, `Draft`, `View`, `TargetSelection`, `components/Tab`                                                                                  |
+| `user/`       | `Profile`                                                                                                                                       |
+
+#### Tier 4 — Screens (`src/social/screens/`)
+
+Full-page views wired directly into `RootStackParamList`. Each screen is responsible for layout and integrating one or more feature-tier components.
+
+Key screens: `SocialHomePage`, `CommunityProfile`, `PostDetail`, `UserProfile`, `CreatePost`, `EditPost`, `CreateStory`, `SocialGlobalSearch`, `MyCommunitiesSearch`, `AllCategories`, `CommunitiesByCategory`, `CreateLivestream`, `LivestreamPlayer`, `PollPostComposer`, `EditCommunity`, `CreateCommunity`, `GlobalFeed`, `Feed`, `GlobalBan`, `FollowerList`, `EditProfile`
+
+> `CommunityProfile` has its own `components/` sub-folder (`Feed`, `Header`, `ImageFeed`, `VideoFeed`, `PinnedPost`, `PendingPostList`) because they are exclusive to that screen.
+
+#### Hooks (`src/social/hooks/`)
+
+```text
+src/social/hooks/
+├── collections/              # Paginated list hooks (8 hooks)
+│   ├── useCategoryCollection.ts
+│   ├── useCommunityMemberCollection.ts
+│   ├── useLiveCollection.ts
+│   ├── usePinnedPostCollection.ts
+│   ├── usePostCollection.ts
+│   ├── useSearchMemberByDisplayNameCollection.ts
+│   ├── useSearchUserByDisplayNameCollection.ts
+│   └── useUserCollection.ts
+├── useMention/               # Mention input with display formatting
+└── [40+ individual hooks]    # useCommunity, usePost, useStory, useUser, etc.
+```
+
+#### Feature Providers (`src/social/providers/`)
+
+| File                    | Purpose                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------- |
+| `AdEngineProvider.tsx`  | Serves and tracks ad impressions via the core `AdEngine`.                       |
+| `BehaviourProvider.tsx` | Provides runtime behavior overrides (e.g., custom navigation on community tap). |
+| `ExploreProvider.tsx`   | Manages explore tab state (trending, recommended communities).                  |
+
+#### Enums (`src/social/enums/`)
+
+| File                                           | Contents                                                                         |
+| ---------------------------------------------- | -------------------------------------------------------------------------------- |
+| `enumUIKitID.ts`                               | IDs for every customizable UIKit component — used in `uikit.config.json` lookups |
+| `enumTheme.ts`                                 | Theme variant identifiers                                                        |
+| `enumTabName.ts`                               | Tab bar item names                                                               |
+| `postTargetType.ts`                            | `PostTargetType` — community vs. user                                            |
+| `AmityPostContentComponentStyle.ts`            | `AmityPostCategory` — general vs. announcement                                   |
+| `storyType.ts`, `mediaAttachmentEnum.ts`, etc. | Other feature enums                                                              |
+
+---
 
 ## Entry Points & Integration Flow
 
-1. **Provider setup:** Consumers wrap their app (or subtree) with `AmityUiKitProvider`, supplying API credentials, optional config overrides, and callbacks.
-2. **Complete experience:** Render `<AmityUiKitSocial />` inside the provider to mount the full tabbed social experience.
-3. **Standalone usage:** For targeted experiences (e.g., community profile, post detail), import the specific component from the package and wrap it with `<AmityPageRenderer>` to ensure navigation context and shared services are available.
-4. **Config overrides:** Import `uikit.config.json` (or a custom variant) and pass as the `configs` prop on the provider to drive themes, typography, and feature flags.
-5. **SDK integration:** Providers internally initialize `@amityco/ts-sdk-react-native`, so consumers only supply credentials and handle auth token rotation as needed.
+### 1. Full social experience
 
-## Dependencies Overview
+```tsx
+import {
+  AmityUiKitProvider,
+  AmityUiKitSocial,
+} from '@amityco/react-native-social-uikit';
+import config from './uikit.config.json';
 
-### Runtime
+<AmityUiKitProvider
+  apiKey="..."
+  apiRegion="..."
+  userId="..."
+  displayName="..."
+  configs={config} // optional — pass to override theme/features
+>
+  <AmityUiKitSocial />
+</AmityUiKitProvider>;
+```
 
-Please refer to /package.json > dependencies & devDependencies
+### 2. Standalone page embedding
 
-## Peer
+```tsx
+import { AmityUiKitProvider, AmityPageRenderer, AmityCommunityProfilePage } from '@amityco/react-native-social-uikit';
 
-The peer dependencies must be provided by host app and should be the versions compatible with React Native version in the host app.
+<AmityUiKitProvider ...>
+  <AmityPageRenderer>
+    <AmityCommunityProfilePage communityId="..." />
+  </AmityPageRenderer>
+</AmityUiKitProvider>
+```
 
-Please refer to /package.json > peerDependencies
+`AmityPageRenderer` injects the navigation context required by all internal pages. It must wrap any standalone page used outside `AmityUiKitSocial`.
 
-- Core React Native stack: `react`, `react-native`, navigation (`@react-navigation/native`, `.../stack`, `.../native-stack`), gestures (`react-native-gesture-handler`, `react-native-screens`, `react-native-safe-area-context`).
-- Media & storage: `react-native-image-picker`, `react-native-video`, `react-native-video-controls`, `react-native-compressor`, `react-native-fs`, `react-native-vision-camera`, `react-native-svg`, `@react-native-community/datetimepicker`.
-- Networking & utilities: `@react-native-async-storage/async-storage`, `@react-native-community/netinfo`, `react-native-get-random-values`, `react-native-linear-gradient`.
-- Amity platform: `@amityco/ts-sdk-react-native` plus optional Firebase messaging modules for push notifications.
-- Tools: `@babel/plugin-transform-export-namespace-from`, `metro-react-native-babel-preset`
+### 3. Config overrides
+
+`uikit.config.json` at the project root is the canonical theme file. It controls:
+
+- **Colors:** Primary, secondary, base palettes with four shade levels each; alert and live-action colors; light and dark variants.
+- **Per-component overrides:** 100+ component paths, each accepting `icon`, `text`, `color`, `background`, `visibility`, and `expandable` keys.
+- **Feature flags:** Toggle entire features (stories, polls, livestreams, ads) at the config level.
+
+Pass a modified copy (or a fully custom object) as `configs` to `AmityUiKitProvider`.
+
+## Adding New Screens
+
+1. **Create the screen** in `src/social/screens/YourScreenName/index.tsx`.
+2. **Register the route** — add an entry to `RootStackParamList` in `src/core/routes/RouteParamList.tsx`.
+3. **Mount in the navigator** — add a `<Stack.Screen>` inside `AmityUIKitNavigator.tsx` (`src/core/routes/`).
+4. **Export publicly** — add the export to `src/social/index.tsx` then re-export from `src/index.tsx` if it should be available to consumers.
+
+---
 
 ## Assets Handling
 
-- Static assets reside in `v4/assets/icons`, and `v4/assets/images`.
+- Icons and images live in `src/core/assets/icons/` and `src/core/assets/images/`.
+- Config assets are deprecated
 
-**NOTE: icons are treated as javascript function to return svg string and rendered using `react-native-svg` library to customize colors and sizes**
+> **Icons are JavaScript functions** that return an SVG string and are rendered via `react-native-svg`. This allows runtime color and size customization without bundling raster images.
+
+---

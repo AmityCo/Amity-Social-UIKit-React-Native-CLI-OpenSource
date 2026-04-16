@@ -1,0 +1,29 @@
+import { View } from 'react-native';
+import { Title } from '../../../../../elements';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useStyles } from './styles';
+import BackButton from '../../../../../elements/BackButton';
+import { PageID } from '../../../../../enums';
+
+function Header() {
+  const { styles } = useStyles();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  return (
+    <View style={styles.container}>
+      <BackButton onPress={navigation.goBack} />
+      <Title
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={styles.title}
+        pageId={PageID.pending_request_page}
+      />
+      <View style={styles.dummy} />
+    </View>
+  );
+}
+
+export default Header;

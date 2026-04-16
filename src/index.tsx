@@ -1,37 +1,11 @@
-import { NativeModules, Platform, BackHandler } from 'react-native';
-
-// Polyfill for BackHandler compatibility with older libraries like react-native-modalbox
-// In React Native 0.65+, BackHandler.removeEventListener was removed
-// This polyfill maintains backward compatibility
-if (!(BackHandler as any).removeEventListener) {
-  const listeners = new Map();
-  const originalAddEventListener = BackHandler.addEventListener;
-
-  BackHandler.addEventListener = (eventName, handler) => {
-    const subscription = originalAddEventListener(eventName, handler);
-    listeners.set(handler, subscription);
-    return subscription;
-  };
-
-  (BackHandler as any).removeEventListener = (
-    _eventName: string,
-    handler: () => boolean
-  ) => {
-    const subscription = listeners.get(handler);
-    if (subscription) {
-      subscription.remove();
-      listeners.delete(handler);
-    }
-  };
-}
-
-import AmityUiKitProvider from './providers/amity-ui-kit-provider';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import AmityUiKitSocial from './v4/routes/AmitySocialUIKitV4Navigator';
-import AmityPageRenderer from './v4/routes/AmityPageRenderer';
-import PostDetail from './v4/screen/PostDetail';
-import CommunityHome from './v4/screen/CommunityHome';
-import UserProfile from './v4/screen/UserProfile';
+import { BackHandler } from 'react-native';
+import {
+  AmityPageRenderer,
+  AmityUiKitProvider,
+  AmityUiKitSocial,
+  ErrorBoundary,
+  navigate,
+} from './core';
 import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
@@ -75,7 +49,6 @@ import {
   AmityCommunityImageFeedComponent,
   AmityCommunityVideoFeedComponent,
   AmityThumbnailActionComponent,
-  AmityUserProfilePage,
   AmityPostEngagementContentComponent,
   AmityPostTargetType,
   AmityCommunitySetupPage,
@@ -93,35 +66,42 @@ import {
   AmityCommunityLivestreamsNotificationSettingPage,
   AmityCommunityPinnedPostComponent,
   AmityPendingPostListComponent,
-} from './v4';
-
-import {
-  AmityStoryTabComponentEnum,
+  AmityGlobalStoryTabWrapper,
   AmityPostComposerMode,
+  AmityStoryTabComponentEnum,
   mediaAttachment,
-} from './v4/PublicApi/types';
-import { AmityGlobalStoryTabWrapper } from './v4/component/MyStories';
+  PostDetail,
+  AmityUserProfilePage,
+  AmityEditUserProfilePage,
+  AmityUserRelationshipPage,
+  AmityBlockedUsersPage,
+} from './social';
 
-const LINKING_ERROR =
-  `The package 'amity-react-native-social-ui-kit' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
+// Polyfill for BackHandler compatibility with older libraries like react-native-modalbox
+// In React Native 0.65+, BackHandler.removeEventListener was removed
+// This polyfill maintains backward compatibility
+if (!(BackHandler as any).removeEventListener) {
+  const listeners = new Map();
+  const originalAddEventListener = BackHandler.addEventListener;
 
-const AmityReactNativeSocialUiKit = NativeModules.AmityReactNativeSocialUiKit
-  ? NativeModules.AmityReactNativeSocialUiKit
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+  BackHandler.addEventListener = (eventName, handler) => {
+    const subscription = originalAddEventListener(eventName, handler);
+    listeners.set(handler, subscription);
+    return subscription;
+  };
 
-export function multiply(a: number, b: number): Promise<number> {
-  return AmityReactNativeSocialUiKit.multiply(a, b + 2 + 3);
+  (BackHandler as any).removeEventListener = (
+    _eventName: string,
+    handler: () => boolean
+  ) => {
+    const subscription = listeners.get(handler);
+    if (subscription) {
+      subscription.remove();
+      listeners.delete(handler);
+    }
+  };
 }
+
 export {
   AmityUiKitProvider,
   ErrorBoundary,
@@ -159,8 +139,10 @@ export {
   AmityExploreComponent,
   AmityPageRenderer,
   PostDetail,
-  CommunityHome,
-  UserProfile,
+  AmityUserProfilePage,
+  AmityEditUserProfilePage,
+  AmityUserRelationshipPage,
+  AmityBlockedUsersPage,
   AmityAllCategoriesPage,
   AmityCommunitiesByCategoryPage,
   CommunityProfilePage,
@@ -175,7 +157,6 @@ export {
   AmityCommunityImageFeedComponent,
   AmityCommunityVideoFeedComponent,
   AmityThumbnailActionComponent,
-  AmityUserProfilePage,
   AmityPostEngagementContentComponent,
   AmityPostTargetType,
   AmityCommunitySetupPage,
@@ -194,4 +175,5 @@ export {
   AmityCommunityPinnedPostComponent,
   AmityPendingPostListComponent,
   AmityGlobalStoryTabWrapper,
+  navigate,
 };

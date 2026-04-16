@@ -1,3 +1,7 @@
-/src/components/react-native-image-viewing/
+/src/social/components/legacy/react-native-image-viewing/
+/src/social/components/legacy/StoryKit/src/components/AndroidCubeEffect.js
+/src/social/components/legacy/StoryKit/src/components/CubeNavigationHorizontal.js
+/src/social/components/StoryKit/src/components/AndroidCubeEffect.js
+/src/social/components/StoryKit/src/components/CubeNavigationHorizontal.js
 /lib/
 /example/
