@@ -37,5 +37,22 @@ target 'AmityReactNativeSocialUiKitExample' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # Fix fmt consteval error with Xcode 26+ (Apple Clang 21+)
+    # The fmt library's consteval usage is broken with newer Apple Clang.
+    # Patch base.h to also disable consteval for Apple Clang >= 21.
+    fmt_base_path = File.join(__dir__, 'Pods', 'fmt', 'include', 'fmt', 'base.h')
+    if File.exist?(fmt_base_path)
+      content = File.read(fmt_base_path)
+      unless content.include?('__apple_build_version__ >= 21000000')
+        patched = content.gsub(
+          '#elif defined(__apple_build_version__) && __apple_build_version__ < 14000029L',
+          '#elif defined(__apple_build_version__) && (__apple_build_version__ < 14000029L || __apple_build_version__ >= 21000000L)'
+        )
+        File.chmod(0644, fmt_base_path)
+        File.write(fmt_base_path, patched)
+        puts "[FMT Patch] Patched fmt/base.h to disable consteval for Xcode 26+ (Apple Clang 21+)"
+      end
+    end
   end
 end

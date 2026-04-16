@@ -5,16 +5,43 @@ import {
 } from '@amityco/react-native-social-uikit';
 import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
-import { useEffect, useState } from 'react';
-import { PermissionsAndroid, Platform } from 'react-native';
+import { useEffect, useState, useCallback } from 'react';
+import {
+  PermissionsAndroid,
+  Platform,
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Share,
+} from 'react-native';
+
 
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  console.log('Background notification:', remoteMessage);
+  console.log('🔔 Background notification:', JSON.stringify(remoteMessage, null, 2));
 });
 
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
+  console.log('fcmToken: ', fcmToken);
   const [permissionGranted, setPermissionGranted] = useState(false);
+  const [notiPayload, setNotiPayload] = useState<string | null>(null);
+  const [notiSource, setNotiSource] = useState('');
+
+  const showPayload = useCallback((source: string, message: any) => {
+    const json = JSON.stringify(message, null, 2);
+    console.log(`🔔 ${source}:`, json);
+    setNotiSource(source);
+    setNotiPayload(json);
+  }, []);
+
+  const handleCopy = useCallback(() => {
+    if (notiPayload) {
+      Share.share({ message: notiPayload }).catch(() => { });
+    }
+  }, [notiPayload]);
   useEffect(() => {
     let granted: boolean;
     messaging()
@@ -74,24 +101,18 @@ export default function App() {
         });
 
       messaging().onNotificationOpenedApp((remoteMessage) => {
-        console.log(
-          'Notification caused app to open from background state:',
-          remoteMessage.notification
-        );
+        showPayload('Clicked (from background)', remoteMessage);
       });
 
       messaging()
         .getInitialNotification()
         .then((remoteMessage) => {
           if (remoteMessage) {
-            console.log(
-              'Notification caused app to open from quit state:',
-              remoteMessage.notification
-            );
+            showPayload('Clicked (from quit state)', remoteMessage);
           }
         });
       unsubscribe = messaging().onMessage(async (remoteMessage) => {
-        console.log(remoteMessage);
+        showPayload('Foreground notification', remoteMessage);
       });
     }
 
@@ -102,14 +123,104 @@ export default function App() {
   return (
     <AmityUiKitProvider
       configs={config} //put your config json object
-      apiKey="YOUR_API_KEY" // Put your apiKey
-      apiRegion="API_REGION" // Put your apiRegion
-      userId="USER_ID" // Put your UserId
-      displayName="DISPLAYNAME" // Put your displayName
-      apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
-      fcmToken={fcmToken} // android:fcm iOS:APN
+      apiKey="b0ebe958398ff6361a31841d010117d9d60ddfe1eb3c3a28"
+      apiRegion="sg"
+      userId="topSocialPlus"
+      displayName="topSocialPlus"
+      apiEndpoint="https://api.eu.amity.co"
+      fcmToken={fcmToken}
     >
       <AmityUiKitSocial />
+
+      {/* Push Notification Payload Modal */}
+      <Modal
+        visible={notiPayload !== null}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setNotiPayload(null)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>🔔 {notiSource}</Text>
+            <ScrollView style={styles.jsonScroll}>
+              <Text style={styles.jsonText} selectable>
+                {notiPayload}
+              </Text>
+            </ScrollView>
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={[styles.button, styles.copyButton]}
+                onPress={handleCopy}
+              >
+                <Text style={styles.buttonText}>
+                  📋 Copy / Share
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.closeButton]}
+                onPress={() => setNotiPayload(null)}
+              >
+                <Text style={styles.buttonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </AmityUiKitProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  modalContainer: {
+    backgroundColor: '#1e1e1e',
+    borderRadius: 16,
+    padding: 20,
+    maxHeight: '80%',
+  },
+  modalTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 12,
+  },
+  jsonScroll: {
+    maxHeight: 400,
+    backgroundColor: '#2d2d2d',
+    borderRadius: 8,
+    padding: 12,
+  },
+  jsonText: {
+    color: '#a9dc76',
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    fontSize: 12,
+    lineHeight: 18,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    marginTop: 16,
+    gap: 10,
+  },
+  button: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  copyButton: {
+    backgroundColor: '#1a73e8',
+  },
+  closeButton: {
+    backgroundColor: '#555',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+});
