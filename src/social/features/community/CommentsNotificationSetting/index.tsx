@@ -1,1 +1,1 @@
-export { default } from './CommentsNotificationSetting';
+export { CommentsNotificationSetting } from './CommentsNotificationSetting';

@@ -1,1 +1,1 @@
-export { default } from './LivestreamsNotificationSetting';
+export { LivestreamsNotificationSetting } from './LivestreamsNotificationSetting';

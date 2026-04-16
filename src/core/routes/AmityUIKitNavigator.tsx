@@ -36,11 +36,11 @@ import CommunitySetting from '../../social/screens/CommunitySetting';
 import CommunityMembership from '../../social/screens/CommunityMembership';
 import CommunityPostPermission from '../../social/screens/CommunityPostPermission';
 import CommunityStorySetting from '../../social/screens/CommunityStorySetting';
-import CommunityNotificationSetting from '../../social/screens/CommunityNotificationSetting';
-import CommunityPostsNotificationSetting from '../../social/screens/CommunityPostsNotificationSetting';
-import CommunityCommentsNotificationSetting from '../../social/screens/CommunityCommentsNotificationSetting';
-import CommunityStoriesNotificationSetting from '../../social/screens/CommunityStoriesNotificationSetting';
-import CommunityLivestreamsNotificationSetting from '../../social/screens/CommunityLivestreamsNotificationSetting';
+import { CommunityNotificationSettingScreen } from '../../social/screens/CommunityNotificationSetting';
+import { CommunityPostsNotificationSettingScreen } from '../../social/screens/CommunityPostsNotificationSetting';
+import { CommunityCommentsNotificationSettingScreen } from '../../social/screens/CommunityCommentsNotificationSetting';
+import { CommunityStoriesNotificationSettingScreen } from '../../social/screens/CommunityStoriesNotificationSetting';
+import { CommunityLivestreamsNotificationSettingScreen } from '../../social/screens/CommunityLivestreamsNotificationSetting';
 import CommunityPendingRequest from '../../social/screens/CommunityPendingRequest';
 import { GlobalBan } from '../../social/screens/GlobalBan';
 import {
@@ -141,23 +141,23 @@ export default function AmitySocialUIKitV4Navigator() {
           />
           <Stack.Screen
             name="CommunityNotificationSetting"
-            component={CommunityNotificationSetting}
+            component={CommunityNotificationSettingScreen}
           />
           <Stack.Screen
             name="CommunityPostsNotificationSetting"
-            component={CommunityPostsNotificationSetting}
+            component={CommunityPostsNotificationSettingScreen}
           />
           <Stack.Screen
             name="CommunityCommentsNotificationSetting"
-            component={CommunityCommentsNotificationSetting}
+            component={CommunityCommentsNotificationSettingScreen}
           />
           <Stack.Screen
             name="CommunityStoriesNotificationSetting"
-            component={CommunityStoriesNotificationSetting}
+            component={CommunityStoriesNotificationSettingScreen}
           />
           <Stack.Screen
             name="CommunityLivestreamsNotificationSetting"
-            component={CommunityLivestreamsNotificationSetting}
+            component={CommunityLivestreamsNotificationSettingScreen}
           />
 
           {/* --- POST --- */}

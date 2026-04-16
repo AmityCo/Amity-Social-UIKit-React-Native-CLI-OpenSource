@@ -790,6 +790,11 @@
     "*/post_content/copy_link": {
       "image": "icon",
       "text": "Copy post link"
-    }
+    },
+    "community_notification_page/*/*": {},
+    "community_posts_notification_page/*/*": {},
+    "community_comments_notification_page/*/*": {},
+    "community_stories_notification_page/*/*": {},
+    "community_livestreams_notification_page/*/*": {}
   }
 }

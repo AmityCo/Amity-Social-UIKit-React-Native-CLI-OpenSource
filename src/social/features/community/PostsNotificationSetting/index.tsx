@@ -1,1 +1,1 @@
-export { default } from './PostsNotificationSetting';
+export { PostsNotificationSetting } from './PostsNotificationSetting';

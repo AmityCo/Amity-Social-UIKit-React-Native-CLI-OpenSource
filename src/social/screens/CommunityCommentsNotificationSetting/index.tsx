@@ -1,22 +1,13 @@
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import CommentsNotificationSetting from '../../features/community/CommentsNotificationSetting';
+import { CommentsNotificationSetting } from '../../features/community/CommentsNotificationSetting';
 
-type CommunityCommentsNotificationSettingProps = NativeStackScreenProps<
-  RootStackParamList,
-  'CommunityCommentsNotificationSetting'
->;
-
-function CommunityCommentsNotificationSetting(
-  _: CommunityCommentsNotificationSettingProps
-) {
+export function CommunityCommentsNotificationSettingScreen() {
   const route =
     useRoute<
       RouteProp<RootStackParamList, 'CommunityCommentsNotificationSetting'>
     >();
+  const { community } = route.params;
 
-  return <CommentsNotificationSetting community={route?.params?.community} />;
+  return <CommentsNotificationSetting community={community} />;
 }
-
-export default CommunityCommentsNotificationSetting;

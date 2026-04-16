@@ -1,22 +1,13 @@
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import StoriesNotificationSetting from '../../features/community/StoriesNotificationSetting';
+import { StoriesNotificationSetting } from '../../features/community/StoriesNotificationSetting';
 
-type CommunityStoriesNotificationSettingProps = NativeStackScreenProps<
-  RootStackParamList,
-  'CommunityStoriesNotificationSetting'
->;
-
-function CommunityStoriesNotificationSetting(
-  _: CommunityStoriesNotificationSettingProps
-) {
+export function CommunityStoriesNotificationSettingScreen() {
   const route =
     useRoute<
       RouteProp<RootStackParamList, 'CommunityStoriesNotificationSetting'>
     >();
+  const { community } = route.params;
 
-  return <StoriesNotificationSetting community={route?.params?.community} />;
+  return <StoriesNotificationSetting community={community} />;
 }
-
-export default CommunityStoriesNotificationSetting;

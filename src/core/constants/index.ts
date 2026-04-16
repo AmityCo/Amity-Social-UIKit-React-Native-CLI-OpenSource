@@ -184,7 +184,18 @@ export const TOAST = {
       FAILED: 'Oops, something went wrong.',
     },
   },
-};
+  COMMUNITY: {
+    NOTIFICATION: {
+      LOAD: {
+        FAILED: 'Failed to load notification settings.',
+      },
+      UPDATE: {
+        SUCCESS: 'Notification settings saved.',
+        FAILED: 'Failed to save notification settings. Please try again.',
+      },
+    },
+  },
+} as const;
 
 export const ALERT = {
   ACTION: {
@@ -223,4 +234,11 @@ export const ALERT = {
       ACTION: 'Close poll',
     },
   },
-};
+  NOTIFICATION: {
+    LEAVE_WITHOUT_FINISHING: {
+      TITLE: 'Leave without finishing?',
+      MESSAGE: 'Your changes that you made may not be saved.',
+      ACTION: 'Leave',
+    },
+  },
+} as const;

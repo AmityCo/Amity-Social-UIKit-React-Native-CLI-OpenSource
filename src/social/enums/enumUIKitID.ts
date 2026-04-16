@@ -27,6 +27,11 @@ export enum PageID {
   blocked_users_page = 'blocked_users_page',
   user_relationship_page = 'user_relationship_page',
   user_pending_follow_request_page = 'user_pending_follow_request_page',
+  community_notification_page = 'community_notification_page',
+  community_posts_notification_page = 'community_posts_notification_page',
+  community_comments_notification_page = 'community_comments_notification_page',
+  community_stories_notification_page = 'community_stories_notification_page',
+  community_livestreams_notification_page = 'community_livestreams_notification_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',

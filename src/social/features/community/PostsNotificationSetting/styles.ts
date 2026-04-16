@@ -13,8 +13,7 @@ export const useStyles = () => {
       backgroundColor: theme.colors.background,
     },
     scrollContainer: {
-      flex: 1,
-      paddingBottom: bottom + 16,
+      paddingBottom: bottom + 24,
     },
     labelContainer: {
       gap: 2,

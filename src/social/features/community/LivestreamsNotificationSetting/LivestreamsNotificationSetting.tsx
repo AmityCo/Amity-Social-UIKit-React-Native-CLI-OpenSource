@@ -1,140 +1,38 @@
-import * as z from 'zod';
-import { useMemo } from 'react';
-import { useStyles } from './styles';
-import Header from './components/Header';
 import { ScrollView, View } from 'react-native';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Controller } from 'react-hook-form';
 import { Typography } from '../../../../core/components/Typography/Typography';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { Radio } from '../../../../core/components/Radio';
-import { useMutation } from '@tanstack/react-query';
-import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { useToast } from '../../../../core/stores/slices/toastSlice';
+import Header from './components/Header';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
+import { useLivestreamsNotificationSetting } from './hooks/useLivestreamsNotificationSetting';
 
-type CommunityLivestreamsNotificationSettingProps = {
-  community: Amity.Community;
-};
-
-const schema = z.object({
-  newLivestream: z.enum(['Everyone', 'Only moderator', 'Off']),
-});
-
-type CommunityLivestreamsNotificationSettingFormValues = z.infer<typeof schema>;
-
-const useCommunityLivestreamsNotificationSetting = ({
+export function LivestreamsNotificationSetting({
   community,
-}: CommunityLivestreamsNotificationSettingProps) => {
-  const { styles, theme } = useStyles();
-  const { showToast } = useToast();
-  const navigation =
-    useNavigation<
-      NativeStackNavigationProp<
-        RootStackParamList,
-        'CommunityLivestreamsNotificationSetting'
-      >
-    >();
-
+}: RootStackParamList['CommunityLivestreamsNotificationSetting']) {
   const {
-    control,
-    handleSubmit,
-    formState: { isDirty, isValid, isSubmitting },
-  } = useForm<CommunityLivestreamsNotificationSettingFormValues>({
-    resolver: zodResolver(schema),
-    mode: 'onChange',
-    values: {
-      newLivestream: 'Everyone',
-    },
-  });
-
-  const { mutateAsync } = useMutation<
-    Amity.Cached<Amity.Community>,
-    Error,
-    CommunityLivestreamsNotificationSettingFormValues
-  >({
-    mutationFn: () =>
-      CommunityRepository.updateCommunity(community.communityId, {}),
-    onSuccess: () => {
-      navigation.navigate('CommunityProfilePage', {
-        communityId: community.communityId,
-      });
-      showToast({
-        type: 'success',
-        message: 'Successfully updated community profile.',
-      });
-    },
-    onError: () => {
-      showToast({
-        type: 'informative',
-        message: 'Failed to save your community profile. Please try again.',
-      });
-    },
-  });
-
-  const onSubmit = async (
-    data: CommunityLivestreamsNotificationSettingFormValues
-  ) => {
-    await mutateAsync(data);
-  };
-
-  const notifications = useMemo(
-    () =>
-      [
-        {
-          title: 'Live streams',
-          description:
-            'Receive notifications when someone starts a live stream in this community.',
-          radio: {
-            name: 'newLivestream',
-            items: [
-              { label: 'Everyone', value: 'Everyone' },
-              { label: 'Only moderator', value: 'Only moderator' },
-              { label: 'Off', value: 'Off' },
-            ],
-          },
-        },
-      ] as const,
-    []
-  );
-
-  return {
     styles,
-    theme,
     control,
-    notifications,
-    disabled: !isDirty || !isValid || isSubmitting,
-    handleSubmit,
-    onSubmit,
     isDirty,
-  };
-};
-
-const CommunityLivestreamsNotificationSetting = ({
-  community,
-}: CommunityLivestreamsNotificationSettingProps) => {
-  const {
-    styles,
-    control,
-    notifications,
     disabled,
-    isDirty,
     onSubmit,
     handleSubmit,
-  } = useCommunityLivestreamsNotificationSetting({
-    community,
-  });
+    notifications,
+    accessibilityId,
+  } = useLivestreamsNotificationSetting({ community });
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView
+      edges={['top']}
+      testID={accessibilityId}
+      style={styles.container}
+    >
       <Header
+        disabled={disabled}
         isFormDirty={isDirty}
         onSave={handleSubmit(onSubmit)}
-        disabled={disabled}
       />
-      <ScrollView style={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         {notifications.map((item, index, list) => (
           <View key={item.radio.name}>
             <Controller
@@ -172,6 +70,4 @@ const CommunityLivestreamsNotificationSetting = ({
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-export default CommunityLivestreamsNotificationSetting;
+}
