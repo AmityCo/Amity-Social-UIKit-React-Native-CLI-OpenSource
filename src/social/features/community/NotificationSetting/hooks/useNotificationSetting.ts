@@ -15,7 +15,7 @@ import { useCommunityNotificationSettingsQuery } from '../../../../hooks/queries
 import { useStyles } from '../styles';
 import { useAmityPage } from '../../../../hooks';
 import { PageID } from '../../../../enums';
-import { NotificationSettingProps } from '../NotificationSetting';
+import type { NotificationSettingProps } from '../NotificationSetting';
 
 const schema = z.object({
   isEnabled: z.boolean(),
@@ -49,17 +49,21 @@ export function useNotificationSetting({
     communityId: community.communityId,
   });
 
-  const { watch, control } = useForm<FormValues>({
+  const { watch, control, setValue } = useForm<FormValues>({
     resolver: zodResolver(schema),
     values: { isEnabled: settings?.isEnabled ?? false },
   });
 
   const isEnabled = watch('isEnabled');
 
-  const handleToggle = (value: boolean) => {
-    value
-      ? enableNotifications({ communityId: community.communityId })
-      : disableNotifications({ communityId: community.communityId });
+  const handleToggle = async (value: boolean) => {
+    try {
+      value
+        ? await enableNotifications({ communityId: community.communityId })
+        : await disableNotifications({ communityId: community.communityId });
+    } catch (e) {
+      setValue('isEnabled', !value);
+    }
   };
 
   const notificationActions = [
