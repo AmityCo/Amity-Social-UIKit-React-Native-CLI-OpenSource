@@ -20,6 +20,14 @@ target 'AmityReactNativeSocialUiKitExample' do
   pod 'DVAssetLoaderDelegate', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
+
+  # ✅ Required for push notification click detection on iOS.
+  # These enable Swift `import` in AppDelegate.swift for:
+  #   - `import FirebaseMessaging` (Firebase token management)
+  #   - `import RNCPushNotificationIOS` (bridges APNs events to React Native JS)
+  # Without modular_headers, Swift cannot resolve these modules.
+  pod 'FirebaseMessaging', :modular_headers => true
+  pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios', :modular_headers => true
   pod 'livekit-react-native', :path => '../node_modules/@livekit/react-native'
   $RNVideoUseVideoCaching = true
   $RNFirebaseAsStaticFramework = true

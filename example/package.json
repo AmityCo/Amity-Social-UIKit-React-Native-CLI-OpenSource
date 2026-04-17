@@ -21,6 +21,7 @@
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/datetimepicker": "^8.4.4",
     "@react-native-community/netinfo": "^11.3.1",
+    "@react-native-community/push-notification-ios": "^1.12.0",
     "@react-native-firebase/app": "^20.1.0",
     "@react-native-firebase/messaging": "^20.1.0",
     "@react-navigation/native": "^7.1.8",

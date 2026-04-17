@@ -5,6 +5,7 @@ import {
 } from '@amityco/react-native-social-uikit';
 import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { useEffect, useState, useCallback } from 'react';
 import {
   PermissionsAndroid,
@@ -17,7 +18,7 @@ import {
   StyleSheet,
   Share,
 } from 'react-native';
-
+import NetworkLogger from 'react-native-network-logger'
 
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
   console.log('🔔 Background notification:', JSON.stringify(remoteMessage, null, 2));
@@ -29,12 +30,14 @@ export default function App() {
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [notiPayload, setNotiPayload] = useState<string | null>(null);
   const [notiSource, setNotiSource] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
   const showPayload = useCallback((source: string, message: any) => {
     const json = JSON.stringify(message, null, 2);
     console.log(`🔔 ${source}:`, json);
     setNotiSource(source);
     setNotiPayload(json);
+    setModalVisible(true);
   }, []);
 
   const handleCopy = useCallback(() => {
@@ -83,7 +86,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    let unsubscribe: () => void;
+    let unsubscribeFirebase: () => void;
     if (permissionGranted) {
       messaging()
         .registerDeviceForRemoteMessages()
@@ -100,44 +103,85 @@ export default function App() {
           console.log(error);
         });
 
-      messaging().onNotificationOpenedApp((remoteMessage) => {
-        showPayload('Clicked (from background)', remoteMessage);
-      });
+      if (Platform.OS === 'ios') {
+        // ===== iOS: Use PushNotificationIOS for APNs click detection =====
 
-      messaging()
-        .getInitialNotification()
-        .then((remoteMessage) => {
-          if (remoteMessage) {
-            showPayload('Clicked (from quit state)', remoteMessage);
+        // User tapped notification (app in foreground or background)
+        PushNotificationIOS.addEventListener('notification', (notification) => {
+          // Show the raw notification object as-is
+          showPayload('iOS notification tapped', notification);
+          notification.finish(PushNotificationIOS.FetchResult.NoData);
+        });
+
+        // App launched by tapping notification (from killed state)
+        PushNotificationIOS.getInitialNotification().then((notification) => {
+          if (notification) {
+            // Show the raw notification object as-is
+            showPayload('iOS clicked (from quit state)', notification);
           }
         });
-      unsubscribe = messaging().onMessage(async (remoteMessage) => {
-        showPayload('Foreground notification', remoteMessage);
-      });
+
+      } else {
+        // ===== Android: Use Firebase Messaging for FCM click detection =====
+
+        messaging().onNotificationOpenedApp((remoteMessage) => {
+          showPayload('Android clicked (from background)', remoteMessage);
+          // TODO: Add your custom navigation logic here
+        });
+
+        messaging()
+          .getInitialNotification()
+          .then((remoteMessage) => {
+            if (remoteMessage) {
+              showPayload('Android clicked (from quit state)', remoteMessage);
+              // TODO: Add your custom navigation logic here
+            }
+          });
+
+        unsubscribeFirebase = messaging().onMessage(async (remoteMessage) => {
+          showPayload('Android foreground notification', remoteMessage);
+        });
+      }
     }
 
-    return () => unsubscribe?.();
-  }, [permissionGranted]);
+    return () => {
+      if (Platform.OS === 'ios') {
+        PushNotificationIOS.removeEventListener('notification');
+      }
+      unsubscribeFirebase?.();
+    };
+  }, [permissionGranted, showPayload]);
 
   if (!fcmToken) return null;
   return (
     <AmityUiKitProvider
       configs={config} //put your config json object
       apiKey="b0ebe958398ff6361a31841d010117d9d60ddfe1eb3c3a28"
-      apiRegion="sg"
+      apiRegion="eu"
       userId="topSocialPlus"
       displayName="topSocialPlus"
       apiEndpoint="https://api.eu.amity.co"
       fcmToken={fcmToken}
     >
       <AmityUiKitSocial />
+      {/* <NetworkLogger /> */}
+
+      {/* Floating button to reopen last notification payload */}
+      {notiPayload && !modalVisible && (
+        <TouchableOpacity
+          style={styles.floatingButton}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.floatingButtonText}>🔔</Text>
+        </TouchableOpacity>
+      )}
 
       {/* Push Notification Payload Modal */}
       <Modal
-        visible={notiPayload !== null}
+        visible={modalVisible}
         transparent
         animationType="slide"
-        onRequestClose={() => setNotiPayload(null)}
+        onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
@@ -158,7 +202,7 @@ export default function App() {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.closeButton]}
-                onPress={() => setNotiPayload(null)}
+                onPress={() => setModalVisible(false)}
               >
                 <Text style={styles.buttonText}>Close</Text>
               </TouchableOpacity>
@@ -222,5 +266,24 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 15,
     fontWeight: '600',
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 100,
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#1a73e8',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  floatingButtonText: {
+    fontSize: 24,
   },
 });
