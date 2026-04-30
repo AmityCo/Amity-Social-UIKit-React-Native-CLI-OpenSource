@@ -1,19 +1,46 @@
 name: Production release pipeline
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release_as:
+        type: choice
+        description: 'release as'
+        required: false
+        options:
+          - none
+          - major
+          - minor
+          - patch
+          - stable
+      pre-release:
+        type: choice
+        description: 'prerelease'
+        required: false
+        options:
+          - none
+          - RC
+          - alpha
+          - beta
+
+env:
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: git checkout
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
+
+      - name: configure committer
+        run: |
+          git config user.name "bmo-amity-bot"
+          git config user.email "developers@amity.co"
 
       - uses: actions/setup-node@v3
         with:
@@ -24,6 +51,41 @@ jobs:
 
       - name: install deps
         run: yarn install --immutable
+
+      - name: increase version (patch)
+        run: npx standard-version --yes --release-as patch
+        if: github.event.inputs.release_as == 'patch' && github.event.inputs.pre-release == 'none'
+
+      - name: increase version (patch) (pre-release)
+        run: npx standard-version --yes --release-as patch --prerelease ${{ github.event.inputs.pre-release }}
+        if: github.event.inputs.release_as == 'patch' && github.event.inputs.pre-release != 'none'
+
+      - name: increase version (minor)
+        run: npx standard-version --yes --release-as minor
+        if: github.event.inputs.release_as == 'minor' && github.event.inputs.pre-release == 'none'
+
+      - name: increase version (minor) (pre-release)
+        run: npx standard-version --yes --release-as minor --prerelease ${{ github.event.inputs.pre-release }}
+        if: github.event.inputs.release_as == 'minor' && github.event.inputs.pre-release != 'none'
+
+      - name: increase version (major)
+        run: npx standard-version --yes --release-as major
+        if: github.event.inputs.release_as == 'major' && github.event.inputs.pre-release == 'none'
+
+      - name: increase version (major) (pre-release)
+        run: npx standard-version --yes --release-as major --prerelease ${{ github.event.inputs.pre-release }}
+        if: github.event.inputs.release_as == 'major' && github.event.inputs.pre-release != 'none'
+
+      - name: increase version (pre-release)
+        run: npx standard-version --yes --prerelease ${{ github.event.inputs.pre-release }}
+        if: github.event.inputs.release_as == 'none' && github.event.inputs.pre-release != 'none'
+
+      - name: Release stable version
+        run: |
+          current_version=$(node -p "require('./package.json').version")
+          stable_version=$(echo $current_version | sed 's/-.*//')
+          npx standard-version --yes --release-as $stable_version
+        if: github.event.inputs.release_as == 'stable'
 
       - name: build library
         run: yarn prepack
@@ -40,3 +102,6 @@ jobs:
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: push version
+        run: git push --follow-tags
