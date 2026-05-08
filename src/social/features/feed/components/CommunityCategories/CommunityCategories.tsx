@@ -4,7 +4,7 @@ import { useStyles } from './styles';
 import { ComponentID, PageID } from '../../../../enums';
 
 type CommunityCategoriesProps = ViewProps & {
-  categories: Amity.Category[];
+  categories?: Amity.Category[];
   pageId?: PageID;
   componentId?: ComponentID;
   allVisible?: boolean;
@@ -13,7 +13,7 @@ type CommunityCategoriesProps = ViewProps & {
 const MAX_VISIBLE_CATEGORIES = 2;
 
 export function CommunityCategories({
-  categories,
+  categories = [],
   allVisible,
   ...props
 }: CommunityCategoriesProps) {
