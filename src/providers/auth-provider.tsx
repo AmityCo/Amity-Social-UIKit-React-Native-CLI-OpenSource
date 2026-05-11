@@ -5,13 +5,14 @@ import type { AuthContextInterface } from '../types/auth.interface';
 import { Alert, Platform } from 'react-native';
 import type { IAmityUIkitProvider } from './amity-ui-kit-provider';
 import { ERROR_CODE } from '../v4/constants';
+import { saveNotificationRegistration, unregisterPushNotification } from '../hooks/notificationRegistration';
 
 export const AuthContext = React.createContext<AuthContextInterface>({
   client: null,
   isConnecting: false,
   error: '',
-  login: () => {},
-  logout: () => {},
+  login: () => { },
+  logout: () => { },
   isConnected: false,
   sessionState: '',
   apiRegion: 'sg',
@@ -96,6 +97,13 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
       try {
         // await Client.registerPushNotification(fcmToken);
         // below is work around solution
+        const deviceId = generateUUID();
+        saveNotificationRegistration({
+          apiEndpoint: apiEndpoint,
+          apiKey: apiKey,
+          userId: userId,
+          deviceId: deviceId,
+        });
         fetch(`${apiEndpoint}/v1/notification`, {
           method: 'POST',
           headers: {
@@ -104,7 +112,7 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            deviceId: generateUUID(),
+            deviceId: deviceId,
             platform: Platform.OS,
             userId: userId,
             token: fcmToken,
@@ -138,8 +146,10 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
   // TODO
   const logout = async () => {
     try {
+      await unregisterPushNotification();
       Client.stopUnreadSync();
-      await Client.logout();
+      await Client.secureLogout();
+      console.log('Logout successful');
     } catch (e) {
       const errorText =
         (e as Error)?.message ?? 'Error while handling request!';

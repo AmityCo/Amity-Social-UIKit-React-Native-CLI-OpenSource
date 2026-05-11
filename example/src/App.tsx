@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   AmityUiKitProvider,
   AmityUiKitSocial,
+  useAmityLogout,
 } from '@amityco/react-native-social-uikit';
 import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
@@ -17,6 +18,9 @@ import {
   ScrollView,
   StyleSheet,
   Share,
+  TextInput,
+  SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import NetworkLogger from 'react-native-network-logger'
 
@@ -27,10 +31,18 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
   console.log('fcmToken: ', fcmToken);
+  const { logout, logoutWithApi } = useAmityLogout();
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [notiPayload, setNotiPayload] = useState<string | null>(null);
   const [notiSource, setNotiSource] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState<{ userId: string; displayName: string } | null>(null);
+  const [loginSessionKey, setLoginSessionKey] = useState(0);
+  const [showNetworkLogger, setShowNetworkLogger] = useState(false);
+
+  // Login form state
+  const [inputUserId, setInputUserId] = useState('topSocialPlus2');
+  const [inputDisplayName, setInputDisplayName] = useState('topSocialPlus2');
 
   const showPayload = useCallback((source: string, message: any) => {
     const json = JSON.stringify(message, null, 2);
@@ -153,18 +165,104 @@ export default function App() {
   }, [permissionGranted, showPayload]);
 
   if (!fcmToken) return null;
+
+  // ===== Login Screen =====
+  if (!loggedInUser) {
+    return (
+      <SafeAreaView style={loginStyles.container}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{ flex: 1, justifyContent: 'center' }}
+        >
+          <View style={loginStyles.card}>
+            <Text style={loginStyles.title}>🔐 Amity UIKit</Text>
+            <Text style={loginStyles.subtitle}>Enter credentials to continue</Text>
+
+            <Text style={loginStyles.label}>User ID</Text>
+            <TextInput
+              style={loginStyles.input}
+              value={inputUserId}
+              onChangeText={setInputUserId}
+              placeholder="Enter user ID"
+              placeholderTextColor="#999"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+            <Text style={loginStyles.label}>Display Name</Text>
+            <TextInput
+              style={loginStyles.input}
+              value={inputDisplayName}
+              onChangeText={setInputDisplayName}
+              placeholder="Enter display name"
+              placeholderTextColor="#999"
+              autoCorrect={false}
+            />
+
+            <TouchableOpacity
+              style={[loginStyles.loginButton, (!inputUserId || !inputDisplayName) && loginStyles.loginButtonDisabled]}
+              onPress={() => {
+                setLoggedInUser({ userId: inputUserId, displayName: inputDisplayName });
+                setLoginSessionKey((prev) => prev + 1);
+              }}
+              disabled={!inputUserId || !inputDisplayName}
+            >
+              <Text style={loginStyles.loginButtonText}>Login</Text>
+            </TouchableOpacity>
+
+            <Text style={loginStyles.tokenText}>
+              📱 {Platform.OS === 'ios' ? 'APNS' : 'FCM'} Token: {fcmToken?.substring(0, 20)}...
+            </Text>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
+
+  // ===== Main App =====
   return (
     <AmityUiKitProvider
+      key={`session-${loginSessionKey}`}
       configs={config} //put your config json object
       apiKey="b0ebe958398ff6361a31841d010117d9d60ddfe1eb3c3a28"
       apiRegion="eu"
-      userId="topSocialPlus"
-      displayName="topSocialPlus"
+      userId={loggedInUser.userId}
+      displayName={loggedInUser.displayName}
       apiEndpoint="https://api.eu.amity.co"
       fcmToken={fcmToken}
     >
       <AmityUiKitSocial />
-      {/* <NetworkLogger /> */}
+      {showNetworkLogger && <NetworkLogger />}
+
+      {/* Network Logger toggle button */}
+      <TouchableOpacity
+        style={styles.networkLoggerButton}
+        onPress={() => setShowNetworkLogger((v) => !v)}
+      >
+        <Text style={styles.logoutButtonText}>{showNetworkLogger ? '🌐 Hide Logger' : '🌐 Show Logger'}</Text>
+      </TouchableOpacity>
+
+      {/* Logout button (SDK) */}
+      <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={async () => {
+          await logout();
+          setLoggedInUser(null);
+        }}
+      >
+        <Text style={styles.logoutButtonText}>👤 {loggedInUser.userId} — Logout (SDK)</Text>
+      </TouchableOpacity>
+
+      {/* Logout button (API) */}
+      <TouchableOpacity
+        style={styles.logoutButtonApi}
+        onPress={async () => {
+          await logoutWithApi();
+          setLoggedInUser(null);
+        }}
+      >
+        <Text style={styles.logoutButtonText}>🔌 Logout (API)</Text>
+      </TouchableOpacity>
 
       {/* Floating button to reopen last notification payload */}
       {notiPayload && !modalVisible && (
@@ -197,7 +295,7 @@ export default function App() {
                 onPress={handleCopy}
               >
                 <Text style={styles.buttonText}>
-                  📋 Copy / Share
+                  📋 Copy to Clipboard
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -285,5 +383,109 @@ const styles = StyleSheet.create({
   },
   floatingButtonText: {
     fontSize: 24,
+  },
+  logoutButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : 20,
+    left: 20,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    zIndex: 999,
+  },
+  logoutButtonApi: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 95 : 55,
+    left: 20,
+    backgroundColor: 'rgba(180,60,60,0.85)',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    zIndex: 999,
+  },
+  networkLoggerButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 130 : 90,
+    left: 20,
+    backgroundColor: 'rgba(50,120,180,0.85)',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    zIndex: 999,
+  },
+  logoutButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+});
+
+const loginStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#888',
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#555',
+    marginBottom: 6,
+    marginTop: 12,
+  },
+  input: {
+    backgroundColor: '#f9f9f9',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    padding: 14,
+    fontSize: 16,
+    color: '#333',
+  },
+  loginButton: {
+    backgroundColor: '#1a73e8',
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 24,
+  },
+  loginButtonDisabled: {
+    backgroundColor: '#a0c4f1',
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  tokenText: {
+    fontSize: 10,
+    color: '#aaa',
+    textAlign: 'center',
+    marginTop: 16,
   },
 });
