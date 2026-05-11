@@ -21,6 +21,7 @@ const BottomSheetComponent = () => {
       closeOnBackdropPress
       style={styles.container}
       onClose={closeBottomSheet}
+      disableBodyPanning
     >
       {content}
     </BottomSheet>
