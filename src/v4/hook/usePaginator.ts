@@ -140,7 +140,13 @@ export const usePaginatorCore = <T>({
         .slice(0, topIndex)
         .map((item) => [item]);
 
-      const prevItems = [...newestItems, ...prevItemWithAds];
+      const prevItemWithAdsIds = new Set(
+        prevItemWithAds.map((item) => getItemId(item[0]))
+      );
+      const dedupedNewestItems = newestItems.filter(
+        (item) => !prevItemWithAdsIds.has(getItemId(item[0]))
+      );
+      const prevItems = [...dedupedNewestItems, ...prevItemWithAds];
 
       // filteredNewItems is the newest items in the next page that are not in prevItems
       const filteredNewItems = filterNewItems(newItems, topIndex, prevItems);
@@ -172,14 +178,24 @@ export const usePaginatorCore = <T>({
 
       const newItemsWithAds = [...prevItems, ...suffixItems];
 
-      updateItemWithAds(newItemsWithAds);
+      const seenPostIds = new Set<string>();
+      const dedupedItemsWithAds = newItemsWithAds.filter((tuple) => {
+        const id = getItemId(tuple[0]);
+        if (seenPostIds.has(id)) return false;
+        seenPostIds.add(id);
+        return true;
+      });
 
-      if (newItemsWithAds.length === 0) {
+      updateItemWithAds(dedupedItemsWithAds);
+
+      if (dedupedItemsWithAds.length === 0) {
         setCurrentAdIndex(0);
         setCurrentIndex(0);
       }
 
-      const result = newItemsWithAds.flatMap((item) => item).filter(Boolean);
+      const result = dedupedItemsWithAds
+        .flatMap((item) => item)
+        .filter(Boolean);
       return result;
     } else if (frequency?.type === 'time-window') {
       const newItemIds = new Set(newItems.map((item) => getItemId(item)));
@@ -190,7 +206,13 @@ export const usePaginatorCore = <T>({
         .slice(0, topIndex)
         .map((item) => [item]);
 
-      const prevItems = [...newestItems, ...prevItemWithAds];
+      const twPrevItemWithAdsIds = new Set(
+        prevItemWithAds.map((item) => getItemId(item[0]))
+      );
+      const twDedupedNewestItems = newestItems.filter(
+        (item) => !twPrevItemWithAdsIds.has(getItemId(item[0]))
+      );
+      const prevItems = [...twDedupedNewestItems, ...prevItemWithAds];
       const filteredNewItems = filterNewItems(newItems, topIndex, prevItems);
       const suffixItems: Array<ItemWithAd<T>> = filteredNewItems.map(
         (newItem, index) => {
@@ -211,11 +233,21 @@ export const usePaginatorCore = <T>({
 
       setHasAppenedFirstRoundAds(true);
 
-      const newItemsWithAds = [...prevItems, ...suffixItems];
+      const seenTwPostIds = new Set<string>();
+      const dedupedTwItemsWithAds = [...prevItems, ...suffixItems].filter(
+        (tuple) => {
+          const id = getItemId(tuple[0]);
+          if (seenTwPostIds.has(id)) return false;
+          seenTwPostIds.add(id);
+          return true;
+        }
+      );
 
-      updateItemWithAds(newItemsWithAds);
+      updateItemWithAds(dedupedTwItemsWithAds);
 
-      const result = newItemsWithAds.flatMap((item) => item).filter(Boolean);
+      const result = dedupedTwItemsWithAds
+        .flatMap((item) => item)
+        .filter(Boolean);
       return result;
     }
     return newItems;

@@ -21,23 +21,28 @@ const globalFeedSlice = createSlice({
   initialState,
   reducers: {
     setNewGlobalFeed: (state, action: PayloadAction<Amity.Post<any>[]>) => {
-      state.postList = [...action.payload];
+      const seen = new Set<string>();
+      state.postList = action.payload.filter((post) => {
+        if (seen.has(post.postId)) return false;
+        seen.add(post.postId);
+        return true;
+      });
     },
     updateGlobalFeed: (state, action: PayloadAction<Amity.Post<any>[]>) => {
-      const getUniqueArrayById = (arr: (Amity.Post<any> | Amity.Ad)[]) => {
-        const uniqueIds = new Set(
-          state.postList.map((post) =>
-            isAmityAd(post) ? post.adId : post.postId
-          )
-        );
-        return arr.filter(
-          (post) => !uniqueIds.has(isAmityAd(post) ? post.adId : post.postId)
-        );
-      };
-      state.postList = [
-        ...state.postList,
-        ...getUniqueArrayById(action.payload),
-      ];
+      const uniqueIds = new Set(
+        state.postList.map((post) =>
+          isAmityAd(post) ? post.adId : post.postId
+        )
+      );
+      const newUnique: (Amity.Post<any> | Amity.Ad)[] = [];
+      for (const post of action.payload) {
+        const id = isAmityAd(post) ? post.adId : post.postId;
+        if (!uniqueIds.has(id)) {
+          uniqueIds.add(id);
+          newUnique.push(post);
+        }
+      }
+      state.postList = [...state.postList, ...newUnique];
     },
     setPaginationData: (
       state,
@@ -46,7 +51,12 @@ const globalFeedSlice = createSlice({
       state.paginationData = action.payload;
     },
     addPostToGlobalFeed: (state, action: PayloadAction<Amity.Post<any>>) => {
-      state.postList = [action.payload, ...state.postList];
+      const alreadyExists = state.postList.some(
+        (item) => !isAmityAd(item) && item.postId === action.payload.postId
+      );
+      if (!alreadyExists) {
+        state.postList = [action.payload, ...state.postList];
+      }
     },
     updateByPostId: (
       state,
