@@ -14,7 +14,7 @@ type CommunityCategoriesProps = ViewProps & {
 const MAX_VISIBLE_CATEGORIES = 2;
 
 export function CommunityCategories({
-  categories,
+  categories = [],
   allVisible,
   ...props
 }: CommunityCategoriesProps) {
