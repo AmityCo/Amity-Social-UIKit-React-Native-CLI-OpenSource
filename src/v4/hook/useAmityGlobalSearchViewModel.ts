@@ -70,6 +70,7 @@ export const useAmityGlobalSearchViewModel = (
           displayName: searchValue,
           limit: 20,
           searchBy: [SearchUsersByEnum.DISPLAY_NAME],
+          matchType: UserRepository.AmityUserSearchMatchType.PARTIAL,
         },
         ({ error, loading, data, hasNextPage, onNextPage }) => {
           if (error) return setSearchResult(null);
