@@ -5,46 +5,46 @@ import { unregisterPushNotification } from './notificationRegistration';
 /**
  * Hook that provides two logout functions:
  *
- * 1. `logout` — Uses SDK's `Client.unregisterPushNotification()` then secureLogout.
+ * 1. `logout` — Uses custom DELETE /v1/notification API to unregister push, then secureLogout.
  * 2. `logoutWithApi` — Uses custom DELETE API to unregister push, then secureLogout.
  *
  * @example
  * const { logout, logoutWithApi } = useAmityLogout();
- * await logout();        // SDK-based unregister
+ * await logout();        // API-based unregister (safe no-op if not registered)
  * await logoutWithApi();  // API-based unregister
  */
 export const useAmityLogout = () => {
-    /**
-     * Logout using SDK's built-in Client.unregisterPushNotification()
-     */
-    const logout = useCallback(async () => {
-        try {
-            Client.stopUnreadSync();
-            Client.unregisterPushNotification();
-            const res = await Client.secureLogout();
-            console.log('res: ', res);
-            console.log('Amity logout (SDK unregister) successful');
-        } catch (e) {
-            console.log('Amity logout error:', e);
-        }
-    }, []);
+  /**
+   * Logout using custom DELETE /v1/notification API to unregister push,
+   * then stop sync and secureLogout. stopUnreadSync and secureLogout always run.
+   */
+  const logout = useCallback(async () => {
+    try {
+      await unregisterPushNotification();
+    } catch (e) {
+      console.warn(
+        '[AmityUIKit] Failed to unregister push notification on logout:',
+        e
+      );
+    }
+    Client.stopUnreadSync();
+    await Client.secureLogout();
+  }, []);
 
-    /**
-     * Logout using custom DELETE /v1/notification API to unregister push
-     */
-    const logoutWithApi = useCallback(async () => {
-        try {
-            await unregisterPushNotification();
-            Client.stopUnreadSync();
-            const res = await Client.secureLogout();
-            console.log('res: ', res);
-            console.log('Amity logout (API unregister) successful');
-        } catch (e) {
-            console.log('Amity logout error:', e);
-        }
-    }, []);
+  /**
+   * Logout using custom DELETE /v1/notification API to unregister push
+   */
+  const logoutWithApi = useCallback(async () => {
+    try {
+      await unregisterPushNotification();
+      Client.stopUnreadSync();
+      await Client.secureLogout();
+    } catch (e) {
+      console.warn('[AmityUIKit] Amity logout error:', e);
+    }
+  }, []);
 
-    return { logout, logoutWithApi };
+  return { logout, logoutWithApi };
 };
 
 export default useAmityLogout;
