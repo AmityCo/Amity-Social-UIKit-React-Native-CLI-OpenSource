@@ -6,6 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useStyles } from './styles';
 import BackButton from '../../../../../elements/BackButton';
 import Button from '../../../../../components/Button/Button';
+import { ALERT } from '../../../../../../core/constants';
 
 type HeaderProps = {
   onSave: () => void;
@@ -24,15 +25,15 @@ function Header({ onSave, disabled, isFormDirty }: HeaderProps) {
         onPress={() => {
           if (!isFormDirty) return navigation.goBack();
           Alert.alert(
-            'Leave without finishing?',
-            'Your changes that you made may not be saved.',
+            ALERT.NOTIFICATION.LEAVE_WITHOUT_FINISHING.TITLE,
+            ALERT.NOTIFICATION.LEAVE_WITHOUT_FINISHING.MESSAGE,
             [
               {
-                text: 'Cancel',
+                text: ALERT.ACTION.CANCEL,
                 style: 'cancel',
               },
               {
-                text: 'Leave',
+                text: ALERT.NOTIFICATION.LEAVE_WITHOUT_FINISHING.ACTION,
                 style: 'destructive',
                 onPress: navigation.goBack,
               },

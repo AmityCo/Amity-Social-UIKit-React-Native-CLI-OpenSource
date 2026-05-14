@@ -34,6 +34,7 @@ const CommunitySetting = ({ community }: CommunitySettingProps) => {
     handleCommunityPostPermission,
     handleCommunityStorySetting,
     handleCommunityNotificationSetting,
+    isNotificationEnabled,
   } = useCommunitySetting(community);
 
   return (
@@ -78,21 +79,17 @@ const CommunitySetting = ({ community }: CommunitySettingProps) => {
             <View style={styles.divider} />
           </>
         )}
-        {false && ( // Notification setting is not available in SDK yet
-          <>
-            <View style={styles.titleContainer}>
-              <Title>Your preferences</Title>
-            </View>
-            <Action
-              description="Off"
-              iconProps={{ xml: bell() }}
-              elementId={ElementID.notifications}
-              pageId={PageID.community_setting_page}
-              onPress={handleCommunityNotificationSetting}
-            />
-            <View style={styles.divider} />
-          </>
-        )}
+        <View style={styles.titleContainer}>
+          <Title>Your preferences</Title>
+        </View>
+        <Action
+          description={isNotificationEnabled ? 'On' : 'Off'}
+          iconProps={{ xml: bell() }}
+          elementId={ElementID.notifications}
+          pageId={PageID.community_setting_page}
+          onPress={handleCommunityNotificationSetting}
+        />
+        <View style={styles.divider} />
         {community?.isJoined && (
           <>
             <LeaveCommunity

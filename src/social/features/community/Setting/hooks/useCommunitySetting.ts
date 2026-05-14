@@ -9,6 +9,7 @@ import { ERROR_CODE } from '../../../../../core/constants';
 import { useStyles } from '../styles';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';
 import { useCustomRankingGlobalFeed } from '../../../../hooks/useCustomRankingGlobalFeed';
+import { useCommunityNotificationSettingsQuery } from '../../../../hooks/queries/useCommunityNotificationSettingsQuery';
 
 export function useCommunitySetting(community: Amity.Community) {
   const { styles } = useStyles();
@@ -20,6 +21,10 @@ export function useCommunitySetting(community: Amity.Community) {
   const { showToast } = useToast();
   const { refresh, globalFeedPosts } = useCustomRankingGlobalFeed({
     enabled: false,
+  });
+
+  const { data: notificationSettings } = useCommunityNotificationSettingsQuery({
+    communityId: community.communityId,
   });
 
   const { mutate: leaveCommunity } = useMutation({
@@ -149,5 +154,6 @@ export function useCommunitySetting(community: Amity.Community) {
     handleCommunityPostPermission,
     handleCommunityStorySetting,
     handleCommunityNotificationSetting,
+    isNotificationEnabled: notificationSettings?.isEnabled ?? false,
   };
 }

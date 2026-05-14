@@ -1,24 +1,13 @@
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import LivestreamsNotificationSetting from '../../features/community/LivestreamsNotificationSetting';
+import { LivestreamsNotificationSetting } from '../../features/community/LivestreamsNotificationSetting';
 
-type CommunityLivestreamsNotificationSettingProps = NativeStackScreenProps<
-  RootStackParamList,
-  'CommunityLivestreamsNotificationSetting'
->;
-
-function CommunityLivestreamsNotificationSetting(
-  _: CommunityLivestreamsNotificationSettingProps
-) {
+export function CommunityLivestreamsNotificationSettingScreen() {
   const route =
     useRoute<
       RouteProp<RootStackParamList, 'CommunityLivestreamsNotificationSetting'>
     >();
+  const { community } = route.params;
 
-  return (
-    <LivestreamsNotificationSetting community={route?.params?.community} />
-  );
+  return <LivestreamsNotificationSetting community={community} />;
 }
-
-export default CommunityLivestreamsNotificationSetting;

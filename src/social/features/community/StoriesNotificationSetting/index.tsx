@@ -1,1 +1,1 @@
-export { default } from './StoriesNotificationSetting';
+export { StoriesNotificationSetting } from './StoriesNotificationSetting';

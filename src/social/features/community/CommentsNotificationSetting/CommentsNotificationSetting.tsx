@@ -1,170 +1,38 @@
-import * as z from 'zod';
-import { useMemo } from 'react';
-import { useStyles } from './styles';
-import Header from './components/Header';
 import { ScrollView, View } from 'react-native';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Controller } from 'react-hook-form';
 import { Typography } from '../../../../core/components/Typography/Typography';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import { Radio } from '../../../../core/components/Radio';
-import { useMutation } from '@tanstack/react-query';
-import { CommunityRepository } from '@amityco/ts-sdk-react-native';
-import { useToast } from '../../../../core/stores/slices/toastSlice';
+import Header from './components/Header';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
+import { useCommentsNotificationSetting } from './hooks/useCommentsNotificationSetting';
 
-type CommunityCommentsNotificationSettingProps = {
-  community: Amity.Community;
-};
-
-const schema = z.object({
-  reactComments: z.enum(['Everyone', 'Only moderator', 'Off']),
-  newComments: z.enum(['Everyone', 'Only moderator', 'Off']),
-  replies: z.enum(['Everyone', 'Only moderator', 'Off']),
-});
-
-type CommunityCommentsNotificationSettingFormValues = z.infer<typeof schema>;
-
-const useCommunityCommentsNotificationSetting = ({
+export function CommentsNotificationSetting({
   community,
-}: CommunityCommentsNotificationSettingProps) => {
-  const { styles, theme } = useStyles();
-  const { showToast } = useToast();
-  const navigation =
-    useNavigation<
-      NativeStackNavigationProp<
-        RootStackParamList,
-        'CommunityCommentsNotificationSetting'
-      >
-    >();
-
+}: RootStackParamList['CommunityCommentsNotificationSetting']) {
   const {
-    control,
-    handleSubmit,
-    formState: { isDirty, isValid, isSubmitting },
-  } = useForm<CommunityCommentsNotificationSettingFormValues>({
-    resolver: zodResolver(schema),
-    mode: 'onChange',
-    values: {
-      reactComments: 'Everyone',
-      newComments: 'Everyone',
-      replies: 'Everyone',
-    },
-  });
-
-  const { mutateAsync } = useMutation<
-    Amity.Cached<Amity.Community>,
-    Error,
-    CommunityCommentsNotificationSettingFormValues
-  >({
-    mutationFn: () =>
-      CommunityRepository.updateCommunity(community.communityId, {}),
-    onSuccess: () => {
-      navigation.navigate('CommunityProfilePage', {
-        communityId: community.communityId,
-      });
-      showToast({
-        type: 'success',
-        message: 'Successfully updated community profile.',
-      });
-    },
-    onError: () => {
-      showToast({
-        type: 'informative',
-        message: 'Failed to save your community profile. Please try again.',
-      });
-    },
-  });
-
-  const onSubmit = async (
-    data: CommunityCommentsNotificationSettingFormValues
-  ) => {
-    await mutateAsync(data);
-  };
-
-  const notifications = useMemo(
-    () =>
-      [
-        {
-          title: 'React comments',
-          description:
-            'Receive notifications when someone like your comment in this community.',
-          radio: {
-            name: 'reactComments',
-            items: [
-              { label: 'Everyone', value: 'Everyone' },
-              { label: 'Only moderator', value: 'Only moderator' },
-              { label: 'Off', value: 'Off' },
-            ],
-          },
-        },
-        {
-          title: 'New comments',
-          description:
-            'Receive notifications when someone comment to your posts in this community.',
-          radio: {
-            name: 'newComments',
-            items: [
-              { label: 'Everyone', value: 'Everyone' },
-              { label: 'Only moderator', value: 'Only moderator' },
-              { label: 'Off', value: 'Off' },
-            ],
-          },
-        },
-        {
-          title: 'Replies',
-          description:
-            'Receive notifications when someone comment to your comments in this community.',
-          radio: {
-            name: 'replies',
-            items: [
-              { label: 'Everyone', value: 'Everyone' },
-              { label: 'Only moderator', value: 'Only moderator' },
-              { label: 'Off', value: 'Off' },
-            ],
-          },
-        },
-      ] as const,
-    []
-  );
-
-  return {
     styles,
-    theme,
     control,
-    notifications,
-    disabled: !isDirty || !isValid || isSubmitting,
-    handleSubmit,
-    onSubmit,
     isDirty,
-  };
-};
-
-const CommunityCommentsNotificationSetting = ({
-  community,
-}: CommunityCommentsNotificationSettingProps) => {
-  const {
-    styles,
-    control,
-    notifications,
     disabled,
     onSubmit,
     handleSubmit,
-    isDirty,
-  } = useCommunityCommentsNotificationSetting({
-    community,
-  });
+    notifications,
+    accessibilityId,
+  } = useCommentsNotificationSetting({ community });
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView
+      edges={['top']}
+      testID={accessibilityId}
+      style={styles.container}
+    >
       <Header
-        onSave={handleSubmit(onSubmit)}
         disabled={disabled}
         isFormDirty={isDirty}
+        onSave={handleSubmit(onSubmit)}
       />
-      <ScrollView style={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         {notifications.map((item, index, list) => (
           <View key={item.radio.name}>
             <Controller
@@ -202,6 +70,4 @@ const CommunityCommentsNotificationSetting = ({
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-export default CommunityCommentsNotificationSetting;
+}

@@ -46,11 +46,11 @@ export { default as AmityCommunitySettingPage } from './features/community/Setti
 export { default as AmityCommunityMembershipPage } from './features/community/Membership';
 export { default as AmityCommunityPostPermissionPage } from './features/community/PostPermission';
 export { default as AmityCommunityStorySettingPage } from './features/community/StorySetting';
-export { default as AmityCommunityNotificationSettingPage } from './features/community/NotificationSetting';
-export { default as AmityCommunityPostsNotificationSettingPage } from './features/community/PostsNotificationSetting';
-export { default as AmityCommunityCommentsNotificationSettingPage } from './features/community/CommentsNotificationSetting';
-export { default as AmityCommunityStoriesNotificationSettingPage } from './features/community/StoriesNotificationSetting';
-export { default as AmityCommunityLivestreamsNotificationSettingPage } from './features/community/LivestreamsNotificationSetting';
+export { NotificationSetting as AmityCommunityNotificationSettingPage } from './features/community/NotificationSetting';
+export { PostsNotificationSetting as AmityCommunityPostsNotificationSettingPage } from './features/community/PostsNotificationSetting';
+export { CommentsNotificationSetting as AmityCommunityCommentsNotificationSettingPage } from './features/community/CommentsNotificationSetting';
+export { StoriesNotificationSetting as AmityCommunityStoriesNotificationSettingPage } from './features/community/StoriesNotificationSetting';
+export { LivestreamsNotificationSetting as AmityCommunityLivestreamsNotificationSettingPage } from './features/community/LivestreamsNotificationSetting';
 
 // Components
 export { default as AmityStoryTabComponent } from './features/story/components/Tab/Tab';
