@@ -61,6 +61,7 @@ const AddMembersModal = ({
           displayName: text,
           limit: 20,
           searchBy: [SearchUsersByEnum.DISPLAY_NAME],
+          matchType: UserRepository.AmityUserSearchMatchType.PARTIAL,
         },
         ({ data, onNextPage }) => {
           userNextPageRef.current = onNextPage;
