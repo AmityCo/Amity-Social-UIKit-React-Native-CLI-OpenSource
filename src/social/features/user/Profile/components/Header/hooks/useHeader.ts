@@ -83,7 +83,7 @@ export function useHeader(user?: Amity.User) {
   } | null>(null);
 
   const { styles, theme } = useStyles({
-    badgePaddingRight: !user?.isBrand ? BADGE_SIZE + BADGE_GAP : 0,
+    badgePaddingRight: user?.isBrand ? BADGE_SIZE + BADGE_GAP : 0,
     badgeTop: badgePosition?.top ?? 0,
     badgeLeft: badgePosition?.left ?? 0,
   });
@@ -136,7 +136,7 @@ export function useHeader(user?: Amity.User) {
     badgePosition,
     badgeSize: BADGE_SIZE,
     navigateToRelationship,
-    showBadge: !user?.isBrand,
+    showBadge: user?.isBrand,
     followingCount: formatCount(followInfo?.followingCount ?? 0),
     followerCount: formatCount(followInfo?.followerCount ?? 0),
     isMyProfile,

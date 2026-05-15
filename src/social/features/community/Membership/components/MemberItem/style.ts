@@ -30,6 +30,12 @@ export const useStyles = () => {
     userName: {
       color: theme.colors.base,
     },
+    displayNameContainer: {
+      display: 'flex',
+      gap: 6,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
   });
 
   return {

@@ -20,6 +20,7 @@ import { ComponentID, ElementID, PageID } from '../../../../enums';
 import AvatarElement from '../../../../elements/CommonElements/AvatarElement';
 import { useAmityComponent, useIsCommunityModerator } from '../../../../hooks';
 import ModeratorBadgeElement from '../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
+import { BrandBadge } from '../../../../elements/BrandBadge';
 import AmityPostEngagementActionsComponent from '../EngagementActions';
 import {
   AmityPostCategory,
@@ -203,6 +204,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
                     {creator?.displayName}
                   </Typography.BodyBold>
                 </TouchableOpacity>
+                {creator?.isBrand && <BrandBadge width={20} height={20} />}
                 {communityData?.displayName && isCommunityNameShown && (
                   <View style={styles.communityNameContainer}>
                     <SvgXml
