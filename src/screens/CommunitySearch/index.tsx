@@ -88,6 +88,7 @@ export default function CommunitySearch() {
           displayName: text,
           limit: 20,
           searchBy: [SearchUsersByEnum.DISPLAY_NAME],
+          matchType: UserRepository.AmityUserSearchMatchType.PARTIAL,
         },
         (data) => {
           setUsersObject(data);

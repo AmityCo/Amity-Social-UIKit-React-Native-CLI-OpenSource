@@ -50,6 +50,7 @@ const useSearch = (
         displayName: text,
         limit: 5,
         searchBy: [SearchUsersByEnum.DISPLAY_NAME],
+        matchType: UserRepository.AmityUserSearchMatchType.PARTIAL,
       },
       ({ data, error, hasNextPage, onNextPage }) => {
         if (error) return null;
