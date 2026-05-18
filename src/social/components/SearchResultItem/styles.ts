@@ -10,13 +10,14 @@ export const useStyles = (theme: MyMD3Theme) => {
       marginVertical: 8,
     },
     avatar: {
-      width: 64,
-      height: 64,
-      borderRadius: 64,
+      width: 40,
+      height: 40,
+      borderRadius: 40,
     },
     profileInfoContainer: {
       marginLeft: 16,
       justifyContent: 'center',
+      flex: 1,
     },
     category: {
       marginVertical: 2,
@@ -37,8 +38,9 @@ export const useStyles = (theme: MyMD3Theme) => {
       marginVertical: 2,
     },
     rowContainer: {
-      justifyContent: 'center',
+      alignItems: 'center',
       flexDirection: 'row',
+      flex: 1,
     },
     diaplayName: {
       fontWeight: '600',

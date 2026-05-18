@@ -113,6 +113,8 @@ const SearchResultItem: FC<SearchResultItemType> = ({
             elementID={ElementID.community_display_name}
             text={item.displayName}
             style={styles.diaplayName}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           />
 
           {showOfficialBadgeIcon && (
