@@ -6,10 +6,12 @@ import { useImageFeed } from './hooks/useImageFeed';
 
 type ImageFeedProps = {
   userId: string;
+  isBrand?: boolean;
+  isUserLoading?: boolean;
 };
 
 export const ImageFeed = forwardRef<FeedRef, ImageFeedProps>(function ImageFeed(
-  { userId },
+  { userId, isBrand, isUserLoading },
   ref
 ) {
   const {
@@ -25,7 +27,7 @@ export const ImageFeed = forwardRef<FeedRef, ImageFeedProps>(function ImageFeed(
     privateInfoConfig,
     blockedConfig,
     blockedInfoConfig,
-  } = useImageFeed({ userId, ref });
+  } = useImageFeed({ userId, isBrand, isUserLoading, ref });
 
   if (isBlockedByMe) {
     return (

@@ -11,13 +11,24 @@ import { FeedRef } from '../../../types';
 
 type UseVideoFeedParams = {
   userId: string;
+  isBrand?: boolean;
+  isUserLoading?: boolean;
   ref: React.ForwardedRef<FeedRef>;
 };
 
-export function useVideoFeed({ userId, ref }: UseVideoFeedParams) {
+export function useVideoFeed({
+  userId,
+  isBrand,
+  isUserLoading,
+  ref,
+}: UseVideoFeedParams) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const { isBlockedByMe, isPrivate, feedEnabled } = useFeedState({ userId });
+  const { isBlockedByMe, isPrivate, feedEnabled } = useFeedState({
+    userId,
+    isBrand,
+    isUserLoading,
+  });
 
   const pageId = PageID.user_profile_page;
   const componentId = ComponentID.user_video_feed;

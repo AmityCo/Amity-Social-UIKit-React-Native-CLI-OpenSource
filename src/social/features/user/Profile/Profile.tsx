@@ -108,13 +108,28 @@ function UserProfile({
             />
           </Tabs.List>
           <Tabs.Content value={UserProfileTab.Feed}>
-            <Feed ref={feedRef} userId={userId} />
+            <Feed
+              ref={feedRef}
+              userId={userId}
+              isBrand={user?.isBrand}
+              isUserLoading={isUserLoading}
+            />
           </Tabs.Content>
           <Tabs.Content value={UserProfileTab.Image}>
-            <ImageFeed ref={feedRef} userId={userId} />
+            <ImageFeed
+              ref={feedRef}
+              userId={userId}
+              isBrand={user?.isBrand}
+              isUserLoading={isUserLoading}
+            />
           </Tabs.Content>
           <Tabs.Content value={UserProfileTab.Video}>
-            <VideoFeed ref={feedRef} userId={userId} />
+            <VideoFeed
+              ref={feedRef}
+              userId={userId}
+              isBrand={user?.isBrand}
+              isUserLoading={isUserLoading}
+            />
           </Tabs.Content>
         </ScrollView>
       </Tabs>

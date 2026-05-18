@@ -6,10 +6,12 @@ import { useVideoFeed } from './hooks/useVideoFeed';
 
 type VideoFeedProps = {
   userId: string;
+  isBrand?: boolean;
+  isUserLoading?: boolean;
 };
 
 export const VideoFeed = forwardRef<FeedRef, VideoFeedProps>(function VideoFeed(
-  { userId },
+  { userId, isBrand, isUserLoading },
   ref
 ) {
   const {
@@ -25,7 +27,7 @@ export const VideoFeed = forwardRef<FeedRef, VideoFeedProps>(function VideoFeed(
     privateInfoConfig,
     blockedConfig,
     blockedInfoConfig,
-  } = useVideoFeed({ userId, ref });
+  } = useVideoFeed({ userId, isBrand, isUserLoading, ref });
 
   if (isBlockedByMe) {
     return (
