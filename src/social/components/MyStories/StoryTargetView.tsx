@@ -82,6 +82,18 @@ const StoryTargetView: FC<IStorytargetView> = ({
     ]
   );
 
+  const handleNavigateToUser = useCallback(
+    (userId: string) => {
+      setViewStory(false);
+      navigation.navigate('UserProfile', { userId });
+      const unsubscribe = navigation.addListener('focus', () => {
+        unsubscribe();
+        setViewStory(true);
+      });
+    },
+    [navigation, setViewStory]
+  );
+
   if (Platform.OS === 'ios') {
     return (
       <CubeNavigationHorizontal
@@ -101,6 +113,7 @@ const StoryTargetView: FC<IStorytargetView> = ({
               onFinish={onFinish}
               onPressAvatar={onPressAvatar}
               onPressCommunityName={onPressCommunityName}
+              onNavigateToUser={handleNavigateToUser}
               index={i}
               currentPage={currentCommunityIndex}
             />
@@ -127,6 +140,7 @@ const StoryTargetView: FC<IStorytargetView> = ({
               onFinish={onFinish}
               onPressAvatar={onPressAvatar}
               onPressCommunityName={onPressCommunityName}
+              onNavigateToUser={handleNavigateToUser}
               index={i}
               currentPage={currentCommunityIndex}
             />

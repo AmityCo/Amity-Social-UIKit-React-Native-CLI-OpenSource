@@ -17,6 +17,7 @@ interface IAmityViewStoryPage {
   onFinish?: (state?: NextOrPrevious, targetId?: string) => void;
   onPressCommunityName?: () => void;
   onPressAvatar?: () => void;
+  onNavigateToUser?: (userId: string) => void;
 }
 
 interface IStoryData extends Amity.Story {
@@ -31,6 +32,7 @@ const AmityViewStoryPage: FC<IAmityViewStoryPage> = ({
   onPressAvatar,
   currentPage,
   index,
+  onNavigateToUser,
 }) => {
   const { client } = useAuth();
   const userId = (client as Amity.Client).userId;
@@ -140,6 +142,7 @@ const AmityViewStoryPage: FC<IAmityViewStoryPage> = ({
         hasStoryPermission={hasStoryPermission}
         onPressAvatar={onPressAvatar}
         onPressCommunityName={onPressCommunityName}
+        onNavigateToUser={onNavigateToUser}
       />
     );
   }

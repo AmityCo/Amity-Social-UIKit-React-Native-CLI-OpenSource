@@ -37,6 +37,9 @@ import {
 import EditCommentModal from '../../legacy/EditCommentModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import ReplyCommentList from '../../legacy/Social/ReplyCommentList';
 import AmityReactionListComponent from '../../../features/reaction/components/List';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
@@ -69,6 +72,7 @@ export interface ICommentList {
   postType: Amity.CommentReferenceType;
   disabledInteraction?: boolean;
   disabledComment?: boolean;
+  onNavigate?: (userId: string) => void;
 }
 
 const CommentListItem = ({
@@ -78,6 +82,7 @@ const CommentListItem = ({
   postType,
   disabledInteraction,
   disabledComment,
+  onNavigate,
 }: ICommentList) => {
   const theme = useTheme() as MyMD3Theme;
   const styles = useStyles();
@@ -122,6 +127,7 @@ const CommentListItem = ({
   const slideAnimation = useRef(new Animated.Value(0)).current;
   const [isReactionListVisible, setIsReactionListVisible] =
     useState<boolean>(false);
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -305,7 +311,17 @@ const CommentListItem = ({
         )}
         <View style={styles.rightSection}>
           <View style={styles.headerRow}>
-            <Text style={styles.headerText}>{user?.displayName}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                if (onNavigate) {
+                  onNavigate(user?.userId);
+                } else {
+                  navigation.navigate('UserProfile', { userId: user?.userId });
+                }
+              }}
+            >
+              <Text style={styles.headerText}>{user?.displayName}</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.commentBubble}>
@@ -381,6 +397,7 @@ const CommentListItem = ({
                 previewReplyCommentList[previewReplyCommentList.length - 1]
               }
               onDelete={onDelete}
+              onNavigate={onNavigate}
             />
           )}
           {isOpenReply && (
@@ -391,6 +408,7 @@ const CommentListItem = ({
                   commentId={item.commentId}
                   commentDetail={item}
                   onDelete={onDelete}
+                  onNavigate={onNavigate}
                 />
               )}
               keyExtractor={(item, index) => item.commentId + index}
@@ -499,6 +517,14 @@ const CommentListItem = ({
         onCloseModal={() => setIsReactionListVisible(false)}
         referenceId={commentId}
         referenceType="comment"
+        onPressUser={(userId) => {
+          setIsReactionListVisible(false);
+          if (onNavigate) {
+            onNavigate(userId);
+          } else {
+            navigation.navigate('UserProfile', { userId });
+          }
+        }}
       />
     </View>
   );
