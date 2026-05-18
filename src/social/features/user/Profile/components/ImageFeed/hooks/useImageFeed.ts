@@ -11,13 +11,24 @@ import { FeedRef } from '../../../types';
 
 type UseImageFeedParams = {
   userId: string;
+  isBrand?: boolean;
+  isUserLoading?: boolean;
   ref: React.ForwardedRef<FeedRef>;
 };
 
-export function useImageFeed({ userId, ref }: UseImageFeedParams) {
+export function useImageFeed({
+  userId,
+  isBrand,
+  isUserLoading,
+  ref,
+}: UseImageFeedParams) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const { isBlockedByMe, isPrivate, feedEnabled } = useFeedState({ userId });
+  const { isBlockedByMe, isPrivate, feedEnabled } = useFeedState({
+    userId,
+    isBrand,
+    isUserLoading,
+  });
 
   const pageId = PageID.user_profile_page;
   const componentId = ComponentID.user_image_feed;

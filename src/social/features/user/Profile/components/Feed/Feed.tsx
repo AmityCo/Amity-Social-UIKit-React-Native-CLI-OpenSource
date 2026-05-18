@@ -11,10 +11,12 @@ import { useFeed } from './hooks/useFeed';
 
 type UserFeedProps = {
   userId: string;
+  isBrand?: boolean;
+  isUserLoading?: boolean;
 };
 
 export const Feed = forwardRef<FeedRef, UserFeedProps>(function Feed(
-  { userId },
+  { userId, isBrand, isUserLoading },
   ref
 ) {
   const { styles } = useStyles();
@@ -31,7 +33,7 @@ export const Feed = forwardRef<FeedRef, UserFeedProps>(function Feed(
     privateInfoConfig,
     blockedConfig,
     blockedInfoConfig,
-  } = useFeed({ userId, ref });
+  } = useFeed({ userId, isBrand, isUserLoading, ref });
 
   if (isBlockedByMe) {
     return (

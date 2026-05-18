@@ -8,11 +8,22 @@ import { FeedRef } from '../../../types';
 
 type UseFeedParams = {
   userId: string;
+  isBrand?: boolean;
+  isUserLoading?: boolean;
   ref: React.ForwardedRef<FeedRef>;
 };
 
-export function useFeed({ userId, ref }: UseFeedParams) {
-  const { isBlockedByMe, isPrivate, feedEnabled } = useFeedState({ userId });
+export function useFeed({
+  userId,
+  isBrand,
+  isUserLoading,
+  ref,
+}: UseFeedParams) {
+  const { isBlockedByMe, isPrivate, feedEnabled } = useFeedState({
+    userId,
+    isBrand,
+    isUserLoading,
+  });
 
   const pageId = PageID.user_profile_page;
   const componentId = ComponentID.user_feed;
