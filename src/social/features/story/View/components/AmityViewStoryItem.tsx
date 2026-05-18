@@ -364,7 +364,11 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
                   opacity: 0.6,
                 },
               ]}
-              resizeMode="contain"
+              resizeMode={
+                currentStory?.data?.imageDisplayMode === 'fill'
+                  ? 'cover'
+                  : 'contain'
+              }
             />
           ) : null}
           {load && (
