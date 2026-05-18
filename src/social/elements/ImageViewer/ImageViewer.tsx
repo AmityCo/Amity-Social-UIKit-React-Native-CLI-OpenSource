@@ -121,9 +121,9 @@ const ImageViewer: FC<ImageViewerProps> = ({
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={handleScroll}
-          // contentContainerStyle={styles.scrollView}
           scrollEventThrottle={16}
           decelerationRate="fast"
+          contentOffset={{ x: width * currentImageIndex, y: 0 }}
         >
           {images.map((imageUrl, index) => (
             <View key={`image-${index}`} style={styles.imageContainer}>
