@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
 import Avatar from '../../../../../components/Avatar';
 import { useStyles } from './style';
 import { Typography } from '../../../../../../core/components/Typography/Typography';
@@ -53,6 +56,8 @@ function useMemberItem({
     userId: member.userId,
     enabled: open,
   });
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const addModeratorRoles = () => {
     addRoles(
@@ -143,6 +148,10 @@ function useMemberItem({
     [communityId]
   );
 
+  const goToUserProfile = () => {
+    navigation.navigate('UserProfile', { userId: member.userId });
+  };
+
   return {
     styles,
     isCurrentUser,
@@ -157,6 +166,7 @@ function useMemberItem({
     isModeratorUser,
     isCurrentUserModerator,
     isFlaggedByMeLoading,
+    goToUserProfile,
   };
 }
 
@@ -174,6 +184,7 @@ function MemberItem({ member, communityId, refreshMembers }: MemberItemProps) {
     removeMember,
     isModeratorUser,
     isCurrentUserModerator,
+    goToUserProfile,
   } = useMemberItem({
     member,
     communityId,
@@ -182,7 +193,7 @@ function MemberItem({ member, communityId, refreshMembers }: MemberItemProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.userContainer}>
+      <TouchableOpacity style={styles.userContainer} onPress={goToUserProfile}>
         <Avatar.User
           imageStyle={styles.userAvatar}
           uri={member.user?.avatarCustomUrl}
