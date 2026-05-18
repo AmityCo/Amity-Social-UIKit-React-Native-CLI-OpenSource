@@ -49,6 +49,10 @@ export const useStyles = (
       fontWeight: '400',
       lineHeight: 20,
     },
+    hiddenText: {
+      position: 'absolute',
+      opacity: 0,
+    },
     seeMore: {
       color: theme.colors.primary,
       fontSize: 15,
