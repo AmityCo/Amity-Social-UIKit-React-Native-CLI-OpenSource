@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import { useStory } from '../../hooks/useStory';
@@ -35,6 +35,7 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
   const { getImage } = useFile();
   const [avatarUrl, setAvatarUrl] = useState(undefined);
   const [viewStory, setViewStory] = useState(false);
+  const shouldRestoreStory = useRef(false);
   const storyRingColor: string[] =
     hasStoryPermission && storyTarget?.failedStoriesCount > 0
       ? ['#DE1029', '#DE1029']
@@ -61,6 +62,11 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
 
   useFocusEffect(
     useCallback(() => {
+      if (shouldRestoreStory.current) {
+        shouldRestoreStory.current = false;
+        setViewStory(true);
+        return;
+      }
       getStoryTarget({
         targetId: communityId,
         targetType: 'community',
@@ -173,6 +179,15 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
     return null;
   };
 
+  const handleNavigateToUser = useCallback(
+    (userId: string) => {
+      shouldRestoreStory.current = true;
+      setViewStory(false);
+      navigation.navigate('UserProfile', { userId });
+    },
+    [navigation]
+  );
+
   const onFinish = useCallback(() => {
     setViewStory(false);
     getStoryTarget({
@@ -204,6 +219,7 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
           onFinish={onFinish}
           onPressAvatar={onPressAvatar}
           onPressCommunityName={onPressCommunityName}
+          onNavigateToUser={handleNavigateToUser}
         />
       </Modal>
     </View>

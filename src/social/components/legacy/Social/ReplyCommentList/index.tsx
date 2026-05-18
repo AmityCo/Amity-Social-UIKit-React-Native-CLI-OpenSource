@@ -45,6 +45,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import { useTimeDifference } from '../../../../hooks';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';
+import AmityReactionListComponent from '../../../../features/reaction/components/List';
 
 export interface IComment {
   commentId: string;
@@ -66,12 +67,14 @@ export interface IReplyCommentList {
   commentId: string;
   commentDetail: IComment;
   onDelete?: (commentId: string) => void;
+  onNavigate?: (userId: string) => void;
 }
 
 export default function ReplyCommentList({
   commentDetail,
   onDelete,
   commentId,
+  onNavigate,
 }: IReplyCommentList) {
   const {
     // commentId,
@@ -105,6 +108,8 @@ export default function ReplyCommentList({
   const [commentMentionPosition, setCommentMentionPosition] = useState<
     IMentionPosition[]
   >([]);
+  const [isReactionListVisible, setIsReactionListVisible] =
+    useState<boolean>(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -206,10 +211,7 @@ export default function ReplyCommentList({
   };
 
   const onPressReplyReaction = () => {
-    navigation.navigate('ReactionList', {
-      referenceId: commentId,
-      referenceType: 'comment',
-    });
+    setIsReactionListVisible(true);
   };
 
   return (
@@ -229,7 +231,19 @@ export default function ReplyCommentList({
         )}
         <View style={styles.rightSection}>
           <View style={styles.headerRow}>
-            <Text style={styles.headerText}>{user?.displayName}</Text>
+            <TouchableOpacity
+              disabled={!user?.userId}
+              onPress={() => {
+                if (!user?.userId) return;
+                if (onNavigate) {
+                  onNavigate(user.userId);
+                } else {
+                  navigation.navigate('UserProfile', { userId: user.userId });
+                }
+              }}
+            >
+              <Text style={styles.headerText}>{user?.displayName}</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.commentBubble}>
@@ -367,6 +381,20 @@ export default function ReplyCommentList({
         commentDetail={commentDetail}
         onFinishEdit={onEditComment}
         onClose={onCloseEditCommentModal}
+      />
+      <AmityReactionListComponent
+        isModalVisible={isReactionListVisible}
+        onCloseModal={() => setIsReactionListVisible(false)}
+        referenceId={commentId}
+        referenceType="comment"
+        onPressUser={(userId) => {
+          setIsReactionListVisible(false);
+          if (onNavigate) {
+            onNavigate(userId);
+          } else {
+            navigation.navigate('UserProfile', { userId });
+          }
+        }}
       />
     </View>
   );

@@ -36,7 +36,7 @@ interface ICommentListProp {
   postId: string;
   postType: Amity.CommentReferenceType;
   disabledInteraction?: boolean;
-  onNavigate?: () => void;
+  onNavigate?: (userId: string) => void;
   withAvatar?: boolean;
   disabledComment?: boolean;
 }

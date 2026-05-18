@@ -58,6 +58,7 @@ interface IAmityViewStoryItem {
   hasStoryPermission: boolean;
   onPressAvatar?: () => void;
   onPressCommunityName?: () => void;
+  onNavigateToUser?: (userId: string) => void;
 }
 
 interface IStoryData extends Amity.Story {
@@ -76,6 +77,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
   hasStoryPermission,
   onPressAvatar,
   onPressCommunityName,
+  onNavigateToUser,
 }) => {
   const styles = useStyles();
   const theme = useTheme<MyMD3Theme>();
@@ -239,6 +241,14 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
     startAnimation();
     setPressed(false);
   }, [startAnimation]);
+
+  const onNavigateFromComment = useCallback(
+    (userId: string) => {
+      onClosedCommentSheet();
+      onNavigateToUser && onNavigateToUser(userId);
+    },
+    [onClosedCommentSheet, onNavigateToUser]
+  );
 
   const deleteStory = useCallback(async () => {
     setLoading(true);
@@ -613,7 +623,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
               postType="story"
               disabledComment={!communityData?.allowCommentInStory}
               disabledInteraction={!communityData?.isJoined}
-              onNavigate={onClose}
+              onNavigate={onNavigateFromComment}
             />
           </KeyboardAvoidingView>
         </Modal>

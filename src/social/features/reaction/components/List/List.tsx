@@ -31,6 +31,7 @@ type AmityReactionListComponentType = {
   referenceType: Amity.ReactableType;
   isModalVisible: boolean;
   onCloseModal: () => void;
+  onPressUser?: (userId: string) => void;
 };
 
 type ReactionListType = Amity.User & { reactionName: string };
@@ -40,6 +41,7 @@ const AmityReactionListComponent: FC<AmityReactionListComponentType> = ({
   referenceType,
   isModalVisible,
   onCloseModal,
+  onPressUser,
 }) => {
   const styles = useStyles();
   const theme = useTheme() as MyMD3Theme;
@@ -133,9 +135,13 @@ const AmityReactionListComponent: FC<AmityReactionListComponentType> = ({
   const onPressReactor = useCallback(
     (userId: string) => {
       onCloseModal();
-      navigation.navigate('UserProfile', { userId });
+      if (onPressUser) {
+        onPressUser(userId);
+      } else {
+        navigation.navigate('UserProfile', { userId });
+      }
     },
-    [navigation, onCloseModal]
+    [navigation, onCloseModal, onPressUser]
   );
 
   const renderReactors = useCallback(
