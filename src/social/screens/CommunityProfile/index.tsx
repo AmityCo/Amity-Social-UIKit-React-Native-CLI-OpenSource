@@ -359,7 +359,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
-  if (!hasPostPermission) return null;
+  if (!hasPostPermission && !hasStoryPermission) return null;
 
   return (
     <Fragment>
@@ -374,17 +374,19 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
         <Pressable onPress={closeBottomSheet} style={styles.modalOverlay}>
           <Animated.View style={styles.modalContent}>
             <View style={styles.dragHandle} />
-            <TouchableOpacity
-              onPress={handleCreatePost}
-              style={styles.bottomSheetOption}
-            >
-              <SvgXml
-                xml={post({ fill: colors.base })}
-                width={24}
-                height={24}
-              />
-              <Text style={styles.bottomSheetOptionText}>Post</Text>
-            </TouchableOpacity>
+            {hasPostPermission && (
+              <TouchableOpacity
+                onPress={handleCreatePost}
+                style={styles.bottomSheetOption}
+              >
+                <SvgXml
+                  xml={post({ fill: colors.base })}
+                  width={24}
+                  height={24}
+                />
+                <Text style={styles.bottomSheetOptionText}>Post</Text>
+              </TouchableOpacity>
+            )}
             {hasStoryPermission && (
               <TouchableOpacity
                 onPress={handleCreateStory}
@@ -399,26 +401,34 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
                 <Text style={styles.bottomSheetOptionText}>Story</Text>
               </TouchableOpacity>
             )}
-
-            <TouchableOpacity
-              onPress={handleCreatePoll}
-              style={styles.bottomSheetOption}
-            >
-              <SvgXml width={24} height={24} xml={poll()} color={colors.base} />
-              <Text style={styles.bottomSheetOptionText}>Poll</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleCreateLivestream}
-              style={styles.bottomSheetOption}
-            >
-              <SvgXml
-                width={24}
-                height={24}
-                xml={livestream()}
-                color={colors.base}
-              />
-              <Text style={styles.bottomSheetOptionText}>Livestream</Text>
-            </TouchableOpacity>
+            {hasPostPermission && (
+              <TouchableOpacity
+                onPress={handleCreatePoll}
+                style={styles.bottomSheetOption}
+              >
+                <SvgXml
+                  width={24}
+                  height={24}
+                  xml={poll()}
+                  color={colors.base}
+                />
+                <Text style={styles.bottomSheetOptionText}>Poll</Text>
+              </TouchableOpacity>
+            )}
+            {hasPostPermission && (
+              <TouchableOpacity
+                onPress={handleCreateLivestream}
+                style={styles.bottomSheetOption}
+              >
+                <SvgXml
+                  width={24}
+                  height={24}
+                  xml={livestream()}
+                  color={colors.base}
+                />
+                <Text style={styles.bottomSheetOptionText}>Livestream</Text>
+              </TouchableOpacity>
+            )}
           </Animated.View>
         </Pressable>
       </Modal>
