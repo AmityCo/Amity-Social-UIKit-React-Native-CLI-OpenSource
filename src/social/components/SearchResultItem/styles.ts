@@ -10,9 +10,9 @@ export const useStyles = (theme: MyMD3Theme) => {
       marginVertical: 8,
     },
     avatar: {
-      width: 64,
-      height: 64,
-      borderRadius: 64,
+      width: 40,
+      height: 40,
+      borderRadius: 40,
     },
     profileInfoContainer: {
       marginLeft: 16,
