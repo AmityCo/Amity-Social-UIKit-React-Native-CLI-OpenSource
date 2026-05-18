@@ -312,11 +312,13 @@ const CommentListItem = ({
         <View style={styles.rightSection}>
           <View style={styles.headerRow}>
             <TouchableOpacity
+              disabled={!user?.userId}
               onPress={() => {
+                if (!user?.userId) return;
                 if (onNavigate) {
-                  onNavigate(user?.userId);
+                  onNavigate(user.userId);
                 } else {
-                  navigation.navigate('UserProfile', { userId: user?.userId });
+                  navigation.navigate('UserProfile', { userId: user.userId });
                 }
               }}
             >
