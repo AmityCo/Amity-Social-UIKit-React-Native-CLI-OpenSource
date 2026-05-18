@@ -17,6 +17,7 @@ import { isModerator } from '../../utils/permissions';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { getFileUrlWithSize } from '../../utils';
 
 type AvatarProps = {
   uri?: string;
@@ -40,7 +41,8 @@ function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
 
   const handlePress = () => {
     if (userAvatarProps?.viewable && uri) {
-      navigation.navigate('ImageViewer', { images: [{ uri }] });
+      const largeUri = getFileUrlWithSize(uri, 'large');
+      navigation.navigate('ImageViewer', { images: [{ uri: largeUri }] });
     } else if (userAvatarProps?.shouldRedirectToUserProfile) {
       navigation.navigate('UserProfile', { userId: userAvatarProps?.userId });
     }
