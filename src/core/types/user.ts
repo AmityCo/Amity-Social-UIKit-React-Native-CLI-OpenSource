@@ -12,4 +12,5 @@ export interface UserInterface {
   displayName: string;
   avatarFileId: string;
   avatarCustomUrl?: string;
+  isBrand?: boolean;
 }

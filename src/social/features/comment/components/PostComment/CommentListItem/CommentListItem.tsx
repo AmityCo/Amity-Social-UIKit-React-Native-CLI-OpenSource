@@ -45,6 +45,7 @@ import ReplyCommentList from '../ReplyCommentList/index';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../../../hooks';
 import ModeratorBadgeElement from '../../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
+import { BrandBadge } from '../../../../../elements/BrandBadge';
 import { ComponentID, PageID } from '../../../../../enums';
 import { LinkPreview } from '../../../../../components/PreviewLink/LinkPreview';
 import AmityReactionListComponent from '../../../../reaction/components/List';
@@ -359,6 +360,10 @@ const CommentListItem = ({
               }}
             >
               <Text style={styles.headerText}>{user?.displayName}</Text>
+              <View style={styles.displayNameRow}>
+                <Text style={styles.headerText}>{user?.displayName}</Text>
+                {user?.isBrand && <BrandBadge width={16} height={16} />}
+              </View>
             </TouchableOpacity>
             {targetType === 'community' && targetId && (
               // eslint-disable-next-line react-native/no-inline-styles

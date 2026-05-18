@@ -211,7 +211,7 @@ export const useStyles = (theme: MyMD3Theme) => {
     },
 
     timeRow: {
-      marginTop: 4,
+      marginTop: 2,
       flexDirection: 'row',
       alignItems: 'center',
     },

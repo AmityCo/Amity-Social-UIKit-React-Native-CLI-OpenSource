@@ -12,6 +12,7 @@ import { useAmityComponent } from '../../hooks';
 import TextElement from '../../elements/CommonElements/TextElement';
 import ImageElement from '../../elements/CommonElements/ImageElement';
 import { formatNumber } from '../../../core/utils/number';
+import { BrandBadge } from '../../elements/BrandBadge';
 type SearchResultItemType = {
   pageId?: PageID;
   componentId?: ComponentID;
@@ -113,7 +114,12 @@ const SearchResultItem: FC<SearchResultItemType> = ({
             elementID={ElementID.community_display_name}
             text={item.displayName}
             style={styles.diaplayName}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           />
+          {!isCommunity && item.isBrand && (
+            <BrandBadge width={20} height={20} />
+          )}
 
           {showOfficialBadgeIcon && (
             <ImageElement

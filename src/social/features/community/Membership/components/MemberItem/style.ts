@@ -29,6 +29,14 @@ export const useStyles = () => {
     },
     userName: {
       color: theme.colors.base,
+      flexShrink: 1,
+    },
+    displayNameContainer: {
+      flex: 1,
+      gap: 6,
+      flexDirection: 'row',
+      alignItems: 'center',
+      flexShrink: 1,
     },
   });
 

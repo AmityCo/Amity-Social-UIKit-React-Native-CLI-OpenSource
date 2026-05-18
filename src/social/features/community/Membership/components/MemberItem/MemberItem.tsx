@@ -28,6 +28,7 @@ import {
   useMembersQuery,
   useUserFlaggedByMeQuery,
 } from '../../../../../hooks';
+import { BrandBadge } from '../../../../../elements/BrandBadge';
 
 type MemberItemProps = {
   member: Amity.Membership<'community'>;
@@ -200,14 +201,24 @@ function MemberItem({ member, communityId, refreshMembers }: MemberItemProps) {
           userName={member.user?.displayName ?? member.user?.userId}
           userId={member.userId}
         />
-        <Typography.BodyBold
-          style={styles.userName}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-        >
-          {member?.user.displayName}
-        </Typography.BodyBold>
-      </TouchableOpacity>
+        <View style={styles.displayNameContainer}>
+          <Typography.BodyBold
+            style={styles.userName}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {member?.user.displayName}
+          </Typography.BodyBold>
+          {member?.user?.isBrand && (
+            <BrandBadge
+              width={20}
+              height={20}
+              accessible
+              accessibilityLabel="Brand verified"
+            />
+          )}
+        </View>
+      </View>
       {!isCurrentUser && (
         <MenuButton
           onPress={() => {

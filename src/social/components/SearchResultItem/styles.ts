@@ -17,6 +17,7 @@ export const useStyles = (theme: MyMD3Theme) => {
     profileInfoContainer: {
       marginLeft: 16,
       justifyContent: 'center',
+      flex: 1,
     },
     category: {
       marginVertical: 2,
@@ -37,13 +38,15 @@ export const useStyles = (theme: MyMD3Theme) => {
       marginVertical: 2,
     },
     rowContainer: {
-      justifyContent: 'center',
+      alignItems: 'center',
       flexDirection: 'row',
+      flex: 1,
     },
     diaplayName: {
       fontWeight: '600',
       fontSize: 15,
       color: theme.colors.base,
+      flexShrink: 1,
     },
     lockIcon: {
       width: 20,

@@ -36,6 +36,7 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../../../core/providers/AmityUIKitProvider';
 import { IMentionPosition } from '../../../../../../core/types';
 import ModeratorBadgeElement from '../../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
+import { BrandBadge } from '../../../../../elements/BrandBadge';
 import { ComponentID, PageID } from '../../../../../enums';
 import AmityReactionListComponent from '../../../../reaction/components/List';
 import RenderTextWithMention from '../../../../../components/RenderTextWithMention/RenderTextWithMention';
@@ -252,7 +253,10 @@ const ReplyCommentList = ({
                 })
               }
             >
-              <Text style={styles.headerText}>{user?.displayName}</Text>
+              <View style={styles.displayNameRow}>
+                <Text style={styles.headerText}>{user?.displayName}</Text>
+                {user?.isBrand && <BrandBadge width={16} height={16} />}
+              </View>
             </TouchableOpacity>
             {targetType === 'community' && targetId && (
               // eslint-disable-next-line react-native/no-inline-styles

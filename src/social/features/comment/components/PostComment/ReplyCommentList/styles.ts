@@ -157,6 +157,11 @@ export const useStyles = () => {
       alignItems: 'center',
       gap: 8,
     },
+    displayNameRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
   });
 
   return styles;
