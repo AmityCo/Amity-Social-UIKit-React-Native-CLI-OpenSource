@@ -46,6 +46,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       fontWeight: '600',
       fontSize: 15,
       color: theme.colors.base,
+      flexShrink: 1,
     },
     lockIcon: {
       width: 20,

@@ -160,6 +160,11 @@ export const useStyles = () => {
       color: theme.colors.base,
       fontSize: 15,
     },
+    displayNameRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
   });
 
   return styles;

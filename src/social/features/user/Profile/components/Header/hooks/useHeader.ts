@@ -137,6 +137,7 @@ export function useHeader(user?: Amity.User) {
     badgeSize: BADGE_SIZE,
     navigateToRelationship,
     showBadge: user?.isBrand,
+    brandBadgeAccessibilityLabel: 'Brand verified',
     followingCount: formatCount(followInfo?.followingCount ?? 0),
     followerCount: formatCount(followInfo?.followerCount ?? 0),
     isMyProfile,

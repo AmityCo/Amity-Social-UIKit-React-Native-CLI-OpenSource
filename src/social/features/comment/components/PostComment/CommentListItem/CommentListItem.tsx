@@ -360,7 +360,10 @@ const CommentListItem = ({
               }}
             >
               <Text style={styles.headerText}>{user?.displayName}</Text>
-              {user?.isBrand && <BrandBadge width={16} height={16} />}
+              <View style={styles.displayNameRow}>
+                <Text style={styles.headerText}>{user?.displayName}</Text>
+                {user?.isBrand && <BrandBadge width={16} height={16} />}
+              </View>
             </TouchableOpacity>
             {targetType === 'community' && targetId && (
               // eslint-disable-next-line react-native/no-inline-styles
