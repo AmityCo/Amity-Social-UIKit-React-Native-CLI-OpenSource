@@ -2,7 +2,7 @@ import { View, TouchableOpacity, Text, TextLayoutLine } from 'react-native';
 import Avatar from '../../../../../components/Avatar';
 import { BrandBadge } from '../../../../../elements/BrandBadge';
 import { Typography } from '../../../../../../core/components/Typography/Typography';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHeader } from './hooks/useHeader';
 import { UserRelationshipTab } from '../../../../../types';
 import Skeleton from '../../../../../../core/components/Skeleton/Skeleton';
@@ -27,6 +27,11 @@ export function Header({ user, inline }: HeaderProps) {
   const [truncatedDescription, setTruncatedDescription] = useState<
     string | null
   >(null);
+
+  useEffect(() => {
+    setDescriptionExpanded(false);
+    setTruncatedDescription(null);
+  }, [user?.userId, user?.description]);
 
   const onDescriptionTextLayout = (lines: TextLayoutLine[]) => {
     if (lines.length <= 4 || truncatedDescription !== null) return;
