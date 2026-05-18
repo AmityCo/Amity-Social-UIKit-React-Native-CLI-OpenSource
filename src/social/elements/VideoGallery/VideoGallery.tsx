@@ -81,8 +81,10 @@ const VideoGallery: FC<VideoGalleryProps> = ({
           item: Amity.Post<'video'>;
           index: number;
         }) => {
-          const uri = item.getVideoThumbnailInfo().fileUrl + '?size=medium';
-          const videoInfo = item.getVideoInfo() as Amity.File<'video'>;
+          const uri = item.getVideoThumbnailInfo()?.fileUrl
+            ? item.getVideoThumbnailInfo()!.fileUrl + '?size=medium'
+            : undefined;
+          const videoInfo = item.getVideoInfo();
           const duration = formatDuration(
             (videoInfo?.attributes?.metadata?.video as Amity.VideoMetadata)
               ?.duration as number
@@ -129,7 +131,7 @@ const VideoGallery: FC<VideoGalleryProps> = ({
             playWhenInactive={false}
             playInBackground={false}
             source={{
-              uri: posts[currentImageIndex].getVideoInfo().fileUrl,
+              uri: posts[currentImageIndex].getVideoInfo()?.fileUrl,
             }}
             fullscreenOrientation="all"
           />
