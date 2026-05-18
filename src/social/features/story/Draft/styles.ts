@@ -39,13 +39,9 @@ export const useStyles = () => {
       justifyContent: 'center',
       overflow: 'hidden',
     },
-    aspect_ratio: {
-      width: '100%',
-      height: '100%',
-    },
     image: {
       width: '100%',
-      height: '60%',
+      height: '100%',
     },
     shareStoryBtn: {
       marginTop: 16,

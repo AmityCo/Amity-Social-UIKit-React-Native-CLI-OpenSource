@@ -42,14 +42,12 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
   const type = getMediaTypeFromUrl(mediaType.uri);
   const styles = useStyles();
   const { getImage } = useFile();
-  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [imageDisplayMode, setImageDisplayMode] =
+    useState<Amity.ImageDisplayMode>('fit');
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [communityAvatarUrl, setCommunityAvatarUrl] = useState<string>(null);
   const [hyperlink, setHyperlink] = useState<Amity.StoryItem[]>(undefined);
   const [loading, setLoading] = useState(false);
-  const imageDisplayMode: Amity.ImageDisplayMode = isFullScreen
-    ? 'fill'
-    : 'fit';
   const theme = useTheme() as MyMD3Theme;
   const aspectRatioIcon = useConfigImageUri({
     configPath: {
@@ -106,7 +104,7 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
   }, [onDiscardStory]);
 
   const onPressAspectRatio = useCallback(() => {
-    setIsFullScreen((prev) => !prev);
+    setImageDisplayMode((prev) => (prev === 'fit' ? 'fill' : 'fit'));
   }, []);
 
   const onPressHyperLink = useCallback(() => {
@@ -184,14 +182,16 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
         {type === StoryType.image ? (
           <Image
             source={{ uri: mediaType.uri }}
-            style={[styles.image, isFullScreen && styles.aspect_ratio]}
+            style={styles.image}
+            resizeMode={imageDisplayMode === 'fill' ? 'cover' : 'contain'}
           />
         ) : (
           <Video
             paused={loading}
             repeat
             source={{ uri: mediaType.uri }}
-            style={[styles.image, isFullScreen && styles.aspect_ratio]}
+            style={styles.image}
+            resizeMode={imageDisplayMode === 'fill' ? 'cover' : 'contain'}
           />
         )}
       </View>
