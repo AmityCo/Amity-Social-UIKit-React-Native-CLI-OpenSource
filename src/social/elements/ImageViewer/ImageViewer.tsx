@@ -31,6 +31,7 @@ const ImageViewer: FC<ImageViewerProps> = ({
 }) => {
   const [active, setActive] = useState(currentImageIndex);
   const scrollViewRef = useRef<ScrollView>(null);
+  const hasScrolledToInitial = useRef(false);
   const { width, height } = Dimensions.get('window');
 
   useEffect(() => {
@@ -95,6 +96,18 @@ const ImageViewer: FC<ImageViewerProps> = ({
     },
   });
 
+  const handleInitialScroll = () => {
+    if (!hasScrolledToInitial.current) {
+      hasScrolledToInitial.current = true;
+      if (currentImageIndex > 0) {
+        scrollViewRef.current?.scrollTo({
+          x: width * currentImageIndex,
+          animated: false,
+        });
+      }
+    }
+  };
+
   const handleScroll = (event) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const newIndex = Math.round(contentOffsetX / width);
@@ -121,9 +134,10 @@ const ImageViewer: FC<ImageViewerProps> = ({
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={handleScroll}
-          // contentContainerStyle={styles.scrollView}
+          onContentSizeChange={handleInitialScroll}
           scrollEventThrottle={16}
           decelerationRate="fast"
+          contentOffset={{ x: width * currentImageIndex, y: 0 }}
         >
           {images.map((imageUrl, index) => (
             <View key={`image-${index}`} style={styles.imageContainer}>
