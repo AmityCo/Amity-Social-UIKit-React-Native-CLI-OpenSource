@@ -1,8 +1,8 @@
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Text, TextLayoutLine } from 'react-native';
 import Avatar from '../../../../../components/Avatar';
 import { BrandBadge } from '../../../../../elements/BrandBadge';
 import { Typography } from '../../../../../../core/components/Typography/Typography';
-import ReadMore from '@fawazahmed/react-native-read-more';
+import { useState } from 'react';
 import { useHeader } from './hooks/useHeader';
 import { UserRelationshipTab } from '../../../../../types';
 import Skeleton from '../../../../../../core/components/Skeleton/Skeleton';
@@ -23,6 +23,26 @@ type HeaderProps = {
 };
 
 export function Header({ user, inline }: HeaderProps) {
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [truncatedDescription, setTruncatedDescription] = useState<
+    string | null
+  >(null);
+
+  const onDescriptionTextLayout = (lines: TextLayoutLine[]) => {
+    if (lines.length <= 4 || truncatedDescription !== null) return;
+    const fourthLine = lines[3];
+    const avgCharWidth = fourthLine.width / (fourthLine.text.length || 1);
+
+    const seeMorePixelWidth = avgCharWidth * '... see more'.length + 4;
+    const charsToRemove = Math.ceil(seeMorePixelWidth / avgCharWidth);
+    const firstThreeText = lines
+      .slice(0, 3)
+      .map((l) => l.text)
+      .join('');
+    const fourthLineText = fourthLine.text.replace(/\n$/, '');
+    const trimmedFourth = fourthLineText.slice(0, -charsToRemove).trimEnd();
+    setTruncatedDescription(firstThreeText + trimmedFourth);
+  };
   const {
     styles,
     showBadge,
@@ -74,15 +94,30 @@ export function Header({ user, inline }: HeaderProps) {
       </View>
       {!!user?.description && (
         <View style={styles.descriptionContainer}>
-          <ReadMore
-            seeLessText=""
-            numberOfLines={4}
-            style={styles.description}
-            seeMoreStyle={styles.seeMore}
-            seeLessStyle={styles.description}
-          >
-            {user.description}
-          </ReadMore>
+          {/* Hidden full text — used only to measure line layout */}
+          {!descriptionExpanded && truncatedDescription === null && (
+            <Text
+              style={[styles.description, styles.hiddenText]}
+              onTextLayout={(e) => onDescriptionTextLayout(e.nativeEvent.lines)}
+            >
+              {user.description}
+            </Text>
+          )}
+          {descriptionExpanded ? (
+            <Text style={styles.description}>{user.description}</Text>
+          ) : (
+            <Text style={styles.description}>
+              {truncatedDescription ?? user.description}
+              {truncatedDescription !== null && (
+                <Text
+                  style={styles.seeMore}
+                  onPress={() => setDescriptionExpanded(true)}
+                >
+                  {'... see more'}
+                </Text>
+              )}
+            </Text>
+          )}
         </View>
       )}
       <View style={styles.followInfoContainer}>
