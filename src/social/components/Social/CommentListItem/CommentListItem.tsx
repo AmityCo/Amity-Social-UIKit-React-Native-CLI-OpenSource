@@ -37,8 +37,8 @@ import {
 import EditCommentModal from '../../legacy/EditCommentModal';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
-import { useNavigation } from '@react-navigation/native';
 import ReplyCommentList from '../../legacy/Social/ReplyCommentList';
+import AmityReactionListComponent from '../../../features/reaction/components/List';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../hooks/useTimeDifference';
 import { LinkPreview } from '../../PreviewLink';
@@ -69,7 +69,6 @@ export interface ICommentList {
   postType: Amity.CommentReferenceType;
   disabledInteraction?: boolean;
   disabledComment?: boolean;
-  onNavigate?: () => void;
 }
 
 const CommentListItem = ({
@@ -78,7 +77,6 @@ const CommentListItem = ({
   onClickReply,
   postType,
   disabledInteraction,
-  onNavigate,
   disabledComment,
 }: ICommentList) => {
   const theme = useTheme() as MyMD3Theme;
@@ -122,7 +120,8 @@ const CommentListItem = ({
   const [editCommentModal, setEditCommentModal] = useState<boolean>(false);
   const [isEditComment, setIsEditComment] = useState<boolean>(false);
   const slideAnimation = useRef(new Animated.Value(0)).current;
-  const navigation = useNavigation<any>();
+  const [isReactionListVisible, setIsReactionListVisible] =
+    useState<boolean>(false);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -286,11 +285,7 @@ const CommentListItem = ({
   };
 
   const onPressCommentReaction = () => {
-    onNavigate && onNavigate();
-    navigation.navigate('ReactionList', {
-      referenceId: commentId,
-      referenceType: 'comment',
-    });
+    setIsReactionListVisible(true);
   };
 
   return (
@@ -498,6 +493,12 @@ const CommentListItem = ({
         commentDetail={commentDetail}
         onFinishEdit={onEditComment}
         onClose={onCloseEditCommentModal}
+      />
+      <AmityReactionListComponent
+        isModalVisible={isReactionListVisible}
+        onCloseModal={() => setIsReactionListVisible(false)}
+        referenceId={commentId}
+        referenceType="comment"
       />
     </View>
   );
