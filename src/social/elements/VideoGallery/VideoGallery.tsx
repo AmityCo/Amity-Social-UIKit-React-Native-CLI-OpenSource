@@ -81,8 +81,9 @@ const VideoGallery: FC<VideoGalleryProps> = ({
           item: Amity.Post<'video'>;
           index: number;
         }) => {
-          const uri = item.getVideoThumbnailInfo()?.fileUrl
-            ? item.getVideoThumbnailInfo()!.fileUrl + '?size=medium'
+          const videoThumbnailInfo = item.getVideoThumbnailInfo();
+          const uri = videoThumbnailInfo?.fileUrl
+            ? videoThumbnailInfo.fileUrl + '?size=medium'
             : undefined;
           const videoInfo = item.getVideoInfo();
           const duration = formatDuration(
