@@ -198,7 +198,14 @@ function MemberItem({ member, communityId, refreshMembers }: MemberItemProps) {
           >
             {member?.user.displayName}
           </Typography.BodyBold>
-          {member?.user?.isBrand && <BrandBadge width={20} height={20} />}
+          {member?.user?.isBrand && (
+            <BrandBadge
+              width={20}
+              height={20}
+              accessible
+              accessibilityLabel="Brand verified"
+            />
+          )}
         </View>
       </View>
       {!isCurrentUser && (
