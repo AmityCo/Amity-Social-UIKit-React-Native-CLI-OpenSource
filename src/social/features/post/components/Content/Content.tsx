@@ -204,7 +204,14 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
                     {creator?.displayName}
                   </Typography.BodyBold>
                 </TouchableOpacity>
-                {creator?.isBrand && <BrandBadge width={20} height={20} />}
+                {creator?.isBrand && (
+                  <BrandBadge
+                    width={20}
+                    height={20}
+                    accessible={true}
+                    accessibilityLabel="Brand verified"
+                  />
+                )}
                 {communityData?.displayName && isCommunityNameShown && (
                   <View style={styles.communityNameContainer}>
                     <SvgXml
