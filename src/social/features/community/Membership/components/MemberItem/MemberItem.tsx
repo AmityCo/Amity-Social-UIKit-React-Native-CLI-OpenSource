@@ -218,7 +218,7 @@ function MemberItem({ member, communityId, refreshMembers }: MemberItemProps) {
             />
           )}
         </View>
-      </View>
+      </TouchableOpacity>
       {!isCurrentUser && (
         <MenuButton
           onPress={() => {
