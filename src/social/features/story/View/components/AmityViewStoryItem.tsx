@@ -624,6 +624,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
               disabledComment={!communityData?.allowCommentInStory}
               disabledInteraction={!communityData?.isJoined}
               onNavigate={onNavigateFromComment}
+              withAvatar={true}
             />
           </KeyboardAvoidingView>
         </Modal>

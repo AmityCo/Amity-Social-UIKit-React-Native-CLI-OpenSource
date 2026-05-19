@@ -25,7 +25,7 @@ import { useConfigImageUri } from '../../../hooks/useConfigImageUri';
 import HyperlinkConfig from './components/HyperLinkConfig';
 import { IAmityDraftStoryPage } from '../../../types';
 import { useFile } from '../../../hooks/useFile';
-import { defaultAvatarUri } from '../../../../core/assets/index';
+import { defaultCommunityAvatarUri } from '../../../../core/assets/index';
 import { getMediaTypeFromUrl } from '../../../../core/utils/url';
 import { LoadingOverlay } from '../../../components/legacy/LoadingOverlay';
 import mime from 'mime';
@@ -45,7 +45,9 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
   const [imageDisplayMode, setImageDisplayMode] =
     useState<Amity.ImageDisplayMode>('fit');
   const [isVisibleModal, setIsVisibleModal] = useState(false);
-  const [communityAvatarUrl, setCommunityAvatarUrl] = useState<string>(null);
+  const [communityAvatarUrl, setCommunityAvatarUrl] = useState<string>(
+    defaultCommunityAvatarUri
+  );
   const [hyperlink, setHyperlink] = useState<Amity.StoryItem[]>(undefined);
   const [loading, setLoading] = useState(false);
   const theme = useTheme() as MyMD3Theme;
@@ -70,7 +72,7 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
 
   useEffect(() => {
     if (!targetId || targetType !== 'community')
-      return setCommunityAvatarUrl(defaultAvatarUri);
+      return setCommunityAvatarUrl(defaultCommunityAvatarUri);
     CommunityRepository.getCommunity(
       targetId,
       async ({ error, loading: isLoading, data }) => {
@@ -80,7 +82,7 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
             fileId: data.avatarFileId,
             imageSize: ImageSizeState.small,
           });
-          setCommunityAvatarUrl(image);
+          setCommunityAvatarUrl(image ?? defaultCommunityAvatarUri);
         }
       }
     )();

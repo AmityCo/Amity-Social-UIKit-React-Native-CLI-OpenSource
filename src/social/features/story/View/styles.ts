@@ -63,8 +63,8 @@ export const useStyles = () => {
       paddingHorizontal: 15,
     },
     avatarImage: {
-      height: 35,
-      width: 35,
+      height: 40,
+      width: 40,
       borderRadius: 100,
     },
     avatarText: {
@@ -173,8 +173,8 @@ export const useStyles = () => {
     },
     storyCreateIcon: {
       position: 'absolute',
-      left: 25,
-      top: 25,
+      left: 28,
+      top: 28,
     },
     bottomSheet: {
       borderTopLeftRadius: 20,
@@ -217,7 +217,7 @@ export const useStyles = () => {
       marginVertical: 10,
     },
     deleteStoryTxt: {
-      color: theme.colors.base,
+      color: theme.colors.alert,
       fontSize: 14,
     },
     errorContainer: {

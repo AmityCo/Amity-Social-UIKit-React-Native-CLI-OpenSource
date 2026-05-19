@@ -14,6 +14,7 @@ import { useStyles } from './styles';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
+import { defaultCommunityAvatarUri } from '../../../core/assets';
 
 interface IStoryCircleItem {
   onPressStoryView: (storyTarget: Amity.StoryTarget) => void;
@@ -25,7 +26,7 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
   storyTarget,
 }) => {
   const theme = useTheme() as MyMD3Theme;
-  const [avatarUrl, setAvatarUrl] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState(defaultCommunityAvatarUri);
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const hasStoryPermission = useStoryPermission(storyTarget.targetId);
   const { getImage } = useFile();
@@ -73,14 +74,14 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
             ? {
                 uri: avatarUrl,
               }
-            : require('../../../core/assets/images/userAvatar.png')
+            : { uri: defaultCommunityAvatarUri }
         }
         style={styles.communityAvatar}
       />
       <SvgXml
         style={styles.storyRing}
-        width={68}
-        height={68}
+        width={48}
+        height={48}
         xml={storyRing(storyRingColor[0], storyRingColor[1])}
       />
       {hasStoryPermission && storyTarget?.failedStoriesCount > 0 ? (
