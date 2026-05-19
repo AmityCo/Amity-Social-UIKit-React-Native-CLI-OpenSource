@@ -1,4 +1,8 @@
-import { PostRepository } from '@amityco/ts-sdk-react-native';
+import {
+  createReport,
+  deleteReport,
+  isReportedByMe,
+} from '@amityco/ts-sdk-react-native';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useToast } from '../../../core/stores/slices/toastSlice';
 import { TOAST } from '../../../core/constants';
@@ -7,14 +11,6 @@ type UseFlagPost = {
   postId: string;
   enabled?: boolean;
 };
-
-type FlagPostPayload = Awaited<ReturnType<typeof PostRepository.flagPost>>;
-
-type FlagPostParam = Parameters<typeof PostRepository.flagPost>[0];
-
-type UnflagPostPayload = Awaited<ReturnType<typeof PostRepository.unflagPost>>;
-
-type UnflagPostParam = Parameters<typeof PostRepository.unflagPost>[0];
 
 export const useFlagPost = ({ postId, enabled = true }: UseFlagPost) => {
   const { showToast } = useToast();
@@ -25,24 +21,16 @@ export const useFlagPost = ({ postId, enabled = true }: UseFlagPost) => {
     refetch,
   } = useQuery<boolean>({
     queryKey: ['PostRepository', 'isPostFlaggedByMe', postId],
-    queryFn: () => PostRepository.isPostFlaggedByMe(postId),
+    queryFn: () => isReportedByMe('post', postId),
     enabled: enabled && !!postId,
   });
 
-  const { mutate: flagPostMutate } = useMutation<
-    FlagPostPayload,
-    Error,
-    FlagPostParam
-  >({
-    mutationFn: PostRepository.flagPost,
+  const { mutate: flagPostMutate } = useMutation<boolean, Error, string>({
+    mutationFn: (targetPostId: string) => createReport('post', targetPostId),
   });
 
-  const { mutate: unflagPostMutate } = useMutation<
-    UnflagPostPayload,
-    Error,
-    UnflagPostParam
-  >({
-    mutationFn: PostRepository.unflagPost,
+  const { mutate: unflagPostMutate } = useMutation<boolean, Error, string>({
+    mutationFn: (targetPostId: string) => deleteReport('post', targetPostId),
   });
 
   const reportPost = (targetPostId: string) => {
