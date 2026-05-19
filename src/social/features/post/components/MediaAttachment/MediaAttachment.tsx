@@ -1,14 +1,10 @@
 import { Pressable, View, Animated, Easing } from 'react-native';
 import { FC, memo, useCallback, useEffect, useRef } from 'react';
-import {
-  PageID,
-  ComponentID,
-  ElementID,
-  mediaAttachment,
-} from '../../../../enums';
+import { PageID, ComponentID, mediaAttachment } from '../../../../enums';
 import { useAmityComponent } from '../../../../hooks';
 import { useStyles } from './styles';
-import ImageKeyElement from '../../../../elements/ImageKeyElement/ImageKeyElement';
+import { SvgXml } from 'react-native-svg';
+import { camera, photo, video } from '../../../../../core/assets/icons';
 
 type AmityMediaAttachmentComponentType = {
   onPressCamera: () => void;
@@ -66,32 +62,38 @@ const AmityMediaAttachmentComponent: FC<AmityMediaAttachmentComponentType> = ({
       <View style={styles.handleBar} />
       <View style={styles.buttonsContainer}>
         <Pressable onPress={onPressCamera}>
-          <ImageKeyElement
-            pageID={pageId}
-            componentID={componentId}
-            elementID={ElementID.camera_button}
-            style={styles.iconBtn}
-          />
+          <View style={styles.iconContainer}>
+            <SvgXml
+              xml={camera()}
+              width={24}
+              height={24}
+              color={themeStyles?.colors?.base}
+            />
+          </View>
         </Pressable>
 
         {(!chosenMediaType || chosenMediaType === mediaAttachment.image) && (
           <Pressable onPress={onPressImage}>
-            <ImageKeyElement
-              pageID={pageId}
-              componentID={componentId}
-              elementID={ElementID.image_button}
-              style={styles.iconBtn}
-            />
+            <View style={styles.iconContainer}>
+              <SvgXml
+                xml={photo()}
+                width={24}
+                height={24}
+                color={themeStyles?.colors?.base}
+              />
+            </View>
           </Pressable>
         )}
         {(!chosenMediaType || chosenMediaType === mediaAttachment.video) && (
           <Pressable onPress={onPressVideo}>
-            <ImageKeyElement
-              pageID={pageId}
-              componentID={componentId}
-              elementID={ElementID.video_button}
-              style={styles.iconBtn}
-            />
+            <View style={styles.iconContainer}>
+              <SvgXml
+                xml={video()}
+                width={24}
+                height={24}
+                color={themeStyles?.colors?.base}
+              />
+            </View>
           </Pressable>
         )}
         {/* //will use later
@@ -100,7 +102,7 @@ const AmityMediaAttachmentComponent: FC<AmityMediaAttachmentComponentType> = ({
             pageID={pageId}
             componentID={componentId}
             elementID={ElementID.file_button}
-            style={styles.iconBtn}
+            style={styles.iconContainer}
           />
         </Pressable> */}
       </View>

@@ -33,10 +33,10 @@ export const useStyles = (theme: MyMD3Theme) => {
       width: '100%',
       justifyContent: 'space-around',
     },
-    iconBtn: {
-      width: 24,
-      height: 24,
-      tintColor: theme.colors.base,
+    iconContainer: {
+      padding: 4,
+      borderRadius: 100,
+      backgroundColor: theme.colors.backgroundShade1,
     },
   });
 

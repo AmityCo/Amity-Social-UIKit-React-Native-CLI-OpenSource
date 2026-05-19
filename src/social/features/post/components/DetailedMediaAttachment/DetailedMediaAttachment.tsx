@@ -8,7 +8,8 @@ import {
 } from '../../../../enums';
 import { useAmityComponent } from '../../../../hooks';
 import { useStyles } from './styles';
-import ImageKeyElement from '../../../../elements/ImageKeyElement/ImageKeyElement';
+import { SvgXml } from 'react-native-svg';
+import { camera, photo, video } from '../../../../../core/assets/icons';
 import TextKeyElement from '../../../../elements/TextKeyElement/TextKeyElement';
 
 type AmityDetailedMediaAttachmentComponentType = {
@@ -64,12 +65,14 @@ const AmityDetailedMediaAttachmentComponent: FC<
       <View style={styles.handleBar} />
       <View style={styles.buttonsContainer}>
         <Pressable style={styles.mediaAttachmentBtn} onPress={onPressCamera}>
-          <ImageKeyElement
-            pageID={pageId}
-            componentID={componentId}
-            elementID={ElementID.camera_button}
-            style={styles.iconBtn}
-          />
+          <View style={styles.iconContainer}>
+            <SvgXml
+              xml={camera()}
+              width={24}
+              height={24}
+              color={themeStyles?.colors?.base}
+            />
+          </View>
           <TextKeyElement
             pageID={pageId}
             componentID={componentId}
@@ -79,12 +82,14 @@ const AmityDetailedMediaAttachmentComponent: FC<
         </Pressable>
         {(!chosenMediaType || chosenMediaType === mediaAttachment.image) && (
           <Pressable style={styles.mediaAttachmentBtn} onPress={onPressImage}>
-            <ImageKeyElement
-              pageID={pageId}
-              componentID={componentId}
-              elementID={ElementID.image_button}
-              style={styles.iconBtn}
-            />
+            <View style={styles.iconContainer}>
+              <SvgXml
+                xml={photo()}
+                width={24}
+                height={24}
+                color={themeStyles?.colors?.base}
+              />
+            </View>
             <TextKeyElement
               pageID={pageId}
               componentID={componentId}
@@ -95,12 +100,14 @@ const AmityDetailedMediaAttachmentComponent: FC<
         )}
         {(!chosenMediaType || chosenMediaType === mediaAttachment.video) && (
           <Pressable style={styles.mediaAttachmentBtn} onPress={onPressVideo}>
-            <ImageKeyElement
-              pageID={pageId}
-              componentID={componentId}
-              elementID={ElementID.video_button}
-              style={styles.iconBtn}
-            />
+            <View style={styles.iconContainer}>
+              <SvgXml
+                xml={video()}
+                width={24}
+                height={24}
+                color={themeStyles?.colors?.base}
+              />
+            </View>
             <TextKeyElement
               pageID={pageId}
               componentID={componentId}
@@ -115,7 +122,7 @@ const AmityDetailedMediaAttachmentComponent: FC<
             pageID={pageId}
             componentID={componentId}
             elementID={ElementID.file_button}
-            style={styles.iconBtn}
+            style={styles.iconContainer}
           />
           <TextKeyElement
             pageID={pageId}
