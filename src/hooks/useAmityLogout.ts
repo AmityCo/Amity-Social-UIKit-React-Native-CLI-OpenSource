@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { Client } from '@amityco/ts-sdk-react-native';
+import { unregisterPushNotification } from '@amityco/ts-sdk-react-native/dist/client';
 
 /**
  * Hook that provides two logout functions:
@@ -35,8 +36,9 @@ export const useAmityLogout = () => {
    */
   const logoutWithApi = useCallback(async () => {
     try {
-      await Client.unregisterPushNotification();
+      await unregisterPushNotification()
       Client.stopUnreadSync();
+
       await Client.secureLogout();
     } catch (e) {
       console.warn('[AmityUIKit] Amity logout error:', e);

@@ -170,6 +170,14 @@ export default function App() {
   if (!loggedInUser) {
     return (
       <SafeAreaView style={loginStyles.container}>
+        {showNetworkLogger && <NetworkLogger />}
+        <TouchableOpacity
+          style={styles.networkLoggerButton}
+          onPress={() => setShowNetworkLogger((v) => !v)}
+        >
+          <Text style={styles.logoutButtonText}>{showNetworkLogger ? '🌐 Hide Logger' : '🌐 Show Logger'}</Text>
+        </TouchableOpacity>
+        {!showNetworkLogger && (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={{ flex: 1, justifyContent: 'center' }}
@@ -215,6 +223,7 @@ export default function App() {
             </Text>
           </View>
         </KeyboardAvoidingView>
+        )}
       </SafeAreaView>
     );
   }
