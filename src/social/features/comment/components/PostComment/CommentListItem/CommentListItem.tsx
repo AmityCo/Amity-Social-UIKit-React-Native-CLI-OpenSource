@@ -245,22 +245,18 @@ const CommentListItem = ({
     }
   };
 
-  const deletePostObject = () => {
-    Alert.alert(
-      'Delete this post',
-      `This post will be permanently deleted. You'll no longer see and find this post`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => onDelete && onDelete(commentId),
-        },
-      ]
-    );
+  const deleteComment = () => {
+    Alert.alert('Delete comment', 'This comment will be permanently deleted.', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => onDelete && onDelete(commentId),
+      },
+    ]);
     setIsVisible(false);
   };
   const reportCommentObject = async () => {
@@ -518,7 +514,7 @@ const CommentListItem = ({
                   <Text style={styles.deleteText}> Edit Comment</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={deletePostObject}
+                  onPress={deleteComment}
                   style={styles.modalRow}
                 >
                   <SvgXml
