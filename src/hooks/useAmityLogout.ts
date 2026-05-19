@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { Client } from '@amityco/ts-sdk-react-native';
-import { unregisterPushNotification } from './notificationRegistration';
 
 /**
  * Hook that provides two logout functions:
@@ -20,7 +19,7 @@ export const useAmityLogout = () => {
    */
   const logout = useCallback(async () => {
     try {
-      await unregisterPushNotification();
+      await Client.unregisterPushNotification();
     } catch (e) {
       console.warn(
         '[AmityUIKit] Failed to unregister push notification on logout:',
@@ -36,7 +35,7 @@ export const useAmityLogout = () => {
    */
   const logoutWithApi = useCallback(async () => {
     try {
-      await unregisterPushNotification();
+      await Client.unregisterPushNotification();
       Client.stopUnreadSync();
       await Client.secureLogout();
     } catch (e) {
