@@ -178,51 +178,51 @@ export default function App() {
           <Text style={styles.logoutButtonText}>{showNetworkLogger ? '🌐 Hide Logger' : '🌐 Show Logger'}</Text>
         </TouchableOpacity>
         {!showNetworkLogger && (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={{ flex: 1, justifyContent: 'center' }}
-        >
-          <View style={loginStyles.card}>
-            <Text style={loginStyles.title}>🔐 Amity UIKit</Text>
-            <Text style={loginStyles.subtitle}>Enter credentials to continue</Text>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={{ flex: 1, justifyContent: 'center' }}
+          >
+            <View style={loginStyles.card}>
+              <Text style={loginStyles.title}>🔐 Amity UIKit</Text>
+              <Text style={loginStyles.subtitle}>Enter credentials to continue</Text>
 
-            <Text style={loginStyles.label}>User ID</Text>
-            <TextInput
-              style={loginStyles.input}
-              value={inputUserId}
-              onChangeText={setInputUserId}
-              placeholder="Enter user ID"
-              placeholderTextColor="#999"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+              <Text style={loginStyles.label}>User ID</Text>
+              <TextInput
+                style={loginStyles.input}
+                value={inputUserId}
+                onChangeText={setInputUserId}
+                placeholder="Enter user ID"
+                placeholderTextColor="#999"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
 
-            <Text style={loginStyles.label}>Display Name</Text>
-            <TextInput
-              style={loginStyles.input}
-              value={inputDisplayName}
-              onChangeText={setInputDisplayName}
-              placeholder="Enter display name"
-              placeholderTextColor="#999"
-              autoCorrect={false}
-            />
+              <Text style={loginStyles.label}>Display Name</Text>
+              <TextInput
+                style={loginStyles.input}
+                value={inputDisplayName}
+                onChangeText={setInputDisplayName}
+                placeholder="Enter display name"
+                placeholderTextColor="#999"
+                autoCorrect={false}
+              />
 
-            <TouchableOpacity
-              style={[loginStyles.loginButton, (!inputUserId || !inputDisplayName) && loginStyles.loginButtonDisabled]}
-              onPress={() => {
-                setLoggedInUser({ userId: inputUserId, displayName: inputDisplayName });
-                setLoginSessionKey((prev) => prev + 1);
-              }}
-              disabled={!inputUserId || !inputDisplayName}
-            >
-              <Text style={loginStyles.loginButtonText}>Login</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={[loginStyles.loginButton, (!inputUserId || !inputDisplayName) && loginStyles.loginButtonDisabled]}
+                onPress={() => {
+                  setLoggedInUser({ userId: inputUserId, displayName: inputDisplayName });
+                  setLoginSessionKey((prev) => prev + 1);
+                }}
+                disabled={!inputUserId || !inputDisplayName}
+              >
+                <Text style={loginStyles.loginButtonText}>Login</Text>
+              </TouchableOpacity>
 
-            <Text style={loginStyles.tokenText}>
-              📱 {Platform.OS === 'ios' ? 'APNS' : 'FCM'} Token: {fcmToken?.substring(0, 20)}...
-            </Text>
-          </View>
-        </KeyboardAvoidingView>
+              <Text style={loginStyles.tokenText}>
+                📱 {Platform.OS === 'ios' ? 'APNS' : 'FCM'} Token: {fcmToken?.substring(0, 20)}...
+              </Text>
+            </View>
+          </KeyboardAvoidingView>
         )}
       </SafeAreaView>
     );
