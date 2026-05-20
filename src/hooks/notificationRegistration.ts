@@ -36,3 +36,29 @@ export const hasNotificationRegistration = (): boolean => {
     registrationInfo.deviceId !== ''
   );
 };
+
+export const unregisterPushNotification = async (): Promise<void> => {
+  if (!registrationInfo) {
+    console.log('⚠️ No push notification registration to unregister');
+    return;
+  }
+  const { apiEndpoint, apiKey, userId, deviceId } = registrationInfo;
+  console.log('userId: ', userId);
+  console.log('deviceId: ', deviceId);
+  const url = `${apiEndpoint}/v1/notification?userId=${encodeURIComponent(
+    userId
+  )}&deviceId=${encodeURIComponent(deviceId)}`;
+  console.log('🔔 Unregistering push notification:', url);
+  try {
+    const res = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'X-API-KEY': apiKey,
+      },
+    });
+    console.log('🔔 Unregister push notification response:', res);
+    clearNotificationRegistration();
+  } catch (err) {
+    console.error('🔔 Failed to unregister push notification:', err);
+  }
+};

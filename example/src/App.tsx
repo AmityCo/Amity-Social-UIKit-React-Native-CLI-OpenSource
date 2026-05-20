@@ -22,21 +22,19 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
 } from 'react-native';
-import NetworkLogger from 'react-native-network-logger'
-
-messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  console.log('🔔 Background notification:', JSON.stringify(remoteMessage, null, 2));
-});
+import NetworkLogger from 'react-native-network-logger';
 
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
   console.log('fcmToken: ', fcmToken);
-  const { logout, logoutWithApi } = useAmityLogout();
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [notiPayload, setNotiPayload] = useState<string | null>(null);
   const [notiSource, setNotiSource] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState<{ userId: string; displayName: string } | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<{
+    userId: string;
+    displayName: string;
+  } | null>(null);
   const [loginSessionKey, setLoginSessionKey] = useState(0);
   const [showNetworkLogger, setShowNetworkLogger] = useState(false);
 
@@ -54,7 +52,7 @@ export default function App() {
 
   const handleCopy = useCallback(() => {
     if (notiPayload) {
-      Share.share({ message: notiPayload }).catch(() => { });
+      Share.share({ message: notiPayload }).catch(() => {});
     }
   }, [notiPayload]);
   useEffect(() => {
@@ -132,7 +130,6 @@ export default function App() {
             showPayload('iOS clicked (from quit state)', notification);
           }
         });
-
       } else {
         // ===== Android: Use Firebase Messaging for FCM click detection =====
 
@@ -175,7 +172,9 @@ export default function App() {
           style={styles.networkLoggerButton}
           onPress={() => setShowNetworkLogger((v) => !v)}
         >
-          <Text style={styles.logoutButtonText}>{showNetworkLogger ? '🌐 Hide Logger' : '🌐 Show Logger'}</Text>
+          <Text style={styles.logoutButtonText}>
+            {showNetworkLogger ? '🌐 Hide Logger' : '🌐 Show Logger'}
+          </Text>
         </TouchableOpacity>
         {!showNetworkLogger && (
           <KeyboardAvoidingView
@@ -184,7 +183,9 @@ export default function App() {
           >
             <View style={loginStyles.card}>
               <Text style={loginStyles.title}>🔐 Amity UIKit</Text>
-              <Text style={loginStyles.subtitle}>Enter credentials to continue</Text>
+              <Text style={loginStyles.subtitle}>
+                Enter credentials to continue
+              </Text>
 
               <Text style={loginStyles.label}>User ID</Text>
               <TextInput
@@ -208,9 +209,16 @@ export default function App() {
               />
 
               <TouchableOpacity
-                style={[loginStyles.loginButton, (!inputUserId || !inputDisplayName) && loginStyles.loginButtonDisabled]}
+                style={[
+                  loginStyles.loginButton,
+                  (!inputUserId || !inputDisplayName) &&
+                    loginStyles.loginButtonDisabled,
+                ]}
                 onPress={() => {
-                  setLoggedInUser({ userId: inputUserId, displayName: inputDisplayName });
+                  setLoggedInUser({
+                    userId: inputUserId,
+                    displayName: inputDisplayName,
+                  });
                   setLoginSessionKey((prev) => prev + 1);
                 }}
                 disabled={!inputUserId || !inputDisplayName}
@@ -219,7 +227,8 @@ export default function App() {
               </TouchableOpacity>
 
               <Text style={loginStyles.tokenText}>
-                📱 {Platform.OS === 'ios' ? 'APNS' : 'FCM'} Token: {fcmToken?.substring(0, 20)}...
+                📱 {Platform.OS === 'ios' ? 'APNS' : 'FCM'} Token:{' '}
+                {fcmToken?.substring(0, 20)}...
               </Text>
             </View>
           </KeyboardAvoidingView>
@@ -232,7 +241,7 @@ export default function App() {
   return (
     <AmityUiKitProvider
       key={`session-${loginSessionKey}`}
-      configs={config} //put your config json object
+      configs={config}
       apiKey="b0ebe958398ff6361a31841d010117d9d60ddfe1eb3c3a28"
       apiRegion="eu"
       userId={loggedInUser.userId}
@@ -241,39 +250,85 @@ export default function App() {
       fcmToken={fcmToken}
     >
       <AmityUiKitSocial />
+      <AppOverlay
+        loggedInUser={loggedInUser}
+        onLogout={() => setLoggedInUser(null)}
+        notiPayload={notiPayload}
+        notiSource={notiSource}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        handleCopy={handleCopy}
+        showNetworkLogger={showNetworkLogger}
+        setShowNetworkLogger={setShowNetworkLogger}
+      />
+    </AmityUiKitProvider>
+  );
+}
+
+// ─── Inner overlay component ───────────────────────────────────────────────
+// Must be rendered inside <AmityUiKitProvider> so useAmityLogout works.
+function AppOverlay({
+  loggedInUser,
+  onLogout,
+  notiPayload,
+  notiSource,
+  modalVisible,
+  setModalVisible,
+  handleCopy,
+  showNetworkLogger,
+  setShowNetworkLogger,
+}: {
+  loggedInUser: { userId: string; displayName: string };
+  onLogout: () => void;
+  notiPayload: string | null;
+  notiSource: string;
+  modalVisible: boolean;
+  setModalVisible: (v: boolean) => void;
+  handleCopy: () => void;
+  showNetworkLogger: boolean;
+  setShowNetworkLogger: (fn: (v: boolean) => boolean) => void;
+}) {
+  const { logout, logoutWithApi } = useAmityLogout();
+
+  return (
+    <>
       {showNetworkLogger && <NetworkLogger />}
 
-      {/* Network Logger toggle button */}
+      {/* Network Logger toggle */}
       <TouchableOpacity
         style={styles.networkLoggerButton}
         onPress={() => setShowNetworkLogger((v) => !v)}
       >
-        <Text style={styles.logoutButtonText}>{showNetworkLogger ? '🌐 Hide Logger' : '🌐 Show Logger'}</Text>
+        <Text style={styles.logoutButtonText}>
+          {showNetworkLogger ? '🌐 Hide Logger' : '🌐 Show Logger'}
+        </Text>
       </TouchableOpacity>
 
-      {/* Logout button (SDK) */}
+      {/* Logout (SDK) */}
       <TouchableOpacity
         style={styles.logoutButton}
         onPress={async () => {
           await logout();
-          setLoggedInUser(null);
+          onLogout();
         }}
       >
-        <Text style={styles.logoutButtonText}>👤 {loggedInUser.userId} — Logout (SDK)</Text>
+        <Text style={styles.logoutButtonText}>
+          👤 {loggedInUser.userId} — Logout (SDK)
+        </Text>
       </TouchableOpacity>
 
-      {/* Logout button (API) */}
+      {/* Logout (API) */}
       <TouchableOpacity
         style={styles.logoutButtonApi}
         onPress={async () => {
           await logoutWithApi();
-          setLoggedInUser(null);
+          onLogout();
         }}
       >
         <Text style={styles.logoutButtonText}>🔌 Logout (API)</Text>
       </TouchableOpacity>
 
-      {/* Floating button to reopen last notification payload */}
+      {/* Floating bell to reopen last notification */}
       {notiPayload && !modalVisible && (
         <TouchableOpacity
           style={styles.floatingButton}
@@ -303,9 +358,7 @@ export default function App() {
                 style={[styles.button, styles.copyButton]}
                 onPress={handleCopy}
               >
-                <Text style={styles.buttonText}>
-                  📋 Copy to Clipboard
-                </Text>
+                <Text style={styles.buttonText}>📋 Copy to Clipboard</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.closeButton]}
@@ -317,7 +370,7 @@ export default function App() {
           </View>
         </View>
       </Modal>
-    </AmityUiKitProvider>
+    </>
   );
 }
 
