@@ -41,6 +41,7 @@ export const useEditUser = (userId: string) => {
   const {
     watch,
     control,
+    resetField,
     handleSubmit,
     formState: { isDirty, isSubmitting, isValid },
   } = useForm<EditUserFormValues>({
@@ -70,6 +71,7 @@ export const useEditUser = (userId: string) => {
     onError: (error) => {
       if (error.message?.includes(ERROR_CODE.DISPLAY_NAME_UPDATE)) {
         setIsDisplayNameDisabled(true);
+        resetField('displayName');
         showToast({
           type: 'informative',
           message: 'Only administrator can update user display name.',
