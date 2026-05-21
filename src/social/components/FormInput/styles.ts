@@ -26,6 +26,9 @@ export const useStyles = () => {
       padding: 0,
       margin: 0,
     },
+    inputDisabled: {
+      color: theme.colors.baseShade2,
+    },
   });
 
   return {

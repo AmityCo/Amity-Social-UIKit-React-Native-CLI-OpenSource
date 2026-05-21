@@ -12,6 +12,7 @@ import { useToast } from '../../../../../core/stores/slices/toastSlice';
 import { ERROR_CODE } from '../../../../../core/constants';
 import { PageID } from '../../../../enums';
 import { useAmityPage } from '../../../../hooks';
+import { useState } from 'react';
 
 const schema = z.object({
   image: z.custom<Amity.File<'image'>>().optional(),
@@ -35,6 +36,7 @@ export const useEditUser = (userId: string) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { showToast } = useToast();
+  const [isDisplayNameDisabled, setIsDisplayNameDisabled] = useState(false);
 
   const {
     watch,
@@ -67,6 +69,7 @@ export const useEditUser = (userId: string) => {
     },
     onError: (error) => {
       if (error.message?.includes(ERROR_CODE.DISPLAY_NAME_UPDATE)) {
+        setIsDisplayNameDisabled(true);
         showToast({
           type: 'informative',
           message: 'Only administrator can update user display name.',
@@ -83,7 +86,7 @@ export const useEditUser = (userId: string) => {
   const onSubmit = async (data: EditUserFormValues) => {
     await mutateAsync({
       avatarFileId: data.image?.fileId,
-      displayName: data.displayName,
+      ...(isDisplayNameDisabled ? {} : { displayName: data.displayName }),
       description: data.description,
     });
   };
@@ -100,5 +103,6 @@ export const useEditUser = (userId: string) => {
     isValid,
     onSubmit,
     accessibilityId,
+    isDisplayNameDisabled,
   };
 };
