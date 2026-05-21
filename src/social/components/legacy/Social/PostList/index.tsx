@@ -406,23 +406,25 @@ export default function PostList({ postDetail, onDelete }: IPostList) {
     <View key={postId} style={styles.postWrap}>
       <View style={styles.headerSection}>
         <View style={styles.user}>
-          {user?.avatarCustomUrl ? (
-            <Image
-              style={styles.avatar as ImageStyle}
-              source={{ uri: user.avatarCustomUrl }}
-            />
-          ) : user?.avatarFileId ? (
-            <Image
-              style={styles.avatar as ImageStyle}
-              source={{
-                uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user.avatarFileId}/download`,
-              }}
-            />
-          ) : (
-            <View style={styles.avatar}>
-              <SvgXml xml={personXml} width="20" height="16" />
-            </View>
-          )}
+          <TouchableOpacity onPress={handleDisplayNamePress}>
+            {user?.avatarCustomUrl ? (
+              <Image
+                style={styles.avatar as ImageStyle}
+                source={{ uri: user.avatarCustomUrl }}
+              />
+            ) : user?.avatarFileId ? (
+              <Image
+                style={styles.avatar as ImageStyle}
+                source={{
+                  uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user.avatarFileId}/download`,
+                }}
+              />
+            ) : (
+              <View style={styles.avatar}>
+                <SvgXml xml={personXml} width="20" height="16" />
+              </View>
+            )}
+          </TouchableOpacity>
 
           <View style={styles.fillSpace}>
             <View style={styles.headerRow}>
