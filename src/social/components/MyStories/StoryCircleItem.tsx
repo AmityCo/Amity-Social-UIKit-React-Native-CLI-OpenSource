@@ -26,8 +26,10 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
   storyTarget,
 }) => {
   const theme = useTheme() as MyMD3Theme;
-  const [avatarUrl, setAvatarUrl] = useState(defaultCommunityAvatarUri);
-  const [communityData, setCommunityData] = useState<Amity.Community>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [communityData, setCommunityData] = useState<Amity.Community | null>(
+    null
+  );
   const hasStoryPermission = useStoryPermission(storyTarget.targetId);
   const { getImage } = useFile();
   const { getUiKitConfig } = useConfig();
@@ -54,6 +56,7 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
           const avatarImage = await getImage({
             fileId: data.avatarFileId,
             imageSize: ImageSizeState.small,
+            type: 'community',
           });
           setAvatarUrl(avatarImage);
         }
@@ -62,6 +65,7 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
   }, [getImage, storyTarget.targetId, storyTarget.targetType]);
 
   if (storyTarget.targetType !== 'community') return null;
+
   return (
     <TouchableOpacity
       key={storyTarget.targetId}

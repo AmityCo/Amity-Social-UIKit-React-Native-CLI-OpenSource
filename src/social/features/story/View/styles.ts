@@ -190,6 +190,8 @@ export const useStyles = () => {
     },
     deleteBtn: {
       flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
       backgroundColor: theme.colors.background,
     },
     commentBottomSheet: {
@@ -199,7 +201,7 @@ export const useStyles = () => {
       height: '100%',
     },
     handleBar: {
-      width: 0.25 * width,
+      width: 36,
       backgroundColor: theme.colors.baseShade4,
       height: 5,
       marginVertical: 10,
@@ -217,8 +219,9 @@ export const useStyles = () => {
       marginVertical: 10,
     },
     deleteStoryTxt: {
-      color: theme.colors.alert,
-      fontSize: 14,
+      color: theme.colors.base,
+      fontSize: 15,
+      fontWeight: '600',
     },
     errorContainer: {
       width: '100%',

@@ -30,6 +30,7 @@ import {
   storyLikedIcon,
   storyThreedotsMenu,
 } from '../../../../core/assets/icons/xml';
+import { trash } from '../../../../core/assets/icons';
 import { useStyles } from './styles';
 import { useTimeDifference } from '../../../../core/hooks/useTimeDifference';
 import { useStory } from '../../../hooks/useStory';
@@ -602,6 +603,7 @@ export const StoryListItem = ({
       >
         <View style={styles.deleteBottomSheet}>
           <TouchableOpacity style={styles.deleteBtn} onPress={onPressDelete}>
+            <SvgXml xml={trash()} width={24} height={24} />
             <Text style={styles.deleteStoryTxt}>Delete story</Text>
           </TouchableOpacity>
         </View>

@@ -96,6 +96,7 @@ const AmityViewStoryPage: FC<IAmityViewStoryPage> = ({
           const avatarUrl = await getImage({
             fileId: data.avatarFileId,
             imageSize: ImageSizeState.small,
+            type: 'community',
           });
           setCommunityAvatar(avatarUrl ?? defaultCommunityAvatarUri);
         }

@@ -8,6 +8,8 @@ export const useStyles = () => {
     container: {
       backgroundColor: theme.colors.background,
       width,
+      marginLeft: 8,
+      paddingVertical: 16,
     },
     skeletonContainer: {
       backgroundColor: theme.colors.background,
@@ -99,7 +101,7 @@ export const useStyles = () => {
     avatarContainer: {
       alignItems: 'center',
       width: 48,
-      margin: 12,
+      marginHorizontal: 8,
     },
   });
 
