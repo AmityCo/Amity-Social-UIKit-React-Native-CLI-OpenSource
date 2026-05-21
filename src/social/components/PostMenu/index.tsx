@@ -13,12 +13,9 @@ import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { ComponentID, PageID } from '../../enums';
 import { useClosePoll } from '../../hooks/queries/useClosePoll';
 import { useUIKitDispatch } from '../../../core/stores/store';
-import { CopyLinkAction } from '../../elements/CopyLinkAction';
-import { ShareAction } from '../../elements/ShareAction';
 import MenuButton from '../../elements/MenuButton/MenuButton';
 import MenuAction from '../../elements/MenuAction/MenuAction';
 import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
-import { usePostShareAction } from '../../features/post/components/EngagementActions/Components/usePostShareAction';
 
 type PostMenuProps = {
   pageId?: PageID;
@@ -43,8 +40,6 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
 
   const { postId, targetType, targetId } = post ?? {};
   const myId = (client as Amity.Client).userId;
-
-  const { shareLink } = usePostShareAction({ postId, postData: post, pageId });
 
   const { isCommunityModerator: isIAmModerator } = useIsCommunityModerator({
     communityId: targetType === 'community' && targetId,
@@ -153,30 +148,6 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
           iconProps={{ xml: pen() }}
           label="Edit post"
           onPress={goToEditPost}
-        />
-      ),
-    },
-    {
-      show: !!shareLink,
-      action: (
-        <CopyLinkAction
-          key="copy"
-          link={shareLink}
-          pageId={pageId}
-          componentId={ComponentID.post_content}
-          onPress={closeBottomSheet}
-        />
-      ),
-    },
-    {
-      show: !!shareLink,
-      action: (
-        <ShareAction
-          key="share"
-          link={shareLink}
-          pageId={pageId}
-          componentId={ComponentID.post_content}
-          onPress={closeBottomSheet}
         />
       ),
     },
