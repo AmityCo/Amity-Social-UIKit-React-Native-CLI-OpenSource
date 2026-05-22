@@ -321,9 +321,11 @@ const CommentList: FC<ICommentListProp> = ({
           (isAmityAd(item) ? item.adId : item.commentId) + `_${index}`
         }
         ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No comments yet</Text>
-          </View>
+          loading ? null : (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No comments yet</Text>
+            </View>
+          )
         }
         onEndReachedThreshold={0.8}
         onEndReached={() => onNextPageRef.current && onNextPageRef.current()}
