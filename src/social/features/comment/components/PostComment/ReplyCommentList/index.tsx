@@ -385,7 +385,7 @@ const ReplyCommentList = ({
                   height="20"
                 />
                 <Text style={styles.deleteText}>
-                  {isReportByMe ? 'Unreport comment' : 'Report comment'}
+                  {isReportByMe ? 'Unreport reply' : 'Report reply'}
                 </Text>
               </TouchableOpacity>
             )}
