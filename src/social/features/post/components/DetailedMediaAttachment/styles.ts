@@ -30,10 +30,10 @@ export const useStyles = (theme: MyMD3Theme) => {
       paddingTop: 16,
       paddingHorizontal: 24,
     },
-    iconBtn: {
-      width: 24,
-      height: 24,
-      tintColor: theme.colors.base,
+    iconContainer: {
+      padding: 4,
+      borderRadius: 100,
+      backgroundColor: theme.colors.backgroundShade1,
       marginRight: 12,
     },
     iconText: {

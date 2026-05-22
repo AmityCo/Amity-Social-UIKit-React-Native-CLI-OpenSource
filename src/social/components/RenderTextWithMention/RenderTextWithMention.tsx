@@ -1,4 +1,4 @@
-import { Text, Linking, TouchableOpacity } from 'react-native';
+import { Text, Linking } from 'react-native';
 import { useStyles } from './styles';
 import { memo, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -94,14 +94,14 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
       const nonHighlightedText = textPost.slice(currentPosition, index);
       // Add highlighted text
       const highlightedText = (
-        <TouchableOpacity
+        <Text
           onPress={() => handleOnClick(link, userId)}
           key={`highlighted-${i}`}
+          style={styles.mentionText}
+          selectable
         >
-          <Text style={styles.mentionText} selectable>
-            {textPost.slice(index, index + length)}
-          </Text>
-        </TouchableOpacity>
+          {textPost.slice(index, index + length)}
+        </Text>
       );
 
       // Update currentPosition for the next iteration
