@@ -115,10 +115,14 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
 
   const onPressShareStory = useCallback(async () => {
     const formData = new FormData();
+    const isImage = type === StoryType.image;
+    const mimeType =
+      mime.getType(mediaType.uri) ?? (isImage ? 'image/jpeg' : 'video/mp4');
     formData.append('files', {
-      ...mediaType,
-      type: mime.getType(mediaType.uri),
-    });
+      uri: mediaType.uri,
+      name: mediaType.name,
+      type: mimeType,
+    } as unknown as Blob);
 
     try {
       setLoading(true);
@@ -204,9 +208,9 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
         >
           <SvgXml xml={storyHyperLinkIcon('blue')} width="25" height="25" />
           <Text style={styles.hyperlinkText}>
-            {hyperlink[0].data.customText.length === 0
-              ? hyperlink[0].data.url
-              : hyperlink[0].data.customText}
+            {(hyperlink[0]?.data?.customText?.length ?? 0) === 0
+              ? hyperlink[0]?.data?.url
+              : hyperlink[0]?.data?.customText}
           </Text>
         </TouchableOpacity>
       )}
