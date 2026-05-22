@@ -23,6 +23,7 @@ export function EditUser({ userId }: EditUserProps) {
     isSubmitting,
     handleSubmit,
     accessibilityId,
+    isDisplayNameDisabled,
   } = useEditUser(userId);
 
   return (
@@ -54,6 +55,7 @@ export function EditUser({ userId }: EditUserProps) {
                   pageId={PageID.edit_user_profile_page}
                   maxLength={CHARACTER_LIMIT.USER_DISPLAY_NAME}
                   elementId={ElementID.user_display_name_title}
+                  editable={!isDisplayNameDisabled}
                 />
               )}
             />

@@ -24,6 +24,7 @@ function FormInput({
   pageId = PageID.WildCardPage,
   elementId = ElementID.WildCardElement,
   componentId = ComponentID.WildCardComponent,
+  editable = true,
   ...props
 }: FormInputProps) {
   const { styles, theme } = useStyles();
@@ -46,7 +47,8 @@ function FormInput({
       <TextInput
         {...props}
         value={value}
-        style={styles.input}
+        editable={editable}
+        style={[styles.input, !editable && styles.inputDisabled]}
         maxLength={maxLength}
         placeholderTextColor={theme.colors.baseShade3}
       />
