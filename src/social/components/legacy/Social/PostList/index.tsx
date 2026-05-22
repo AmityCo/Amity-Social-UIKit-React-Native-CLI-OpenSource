@@ -406,29 +406,57 @@ export default function PostList({ postDetail, onDelete }: IPostList) {
     <View key={postId} style={styles.postWrap}>
       <View style={styles.headerSection}>
         <View style={styles.user}>
-          {user?.avatarCustomUrl ? (
-            <Image
-              style={styles.avatar as ImageStyle}
-              source={{ uri: user.avatarCustomUrl }}
-            />
-          ) : user?.avatarFileId ? (
-            <Image
-              style={styles.avatar as ImageStyle}
-              source={{
-                uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user.avatarFileId}/download`,
-              }}
-            />
+          {user?.userId ? (
+            <TouchableOpacity onPress={handleDisplayNamePress}>
+              {user?.avatarCustomUrl ? (
+                <Image
+                  style={styles.avatar as ImageStyle}
+                  source={{ uri: user.avatarCustomUrl }}
+                />
+              ) : user?.avatarFileId ? (
+                <Image
+                  style={styles.avatar as ImageStyle}
+                  source={{
+                    uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user.avatarFileId}/download`,
+                  }}
+                />
+              ) : (
+                <View style={styles.avatar}>
+                  <SvgXml xml={personXml} width="20" height="16" />
+                </View>
+              )}
+            </TouchableOpacity>
           ) : (
-            <View style={styles.avatar}>
-              <SvgXml xml={personXml} width="20" height="16" />
-            </View>
+            <>
+              {user?.avatarCustomUrl ? (
+                <Image
+                  style={styles.avatar as ImageStyle}
+                  source={{ uri: user.avatarCustomUrl }}
+                />
+              ) : user?.avatarFileId ? (
+                <Image
+                  style={styles.avatar as ImageStyle}
+                  source={{
+                    uri: `https://api.${apiRegion}.amity.co/api/v3/files/${user.avatarFileId}/download`,
+                  }}
+                />
+              ) : (
+                <View style={styles.avatar}>
+                  <SvgXml xml={personXml} width="20" height="16" />
+                </View>
+              )}
+            </>
           )}
 
           <View style={styles.fillSpace}>
             <View style={styles.headerRow}>
-              <TouchableOpacity onPress={handleDisplayNamePress}>
+              {user?.userId ? (
+                <TouchableOpacity onPress={handleDisplayNamePress}>
+                  <Text style={styles.headerText}>{user?.displayName}</Text>
+                </TouchableOpacity>
+              ) : (
                 <Text style={styles.headerText}>{user?.displayName}</Text>
-              </TouchableOpacity>
+              )}
 
               {communityName && (
                 <View style={styles.communityNameContainer}>
