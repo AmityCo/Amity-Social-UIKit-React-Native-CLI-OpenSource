@@ -1,34 +1,61 @@
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useStyles } from '../styles';
 import { arrowLeft } from '../../../../../core/assets/icons';
 import { Typography } from '../../../../../core/components/Typography/Typography';
 import dayjs from 'dayjs';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, {
+  DateTimePickerAndroid,
+} from '@react-native-community/datetimepicker';
 import {
   androidDurationOptions,
   usePollPostComposerContext,
 } from '../PollPostComposer';
 
 export function AndroidPollDurationPicker() {
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
   const {
     duration,
     selectedDate,
     setSelectedTime,
     selectedTime,
     setSelectedDate,
-    setIsShowingDatePicker,
-    setIsTimePickerShown,
-    isShowingDatePicker,
-    isTimePickerShown,
   } = usePollPostComposerContext();
   const endOn = dayjs().add(duration.value, 'day');
+  const isCustom =
+    duration.label ===
+    androidDurationOptions[androidDurationOptions.length - 1].label;
+
+  const openDatePicker = () => {
+    DateTimePickerAndroid.open({
+      mode: 'date',
+      value: selectedDate,
+      minimumDate: dayjs().toDate(),
+      maximumDate: dayjs().add(1, 'month').toDate(),
+      onChange: (event, date) => {
+        if (event.type === 'set' && date) {
+          setSelectedDate(date);
+        }
+      },
+    });
+  };
+
+  const openTimePicker = () => {
+    DateTimePickerAndroid.open({
+      mode: 'time',
+      value: selectedTime,
+      is24Hour: true,
+      onChange: (event, time) => {
+        if (event.type === 'set' && time) {
+          setSelectedTime(time);
+        }
+      },
+    });
+  };
 
   return (
     <View>
-      {duration.label !==
-      androidDurationOptions[androidDurationOptions.length - 1].label ? (
+      {!isCustom ? (
         <Typography.Caption style={styles.base}>
           Ends on {endOn.format('DD MMM')} at {endOn.format('HH:mm A')}
         </Typography.Caption>
@@ -38,7 +65,7 @@ export function AndroidPollDurationPicker() {
           <View style={styles.androidDateTimeContainer}>
             <TouchableOpacity
               style={styles.androidDateTimeButton}
-              onPress={() => setIsShowingDatePicker(true)}
+              onPress={openDatePicker}
             >
               <Typography.Body style={styles.base}>
                 {dayjs(selectedDate).format('DD MMM YYYY')}
@@ -46,7 +73,7 @@ export function AndroidPollDurationPicker() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.androidDateTimeButton}
-              onPress={() => setIsTimePickerShown(true)}
+              onPress={openTimePicker}
             >
               <Typography.Body style={styles.base}>
                 {dayjs(selectedTime).format('HH:mm A')}
@@ -55,42 +82,13 @@ export function AndroidPollDurationPicker() {
           </View>
         </View>
       )}
-      {isShowingDatePicker && (
-        <DateTimePicker
-          mode="date"
-          locale="en_US"
-          display="compact"
-          value={selectedDate}
-          minimumDate={dayjs().toDate()}
-          accentColor={theme.colors.primary}
-          maximumDate={dayjs().add(1, 'month').toDate()}
-          onChange={(event, date) => {
-            setIsShowingDatePicker(false);
-            if (event.type === 'set') {
-              setSelectedDate(date);
-            }
-          }}
-        />
-      )}
-      {isTimePickerShown && (
-        <DateTimePicker
-          mode="time"
-          display="clock"
-          value={selectedTime}
-          onChange={(event, time) => {
-            setIsTimePickerShown(false);
-            if (event.type === 'set') {
-              setSelectedTime(time);
-            }
-          }}
-        />
-      )}
     </View>
   );
 }
 
 export function IOSPollDurationPicker() {
   const { styles, theme } = useStyles();
+  const { width } = useWindowDimensions();
   const {
     setDuration,
     selectedDate,
@@ -138,7 +136,7 @@ export function IOSPollDurationPicker() {
         display="inline"
         value={selectedDate}
         minimumDate={dayjs().toDate()}
-        style={styles.iOSDateTimePicker}
+        style={[styles.iOSDateTimePicker, { width }]}
         accentColor={theme.colors.primary}
         maximumDate={dayjs().add(1, 'month').toDate()}
         onChange={(event, date) => {
