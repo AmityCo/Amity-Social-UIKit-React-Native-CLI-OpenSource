@@ -22,6 +22,7 @@ const PollContent = ({
   const {
     poll,
     votePoll,
+    unvotePoll,
     totalVotes,
     isPollClosed,
     isAlreadyVoted,
@@ -58,6 +59,7 @@ const PollContent = ({
         totalVotes={totalVotes}
         isPollClosed={isPollClosed}
         isAlreadyVoted={isAlreadyVoted}
+        unvotePoll={unvotePoll}
         isAuthorSeeingResults={isAuthorSeeingResults}
         setIsAuthorSeeingResults={setIsAuthorSeeingResults}
       />
