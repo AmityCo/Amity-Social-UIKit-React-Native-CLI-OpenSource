@@ -1,7 +1,12 @@
 import { Pressable, View, Animated, Easing } from 'react-native';
 import { FC, memo, useCallback, useEffect, useRef } from 'react';
-import { PageID, ComponentID, mediaAttachment } from '../../../../enums';
-import { useAmityComponent } from '../../../../hooks';
+import {
+  PageID,
+  ComponentID,
+  ElementID,
+  mediaAttachment,
+} from '../../../../enums';
+import { useAmityComponent, useAmityElement } from '../../../../hooks';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { camera, photo, video } from '../../../../../core/assets/icons';
@@ -24,6 +29,21 @@ const AmityMediaAttachmentComponent: FC<AmityMediaAttachmentComponentType> = ({
   const { accessibilityId, themeStyles, isExcluded } = useAmityComponent({
     pageId,
     componentId,
+  });
+  const cameraElement = useAmityElement({
+    pageId,
+    componentId,
+    elementId: ElementID.camera_button,
+  });
+  const imageElement = useAmityElement({
+    pageId,
+    componentId,
+    elementId: ElementID.image_button,
+  });
+  const videoElement = useAmityElement({
+    pageId,
+    componentId,
+    elementId: ElementID.video_button,
   });
   const styles = useStyles(themeStyles);
 
@@ -61,41 +81,57 @@ const AmityMediaAttachmentComponent: FC<AmityMediaAttachmentComponentType> = ({
     >
       <View style={styles.handleBar} />
       <View style={styles.buttonsContainer}>
-        <Pressable onPress={onPressCamera}>
-          <View style={styles.iconContainer}>
-            <SvgXml
-              xml={camera()}
-              width={24}
-              height={24}
-              color={themeStyles?.colors?.base}
-            />
-          </View>
-        </Pressable>
+        {!cameraElement.isExcluded && (
+          <Pressable
+            testID={cameraElement.accessibilityId}
+            accessibilityLabel={cameraElement.accessibilityId}
+            onPress={onPressCamera}
+          >
+            <View style={styles.iconContainer}>
+              <SvgXml
+                xml={camera()}
+                width={24}
+                height={24}
+                color={themeStyles?.colors?.base}
+              />
+            </View>
+          </Pressable>
+        )}
 
-        {(!chosenMediaType || chosenMediaType === mediaAttachment.image) && (
-          <Pressable onPress={onPressImage}>
-            <View style={styles.iconContainer}>
-              <SvgXml
-                xml={photo()}
-                width={24}
-                height={24}
-                color={themeStyles?.colors?.base}
-              />
-            </View>
-          </Pressable>
-        )}
-        {(!chosenMediaType || chosenMediaType === mediaAttachment.video) && (
-          <Pressable onPress={onPressVideo}>
-            <View style={styles.iconContainer}>
-              <SvgXml
-                xml={video()}
-                width={24}
-                height={24}
-                color={themeStyles?.colors?.base}
-              />
-            </View>
-          </Pressable>
-        )}
+        {!imageElement.isExcluded &&
+          (!chosenMediaType || chosenMediaType === mediaAttachment.image) && (
+            <Pressable
+              testID={imageElement.accessibilityId}
+              accessibilityLabel={imageElement.accessibilityId}
+              onPress={onPressImage}
+            >
+              <View style={styles.iconContainer}>
+                <SvgXml
+                  xml={photo()}
+                  width={24}
+                  height={24}
+                  color={themeStyles?.colors?.base}
+                />
+              </View>
+            </Pressable>
+          )}
+        {!videoElement.isExcluded &&
+          (!chosenMediaType || chosenMediaType === mediaAttachment.video) && (
+            <Pressable
+              testID={videoElement.accessibilityId}
+              accessibilityLabel={videoElement.accessibilityId}
+              onPress={onPressVideo}
+            >
+              <View style={styles.iconContainer}>
+                <SvgXml
+                  xml={video()}
+                  width={24}
+                  height={24}
+                  color={themeStyles?.colors?.base}
+                />
+              </View>
+            </Pressable>
+          )}
         {/* //will use later
         <Pressable>
           <ImageKeyElement

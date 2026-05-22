@@ -6,7 +6,7 @@ import {
   ElementID,
   mediaAttachment,
 } from '../../../../enums';
-import { useAmityComponent } from '../../../../hooks';
+import { useAmityComponent, useAmityElement } from '../../../../hooks';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { camera, photo, video } from '../../../../../core/assets/icons';
@@ -27,6 +27,21 @@ const AmityDetailedMediaAttachmentComponent: FC<
   const { accessibilityId, themeStyles, isExcluded } = useAmityComponent({
     pageId,
     componentId,
+  });
+  const cameraElement = useAmityElement({
+    pageId,
+    componentId,
+    elementId: ElementID.camera_button,
+  });
+  const imageElement = useAmityElement({
+    pageId,
+    componentId,
+    elementId: ElementID.image_button,
+  });
+  const videoElement = useAmityElement({
+    pageId,
+    componentId,
+    elementId: ElementID.video_button,
   });
   const styles = useStyles(themeStyles);
 
@@ -64,27 +79,16 @@ const AmityDetailedMediaAttachmentComponent: FC<
     >
       <View style={styles.handleBar} />
       <View style={styles.buttonsContainer}>
-        <Pressable style={styles.mediaAttachmentBtn} onPress={onPressCamera}>
-          <View style={styles.iconContainer}>
-            <SvgXml
-              xml={camera()}
-              width={24}
-              height={24}
-              color={themeStyles?.colors?.base}
-            />
-          </View>
-          <TextKeyElement
-            pageID={pageId}
-            componentID={componentId}
-            elementID={ElementID.camera_button}
-            style={styles.iconText}
-          />
-        </Pressable>
-        {(!chosenMediaType || chosenMediaType === mediaAttachment.image) && (
-          <Pressable style={styles.mediaAttachmentBtn} onPress={onPressImage}>
+        {!cameraElement.isExcluded && (
+          <Pressable
+            testID={cameraElement.accessibilityId}
+            accessibilityLabel={cameraElement.accessibilityId}
+            style={styles.mediaAttachmentBtn}
+            onPress={onPressCamera}
+          >
             <View style={styles.iconContainer}>
               <SvgXml
-                xml={photo()}
+                xml={camera()}
                 width={24}
                 height={24}
                 color={themeStyles?.colors?.base}
@@ -93,29 +97,59 @@ const AmityDetailedMediaAttachmentComponent: FC<
             <TextKeyElement
               pageID={pageId}
               componentID={componentId}
-              elementID={ElementID.image_button}
+              elementID={ElementID.camera_button}
               style={styles.iconText}
             />
           </Pressable>
         )}
-        {(!chosenMediaType || chosenMediaType === mediaAttachment.video) && (
-          <Pressable style={styles.mediaAttachmentBtn} onPress={onPressVideo}>
-            <View style={styles.iconContainer}>
-              <SvgXml
-                xml={video()}
-                width={24}
-                height={24}
-                color={themeStyles?.colors?.base}
+        {!imageElement.isExcluded &&
+          (!chosenMediaType || chosenMediaType === mediaAttachment.image) && (
+            <Pressable
+              testID={imageElement.accessibilityId}
+              accessibilityLabel={imageElement.accessibilityId}
+              style={styles.mediaAttachmentBtn}
+              onPress={onPressImage}
+            >
+              <View style={styles.iconContainer}>
+                <SvgXml
+                  xml={photo()}
+                  width={24}
+                  height={24}
+                  color={themeStyles?.colors?.base}
+                />
+              </View>
+              <TextKeyElement
+                pageID={pageId}
+                componentID={componentId}
+                elementID={ElementID.image_button}
+                style={styles.iconText}
               />
-            </View>
-            <TextKeyElement
-              pageID={pageId}
-              componentID={componentId}
-              elementID={ElementID.video_button}
-              style={styles.iconText}
-            />
-          </Pressable>
-        )}
+            </Pressable>
+          )}
+        {!videoElement.isExcluded &&
+          (!chosenMediaType || chosenMediaType === mediaAttachment.video) && (
+            <Pressable
+              testID={videoElement.accessibilityId}
+              accessibilityLabel={videoElement.accessibilityId}
+              style={styles.mediaAttachmentBtn}
+              onPress={onPressVideo}
+            >
+              <View style={styles.iconContainer}>
+                <SvgXml
+                  xml={video()}
+                  width={24}
+                  height={24}
+                  color={themeStyles?.colors?.base}
+                />
+              </View>
+              <TextKeyElement
+                pageID={pageId}
+                componentID={componentId}
+                elementID={ElementID.video_button}
+                style={styles.iconText}
+              />
+            </Pressable>
+          )}
         {/* will use later
         <Pressable style={styles.mediaAttachmentBtn}>
           <ImageKeyElement
