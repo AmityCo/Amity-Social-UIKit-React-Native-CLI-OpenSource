@@ -8,6 +8,8 @@ export const useStyles = () => {
     container: {
       backgroundColor: theme.colors.background,
       width,
+      marginLeft: 8,
+      paddingVertical: 16,
     },
     skeletonContainer: {
       backgroundColor: theme.colors.background,
@@ -79,27 +81,27 @@ export const useStyles = () => {
     },
     officialIcon: {
       position: 'absolute',
-      left: 45,
-      top: 42,
+      left: 30,
+      top: 30,
     },
     errorIcon: {
       position: 'absolute',
-      left: 45,
-      bottom: 24,
+      left: 30,
+      bottom: 6,
     },
     scrollContainer: {
       paddingVertical: 4,
     },
     communityAvatar: {
-      width: 60,
-      height: 60,
+      width: 40,
+      height: 40,
       borderRadius: 56,
       margin: 4,
     },
     avatarContainer: {
       alignItems: 'center',
-      width: 68,
-      margin: 8,
+      width: 48,
+      marginHorizontal: 8,
     },
   });
 

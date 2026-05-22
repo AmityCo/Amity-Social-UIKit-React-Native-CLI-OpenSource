@@ -30,7 +30,7 @@ export const useFile = () => {
           : defaultAvatarUri;
       const newImageUrl =
         FileRepository.fileUrlWithSize(file.data.fileUrl, imageSize) ??
-        defaultAvatarUri;
+        (type === 'community' ? defaultCommunityAvatarUri : defaultAvatarUri);
       return newImageUrl;
     },
     []

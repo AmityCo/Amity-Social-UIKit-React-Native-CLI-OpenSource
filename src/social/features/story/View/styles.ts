@@ -63,8 +63,8 @@ export const useStyles = () => {
       paddingHorizontal: 15,
     },
     avatarImage: {
-      height: 35,
-      width: 35,
+      height: 40,
+      width: 40,
       borderRadius: 100,
     },
     avatarText: {
@@ -173,8 +173,8 @@ export const useStyles = () => {
     },
     storyCreateIcon: {
       position: 'absolute',
-      left: 25,
-      top: 25,
+      left: 28,
+      top: 28,
     },
     bottomSheet: {
       borderTopLeftRadius: 20,
@@ -190,6 +190,8 @@ export const useStyles = () => {
     },
     deleteBtn: {
       flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
       backgroundColor: theme.colors.background,
     },
     commentBottomSheet: {
@@ -199,7 +201,7 @@ export const useStyles = () => {
       height: '100%',
     },
     handleBar: {
-      width: 0.25 * width,
+      width: 36,
       backgroundColor: theme.colors.baseShade4,
       height: 5,
       marginVertical: 10,
@@ -218,7 +220,8 @@ export const useStyles = () => {
     },
     deleteStoryTxt: {
       color: theme.colors.base,
-      fontSize: 14,
+      fontSize: 15,
+      fontWeight: '600',
     },
     errorContainer: {
       width: '100%',

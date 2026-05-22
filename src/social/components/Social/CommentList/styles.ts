@@ -135,6 +135,18 @@ export const useStyles = () => {
     disabledCommentText: {
       color: theme.colors.baseShade2,
     },
+    emptyContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    listContent: {
+      flexGrow: 1,
+    },
+    emptyText: {
+      color: theme.colors.baseShade2,
+      fontSize: 15,
+    },
   });
 
   return styles;

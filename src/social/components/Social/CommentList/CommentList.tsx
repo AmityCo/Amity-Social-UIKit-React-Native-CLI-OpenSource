@@ -300,6 +300,7 @@ const CommentList: FC<ICommentListProp> = ({
       <FlatList
         keyboardShouldPersistTaps="handled"
         data={itemWithAds}
+        contentContainerStyle={styles.listContent}
         renderItem={({ item }) => {
           if (isAmityAd(item)) {
             return <CommentAdComponent ad={item} />;
@@ -318,6 +319,13 @@ const CommentList: FC<ICommentListProp> = ({
         }}
         keyExtractor={(item, index) =>
           (isAmityAd(item) ? item.adId : item.commentId) + `_${index}`
+        }
+        ListEmptyComponent={
+          loading ? null : (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No comments yet</Text>
+            </View>
+          )
         }
         onEndReachedThreshold={0.8}
         onEndReached={() => onNextPageRef.current && onNextPageRef.current()}

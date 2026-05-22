@@ -8,6 +8,7 @@ import { ImageSizeState } from '../../../enums';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { NextOrPrevious } from '../../../components/StoryKit';
 import AmityViewStoryItem from './components/AmityViewStoryItem';
+import { defaultCommunityAvatarUri } from '../../../../core/assets';
 
 interface IAmityViewStoryPage {
   targetType: Amity.StoryTargetType;
@@ -95,8 +96,9 @@ const AmityViewStoryPage: FC<IAmityViewStoryPage> = ({
           const avatarUrl = await getImage({
             fileId: data.avatarFileId,
             imageSize: ImageSizeState.small,
+            type: 'community',
           });
-          setCommunityAvatar(avatarUrl);
+          setCommunityAvatar(avatarUrl ?? defaultCommunityAvatarUri);
         }
       }
     );

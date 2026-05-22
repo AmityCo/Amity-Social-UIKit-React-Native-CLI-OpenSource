@@ -66,6 +66,38 @@ const HyperlinkConfig: FC<IHyperLinkConfig> = ({
     setIsVisibleModal(false);
   }, [setIsVisibleModal]);
 
+  const handleCancel = useCallback(() => {
+    const hasChanges =
+      url !== (hyperlinkItem?.url ?? '') ||
+      customizedText !== (hyperlinkItem?.customText ?? '');
+    if (hasChanges) {
+      Alert.alert(
+        'Unsaved changes',
+        "Are you sure you want to cancel? Your changes won't be saved.",
+        [
+          { text: 'No', style: 'cancel' },
+          {
+            text: 'Yes',
+            style: 'destructive',
+            onPress: () => {
+              if (hyperlinkItem) {
+                setUrl(hyperlinkItem.url);
+                setCustomizedText(hyperlinkItem.customText);
+              } else {
+                reset();
+              }
+              setUrlErrorMessage(null);
+              setCustomTextErrorMessage(null);
+              onClosed();
+            },
+          },
+        ]
+      );
+    } else {
+      onClosed();
+    }
+  }, [url, customizedText, hyperlinkItem, onClosed, reset]);
+
   const handleUrl = useCallback((text: string) => {
     setUrlErrorMessage(null);
     setUrl(text);
@@ -149,7 +181,11 @@ const HyperlinkConfig: FC<IHyperLinkConfig> = ({
       >
         <View style={styles.handleBar} />
         <View style={styles.titleContainer}>
-          <View style={styles.flexContainer} />
+          <View style={styles.flexContainer}>
+            <Text onPress={handleCancel} style={styles.cancel}>
+              Cancel
+            </Text>
+          </View>
           <View style={styles.flexContainer}>
             <Text style={styles.title}>Add link</Text>
           </View>
@@ -177,68 +213,76 @@ const HyperlinkConfig: FC<IHyperLinkConfig> = ({
             color={theme.colors.base}
           />
         )}
-        <View
-          style={[
-            styles.inputContainer,
-            url.length > 0 && urlErrorMessage && styles.alertBorderColor,
-          ]}
-        >
-          <Text style={styles.label}>
-            URL <Text style={styles.requiredSign}>*</Text>
-          </Text>
-          <TextInput
-            defaultValue={url}
-            onChangeText={handleUrl}
-            style={styles.input}
-            placeholder="https://www.example.com"
-            placeholderTextColor={theme.colors.baseShade2}
-            onFocus={validateHyperlinkText}
-          />
-        </View>
-        {urlErrorMessage && (
-          <Text style={styles.inValidUrl}>{urlErrorMessage}</Text>
-        )}
+        <View style={styles.contentContainer}>
+          <View
+            style={[
+              styles.inputContainer,
+              url.length > 0 && urlErrorMessage && styles.alertBorderColor,
+            ]}
+          >
+            <Text style={styles.label}>
+              URL <Text style={styles.requiredSign}>*</Text>
+            </Text>
+            <TextInput
+              defaultValue={url}
+              onChangeText={handleUrl}
+              style={styles.input}
+              placeholder="https://www.example.com"
+              placeholderTextColor={theme.colors.baseShade2}
+              onFocus={validateHyperlinkText}
+            />
+          </View>
+          {urlErrorMessage && (
+            <Text style={styles.inValidUrl}>{urlErrorMessage}</Text>
+          )}
 
-        <View
-          style={[
-            styles.inputContainer,
-            customizedText.length > 0 &&
-              customTextErrorMessage &&
-              styles.alertBorderColor,
-          ]}
-        >
-          <View style={styles.rowContainer}>
-            <Text style={styles.label}>Customize Link Text</Text>
-            <Text style={styles.textCount}>{customizedText.length}/30</Text>
+          <View
+            style={[
+              styles.inputContainer,
+              customizedText.length > 0 &&
+                customTextErrorMessage &&
+                styles.alertBorderColor,
+            ]}
+          >
+            <View style={styles.rowContainer}>
+              <Text style={styles.label}>Customize Link Text</Text>
+              <Text style={styles.textCount}>{customizedText.length}/30</Text>
+            </View>
+            <TextInput
+              defaultValue={customizedText}
+              onChangeText={handleCustomText}
+              style={styles.input}
+              placeholder="Name your link"
+              placeholderTextColor={theme.colors.baseShade2}
+              maxLength={30}
+              onFocus={validateHyperlinkUrl}
+            />
           </View>
-          <TextInput
-            defaultValue={customizedText}
-            onChangeText={handleCustomText}
-            style={styles.input}
-            placeholder="Name your link"
-            placeholderTextColor={theme.colors.baseShade2}
-            maxLength={30}
-            onFocus={validateHyperlinkUrl}
-          />
+          {customTextErrorMessage ? (
+            <Text style={styles.inValidUrl}>{customTextErrorMessage}</Text>
+          ) : (
+            <Text style={styles.note}>
+              This Text will show on the link instead of URL.
+            </Text>
+          )}
+          {hyperlinkItem && (
+            <View>
+              <View style={styles.removeLinkContainer} />
+              <TouchableOpacity
+                style={styles.deleteHyperlinkContainer}
+                onPress={onPressDeleteHyperlink}
+              >
+                <SvgXml
+                  xml={storyDraftDeletHyperLink()}
+                  width="20"
+                  height="20"
+                />
+                <Text style={styles.removeLink}>Remove link</Text>
+              </TouchableOpacity>
+              <View style={styles.removeLinkDivider} />
+            </View>
+          )}
         </View>
-        {customTextErrorMessage ? (
-          <Text style={styles.inValidUrl}>{customTextErrorMessage}</Text>
-        ) : (
-          <Text style={styles.note}>
-            This Text will show on the link instead of URL.
-          </Text>
-        )}
-        {hyperlinkItem && (
-          <View style={styles.inputContainer}>
-            <TouchableOpacity
-              style={styles.deleteHyperlinkContainer}
-              onPress={onPressDeleteHyperlink}
-            >
-              <SvgXml xml={storyDraftDeletHyperLink()} width="24" height="24" />
-              <Text style={styles.removeLink}>Remove link</Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </KeyboardAvoidingView>
     </Modal>
   );
