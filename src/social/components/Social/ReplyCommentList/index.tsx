@@ -12,10 +12,12 @@ import {
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import {
+  editIcon,
   expandIcon,
   likedXml,
   likeXml,
   personXml,
+  storyDraftDeletHyperLink,
   threeDots,
 } from '../../../../core/assets/icons/xml';
 
@@ -139,22 +141,18 @@ export default function ReplyCommentList({
       await addCommentReaction(commentId, 'like');
     }
   };
-  const deletePostObject = () => {
-    Alert.alert(
-      'Delete this post',
-      `This post will be permanently deleted. You'll no longer see and find this post`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => onDelete && onDelete(commentId),
-        },
-      ]
-    );
+  const deleteReplyComment = () => {
+    Alert.alert('Delete reply', 'This reply will be permanently deleted.', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => onDelete && onDelete(commentId),
+      },
+    ]);
     setIsVisible(false);
   };
   const reportCommentObject = async () => {
@@ -296,13 +294,23 @@ export default function ReplyCommentList({
                   onPress={openEditCommentModal}
                   style={styles.modalRow}
                 >
-                  <Text style={styles.deleteText}> Edit Comment</Text>
+                  <SvgXml
+                    xml={editIcon(theme.colors.base)}
+                    width="20"
+                    height="20"
+                  />
+                  <Text style={styles.deleteText}> Edit reply</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={deletePostObject}
+                  onPress={deleteReplyComment}
                   style={styles.modalRow}
                 >
-                  <Text style={styles.deleteText}> Delete Comment</Text>
+                  <SvgXml
+                    xml={storyDraftDeletHyperLink()}
+                    width="20"
+                    height="20"
+                  />
+                  <Text style={styles.deleteText}> Delete reply</Text>
                 </TouchableOpacity>
               </View>
             ) : (
