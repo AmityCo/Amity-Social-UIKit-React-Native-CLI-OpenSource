@@ -179,12 +179,23 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
       >
         <Pressable style={styles.headerSection} onPress={onPressPost}>
           <View style={styles.user}>
-            <TouchableOpacity
-              onPress={(e) => {
-                e.stopPropagation();
-                handleDisplayNamePress();
-              }}
-            >
+            {creator?.userId ? (
+              <TouchableOpacity
+                onPress={(e) => {
+                  e.stopPropagation();
+                  handleDisplayNamePress();
+                }}
+              >
+                <AvatarElement
+                  style={styles.avatar as ImageStyle}
+                  avatarId={creator?.avatarFileId}
+                  pageID={pageId}
+                  elementID={ElementID.WildCardElement}
+                  componentID={componentId}
+                  avatarCustomUrl={creator?.avatarCustomUrl}
+                />
+              </TouchableOpacity>
+            ) : (
               <AvatarElement
                 style={styles.avatar as ImageStyle}
                 avatarId={creator?.avatarFileId}
@@ -193,7 +204,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
                 componentID={componentId}
                 avatarCustomUrl={creator?.avatarCustomUrl}
               />
-            </TouchableOpacity>
+            )}
 
             <View style={styles.fillSpace}>
               <View style={styles.headerRow}>
