@@ -29,8 +29,7 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
 
   if (isExcluded) return null;
 
-  if (loading || (globalFeedPosts?.length > 0 && !itemWithAds))
-    return <NewsFeedLoadingComponent />;
+  if (loading && !globalFeedPosts?.length) return <NewsFeedLoadingComponent />;
 
   if (!loading && !globalFeedPosts?.length)
     return (
