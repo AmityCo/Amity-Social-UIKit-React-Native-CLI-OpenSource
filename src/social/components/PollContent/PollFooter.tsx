@@ -13,6 +13,7 @@ type PollFooterProps = {
   isAuthorSeeingResults: boolean;
   setIsAuthorSeeingResults: (value: boolean) => void;
   unvotePoll: () => void;
+  disabledPoll?: boolean;
 };
 
 export function PollFooter({
@@ -24,6 +25,7 @@ export function PollFooter({
   isAuthorSeeingResults,
   setIsAuthorSeeingResults,
   unvotePoll,
+  disabledPoll,
 }: PollFooterProps) {
   const { styles } = useStyles();
   const { userId } = Client.getActiveUser();
@@ -63,13 +65,16 @@ export function PollFooter({
           </Typography.CaptionBold>
         </TouchableOpacity>
       )}
-      {!isPollClosed && isAlreadyVoted && !isAuthorSeeingResults && (
-        <TouchableOpacity onPress={unvotePoll}>
-          <Typography.CaptionBold style={styles.seeResultsBtnLabel}>
-            Unvote
-          </Typography.CaptionBold>
-        </TouchableOpacity>
-      )}
+      {!isPollClosed &&
+        isAlreadyVoted &&
+        !isAuthorSeeingResults &&
+        !disabledPoll && (
+          <TouchableOpacity onPress={unvotePoll}>
+            <Typography.CaptionBold style={styles.seeResultsBtnLabel}>
+              Unvote
+            </Typography.CaptionBold>
+          </TouchableOpacity>
+        )}
     </View>
   );
 }

@@ -60,6 +60,7 @@ const PollContent = ({
         isPollClosed={isPollClosed}
         isAlreadyVoted={isAlreadyVoted}
         unvotePoll={unvotePoll}
+        disabledPoll={disabledPoll}
         isAuthorSeeingResults={isAuthorSeeingResults}
         setIsAuthorSeeingResults={setIsAuthorSeeingResults}
       />
