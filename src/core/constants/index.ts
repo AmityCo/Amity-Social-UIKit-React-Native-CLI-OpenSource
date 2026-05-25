@@ -78,6 +78,8 @@ export const MAX_POLL_ANSWER_LENGTH = 60;
 
 export const MAXIMUM_POST_CHARACTERS = 50000;
 
+export const MAX_MENTION_USERS = 30;
+
 export const ERROR_CODE = {
   BLOCKED_WORD: '400308',
   BLOCKED_URL: '400309',

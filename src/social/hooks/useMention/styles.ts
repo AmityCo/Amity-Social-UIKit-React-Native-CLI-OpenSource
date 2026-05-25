@@ -21,9 +21,7 @@ export const useStyles = () => {
     commentMentionContainer: {
       left: 0,
       right: 0,
-      bottom: 0,
       maxHeight: 300,
-      position: 'absolute',
       overflow: 'scroll',
       backgroundColor: 'white',
     },

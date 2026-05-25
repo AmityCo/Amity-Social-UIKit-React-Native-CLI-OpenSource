@@ -10,9 +10,7 @@ export const useStyles = () => {
       height: '100%',
       paddingBottom: 40,
     },
-    suggestionContainer: {
-      bottom: 0,
-    },
+    suggestionContainer: {},
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
