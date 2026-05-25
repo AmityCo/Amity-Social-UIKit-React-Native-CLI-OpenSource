@@ -72,6 +72,7 @@ const CommentList: FC<ICommentListProp> = ({
   const theme = useTheme() as MyMD3Theme;
   const onNextPageRef = useRef<() => void | null>(null);
   const [commentList, setCommentList] = useState<IComment[]>([]);
+  const [loadingComments, setLoadingComments] = useState(true);
   const [replyUserName, setReplyUserName] = useState<string>('');
   const [replyCommentId, setReplyCommentId] = useState<string>('');
   const [inputMessage, setInputMessage] = useState('');
@@ -107,6 +108,7 @@ const CommentList: FC<ICommentListProp> = ({
         limit: commentListLimit,
       },
       ({ error, loading, data, hasNextPage, onNextPage }) => {
+        setLoadingComments(loading);
         if (error) return;
         if (!loading) {
           data && data.length > 0 && queryComment(data);
@@ -321,7 +323,7 @@ const CommentList: FC<ICommentListProp> = ({
           (isAmityAd(item) ? item.adId : item.commentId) + `_${index}`
         }
         ListEmptyComponent={
-          loading ? null : (
+          loadingComments ? null : (
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyText}>No comments yet</Text>
             </View>
