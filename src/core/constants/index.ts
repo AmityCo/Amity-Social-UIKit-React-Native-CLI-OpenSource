@@ -98,7 +98,6 @@ export const COMMENT_ERROR_MESSAGE = {
     'Your comment contains inappropriate word. Please review and delete it.',
   BLOCKED_URL:
     "Your comment contains a link that's not allowed. Please review and delete it.",
-  OVER_MENTION_LIMIT: 'You have reached maximum 30 mentioned users in a post.',
   GENERIC: 'Oops, something went wrong',
 };
 

@@ -203,7 +203,8 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     if (inputMessage.trim() === '') {
       return;
     }
-    if (mentionNames.length > MAX_MENTION_USERS) {
+    const uniqueMentionIds = [...new Set(mentionNames.map((item) => item.id))];
+    if (uniqueMentionIds.length > MAX_MENTION_USERS) {
       Alert.alert(
         'Too many users mentioned',
         'You can only mention up to 30 users per post.',
@@ -221,7 +222,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
           comment,
           postId,
           replyCommentId,
-          mentionNames?.map((item) => item.id),
+          uniqueMentionIds,
           mentionsPosition,
           'post'
         );
@@ -234,7 +235,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
         await createComment(
           comment,
           postId,
-          mentionNames?.map((item) => item.id),
+          uniqueMentionIds,
           mentionsPosition,
           'post'
         );
