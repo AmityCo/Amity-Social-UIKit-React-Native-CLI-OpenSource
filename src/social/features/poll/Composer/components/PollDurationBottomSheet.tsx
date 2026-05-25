@@ -87,12 +87,14 @@ export function AndroidBottomSheet() {
   return (
     <View style={{ paddingBottom: bottom + 8 }}>
       {androidDurationOptions.map((option) => {
-        const isSelected =
-          duration.value === option.value && duration.label === option.label;
+        const isSelected = duration.value === option.value;
         return (
           <TouchableOpacity
             key={option.label}
             style={styles.androidDurationOption}
+            accessibilityRole="radio"
+            accessibilityState={{ selected: isSelected }}
+            accessibilityLabel={option.label}
             onPress={() => {
               setDuration(option);
               bottomSheetRef.current?.close();

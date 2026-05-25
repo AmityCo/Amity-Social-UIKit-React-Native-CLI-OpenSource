@@ -7,10 +7,7 @@ import dayjs from 'dayjs';
 import DateTimePicker, {
   DateTimePickerAndroid,
 } from '@react-native-community/datetimepicker';
-import {
-  androidDurationOptions,
-  usePollPostComposerContext,
-} from '../PollPostComposer';
+import { usePollPostComposerContext } from '../PollPostComposer';
 
 export function AndroidPollDurationPicker() {
   const { styles } = useStyles();
@@ -22,9 +19,7 @@ export function AndroidPollDurationPicker() {
     setSelectedDate,
   } = usePollPostComposerContext();
   const endOn = dayjs().add(duration.value, 'day');
-  const isCustom =
-    duration.label ===
-    androidDurationOptions[androidDurationOptions.length - 1].label;
+  const isCustom = duration.value === 0;
 
   const openDatePicker = () => {
     DateTimePickerAndroid.open({
