@@ -133,6 +133,13 @@ export const useStyles = () => {
     },
     iOSDateTimePicker: {
       height: 600,
+      marginLeft: 32,
+    },
+    androidDurationOption: {
+      padding: 16,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
     iOSDateTimeHeader: {
       paddingHorizontal: 16,
