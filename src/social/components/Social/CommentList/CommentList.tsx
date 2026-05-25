@@ -88,14 +88,19 @@ const CommentList: FC<ICommentListProp> = ({
     onChange: setInputMessage,
     setMentionUsers: (user: TSearchItem) => {
       setMentionNames((prev) => {
+        if (prev.some((mentionedUser) => mentionedUser.id === user.id)) {
+          return prev;
+        }
+
         if (prev.length >= MAX_MENTION_USERS) {
           Alert.alert(
             'Too many users mentioned',
-            'You can only mention up to 30 users per post.',
+            `You can only mention up to ${MAX_MENTION_USERS} users per post.`,
             [{ text: 'OK' }]
           );
           return prev;
         }
+
         return [...prev, user];
       });
     },
