@@ -2,6 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { PollRepository } from '@amityco/ts-sdk-react-native';
 import { useToast } from '../../core/stores/slices/toastSlice';
 
+const POLL_ERROR = {
+  POLL_CLOSED: 'Poll was closed',
+  POLL_NOT_FOUND: 'Poll not found',
+} as const;
+
 export const usePoll = (pollId: string) => {
   const [poll, setPoll] = useState<Amity.Poll | undefined>(undefined);
   const [isAuthorSeeingResults, setIsAuthorSeeingResults] = useState(false);
@@ -30,11 +35,33 @@ export const usePoll = (pollId: string) => {
     });
   }, [pollId]);
 
+  const handlePollError = (error: Error) => {
+    if (error?.message?.includes(POLL_ERROR.POLL_CLOSED)) {
+      showToast({ type: 'informative', message: 'Poll ended.' });
+    } else if (error?.message?.includes(POLL_ERROR.POLL_NOT_FOUND)) {
+      showToast({
+        type: 'informative',
+        message: 'This poll is no longer available.',
+      });
+    } else {
+      showToast({ type: 'failed', message: 'Oops, something went wrong.' });
+    }
+  };
+
   const votePoll = async (answerIds: string[]) => {
     try {
       await PollRepository.votePoll(pollId, answerIds);
     } catch (error) {
-      showToast({ type: 'failed', message: 'Oops, something went wrong.' });
+      handlePollError(error as Error);
+    }
+  };
+
+  const unvotePoll = async () => {
+    try {
+      await PollRepository.unvotePoll(pollId);
+      showToast({ type: 'success', message: 'Vote removed.' });
+    } catch (error) {
+      handlePollError(error as Error);
     }
   };
 
@@ -42,6 +69,7 @@ export const usePoll = (pollId: string) => {
     poll,
     loading,
     votePoll,
+    unvotePoll,
     totalVotes,
     isPollClosed,
     isAlreadyVoted,
