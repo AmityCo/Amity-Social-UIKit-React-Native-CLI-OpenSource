@@ -97,7 +97,7 @@ export const useStyles = () => {
     hyperLinkIcon: {
       width: 32,
       height: 32,
-      tintColor: theme.colors.primary,
+      color: theme.colors.primary,
     },
     handleBar: {
       width: 36,
