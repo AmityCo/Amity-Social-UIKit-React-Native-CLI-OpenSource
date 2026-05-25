@@ -39,14 +39,10 @@ import AmityPostCommentComponent from '../../comment/components/PostComment';
 import { closeIcon } from '../../../../core/assets/icons/xml';
 import { SvgXml } from 'react-native-svg';
 import { IMentionPosition } from '../../../../core/types';
-import uiSlice from '../../../../core/stores/slices/uiSlice';
 import NetInfo from '@react-native-community/netinfo';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
 import MyAvatar from '../../../components/MyAvatar/MyAvatar';
-import {
-  comment_contains_inapproproate_word,
-  text_contain_blocked_word,
-} from '../../../../core/constants';
+import { MAX_MENTION_USERS } from '../../../../core/constants';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorComponent from '../../../components/ErrorComponent/ErrorComponent';
@@ -59,7 +55,6 @@ import {
   createComment,
   createReplyComment,
 } from '../../../../core/legacy/comment';
-import { useUIKitDispatch } from '../../../../core/stores/store';
 
 type AmityPostDetailPageType = {
   postId: Amity.Post['postId'];
@@ -77,14 +72,13 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   isDeleted,
 }) => {
   const pageId = PageID.post_detail_page;
-  const dispatch = useUIKitDispatch();
   const componentId = ComponentID.WildCardComponent;
   const disabledInteraction = false;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
   const styles = useStyles(themeStyles);
-  const { showToast } = useToast();
+  const { showToast, showCommentErrorToast } = useToast();
   const [postData, setPostData] = useState<Amity.Post<any>>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -104,14 +98,22 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     value: inputMessage,
     onChange: setInputMessage,
     setMentionUsers: (user: TSearchItem) => {
-      setMentionNames((prev) => [...prev, user]);
+      setMentionNames((prev) => {
+        if (prev.length >= MAX_MENTION_USERS) {
+          Alert.alert(
+            'Too many users mentioned',
+            'You can only mention up to 30 users per post.',
+            [{ text: 'OK' }]
+          );
+          return prev;
+        }
+        return [...prev, user];
+      });
     },
     setMentionPosition: (position: IMentionPosition) => {
       setMentionsPosition((prev) => [...prev, position]);
     },
   });
-
-  const { showToastMessage } = uiSlice.actions;
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -156,14 +158,22 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   }, [postId]);
 
   useEffect(() => {
-    const checkMentionNames = mentionNames.filter((item) => {
-      return inputMessage.includes(item.displayName);
-    });
-    const checkMentionPosition = mentionsPosition.filter((item) => {
-      return inputMessage.includes(item.displayName as string);
-    });
-    setMentionNames(checkMentionNames);
-    setMentionsPosition(checkMentionPosition);
+    // Parse active mention user IDs directly from the controlled-mentions
+    // value format: {@}[DisplayName](userId)
+    // Using displayName.includes() is unreliable — the same name can appear as
+    // plain text, and deletions may not remove the entry correctly.
+    const mentionTokenRegex = /\{@\}\[([^\]]*)\]\(([^)]*)\)/g;
+    const activeUserIds = new Set<string>();
+    let match: RegExpExecArray | null;
+    while ((match = mentionTokenRegex.exec(inputMessage)) !== null) {
+      activeUserIds.add(match[2]); // userId is capture group 2
+    }
+    setMentionNames((prev) =>
+      prev.filter((item) => activeUserIds.has(item.id))
+    );
+    setMentionsPosition((prev) =>
+      prev.filter((item) => activeUserIds.has(item.userId))
+    );
   }, [inputMessage]);
 
   const onPressBack = useCallback(() => {
@@ -193,8 +203,14 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     if (inputMessage.trim() === '') {
       return;
     }
-    setInputMessage('');
-    Keyboard.dismiss();
+    if (mentionNames.length > MAX_MENTION_USERS) {
+      Alert.alert(
+        'Too many users mentioned',
+        'You can only mention up to 30 users per post.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
     const comment = replaceTriggerValues(
       inputMessage,
       ({ name }) => `@${name}`
@@ -210,14 +226,8 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
           'post'
         );
       } catch (error) {
-        if (error.message.includes(text_contain_blocked_word)) {
-          dispatch(
-            showToastMessage({
-              toastMessage: comment_contains_inapproproate_word,
-            })
-          );
-          return;
-        }
+        showCommentErrorToast(error);
+        return;
       }
     } else {
       try {
@@ -229,17 +239,12 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
           'post'
         );
       } catch (error) {
-        if (error.message.includes(text_contain_blocked_word)) {
-          dispatch(
-            showToastMessage({
-              toastMessage: comment_contains_inapproproate_word,
-            })
-          );
-          return;
-        }
+        showCommentErrorToast(error);
+        return;
       }
     }
     setInputMessage('');
+    Keyboard.dismiss();
     setMentionNames([]);
     setMentionsPosition([]);
     onCloseReply();

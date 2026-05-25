@@ -355,7 +355,6 @@ const CommentListItem = ({
                   });
               }}
             >
-              <Text style={styles.headerText}>{user?.displayName}</Text>
               <View style={styles.displayNameRow}>
                 <Text style={styles.headerText}>{user?.displayName}</Text>
                 {user?.isBrand && <BrandBadge width={16} height={16} />}

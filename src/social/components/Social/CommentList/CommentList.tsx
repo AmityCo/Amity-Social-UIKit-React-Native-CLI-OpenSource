@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
@@ -31,6 +32,7 @@ import MyAvatar from '../../MyAvatar/MyAvatar';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { lock } from '../../../../core/assets/icons';
 import { Typography } from '../../../../core/components/Typography/Typography';
+import { MAX_MENTION_USERS } from '../../../../core/constants';
 
 interface ICommentListProp {
   postId: string;
@@ -85,7 +87,17 @@ const CommentList: FC<ICommentListProp> = ({
     value: inputMessage,
     onChange: setInputMessage,
     setMentionUsers: (user: TSearchItem) => {
-      setMentionNames((prev) => [...prev, user]);
+      setMentionNames((prev) => {
+        if (prev.length >= MAX_MENTION_USERS) {
+          Alert.alert(
+            'Too many users mentioned',
+            'You can only mention up to 30 users per post.',
+            [{ text: 'OK' }]
+          );
+          return prev;
+        }
+        return [...prev, user];
+      });
     },
     setMentionPosition: (position: IMentionPosition) => {
       setMentionsPosition((prev) => [...prev, position]);
@@ -122,14 +134,22 @@ const CommentList: FC<ICommentListProp> = ({
   }, [postId, postType]);
 
   useEffect(() => {
-    const checkMentionNames = mentionNames.filter((item) => {
-      return inputMessage.includes(item.displayName);
-    });
-    const checkMentionPosition = mentionsPosition.filter((item) => {
-      return inputMessage.includes(item.displayName as string);
-    });
-    setMentionNames(checkMentionNames);
-    setMentionsPosition(checkMentionPosition);
+    // Parse active mention user IDs directly from the controlled-mentions
+    // value format: {@}[DisplayName](userId)
+    // Using displayName.includes() is unreliable — the same name can appear as
+    // plain text, and deletions may not remove the entry correctly.
+    const mentionTokenRegex = /\{@\}\[([^\]]*)\]\(([^)]*)\)/g;
+    const activeUserIds = new Set<string>();
+    let match: RegExpExecArray | null;
+    while ((match = mentionTokenRegex.exec(inputMessage)) !== null) {
+      activeUserIds.add(match[2]); // userId is capture group 2
+    }
+    setMentionNames((prev) =>
+      prev.filter((item) => activeUserIds.has(item.id))
+    );
+    setMentionsPosition((prev) =>
+      prev.filter((item) => activeUserIds.has(item.userId))
+    );
   }, [inputMessage]);
 
   const queryComment = async (comments: Amity.InternalComment[]) => {
@@ -186,8 +206,14 @@ const CommentList: FC<ICommentListProp> = ({
     if (inputMessage.trim() === '') {
       return;
     }
-    setInputMessage('');
-    Keyboard.dismiss();
+    if (mentionNames.length > MAX_MENTION_USERS) {
+      Alert.alert(
+        'Too many users mentioned',
+        'You can only mention up to 30 users per post.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
     const comment = replaceTriggerValues(
       inputMessage,
       ({ name }) => `@${name}`
@@ -204,6 +230,7 @@ const CommentList: FC<ICommentListProp> = ({
         );
       } catch (error) {
         showCommentErrorToast(error);
+        return;
       }
     } else {
       try {
@@ -216,9 +243,11 @@ const CommentList: FC<ICommentListProp> = ({
         );
       } catch (error) {
         showCommentErrorToast(error);
+        return;
       }
     }
     setInputMessage('');
+    Keyboard.dismiss();
     setMentionNames([]);
     setMentionsPosition([]);
     onCloseReply();
