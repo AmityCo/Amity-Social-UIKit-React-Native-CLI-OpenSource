@@ -117,8 +117,8 @@ export function useNotificationSetting({
       },
     },
     {
-      // livestream notification setting is not supported yet in other platforms
-      visible: false,
+      // livestream notification setting is now visible
+      visible: true,
       label: 'Live streams',
       iconProps: {
         xml: livestream(),
