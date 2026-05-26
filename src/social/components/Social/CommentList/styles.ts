@@ -76,6 +76,7 @@ export const useStyles = () => {
       backgroundColor: theme.colors.baseShade4,
       paddingVertical: Platform.OS === 'android' ? 8 : 12,
       paddingHorizontal: Platform.OS === 'android' ? 12 : 14,
+      maxHeight: 5 * 20 + (Platform.OS === 'android' ? 8 * 2 : 12 * 2),
     },
     mentionText: {
       color: theme.colors.primary,
@@ -120,6 +121,10 @@ export const useStyles = () => {
     },
     commentListFooter: {
       width: width,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
     },
     disabledCommentWrap: {
       flexDirection: 'row',

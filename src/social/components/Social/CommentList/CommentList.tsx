@@ -2,8 +2,6 @@ import {
   Alert,
   FlatList,
   Keyboard,
-  KeyboardAvoidingView,
-  Platform,
   Text,
   TouchableOpacity,
   View,
@@ -82,6 +80,21 @@ const CommentList: FC<ICommentListProp> = ({
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
   );
+  const [inputBarHeight, setInputBarHeight] = useState(0);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const showListener = Keyboard.addListener('keyboardWillShow', (e) =>
+      setKeyboardHeight(e.endCoordinates.height)
+    );
+    const hideListener = Keyboard.addListener('keyboardWillHide', () =>
+      setKeyboardHeight(0)
+    );
+    return () => {
+      showListener.remove();
+      hideListener.remove();
+    };
+  }, []);
   const { showCommentErrorToast } = useToast();
   const { renderInput, renderSuggestions } = useMention({
     value: inputMessage,
@@ -260,74 +273,74 @@ const CommentList: FC<ICommentListProp> = ({
 
   const renderFooterComponent = () => {
     return (
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.commentListFooter}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 140 : 20}
-      >
+      <View style={styles.commentListFooter}>
         {renderSuggestions({
           type: 'comment',
           style: styles.suggestionContainer,
+          bottom: inputBarHeight + keyboardHeight,
         })}
-        {replyUserName.length > 0 && (
-          <View style={styles.replyLabelWrap}>
-            <Text style={styles.replyLabel}>
-              Replying to{' '}
-              <Text style={styles.userNameLabel}>{replyUserName}</Text>
-            </Text>
-            <TouchableOpacity>
-              <TouchableOpacity onPress={onCloseReply}>
+        <View onLayout={(e) => setInputBarHeight(e.nativeEvent.layout.height)}>
+          {replyUserName.length > 0 && (
+            <View style={styles.replyLabelWrap}>
+              <Text style={styles.replyLabel}>
+                Replying to{' '}
+                <Text style={styles.userNameLabel}>{replyUserName}</Text>
+              </Text>
+              <TouchableOpacity>
+                <TouchableOpacity onPress={onCloseReply}>
+                  <SvgXml
+                    style={styles.closeIcon}
+                    xml={closeIcon(theme.colors.baseShade2)}
+                    width={20}
+                  />
+                </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
+          )}
+          {!disabledInteraction &&
+            (disabledComment ? (
+              <View style={styles.disabledCommentWrap}>
                 <SvgXml
-                  style={styles.closeIcon}
-                  xml={closeIcon(theme.colors.baseShade2)}
                   width={20}
+                  height={20}
+                  xml={lock()}
+                  color={theme.colors.baseShade2}
                 />
-              </TouchableOpacity>
-            </TouchableOpacity>
-          </View>
-        )}
-        {!disabledInteraction &&
-          (disabledComment ? (
-            <View style={styles.disabledCommentWrap}>
-              <SvgXml
-                width={20}
-                height={20}
-                xml={lock()}
-                color={theme.colors.baseShade2}
-              />
-              <Typography.Body style={styles.disabledCommentText}>
-                Comments are disabled for this story
-              </Typography.Body>
-            </View>
-          ) : (
-            <View style={styles.inputWrap}>
-              {withAvatar && <MyAvatar />}
-              <View style={styles.inputContainer}>
-                {renderInput({
-                  multiline: true,
-                  style: styles.textInput,
-                  placeholder: 'Say something nice...',
-                  placeholderTextColor: theme.colors.baseShade3,
-                })}
+                <Typography.Body style={styles.disabledCommentText}>
+                  Comments are disabled for this story
+                </Typography.Body>
               </View>
-              <TouchableOpacity
-                disabled={inputMessage.length > 0 ? false : true}
-                onPress={handleSend}
-                style={styles.postBtn}
-              >
-                <Text
-                  style={
-                    inputMessage.length > 0
-                      ? styles.postBtnText
-                      : styles.postDisabledBtn
-                  }
+            ) : (
+              <View style={styles.inputWrap}>
+                {withAvatar && <MyAvatar />}
+                <View style={styles.inputContainer}>
+                  {renderInput({
+                    multiline: true,
+                    scrollEnabled: true,
+                    style: [styles.textInput, { lineHeight: 20 }],
+                    placeholder: 'Say something nice...',
+                    placeholderTextColor: theme.colors.baseShade3,
+                  })}
+                </View>
+                <TouchableOpacity
+                  disabled={inputMessage.length > 0 ? false : true}
+                  onPress={handleSend}
+                  style={styles.postBtn}
                 >
-                  Post
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-      </KeyboardAvoidingView>
+                  <Text
+                    style={
+                      inputMessage.length > 0
+                        ? styles.postBtnText
+                        : styles.postDisabledBtn
+                    }
+                  >
+                    Post
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+        </View>
+      </View>
     );
   };
 

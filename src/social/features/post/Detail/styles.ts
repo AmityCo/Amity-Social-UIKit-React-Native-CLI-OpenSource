@@ -94,6 +94,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       paddingHorizontal: Platform.OS === 'android' ? 6 : 12,
       backgroundColor: theme.colors.baseShade4,
       borderRadius: 20,
+      maxHeight: 5 * 20 + (Platform.OS === 'android' ? 2 * 2 : 10 * 2),
     },
     mentionText: {
       color: theme.colors.primary,
