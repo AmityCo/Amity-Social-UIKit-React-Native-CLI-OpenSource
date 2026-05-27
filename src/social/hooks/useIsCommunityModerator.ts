@@ -18,7 +18,6 @@ export const useIsCommunityModerator = ({
         search: userId,
         limit: 1,
         sortBy: 'firstCreated',
-        memberships: ['member'],
       },
       async ({ error, loading, data }) => {
         if (error) return setisCommunityModerator(false);
