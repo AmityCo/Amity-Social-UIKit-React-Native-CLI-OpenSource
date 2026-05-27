@@ -69,10 +69,16 @@ const useSearch = (
   }, []);
 
   useEffect(() => {
-    if (privateCommunityId)
-      return searchPrivateCommunityMember(searchText ?? '');
-    if (searchText == null) return setSearchResult([]);
-    return searchAllUsers(searchText);
+    if (searchText == null) {
+      onNextPageRef.current = null;
+      setSearchResult([]);
+      return;
+    }
+    if (privateCommunityId) {
+      searchPrivateCommunityMember(searchText);
+      return;
+    }
+    searchAllUsers(searchText);
   }, [
     privateCommunityId,
     searchAllUsers,
