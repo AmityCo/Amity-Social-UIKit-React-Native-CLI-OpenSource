@@ -89,6 +89,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
   );
+  const [inputBarHeight, setInputBarHeight] = useState(0);
 
   const [showLivestreamEndPopup, setShowLivestreamEndPopup] = useState<boolean>(
     showEndPopup || false
@@ -254,8 +255,11 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const renderFooterComponent = () => {
     return (
       <View style={styles.commentListFooter}>
-        {renderSuggestions({ type: 'comment' })}
-        <View>
+        {renderSuggestions({
+          type: 'comment',
+          bottom: inputBarHeight,
+        })}
+        <View onLayout={(e) => setInputBarHeight(e.nativeEvent.layout.height)}>
           {replyUserName.length > 0 && (
             <View style={styles.replyLabelWrap}>
               <Text style={styles.replyLabel}>

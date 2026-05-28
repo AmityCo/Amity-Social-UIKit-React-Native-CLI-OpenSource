@@ -129,11 +129,14 @@ const Suggestions = ({
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
       onEndReached={() => getNextPage?.()}
-      contentContainerStyle={styles.mentionSuggestionContentContainer}
+      contentContainerStyle={
+        type === 'comment' && styles.mentionSuggestionContentContainer
+      }
       style={[
         type === 'post' && styles.postMentionSuggestionContainer,
         type === 'comment' && styles.commentMentionContainer,
-        { height: 54 * searchResult.length, bottom: bottom },
+        { height: 56 * searchResult.length },
+        type === 'comment' && { bottom: bottom },
         style && style,
       ]}
       renderItem={({ item }: { item: TSearchItem }) => {

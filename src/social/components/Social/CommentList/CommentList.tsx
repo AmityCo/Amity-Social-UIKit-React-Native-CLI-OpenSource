@@ -81,20 +81,7 @@ const CommentList: FC<ICommentListProp> = ({
     []
   );
   const [inputBarHeight, setInputBarHeight] = useState(0);
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
-  useEffect(() => {
-    const showListener = Keyboard.addListener('keyboardWillShow', (e) =>
-      setKeyboardHeight(e.endCoordinates.height)
-    );
-    const hideListener = Keyboard.addListener('keyboardWillHide', () =>
-      setKeyboardHeight(0)
-    );
-    return () => {
-      showListener.remove();
-      hideListener.remove();
-    };
-  }, []);
   const { showCommentErrorToast } = useToast();
   const { renderInput, renderSuggestions } = useMention({
     value: inputMessage,
@@ -277,7 +264,7 @@ const CommentList: FC<ICommentListProp> = ({
         {renderSuggestions({
           type: 'comment',
           style: styles.suggestionContainer,
-          bottom: inputBarHeight + keyboardHeight,
+          bottom: inputBarHeight,
         })}
         <View onLayout={(e) => setInputBarHeight(e.nativeEvent.layout.height)}>
           {replyUserName.length > 0 && (
