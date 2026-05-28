@@ -168,11 +168,17 @@ export function useStoriesNotificationSetting({
           ),
         ],
       });
-      navigation.goBack();
+      navigation.navigate('CommunityProfilePage', {
+        communityId: community.communityId,
+      });
+      showToast({
+        type: 'success',
+        message: TOAST.COMMUNITY.PROFILE.UPDATE.SUCCESS,
+      });
     } catch {
       showToast({
         type: 'informative',
-        message: TOAST.COMMUNITY.NOTIFICATION.UPDATE.FAILED,
+        message: TOAST.COMMUNITY.PROFILE.UPDATE.FAILED,
       });
     }
   };
