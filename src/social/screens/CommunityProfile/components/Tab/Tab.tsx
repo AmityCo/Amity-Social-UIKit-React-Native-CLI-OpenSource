@@ -1,7 +1,7 @@
 import { memo, FC, useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { feed, image, pin, video } from '../../../../../core/assets/icons';
+import { feed, image, mediaIcon, pin } from '../../../../../core/assets/icons';
 import IconTab from '../../../../components/IconTab/IconTab';
 import { ComponentID, ElementID, PageID } from '../../../../enums';
 import { useAmityElement } from '../../../../hooks';
@@ -124,7 +124,7 @@ const AmityCommunityProfileTabComponent: FC<
             <SvgXml
               width={24}
               height={24}
-              xml={video()}
+              xml={mediaIcon()}
               color={getActiveColor(
                 currentTab === CommunityProfileTab.community_video_feed
               )}

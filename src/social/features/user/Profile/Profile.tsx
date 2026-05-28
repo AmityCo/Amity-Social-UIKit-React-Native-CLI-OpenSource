@@ -11,7 +11,7 @@ import {
 import { useUserProfile } from './hooks/useUserProfile';
 import Tabs from '../../../../core/components/Tabs';
 import { UserProfileTab } from './types';
-import { feed, image, video } from '../../../../core/assets/icons';
+import { feed, image, mediaIcon } from '../../../../core/assets/icons';
 
 export type UserProfilePageProps = {
   userId: string;
@@ -104,7 +104,7 @@ function UserProfile({
               testID={videoTabId}
               aria-label="User Video Feed"
               value={UserProfileTab.Video}
-              iconProps={{ xml: video() }}
+              iconProps={{ xml: mediaIcon() }}
             />
           </Tabs.List>
           <Tabs.Content value={UserProfileTab.Feed}>
