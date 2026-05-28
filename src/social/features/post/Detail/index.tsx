@@ -279,9 +279,10 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
               <View style={styles.inputContainer}>
                 {renderInput({
                   multiline: true,
+                  scrollEnabled: true,
                   placeholder: 'Say something nice...',
                   placeholderTextColor: themeStyles.colors.baseShade3,
-                  style: styles.input,
+                  style: [styles.input, { lineHeight: 20 }],
                 })}
               </View>
 

@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import SearchItem from '../../components/SearchItem';
 import { TSearchItem } from '..';
 import { TriggersConfig, useMentions } from 'react-native-controlled-mentions';
 import { useStyles } from './styles';
 import {
   FlatList,
-  Keyboard,
   StyleProp,
   TextInput,
   TextInputProps,
@@ -13,7 +12,6 @@ import {
 } from 'react-native';
 import useSearch from '../useSearch';
 import { IMentionPosition } from '../../../core/types';
-
 type UseMentionProps = {
   value: string;
   communityId?: string;
@@ -104,9 +102,8 @@ const Suggestions = ({
   setMentionPosition,
 }: SuggestionsProps) => {
   const { styles } = useStyles();
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
-  const keyword = triggers?.mention?.keyword || '';
+  const keyword = triggers?.mention?.keyword;
 
   const { searchResult, getNextPage } = useSearch(keyword, communityId);
 
@@ -122,24 +119,7 @@ const Suggestions = ({
     setMentionPosition(position);
   };
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardWillShow',
-      (event) => setKeyboardHeight(event.endCoordinates.height)
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardWillHide',
-      () => setKeyboardHeight(0)
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  if (!keyword) return null;
+  if (keyword == null) return null;
 
   return (
     <FlatList
@@ -153,7 +133,7 @@ const Suggestions = ({
       style={[
         type === 'post' && styles.postMentionSuggestionContainer,
         type === 'comment' && styles.commentMentionContainer,
-        { height: 54 * searchResult.length, bottom: bottom + keyboardHeight },
+        { height: 54 * searchResult.length, bottom: bottom },
         style && style,
       ]}
       renderItem={({ item }: { item: TSearchItem }) => {
