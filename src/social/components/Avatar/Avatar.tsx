@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Image,
   ImageProps,
@@ -18,6 +18,8 @@ import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { getFileUrlWithSize } from '../../utils';
+import { useUser } from '../../hooks/objects/user/useUser';
+import { FileRepository } from '@amityco/ts-sdk-react-native';
 
 type AvatarProps = {
   uri?: string;
@@ -30,6 +32,7 @@ type AvatarProps = {
     roles?: string[];
     shouldRedirectToUserProfile?: boolean;
     viewable?: boolean;
+    firstCharFontSize?: number;
   };
 };
 
@@ -73,7 +76,14 @@ function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
       activeOpacity={0.7}
       onPress={handlePress}
     >
-      <Typography.Body style={styles.firstChar}>
+      <Typography.Body
+        style={[
+          styles.firstChar,
+          userAvatarProps?.firstCharFontSize
+            ? { fontSize: userAvatarProps.firstCharFontSize }
+            : undefined,
+        ]}
+      >
         {userAvatarProps.userName?.trim()?.charAt(0).toUpperCase()}
       </Typography.Body>
       {userAvatarProps?.roles && isModerator(userAvatarProps.roles) && (
@@ -119,6 +129,7 @@ type UserAvatarProps = {
   viewable?: boolean;
   imageStyle?: StyleProp<ImageStyle>;
   shouldRedirectToUserProfile?: boolean;
+  firstCharFontSize?: number;
 };
 
 function UserAvatar({
@@ -129,21 +140,33 @@ function UserAvatar({
   viewable,
   imageStyle,
   shouldRedirectToUserProfile,
+  firstCharFontSize,
 }: UserAvatarProps) {
+  const { user } = useUser({ userId: userId ?? '', enabled: !!userId });
+
+  const resolvedUri = useMemo(() => {
+    const url = uri ?? user?.avatarCustomUrl ?? user?.avatar?.fileUrl;
+    if (!url) return undefined;
+    return FileRepository.fileUrlWithSize(url, 'small');
+  }, [uri, user?.avatarCustomUrl, user?.avatar?.fileUrl]);
+
+  const resolvedName = userName ?? user?.displayName ?? user?.userId;
+
   return (
     <Avatar
-      uri={uri}
+      uri={resolvedUri}
       userAvatarProps={{
         roles,
         userId,
-        userName,
+        userName: resolvedName,
         style: imageStyle,
         shouldRedirectToUserProfile,
         viewable: viewable,
+        firstCharFontSize,
       }}
       imageProps={{
         style: imageStyle,
-        accessibilityLabel: `${userName ?? 'User'} Avatar`,
+        accessibilityLabel: `${resolvedName ?? 'User'} Avatar`,
       }}
     />
   );

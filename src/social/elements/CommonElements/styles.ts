@@ -6,26 +6,20 @@ export const useStyles = () => {
   const theme = useTheme<MyMD3Theme>();
 
   const styles = StyleSheet.create({
-    defaultUserAvatar: {
-      borderRadius: 100,
+    avatarPlaceholder: {
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: theme.colors.primaryShade2,
-      position: 'relative',
     },
-    firstChar: {
+    avatarPlaceholderText: {
       color: theme.colors.background,
+      fontSize: 16,
+      fontWeight: '600',
       textAlign: 'center',
       textAlignVertical: 'center',
       includeFontPadding: false,
-      lineHeight: undefined,
       padding: 0,
       margin: 0,
-    },
-    moderatorBadge: {
-      position: 'absolute',
-      bottom: 0,
-      right: 0,
     },
   });
 
