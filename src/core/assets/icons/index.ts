@@ -18,6 +18,7 @@ export { default as startLivestream } from './startLivestream';
 export { default as feed } from './feed';
 export { default as pin } from './pin';
 export { default as video } from './video';
+export { default as mediaIcon } from './mediaIcon';
 export { default as image } from './image';
 export { default as dot } from './dot';
 export { default as emptyPost } from './emptyPost';
