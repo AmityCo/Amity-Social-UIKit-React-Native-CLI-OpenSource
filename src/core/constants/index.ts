@@ -187,6 +187,12 @@ export const TOAST = {
     },
   },
   COMMUNITY: {
+    PROFILE: {
+      UPDATE: {
+        SUCCESS: 'Successfully updated community profile.',
+        FAILED: 'Failed to save your community profile. Please try again.',
+      },
+    },
     NOTIFICATION: {
       LOAD: {
         FAILED: 'Failed to load notification settings.',
