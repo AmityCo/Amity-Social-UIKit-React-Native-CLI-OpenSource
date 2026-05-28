@@ -17,11 +17,18 @@ type AmityDetailedMediaAttachmentComponentType = {
   onPressImage: () => void;
   onPressVideo: () => void;
   chosenMediaType?: mediaAttachment;
+  onHeightChange?: (height: number) => void;
 };
 
 const AmityDetailedMediaAttachmentComponent: FC<
   AmityDetailedMediaAttachmentComponentType
-> = ({ onPressCamera, onPressImage, onPressVideo, chosenMediaType }) => {
+> = ({
+  onPressCamera,
+  onPressImage,
+  onPressVideo,
+  chosenMediaType,
+  onHeightChange,
+}) => {
   const pageId = PageID.post_composer_page;
   const componentId = ComponentID.detailed_media_attachment;
   const { accessibilityId, themeStyles, isExcluded } = useAmityComponent({
@@ -76,6 +83,7 @@ const AmityDetailedMediaAttachmentComponent: FC<
       testID={accessibilityId}
       accessibilityLabel={accessibilityId}
       style={[styles.container, { bottom: animatedBottom }]}
+      onLayout={(e) => onHeightChange?.(e.nativeEvent.layout.height)}
     >
       <View style={styles.handleBar} />
       <View style={styles.buttonsContainer}>

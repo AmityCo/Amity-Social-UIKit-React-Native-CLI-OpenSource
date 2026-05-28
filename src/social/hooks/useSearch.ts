@@ -10,8 +10,10 @@ export type TSearchItem = Amity.User &
   ISearchItem &
   Amity.Membership<'community'> & { name: string; id: string };
 
+const MIN_SEARCH_LENGTH = 3;
+
 const useSearch = (
-  searchText: string | null,
+  searchText: string | undefined | null,
   privateCommunityId: string = ''
 ) => {
   const onNextPageRef = useRef<(() => void) | undefined | null>(null);
@@ -21,7 +23,7 @@ const useSearch = (
       return CommunityRepository.Membership.searchMembers(
         {
           communityId: privateCommunityId,
-          search: text,
+          ...(text ? { search: text } : {}),
           limit: 5,
           sortBy: 'firstCreated',
           memberships: ['member'],
@@ -43,6 +45,26 @@ const useSearch = (
     },
     [privateCommunityId]
   );
+
+  const getAllUsers = useCallback(() => {
+    return UserRepository.getUsers(
+      { limit: 5 },
+      ({ data, error, hasNextPage, onNextPage }) => {
+        if (error) return null;
+        hasNextPage
+          ? (onNextPageRef.current = onNextPage)
+          : (onNextPageRef.current = null);
+        const mappedSearchData = data.map((item) => {
+          return {
+            ...item,
+            name: item.displayName,
+            id: item.userId,
+          };
+        }) as TSearchItem[];
+        setSearchResult(mappedSearchData);
+      }
+    );
+  }, []);
 
   const searchAllUsers = useCallback((text: string) => {
     return UserRepository.searchUserByDisplayName(
@@ -72,14 +94,31 @@ const useSearch = (
     if (searchText == null) {
       onNextPageRef.current = null;
       setSearchResult([]);
-      return;
+      return () => {};
     }
+
+    // Treat 1–2 character queries as empty: show all users without filtering.
+    // Only send a search query once the user has typed at least MIN_SEARCH_LENGTH chars.
+    const effectiveText =
+      searchText.length > 0 && searchText.length < MIN_SEARCH_LENGTH
+        ? ''
+        : searchText;
+
+    let unsubscribe: (() => void) | undefined;
+
     if (privateCommunityId) {
-      searchPrivateCommunityMember(searchText);
-      return;
+      unsubscribe = searchPrivateCommunityMember(effectiveText) ?? undefined;
+    } else if (!effectiveText) {
+      unsubscribe = getAllUsers() ?? undefined;
+    } else {
+      unsubscribe = searchAllUsers(effectiveText) ?? undefined;
     }
-    searchAllUsers(searchText);
+
+    return () => {
+      unsubscribe?.();
+    };
   }, [
+    getAllUsers,
     privateCommunityId,
     searchAllUsers,
     searchPrivateCommunityMember,

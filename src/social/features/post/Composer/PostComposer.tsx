@@ -87,6 +87,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { isKeyboardShowing } = useKeyboardStatus();
+  const [attachmentBarHeight, setAttachmentBarHeight] = useState(0);
   const { client } = useAuth();
   const dispatch = useUIKitDispatch();
   const { addPostToGlobalFeed, updateByPostId } = globalfeedSlice.actions;
@@ -723,6 +724,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           onPressImage={onPressImage}
           onPressVideo={onPressVideo}
           chosenMediaType={chosenMediaType}
+          onHeightChange={setAttachmentBarHeight}
         />
       );
     }
@@ -732,6 +734,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         onPressImage={onPressImage}
         onPressVideo={onPressVideo}
         chosenMediaType={chosenMediaType}
+        onHeightChange={setAttachmentBarHeight}
       />
     );
   }, [
@@ -847,17 +850,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
             )}
           </View>
         </ScrollView>
-        {renderSuggestions({
-          type: 'post',
-          bottom: isEditMode
-            ? 0
-            : shouldShowDetailAttachment
-            ? 220
-            : isKeyboardShowing
-            ? 60
-            : 80,
-        })}
+        {renderSuggestions({ type: 'post' })}
         <View
+          style={{ zIndex: 200, minHeight: attachmentBarHeight }}
           onTouchStart={() => {
             tEvents = [];
           }}
