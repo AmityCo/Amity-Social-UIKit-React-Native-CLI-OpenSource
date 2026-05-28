@@ -96,6 +96,9 @@ const SearchResultItem: FC<SearchResultItemType> = ({
           searchType === TabName.Users ? item?.avatarCustomUrl : undefined
         }
         targetType={searchType === TabName.Communities ? 'community' : 'user'}
+        displayName={
+          searchType === TabName.Users ? item?.displayName : undefined
+        }
       />
       <View style={styles.profileInfoContainer}>
         <View style={styles.rowContainer}>

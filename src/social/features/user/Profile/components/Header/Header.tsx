@@ -82,6 +82,7 @@ export function Header({ user, inline }: HeaderProps) {
           imageStyle={styles.image}
           userName={user?.displayName}
           uri={user?.avatarCustomUrl ?? user?.avatar?.fileUrl}
+          firstCharFontSize={24}
         />
         <View style={styles.displayNameContainer}>
           <Typography.Headline numberOfLines={4} onTextLayout={onTextLayout}>

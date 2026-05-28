@@ -81,6 +81,7 @@ export function PollResults({ options, totalVotes }: PollResultsProps) {
                   avatarId={user?.avatarFileId}
                   avatarCustomUrl={user?.avatarCustomUrl}
                   elementID={ElementID.WildCardElement}
+                  displayName={user?.displayName}
                 />
               )}
             </View>

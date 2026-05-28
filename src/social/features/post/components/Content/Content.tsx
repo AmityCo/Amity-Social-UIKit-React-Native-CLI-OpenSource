@@ -193,6 +193,8 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
                   elementID={ElementID.WildCardElement}
                   componentID={componentId}
                   avatarCustomUrl={creator?.avatarCustomUrl}
+                  targetType="user"
+                  displayName={creator?.displayName}
                 />
               </TouchableOpacity>
             ) : (
@@ -203,6 +205,8 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
                 elementID={ElementID.WildCardElement}
                 componentID={componentId}
                 avatarCustomUrl={creator?.avatarCustomUrl}
+                targetType="user"
+                displayName={creator?.displayName}
               />
             )}
 
