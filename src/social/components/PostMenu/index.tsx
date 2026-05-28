@@ -16,6 +16,8 @@ import { useUIKitDispatch } from '../../../core/stores/store';
 import MenuButton from '../../elements/MenuButton/MenuButton';
 import MenuAction from '../../elements/MenuAction/MenuAction';
 import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
+import { useUser } from '../../hooks/useUser';
+import { isAdmin } from '../../utils/permissions';
 
 type PostMenuProps = {
   pageId?: PageID;
@@ -45,6 +47,9 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
     communityId: targetType === 'community' && targetId,
     userId: myId,
   });
+
+  const currentUser = useUser(myId);
+  const isGlobalAdmin = isAdmin(currentUser?.roles);
 
   const childrenPost = post?.childrenPosts?.[0];
 
@@ -170,7 +175,7 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
       ),
     },
     {
-      show: post?.creator?.userId === myId || isIAmModerator,
+      show: post?.creator?.userId === myId || isIAmModerator || isGlobalAdmin,
       action: (
         <MenuAction
           key="delete"
