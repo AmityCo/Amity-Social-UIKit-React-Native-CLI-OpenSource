@@ -72,14 +72,16 @@ export const Button = ({
 
     if (size === 'small') {
       return (
-        <Typography.CaptionBold style={textStyles}>
+        <Typography.CaptionBold numberOfLines={1} style={textStyles}>
           {children}
         </Typography.CaptionBold>
       );
     }
 
     return (
-      <Typography.BodyBold style={textStyles}>{children}</Typography.BodyBold>
+      <Typography.BodyBold numberOfLines={1} style={textStyles}>
+        {children}
+      </Typography.BodyBold>
     );
   };
 
