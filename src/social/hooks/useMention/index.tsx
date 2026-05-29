@@ -18,6 +18,8 @@ type UseMentionProps = {
   onChange: (value: string) => void;
   setMentionPosition: (position: IMentionPosition) => void;
   setMentionUsers: (user: TSearchItem) => void;
+  isMentionLimitReached?: boolean;
+  onMentionLimitReached?: () => void;
 };
 
 type RenderSuggestionsProps = {
@@ -32,6 +34,8 @@ function useMention({
   communityId,
   setMentionUsers,
   setMentionPosition,
+  isMentionLimitReached,
+  onMentionLimitReached,
 }: UseMentionProps) {
   const { styles } = useStyles();
   const [cursorIndex, setCursorIndex] = useState(0);
@@ -70,6 +74,8 @@ function useMention({
         communityId={communityId}
         setMentionUsers={setMentionUsers}
         setMentionPosition={setMentionPosition}
+        isMentionLimitReached={isMentionLimitReached}
+        onMentionLimitReached={onMentionLimitReached}
       />
     );
   };
@@ -89,6 +95,8 @@ type SuggestionsProps = {
   communityId?: string;
   setMentionUsers: (user: TSearchItem) => void;
   setMentionPosition: (position: IMentionPosition) => void;
+  isMentionLimitReached?: boolean;
+  onMentionLimitReached?: () => void;
 };
 
 const Suggestions = ({
@@ -100,6 +108,8 @@ const Suggestions = ({
   communityId,
   setMentionUsers,
   setMentionPosition,
+  isMentionLimitReached,
+  onMentionLimitReached,
 }: SuggestionsProps) => {
   const { styles } = useStyles();
 
@@ -145,6 +155,10 @@ const Suggestions = ({
             target={item}
             userProfileNavigateEnabled={false}
             onPress={() => {
+              if (isMentionLimitReached) {
+                onMentionLimitReached?.();
+                return;
+              }
               triggers?.mention?.onSelect(item);
               onSelectUserMention(item);
             }}
