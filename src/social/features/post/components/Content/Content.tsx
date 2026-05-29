@@ -214,7 +214,9 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
               <View style={styles.headerRow}>
                 <TouchableOpacity
                   style={
-                    targetType === 'community' ? styles.headerTextContainer : {}
+                    targetType === 'community'
+                      ? styles.headerTextContainer
+                      : styles.headerTextContainerUser
                   }
                   onPress={handleDisplayNamePress}
                 >

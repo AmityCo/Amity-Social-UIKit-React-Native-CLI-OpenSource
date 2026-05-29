@@ -184,6 +184,7 @@ const CommentListItem = ({
             displayName: userObject.data.displayName,
             avatarFileId: userObject.data.avatarFileId,
             avatarCustomUrl: userObject.data?.avatarCustomUrl,
+            isBrand: userObject.data?.isBrand,
           };
 
           return {

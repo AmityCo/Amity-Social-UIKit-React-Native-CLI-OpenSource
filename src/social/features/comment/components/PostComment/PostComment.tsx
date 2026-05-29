@@ -106,6 +106,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         displayName: item.creator?.displayName,
         avatarFileId: item.creator?.avatarFileId,
         avatarCustomUrl: item.creator?.avatarCustomUrl,
+        isBrand: item.creator?.isBrand,
       };
 
       return {
