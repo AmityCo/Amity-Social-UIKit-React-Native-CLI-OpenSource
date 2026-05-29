@@ -244,6 +244,13 @@ export const useStyles = () => {
     errorText: {
       color: 'white',
     },
+    storyGradient: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: width,
+      height: width * (16 / 9),
+    },
   });
 
   return styles;

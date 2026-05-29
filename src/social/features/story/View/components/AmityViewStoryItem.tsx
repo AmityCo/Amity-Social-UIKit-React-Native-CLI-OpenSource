@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { FC, memo, useCallback, useRef, useState } from 'react';
 import { useConfigImageUri, useStory } from '../../../../hooks';
 import { useStyles } from '../styles';
@@ -358,29 +359,43 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
               muted={muted}
             />
           ) : currentStory?.dataType === 'image' ? (
-            <Image
-              onLoadStart={() => setLoad(true)}
-              onLoadEnd={() => start()}
-              source={{
-                uri:
-                  currentStory?.imageData?.fileUrl ||
-                  (typeof currentStory?.data?.fileData === 'string'
-                    ? currentStory?.data?.fileData
-                    : ''),
-              }}
-              style={[
-                styles.image,
-                // eslint-disable-next-line react-native/no-inline-styles
-                isFailedImageUpload && {
-                  opacity: 0.6,
-                },
-              ]}
-              resizeMode={
-                currentStory?.data?.imageDisplayMode === 'fill'
-                  ? 'cover'
-                  : 'contain'
-              }
-            />
+            <>
+              <Image
+                onLoadStart={() => setLoad(true)}
+                onLoadEnd={() => start()}
+                source={{
+                  uri:
+                    currentStory?.imageData?.fileUrl ||
+                    (typeof currentStory?.data?.fileData === 'string'
+                      ? currentStory?.data?.fileData
+                      : ''),
+                }}
+                style={[
+                  styles.image,
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  isFailedImageUpload && {
+                    opacity: 0.6,
+                  },
+                ]}
+                resizeMode={
+                  currentStory?.data?.imageDisplayMode === 'fill'
+                    ? 'cover'
+                    : 'contain'
+                }
+              />
+              {currentStory?.data?.imageDisplayMode === 'fill' && (
+                <LinearGradient
+                  colors={[
+                    'rgba(0, 0, 0, 0.4)',
+                    'transparent',
+                    'rgba(0, 0, 0, 0.4)',
+                  ]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0, y: 1 }}
+                  style={styles.storyGradient}
+                />
+              )}
+            </>
           ) : null}
           {load && (
             <View style={styles.spinnerContainer}>
