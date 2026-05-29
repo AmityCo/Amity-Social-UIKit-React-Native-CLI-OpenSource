@@ -249,4 +249,10 @@ export const ALERT = {
       ACTION: 'Leave',
     },
   },
+  MENTION: {
+    TOO_MANY: {
+      TITLE: 'Too many users mentioned',
+      MESSAGE: 'You can only mention up to %s users per post.',
+    },
+  },
 } as const;

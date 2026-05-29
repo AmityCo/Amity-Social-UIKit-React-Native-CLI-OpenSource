@@ -59,7 +59,11 @@ import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { useFile } from '../../../hooks';
 import useMention from '../../../hooks/useMention';
 import { getPostErrorMessage } from '../../../utils/errors';
-import { MAXIMUM_POST_CHARACTERS } from '../../../../core/constants';
+import {
+  ALERT,
+  MAX_MENTION_USERS,
+  MAXIMUM_POST_CHARACTERS,
+} from '../../../../core/constants';
 import { replaceTriggerValues } from 'react-native-controlled-mentions';
 import { useUIKitDispatch } from '../../../../core/stores/store';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
@@ -136,6 +140,14 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     },
     setMentionPosition: (position: IMentionPosition) => {
       setMentionsPosition((prev) => [...prev, position]);
+    },
+    isMentionLimitReached: mentionUsers.length >= MAX_MENTION_USERS,
+    onMentionLimitReached: () => {
+      Alert.alert(
+        ALERT.MENTION.TOO_MANY.TITLE,
+        ALERT.MENTION.TOO_MANY.MESSAGE.replace('%s', String(MAX_MENTION_USERS)),
+        [{ text: ALERT.ACTION.OK }]
+      );
     },
   });
 
