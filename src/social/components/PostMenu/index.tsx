@@ -18,6 +18,9 @@ import MenuAction from '../../elements/MenuAction/MenuAction';
 import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
 import { useUser } from '../../hooks/useUser';
 import { isAdmin } from '../../utils/permissions';
+import { usePostShareAction } from '../../features/post/components/EngagementActions/Components/usePostShareAction';
+import { CopyLinkAction } from '../../elements/CopyLinkAction';
+import { ShareAction } from '../../elements/ShareAction';
 
 type PostMenuProps = {
   pageId?: PageID;
@@ -50,6 +53,8 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
 
   const currentUser = useUser(myId);
   const isGlobalAdmin = isAdmin(currentUser?.roles);
+
+  const { shareLink } = usePostShareAction({ postId, postData: post, pageId });
 
   const childrenPost = post?.childrenPosts?.[0];
 
@@ -171,6 +176,30 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
             closeBottomSheet();
             closePoll((childrenPost as Amity.Post<'poll'>)?.data?.pollId);
           }}
+        />
+      ),
+    },
+    {
+      show: !!shareLink,
+      action: (
+        <CopyLinkAction
+          key="copy-link"
+          link={shareLink}
+          pageId={pageId}
+          componentId={componentId}
+          onPress={closeBottomSheet}
+        />
+      ),
+    },
+    {
+      show: !!shareLink,
+      action: (
+        <ShareAction
+          key="share"
+          link={shareLink}
+          pageId={pageId}
+          componentId={componentId}
+          onPress={closeBottomSheet}
         />
       ),
     },
