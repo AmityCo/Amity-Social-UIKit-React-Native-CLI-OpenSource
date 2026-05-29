@@ -28,6 +28,9 @@ export const useStyles = (theme: MyMD3Theme) => {
     headerTextContainer: {
       maxWidth: '60%',
     },
+    headerTextContainerUser: {
+      flexShrink: 1,
+    },
     headerText: {
       color: theme.colors.base,
     },

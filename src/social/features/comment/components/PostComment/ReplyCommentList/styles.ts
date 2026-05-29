@@ -31,6 +31,7 @@ export const useStyles = () => {
       fontSize: 15,
       color: theme.colors.base,
       marginBottom: 4,
+      flexShrink: 1,
     },
     headerTextTime: {
       fontSize: 13,
@@ -61,6 +62,7 @@ export const useStyles = () => {
       borderRadius: 12,
       borderTopLeftRadius: 0,
       alignSelf: 'flex-start',
+      maxWidth: '100%',
     },
 
     viewMoreReplyBtn: {

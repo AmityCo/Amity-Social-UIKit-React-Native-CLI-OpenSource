@@ -28,6 +28,7 @@ export const useStyles = () => {
       fontWeight: '600',
       fontSize: 15,
       color: theme.colors.base,
+      flexShrink: 1,
     },
     headerTextTime: {
       fontSize: 13,
@@ -52,6 +53,7 @@ export const useStyles = () => {
       borderRadius: 12,
       borderTopLeftRadius: 0,
       alignSelf: 'flex-start',
+      maxWidth: '100%',
     },
 
     viewMoreReplyBtn: {
