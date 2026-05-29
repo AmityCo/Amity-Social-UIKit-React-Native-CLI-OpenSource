@@ -5,6 +5,7 @@ import {
 import { useEffect, useState } from 'react';
 import { isModerator } from '../utils/permissions';
 import useAuth from '../../core/hooks/useAuth';
+import { MemberRoles } from '../../core/constants';
 
 type UsePostPermissionParams = {
   community?: Amity.Community;
@@ -20,16 +21,16 @@ export function usePostPermission({ community }: UsePostPermissionParams) {
   useEffect(() => {
     if (!community?.communityId || !client?.userId) return;
 
-    CommunityRepository.Membership.searchMembers(
+    CommunityRepository.Membership.getMembers(
       {
         communityId: community.communityId,
-        search: client.userId,
-        limit: 1,
-        memberships: ['member'],
-        includeDeleted: false,
+        limit: 20,
+        roles: [MemberRoles.ADMIN, MemberRoles.COMMUNITY_MODERATOR],
       },
       ({ data }) => {
-        const userRoles = data[0]?.roles ?? [];
+        const userRoles = data.find(
+          (member) => member.userId === client.userId
+        )?.roles;
         setHasPostPermission(
           isOnlyAdminCanPost ? isModerator(userRoles) : !!community?.isJoined
         );
