@@ -359,7 +359,8 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
-  if (!hasPostPermission && !hasStoryPermission) return null;
+  if (!community?.isJoined || (!hasPostPermission && !hasStoryPermission))
+    return null;
 
   return (
     <Fragment>
