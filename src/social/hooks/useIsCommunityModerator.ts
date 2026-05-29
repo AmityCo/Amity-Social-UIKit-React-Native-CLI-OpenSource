@@ -1,6 +1,7 @@
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { isModerator } from '../../core/utils/permission';
 import { useEffect, useState } from 'react';
+import { MemberRoles } from '../../core/constants';
 
 export const useIsCommunityModerator = ({
   userId,
@@ -12,23 +13,21 @@ export const useIsCommunityModerator = ({
   const [isCommunityModerator, setisCommunityModerator] = useState(false);
   useEffect(() => {
     if (!userId || !communityId) return setisCommunityModerator(false);
-    const unsub = CommunityRepository.Membership.searchMembers(
+    const unsub = CommunityRepository.Membership.getMembers(
       {
-        communityId: communityId,
-        search: userId,
-        limit: 1,
-        sortBy: 'firstCreated',
+        communityId,
+        limit: 20,
+        roles: [MemberRoles.ADMIN, MemberRoles.COMMUNITY_MODERATOR],
       },
-      async ({ error, loading, data }) => {
+      ({ error, loading, data }) => {
         if (error) return setisCommunityModerator(false);
         if (!loading) {
-          const userRoles = data[0]?.roles ?? [];
-          return setisCommunityModerator(() => isModerator(userRoles));
+          const userRoles = data.find((m) => m.userId === userId)?.roles;
+          setisCommunityModerator(isModerator(userRoles));
         }
-        return setisCommunityModerator(false);
       }
     );
     return () => unsub();
   }, [communityId, userId]);
-  return { isCommunityModerator: isCommunityModerator };
+  return { isCommunityModerator };
 };
