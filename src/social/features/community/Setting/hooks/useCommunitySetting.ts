@@ -136,6 +136,11 @@ export function useCommunitySetting(community: Amity.Community) {
     navigation.navigate('CommunityStorySetting', { community });
   };
 
+  const isNetworkNotificationsEnabled =
+    !notificationSettings ||
+    notificationSettings.events.length === 0 ||
+    notificationSettings.events.some((e) => e.isNetworkEnabled !== false);
+
   const handleCommunityNotificationSetting = () => {
     if (AmityCommunitySettingPageBehavior.goToNotificationPage) {
       return AmityCommunitySettingPageBehavior.goToNotificationPage({
@@ -155,5 +160,6 @@ export function useCommunitySetting(community: Amity.Community) {
     handleCommunityStorySetting,
     handleCommunityNotificationSetting,
     isNotificationEnabled: notificationSettings?.isEnabled ?? false,
+    isNetworkNotificationsEnabled,
   };
 }

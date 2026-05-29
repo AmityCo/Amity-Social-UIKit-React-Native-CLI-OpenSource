@@ -35,6 +35,7 @@ const CommunitySetting = ({ community }: CommunitySettingProps) => {
     handleCommunityStorySetting,
     handleCommunityNotificationSetting,
     isNotificationEnabled,
+    isNetworkNotificationsEnabled,
   } = useCommunitySetting(community);
 
   return (
@@ -79,17 +80,21 @@ const CommunitySetting = ({ community }: CommunitySettingProps) => {
             <View style={styles.divider} />
           </>
         )}
-        <View style={styles.titleContainer}>
-          <Title>Your preferences</Title>
-        </View>
-        <Action
-          description={isNotificationEnabled ? 'On' : 'Off'}
-          iconProps={{ xml: bell() }}
-          elementId={ElementID.notifications}
-          pageId={PageID.community_setting_page}
-          onPress={handleCommunityNotificationSetting}
-        />
-        <View style={styles.divider} />
+        {isNetworkNotificationsEnabled && (
+          <>
+            <View style={styles.titleContainer}>
+              <Title>Your preferences</Title>
+            </View>
+            <Action
+              description={isNotificationEnabled ? 'On' : 'Off'}
+              iconProps={{ xml: bell() }}
+              elementId={ElementID.notifications}
+              pageId={PageID.community_setting_page}
+              onPress={handleCommunityNotificationSetting}
+            />
+            <View style={styles.divider} />
+          </>
+        )}
         {community?.isJoined && (
           <>
             <LeaveCommunity
