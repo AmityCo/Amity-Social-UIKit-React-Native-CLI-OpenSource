@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React, { FC, useCallback, useState, useEffect, memo } from 'react';
 import Video from 'react-native-video';
+import LinearGradient from 'react-native-linear-gradient';
 import {
   leftLongArrow,
   rightLongArrow,
@@ -200,6 +201,10 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
             style={[styles.image, isFullScreen && styles.aspect_ratio]}
           />
         )}
+        <LinearGradient
+          style={styles.gradientOverlay}
+          colors={['transparent', 'rgba(0,0,0,0.8)']}
+        />
       </View>
       {hyperlink?.length > 0 && (
         <TouchableOpacity
