@@ -1,5 +1,10 @@
-import { useEffect, useState, useRef } from 'react';
-import { View, TouchableOpacity, Platform } from 'react-native';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import {
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Platform,
+} from 'react-native';
 import { useStyles } from './styles';
 import LiveStreamEndThumbnail from '../../../components/LivestreamContent/LivestreamEndedThumbnail';
 import { SvgXml } from 'react-native-svg';
@@ -38,6 +43,8 @@ function AmityLiveStreamPlayerPage() {
   const [videoKey, setVideoKey] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [wasLive, setWasLive] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const controlsTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { roomId, post } = route.params;
   const { subscribedPost } = usePostSubscription(post?.postId);
@@ -150,6 +157,19 @@ function AmityLiveStreamPlayerPage() {
     }
   }, [room?.status, navigation]);
 
+  const showControlsTemporarily = useCallback(() => {
+    setShowControls(true);
+    if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    controlsTimerRef.current = setTimeout(() => setShowControls(false), 4000);
+  }, []);
+
+  useEffect(() => {
+    showControlsTemporarily();
+    return () => {
+      if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    };
+  }, [showControlsTemporarily]);
+
   const shouldShowEndThumbnail =
     room?.status === RoomStatus.ended ||
     (room?.status === RoomStatus.recorded && wasLive) ||
@@ -183,73 +203,90 @@ function AmityLiveStreamPlayerPage() {
           <TouchableOpacity style={styles.closeButton} onPress={closePlayer}>
             <SvgXml
               xml={close()}
-              width="28"
-              height="28"
+              width="24"
+              height="24"
               color={theme.colors.background}
             />
           </TouchableOpacity>
         </>
       ) : (
-        <View style={styles.container}>
-          {(room.status === RoomStatus.live ||
-            room.status === RoomStatus.waitingReconnect) && (
-            <View style={styles.liveRow}>
-              <View style={styles.status}>
-                <Typography.CaptionBold style={styles.live}>
-                  LIVE
-                </Typography.CaptionBold>
+        <TouchableWithoutFeedback onPress={showControlsTemporarily}>
+          <View style={styles.container}>
+            {(room.status === RoomStatus.live ||
+              room.status === RoomStatus.waitingReconnect) && (
+              <View style={styles.liveRow}>
+                <View style={styles.status}>
+                  <Typography.CaptionBold style={styles.live}>
+                    LIVE
+                  </Typography.CaptionBold>
+                </View>
+                {shareLink && (
+                  <MenuButton
+                    pageId={PageID.livestream_player_page}
+                    variant="vertical"
+                    onPress={handleSharePress}
+                  />
+                )}
               </View>
-              {shareLink && (
-                <MenuButton
-                  pageId={PageID.livestream_player_page}
-                  variant="vertical"
-                  onPress={handleSharePress}
-                />
-              )}
-            </View>
-          )}
-          {!shouldShowEndThumbnail && (
-            <Video
-              key={
-                Platform.OS === 'android' ? `${videoUrl}-${videoKey}` : videoUrl
-              }
-              ref={videoRef}
-              source={{
-                uri:
-                  room.status === RoomStatus.recorded
-                    ? room.recordedPlaybackInfos[0]?.url
-                    : room.livePlaybackUrl,
-                headers: {
-                  Authorization: `Bearer ${client?.token?.accessToken}`,
-                },
-                type: 'm3u8',
-              }}
-              style={styles.container}
-              resizeMode="cover"
-              controls={true}
-              fullscreenOrientation="landscape"
-              paused={isPaused}
-              muted={false}
-              volume={1.0}
-              audioOutput="speaker"
-              playInBackground={false}
-              playWhenInactive={false}
-              repeat={false}
-              onLoad={() => {
-                setIsVideoLoading(false);
-                if (room.status === RoomStatus.recorded) {
-                  setIsPaused(false);
+            )}
+            {!shouldShowEndThumbnail && (
+              <Video
+                key={
+                  Platform.OS === 'android'
+                    ? `${videoUrl}-${videoKey}`
+                    : videoUrl
                 }
-              }}
-            />
-          )}
+                ref={videoRef}
+                source={{
+                  uri:
+                    room.status === RoomStatus.recorded
+                      ? room.recordedPlaybackInfos[0]?.url
+                      : room.livePlaybackUrl,
+                  headers: {
+                    Authorization: `Bearer ${client?.token?.accessToken}`,
+                  },
+                  type: 'm3u8',
+                }}
+                style={styles.container}
+                resizeMode="cover"
+                controls={false}
+                paused={isPaused}
+                muted={false}
+                volume={1.0}
+                audioOutput="speaker"
+                playInBackground={false}
+                playWhenInactive={false}
+                repeat={false}
+                onLoad={() => {
+                  setIsVideoLoading(false);
+                  if (room.status === RoomStatus.recorded) {
+                    setIsPaused(false);
+                  }
+                }}
+              />
+            )}
 
-          {isVideoLoading && (
-            <View style={styles.connecting}>
-              <CircularProgressIndicator size={40} strokeWidth={2} />
-            </View>
-          )}
-        </View>
+            {showControls && (
+              <TouchableOpacity
+                style={styles.liveCloseButton}
+                onPress={closePlayer}
+              >
+                <SvgXml
+                  xml={close()}
+                  width="24"
+                  height="24"
+                  color={theme.colors.background}
+                />
+              </TouchableOpacity>
+            )}
+
+            {isVideoLoading && (
+              <View style={styles.connecting}>
+                <CircularProgressIndicator size={40} strokeWidth={2} />
+              </View>
+            )}
+          </View>
+        </TouchableWithoutFeedback>
       )}
 
       {((room.status === RoomStatus.live && reconnecting) ||
