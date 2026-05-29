@@ -65,7 +65,12 @@ const AmityCommunityCategoriesComponent: FC<
               <Typography.BodyBold style={styles.seeMoreCategoryText}>
                 {'See more'}
               </Typography.BodyBold>
-              <SvgXml xml={arrowRight()} />
+              <SvgXml
+                width={20}
+                height={20}
+                xml={arrowRight()}
+                color={themeStyles.colors.base}
+              />
             </View>
           </Pressable>
         ) : null
