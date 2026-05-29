@@ -84,8 +84,8 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
       />
       <SvgXml
         style={styles.storyRing}
-        width={48}
-        height={48}
+        width={64}
+        height={64}
         xml={storyRing(storyRingColor[0], storyRingColor[1])}
       />
       {hasStoryPermission && storyTarget?.failedStoriesCount > 0 ? (
