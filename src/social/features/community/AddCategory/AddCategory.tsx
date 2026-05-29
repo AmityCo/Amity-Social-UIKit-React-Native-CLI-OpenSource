@@ -113,6 +113,7 @@ const AddCategory = () => {
       />
       <View style={styles.submitButtonContainer}>
         <ActionButton
+          fullWidth
           label="Add category"
           onPress={handleSubmit(onSubmit)}
           disabled={!isDirty || !isValid || isSubmitting}
