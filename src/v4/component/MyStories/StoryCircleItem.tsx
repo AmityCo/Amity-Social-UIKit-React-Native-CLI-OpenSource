@@ -44,7 +44,7 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
       : ['#e2e2e2', '#e2e2e2'];
 
   useEffect(() => {
-    if (storyTarget.targetType !== 'community') return;
+    if (storyTarget.targetType !== 'community') return null;
     const unsubscribe = CommunityRepository.getCommunity(
       storyTarget.targetId,
       async ({ error, loading, data }) => {
