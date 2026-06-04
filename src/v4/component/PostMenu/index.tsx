@@ -18,7 +18,7 @@ import { useStyles } from './styles';
 import { getCommunityById } from '../../../providers/Social/communities-sdk';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useIsCommunityModerator } from '../../hook';
+import { isModerator, useUser } from '../../hook';
 import {
   deletePostById,
   reportTargetById,
@@ -69,11 +69,7 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   const { postId, targetType, targetId } = post ?? {};
 
   const myId = (client as Amity.Client).userId;
-
-  const { isCommunityModerator: isIAmModerator } = useIsCommunityModerator({
-    communityId: targetType === 'community' && targetId,
-    userId: myId,
-  });
+  const currentUser = useUser(myId);
 
   useEffect(() => {
     if (targetType === 'community' && targetId) {
@@ -254,7 +250,8 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
                   },
                 ],
               },
-              (post?.creator?.userId === myId || isIAmModerator) &&
+              (post?.creator?.userId === myId ||
+                isModerator(currentUser?.roles)) &&
                 ((childrenPost?.dataType !== 'room' &&
                   childrenPost?.dataType !== 'poll') ||
                   (childrenPost?.dataType === 'poll' &&
@@ -312,7 +309,8 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
                   </Typography.BodyBold>
                 </TouchableOpacity>
               )}
-            {(post?.creator?.userId === myId || isIAmModerator) && (
+            {(post?.creator?.userId === myId ||
+              isModerator(currentUser?.roles)) && (
               <TouchableOpacity style={styles.menuItem} onPress={onDeletePost}>
                 <SvgXml
                   width="24"

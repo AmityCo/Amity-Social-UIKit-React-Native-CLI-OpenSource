@@ -61,7 +61,7 @@ export const StoryListItem = ({
   isModerator,
 }: StoryListItemProps) => {
   const styles = useStyles();
-  const hasStoryPermission = useStoryPermission(userId);
+  const { hasStoryPermission } = useStoryPermission(userId);
   const { getUiKitConfig } = useConfig();
   const storyReactionBgColor =
     (getUiKitConfig({

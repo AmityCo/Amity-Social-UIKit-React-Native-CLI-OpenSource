@@ -1,11 +1,8 @@
 import React, { memo, useState, FC } from 'react';
 import { View } from 'react-native';
 import { ComponentID, PageID } from '../../../enum';
-import {
-  useAmityComponent,
-  useCommunity,
-  useIsCommunityModerator,
-} from '../../../hook';
+import { useAmityComponent, useCommunity, useUser } from '../../../hook';
+import { isModerator } from '../../../hook/isModerator';
 import { useStyles } from './styles';
 import CommunityCover from '../../../elements/CommunityCover/CommunityCover';
 import CommunityPrivateBadge from '../../../elements/CommunityPrivateBadge/CommunityPrivateBadge';
@@ -61,10 +58,8 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
     componentId,
   });
 
-  const { isCommunityModerator } = useIsCommunityModerator({
-    communityId: community?.communityId,
-    userId: client?.userId,
-  });
+  const currentUser = useUser(client?.userId || '');
+  const isCommunityModerator = isModerator(currentUser?.roles);
 
   const styles = useStyles(themeStyles);
 

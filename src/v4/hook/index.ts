@@ -14,7 +14,7 @@ export * from './useCommunities';
 export * from './useCommunity';
 export * from './useCategory';
 export * from './useUiKitReference';
-export * from './useIsCommunityModerator';
+export * from './isModerator';
 export * from './useSearch';
 export * from './useTimeDifference';
 export * from './useReaction';

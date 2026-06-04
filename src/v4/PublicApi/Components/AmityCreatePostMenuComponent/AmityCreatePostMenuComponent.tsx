@@ -24,7 +24,7 @@ const AmityCreatePostMenuComponent = ({
 
   const { AmityCreatePostMenuComponentBehavior } = useBehaviour();
 
-  const hasStoryPermission = useStoryPermission();
+  const { hasStoryPermission } = useStoryPermission();
 
   const styles = StyleSheet.create({
     container: {
