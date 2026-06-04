@@ -1,17 +1,18 @@
 import { ComponentID, PageID } from '../../v4/enum';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState, useUIKitDispatch, useUIKitSelector } from '../store';
+import { ReactElement } from 'react';
 
 export interface BottomSheetState {
   open: boolean;
-  content: JSX.Element | null;
+  content: ReactElement | null;
   height?: number;
   pageId?: PageID;
   componentId?: ComponentID;
 }
 
 type OpenBottomSheetPayload = {
-  content: JSX.Element;
+  content: ReactElement;
   height?: number;
 };
 

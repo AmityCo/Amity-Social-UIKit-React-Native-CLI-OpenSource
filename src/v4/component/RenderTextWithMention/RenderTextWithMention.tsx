@@ -88,7 +88,7 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
   }
 
   let currentPosition = 0;
-  const result: (string | JSX.Element)[][] = heightlightTextPositions.map(
+  const result: (string | React.ReactElement)[][] = heightlightTextPositions.map(
     ({ index, length, userId, link }, i) => {
       // Add non-highlighted text before the mention
       const nonHighlightedText = textPost.slice(currentPosition, index);
