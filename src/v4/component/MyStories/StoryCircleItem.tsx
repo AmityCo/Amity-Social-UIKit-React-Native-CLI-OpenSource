@@ -27,7 +27,8 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
   const theme = useTheme() as MyMD3Theme;
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
-  const hasStoryPermission = useStoryPermission(storyTarget.targetId);
+  const [communityLoading, setCommunityLoading] = useState(true);
+  const { hasStoryPermission } = useStoryPermission(storyTarget.targetId);
   const { getImage } = useFile();
   const { getUiKitConfig } = useConfig();
   const styles = useStyles();
@@ -43,13 +44,17 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
       : ['#e2e2e2', '#e2e2e2'];
 
   useEffect(() => {
-    if (storyTarget.targetType !== 'community') return;
-    CommunityRepository.getCommunity(
+    if (storyTarget.targetType !== 'community') return null;
+    const unsubscribe = CommunityRepository.getCommunity(
       storyTarget.targetId,
       async ({ error, loading, data }) => {
-        if (error) return;
+        if (error) {
+          setCommunityLoading(false);
+          return;
+        }
         if (!loading) {
           setCommunityData(data);
+          setCommunityLoading(false);
           const avatarImage = await getImage({
             fileId: data.avatarFileId,
             imageSize: ImageSizeState.small,
@@ -58,9 +63,17 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
         }
       }
     );
+    return () => unsubscribe();
   }, [getImage, storyTarget.targetId, storyTarget.targetType]);
 
   if (storyTarget.targetType !== 'community') return null;
+
+  // Global story feed: only show stories from communities the user has joined.
+  // Public community stories are visible on the community profile page,
+  // but must NOT appear in the global story feed for non-members.
+  // Private community stories are never returned by the SDK for non-members,
+  // but we guard here as an extra safety net.
+  if (!communityLoading && !communityData?.isJoined) return null;
   return (
     <TouchableOpacity
       key={storyTarget.targetId}

@@ -2,9 +2,9 @@ import useAuth from '../../hooks/useAuth';
 import { useUser } from './useUser';
 import useSocialSettings from '../core/hooks/useSocialSettings';
 import {
+  checkStoryPermission,
   isAdmin,
   isModerator,
-  checkStoryPermission,
 } from '../utils/permissions';
 
 export function useStoryPermission(communityId?: string) {
@@ -22,5 +22,5 @@ export function useStoryPermission(communityId?: string) {
       isModeratorUser ||
       checkStoryPermission(client, communityId);
 
-  return hasStoryPermission;
+  return { hasStoryPermission };
 }

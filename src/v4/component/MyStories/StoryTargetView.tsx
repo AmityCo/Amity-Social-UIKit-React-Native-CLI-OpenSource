@@ -26,7 +26,7 @@ const StoryTargetView: FC<IStorytargetView> = ({
 }) => {
   const cube = useRef<CubeNavigationHorizontal | AndroidCubeEffect>();
   const communityId = globalStoryTargets[currentCommunityIndex].targetId;
-  const hasStoryPermission = useStoryPermission(communityId);
+  const { hasStoryPermission } = useStoryPermission(communityId);
 
   const navigation =
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;

@@ -30,7 +30,7 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
   const styles = useStyles();
   const { getUiKitConfig } = useConfig();
-  const hasStoryPermission = useStoryPermission(communityId);
+  const { hasStoryPermission } = useStoryPermission(communityId);
   const { getStoryTarget, storyTarget, stories, getStories } = useStory();
   const { getImage } = useFile();
   const [avatarUrl, setAvatarUrl] = useState(undefined);
