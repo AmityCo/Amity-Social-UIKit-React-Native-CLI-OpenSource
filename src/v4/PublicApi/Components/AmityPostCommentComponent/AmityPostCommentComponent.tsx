@@ -45,7 +45,7 @@ type AmityPostCommentComponentType = {
   disabledInteraction?: boolean;
   setReplyUserName?: (arg: string) => void;
   setReplyCommentId?: (arg: string) => void;
-  ListHeaderComponent?: JSX.Element;
+  ListHeaderComponent?: React.ReactElement;
 };
 
 const commentListLimit = 10;

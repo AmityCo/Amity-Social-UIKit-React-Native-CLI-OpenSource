@@ -185,6 +185,8 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
     return null;
   }
 
+  if (!hasStoryPermission && stories.length === 0) return null;
+
   return (
     <View style={styles.container}>
       <View style={styles.storyItemWrap}>{renderCommunityStory()}</View>

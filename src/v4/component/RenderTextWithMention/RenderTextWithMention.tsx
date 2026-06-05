@@ -88,8 +88,8 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
   }
 
   let currentPosition = 0;
-  const result: (string | JSX.Element)[][] = heightlightTextPositions.map(
-    ({ index, length, userId, link }, i) => {
+  const result: (string | React.ReactElement)[][] =
+    heightlightTextPositions.map(({ index, length, userId, link }, i) => {
       // Add non-highlighted text before the mention
       const nonHighlightedText = textPost.slice(currentPosition, index);
       // Add highlighted text
@@ -109,8 +109,7 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
 
       // Return an array of non-highlighted and highlighted text
       return [nonHighlightedText, highlightedText];
-    }
-  );
+    });
 
   // Add any remaining non-highlighted text after the mentions
   const remainingText = textPost.slice(currentPosition);
