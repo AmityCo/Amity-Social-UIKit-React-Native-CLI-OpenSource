@@ -30,6 +30,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { RoomStatus } from '../../../enums/roomStatus';
 import { AmityThumbnailActionComponent } from '../components/ThumbnailAction';
 import { StartLivestreamButton } from '../../../elements/StartLivestreamButton';
+import LiveStreamStartingThumbnail from '../../../components/LivestreamContent/LivestreamStartingThumbnail';
 import { PageID } from '../../../enums';
 import { useShareableLink } from '../../../../core/hooks/useShareableLink';
 import { ShareableLinkModel } from '../../../types';
@@ -293,8 +294,10 @@ function AmityCreateLivestreamPage() {
 
         setPost(newPost.data);
 
-        // Set isConnecting to false since LiveKit room is already connected
-        setIsConnecting(false);
+        // Do NOT set isConnecting to false here — keep the loading overlay
+        // visible until LiveKitRoom fires onConnected, which confirms the
+        // video stream is ready. Clearing it prematurely exposes the white
+        // background before the camera feed appears (PDT-3089).
 
         // Start the timer when live stream actually starts
         if (timerRef.current) {
@@ -467,16 +470,26 @@ function AmityCreateLivestreamPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {(!isLive ||
-        (isLive && isConnecting) ||
-        (isLive && reconnecting && !isEnding) ||
-        isEnding) && (
+      {(!isLive || (isLive && reconnecting && !isEnding) || isEnding) && (
         <View
           style={[styles.overlay, !hasPermission && styles.noPermissionOverlay]}
         />
       )}
 
-      {/* Preview camera part */}
+      {/* Starting loading screen — shown instead of camera/LiveKit while
+          the stream connection is being established. Renders on top of the
+          black container so no white/blank flash on Android. */}
+      {isLive && isConnecting && (
+        <View style={styles.startingContainer}>
+          <LiveStreamStartingThumbnail />
+        </View>
+      )}
+
+      {/* Preview camera / livestream feed.
+          LiveKitRoom must always mount once roomToken is set so it can
+          establish the WebRTC connection and fire onConnected. While
+          isConnecting=true the LiveStreamStartingThumbnail (zIndex 60)
+          sits on top, hiding the blank RoomView from the user. */}
 
       {hasPermission ? (
         roomToken ? (
@@ -505,10 +518,13 @@ function AmityCreateLivestreamPage() {
           >
             <View style={styles.cameraContainer}>
               <View style={styles.camera}>
-                <RoomView
-                  onLocalParticipantReady={setLivekitParticipant}
-                  isFrontCamera={isFrontCamera}
-                />
+                {/* RoomView hidden while connecting — loading thumbnail covers it */}
+                {!isConnecting && (
+                  <RoomView
+                    onLocalParticipantReady={setLivekitParticipant}
+                    isFrontCamera={isFrontCamera}
+                  />
+                )}
               </View>
             </View>
           </LiveKitRoom>
@@ -520,7 +536,7 @@ function AmityCreateLivestreamPage() {
                   // eslint-disable-next-line react-native/no-inline-styles
                   style={{ flex: 1 }}
                   device={cameraDevice}
-                  isActive={true}
+                  isActive={!isConnecting}
                 />
               )}
             </View>
@@ -551,14 +567,7 @@ function AmityCreateLivestreamPage() {
         </View>
       )}
       {isLive ? (
-        isConnecting ? (
-          <View style={styles.connecting}>
-            <CircularProgressIndicator size={40} strokeWidth={2} />
-            <Typography.TitleBold style={styles.text}>
-              Starting live stream
-            </Typography.TitleBold>
-          </View>
-        ) : (
+        isConnecting ? null : (
           <>
             {!isEnding && reconnecting && (
               <View style={styles.connecting}>

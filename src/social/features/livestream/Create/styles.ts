@@ -37,6 +37,17 @@ export const useStyles = () => {
     noPermissionOverlay: {
       backgroundColor: 'rgba(0, 0, 0, 1)',
     },
+    startingContainer: {
+      // Full-screen overlay that shows LiveStreamStartingThumbnail during
+      // the LiveKit connection phase. Sits above the camera but below the
+      // control elements (zIndex 100) so the UI doesn't flash white/black.
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 60,
+    },
     camera: {
       flex: 1,
       height: '100%',
