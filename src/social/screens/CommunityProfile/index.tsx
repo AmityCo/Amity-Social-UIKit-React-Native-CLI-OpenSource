@@ -41,6 +41,7 @@ import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 import AmityCommunityPinnedPostComponent from './components/PinnedPost/PinnedPost';
 import { usePostPermission } from '../../../social/hooks/usePostPermission';
+import { serializeCommunity } from '../../../social/utils';
 
 type ICommunityProfilePage = {
   defaultCommunityId?: string;
@@ -298,7 +299,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     }
 
     return navigation.navigate('CreatePost', {
-      community,
+      community: serializeCommunity(community),
       targetId: communityId,
       targetType: 'community',
     });
