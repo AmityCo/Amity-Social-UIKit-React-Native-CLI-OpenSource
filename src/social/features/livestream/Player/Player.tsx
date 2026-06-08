@@ -212,23 +212,6 @@ function AmityLiveStreamPlayerPage() {
       ) : (
         <TouchableWithoutFeedback onPress={showControlsTemporarily}>
           <View style={styles.container}>
-            {(room.status === RoomStatus.live ||
-              room.status === RoomStatus.waitingReconnect) && (
-              <View style={styles.liveRow}>
-                <View style={styles.status}>
-                  <Typography.CaptionBold style={styles.live}>
-                    LIVE
-                  </Typography.CaptionBold>
-                </View>
-                {shareLink && (
-                  <MenuButton
-                    pageId={PageID.livestream_player_page}
-                    variant="vertical"
-                    onPress={handleSharePress}
-                  />
-                )}
-              </View>
-            )}
             {!shouldShowEndThumbnail && (
               <Video
                 key={
@@ -264,6 +247,24 @@ function AmityLiveStreamPlayerPage() {
                   }
                 }}
               />
+            )}
+
+            {(room.status === RoomStatus.live ||
+              room.status === RoomStatus.waitingReconnect) && (
+              <View style={styles.liveRow}>
+                <View style={styles.status}>
+                  <Typography.CaptionBold style={styles.live}>
+                    LIVE
+                  </Typography.CaptionBold>
+                </View>
+                {shareLink && (
+                  <MenuButton
+                    pageId={PageID.livestream_player_page}
+                    variant="vertical"
+                    onPress={handleSharePress}
+                  />
+                )}
+              </View>
             )}
 
             {showControls && (
