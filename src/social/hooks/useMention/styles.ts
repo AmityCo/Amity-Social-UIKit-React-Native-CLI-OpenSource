@@ -9,6 +9,9 @@ export const useStyles = () => {
     mention: {
       color: theme.colors.primary,
     },
+    link: {
+      color: theme.colors.primary,
+    },
     postMentionSuggestionContainer: {
       left: 0,
       right: 0,

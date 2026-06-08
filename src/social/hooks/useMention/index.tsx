@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import SearchItem from '../../components/SearchItem';
 import { TSearchItem } from '..';
-import { TriggersConfig, useMentions } from 'react-native-controlled-mentions';
+import {
+  PatternsConfig,
+  TriggersConfig,
+  useMentions,
+} from 'react-native-controlled-mentions';
 import { useStyles } from './styles';
 import {
   FlatList,
@@ -37,7 +41,7 @@ function useMention({
   isMentionLimitReached,
   onMentionLimitReached,
 }: UseMentionProps) {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   const [cursorIndex, setCursorIndex] = useState(0);
 
   const triggersConfig: TriggersConfig<'mention'> = {
@@ -48,10 +52,30 @@ function useMention({
     },
   };
 
+  // Highlight URLs while typing in the TextInput.
+  //
+  // Rules for react-native-controlled-mentions patternsConfig:
+  //  1. The regex MUST have exactly ONE capturing group — the library uses
+  //     String.split(regex) and expects the matched text at odd indices.
+  //  2. textStyle must be a plain object (not a StyleSheet ID) so the library
+  //     can pass it directly as a style prop to its internal Text component.
+  const patternsConfig: PatternsConfig = {
+    url: {
+      // (?<![a-zA-Z0-9_]) — negative lookbehind: skip URLs embedded in words (e.g. my_http://x)
+      // The capturing group (…) is required by react-native-controlled-mentions split() logic.
+      pattern:
+        /(?<![a-zA-Z0-9_])((?:https?|ftp):\/\/[^\s<>|()[\]{}]+|mailto:[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}|www\.[a-zA-Z0-9][-a-zA-Z0-9.]*\.[a-zA-Z]{2,}(?:\/[^\s<>|()[\]{}]*)?)/gi,
+      textStyle: {
+        color: theme.colors.primary,
+      },
+    },
+  };
+
   const { textInputProps, triggers } = useMentions({
     value,
     onChange,
     triggersConfig,
+    patternsConfig,
     onSelectionChange: (selection) => setCursorIndex(selection.start),
   });
 

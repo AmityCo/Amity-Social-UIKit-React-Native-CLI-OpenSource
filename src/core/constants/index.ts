@@ -128,8 +128,11 @@ export const QUERY_KEY = {
   PINNED_POSTS_COLLECTION: 'pinned-posts-collections',
 };
 
+// Matches the spec: https://github.com/AmityCo/cleverden/blob/feat/frontend-agentic/tech-specs/18-links-detection-in-console.md
+// (?<![\w])  — skip URLs embedded inside words
+// (?<![.])   — strip trailing dots
 export const URL_REGEX =
-  /(?:(?:https?|ftp):\/\/(?:[a-zA-Z0-9.-]+|[\d.]+)(?::\d{1,5})?(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?|mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|www\.(?:[a-zA-Z0-9.-]+)(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?!\.))/g;
+  /(?<![\w])(?:(?:https?|ftp):\/\/(?:[a-zA-Z0-9.-]+|[\d.]+)(?::\d{1,5})?(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?<![.])|mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|www\.(?:[a-zA-Z0-9.-]+)(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?<![.]))/g;
 
 export const TOAST = {
   SHARE: {
