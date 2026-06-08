@@ -93,15 +93,15 @@ export const useStyles = () => {
       paddingVertical: 4,
     },
     communityAvatar: {
-      width: 40,
-      height: 40,
+      width: 56,
+      height: 56,
       borderRadius: 56,
       margin: 4,
     },
     avatarContainer: {
       alignItems: 'center',
       width: 48,
-      marginHorizontal: 8,
+      marginHorizontal: 16,
     },
   });
 
