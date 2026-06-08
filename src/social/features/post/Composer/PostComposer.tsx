@@ -55,7 +55,11 @@ import LoadingImage from '../../../components/LoadingImage';
 import LoadingVideo from '../../../components/LoadingVideo';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
+import {
+  CommunityRepository,
+  PostRepository,
+  UserRepository,
+} from '@amityco/ts-sdk-react-native';
 import { useFile } from '../../../hooks';
 import useMention from '../../../hooks/useMention';
 import { getPostErrorMessage } from '../../../utils/errors';
@@ -117,10 +121,31 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const [hasChangedAttachment, setHasChangedAttachment] = useState(false);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [videoErrors, setVideoErrors] = useState<Set<string>>(new Set());
-  const privateCommunityId = !community?.isPublic && community?.communityId;
+
+  // When community is not provided via props (e.g. PostTypeChoiceModal only
+  // dispatches targetId/targetType), fetch it from targetId.
+  const [fetchedCommunity, setFetchedCommunity] =
+    useState<Amity.Community | null>(null);
+  useEffect(() => {
+    let unsub: (() => void) | undefined;
+    if (!community && targetType === 'community' && targetId) {
+      unsub =
+        CommunityRepository.getCommunity(
+          targetId,
+          ({ data, loading, error }) => {
+            if (!loading && !error && data) setFetchedCommunity(data);
+          }
+        ) ?? undefined;
+    }
+    return () => unsub?.();
+  }, [community, targetId, targetType]);
+
+  const effectiveCommunity = community ?? fetchedCommunity;
+  const privateCommunityId =
+    !effectiveCommunity?.isPublic && effectiveCommunity?.communityId;
   const title = isEditMode
     ? 'Edit Post'
-    : community?.displayName ?? 'My Timeline';
+    : effectiveCommunity?.displayName ?? 'My Timeline';
   const isInputValid =
     !isUploading &&
     imageErrors.size === 0 &&
@@ -405,8 +430,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       dispatch(hideToastMessage());
       if (
         targetType === 'community' &&
-        (community?.postSetting === 'ADMIN_REVIEW_POST_REQUIRED' ||
-          (community as Record<string, any>)?.needApprovalOnPostCreation) &&
+        (effectiveCommunity?.postSetting === 'ADMIN_REVIEW_POST_REQUIRED' ||
+          (effectiveCommunity as Record<string, any>)
+            ?.needApprovalOnPostCreation) &&
         !isCommunityModerator
       ) {
         onPressClose();
@@ -442,7 +468,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   }, [
     addPostToGlobalFeed,
     chosenMediaType,
-    community,
+    effectiveCommunity,
     deletedPostIds,
     dispatch,
     displayImages,

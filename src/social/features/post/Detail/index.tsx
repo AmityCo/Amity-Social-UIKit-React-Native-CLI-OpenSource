@@ -95,9 +95,17 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     showEndPopup || false
   );
 
+  // Restrict @mention list to community members when the post belongs to a
+  // private community. postData.targetCommunity is populated after the post loads.
+  const privateCommunityId =
+    postData?.targetType === 'community' && !postData?.targetCommunity?.isPublic
+      ? postData?.targetId
+      : undefined;
+
   const { renderInput, renderSuggestions } = useMention({
     value: inputMessage,
     onChange: setInputMessage,
+    communityId: privateCommunityId,
     setMentionUsers: (user: TSearchItem) => {
       setMentionNames((prev) => {
         if (prev.length >= MAX_MENTION_USERS) {
