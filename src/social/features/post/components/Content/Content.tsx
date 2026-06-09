@@ -214,9 +214,11 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
               <View style={styles.headerRow}>
                 <TouchableOpacity
                   style={
-                    targetType === 'community'
-                      ? styles.headerTextContainer
-                      : styles.headerTextContainerUser
+                    targetType === 'community' &&
+                    isCommunityNameShown &&
+                    !!communityData?.displayName
+                      ? styles.headerTextContainer // global feed: cap at 40% to leave room for community name
+                      : styles.headerTextContainerUser // community feed: fill available width
                   }
                   onPress={handleDisplayNamePress}
                 >

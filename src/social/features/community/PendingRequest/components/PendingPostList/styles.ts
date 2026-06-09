@@ -51,12 +51,22 @@ export const useStyles = () => {
       borderRadius: 24,
     },
     pendingPostCreatorContainer: {
+      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
     },
     userNameContainer: {
       gap: 2,
+      flexShrink: 1,
+    },
+    displayNameRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    displayNameTouchable: {
+      flexShrink: 1,
     },
     pendingPostContentContainer: {
       paddingVertical: 8,

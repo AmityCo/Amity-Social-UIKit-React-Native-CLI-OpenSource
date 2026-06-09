@@ -19,6 +19,7 @@ import { usePostCollection } from '../../../../../hooks/collections/post/usePost
 import ActionButton from '../../../../../elements/ActionButton';
 import { useIsCommunityModerator } from '../../../../../hooks';
 import { usePendingPostQuery } from '../../../../../hooks/usePendingPostQuery';
+import { BrandBadge } from '../../../../../elements/BrandBadge';
 import { SvgXml } from 'react-native-svg';
 import { Title } from '../../../../../elements';
 import PostFeedSkeleton from '../../../../../components/PostFeedSkeleton';
@@ -160,21 +161,27 @@ const PendingPostList = ({
                   shouldRedirectToUserProfile
                 />
                 <View style={styles.userNameContainer}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('UserProfile', {
-                        userId: item?.creator?.userId,
-                      })
-                    }
-                  >
-                    <Typography.BodyBold
-                      style={styles.colorBase}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
+                  <View style={styles.displayNameRow}>
+                    <TouchableOpacity
+                      style={styles.displayNameTouchable}
+                      onPress={() =>
+                        navigation.navigate('UserProfile', {
+                          userId: item?.creator?.userId,
+                        })
+                      }
                     >
-                      {item?.creator?.displayName || item?.creator?.userId}
-                    </Typography.BodyBold>
-                  </TouchableOpacity>
+                      <Typography.BodyBold
+                        style={styles.colorBase}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {item?.creator?.displayName || item?.creator?.userId}
+                      </Typography.BodyBold>
+                    </TouchableOpacity>
+                    {item?.creator?.isBrand && (
+                      <BrandBadge width={16} height={16} />
+                    )}
+                  </View>
                   <Timestamp
                     timestamp={item?.createdAt}
                     pageId={PageID.pending_request_page}
