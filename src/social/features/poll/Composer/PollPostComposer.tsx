@@ -375,6 +375,7 @@ const PollPostComposer = () => {
         ref={bottomSheetRef}
         style={styles.bottomSheet}
         height={(Platform.OS === 'ios' && isShowingDatePicker && 600) || 400}
+        disableBodyPanning={Platform.OS === 'android'}
       >
         {Platform.OS === 'android' && <AndroidBottomSheet />}
         {Platform.OS === 'ios' && <IOSBottomSheet />}
