@@ -195,6 +195,7 @@ function MemberItem({ member, communityId, refreshMembers }: MemberItemProps) {
     <View style={styles.container}>
       <TouchableOpacity style={styles.userContainer} onPress={goToUserProfile}>
         <Avatar.User
+          shouldRedirectToUserProfile
           imageStyle={styles.userAvatar}
           uri={member.user?.avatarCustomUrl}
           roles={member.roles}

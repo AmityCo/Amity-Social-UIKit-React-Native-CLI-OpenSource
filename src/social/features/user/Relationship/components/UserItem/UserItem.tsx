@@ -36,6 +36,7 @@ export function UserItem({ profileId, userId }: UserItemProps) {
       onPress={goToUserProfile}
     >
       <Avatar.User
+        shouldRedirectToUserProfile
         userId={user?.userId}
         imageStyle={styles.avatar}
         userName={user?.displayName}
