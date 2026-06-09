@@ -180,7 +180,8 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
       ),
     },
     {
-      show: !!shareLink,
+      show:
+        !!shareLink && targetType === 'community' && !communityData?.isJoined,
       action: (
         <CopyLinkAction
           key="copy-link"
@@ -192,7 +193,8 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
       ),
     },
     {
-      show: !!shareLink,
+      show:
+        !!shareLink && targetType === 'community' && !communityData?.isJoined,
       action: (
         <ShareAction
           key="share"
