@@ -61,10 +61,8 @@ function useMention({
   //     can pass it directly as a style prop to its internal Text component.
   const patternsConfig: PatternsConfig = {
     url: {
-      // (?<![a-zA-Z0-9_]) — negative lookbehind: skip URLs embedded in words (e.g. my_http://x)
-      // The capturing group (…) is required by react-native-controlled-mentions split() logic.
       pattern:
-        /(?<![a-zA-Z0-9_])((?:https?|ftp):\/\/[^\s<>|()[\]{}]+|mailto:[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}|www\.[a-zA-Z0-9][-a-zA-Z0-9.]*\.[a-zA-Z]{2,}(?:\/[^\s<>|()[\]{}]*)?)/gi,
+        /(?<![a-zA-Z0-9_])((?:https?|ftp):\/\/(?:[a-zA-Z0-9.\-]+|[\d.]+)(?::\d{1,5})?(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?<![.])(?![^\s]*\()|mailto:[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}|www\.[a-zA-Z0-9][-a-zA-Z0-9.]*\.[a-zA-Z]{2,}(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?<![.])(?![^\s]*\())/gi,
       textStyle: {
         color: theme.colors.primary,
       },

@@ -129,10 +129,16 @@ export const QUERY_KEY = {
 };
 
 // Matches the spec: https://github.com/AmityCo/cleverden/blob/feat/frontend-agentic/tech-specs/18-links-detection-in-console.md
-// (?<![\w])  — skip URLs embedded inside words
-// (?<![.])   — strip trailing dots
+// (?<![\w])      — skip URLs embedded inside words  e.g. my_http://x
+// (?<![.])       — strip trailing dots
+// (?![^\s]*\()   — reject if non-space text after match still contains '('
+//                  (unbalanced paren → no match, balanced (1) → full match)
 export const URL_REGEX =
-  /(?<![\w])(?:(?:https?|ftp):\/\/(?:[a-zA-Z0-9.-]+|[\d.]+)(?::\d{1,5})?(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?<![.])|mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|www\.(?:[a-zA-Z0-9.-]+)(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?<![.]))/g;
+  /(?<![\w])(?:(?:https?|ftp):\/\/(?:[a-zA-Z0-9.-]+|[\d.]+)(?::\d{1,5})?(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?<![.])(?![^\s]*\()|mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|www\.(?:[a-zA-Z0-9.-]+)(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?<![.])(?![^\s]*\())/g;
+
+// Use this factory when calling exec() in a loop — a fresh RegExp instance
+// avoids the stateful lastIndex issue that comes with the global /g flag.
+export const createUrlRegex = () => new RegExp(URL_REGEX.source, 'g');
 
 export const TOAST = {
   SHARE: {

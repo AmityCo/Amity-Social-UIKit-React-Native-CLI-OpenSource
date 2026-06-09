@@ -8,29 +8,15 @@ import {
   ReactionRepository,
 } from '@amityco/ts-sdk-react-native';
 import { IMentionPosition } from '../../core/types';
+import { Alert } from 'react-native';
+import { createUrlRegex, text_contain_blocked_word } from '../constants';
 
-/**
- * Detects URLs in a text string and returns them as Amity.Link[] so other
- * platforms (console, web UIKit) can render them as clickable hyperlinks.
- *
- * Regex matches the spec at:
- * https://github.com/AmityCo/cleverden/blob/feat/frontend-agentic/tech-specs/18-links-detection-in-console.md
- * (same pattern used by the web UIKit in ~/v4/social/constants/post.ts)
- *
- * Key differences from a naive URL regex:
- *  - (?<![\w])  — negative lookbehind: don't match URLs embedded inside words
- *  - (?<![.])   — negative lookbehind: strip trailing dots from matched URLs
- *
- * A fresh RegExp is created each call to avoid stateful `lastIndex` issues
- * with the global flag.
- */
 function extractLinks(text: string): Amity.Link[] {
   if (!text) return [];
-  const urlPattern =
-    /(?<![\w])(?:(?:https?|ftp):\/\/(?:[a-zA-Z0-9.-]+|[\d.]+)(?::\d{1,5})?(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?<![.])|mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|www\.(?:[a-zA-Z0-9.-]+)(?:\/(?:[^\s<>|()]*(?:\([^\s<>|()]*\)[^\s<>|()]*)*)*)?(?<![.]))/g;
+  const urlRegex = createUrlRegex();
   const links: Amity.Link[] = [];
   let match: RegExpExecArray | null;
-  while ((match = urlPattern.exec(text)) !== null) {
+  while ((match = urlRegex.exec(text)) !== null) {
     links.push({
       index: match.index,
       length: match[0].length,
@@ -40,8 +26,6 @@ function extractLinks(text: string): Amity.Link[] {
   }
   return links;
 }
-import { Alert } from 'react-native';
-import { text_contain_blocked_word } from '../constants';
 
 export interface IGlobalFeedRes {
   data: Amity.Post<any>[];
