@@ -45,5 +45,5 @@ export const serializeCommunity = (
     postsCount: community.postsCount,
     needApprovalOnPostCreation: (community as Record<string, unknown>)
       .needApprovalOnPostCreation,
-  } as Amity.Community;
+  } as unknown as Amity.Community;
 };
