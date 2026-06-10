@@ -26,7 +26,7 @@ export const useStyles = (theme: MyMD3Theme) => {
       flex: 1,
     },
     headerTextContainer: {
-      maxWidth: '60%',
+      maxWidth: '40%',
     },
     headerTextContainerUser: {
       flexShrink: 1,

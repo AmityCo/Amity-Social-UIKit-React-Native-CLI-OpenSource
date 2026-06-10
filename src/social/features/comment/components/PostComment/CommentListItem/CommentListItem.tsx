@@ -357,7 +357,13 @@ const CommentListItem = ({
               }}
             >
               <View style={styles.displayNameRow}>
-                <Text style={styles.headerText}>{user?.displayName}</Text>
+                <Text
+                  style={styles.headerText}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {user?.displayName}
+                </Text>
                 {user?.isBrand && <BrandBadge width={16} height={16} />}
               </View>
             </TouchableOpacity>
