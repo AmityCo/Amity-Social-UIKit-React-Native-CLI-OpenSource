@@ -335,8 +335,23 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
       currentStory?.syncState === 'syncing' ||
       !currentStory?.videoData?.fileUrl);
 
+  const imageUri =
+    currentStory?.imageData?.fileUrl ||
+    (typeof currentStory?.data?.fileData === 'string'
+      ? currentStory?.data?.fileData
+      : '');
+
   return (
     <View style={[styles.container]}>
+      {currentStory?.dataType === 'image' &&
+        currentStory?.data?.imageDisplayMode !== 'fill' && (
+          <Image
+            source={{ uri: imageUri }}
+            style={styles.blurredBackground}
+            resizeMode="cover"
+            blurRadius={20}
+          />
+        )}
       <SafeAreaView>
         <View style={styles.backgroundContainer}>
           {currentStory?.dataType === 'video' ? (
@@ -363,13 +378,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
               <Image
                 onLoadStart={() => setLoad(true)}
                 onLoadEnd={() => start()}
-                source={{
-                  uri:
-                    currentStory?.imageData?.fileUrl ||
-                    (typeof currentStory?.data?.fileData === 'string'
-                      ? currentStory?.data?.fileData
-                      : ''),
-                }}
+                source={{ uri: imageUri }}
                 style={[
                   styles.image,
                   // eslint-disable-next-line react-native/no-inline-styles

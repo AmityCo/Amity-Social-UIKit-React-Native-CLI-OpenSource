@@ -212,6 +212,20 @@ export const useStyles = () => {
     alertBorderColor: {
       borderBottomColor: theme.colors.alert,
     },
+    storyGradient: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+    },
+    blurredBackground: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+    },
   });
 
   return styles;
