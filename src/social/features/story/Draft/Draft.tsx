@@ -1,5 +1,6 @@
 import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
 import { FC, useCallback, useState, useEffect, memo } from 'react';
+import LinearGradient from 'react-native-linear-gradient';
 import Video from 'react-native-video';
 import {
   leftLongArrow,
@@ -186,11 +187,21 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
         {type === StoryType.image ? (
-          <Image
-            source={{ uri: mediaType.uri }}
-            style={styles.image}
-            resizeMode={imageDisplayMode === 'fill' ? 'cover' : 'contain'}
-          />
+          <>
+            {imageDisplayMode !== 'fill' && (
+              <Image
+                source={{ uri: mediaType.uri }}
+                style={styles.blurredBackground}
+                resizeMode="cover"
+                blurRadius={20}
+              />
+            )}
+            <Image
+              source={{ uri: mediaType.uri }}
+              style={styles.image}
+              resizeMode={imageDisplayMode === 'fill' ? 'cover' : 'contain'}
+            />
+          </>
         ) : (
           <Video
             paused={loading}
@@ -198,6 +209,14 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
             source={{ uri: mediaType.uri }}
             style={styles.image}
             resizeMode={imageDisplayMode === 'fill' ? 'cover' : 'contain'}
+          />
+        )}
+        {imageDisplayMode === 'fill' && (
+          <LinearGradient
+            colors={['rgba(0, 0, 0, 0.4)', 'transparent', 'rgba(0, 0, 0, 0.4)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.storyGradient}
           />
         )}
       </View>

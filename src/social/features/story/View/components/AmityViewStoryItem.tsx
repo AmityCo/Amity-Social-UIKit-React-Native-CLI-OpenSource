@@ -360,6 +360,20 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
             />
           ) : currentStory?.dataType === 'image' ? (
             <>
+              {currentStory?.data?.imageDisplayMode !== 'fill' && (
+                <Image
+                  source={{
+                    uri:
+                      currentStory?.imageData?.fileUrl ||
+                      (typeof currentStory?.data?.fileData === 'string'
+                        ? currentStory?.data?.fileData
+                        : ''),
+                  }}
+                  style={styles.blurredBackground}
+                  resizeMode="cover"
+                  blurRadius={20}
+                />
+              )}
               <Image
                 onLoadStart={() => setLoad(true)}
                 onLoadEnd={() => start()}

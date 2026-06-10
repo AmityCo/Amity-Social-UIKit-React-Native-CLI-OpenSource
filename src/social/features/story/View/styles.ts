@@ -248,8 +248,15 @@ export const useStyles = () => {
       position: 'absolute',
       top: 0,
       left: 0,
-      width: width,
-      height: width * (16 / 9),
+      width: '100%',
+      height: '100%',
+    },
+    blurredBackground: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
     },
   });
 
