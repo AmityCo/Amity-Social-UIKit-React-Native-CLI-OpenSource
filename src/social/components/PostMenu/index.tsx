@@ -3,7 +3,7 @@ import { Alert, View } from 'react-native';
 import { getCommunityById } from '../../../core/legacy/community';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useFlagPost, useIsCommunityModerator } from '../../hooks';
+import { useFlagPost, isModerator } from '../../hooks';
 import { deletePostById } from '../../../core/legacy/feed';
 import useAuth from '../../../core/hooks/useAuth';
 import globalFeedSlice from '../../../core/stores/slices/globalfeedSlice';
@@ -45,11 +45,6 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
 
   const { postId, targetType, targetId } = post ?? {};
   const myId = (client as Amity.Client).userId;
-
-  const { isCommunityModerator: isIAmModerator } = useIsCommunityModerator({
-    communityId: targetType === 'community' && targetId,
-    userId: myId,
-  });
 
   const currentUser = useUser(myId);
   const isGlobalAdmin = isAdmin(currentUser?.roles);
@@ -206,7 +201,10 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
       ),
     },
     {
-      show: post?.creator?.userId === myId || isIAmModerator || isGlobalAdmin,
+      show:
+        post?.creator?.userId === myId ||
+        isModerator(currentUser?.roles) ||
+        isGlobalAdmin,
       action: (
         <MenuAction
           key="delete"

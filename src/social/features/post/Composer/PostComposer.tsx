@@ -22,8 +22,9 @@ import {
 import {
   TSearchItem,
   useAmityPage,
-  useIsCommunityModerator,
   useRequestPermission,
+  useUser,
+  isModerator,
 } from '../../../hooks';
 import { useStyles } from './styles';
 import {
@@ -100,10 +101,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const dispatch = useUIKitDispatch();
   const { addPostToGlobalFeed, updateByPostId } = globalfeedSlice.actions;
 
-  const { isCommunityModerator } = useIsCommunityModerator({
-    communityId: community?.communityId,
-    userId: (client as Amity.Client)?.userId,
-  });
+  const currentUser = useUser((client as Amity.Client)?.userId || '');
+  const isCommunityModerator = isModerator(currentUser?.roles);
   const { showToastMessage, hideToastMessage } = uiSlice.actions;
   const [inputMessage, setInputMessage] = useState<string>(
     (post?.data as Amity.ContentDataText)?.text ?? ''

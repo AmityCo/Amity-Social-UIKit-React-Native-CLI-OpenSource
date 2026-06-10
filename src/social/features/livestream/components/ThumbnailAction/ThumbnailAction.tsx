@@ -15,7 +15,7 @@ const AmityThumbnailActionComponent = ({
   onChangeThumbnail,
   onDeleteThumbnail,
   pageId = PageID.WildCardPage,
-}: AmityThumbnailActionComponentProps): React.JSX.Element => {
+}: AmityThumbnailActionComponentProps): React.ReactElement => {
   const componentId = ComponentID.thumbnail_action;
   const { themeStyles } = useAmityComponent({ pageId, componentId });
   const styles = useStyles(themeStyles);

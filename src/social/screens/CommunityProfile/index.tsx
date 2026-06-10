@@ -279,7 +279,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
       NativeStackNavigationProp<RootStackParamList, 'CreatePost'>
     >();
 
-  const hasStoryPermission = useStoryPermission(communityId);
+  const { hasStoryPermission } = useStoryPermission(communityId);
 
   const hasPostPermission = usePostPermission({ community });
 

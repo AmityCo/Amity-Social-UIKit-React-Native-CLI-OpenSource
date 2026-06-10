@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useRef, useState } from 'react';
+import React, { FC, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, View } from 'react-native';
 
 import { RefreshControl } from 'react-native';
@@ -62,6 +62,24 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
     )
   );
 
+  const viewabilityConfig = useRef({
+    viewAreaCoveragePercentThreshold: 60,
+  }).current;
+
+  const listHeaderComponent = useMemo(() => {
+    if (isShowStoryTab) {
+      return (
+        <View>
+          {GlobalFeedHeaderComponent}
+          <AmityStoryTabComponent
+            type={AmityStoryTabComponentEnum.globalFeed}
+          />
+        </View>
+      );
+    }
+    return GlobalFeedHeaderComponent || null;
+  }, [isShowStoryTab, GlobalFeedHeaderComponent]);
+
   if (isExcluded) return null;
 
   return (
@@ -89,8 +107,9 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
         );
       }}
       keyExtractor={(item, index) =>
-        (isAmityAd(item) ? item.adId.toString() : item.postId.toString()) +
-        `_${index}`
+        isAmityAd(item)
+          ? item.adId.toString() + '_' + index
+          : item.postId.toString() + '_' + index
       }
       onEndReachedThreshold={0.5}
       onEndReached={handleLoadMore}
@@ -104,19 +123,8 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
         />
       }
       keyboardShouldPersistTaps="handled"
-      ListHeaderComponent={
-        !refreshing && !loading && isShowStoryTab ? (
-          <View>
-            {GlobalFeedHeaderComponent}
-            <AmityStoryTabComponent
-              type={AmityStoryTabComponentEnum.globalFeed}
-            />
-          </View>
-        ) : (
-          GlobalFeedHeaderComponent
-        )
-      }
-      viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
+      ListHeaderComponent={listHeaderComponent}
+      viewabilityConfig={viewabilityConfig}
       onViewableItemsChanged={handleViewChange}
       extraData={itemWithAds}
     />

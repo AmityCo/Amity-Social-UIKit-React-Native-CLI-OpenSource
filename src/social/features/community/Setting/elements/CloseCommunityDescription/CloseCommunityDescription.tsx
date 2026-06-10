@@ -1,12 +1,10 @@
+import { TextProps } from 'react-native';
 import { useAmityElement } from '../../../../../hooks';
 import { ComponentID, ElementID, PageID } from '../../../../../enums';
 import { useStyles } from './styles';
-import {
-  Typography,
-  TypographyProps,
-} from '../../../../../../core/components/Typography/Typography';
+import { Typography } from '../../../../../../core/components/Typography/Typography';
 
-type CloseCommunityDescriptionProps = TypographyProps & {
+type CloseCommunityDescriptionProps = TextProps & {
   pageId?: PageID;
   componentId?: ComponentID;
   elementId?: ElementID;

@@ -50,14 +50,19 @@ export const isAdmin = (roles: string[] = []) => {
 };
 
 export const checkStoryPermission = (
-  client: Amity.Client,
-  communityId: string
-) => {
-  if (!client || !communityId) return false;
+  client: Amity.Client | null | undefined,
+  communityId?: string
+): boolean => {
+  if (!client) {
+    return false;
+  }
 
-  const communityPermission = client
-    .hasPermission(Permissions.ManageStoryPermission)
-    .community(communityId);
+  if (communityId) {
+    const communityPermission = client
+      .hasPermission(Permissions.ManageStoryPermission)
+      .community(communityId);
+    return communityPermission;
+  }
 
-  return !!communityPermission;
+  return false;
 };

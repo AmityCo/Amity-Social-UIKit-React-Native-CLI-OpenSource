@@ -1,10 +1,11 @@
 import { TextProps, Text, View } from 'react-native';
 import { FC, memo } from 'react';
-import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
-import { useAmityElement } from '../../hooks';
+
 import ImageElement from '../CommonElements/ImageElement';
 import { useStyles } from './styles';
-import { useIsCommunityModerator } from '../../hooks';
+import { useUser } from '../../hooks/objects';
+import { isModerator, useAmityElement } from '../../hooks';
+import { ComponentID, ElementID, PageID } from '../../enums';
 
 type ModeratorBadgeElementType = Partial<TextProps> & {
   pageID: PageID;
@@ -20,10 +21,7 @@ const ModeratorBadgeElement: FC<ModeratorBadgeElementType> = ({
   communityId,
   ...props
 }) => {
-  const { isCommunityModerator } = useIsCommunityModerator({
-    communityId,
-    userId,
-  });
+  const { user } = useUser({ userId });
   const elementID = ElementID.moderator_badge;
   const { isExcluded, config, accessibilityId, themeStyles } = useAmityElement({
     pageId: pageID,
@@ -32,8 +30,8 @@ const ModeratorBadgeElement: FC<ModeratorBadgeElementType> = ({
   });
   const styles = useStyles(themeStyles);
   if (isExcluded) return null;
-  if (!isCommunityModerator || !communityId || !userId) return null;
-  const text = config?.text ?? '';
+  if (!isModerator(user?.roles) || !communityId || !userId) return null;
+  const text = (config?.text as string) ?? '';
 
   return (
     <View style={styles.moderatorRow}>

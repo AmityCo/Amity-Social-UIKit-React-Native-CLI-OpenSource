@@ -1,11 +1,7 @@
 import useAuth from '../../core/hooks/useAuth';
 import { useUser } from './useUser';
 import useSocialSettings from '../../core/hooks/useSocialSettings';
-import {
-  isAdmin,
-  isModerator,
-  checkStoryPermission,
-} from '../utils/permissions';
+import { checkStoryPermission, isAdmin } from '../utils/permissions';
 
 export function useStoryPermission(communityId?: string) {
   const { client } = useAuth();
@@ -13,14 +9,12 @@ export function useStoryPermission(communityId?: string) {
   const user = useUser(client?.userId || '');
 
   const isGlobalAdmin = isAdmin(user?.roles);
-  const isModeratorUser = isModerator(user?.roles);
 
   const hasStoryPermission = !communityId
     ? socialSettings?.story?.allowAllUserToCreateStory
     : socialSettings?.story?.allowAllUserToCreateStory ||
       isGlobalAdmin ||
-      isModeratorUser ||
       checkStoryPermission(client, communityId);
 
-  return hasStoryPermission;
+  return { hasStoryPermission };
 }

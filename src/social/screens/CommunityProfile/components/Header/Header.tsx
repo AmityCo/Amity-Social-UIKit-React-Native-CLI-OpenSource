@@ -4,7 +4,8 @@ import { ComponentID, PageID } from '../../../../enums';
 import {
   useAmityComponent,
   useCommunity,
-  useIsCommunityModerator,
+  isModerator,
+  useUser,
 } from '../../../../hooks';
 import { useStyles } from './styles';
 import { CommunityCover } from '../../elements/CommunityCover/CommunityCover';
@@ -61,10 +62,8 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
     componentId,
   });
 
-  const { isCommunityModerator } = useIsCommunityModerator({
-    communityId: community?.communityId,
-    userId: client?.userId,
-  });
+  const currentUser = useUser(client?.userId || '');
+  const isCommunityModerator = isModerator(currentUser?.roles);
 
   const styles = useStyles(themeStyles);
 

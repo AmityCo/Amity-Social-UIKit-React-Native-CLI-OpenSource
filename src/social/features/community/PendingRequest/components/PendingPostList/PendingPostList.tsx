@@ -17,9 +17,10 @@ import PostContent from '../../../../../components/PostContent';
 import FormDescription from '../../../../../elements/FormDescription';
 import { usePostCollection } from '../../../../../hooks/collections/post/usePostCollection';
 import ActionButton from '../../../../../elements/ActionButton';
-import { useIsCommunityModerator } from '../../../../../hooks';
 import { usePendingPostQuery } from '../../../../../hooks/usePendingPostQuery';
 import { BrandBadge } from '../../../../../elements/BrandBadge';
+import { isModerator, useUser } from '../../../../../hooks';
+
 import { SvgXml } from 'react-native-svg';
 import { Title } from '../../../../../elements';
 import PostFeedSkeleton from '../../../../../components/PostFeedSkeleton';
@@ -49,10 +50,8 @@ const usePendingPostList = ({
     },
   });
 
-  const { isCommunityModerator } = useIsCommunityModerator({
-    communityId: community.communityId,
-    userId: client.userId,
-  });
+  const currentUser = useUser(client.userId || '');
+  const isCommunityModerator = isModerator(currentUser?.roles);
 
   useEffect(() => {
     onPendingPostCountChange?.(collection.data.length);

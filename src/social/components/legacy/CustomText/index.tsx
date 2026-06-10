@@ -13,11 +13,9 @@ const CustomText: React.FC<CustomTextProps> = ({
   style,
   numberOfLines,
   ellipsizeMode = 'tail',
-  ...props
-}: CustomTextProps) => {
+}) => {
   return (
     <Text
-      {...props}
       style={[styles.text, style]}
       numberOfLines={numberOfLines}
       ellipsizeMode={ellipsizeMode}

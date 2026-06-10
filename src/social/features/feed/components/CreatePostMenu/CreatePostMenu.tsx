@@ -23,13 +23,13 @@ interface AmityCreatePostMenuComponentProps {
 const AmityCreatePostMenuComponent = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
-}: AmityCreatePostMenuComponentProps): React.JSX.Element => {
+}: AmityCreatePostMenuComponentProps): React.ReactElement => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { themeStyles } = useAmityComponent({ pageId, componentId });
 
   const { AmityCreatePostMenuComponentBehavior } = useBehaviour();
 
-  const hasStoryPermission = useStoryPermission();
+  const { hasStoryPermission } = useStoryPermission();
 
   const styles = StyleSheet.create({
     container: {

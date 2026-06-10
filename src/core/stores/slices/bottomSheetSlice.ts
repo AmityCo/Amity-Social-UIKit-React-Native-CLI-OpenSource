@@ -1,10 +1,11 @@
 import { ComponentID, PageID } from '../../../social/enums';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState, useUIKitDispatch, useUIKitSelector } from '../store';
+import { ReactElement } from 'react';
 
 export interface BottomSheetState {
   open: boolean;
-  content: React.JSX.Element | null;
+  content: ReactElement | null;
   height?: number;
   dark?: boolean;
   pageId?: PageID;
@@ -12,7 +13,7 @@ export interface BottomSheetState {
 }
 
 type OpenBottomSheetPayload = {
-  content: React.JSX.Element;
+  content: ReactElement;
   height?: number;
   dark?: boolean;
 };

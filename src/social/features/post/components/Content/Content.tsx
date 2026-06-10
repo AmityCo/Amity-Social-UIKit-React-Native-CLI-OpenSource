@@ -18,10 +18,12 @@ import { IMentionPosition } from '../../../../../core/types';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import { ComponentID, ElementID, PageID } from '../../../../enums';
 import AvatarElement from '../../../../elements/CommonElements/AvatarElement';
-import { useAmityComponent, useIsCommunityModerator } from '../../../../hooks';
 import ModeratorBadgeElement from '../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import { BrandBadge } from '../../../../elements/BrandBadge';
 import AmityPostEngagementActionsComponent from '../EngagementActions';
+
+import { useAmityComponent, useUser, isModerator } from '../../../../hooks';
+
 import {
   AmityPostCategory,
   AmityPostContentComponentStyleEnum,
@@ -95,10 +97,8 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
   } = post ?? {};
   const mentionPosition = metadata?.mentioned;
 
-  const { isCommunityModerator } = useIsCommunityModerator({
-    communityId: targetType === 'community' && targetId,
-    userId: creator?.userId,
-  });
+  const creatorUser = useUser(creator?.userId || '');
+  const isCommunityModerator = isModerator(creatorUser?.roles);
 
   useEffect(() => {
     if (mentionPosition) {

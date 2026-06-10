@@ -30,7 +30,7 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
   const styles = useStyles();
   const { getUiKitConfig } = useConfig();
-  const hasStoryPermission = useStoryPermission(communityId);
+  const { hasStoryPermission } = useStoryPermission(communityId);
   const { getStoryTarget, storyTarget, stories, getStories } = useStory();
   const { getImage } = useFile();
   const [avatarUrl, setAvatarUrl] = useState(undefined);
@@ -199,6 +199,8 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
   if (community?.isPublic && !community?.isJoined && stories.length <= 0) {
     return null;
   }
+
+  if (!hasStoryPermission && stories.length === 0) return null;
 
   return (
     <View style={styles.container}>

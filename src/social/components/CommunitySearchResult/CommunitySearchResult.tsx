@@ -108,7 +108,9 @@ const CommunitySearchResult: FC<CommunitySearchResultProps> = ({
             />
           </Pressable>
         )}
-        keyExtractor={(item, index) => item.communityId + index}
+        keyExtractor={(item, index) =>
+          (item.communityId ?? index).toString() + '_' + index
+        }
         onEndReachedThreshold={0.5}
         style={styles.list}
         contentContainerStyle={styles.listContent}

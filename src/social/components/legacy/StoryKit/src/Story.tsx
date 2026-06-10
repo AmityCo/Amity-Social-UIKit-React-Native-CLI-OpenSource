@@ -45,7 +45,9 @@ export const Story = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [selectedData, setSelectedData] = useState<IUserStory[]>([]);
-  const cube = useRef<CubeNavigationHorizontal | AndroidCubeEffect>(null);
+  const cube = useRef<CubeNavigationHorizontal | AndroidCubeEffect | null>(
+    null
+  );
 
   // Component Functions
   const _handleStoryItemPress = (item: IUserStory, index?: number) => {

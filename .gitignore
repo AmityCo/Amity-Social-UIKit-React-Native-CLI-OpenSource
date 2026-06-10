@@ -85,5 +85,4 @@ lib/
 !.yarn/versions
 
 # Claude
-
 .claude/

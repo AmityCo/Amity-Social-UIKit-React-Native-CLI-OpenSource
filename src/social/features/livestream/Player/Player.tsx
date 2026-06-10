@@ -231,7 +231,7 @@ function AmityLiveStreamPlayerPage() {
                   type: 'm3u8',
                 }}
                 style={styles.container}
-                resizeMode="cover"
+                resizeMode="contain"
                 controls={false}
                 paused={isPaused}
                 muted={false}
