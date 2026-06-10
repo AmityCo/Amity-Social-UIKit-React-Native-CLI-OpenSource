@@ -9,7 +9,23 @@ import {
 } from '@amityco/ts-sdk-react-native';
 import { IMentionPosition } from '../../core/types';
 import { Alert } from 'react-native';
-import { text_contain_blocked_word } from '../constants';
+import { createUrlRegex, text_contain_blocked_word } from '../constants';
+
+function extractLinks(text: string): Amity.Link[] {
+  if (!text) return [];
+  const urlRegex = createUrlRegex();
+  const links: Amity.Link[] = [];
+  let match: RegExpExecArray | null;
+  while ((match = urlRegex.exec(text)) !== null) {
+    links.push({
+      index: match.index,
+      length: match[0].length,
+      url: match[0],
+      renderPreview: true,
+    });
+  }
+  return links;
+}
 
 export interface IGlobalFeedRes {
   data: Amity.Post<any>[];
@@ -98,6 +114,7 @@ export async function createPostToFeed(
   mentionees: string[],
   mentionPosition: IMentionPosition[]
 ): Promise<Amity.Post<any>> {
+  const detectedLinks = extractLinks(content.text);
   let postParam = {
     targetType: targetType,
     targetId: targetId,
@@ -108,6 +125,7 @@ export async function createPostToFeed(
           ] as Amity.MentionType['user'][])
         : [],
     metadata: { mentioned: mentionPosition },
+    ...(detectedLinks.length > 0 && { links: detectedLinks }),
   };
   if (postType === 'text') {
     const newPostParam = {
@@ -167,6 +185,7 @@ export async function editPost(
   mentionees: string[],
   mentionPosition: IMentionPosition[]
 ): Promise<Amity.Post<any>> {
+  const detectedLinks = extractLinks(content.text);
   let postParam = {
     mentionees:
       mentionees.length > 0
@@ -175,6 +194,7 @@ export async function editPost(
           ] as Amity.MentionType['user'][])
         : [],
     metadata: { mentioned: mentionPosition },
+    ...(detectedLinks.length > 0 && { links: detectedLinks }),
   };
   if (postType === 'text') {
     const newPostParam = {

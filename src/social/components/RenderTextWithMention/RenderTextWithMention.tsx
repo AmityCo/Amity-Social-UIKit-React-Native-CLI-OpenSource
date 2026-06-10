@@ -6,7 +6,7 @@ import { IMentionPosition } from '../../../core/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import ReadMore from '@fawazahmed/react-native-read-more';
-import { URL_REGEX } from '../../../core/constants';
+import { createUrlRegex } from '../../../core/constants';
 
 interface IrenderTextWithMention {
   mentionPositionArr: IMentionPosition[];
@@ -30,8 +30,9 @@ const RenderTextWithMention: React.FC<IrenderTextWithMention> = ({
     useNavigation() as NativeStackNavigationProp<RootStackParamList>;
   const linkArr = useCallback((text: string): LinkInfo[] => {
     const links: LinkInfo[] = [];
+    const urlRegex = createUrlRegex();
     let match;
-    while ((match = URL_REGEX.exec(text)) !== null) {
+    while ((match = urlRegex.exec(text)) !== null) {
       links.push({
         link: match[0],
         index: match.index,
