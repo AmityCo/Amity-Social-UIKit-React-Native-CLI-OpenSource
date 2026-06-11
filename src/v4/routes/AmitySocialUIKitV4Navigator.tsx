@@ -66,15 +66,41 @@ import CommunityStoriesNotificationSetting from '../../v4/screen/CommunityStorie
 import CommunityLivestreamsNotificationSetting from '../../v4/screen/CommunityLivestreamsNotificationSetting';
 import CommunityPendingRequest from '../../v4/screen/CommunityPendingRequest';
 import { GlobalBan } from '../screen/GlobalBan';
+import { VisitorUsageLimit } from '../screen/VisitorUsageLimit';
+import { useBehaviour } from '../providers/BehaviourProvider';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
-  const { isConnected, isGlobalBan } = useAuth();
+  const { isConnected, isGlobalBan, isVisitorUsageLimitReached } = useAuth();
+  const { AmityGlobalBehaviour } = useBehaviour();
   const theme = useTheme() as MyMD3Theme;
 
   const styles = useStyles();
 
+  const handleVisitorUsageLimitReached =
+    AmityGlobalBehaviour?.handleVisitorUsageLimitReached;
+  const hasHandledUsageLimit = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!isVisitorUsageLimitReached) {
+      hasHandledUsageLimit.current = false;
+      return;
+    }
+    // Customer override replaces the default full-page swap; guard so rapid
+    // repeat events trigger a single navigation.
+    if (handleVisitorUsageLimitReached && !hasHandledUsageLimit.current) {
+      hasHandledUsageLimit.current = true;
+      handleVisitorUsageLimitReached();
+    }
+  }, [isVisitorUsageLimitReached, handleVisitorUsageLimitReached]);
+
   if (isGlobalBan) return <GlobalBan />;
+
+  // Default usage-limit handling: replace the whole navigation tree with the
+  // dead-end error page so back-navigation cannot escape it.
+  if (isVisitorUsageLimitReached && !handleVisitorUsageLimitReached) {
+    return <VisitorUsageLimit />;
+  }
 
   return (
     <NavigationIndependentTree>

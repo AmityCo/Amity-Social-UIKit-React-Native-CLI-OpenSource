@@ -11,13 +11,14 @@ type UsePostPermissionParams = {
 };
 
 export function usePostPermission({ community }: UsePostPermissionParams) {
-  const { client } = useAuth();
+  const { client, isVisitorOrBot } = useAuth();
   const [hasPostPermission, setHasPostPermission] = useState(false);
 
   const isOnlyAdminCanPost =
     community?.postSetting === CommunityPostSettings.ONLY_ADMIN_CAN_POST;
 
   useEffect(() => {
+    if (isVisitorOrBot) return;
     if (!community?.communityId || !client?.userId) return;
 
     CommunityRepository.Membership.searchMembers(
@@ -40,6 +41,7 @@ export function usePostPermission({ community }: UsePostPermissionParams) {
     client?.userId,
     isOnlyAdminCanPost,
     community?.isJoined,
+    isVisitorOrBot,
   ]);
 
   return hasPostPermission;

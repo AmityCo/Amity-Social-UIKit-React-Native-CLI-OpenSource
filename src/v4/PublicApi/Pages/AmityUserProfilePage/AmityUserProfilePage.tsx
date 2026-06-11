@@ -49,7 +49,7 @@ import { TabName } from '../../../../enum/tabNameState';
 import uiSlice from '../../../../redux/slices/uiSlice';
 import { PostTargetType } from '../../../../enum/postTargetType';
 import GalleryComponent from '../../../component/Gallery/GalleryComponent';
-import { useFile } from '../../../hook';
+import { useFile, useGlobalBehavior } from '../../../hook';
 import { defaultAvatarUri } from '../../../assets';
 import { ImageSizeState } from '../../../enum';
 
@@ -105,13 +105,17 @@ function UserProfile({
       user: user,
     });
   };
+  const { handleGlobalBehavior } = useGlobalBehavior();
   const onFollowTap = async () => {
-    const { data: followStatus } = await UserRepository.Relationship.follow(
-      userId
-    );
-    if (followStatus) {
-      setFollowStatus(followStatus.status);
-    }
+    handleGlobalBehavior({
+      defaultBehavior: async () => {
+        const { data: newFollowStatus } =
+          await UserRepository.Relationship.follow(userId);
+        if (newFollowStatus) {
+          setFollowStatus(newFollowStatus.status);
+        }
+      },
+    });
   };
   const onUnblockUser = async () => {
     await UserRepository.Relationship.unBlockUser(userId);

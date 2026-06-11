@@ -32,6 +32,7 @@ import AmityPageRenderer from './v4/routes/AmityPageRenderer';
 import PostDetail from './v4/screen/PostDetail';
 import CommunityHome from './v4/screen/CommunityHome';
 import UserProfile from './v4/screen/UserProfile';
+import { VisitorUsageLimit } from './v4/screen/VisitorUsageLimit';
 import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
@@ -126,6 +127,7 @@ export {
   AmityUiKitProvider,
   ErrorBoundary,
   AmityUiKitSocial,
+  VisitorUsageLimit,
   AmityStoryTabComponent,
   AmityStoryTabComponentEnum,
   AmityCreateStoryPage,

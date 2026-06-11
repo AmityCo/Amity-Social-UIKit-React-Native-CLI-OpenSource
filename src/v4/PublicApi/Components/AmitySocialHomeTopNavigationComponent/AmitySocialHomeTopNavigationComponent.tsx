@@ -15,6 +15,7 @@ import AmityCreatePostMenuComponent from '../AmityCreatePostMenuComponent/AmityC
 import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';
 import { usePopup } from '../../../hook/usePopup';
 import Popup from '../../../component/PopupMenu/PopupMenu';
+import useAuth from '../../../../hooks/useAuth';
 
 type AmitySocialHomeTopNavigationComponentType = {
   activeTab: string;
@@ -29,6 +30,7 @@ const AmitySocialHomeTopNavigationComponent: FC<
   const theme = componentConfig.themeStyles;
   const { AmitySocialHomeTopNavigationComponentBehaviour } = useBehaviour();
   const { isOpen, setIsOpen, toggle } = usePopup();
+  const { isVisitorOrBot } = useAuth();
 
   const [myCommunitiesTab] = useUiKitConfig({
     page: PageID.social_home_page,
@@ -169,7 +171,7 @@ const AmitySocialHomeTopNavigationComponent: FC<
           >
             <Image source={searchIcon} style={styles.icon} />
           </TouchableOpacity>
-          {activeTab !== exploreTab && (
+          {!isVisitorOrBot && activeTab !== exploreTab && (
             <TouchableOpacity
               style={styles.iconBtn}
               onPress={onPressCreate}

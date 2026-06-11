@@ -30,6 +30,7 @@ import TimestampElement from '../../Elements/TimestampElement/TimestampElement';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
 import PostContent from '../../../component/PostContent';
 import { PostMenu } from '../../../component/PostMenu';
+import useAuth from '../../../../hooks/useAuth';
 import PinBadge from '../../../../v4/elements/PinBadge';
 import AnnouncementBadge from '../../../../v4/elements/AnnouncementBadge';
 import { Typography } from '../../../../v4/component/Typography/Typography';
@@ -71,6 +72,7 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     componentId: componentId,
   });
   const styles = useStyles(themeStyles);
+  const { isVisitorOrBot } = useAuth();
   const [textPost, setTextPost] = useState<string>('');
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const navigation =
@@ -252,10 +254,11 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
             category === AmityPostCategory.PIN_AND_ANNOUNCEMENT) && (
             <PinBadge componentId={ComponentID.post_content} />
           )}
-          {AmityPostContentComponentStyle ===
-            AmityPostContentComponentStyleEnum.feed && (
-            <PostMenu post={post} pageId={pageId} componentId={componentId} />
-          )}
+          {!isVisitorOrBot &&
+            AmityPostContentComponentStyle ===
+              AmityPostContentComponentStyleEnum.feed && (
+              <PostMenu post={post} pageId={pageId} componentId={componentId} />
+            )}
         </Pressable>
         <View>
           <View style={styles.bodySection}>

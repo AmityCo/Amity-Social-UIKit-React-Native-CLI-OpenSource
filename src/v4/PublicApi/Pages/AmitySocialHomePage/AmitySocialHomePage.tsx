@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import CustomSocialTab from '../../../../v4/component/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../../../v4/hook';
@@ -16,6 +16,7 @@ import AmityMyCommunitiesComponent from '../../../../v4/PublicApi/Components/Ami
 import AmityNewsFeedComponent from '../../../../v4/PublicApi/Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
 import AmityExploreComponent from '../../../../v4/PublicApi/Components/AmityExploreComponent/AmityExploreComponent';
 import { MyMD3Theme } from '../../../../providers/amity-ui-kit-provider';
+import useAuth from '../../../../hooks/useAuth';
 
 const AmitySocialHomePage = () => {
   const theme = useTheme() as MyMD3Theme;
@@ -49,8 +50,18 @@ const AmitySocialHomePage = () => {
     keys: ['text'],
   }) as string[];
 
+  const { isVisitorOrBot } = useAuth();
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
   const visitedTabs = useRef<Set<string>>(new Set([newsFeedTab]));
+
+  // Web parity (SocialHomePage): visitors land on the community browsing tab
+  // and never see Newsfeed / My Communities.
+  useEffect(() => {
+    if (isVisitorOrBot) {
+      visitedTabs.current.add(exploreTab);
+      setActiveTab(exploreTab);
+    }
+  }, [isVisitorOrBot, exploreTab]);
 
   const onTabChange = useCallback(
     (tabName: string) => {
@@ -80,22 +91,28 @@ const AmitySocialHomePage = () => {
     >
       <AmitySocialHomeTopNavigationComponent activeTab={activeTab} />
       <CustomSocialTab
-        tabNames={[newsFeedTab, exploreTab, myCommunitiesTab]}
+        tabNames={
+          isVisitorOrBot
+            ? [exploreTab]
+            : [newsFeedTab, exploreTab, myCommunitiesTab]
+        }
         onTabChange={onTabChange}
         activeTab={activeTab}
       />
-      <View style={tabStyle(newsFeedTab)}>
-        <AmityNewsFeedComponent
-          pageId={PageID.social_home_page}
-          onPressExploreCommunity={onPressExploreCommunity}
-        />
-      </View>
+      {!isVisitorOrBot && (
+        <View style={tabStyle(newsFeedTab)}>
+          <AmityNewsFeedComponent
+            pageId={PageID.social_home_page}
+            onPressExploreCommunity={onPressExploreCommunity}
+          />
+        </View>
+      )}
       {visitedTabs.current.has(exploreTab) && (
         <View style={tabStyle(exploreTab)}>
           <AmityExploreComponent pageId={PageID.social_home_page} />
         </View>
       )}
-      {visitedTabs.current.has(myCommunitiesTab) && (
+      {!isVisitorOrBot && visitedTabs.current.has(myCommunitiesTab) && (
         <View style={tabStyle(myCommunitiesTab)}>
           <AmityMyCommunitiesComponent
             pageId={PageID.social_home_page}

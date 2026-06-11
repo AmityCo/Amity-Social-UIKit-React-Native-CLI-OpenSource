@@ -14,6 +14,8 @@ const useAuth = (): AuthContextInterface => {
     sessionState,
     apiRegion,
     isGlobalBan,
+    isVisitorUsageLimitReached,
+    isVisitorOrBot,
   } = useContext(AuthContext);
 
   return {
@@ -26,6 +28,8 @@ const useAuth = (): AuthContextInterface => {
     sessionState,
     apiRegion,
     isGlobalBan,
+    isVisitorUsageLimitReached,
+    isVisitorOrBot,
   };
 };
 
