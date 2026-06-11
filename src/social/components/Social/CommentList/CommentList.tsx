@@ -31,6 +31,7 @@ import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { lock } from '../../../../core/assets/icons';
 import { Typography } from '../../../../core/components/Typography/Typography';
 import { MAX_MENTION_USERS } from '../../../../core/constants';
+import useAuth from '../../../../core/hooks/useAuth';
 
 interface ICommentListProp {
   postId: string;
@@ -63,11 +64,14 @@ const commentListLimit = 8;
 const CommentList: FC<ICommentListProp> = ({
   postId,
   postType,
-  disabledInteraction,
+  disabledInteraction: disabledInteractionProp,
   onNavigate,
   withAvatar,
   disabledComment,
 }) => {
+  // Web parity: visitors can never comment, reply, or react
+  const { isVisitorOrBot } = useAuth();
+  const disabledInteraction = disabledInteractionProp || isVisitorOrBot;
   const styles = useStyles();
   const theme = useTheme() as MyMD3Theme;
   const onNextPageRef = useRef<() => void | null>(null);

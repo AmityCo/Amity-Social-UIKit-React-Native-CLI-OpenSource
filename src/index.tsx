@@ -6,6 +6,7 @@ import {
   ErrorBoundary,
   navigate,
 } from './core';
+import { VisitorUsageLimit } from './social/screens/VisitorUsageLimit';
 import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
@@ -106,6 +107,7 @@ export {
   AmityUiKitProvider,
   ErrorBoundary,
   AmityUiKitSocial,
+  VisitorUsageLimit,
   AmityStoryTabComponent,
   AmityStoryTabComponentEnum,
   AmityCreateStoryPage,

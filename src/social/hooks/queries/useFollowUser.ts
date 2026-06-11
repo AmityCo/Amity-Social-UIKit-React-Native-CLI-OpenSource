@@ -3,6 +3,7 @@ import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from '../../../core/stores/slices/toastSlice';
 import { ALERT, TOAST } from '../../../core/constants';
+import { useGlobalBehavior } from '../useGlobalBehavior';
 
 type FollowPayload = Awaited<
   ReturnType<typeof UserRepository.Relationship.follow>
@@ -18,6 +19,7 @@ type UnfollowParam = Parameters<typeof UserRepository.Relationship.unfollow>[0];
 
 export const useFollowUser = () => {
   const { showToast } = useToast();
+  const { handleGlobalBehavior } = useGlobalBehavior();
 
   const { mutate: followMutate, isPending: isFollowPending } = useMutation<
     FollowPayload,
@@ -36,11 +38,16 @@ export const useFollowUser = () => {
   });
 
   const followUser = (userId: string) => {
-    followMutate(userId, {
-      onError: () => {
-        Alert.alert(ALERT.USER.FOLLOW.TITLE, ALERT.USER.FOLLOW.MESSAGE, [
-          { text: ALERT.ACTION.OK },
-        ]);
+    // Web parity: visitors get the sign-in toast instead of following
+    handleGlobalBehavior({
+      defaultBehavior: () => {
+        followMutate(userId, {
+          onError: () => {
+            Alert.alert(ALERT.USER.FOLLOW.TITLE, ALERT.USER.FOLLOW.MESSAGE, [
+              { text: ALERT.ACTION.OK },
+            ]);
+          },
+        });
       },
     });
   };

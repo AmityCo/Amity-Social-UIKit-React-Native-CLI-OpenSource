@@ -18,6 +18,7 @@ import {
 } from 'react';
 import { ComponentID, PageID } from '../../../enums';
 import { TSearchItem, useAmityPage } from '../../../hooks';
+import useAuth from '../../../../core/hooks/useAuth';
 import { useStyles } from './styles';
 import BackButtonIconElement from '../../../elements/BackButtonIconElement/BackButtonIconElement';
 import { CommonActions, useNavigation } from '@react-navigation/native';
@@ -73,7 +74,10 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
 }) => {
   const pageId = PageID.post_detail_page;
   const componentId = ComponentID.WildCardComponent;
-  const disabledInteraction = false;
+  // Web parity (CommentTray.canShowComposer): visitors cannot comment,
+  // reply, react, or open the comment actions menu.
+  const { isVisitorOrBot } = useAuth();
+  const disabledInteraction = isVisitorOrBot;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
@@ -398,7 +402,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
                 postData?.targetType === 'community' && postData?.targetId
               }
               postType="post"
-              disabledInteraction={false}
+              disabledInteraction={disabledInteraction}
               ListHeaderComponent={
                 postData && (
                   <AmityPostContentComponent
