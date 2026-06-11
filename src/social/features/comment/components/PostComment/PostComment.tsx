@@ -12,7 +12,6 @@ import CommentAdComponent from '../../../../components/CommentAdComponent/Commen
 import { usePaginatorApi } from '../../../../hooks/usePaginator';
 import { useCommentAdImpression } from '../../../../hooks/useCommentAdImpression';
 import { useStyles } from './styles';
-import useAuth from '../../../../hooks/useAuth';
 
 export interface IComment {
   commentId: string;
@@ -49,14 +48,11 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
   postId,
   communityId,
   postType,
-  disabledInteraction: disabledInteractionProp,
+  disabledInteraction,
   setReplyUserName,
   setReplyCommentId,
   ListHeaderComponent,
 }) => {
-  // Web parity: visitors can never comment, reply, or react
-  const { isVisitorOrBot } = useAuth();
-  const disabledInteraction = disabledInteractionProp || isVisitorOrBot;
   const componentId = ComponentID.CommentTray;
   const { isExcluded, themeStyles } = useAmityComponent({
     pageId,

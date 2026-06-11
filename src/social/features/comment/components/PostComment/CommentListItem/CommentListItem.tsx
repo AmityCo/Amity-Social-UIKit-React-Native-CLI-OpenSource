@@ -43,7 +43,7 @@ import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../../../core/providers/AmityUIKitProvider';
 import ReplyCommentList from '../ReplyCommentList/index';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
-import { useTimeDifference } from '../../../../../hooks';
+import { useGlobalBehavior, useTimeDifference } from '../../../../../hooks';
 import ModeratorBadgeElement from '../../../../../elements/ModeratorBadgeElement/ModeratorBadgeElement';
 import { BrandBadge } from '../../../../../elements/BrandBadge';
 import { ComponentID, PageID } from '../../../../../enums';
@@ -315,6 +315,13 @@ const CommentListItem = ({
     onClickReply && onClickReply(user, commentId);
   };
 
+  // Web parity: visitors see Like/Reply but taps show the sign-in toast
+  const { handleGlobalBehavior, isVisitorOrBot } = useGlobalBehavior();
+  const onPressLike = () =>
+    handleGlobalBehavior({ defaultBehavior: addReactionToComment });
+  const onPressReply = () =>
+    handleGlobalBehavior({ defaultBehavior: onHandleReply });
+
   const onPressCommentReaction = () => {
     onNavigate && onNavigate();
     setIsReactionListVisible(true);
@@ -399,27 +406,26 @@ const CommentListItem = ({
                   )}
                 </View>
 
-                <TouchableOpacity
-                  onPress={() => addReactionToComment()}
-                  style={styles.likeBtn}
-                >
+                <TouchableOpacity onPress={onPressLike} style={styles.likeBtn}>
                   <Text style={isLike ? styles.likedText : styles.btnText}>
                     {!isLike ? 'Like' : 'Liked'}
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={onHandleReply}
-                  style={styles.likeBtn}
-                >
+                <TouchableOpacity onPress={onPressReply} style={styles.likeBtn}>
                   <Text style={styles.btnText}>Reply</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={openModal} style={styles.threeDots}>
-                  <SvgXml
-                    xml={threeDots(theme.colors.base)}
-                    width="20"
-                    height="16"
-                  />
-                </TouchableOpacity>
+                {!isVisitorOrBot && (
+                  <TouchableOpacity
+                    onPress={openModal}
+                    style={styles.threeDots}
+                  >
+                    <SvgXml
+                      xml={threeDots(theme.colors.base)}
+                      width="20"
+                      height="16"
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
 
               {likeReaction > 0 && (
