@@ -16,7 +16,7 @@ import { useBehaviour } from '../../../../providers/BehaviourProvider';
 import useAuth from '../../../../../core/hooks/useAuth';
 import type { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 
-const eventDefaultThumbnail = require('../../../assets/images/eventDefaultThumbnail.png');
+const eventDefaultThumbnail = require('../../../../../core/assets/images/eventDefaultThumbnail.png');
 
 type EventCardProps = {
   event: Amity.Event;
