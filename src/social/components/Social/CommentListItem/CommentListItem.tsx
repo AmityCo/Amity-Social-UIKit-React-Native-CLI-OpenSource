@@ -424,7 +424,8 @@ const CommentListItem = ({
             >
               <SvgXml xml={expandIcon} />
               <Typography.CaptionBold style={styles.viewMoreText}>
-                View {childrenNumber} replies
+                View {childrenNumber}{' '}
+                {childrenNumber === 1 ? 'reply' : 'replies'}
               </Typography.CaptionBold>
             </TouchableOpacity>
           )}

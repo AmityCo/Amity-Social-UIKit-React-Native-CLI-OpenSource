@@ -320,6 +320,9 @@ const CommentListItem = ({
     setIsReactionListVisible(true);
   };
 
+  const replyCount =
+    childrenNumber === 0 ? replyCommentList.length : childrenNumber;
+
   return (
     <View key={commentId} style={styles.commentWrap}>
       <View style={styles.headerSection}>
@@ -470,11 +473,7 @@ const CommentListItem = ({
             >
               <SvgXml xml={expandIcon} />
               <Text style={styles.viewMoreText}>
-                View{' '}
-                {childrenNumber === 0
-                  ? replyCommentList.length
-                  : childrenNumber}{' '}
-                replies
+                View {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
               </Text>
             </TouchableOpacity>
           )}

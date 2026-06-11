@@ -411,7 +411,8 @@ const CommentList = ({
             >
               <SvgXml xml={expandIcon} />
               <Text style={styles.viewMoreText}>
-                View {childrenNumber} replies
+                View {childrenNumber}{' '}
+                {childrenNumber === 1 ? 'reply' : 'replies'}
               </Text>
             </TouchableOpacity>
           )}
