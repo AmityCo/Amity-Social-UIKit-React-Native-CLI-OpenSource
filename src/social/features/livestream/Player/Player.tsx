@@ -252,11 +252,13 @@ function AmityLiveStreamPlayerPage() {
             {(room.status === RoomStatus.live ||
               room.status === RoomStatus.waitingReconnect) && (
               <View style={styles.liveRow}>
-                <View style={styles.status}>
-                  <Typography.CaptionBold style={styles.live}>
-                    LIVE
-                  </Typography.CaptionBold>
-                </View>
+                {Platform.OS !== 'android' && (
+                  <View style={styles.status}>
+                    <Typography.CaptionBold style={styles.live}>
+                      LIVE
+                    </Typography.CaptionBold>
+                  </View>
+                )}
                 {shareLink && (
                   <MenuButton
                     pageId={PageID.livestream_player_page}
