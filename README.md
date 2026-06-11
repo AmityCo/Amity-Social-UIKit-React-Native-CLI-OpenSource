@@ -20,6 +20,10 @@ Our AmityUIKit include user interfaces to enable fast integration of standard Am
 - ruby 3.2.0
 - XCode 15
 
+## Migrating from 4.x
+
+This release is a major upgrade (React Native 0.82, React 19, Android SDK 36, new peer dependencies). Host-app engineers should follow [MIGRATION.md](./MIGRATION.md) for the full guide before bumping the package.
+
 ### Try Sample app
 
 This repository also includes a built-in sample app which you can use to test your code while customizing it, or even explore our UIKit features with just a few installations!
