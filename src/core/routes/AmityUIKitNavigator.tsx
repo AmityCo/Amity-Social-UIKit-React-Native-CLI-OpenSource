@@ -45,6 +45,12 @@ import { CommunityLivestreamsNotificationSettingScreen } from '../../social/scre
 import CommunityPendingRequest from '../../social/screens/CommunityPendingRequest';
 import { GlobalBan } from '../../social/screens/GlobalBan';
 import { VisitorUsageLimit } from '../../social/screens/VisitorUsageLimit';
+import AmityEventDetailPage from '../../social/features/events/EventDetail';
+import AmityUpcomingEventsPage from '../../social/features/events/UpcomingEvents';
+import AmityPastEventsPage from '../../social/features/events/PastEvents';
+import AmityEventAttendeesPage from '../../social/features/events/EventAttendees';
+import AmityEventTargetSelectionPage from '../../social/features/events/TargetSelection';
+import AmityEventSetupPage from '../../social/features/events/EventSetup';
 import { useBehaviour } from '../../social/providers/BehaviourProvider';
 import {
   ImageViewerScreen,
@@ -204,6 +210,23 @@ export default function AmitySocialUIKitV4Navigator() {
             options={{ animation: 'slide_from_bottom' }}
           />
           <Stack.Screen name="PollPostComposer" component={PollPostComposer} />
+
+          {/* --- Events --- */}
+          <Stack.Screen name="EventDetail" component={AmityEventDetailPage} />
+          <Stack.Screen
+            name="UpcomingEvents"
+            component={AmityUpcomingEventsPage}
+          />
+          <Stack.Screen name="PastEvents" component={AmityPastEventsPage} />
+          <Stack.Screen
+            name="EventAttendees"
+            component={AmityEventAttendeesPage}
+          />
+          <Stack.Screen
+            name="EventTargetSelection"
+            component={AmityEventTargetSelectionPage}
+          />
+          <Stack.Screen name="EventSetup" component={AmityEventSetupPage} />
 
           {/* --- User --- */}
           <Stack.Screen name="UserProfile" component={UserProfileScreen} />

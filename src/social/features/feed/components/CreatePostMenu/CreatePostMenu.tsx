@@ -2,12 +2,14 @@ import { useCallback, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ComponentID, PageID } from '../../../../enums/enumUIKitID';
 import { useAmityComponent, useStoryPermission } from '../../../../hooks';
+import { useEventPermission } from '../../events/hooks/useEventPermission';
 import { useBehaviour } from '../../../../providers/BehaviourProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import { AmityPostTargetSelectionPageType } from '../../../../enums';
 import {
+  event,
   livestream,
   poll,
   post,
@@ -30,6 +32,7 @@ const AmityCreatePostMenuComponent = ({
   const { AmityCreatePostMenuComponentBehavior } = useBehaviour();
 
   const { hasStoryPermission } = useStoryPermission();
+  const { hasCreateEventPermission } = useEventPermission();
 
   const styles = StyleSheet.create({
     container: {
@@ -129,6 +132,25 @@ const AmityCreatePostMenuComponent = ({
           onPressCreatePost(AmityPostTargetSelectionPageType.livestream)
         }
       />
+      {/* Web parity (CreatePostMenu): create-event entry, hidden for
+          visitors and users without CREATE_EVENT permission */}
+      {hasCreateEventPermission && (
+        <MenuAction
+          style={styles.menu}
+          label="Event"
+          iconProps={{
+            xml: event(),
+          }}
+          onPress={() => {
+            if (
+              AmityCreatePostMenuComponentBehavior.goToSelectEventTargetPage
+            ) {
+              return AmityCreatePostMenuComponentBehavior.goToSelectEventTargetPage();
+            }
+            navigation.navigate('EventTargetSelection');
+          }}
+        />
+      )}
     </View>
   );
 };

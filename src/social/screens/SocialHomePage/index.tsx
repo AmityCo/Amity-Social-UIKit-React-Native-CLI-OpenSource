@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import UserProfile from '../../features/user/Profile';
 import useAuth from '../../../core/hooks/useAuth';
 import Divider from '../../components/Divider';
+import AmityEventsComponent from '../../features/events/EventsHub';
 
 const PROFILE_TAB = 'Profile';
 
@@ -49,6 +50,13 @@ const AmitySocialHomePage = () => {
     page: PageID.social_home_page,
     component: ComponentID.WildCardComponent,
     element: ElementID.my_communities_button,
+    keys: ['text'],
+  }) as string[];
+
+  const [eventsTab] = useUiKitConfig({
+    page: PageID.social_home_page,
+    component: ComponentID.WildCardComponent,
+    element: ElementID.events_button,
     keys: ['text'],
   }) as string[];
 
@@ -97,8 +105,8 @@ const AmitySocialHomePage = () => {
         onTabChange={onTabChange}
         tabNames={
           isVisitorOrBot
-            ? [exploreTab]
-            : [newsFeedTab, exploreTab, myCommunitiesTab, PROFILE_TAB]
+            ? [exploreTab, eventsTab]
+            : [newsFeedTab, exploreTab, eventsTab, myCommunitiesTab, PROFILE_TAB]
         }
       />
       <Divider />
@@ -113,6 +121,13 @@ const AmitySocialHomePage = () => {
       {visitedTabs.current.has(exploreTab) && (
         <View style={tabStyle(exploreTab)}>
           <AmityExploreComponent pageId={PageID.social_home_page} />
+        </View>
+      )}
+      {/* Web parity (SocialHomePage): Events sits right after the
+          Communities/Explore tab and is visible to visitors too. */}
+      {visitedTabs.current.has(eventsTab) && (
+        <View style={tabStyle(eventsTab)}>
+          <AmityEventsComponent pageId={PageID.social_home_page} />
         </View>
       )}
       {!isVisitorOrBot && visitedTabs.current.has(myCommunitiesTab) && (

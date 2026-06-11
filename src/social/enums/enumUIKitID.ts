@@ -32,6 +32,13 @@ export enum PageID {
   community_comments_notification_page = 'community_comments_notification_page',
   community_stories_notification_page = 'community_stories_notification_page',
   community_livestreams_notification_page = 'community_livestreams_notification_page',
+  events_page = 'events_page',
+  event_detail_page = 'event_detail_page',
+  upcoming_events_page = 'upcoming_events_page',
+  past_events_page = 'past_events_page',
+  event_attendees_page = 'event_attendees_page',
+  select_event_target_page = 'select_event_target_page',
+  event_setup_page = 'event_setup_page',
 }
 export enum ComponentID {
   EditComment = 'edit_comment_component',
@@ -66,6 +73,10 @@ export enum ComponentID {
   user_feed = 'user_feed',
   user_image_feed = 'user_image_feed',
   user_video_feed = 'user_video_feed',
+  explore_event = 'explore_event',
+  my_events = 'my_events',
+  event_info = 'event_info',
+  event_discussion = 'event_discussion',
 }
 export enum ElementID {
   CloseBtn = 'close_button',
@@ -233,6 +244,9 @@ export enum ElementID {
   blocked_user_video_feed_info = 'blocked_user_video_feed_info',
   copy_link = 'copy_link',
   share_link = 'share_link',
+  events_button = 'events_button',
+  create_event_button = 'create_event_button',
+  rsvp_button = 'rsvp_button',
 }
 
 export interface UiKitConfigKeys {

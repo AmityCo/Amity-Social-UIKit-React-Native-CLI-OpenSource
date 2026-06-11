@@ -60,7 +60,10 @@
     },
     "story_page/*/*": {},
     "story_page/*/progress_bar": {
-      "progress_color": ["#339AF9", "#78FA58"],
+      "progress_color": [
+        "#339AF9",
+        "#78FA58"
+      ],
       "background_color": "#AB1234"
     },
     "story_page/*/overflow_menu": {
@@ -119,7 +122,10 @@
     },
     "*/story_tab_component/*": {},
     "*/story_tab_component/story_ring": {
-      "progress_color": ["#339AF9", "#78FA58"],
+      "progress_color": [
+        "#339AF9",
+        "#78FA58"
+      ],
       "background_color": "#AB1234"
     },
     "*/story_tab_component/create_new_story_button": {
@@ -146,6 +152,9 @@
     },
     "social_home_page/*/my_communities_button": {
       "text": "My Communities"
+    },
+    "social_home_page/*/events_button": {
+      "text": "Events"
     },
     "social_home_page/empty_newsfeed/illustration": {
       "icon": "emptyFeedIcon"
@@ -636,7 +645,6 @@
     "user_profile_page/*/user_video_feed_tab_button": {
       "text": "Videos"
     },
-
     "user_profile_page/user_profile_header/follow_user_button": {
       "text": "Follow",
       "image": "value"
@@ -662,7 +670,6 @@
     "user_profile_page/user_profile_header/user_follower": {
       "text": "value"
     },
-
     "user_profile_page/user_feed/*": {},
     "user_profile_page/user_feed/empty_user_feed": {
       "text": "No posts yet"
@@ -679,7 +686,6 @@
     "user_profile_page/user_feed/blocked_user_feed_info": {
       "text": "Unblock to see their posts."
     },
-
     "user_profile_page/user_image_feed/*": {},
     "user_profile_page/user_image_feed/empty_user_image_feed": {
       "text": "No images yet"
@@ -696,7 +702,6 @@
     "user_profile_page/user_image_feed/blocked_user_image_feed_info": {
       "text": "Unblock to see their images."
     },
-
     "user_profile_page/user_video_feed/*": {},
     "user_profile_page/user_video_feed/empty_user_video_feed": {
       "text": "No videos yet"
@@ -713,17 +718,14 @@
     "user_profile_page/user_video_feed/blocked_user_video_feed_info": {
       "text": "Unblock to see their videos."
     },
-
     "user_relationship_page/*/*": {},
     "user_relationship_page/*/back_button": {
       "image": "value"
     },
-
     "user_pending_follow_request_page/*/*": {},
     "user_pending_follow_request_page/*/back_button": {
       "image": "value"
     },
-
     "edit_user_profile_page/*/*": {},
     "edit_user_profile_page/*/back_button": {
       "image": "value"
@@ -740,7 +742,6 @@
     "edit_user_profile_page/*/update_user_profile_button": {
       "text": "Save"
     },
-
     "blocked_users_page/*/*": {},
     "blocked_users_page/*/back_button": {
       "image": "value"
@@ -791,10 +792,27 @@
       "image": "icon",
       "text": "Copy post link"
     },
-    "community_notification_page/*/*": {},
-    "community_posts_notification_page/*/*": {},
-    "community_comments_notification_page/*/*": {},
-    "community_stories_notification_page/*/*": {},
-    "community_livestreams_notification_page/*/*": {}
+    "community_livestreams_notification_page/*/*": {},
+    "events_page/*/*": {},
+    "events_page/*/create_event_button": {},
+    "events_page/explore_event/*": {},
+    "events_page/my_events/*": {},
+    "event_detail_page/*/*": {},
+    "event_detail_page/*/rsvp_button": {
+      "text": "RSVP"
+    },
+    "event_detail_page/event_info/*": {},
+    "event_detail_page/event_discussion/*": {},
+    "upcoming_events_page/*/*": {},
+    "past_events_page/*/*": {},
+    "event_attendees_page/*/*": {},
+    "select_event_target_page/*/*": {},
+    "select_event_target_page/*/title": {
+      "text": "Create event in"
+    },
+    "select_event_target_page/*/close_button": {
+      "image": "close_button"
+    },
+    "event_setup_page/*/*": {}
   }
 }

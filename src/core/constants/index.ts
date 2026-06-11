@@ -44,6 +44,9 @@ export const Permissions = {
   EditCommunityCategoryPermission: 'EDIT_COMMUNITY_CATEGORY',
   DeleteCommunityCategoryPermission: 'DELETE_COMMUNITY_CATEGORY',
   ManageStoryPermission: 'MANAGE_COMMUNITY_STORY',
+  CreateEventPermission: 'CREATE_EVENT',
+  UpdateEventPermission: 'UPDATE_EVENT',
+  DeleteEventPermission: 'DELETE_EVENT',
 };
 
 export const text_contain_blocked_word = 'Text contain blocked word';

@@ -84,6 +84,49 @@ export interface IBehaviour {
     goToSelectStoryTargetPage?: () => void;
     goToSelectLivestreamPostTargetPage?: () => void;
     goToSelectPollPostTargetPage?: () => void;
+    goToSelectEventTargetPage?: () => void;
+  };
+  AmityEventsPageBehaviour?: {
+    goToEventDetailPage?: (context: { eventId: string }) => void;
+    goToSelectEventTargetPage?: () => void;
+  };
+  AmityExploreEventFeedComponentBehaviour?: {
+    goToUpcomingEventsPage?: (context?: { fromExplore?: boolean }) => void;
+  };
+  AmityMyEventFeedComponentBehaviour?: {
+    goToUpcomingEventsPage?: (context?: { fromExplore?: boolean }) => void;
+    goToPastEventsPage?: () => void;
+  };
+  AmityEventDetailPageBehaviour?: {
+    goToCommunityProfilePage?: (context: { communityId: string }) => void;
+    goToEventAttendeesPage?: (context: { event: Amity.Event }) => void;
+    goToUserProfilePage?: (context: { userId: string }) => void;
+    goToCreateLivestreamPage?: (context: {
+      targetId: string;
+      targetType: 'community';
+      event?: Amity.Event;
+    }) => void;
+    goToPostDetailPage?: (context: { postId: string }) => void;
+    goToEventSetupPage?: (context: {
+      mode: 'edit';
+      event: Amity.Event;
+    }) => void;
+    goToPostComposerPage?: (context: {
+      targetId: string;
+      targetType: 'community';
+      targetName?: string;
+      community?: Amity.Community;
+    }) => void;
+  };
+  AmityEventTargetSelectionPageBehaviour?: {
+    goToEventSetupPage?: (context: {
+      mode: 'create';
+      targetId: string;
+      targetName?: string;
+    }) => void;
+  };
+  AmityEventSetupPageBehaviour?: {
+    goToEventDetailPage?: (context: { eventId: string }) => void;
   };
   AmityPostTargetSelectionPageBehavior?: {
     goToPostComposerPage?: (arg?: {
