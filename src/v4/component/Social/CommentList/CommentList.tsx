@@ -64,14 +64,14 @@ const commentListLimit = 8;
 const CommentList: FC<ICommentListProp> = ({
   postId,
   postType,
-  disabledInteraction: disabledInteractionProp,
+  disabledInteraction,
   onNavigate,
   withAvatar,
   disabledComment,
 }) => {
-  // Web parity: visitors can never comment, reply, or react
+  // Web parity: visitors never see the comment composer
   const { isVisitorOrBot } = useAuth();
-  const disabledInteraction = disabledInteractionProp || isVisitorOrBot;
+  const hideComposer = disabledInteraction || isVisitorOrBot;
   const styles = useStyles();
   const theme = useTheme() as MyMD3Theme;
   const onNextPageRef = useRef<() => void | null>(null);
@@ -255,7 +255,7 @@ const CommentList: FC<ICommentListProp> = ({
             </TouchableOpacity>
           </View>
         )}
-        {!disabledInteraction &&
+        {!hideComposer &&
           (disabledComment ? (
             <View style={styles.disabledCommentWrap}>
               <SvgXml

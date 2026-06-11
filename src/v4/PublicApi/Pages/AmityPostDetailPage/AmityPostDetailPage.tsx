@@ -80,10 +80,10 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const pageId = PageID.post_detail_page;
   const dispatch = useUIKitDispatch();
   const componentId = ComponentID.WildCardComponent;
-  // Web parity (CommentTray.canShowComposer): visitors cannot comment,
-  // reply, react, or open the comment actions menu.
+  // Web parity (CommentTray.canShowComposer): visitors never see the
+  // composer; comment rows stay visible and their actions toast on tap.
   const { isVisitorOrBot } = useAuth();
-  const disabledInteraction = isVisitorOrBot;
+  const disabledInteraction = false;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
@@ -272,7 +272,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
               </TouchableOpacity>
             </View>
           )}
-          {!disabledInteraction && (
+          {!disabledInteraction && !isVisitorOrBot && (
             <View style={styles.InputWrap}>
               <MyAvatar style={styles.myAvatar} />
               <View style={styles.inputContainer}>
