@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useState } from 'react';
+import { FC, memo, useCallback, useState } from 'react';
 import {
   RefreshControl,
   ScrollView,
@@ -9,9 +9,9 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AmityEventStatus } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
-import EventListItems from '../../../component/Events/EventListItems';
-import HappeningEvents from '../../../component/Events/HappeningEvents';
-import EventListSkeleton from '../../../component/Events/EventListSkeleton';
+import EventListItems from '../components/EventListItems';
+import HappeningEvents from '../components/HappeningEvents';
+import EventListSkeleton from '../components/EventListSkeleton';
 import { Typography } from '../../../../core/components/Typography/Typography';
 import { EVENTS_STRINGS } from '../constants';
 import { useEventsCollection } from '../hooks/useEventsCollection';

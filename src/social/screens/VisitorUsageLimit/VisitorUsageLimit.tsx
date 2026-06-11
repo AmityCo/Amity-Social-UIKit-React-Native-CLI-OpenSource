@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { BackHandler, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
@@ -22,7 +22,6 @@ export function VisitorUsageLimit() {
       type: 'informative',
       duration: TOAST_DURATION,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Toast appears on the initial usage-limit trigger only; a dismissed

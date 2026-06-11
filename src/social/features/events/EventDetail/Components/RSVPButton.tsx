@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useTheme } from 'react-native-paper';
@@ -6,7 +6,11 @@ import {
   AmityEventResponseStatus,
   AmityEventStatus,
 } from '@amityco/ts-sdk-react-native';
-import { eventBell, eventCheck, eventClose } from '../../../../../core/assets/icons';
+import {
+  eventBell,
+  eventCheck,
+  eventClose,
+} from '../../../../../core/assets/icons';
 import {
   MEMBER_SHEET_HEIGHT,
   MemberBottomSheet,

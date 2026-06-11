@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import { useStyles } from './styles';
 import EventTypeBadge from '../EventTypeBadge';
 import EventHostBadge from '../EventHostBadge';
 import { brandBadge } from '../../../../../core/assets/icons';
-import { Typography } from '../../Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { formatEventDuration } from '../../utils';
 import { EVENTS_STRINGS } from '../../constants';
 import { useGlobalBehavior } from '../../../../hooks/useGlobalBehavior';

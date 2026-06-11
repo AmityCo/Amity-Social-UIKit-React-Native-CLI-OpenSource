@@ -1,4 +1,4 @@
-import React, { FC, memo, useState } from 'react';
+import { FC, memo, useState } from 'react';
 import { View } from 'react-native';
 import { useStyles } from './styles';
 import ExploreEventFeed from './ExploreEventFeed';

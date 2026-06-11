@@ -1,10 +1,10 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { FlatList, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { AmityEventStatus } from '@amityco/ts-sdk-react-native';
 import ContentLoader, { Rect } from 'react-content-loader/native';
 import EventCard from '../EventCard';
-import { Typography } from '../../Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { EVENTS_STRINGS } from '../../constants';
 import { useEventsCollection } from '../../hooks/useEventsCollection';
 import { getSkeletonBackgrounColor } from '../../../../../core/utils/color';

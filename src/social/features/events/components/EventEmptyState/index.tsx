@@ -1,9 +1,9 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useTheme } from 'react-native-paper';
 import { eventOutlined } from '../../../../../core/assets/icons';
-import { Typography } from '../../Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { EVENTS_STRINGS } from '../../constants';
 import type { MyMD3Theme } from '../../../../../core/providers/AmityUIKitProvider';
 

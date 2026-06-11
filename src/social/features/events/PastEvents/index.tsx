@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -12,11 +12,11 @@ import {
   AmityEventOrderOption,
   AmityEventStatus,
 } from '@amityco/ts-sdk-react-native';
-import { useStyles } from '../AmityUpcomingEventsPage/styles';
+import { useStyles } from '../UpcomingEvents/styles';
 import Tabs from '../../../../core/components/Tabs';
-import EventCard from '../../../component/Events/EventCard';
-import EventEmptyState from '../../../component/Events/EventEmptyState';
-import EventListSkeleton from '../../../component/Events/EventListSkeleton';
+import EventCard from '../components/EventCard';
+import EventEmptyState from '../components/EventEmptyState';
+import EventListSkeleton from '../components/EventListSkeleton';
 import { Typography } from '../../../../core/components/Typography/Typography';
 import { arrowLeft } from '../../../../core/assets/icons';
 import { EVENTS_STRINGS } from '../constants';

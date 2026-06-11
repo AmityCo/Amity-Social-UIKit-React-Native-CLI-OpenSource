@@ -32,7 +32,7 @@ export const useGlobalBehavior = () => {
       }
       return defaultBehavior?.();
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [isVisitorOrBot, AmityGlobalBehaviour]
   );
 

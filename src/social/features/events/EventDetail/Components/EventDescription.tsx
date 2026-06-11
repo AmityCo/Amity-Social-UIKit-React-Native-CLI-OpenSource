@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback } from 'react';
 import dayjs from 'dayjs';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';

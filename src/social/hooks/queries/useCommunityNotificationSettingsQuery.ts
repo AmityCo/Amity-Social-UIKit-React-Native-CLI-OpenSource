@@ -1,36 +1,25 @@
-import { Client } from '@amityco/ts-sdk-react-native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+// See notificationSettingsCompat: Client.notifications() is not in the public
+// SDK yet; the compat wrapper keeps these screens compiling and failing
+// gracefully on SDK builds without the API.
+import { communityNotifications } from '../../features/community/shared/notificationSettingsCompat';
 
 type CommunityNotificationSettingsQueryParams = {
   communityId: string;
 };
 
 type EnableParam = {
-  communityId: Parameters<
-    ReturnType<typeof Client.notifications>['community']
-  >[0];
-  events?: Parameters<
-    ReturnType<ReturnType<typeof Client.notifications>['community']>['enable']
-  >[0];
+  communityId: string;
+  events?: Amity.CommunityNotificationEvent[];
 };
 
-type EnablePayload = Awaited<
-  ReturnType<
-    ReturnType<ReturnType<typeof Client.notifications>['community']>['enable']
-  >
->;
+type EnablePayload = Amity.CommunityNotificationSettings;
 
 type DisableParam = {
-  communityId: Parameters<
-    ReturnType<typeof Client.notifications>['community']
-  >[0];
+  communityId: string;
 };
 
-type DisablePayload = Awaited<
-  ReturnType<
-    ReturnType<ReturnType<typeof Client.notifications>['community']>['disable']
-  >
->;
+type DisablePayload = Amity.CommunityNotificationSettings;
 
 export function useCommunityNotificationSettingsQuery({
   communityId,
@@ -45,7 +34,7 @@ export function useCommunityNotificationSettingsQuery({
 
   const { data, isLoading } = useQuery({
     queryKey,
-    queryFn: () => Client.notifications().community(communityId).getSettings(),
+    queryFn: () => communityNotifications(communityId).getSettings(),
     enabled: !!communityId,
   });
 
@@ -55,14 +44,13 @@ export function useCommunityNotificationSettingsQuery({
     EnableParam
   >({
     mutationFn: ({ communityId: id, events }) =>
-      Client.notifications().community(id).enable(events),
+      communityNotifications(id).enable(events),
     onSuccess: invalidate,
   });
 
   const { mutateAsync: disableMutate, isPending: isDisablePending } =
     useMutation<DisablePayload, Error, DisableParam>({
-      mutationFn: ({ communityId: id }) =>
-        Client.notifications().community(id).disable(),
+      mutationFn: ({ communityId: id }) => communityNotifications(id).disable(),
       onSuccess: invalidate,
     });
 

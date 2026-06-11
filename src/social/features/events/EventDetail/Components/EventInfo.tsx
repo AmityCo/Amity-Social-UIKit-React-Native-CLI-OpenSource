@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useState } from 'react';
+import { FC, memo, useCallback, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import type { NativeSyntheticEvent, TextLayoutEventData } from 'react-native';
 import { SvgXml } from 'react-native-svg';
@@ -9,10 +9,7 @@ import { eventCopy } from '../../../../../core/assets/icons';
 import { Typography } from '../../../../../core/components/Typography/Typography';
 import LivestreamContent from '../../../../components/LivestreamContent';
 import { EVENTS_STRINGS } from '../../constants';
-import {
-  copyToClipboard,
-  isClipboardAvailable,
-} from '../../../../../core/utils/clipboard';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { useAmityComponent } from '../../../../hooks';
 import { ComponentID, PageID } from '../../../../enums';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';

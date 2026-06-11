@@ -54,7 +54,6 @@ export const useRSVPCollection = ({
       }
     );
     return unsubscribe;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event?.eventId, status, limit, shouldCall]);
 
   const loadMore = useCallback(() => {

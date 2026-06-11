@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   Image,
@@ -23,7 +23,10 @@ import {
   FileRepository,
 } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
-import { camera as cameraIcon, eventClose } from '../../../../core/assets/icons';
+import {
+  camera as cameraIcon,
+  eventClose,
+} from '../../../../core/assets/icons';
 import { Typography } from '../../../../core/components/Typography/Typography';
 import { EVENTS_STRINGS, EVENT_TYPE_LABEL } from '../constants';
 import { checkIsWithinMinutes } from '../utils';
@@ -231,7 +234,7 @@ const AmityEventSetupPage = () => {
   >(undefined);
 
   useEffect(() => {
-    if (!imageUri) return;
+    if (!imageUri) return undefined;
     let isMounted = true;
     uploadImage({ file: imageUri }).then((response) => {
       if (isMounted && response?.data?.[0]) {
@@ -241,7 +244,6 @@ const AmityEventSetupPage = () => {
     return () => {
       isMounted = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageUri]);
 
   const existingCoverUrl = editingEvent?.coverImage?.fileUrl

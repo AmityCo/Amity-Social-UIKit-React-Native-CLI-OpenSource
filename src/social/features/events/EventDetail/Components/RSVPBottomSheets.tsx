@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useTheme } from 'react-native-paper';

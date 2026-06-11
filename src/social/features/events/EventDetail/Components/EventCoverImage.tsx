@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { FileRepository } from '@amityco/ts-sdk-react-native';
 

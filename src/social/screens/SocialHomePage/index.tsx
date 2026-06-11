@@ -106,7 +106,13 @@ const AmitySocialHomePage = () => {
         tabNames={
           isVisitorOrBot
             ? [exploreTab, eventsTab]
-            : [newsFeedTab, exploreTab, eventsTab, myCommunitiesTab, PROFILE_TAB]
+            : [
+                newsFeedTab,
+                exploreTab,
+                eventsTab,
+                myCommunitiesTab,
+                PROFILE_TAB,
+              ]
         }
       />
       <Divider />

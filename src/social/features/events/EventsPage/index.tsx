@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { SafeAreaView } from 'react-native';
 import { useStyles } from './styles';
-import AmityEventsComponent from '../../Components/AmityEventsComponent/AmityEventsComponent';
+import AmityEventsComponent from '../EventsHub';
 import { useAmityPage } from '../../../hooks';
 import { PageID } from '../../../enums';
 

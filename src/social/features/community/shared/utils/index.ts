@@ -1,5 +1,5 @@
 import { MemberRoles } from '../../../../../core/constants';
-import { NotificationRolesFilterTypeEnum } from '@amityco/ts-sdk-react-native';
+import { NotificationRolesFilterTypeEnum } from '../notificationSettingsCompat';
 import { NOTIFICATION_RADIO_OPTIONS } from '../constants';
 
 export type NotificationRadioValue =

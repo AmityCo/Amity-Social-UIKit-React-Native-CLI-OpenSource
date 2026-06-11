@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Typography } from '../../Typography/Typography';
+import { Typography } from '../../../../../core/components/Typography/Typography';
 import { EVENT_TYPE_LABEL } from '../../constants';
 
 // Web parity: EventTypeBadge — pill with white CaptionBold label on

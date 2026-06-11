@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback } from 'react';
 import {
   Alert,
   ImageBackground,
@@ -206,7 +206,6 @@ const EventTopBar: FC<EventTopBarProps> = ({
       ),
       height: 64 + menuActions.length * 56,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openBottomSheet, menuActions]);
 
   const barContent = (

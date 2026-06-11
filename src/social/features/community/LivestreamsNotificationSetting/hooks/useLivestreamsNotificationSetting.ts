@@ -4,7 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { CommunityNotificationEventNameEnum } from '@amityco/ts-sdk-react-native';
+import { CommunityNotificationEventNameEnum } from '../../shared/notificationSettingsCompat';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import { useStyles } from '../styles';
 import { useAmityPage } from '../../../../hooks';
