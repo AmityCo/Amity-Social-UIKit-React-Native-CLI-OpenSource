@@ -15,7 +15,7 @@ export function VideoPlayerScreen() {
       <Video
         controls
         style={styles.video}
-        source={{ uri: source, type: 'mp4' }}
+        source={{ uri: source, type: 'm3u8' }}
         resizeMode="contain"
         playWhenInactive={false}
         playInBackground={false}
