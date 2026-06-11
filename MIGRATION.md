@@ -1,6 +1,6 @@
 # Migration Guide
 
-This document describes how to upgrade host apps from the previous production release (4.x) to the next release.
+This document describes how to upgrade host apps from the previous production RC release (4.x-RC) to the official release (4.0.0).
 
 This is a **major upgrade**. Read this document in full before bumping the package.
 
