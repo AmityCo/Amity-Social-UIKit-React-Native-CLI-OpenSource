@@ -13,7 +13,6 @@ import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import {
   editIcon,
-  expandIcon,
   likeCircle,
   personXml,
   reportOutLine,
@@ -86,7 +85,6 @@ const ReplyCommentList = ({
     childrenComment,
     editedAt,
     mentionPosition,
-    childrenNumber,
     targetType,
     targetId,
   } = commentDetail;
@@ -325,17 +323,6 @@ const ReplyCommentList = ({
                   height="16"
                 />
               </TouchableOpacity>
-            )}
-          </View>
-
-          <View>
-            {childrenComment && childrenComment.length > 0 && (
-              <Pressable style={styles.viewMoreReplyBtn}>
-                <SvgXml xml={expandIcon} />
-                <Text style={styles.viewMoreText}>
-                  View {childrenNumber} replies
-                </Text>
-              </Pressable>
             )}
           </View>
         </View>
