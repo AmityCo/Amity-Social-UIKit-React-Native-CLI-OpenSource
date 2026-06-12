@@ -2,7 +2,6 @@ import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
 import { FC, useCallback, useState, useEffect, memo } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import Video from 'react-native-video';
-import { Video as VideoCompressor } from 'react-native-compressor';
 import {
   leftLongArrow,
   rightLongArrow,
@@ -116,36 +115,18 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
   }, []);
 
   const onPressShareStory = useCallback(async () => {
+    const formData = new FormData();
     const isImage = type === StoryType.image;
+    const mimeType =
+      mime.getType(mediaType.uri) ?? (isImage ? 'image/jpeg' : 'video/mp4');
+    formData.append('files', {
+      uri: mediaType.uri,
+      name: mediaType.name,
+      type: mimeType,
+    } as unknown as Blob);
+
     try {
       setLoading(true);
-
-      let uploadUri = mediaType.uri;
-      let uploadName = mediaType.name;
-
-      // Compress recorded/picked video before upload so high-resolution
-      // captures (e.g. 4K on flagship Androids) can't exhaust native memory
-      // and crash the app at share time (PDT-2983).
-      if (!isImage) {
-        const compressedUri = await VideoCompressor.compress(mediaType.uri, {});
-        uploadUri =
-          compressedUri.startsWith('file://') ||
-          compressedUri.startsWith('content://')
-            ? compressedUri
-            : `file://${compressedUri}`;
-        uploadName = uploadUri.split('/').pop() ?? mediaType.name;
-      }
-
-      const mimeType =
-        mime.getType(uploadUri) ?? (isImage ? 'image/jpeg' : 'video/mp4');
-
-      const formData = new FormData();
-      formData.append('files', {
-        uri: uploadUri,
-        name: uploadName,
-        type: mimeType,
-      } as unknown as Blob);
-
       if (type === StoryType.image) {
         await StoryRepository.createImageStory(
           'community',

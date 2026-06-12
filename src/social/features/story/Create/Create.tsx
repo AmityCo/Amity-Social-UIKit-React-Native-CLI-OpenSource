@@ -96,6 +96,7 @@ const AmityCreateStoryPage: FC<ICreateStoryPage> = ({
     android: useCameraFormat(activeCamera, [
       { photoAspectRatio: 16 / 9 },
       { videoAspectRatio: 16 / 9 },
+      { videoResolution: { width: 1920, height: 1080 } },
     ]),
   });
   const activeSwitchColor = { backgroundColor: '#ffffff' };
