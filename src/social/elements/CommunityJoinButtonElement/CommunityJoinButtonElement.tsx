@@ -1,7 +1,11 @@
 import { FC, memo } from 'react';
 import { TouchableOpacityProps } from 'react-native';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
-import { useAmityElement, useJoinCommunity } from '../../hooks';
+import {
+  useAmityElement,
+  useGlobalBehavior,
+  useJoinCommunity,
+} from '../../hooks';
 import { Button, BUTTON_SIZE } from '../../components/Button/Button';
 import { plus } from '../../../core/assets/icons';
 import { useCustomRankingGlobalFeed } from '../../hooks/useCustomRankingGlobalFeed';
@@ -36,9 +40,13 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
     },
   });
 
+  const { handleGlobalBehavior } = useGlobalBehavior();
+
   const handleJoinCommunity = () => {
     if (!communityId) return;
-    joinCommunity(communityId);
+    handleGlobalBehavior({
+      defaultBehavior: () => joinCommunity(communityId),
+    });
   };
 
   if (isExcluded) return null;

@@ -21,7 +21,8 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
-  userId: string;
+  /** Omit to connect as a visitor (read-only session). */
+  userId?: string;
   displayName?: string;
   apiKey: string;
   apiRegion?: string;
