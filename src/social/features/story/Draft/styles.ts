@@ -10,7 +10,7 @@ export const useStyles = () => {
       flex: 1,
       width: '100%',
       height: '100%',
-      backgroundColor: theme.colors.base,
+      backgroundColor: '#000',
     },
     backBtn: {
       position: 'absolute',

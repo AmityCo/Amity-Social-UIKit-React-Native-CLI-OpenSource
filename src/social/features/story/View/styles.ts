@@ -1,9 +1,11 @@
 import { StyleSheet, useWindowDimensions, Platform } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import type { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const useStyles = () => {
   const theme = useTheme() as MyMD3Theme;
+  const { bottom } = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
   const styles = StyleSheet.create({
     video: {
@@ -113,8 +115,11 @@ export const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginBottom: 50,
       paddingHorizontal: 20,
+      paddingTop: 16,
+      paddingBottom:
+        Platform.OS === 'android' ? Math.max(bottom, 34) + 16 : bottom + 16,
+      backgroundColor: '#000',
     },
     muteBtn: {
       width: 30,

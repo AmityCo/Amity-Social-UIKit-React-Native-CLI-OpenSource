@@ -663,7 +663,12 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
       >
         <View style={styles.deleteBottomSheet}>
           <TouchableOpacity style={styles.deleteBtn} onPress={onPressDelete}>
-            <SvgXml xml={trash()} width={24} height={24} />
+            <SvgXml
+              xml={trash()}
+              width={24}
+              height={24}
+              color={theme.colors.base}
+            />
             <Text style={styles.deleteStoryTxt}>Delete story</Text>
           </TouchableOpacity>
         </View>
