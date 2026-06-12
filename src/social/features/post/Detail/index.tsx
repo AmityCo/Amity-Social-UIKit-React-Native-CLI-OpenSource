@@ -43,6 +43,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
 import MyAvatar from '../../../components/MyAvatar/MyAvatar';
 import { MAX_MENTION_USERS } from '../../../../core/constants';
+import useAuth from '../../../../core/hooks/useAuth';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorComponent from '../../../components/ErrorComponent/ErrorComponent';
@@ -73,6 +74,9 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
 }) => {
   const pageId = PageID.post_detail_page;
   const componentId = ComponentID.WildCardComponent;
+  // Web parity (CommentTray.canShowComposer): visitors never see the
+  // composer; comment rows stay visible and their actions toast on tap.
+  const { isVisitorOrBot } = useAuth();
   const disabledInteraction = false;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -285,7 +289,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
               </TouchableOpacity>
             </View>
           )}
-          {!disabledInteraction && (
+          {!disabledInteraction && !isVisitorOrBot && (
             <View style={styles.InputWrap}>
               <MyAvatar style={styles.myAvatar} />
               <View style={styles.inputContainer}>
@@ -398,7 +402,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
                 postData?.targetType === 'community' && postData?.targetId
               }
               postType="post"
-              disabledInteraction={false}
+              disabledInteraction={disabledInteraction}
               ListHeaderComponent={
                 postData && (
                   <AmityPostContentComponent

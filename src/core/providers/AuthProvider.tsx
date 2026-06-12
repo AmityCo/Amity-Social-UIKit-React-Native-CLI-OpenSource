@@ -24,6 +24,8 @@ export const AuthContext = createContext<AuthContextInterface>({
   authToken: '',
   fcmToken: undefined,
   isGlobalBan: false,
+  isVisitorUsageLimitReached: false,
+  isVisitorOrBot: false,
 });
 
 export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
@@ -44,6 +46,9 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     apiEndpoint: { http: apiEndpoint },
   });
   const [isGlobalBan, setIsGlobalBan] = useState(false);
+  const [isVisitorUsageLimitReached, setIsVisitorUsageLimitReached] =
+    useState(false);
+  const [isVisitorOrBot, setIsVisitorOrBot] = useState(false);
 
   const sessionHandler: Amity.SessionHandler = {
     sessionWillRenewAccessToken(renewal) {
@@ -64,22 +69,39 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     if (sessionState === 'established') {
       setIsConnected(true);
       onSdkReady();
+      // Same check as the Web UIKit's isVisitorOrBot in SDKProvider
+      setIsVisitorOrBot(Client.getCurrentUserType() !== 'signed-in');
     }
   }, [sessionState]);
 
-  const handleConnect = useCallback(async () => {
-    let loginParam;
+  useEffect(() => {
+    // SDK emits this (throttled, 2s window) when a visitor/bot session gets
+    // error 400323 — daily usage limit exceeded. The session stays alive, so
+    // this is tracked separately from isGlobalBan. In-memory only: the flag
+    // resets when the provider remounts or the user signs in with a userId.
+    return Client.onVisitorUsageLimitReached(() => {
+      setIsVisitorUsageLimitReached(true);
+    });
+  }, []);
 
-    loginParam = {
-      userId: userId,
-      displayName: displayName,
-    };
-    if (authToken?.length > 0) {
-      loginParam = { ...loginParam, authToken: authToken };
-    }
+  const handleConnect = useCallback(async () => {
     try {
-      const response = await Client.login(loginParam, sessionHandler);
-      if (!response) return;
+      if (userId) {
+        let loginParam: Amity.ConnectClientParams = {
+          userId: userId,
+          displayName: displayName,
+        };
+        if (authToken?.length > 0) {
+          loginParam = { ...loginParam, authToken: authToken };
+        }
+        const response = await Client.login(loginParam, sessionHandler);
+        if (!response) return;
+      } else {
+        // No userId — connect as a visitor (read-only session, same
+        // convention as the Web UIKit's registerDevice without userId)
+        const response = await Client.loginAsVisitor({ sessionHandler });
+        if (!response) return;
+      }
     } catch (err) {
       if (err?.message?.includes(ERROR_CODE.GLOBAL_BAN)) {
         setIsGlobalBan(true);
@@ -111,6 +133,7 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     }
   };
   useEffect(() => {
+    setIsVisitorUsageLimitReached(false);
     login();
   }, [userId]);
 
@@ -138,6 +161,8 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
         sessionState,
         apiRegion: apiRegion.toLowerCase(),
         isGlobalBan,
+        isVisitorUsageLimitReached,
+        isVisitorOrBot,
       }}
     >
       {children}
