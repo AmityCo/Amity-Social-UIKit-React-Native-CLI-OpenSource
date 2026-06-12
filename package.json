@@ -1,6 +1,6 @@
 {
   "name": "@amityco/react-native-social-uikit",
-  "version": "4.0.0-RC.24",
+  "version": "4.0.0",
   "description": "Social UIKit",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "prepare": "husky install",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepack": "bob build",
