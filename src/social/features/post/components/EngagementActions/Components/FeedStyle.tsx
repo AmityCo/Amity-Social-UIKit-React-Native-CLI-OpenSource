@@ -8,7 +8,7 @@ import {
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
-import { useAmityComponent } from '../../../../../hooks';
+import { useAmityComponent, useGlobalBehavior } from '../../../../../hooks';
 import { PageID, ComponentID } from '../../../../../enums';
 import { SvgXml } from 'react-native-svg';
 import { likeReaction } from '../../../../../../core/assets/icons/xml';
@@ -38,6 +38,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   });
   const styles = useStyles(themeStyles);
   const { AmityGlobalFeedComponentBehavior } = useBehaviour();
+  const { handleGlobalBehavior } = useGlobalBehavior();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [postData, setPostData] = useState<Amity.Post>(null);
@@ -81,6 +82,10 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
     }
   }, [isLike, postData, postId]);
 
+  const onPressReaction = useCallback(() => {
+    handleGlobalBehavior({ defaultBehavior: addReactionToPost });
+  }, [addReactionToPost, handleGlobalBehavior]);
+
   const onPressComment = useCallback(() => {
     if (AmityGlobalFeedComponentBehavior.goToPostDetailPage) {
       return AmityGlobalFeedComponentBehavior.goToPostDetailPage();
@@ -103,7 +108,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   return (
     <Pressable onPress={onPressComment} style={styles.actionSection}>
       <View style={styles.row}>
-        <TouchableOpacity onPress={addReactionToPost} style={styles.likeBtn}>
+        <TouchableOpacity onPress={onPressReaction} style={styles.likeBtn}>
           {isLike ? (
             <SvgXml
               xml={likeReaction(themeStyles.colors.background)}

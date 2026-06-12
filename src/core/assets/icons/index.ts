@@ -34,6 +34,7 @@ export { default as pause } from './pause';
 export { default as resume } from './resume';
 export { default as terminated } from './terminated';
 export { default as warning } from './warning';
+export { default as visitorLimit } from './visitorLimit';
 export { default as ban } from './ban';
 export { default as arrowLeft } from './arrowLeft';
 export { default as poll } from './poll';
