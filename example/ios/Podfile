@@ -30,7 +30,6 @@ target 'AmityReactNativeSocialUiKitExample' do
   )
 
   post_install do |installer|
-    # React Native post-install script
     react_native_post_install(
       installer,
       config[:reactNativePath],

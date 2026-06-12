@@ -44,7 +44,7 @@ project.xcworkspace
 .settings
 local.properties
 android.iml
-.kotlin
+.kotlin/
 
 # Cocoapods
 #
@@ -85,4 +85,4 @@ lib/
 !.yarn/versions
 
 # Claude
-.claude/
+.claude/plans

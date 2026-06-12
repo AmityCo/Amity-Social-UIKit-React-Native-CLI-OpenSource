@@ -1,0 +1,1 @@
+export { CommentsNotificationSetting } from './CommentsNotificationSetting';

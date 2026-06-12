@@ -1,0 +1,74 @@
+import { useState } from 'react';
+import { useStyles } from './styles';
+import Header from './components/Header';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Tabs from '../../../../core/components/Tabs';
+import PendingPostList from './components/PendingPostList';
+import { useAmityElement } from '../../../hooks';
+import { ComponentID, ElementID, PageID } from '../../../enums';
+
+type CommunityPendingRequestProps = {
+  community: Amity.Community;
+};
+
+const useCommunityPendingRequest = () => {
+  const { styles } = useStyles();
+  const [activeTab, setActiveTab] = useState('posts');
+  const [pendingPostCount, setPendingPostCount] = useState(0);
+  const postsButtonTabElement = useAmityElement({
+    pageId: PageID.pending_request_page,
+    componentId: ComponentID.WildCardComponent,
+    elementId: ElementID.posts_button_tab,
+  });
+
+  return {
+    styles,
+    activeTab,
+    setActiveTab,
+    pendingPostCount,
+    setPendingPostCount,
+    postsButtonTabElement,
+  };
+};
+
+const CommunityPendingRequest = ({
+  community,
+}: CommunityPendingRequestProps) => {
+  const {
+    styles,
+    activeTab,
+    setActiveTab,
+    pendingPostCount,
+    setPendingPostCount,
+    postsButtonTabElement,
+  } = useCommunityPendingRequest();
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <Header />
+      <Tabs
+        variant="underline"
+        activeTab={activeTab}
+        onChangeTab={setActiveTab}
+      >
+        <Tabs.List>
+          <Tabs.Tab
+            value="posts"
+            testID={postsButtonTabElement.accessibilityId}
+          >
+            {postsButtonTabElement.config?.text} (
+            {pendingPostCount > 10 ? `10+` : pendingPostCount})
+          </Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Content value="posts">
+          <PendingPostList
+            community={community}
+            onPendingPostCountChange={setPendingPostCount}
+          />
+        </Tabs.Content>
+      </Tabs>
+    </SafeAreaView>
+  );
+};
+
+export default CommunityPendingRequest;

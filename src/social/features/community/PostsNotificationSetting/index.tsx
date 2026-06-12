@@ -1,0 +1,1 @@
+export { PostsNotificationSetting } from './PostsNotificationSetting';

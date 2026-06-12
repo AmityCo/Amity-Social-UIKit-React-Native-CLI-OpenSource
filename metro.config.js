@@ -19,9 +19,6 @@ const config = {
       {},
       {
         get: (target, name) => {
-          if (name === '~') {
-            return path.resolve(__dirname, 'src');
-          }
           return path.join(__dirname, 'node_modules', name);
         },
       }

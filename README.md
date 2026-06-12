@@ -20,6 +20,10 @@ Our AmityUIKit include user interfaces to enable fast integration of standard Am
 - ruby 3.2.0
 - XCode 15
 
+## Migrating from 4.x.x-RC (Release Candidate)
+
+This release is a major upgrade (React Native 0.82, React 19, Android SDK 36, new peer dependencies). Host-app engineers should follow [MIGRATION.md](./MIGRATION.md) for the full guide before bumping the package.
+
 ### Try Sample app
 
 This repository also includes a built-in sample app which you can use to test your code while customizing it, or even explore our UIKit features with just a few installations!
@@ -85,14 +89,13 @@ Then, inside another project, Copy tgz file to your application folder where you
 
 ```sh
 1. yarn add ./amity-react-native-social-ui-kit-x.x.x.tgz
-2. yarn add react-native-safe-area-context react-native-image-picker @react-native-async-storage/async-storage react-native-svg react-native-gesture-handler react-native-screens react-native-video react-native-compressor @react-native-community/netinfo @react-navigation/native \@react-navigation/native-stack @react-navigation/stack react-native-vision-camera  react-native-get-random-values react-native-vlc-media-player react-native-fs@2.20.0 @react-native-community/datetimepicker react-native-video-controls @amityco/ts-sdk-react-native @babel/plugin-transform-export-namespace-from metro-react-native-babel-preset react-native-linear-gradient
+2. yarn add react-native-safe-area-context react-native-image-picker @react-native-async-storage/async-storage react-native-svg react-native-gesture-handler react-native-screens react-native-video react-native-compressor @react-native-community/netinfo @react-navigation/native \@react-navigation/native-stack @react-navigation/stack react-native-vision-camera  react-native-get-random-values react-native-fs@2.20.0 @react-native-community/datetimepicker react-native-video-controls @amityco/ts-sdk-react-native @babel/plugin-transform-export-namespace-from metro-react-native-babel-preset react-native-linear-gradient
 ```
 
 ### Babel Config
 
 ```sh
 module.exports = {
-  presets: ['module:metro-react-native-babel-preset'],
   plugins: [
     '@babel/plugin-transform-export-namespace-from',
   ],
@@ -204,7 +207,7 @@ You can import and use the following screens individually in your application:
 
 | Component                  | Required Props                                         | Notes                                                                                                                                                                                                                                                                     |
 | -------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CommunityProfilePage`            | `defaultCommunityId: string`                           | Community to display                                                                                                                                                                                                                                                      |
+| `CommunityProfilePage`     | `defaultCommunityId: string`                           | Community to display                                                                                                                                                                                                                                                      |
 | `PostDetail`               | `defaultPostId: string`                                | Post Detail page to display                                                                                                                                                                                                                                               |
 | `AmityExploreComponent`    | -                                                      | Explore page to display                                                                                                                                                                                                                                                   |
 | `UserProfile`              | `defaultUserId: string` , `isShowBackButton?: boolean` | User profile to display                                                                                                                                                                                                                                                   |

@@ -11,7 +11,6 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js', '.json'],
         alias: {
           [pak.name]: path.join(__dirname, '..', pak.source),
-          '~': path.join(__dirname, '..', 'src'),
         },
       },
     ],
