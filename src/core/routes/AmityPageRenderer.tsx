@@ -91,6 +91,13 @@ export default function PageRenderer({ children }: PageRendererProps) {
               name="AmityPostEngagementContentComponent"
               children={() => children}
             />
+            {/* Prop-driven page (e.g. AmityCreateProfilePage) rendered directly
+                by the host. The component's displayName resolves to this route
+                so it can be the navigator's initialRouteName. */}
+            <Stack.Screen
+              name="AmityCreateUserProfilePage"
+              children={() => children}
+            />
 
             {/* --- Social Home --- */}
             <Stack.Screen

@@ -23,6 +23,7 @@ export { default as AmityLivestreamPlayerPage } from './features/livestream/Play
 export {
   UserRelationshipScreen as AmityUserRelationshipPage,
   EditUserScreen as AmityEditUserProfilePage,
+  CreateUserProfileScreen as AmityCreateProfilePage,
   UserProfileScreen as AmityUserProfilePage,
   BlockedUsersScreen as AmityBlockedUsersPage,
   UserPendingFollowRequests as AmityUserPendingFollowRequestsPage,
