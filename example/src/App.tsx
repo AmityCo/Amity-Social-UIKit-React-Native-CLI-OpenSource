@@ -128,9 +128,9 @@ export default function App() {
   // it shows a guidelines modal -> AmityCreateProfilePage -> signed-in newsfeed.
   return (
     <VisitorScreen
-      apiKey="b0ebeb5939def76019308d4a530b12ddd558dde5bf346e2e" // Put your apiKey
-      apiRegion="us" // Put your apiRegion
-      apiEndpoint="https://api.us.amity.co" //"https://api.{apiRegion}.amity.co"
+      apiKey="YOUR_API_KEY" // Put your apiKey
+      apiRegion="API_REGION" // Put your apiRegion
+      apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
       fcmToken={fcmToken} // android:fcm iOS:APN
     />
   );
