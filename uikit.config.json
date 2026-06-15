@@ -657,6 +657,23 @@
       "text": "Save"
     },
 
+    "create_user_profile_page/*/*": {},
+    "create_user_profile_page/*/back_button": {
+      "image": "value"
+    },
+    "create_user_profile_page/*/title": {
+      "text": "Create profile"
+    },
+    "create_user_profile_page/*/user_display_name_title": {
+      "text": "Display name"
+    },
+    "create_user_profile_page/*/user_about_title": {
+      "text": "About"
+    },
+    "create_user_profile_page/*/create_user_profile_button": {
+      "text": "Save"
+    },
+
     "blocked_users_page/*/*": {},
     "blocked_users_page/*/back_button": {
       "image": "value"

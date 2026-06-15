@@ -3,6 +3,7 @@ import {
   NavigationContainer,
   NavigationIndependentTree,
 } from '@react-navigation/native';
+import { View } from 'react-native';
 import { navigationRef, onNavigationReady } from './navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
@@ -63,11 +64,11 @@ const Stack = createNativeStackNavigator<
 
 export default function AmitySocialUIKitV4Navigator() {
   const theme = useTheme<MyMD3Theme>();
-  const { isGlobalBan, isVisitorUsageLimitReached } = useAuth();
-  const { AmityGlobalBehaviour } = useBehaviour();
+  const { isGlobalBan, isVisitorUsageLimitReached, isConnected } = useAuth();
+  const { AmityGlobalBehavior } = useBehaviour();
 
   const handleVisitorUsageLimitReached =
-    AmityGlobalBehaviour?.handleVisitorUsageLimitReached;
+    AmityGlobalBehavior?.handleVisitorUsageLimitReached;
   const hasHandledUsageLimit = useRef(false);
 
   useEffect(() => {
@@ -84,6 +85,15 @@ export default function AmitySocialUIKitV4Navigator() {
   }, [isVisitorUsageLimitReached, handleVisitorUsageLimitReached]);
 
   if (isGlobalBan) return <GlobalBan />;
+
+  // Wait for the session to establish before mounting the home page. Until then
+  // isVisitorOrBot is unknown (defaults to false), so rendering now would flash
+  // the full signed-in UIKit for a frame before resolving to visitor mode.
+  if (!isConnected) {
+    return (
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }} />
+    );
+  }
 
   // Default usage-limit handling: replace the whole navigation tree with the
   // dead-end error page so back-navigation cannot escape it.

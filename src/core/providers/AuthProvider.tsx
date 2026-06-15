@@ -115,7 +115,11 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
         console.log(err);
       }
     }
-  }, []);
+    // Depend on userId (and the other login params) so that when the host
+    // switches a visitor session to a signed-in one by passing a userId, this
+    // callback re-reads the new value and calls Client.login instead of
+    // re-using the stale (undefined) userId and re-connecting as a visitor.
+  }, [userId, displayName, authToken, fcmToken]);
 
   const login = async () => {
     setError('');

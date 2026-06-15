@@ -14,7 +14,7 @@ const TOAST_DURATION = 3000;
 export function VisitorUsageLimit() {
   const { styles, theme } = useStyles();
   const { showToast } = useToast();
-  const { AmityGlobalBehaviour } = useBehaviour();
+  const { AmityGlobalBehavior } = useBehaviour();
 
   const showSignInToast = useCallback(() => {
     showToast({
@@ -41,8 +41,8 @@ export function VisitorUsageLimit() {
   }, []);
 
   const onPressSignIn = () => {
-    if (AmityGlobalBehaviour?.handleVisitorUsageLimitSignIn) {
-      return AmityGlobalBehaviour.handleVisitorUsageLimitSignIn();
+    if (AmityGlobalBehavior?.handleVisitorUsageLimitSignIn) {
+      return AmityGlobalBehavior.handleVisitorUsageLimitSignIn();
     }
     showSignInToast();
   };
