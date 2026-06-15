@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { Alert } from 'react-native';
+import { useEffect, useRef } from 'react';
 import { useStyles } from '../styles';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +16,13 @@ import { useUpload } from '../../../../../core/hooks';
 // page is shown (still a visitor). Instead we hold the locally picked image
 // (just its uri) and upload it AFTER Client.login signs the user in.
 export type LocalImage = { uri: string };
+
+// The success toast is hosted inside this page's tree. onCreated typically
+// tears that tree down (host swaps to the signed-in app), which would unmount
+// the toast before it finishes fading in. Defer onCreated so the success toast
+// stays visible across the transition. Sized to the toast fade-in + a brief
+// display window.
+const ON_CREATED_DELAY = 800;
 
 const schema = z.object({
   image: z.custom<LocalImage>().nullish(),
@@ -48,9 +55,16 @@ export const useCreateProfile = ({
     pageId: PageID.create_user_profile_page,
   });
 
-  const { showToast } = useToast();
+  const { showToast, hideToast } = useToast();
   const { isConnected } = useNetInfo();
   const { uploadImage } = useUpload();
+
+  // Tracks the deferred onCreated call so it can be cleared if the page
+  // unmounts before it fires.
+  const onCreatedTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+  useEffect(() => () => clearTimeout(onCreatedTimer.current), []);
 
   const {
     watch,
@@ -79,6 +93,11 @@ export const useCreateProfile = ({
     CreateProfileFormValues
   >({
     mutationKey: ['create-user-profile', userId],
+    onMutate: () => {
+      // Long-running toast shown while the SDK calls run, matching the loading
+      // toast used by other composers (e.g. PollPostComposer).
+      showToast({ message: 'Creating profile...', type: 'loading' });
+    },
     mutationFn: async (data) => {
       let loginParam: Amity.ConnectClientParams = {
         userId,
@@ -88,19 +107,15 @@ export const useCreateProfile = ({
         loginParam = { ...loginParam, authToken };
       }
 
-      Alert.alert('DEBUG', 'step 1: login start');
       await Client.login(loginParam, sessionHandler);
-      Alert.alert('DEBUG', 'step 2: login done');
 
       // The avatar upload is a write, which a visitor session cannot perform.
       // Now that login has signed the user in, upload the locally picked image
       // and then apply the remaining profile fields (about + avatar).
       let avatarFileId: string | undefined;
       if (data.image?.uri) {
-        Alert.alert('DEBUG', 'step 3: upload start');
         const uploaded = await uploadImage({ file: data.image.uri });
         avatarFileId = uploaded?.data?.[0]?.fileId;
-        Alert.alert('DEBUG', 'step 4: upload done ' + String(avatarFileId));
       }
 
       // displayName is set during login; apply the remaining fields here.
@@ -110,22 +125,28 @@ export const useCreateProfile = ({
       };
 
       if (payload.description != null || payload.avatarFileId != null) {
-        Alert.alert('DEBUG', 'step 5: updateUser start');
         await UserRepository.updateUser(userId, payload);
-        Alert.alert('DEBUG', 'step 6: updateUser done');
       }
 
       return { userId, displayName: data.displayName || '' };
     },
     onSuccess: (createdUser) => {
+      // Replace the loading toast in-place (no hideToast first — a hide->show
+      // double dispatch can cancel the success toast's fade-in before it shows).
       showToast({
         type: 'success',
-        message: 'Successfully updated your profile!',
+        message: 'Successfully created your profile!',
       });
-      onCreated?.(createdUser);
+      // Defer the transition briefly so the toast starts showing here before the
+      // host swaps screens. The toast state is shared (Redux), so it keeps
+      // displaying on the destination (signed-in) screen too.
+      onCreatedTimer.current = setTimeout(
+        () => onCreated?.(createdUser),
+        ON_CREATED_DELAY
+      );
     },
     onError: (error) => {
-      console.log('[CreateProfile] save failed:', error?.message, error);
+      hideToast();
       if (error.message?.includes(ERROR_CODE.BLOCKED_WORD)) {
         showToast({
           type: 'informative',

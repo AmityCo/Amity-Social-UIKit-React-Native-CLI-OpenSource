@@ -52,11 +52,19 @@ const AmitySocialHomePage = () => {
     keys: ['text'],
   }) as string[];
 
-  const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
-  const visitedTabs = useRef<Set<string>>(new Set([newsFeedTab]));
-
   // Web parity (SocialHomePage): visitors land on the community browsing tab
-  // and never see Newsfeed / My Communities / Profile.
+  // and never see Newsfeed / My Communities / Profile. Pick the visitor default
+  // at first render (lazy initializer) so a visitor never sees a one-frame flash
+  // of the Newsfeed tab before an effect could correct it.
+  const [activeTab, setActiveTab] = useState<string>(() =>
+    isVisitorOrBot ? exploreTab : newsFeedTab
+  );
+  const visitedTabs = useRef<Set<string>>(
+    new Set([isVisitorOrBot ? exploreTab : newsFeedTab])
+  );
+
+  // If the visitor flag resolves after mount (session establishing), still
+  // switch to the community browsing tab.
   useEffect(() => {
     if (isVisitorOrBot) {
       visitedTabs.current.add(exploreTab);

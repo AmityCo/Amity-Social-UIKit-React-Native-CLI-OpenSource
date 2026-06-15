@@ -177,7 +177,7 @@ export default function VisitorScreen({
       configs={config as any}
       fcmToken={fcmToken}
       behaviour={{
-        AmityGlobalBehaviour: {
+        AmityGlobalBehavior: {
           // Visitor tried a gated action -> show the guidelines modal.
           handleVisitorUserAction: () => {
             setShowGuidelines(true);

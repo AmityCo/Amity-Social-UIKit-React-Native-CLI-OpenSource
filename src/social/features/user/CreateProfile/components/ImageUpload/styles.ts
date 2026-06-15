@@ -7,9 +7,16 @@ export const useStyles = () => {
 
   const styles = StyleSheet.create({
     container: {
-      flexDirection: 'row',
+      gap: 8,
+      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    choosePhotoLabel: {
+      color: theme.colors.primary,
+    },
+    disabled: {
+      opacity: 0.5,
     },
     imageContainer: {
       width: 64,

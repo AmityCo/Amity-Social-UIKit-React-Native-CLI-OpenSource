@@ -9,20 +9,20 @@ const TOAST_DURATION = 3000;
 /**
  * Mirrors the Web UIKit's useGlobalBehavior: gate a restricted action behind
  * the visitor/bot check. For signed-in users the default behaviour runs; for
- * visitors the AmityGlobalBehaviour.handleVisitorUserAction override is
+ * visitors the AmityGlobalBehavior.handleVisitorUserAction override is
  * called when provided, otherwise a "create an account or sign in" toast is
  * shown.
  */
 export const useGlobalBehavior = () => {
   const { isVisitorOrBot } = useAuth();
-  const { AmityGlobalBehaviour } = useBehaviour();
+  const { AmityGlobalBehavior } = useBehaviour();
   const { showToast } = useToast();
 
   const handleGlobalBehavior = useCallback(
     ({ defaultBehavior }: { defaultBehavior?: () => void }) => {
       if (isVisitorOrBot) {
-        if (AmityGlobalBehaviour?.handleVisitorUserAction) {
-          return AmityGlobalBehaviour.handleVisitorUserAction();
+        if (AmityGlobalBehavior?.handleVisitorUserAction) {
+          return AmityGlobalBehavior.handleVisitorUserAction();
         }
         return showToast({
           message: VISITOR_USER_ACTION_TOAST,
@@ -32,7 +32,7 @@ export const useGlobalBehavior = () => {
       }
       return defaultBehavior?.();
     },
-    [isVisitorOrBot, AmityGlobalBehaviour, showToast]
+    [isVisitorOrBot, AmityGlobalBehavior, showToast]
   );
 
   return { handleGlobalBehavior, isVisitorOrBot };

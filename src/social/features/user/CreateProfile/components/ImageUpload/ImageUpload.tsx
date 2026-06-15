@@ -5,16 +5,18 @@ import { SvgXml } from 'react-native-svg';
 import { camera } from '../../../../../../core/assets/icons';
 import { isValidImageType } from '../../../../../utils';
 import { Avatar } from '../../../../../components';
+import { Typography } from '../../../../../../core/components/Typography/Typography';
 import type { LocalImage } from '../../hooks/useCreateProfile';
 
 type ImageUploadProps = {
   value?: LocalImage | null;
   onChange: (image: LocalImage | null) => void;
+  disabled?: boolean;
 };
 
 // Pick-only: a visitor session is read-only, so the avatar can't be uploaded
 // here. We hold the local image uri and the page uploads it after Client.login.
-export function ImageUpload({ value, onChange }: ImageUploadProps) {
+export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
   const { styles, theme } = useStyles();
 
   const onPickImage = async () => {
@@ -45,10 +47,11 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, disabled && styles.disabled]}>
       <TouchableOpacity
         hitSlop={0.8}
         activeOpacity={0.7}
+        disabled={disabled}
         style={styles.imageContainer}
         onPress={onPickImage}
       >
@@ -67,6 +70,15 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
             color={theme.colors.white}
           />
         </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        disabled={disabled}
+        onPress={onPickImage}
+      >
+        <Typography.BodyBold style={styles.choosePhotoLabel}>
+          Choose a photo
+        </Typography.BodyBold>
       </TouchableOpacity>
     </View>
   );

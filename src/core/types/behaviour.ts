@@ -17,7 +17,7 @@ export type CommunitySettingPageContext = {
 };
 
 export interface IBehaviour {
-  AmityGlobalBehaviour?: {
+  AmityGlobalBehavior?: {
     /**
      * Called when a visitor attempts a restricted action (comment, react,
      * follow, join…). Default shows a toast; override to open a sign-in flow.

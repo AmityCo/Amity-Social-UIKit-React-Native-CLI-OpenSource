@@ -15,20 +15,14 @@ export const useStyles = () => {
       justifyContent: 'space-between',
       backgroundColor: theme.colors.background,
     },
-    cancelButton: {
-      minWidth: 56,
-      alignItems: 'flex-start',
-    },
-    cancelLabel: {
-      color: theme.colors.base,
-    },
     title: {
       flex: 1,
       textAlign: 'center',
       color: theme.colors.base,
     },
     dummy: {
-      minWidth: 56,
+      width: 24,
+      height: 24,
     },
   });
 

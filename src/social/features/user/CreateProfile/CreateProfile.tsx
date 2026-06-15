@@ -50,7 +50,7 @@ export function CreateProfile({
 
   return (
     <SafeAreaView testID={accessibilityId} style={styles.container}>
-      <TopBar onCancel={onCancel} />
+      <TopBar onCancel={onCancel} disabled={isSubmitting} />
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -60,7 +60,11 @@ export function CreateProfile({
             name="image"
             control={control}
             render={({ field: { onChange, value } }) => (
-              <ImageUpload value={value} onChange={onChange} />
+              <ImageUpload
+                value={value}
+                onChange={onChange}
+                disabled={isSubmitting}
+              />
             )}
           />
           <View style={styles.inputContainer}>
@@ -72,8 +76,9 @@ export function CreateProfile({
                   value={value}
                   onBlur={onBlur}
                   multiline={false}
+                  editable={!isSubmitting}
                   onChangeText={onChange}
-                  placeholder="Enter your display name"
+                  placeholder="Username"
                   pageId={PageID.create_user_profile_page}
                   maxLength={CHARACTER_LIMIT.USER_DISPLAY_NAME}
                   elementId={ElementID.user_display_name_title}
@@ -91,8 +96,9 @@ export function CreateProfile({
                   multiline
                   value={value}
                   onBlur={onBlur}
+                  editable={!isSubmitting}
                   onChangeText={onChange}
-                  placeholder="Enter your description"
+                  placeholder="Write something about yourself"
                   pageId={PageID.create_user_profile_page}
                   elementId={ElementID.user_about_title}
                   maxLength={CHARACTER_LIMIT.USER_DESCRIPTION}
@@ -103,7 +109,6 @@ export function CreateProfile({
         </ScrollView>
         <View style={styles.submitButtonContainer}>
           <ActionButton
-            label="Create Profile"
             onPress={handleSubmit(onSubmit)}
             pageId={PageID.create_user_profile_page}
             elementId={ElementID.create_user_profile_button}
