@@ -20,7 +20,7 @@ type VisitorScreenProps = {
   apiKey: string;
   apiRegion: string;
   apiEndpoint: string;
-  fcmToken: string;
+  fcmToken?: string;
   /** The userId the visitor will create a profile as on save. */
   signupUserId?: string;
 };
