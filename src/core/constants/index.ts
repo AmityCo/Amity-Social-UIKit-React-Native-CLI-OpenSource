@@ -44,6 +44,9 @@ export const Permissions = {
   EditCommunityCategoryPermission: 'EDIT_COMMUNITY_CATEGORY',
   DeleteCommunityCategoryPermission: 'DELETE_COMMUNITY_CATEGORY',
   ManageStoryPermission: 'MANAGE_COMMUNITY_STORY',
+  CreateEventPermission: 'CREATE_EVENT',
+  UpdateEventPermission: 'UPDATE_EVENT',
+  DeleteEventPermission: 'DELETE_EVENT',
 };
 
 export const text_contain_blocked_word = 'Text contain blocked word';
@@ -91,7 +94,19 @@ export const ERROR_CODE = {
   INVALID_IMAGE:
     'Amity SDK (500000): Image uploading failed: Request has invalid image format',
   DISPLAY_NAME_UPDATE: '400301',
+  VISITOR_USAGE_LIMIT_EXCEEDED: '400323',
 };
+
+export const VISITOR_USAGE_LIMIT_MESSAGE = {
+  TITLE: "You've reached your daily limit.",
+  SUBTITLE: 'Create an account or sign in to keep exploring the community.',
+  SIGN_IN: 'Sign in',
+  TOAST: 'Create an account or sign in to continue.',
+};
+
+// Web parity: amity_social_label_create_account_or_sign_in
+export const VISITOR_USER_ACTION_TOAST =
+  'Create an account or sign in to continue.';
 
 export const COMMENT_ERROR_MESSAGE = {
   BLOCKED_WORD:

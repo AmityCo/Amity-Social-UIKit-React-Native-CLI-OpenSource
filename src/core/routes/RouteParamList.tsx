@@ -156,4 +156,24 @@ export type RootStackParamList = {
   VideoPlayer: {
     source: string;
   };
+
+  EventDetail: {
+    eventId: string;
+  };
+
+  UpcomingEvents: {
+    fromExplore?: boolean;
+  };
+
+  PastEvents: undefined;
+
+  EventAttendees: {
+    event: Amity.Event;
+  };
+
+  EventTargetSelection: undefined;
+
+  EventSetup:
+    | { mode: 'create'; targetId: string; targetName?: string }
+    | { mode: 'edit'; event: Amity.Event };
 };

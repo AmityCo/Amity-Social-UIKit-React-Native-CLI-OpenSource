@@ -8,7 +8,7 @@ import {
 } from '@amityco/ts-sdk-react-native';
 import { AmityPostEngagementActionsSubComponentType } from './type';
 import { useStyles } from './styles';
-import { useAmityComponent } from '../../../../../hooks';
+import { useAmityComponent, useGlobalBehavior } from '../../../../../hooks';
 import { PageID, ComponentID } from '../../../../../enums';
 import { SvgXml } from 'react-native-svg';
 import { likeReaction } from '../../../../../../core/assets/icons/xml';
@@ -34,6 +34,7 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
     componentId: ComponentID.post_content,
   });
   const styles = useStyles(themeStyles);
+  const { handleGlobalBehavior } = useGlobalBehavior();
   const [postData, setPostData] = useState<Amity.Post>(null);
 
   const { shareLink, handleSharePress } = usePostShareAction({
@@ -95,6 +96,10 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
     }
   }, [isLike, postId]);
 
+  const onPressReaction = useCallback(() => {
+    handleGlobalBehavior({ defaultBehavior: addReactionToPost });
+  }, [addReactionToPost, handleGlobalBehavior]);
+
   const onClickReactions = useCallback(() => {
     setIsReactionListVisible(true);
   }, []);
@@ -136,7 +141,7 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
       </View>
       <View style={[styles.actionSection, styles.detailActionSection]}>
         <View style={styles.row}>
-          <TouchableOpacity onPress={addReactionToPost} style={styles.likeBtn}>
+          <TouchableOpacity onPress={onPressReaction} style={styles.likeBtn}>
             {isLike ? (
               <SvgXml
                 xml={likeReaction(themeStyles.colors.background)}

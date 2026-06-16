@@ -18,6 +18,7 @@ import {
 } from 'react';
 import { ComponentID, PageID } from '../../../enums';
 import { TSearchItem, useAmityPage } from '../../../hooks';
+import useAuth from '../../../../core/hooks/useAuth';
 import { useStyles } from './styles';
 import BackButtonIconElement from '../../../elements/BackButtonIconElement/BackButtonIconElement';
 import { CommonActions, useNavigation } from '@react-navigation/native';
@@ -73,6 +74,9 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
 }) => {
   const pageId = PageID.post_detail_page;
   const componentId = ComponentID.WildCardComponent;
+  // Web parity (CommentTray.canShowComposer): visitors never see the
+  // composer; comment rows stay visible and their actions toast on tap.
+  const { isVisitorOrBot } = useAuth();
   const disabledInteraction = false;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -285,7 +289,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
               </TouchableOpacity>
             </View>
           )}
-          {!disabledInteraction && (
+          {!disabledInteraction && !isVisitorOrBot && (
             <View style={styles.InputWrap}>
               <MyAvatar style={styles.myAvatar} />
               <View style={styles.inputContainer}>
@@ -398,7 +402,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
                 postData?.targetType === 'community' && postData?.targetId
               }
               postType="post"
-              disabledInteraction={false}
+              disabledInteraction={disabledInteraction}
               ListHeaderComponent={
                 postData && (
                   <AmityPostContentComponent

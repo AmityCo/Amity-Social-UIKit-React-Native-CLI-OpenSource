@@ -27,6 +27,7 @@ import {
 import { Pressable } from 'react-native';
 import useAuth from '../../../../../../core/hooks/useAuth';
 import { useTimeDifference } from '../../../../../hooks/useTimeDifference';
+import { useGlobalBehavior } from '../../../../../hooks/useGlobalBehavior';
 import {
   isReportTarget,
   reportTargetById,
@@ -144,6 +145,11 @@ const ReplyCommentList = ({
       await addCommentReaction(commentId, 'like');
     }
   };
+  // Web parity: visitors see Like but taps show the sign-in toast
+  const { handleGlobalBehavior, isVisitorOrBot } = useGlobalBehavior();
+  const onPressLike = () =>
+    handleGlobalBehavior({ defaultBehavior: addReactionToComment });
+
   const deleteReplyComment = () => {
     Alert.alert('Delete reply', 'This reply will be permanently deleted.', [
       {
@@ -292,21 +298,20 @@ const ReplyCommentList = ({
                 )}
               </View>
 
-              <TouchableOpacity
-                onPress={() => addReactionToComment()}
-                style={styles.likeBtn}
-              >
+              <TouchableOpacity onPress={onPressLike} style={styles.likeBtn}>
                 <Text style={isLike ? styles.likedText : styles.btnText}>
                   {!isLike ? 'Like' : 'Liked'}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={openModal} style={styles.threeDots}>
-                <SvgXml
-                  xml={threeDots(theme.colors.base)}
-                  width="20"
-                  height="16"
-                />
-              </TouchableOpacity>
+              {!isVisitorOrBot && (
+                <TouchableOpacity onPress={openModal} style={styles.threeDots}>
+                  <SvgXml
+                    xml={threeDots(theme.colors.base)}
+                    width="20"
+                    height="16"
+                  />
+                </TouchableOpacity>
+              )}
             </View>
 
             {likeReaction > 0 && (

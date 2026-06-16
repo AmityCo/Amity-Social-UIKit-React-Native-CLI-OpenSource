@@ -11,7 +11,7 @@ import { PageID } from '../../../../enums';
 import { useCommunityNotificationSettingsQuery } from '../../../../hooks/queries/useCommunityNotificationSettingsQuery';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';
 import { TOAST } from '../../../../../core/constants';
-import { CommunityNotificationEventNameEnum } from '@amityco/ts-sdk-react-native';
+import { CommunityNotificationEventNameEnum } from '../../shared/notificationSettingsCompat';
 import { NOTIFICATION_RADIO_OPTIONS } from '../../shared/constants';
 import {
   buildNotificationEvent,

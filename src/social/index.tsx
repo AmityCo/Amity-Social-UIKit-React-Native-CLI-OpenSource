@@ -94,3 +94,11 @@ export {
 export { AmityGlobalStoryTabWrapper } from './components/MyStories';
 
 export { default as PostDetail } from './screens/PostDetail';
+export { default as AmityEventsPage } from './features/events/EventsPage';
+export { default as AmityEventsComponent } from './features/events/EventsHub';
+export { default as AmityEventDetailPage } from './features/events/EventDetail';
+export { default as AmityUpcomingEventsPage } from './features/events/UpcomingEvents';
+export { default as AmityPastEventsPage } from './features/events/PastEvents';
+export { default as AmityEventAttendeesPage } from './features/events/EventAttendees';
+export { default as AmityEventTargetSelectionPage } from './features/events/TargetSelection';
+export { default as AmityEventSetupPage } from './features/events/EventSetup';

@@ -44,6 +44,7 @@ import ReplyCommentList from '../../legacy/Social/ReplyCommentList';
 import AmityReactionListComponent from '../../../features/reaction/components/List';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../hooks/useTimeDifference';
+import { useGlobalBehavior } from '../../../hooks/useGlobalBehavior';
 import { LinkPreview } from '../../PreviewLink';
 import { Typography } from '../../../../core/components/Typography/Typography';
 import { pen, report, trash, unreport } from '../../../../core/assets/icons';
@@ -290,6 +291,13 @@ const CommentListItem = ({
     onClickReply && onClickReply(user, commentId);
   };
 
+  // Web parity: visitors see Like/Reply but taps show the sign-in toast
+  const { handleGlobalBehavior, isVisitorOrBot } = useGlobalBehavior();
+  const onPressLike = () =>
+    handleGlobalBehavior({ defaultBehavior: addReactionToComment });
+  const onPressReply = () =>
+    handleGlobalBehavior({ defaultBehavior: onHandleReply });
+
   const onPressCommentReaction = () => {
     setIsReactionListVisible(true);
   };
@@ -348,10 +356,7 @@ const CommentListItem = ({
                     </Typography.Caption>
                   )}
                 </View>
-                <TouchableOpacity
-                  onPress={() => addReactionToComment()}
-                  style={styles.likeBtn}
-                >
+                <TouchableOpacity onPress={onPressLike} style={styles.likeBtn}>
                   <Typography.CaptionBold
                     style={isLike ? styles.likedText : styles.btnText}
                   >
@@ -359,20 +364,22 @@ const CommentListItem = ({
                   </Typography.CaptionBold>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={disabledComment ? undefined : onHandleReply}
+                  onPress={disabledComment ? undefined : onPressReply}
                   style={styles.likeBtn}
                 >
                   <Typography.CaptionBold style={styles.btnText}>
                     Reply
                   </Typography.CaptionBold>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={openModal}>
-                  <SvgXml
-                    xml={threeDots(theme.colors.baseShade2)}
-                    width="20"
-                    height="20"
-                  />
-                </TouchableOpacity>
+                {!isVisitorOrBot && (
+                  <TouchableOpacity onPress={openModal}>
+                    <SvgXml
+                      xml={threeDots(theme.colors.baseShade2)}
+                      width="20"
+                      height="20"
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
 
               {likeReaction > 0 && (

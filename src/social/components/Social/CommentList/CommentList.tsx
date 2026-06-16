@@ -31,6 +31,7 @@ import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { lock } from '../../../../core/assets/icons';
 import { Typography } from '../../../../core/components/Typography/Typography';
 import { MAX_MENTION_USERS } from '../../../../core/constants';
+import useAuth from '../../../../core/hooks/useAuth';
 
 interface ICommentListProp {
   postId: string;
@@ -68,6 +69,9 @@ const CommentList: FC<ICommentListProp> = ({
   withAvatar,
   disabledComment,
 }) => {
+  // Web parity: visitors never see the comment composer
+  const { isVisitorOrBot } = useAuth();
+  const hideComposer = disabledInteraction || isVisitorOrBot;
   const styles = useStyles();
   const theme = useTheme() as MyMD3Theme;
   const onNextPageRef = useRef<() => void | null>(null);
@@ -284,7 +288,7 @@ const CommentList: FC<ICommentListProp> = ({
               </TouchableOpacity>
             </View>
           )}
-          {!disabledInteraction &&
+          {!hideComposer &&
             (disabledComment ? (
               <View style={styles.disabledCommentWrap}>
                 <SvgXml

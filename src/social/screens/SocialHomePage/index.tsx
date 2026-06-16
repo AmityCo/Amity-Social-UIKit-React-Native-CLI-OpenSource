@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import CustomSocialTab from '../../components/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../hooks';
@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import UserProfile from '../../features/user/Profile';
 import useAuth from '../../../core/hooks/useAuth';
 import Divider from '../../components/Divider';
+import AmityEventsComponent from '../../features/events/EventsHub';
 
 const PROFILE_TAB = 'Profile';
 
@@ -52,8 +53,25 @@ const AmitySocialHomePage = () => {
     keys: ['text'],
   }) as string[];
 
+  const [eventsTab] = useUiKitConfig({
+    page: PageID.social_home_page,
+    component: ComponentID.WildCardComponent,
+    element: ElementID.events_button,
+    keys: ['text'],
+  }) as string[];
+
+  const { isVisitorOrBot } = useAuth();
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
   const visitedTabs = useRef<Set<string>>(new Set([newsFeedTab]));
+
+  // Web parity (SocialHomePage): visitors land on the community browsing tab
+  // and never see Newsfeed / My Communities.
+  useEffect(() => {
+    if (isVisitorOrBot) {
+      visitedTabs.current.add(exploreTab);
+      setActiveTab(exploreTab);
+    }
+  }, [isVisitorOrBot, exploreTab]);
 
   const onTabChange = useCallback(
     (tabName: string) => {
@@ -85,21 +103,40 @@ const AmitySocialHomePage = () => {
       <CustomSocialTab
         activeTab={activeTab}
         onTabChange={onTabChange}
-        tabNames={[newsFeedTab, exploreTab, myCommunitiesTab, PROFILE_TAB]}
+        tabNames={
+          isVisitorOrBot
+            ? [exploreTab, eventsTab]
+            : [
+                newsFeedTab,
+                exploreTab,
+                eventsTab,
+                myCommunitiesTab,
+                PROFILE_TAB,
+              ]
+        }
       />
       <Divider />
-      <View style={tabStyle(newsFeedTab)}>
-        <AmityNewsFeedComponent
-          pageId={PageID.social_home_page}
-          onPressExploreCommunity={onPressExploreCommunity}
-        />
-      </View>
+      {!isVisitorOrBot && (
+        <View style={tabStyle(newsFeedTab)}>
+          <AmityNewsFeedComponent
+            pageId={PageID.social_home_page}
+            onPressExploreCommunity={onPressExploreCommunity}
+          />
+        </View>
+      )}
       {visitedTabs.current.has(exploreTab) && (
         <View style={tabStyle(exploreTab)}>
           <AmityExploreComponent pageId={PageID.social_home_page} />
         </View>
       )}
-      {visitedTabs.current.has(myCommunitiesTab) && (
+      {/* Web parity (SocialHomePage): Events sits right after the
+          Communities/Explore tab and is visible to visitors too. */}
+      {visitedTabs.current.has(eventsTab) && (
+        <View style={tabStyle(eventsTab)}>
+          <AmityEventsComponent pageId={PageID.social_home_page} />
+        </View>
+      )}
+      {!isVisitorOrBot && visitedTabs.current.has(myCommunitiesTab) && (
         <View style={tabStyle(myCommunitiesTab)}>
           <AmityMyCommunitiesComponent
             pageId={PageID.social_home_page}
@@ -107,7 +144,7 @@ const AmitySocialHomePage = () => {
           />
         </View>
       )}
-      {visitedTabs.current.has(PROFILE_TAB) && (
+      {!isVisitorOrBot && visitedTabs.current.has(PROFILE_TAB) && (
         <View style={tabStyle(PROFILE_TAB)}>
           <UserProfile inline stickyTab={false} userId={client?.userId ?? ''} />
         </View>
