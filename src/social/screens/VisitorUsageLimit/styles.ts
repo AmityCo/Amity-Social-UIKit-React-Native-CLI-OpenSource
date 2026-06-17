@@ -21,10 +21,12 @@ export const useStyles = () => {
       marginBottom: 16,
     },
     title: {
+      maxWidth: 252,
       textAlign: 'center',
       color: theme.colors.baseShade3,
     },
     subtitle: {
+      maxWidth: 252,
       textAlign: 'center',
       color: theme.colors.baseShade3,
     },

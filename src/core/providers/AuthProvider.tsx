@@ -108,7 +108,8 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
       }
     }
 
-    if (fcmToken) {
+    // Visitors/bots are GET-only with no MQTT — skip push registration for them.
+    if (fcmToken && userId) {
       try {
         await Client.registerPushNotification(fcmToken);
       } catch (err) {

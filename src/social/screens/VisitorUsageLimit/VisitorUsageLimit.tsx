@@ -51,6 +51,8 @@ export function VisitorUsageLimit() {
     <SafeAreaView style={styles.container} edges={['top', 'left']}>
       <View style={styles.contentContainer}>
         <SvgXml
+          accessible
+          accessibilityLabel="Usage limit reached"
           width={60}
           height={40}
           style={styles.icon}
@@ -67,6 +69,7 @@ export function VisitorUsageLimit() {
           style={styles.signInButton}
           onPress={onPressSignIn}
           accessibilityRole="button"
+          accessibilityLabel={VISITOR_USAGE_LIMIT_MESSAGE.SIGN_IN}
         >
           <Typography.BodyBold style={styles.signInText}>
             {VISITOR_USAGE_LIMIT_MESSAGE.SIGN_IN}
