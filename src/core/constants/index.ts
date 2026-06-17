@@ -101,9 +101,11 @@ export const VISITOR_USAGE_LIMIT_MESSAGE = {
   TOAST: 'Create an account or sign in to continue.',
 };
 
-// Web parity: amity_social_label_create_account_or_sign_in
 export const VISITOR_USER_ACTION_TOAST =
   'Create an account or sign in to continue.';
+
+// Visitor toasts auto-dismiss after 3s per the Figma spec (slice default is 2.5s).
+export const VISITOR_TOAST_DURATION = 3000;
 
 export const COMMENT_ERROR_MESSAGE = {
   BLOCKED_WORD:

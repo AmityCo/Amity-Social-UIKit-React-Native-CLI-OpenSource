@@ -7,9 +7,10 @@ import { Typography } from '../../../core/components/Typography/Typography';
 import { visitorLimit } from '../../../core/assets/icons';
 import { useToast } from '../../../core/stores/slices/toastSlice';
 import { useBehaviour } from '../../providers/BehaviourProvider';
-import { VISITOR_USAGE_LIMIT_MESSAGE } from '../../../core/constants';
-
-const TOAST_DURATION = 3000;
+import {
+  VISITOR_USAGE_LIMIT_MESSAGE,
+  VISITOR_TOAST_DURATION,
+} from '../../../core/constants';
 
 export function VisitorUsageLimit() {
   const { styles, theme } = useStyles();
@@ -20,12 +21,10 @@ export function VisitorUsageLimit() {
     showToast({
       message: VISITOR_USAGE_LIMIT_MESSAGE.TOAST,
       type: 'informative',
-      duration: TOAST_DURATION,
+      duration: VISITOR_TOAST_DURATION,
     });
   }, []);
 
-  // Toast appears on the initial usage-limit trigger only; a dismissed
-  // sign-in flow returning to this page must not re-show it.
   useEffect(() => {
     showSignInToast();
   }, [showSignInToast]);
