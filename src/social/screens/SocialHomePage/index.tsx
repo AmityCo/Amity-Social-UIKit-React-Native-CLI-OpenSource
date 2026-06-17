@@ -55,8 +55,6 @@ const AmitySocialHomePage = () => {
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
   const visitedTabs = useRef<Set<string>>(new Set([newsFeedTab]));
 
-  // Web parity (SocialHomePage): visitors land on the community browsing tab
-  // and never see Newsfeed / My Communities / Profile.
   useEffect(() => {
     if (isVisitorOrBot) {
       visitedTabs.current.add(exploreTab);

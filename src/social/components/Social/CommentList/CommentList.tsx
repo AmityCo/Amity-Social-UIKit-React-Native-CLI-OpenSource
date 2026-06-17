@@ -69,7 +69,6 @@ const CommentList: FC<ICommentListProp> = ({
   withAvatar,
   disabledComment,
 }) => {
-  // Web parity: visitors never see the comment composer
   const { isVisitorOrBot } = useAuth();
   const hideComposer = disabledInteraction || isVisitorOrBot;
   const styles = useStyles();

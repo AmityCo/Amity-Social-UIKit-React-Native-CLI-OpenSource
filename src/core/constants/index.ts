@@ -104,7 +104,6 @@ export const VISITOR_USAGE_LIMIT_MESSAGE = {
 export const VISITOR_USER_ACTION_TOAST =
   'Create an account or sign in to continue.';
 
-// Visitor toasts auto-dismiss after 3s per the Figma spec (slice default is 2.5s).
 export const VISITOR_TOAST_DURATION = 3000;
 
 export const COMMENT_ERROR_MESSAGE = {

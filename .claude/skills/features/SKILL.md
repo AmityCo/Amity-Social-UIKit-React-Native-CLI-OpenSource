@@ -34,7 +34,7 @@ Reference: `src/social/types/index.ts`
 
 1. Add route type to `src/core/routes/RouteParamList.tsx`
 2. Register screen in `src/core/routes/AmityUIKitNavigator.tsx`
-3. Create screen wrapper under `src/social/screens/${FeatureName}/`
+3. Create screen wrapper under `src/social/screens/${FeatureName}/` (see Step 3a)
 4. Export from `src/social/screens/index.ts`
 5. Export from `src/social/index.tsx` using the `Amity` prefix convention:
    ```ts
@@ -57,6 +57,27 @@ Rules:
 
 Reference: `src/social/screens/UserRelationship/`
 Reference (sub-components): `src/social/features/user/Profile/components/`
+
+---
+
+## Step 3a — Screen Wrapper Shape
+
+The screen folder is **always** a thin wrapper — no logic, no styles, no JSX beyond rendering the feature component. The real implementation lives under `features/${domain}/${FeatureName}/` (Step 4), even for simple, single-view, or "dead-end" pages.
+
+```
+screens/ScreenName/
+  ScreenName.tsx   ← named-export wrapper: returns <FeatureComponent />
+  index.ts         ← barrel: export { ScreenName } from './ScreenName'
+```
+
+Rules:
+
+- The wrapper is a `.tsx` **named component file** that renders the feature component — NOT a bare re-export inside `index.ts`. `index.ts` only barrels it.
+- Re-export the feature under the screen's name when they differ (e.g. feature `UsageLimit` → screen `VisitorUsageLimit`), so the navigator import path stays stable.
+- No `useStyles`, no hooks, no business logic in the screen — all of that belongs in the feature and its hook.
+
+Reference: `src/social/screens/VisitorUsageLimit/`
+Reference (feature behind it): `src/social/features/visitor/UsageLimit/`
 
 ---
 
@@ -124,7 +145,10 @@ ComponentName/
   index.ts            ← export * from './ComponentName'
   hooks/
     useComponentName.ts  ← ALL logic here
+    index.ts             ← barrel: re-exports the hook
 ```
+
+Always add a `hooks/index.ts` barrel and import the hook from `./hooks` — never reach into the file directly (`./hooks/useComponentName`).
 
 Reference: `src/social/features/user/Relationship/hooks/useUserRelationship.ts`
 Reference (navigation logic in hook): `src/social/features/user/Profile/components/Header/hooks/useHeader.ts`

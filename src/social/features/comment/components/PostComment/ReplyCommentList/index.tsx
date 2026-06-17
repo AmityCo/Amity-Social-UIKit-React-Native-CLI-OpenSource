@@ -146,8 +146,8 @@ const ReplyCommentList = ({
     }
   };
 
-  // Web parity: visitors see Like but taps show the sign-in toast
   const { handleGlobalBehavior, isVisitorOrBot } = useGlobalBehavior();
+
   const onPressLike = () =>
     handleGlobalBehavior({ defaultBehavior: addReactionToComment });
 

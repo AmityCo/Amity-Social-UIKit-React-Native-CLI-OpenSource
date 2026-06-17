@@ -68,6 +68,7 @@ export default function AmitySocialUIKitV4Navigator() {
 
   const handleVisitorUsageLimitReached =
     AmityGlobalBehaviour?.handleVisitorUsageLimitReached;
+
   const hasHandledUsageLimit = useRef(false);
 
   useEffect(() => {
@@ -75,8 +76,7 @@ export default function AmitySocialUIKitV4Navigator() {
       hasHandledUsageLimit.current = false;
       return;
     }
-    // Customer override replaces the default full-page swap; guard so rapid
-    // repeat events trigger a single navigation.
+
     if (handleVisitorUsageLimitReached && !hasHandledUsageLimit.current) {
       hasHandledUsageLimit.current = true;
       handleVisitorUsageLimitReached();
@@ -85,8 +85,6 @@ export default function AmitySocialUIKitV4Navigator() {
 
   if (isGlobalBan) return <GlobalBan />;
 
-  // Default usage-limit handling: replace the whole navigation tree with the
-  // dead-end error page so back-navigation cannot escape it.
   if (isVisitorUsageLimitReached && !handleVisitorUsageLimitReached) {
     return <VisitorUsageLimit />;
   }

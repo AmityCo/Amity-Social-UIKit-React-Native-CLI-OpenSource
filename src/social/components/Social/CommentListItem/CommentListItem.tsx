@@ -291,10 +291,11 @@ const CommentListItem = ({
     onClickReply && onClickReply(user, commentId);
   };
 
-  // Web parity: visitors see Like/Reply but taps show the sign-in toast
   const { handleGlobalBehavior, isVisitorOrBot } = useGlobalBehavior();
+
   const onPressLike = () =>
     handleGlobalBehavior({ defaultBehavior: addReactionToComment });
+
   const onPressReply = () =>
     handleGlobalBehavior({ defaultBehavior: onHandleReply });
 

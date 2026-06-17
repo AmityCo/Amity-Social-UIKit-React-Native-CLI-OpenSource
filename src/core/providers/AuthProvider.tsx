@@ -69,19 +69,18 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     if (sessionState === 'established') {
       setIsConnected(true);
       onSdkReady();
-      // Same check as the Web UIKit's isVisitorOrBot in SDKProvider
       setIsVisitorOrBot(Client.getCurrentUserType() !== 'signed-in');
     }
   }, [sessionState]);
 
   useEffect(() => {
-    // SDK emits this (throttled, 2s window) when a visitor/bot session gets
-    // error 400323 — daily usage limit exceeded. The session stays alive, so
-    // this is tracked separately from isGlobalBan. In-memory only: the flag
-    // resets when the provider remounts or the user signs in with a userId.
-    return Client.onVisitorUsageLimitReached(() => {
+    const unsubscribe = Client.onVisitorUsageLimitReached(() => {
       setIsVisitorUsageLimitReached(true);
     });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const handleConnect = useCallback(async () => {
@@ -97,8 +96,6 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
         const response = await Client.login(loginParam, sessionHandler);
         if (!response) return;
       } else {
-        // No userId — connect as a visitor (read-only session, same
-        // convention as the Web UIKit's registerDevice without userId)
         const response = await Client.loginAsVisitor({ sessionHandler });
         if (!response) return;
       }
@@ -133,6 +130,7 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
       setLoading(false);
     }
   };
+
   useEffect(() => {
     setIsVisitorUsageLimitReached(false);
     login();

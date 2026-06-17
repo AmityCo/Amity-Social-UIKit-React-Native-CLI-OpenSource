@@ -18,21 +18,8 @@ export type CommunitySettingPageContext = {
 
 export interface IBehaviour {
   AmityGlobalBehaviour?: {
-    /**
-     * Called when a visitor attempts a restricted action (comment, react,
-     * follow, join…). Default shows a toast; override to open a sign-in flow.
-     */
     handleVisitorUserAction?: () => void;
-    /**
-     * Called when a visitor session exceeds its daily usage limit (error
-     * 400323). Providing this skips the default full-page
-     * <VisitorUsageLimit /> swap so a custom error page can be shown instead.
-     */
     handleVisitorUsageLimitReached?: () => void;
-    /**
-     * Called when "Sign in" is pressed on the usage-limit error page.
-     * Default shows a toast; override to navigate to a sign-in flow.
-     */
     handleVisitorUsageLimitSignIn?: () => void;
   };
   AmitySocialHomePageBehaviour?: {

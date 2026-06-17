@@ -74,8 +74,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
 }) => {
   const pageId = PageID.post_detail_page;
   const componentId = ComponentID.WildCardComponent;
-  // Web parity (CommentTray.canShowComposer): visitors never see the
-  // composer; comment rows stay visible and their actions toast on tap.
+
   const { isVisitorOrBot } = useAuth();
   const disabledInteraction = false;
   const navigation =
