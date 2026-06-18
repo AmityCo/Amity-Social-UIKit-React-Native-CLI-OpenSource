@@ -104,6 +104,8 @@ export const VISITOR_USAGE_LIMIT_MESSAGE = {
 export const VISITOR_USER_ACTION_TOAST =
   'Create an account or sign in to continue.';
 
+export const NON_MEMBER_ACTION_TOAST = 'Join community to interact.';
+
 export const VISITOR_TOAST_DURATION = 3000;
 
 export const COMMENT_ERROR_MESSAGE = {

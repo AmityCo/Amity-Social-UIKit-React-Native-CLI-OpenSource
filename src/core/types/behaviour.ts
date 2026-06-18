@@ -19,6 +19,7 @@ export type CommunitySettingPageContext = {
 export interface IBehaviour {
   AmityGlobalBehaviour?: {
     handleVisitorUserAction?: () => void;
+    handleNonMemberAction?: () => void;
     handleVisitorUsageLimitReached?: () => void;
     handleVisitorUsageLimitSignIn?: () => void;
   };

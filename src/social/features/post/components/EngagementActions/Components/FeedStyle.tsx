@@ -8,7 +8,10 @@ import {
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
-import { useAmityComponent, useGlobalBehavior } from '../../../../../hooks';
+import {
+  useAmityComponent,
+  useCommunityEngagementBehavior,
+} from '../../../../../hooks';
 import { PageID, ComponentID } from '../../../../../enums';
 import { SvgXml } from 'react-native-svg';
 import { likeReaction } from '../../../../../../core/assets/icons/xml';
@@ -38,7 +41,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   });
   const styles = useStyles(themeStyles);
   const { AmityGlobalFeedComponentBehavior } = useBehaviour();
-  const { handleGlobalBehavior } = useGlobalBehavior();
+  const { handleCommunityEngagement } = useCommunityEngagementBehavior();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [postData, setPostData] = useState<Amity.Post>(null);
@@ -83,10 +86,13 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   }, [isLike, postData, postId]);
 
   const onPressReaction = useCallback(() => {
-    handleGlobalBehavior({ defaultBehavior: addReactionToPost });
-  }, [addReactionToPost, handleGlobalBehavior]);
+    handleCommunityEngagement({
+      defaultBehavior: addReactionToPost,
+      isJoined: community ? community.isJoined : true,
+    });
+  }, [addReactionToPost, handleCommunityEngagement, community]);
 
-  const onPressComment = useCallback(() => {
+  const goToPostDetail = useCallback(() => {
     if (AmityGlobalFeedComponentBehavior.goToPostDetailPage) {
       return AmityGlobalFeedComponentBehavior.goToPostDetailPage();
     }
@@ -95,15 +101,12 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
     });
   }, [AmityGlobalFeedComponentBehavior, navigation, postId]);
 
-  if (community && community.isJoined === false) {
-    return (
-      <View style={styles.actionSection}>
-        <Text style={styles.btnText}>
-          Join community to interact with all posts
-        </Text>
-      </View>
-    );
-  }
+  const onPressComment = useCallback(() => {
+    handleCommunityEngagement({
+      defaultBehavior: goToPostDetail,
+      isJoined: community ? community.isJoined : true,
+    });
+  }, [goToPostDetail, handleCommunityEngagement, community]);
 
   return (
     <Pressable onPress={onPressComment} style={styles.actionSection}>

@@ -8,7 +8,10 @@ import {
 } from '@amityco/ts-sdk-react-native';
 import { AmityPostEngagementActionsSubComponentType } from './type';
 import { useStyles } from './styles';
-import { useAmityComponent, useGlobalBehavior } from '../../../../../hooks';
+import {
+  useAmityComponent,
+  useCommunityEngagementBehavior,
+} from '../../../../../hooks';
 import { PageID, ComponentID } from '../../../../../enums';
 import { SvgXml } from 'react-native-svg';
 import { likeReaction } from '../../../../../../core/assets/icons/xml';
@@ -34,7 +37,7 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
     componentId: ComponentID.post_content,
   });
   const styles = useStyles(themeStyles);
-  const { handleGlobalBehavior } = useGlobalBehavior();
+  const { handleCommunityEngagement } = useCommunityEngagementBehavior();
   const [postData, setPostData] = useState<Amity.Post>(null);
 
   const { shareLink, handleSharePress } = usePostShareAction({
@@ -97,22 +100,19 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   }, [isLike, postId]);
 
   const onPressReaction = useCallback(() => {
-    handleGlobalBehavior({ defaultBehavior: addReactionToPost });
-  }, [addReactionToPost, handleGlobalBehavior]);
+    handleCommunityEngagement({
+      defaultBehavior: addReactionToPost,
+      isJoined: community ? community.isJoined : true,
+    });
+  }, [addReactionToPost, handleCommunityEngagement, community]);
 
   const onClickReactions = useCallback(() => {
-    setIsReactionListVisible(true);
-  }, []);
-
-  if (community && community.isJoined === false) {
-    return (
-      <View style={styles.actionSection}>
-        <Text style={styles.btnText}>
-          Join community to interact with all posts
-        </Text>
-      </View>
-    );
-  }
+    handleCommunityEngagement({
+      defaultBehavior: () => setIsReactionListVisible(true),
+      allowNonMember: true,
+      isJoined: community?.isJoined,
+    });
+  }, [handleCommunityEngagement, community]);
 
   return (
     <>
