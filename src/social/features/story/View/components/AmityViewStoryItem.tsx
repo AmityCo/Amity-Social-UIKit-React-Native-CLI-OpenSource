@@ -649,6 +649,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
               withAvatar={true}
             />
           </KeyboardAvoidingView>
+          <GlobalToast />
         </Modal>
       )}
       <BottomSheet
