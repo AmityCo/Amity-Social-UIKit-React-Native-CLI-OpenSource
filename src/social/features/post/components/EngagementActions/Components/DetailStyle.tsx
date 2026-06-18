@@ -10,7 +10,7 @@ import { AmityPostEngagementActionsSubComponentType } from './type';
 import { useStyles } from './styles';
 import {
   useAmityComponent,
-  useCommunityEngagementBehavior,
+  useInteractionBehavior,
 } from '../../../../../hooks';
 import { PageID, ComponentID } from '../../../../../enums';
 import { SvgXml } from 'react-native-svg';
@@ -37,7 +37,7 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
     componentId: ComponentID.post_content,
   });
   const styles = useStyles(themeStyles);
-  const { handleCommunityEngagement } = useCommunityEngagementBehavior();
+  const { handleInteraction } = useInteractionBehavior();
   const [postData, setPostData] = useState<Amity.Post>(null);
 
   const { shareLink, handleSharePress } = usePostShareAction({
@@ -100,19 +100,19 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   }, [isLike, postId]);
 
   const onPressReaction = useCallback(() => {
-    handleCommunityEngagement({
+    handleInteraction({
       defaultBehavior: addReactionToPost,
       isJoined: community ? community.isJoined : true,
     });
-  }, [addReactionToPost, handleCommunityEngagement, community]);
+  }, [addReactionToPost, handleInteraction, community]);
 
   const onClickReactions = useCallback(() => {
-    handleCommunityEngagement({
+    handleInteraction({
       defaultBehavior: () => setIsReactionListVisible(true),
       allowNonMember: true,
       isJoined: community?.isJoined,
     });
-  }, [handleCommunityEngagement, community]);
+  }, [handleInteraction, community]);
 
   return (
     <>
