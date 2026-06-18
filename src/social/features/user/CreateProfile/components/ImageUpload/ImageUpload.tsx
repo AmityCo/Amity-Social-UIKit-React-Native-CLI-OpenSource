@@ -12,12 +12,24 @@ type ImageUploadProps = {
   value?: LocalImage | null;
   onChange: (image: LocalImage | null) => void;
   disabled?: boolean;
+  /**
+   * Optional remote avatar URL shown when the user hasn't picked a local photo.
+   * A locally picked image (`value`) takes priority.
+   */
+  defaultImageUrl?: string;
 };
 
 // Pick-only: a visitor session is read-only, so the avatar can't be uploaded
 // here. We hold the local image uri and the page uploads it after Client.login.
-export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
+export function ImageUpload({
+  value,
+  onChange,
+  disabled,
+  defaultImageUrl,
+}: ImageUploadProps) {
   const { styles, theme } = useStyles();
+
+  const hasImage = Boolean(value?.uri ?? defaultImageUrl);
 
   const onPickImage = async () => {
     const result = await launchImageLibrary({
@@ -56,20 +68,22 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
         onPress={onPickImage}
       >
         <Avatar.User
-          uri={value?.uri}
+          uri={value?.uri ?? defaultImageUrl}
           viewable={false}
           userId=""
           imageStyle={styles.image}
           shouldRedirectToUserProfile={false}
         />
-        <View style={styles.iconContainer}>
-          <SvgXml
-            width={24}
-            height={24}
-            xml={camera()}
-            color={theme.colors.white}
-          />
-        </View>
+        {!hasImage && (
+          <View style={styles.iconContainer}>
+            <SvgXml
+              width={24}
+              height={24}
+              xml={camera()}
+              color={theme.colors.white}
+            />
+          </View>
+        )}
       </TouchableOpacity>
       <TouchableOpacity
         activeOpacity={0.7}

@@ -108,7 +108,7 @@
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-video": "^6.18.0",
     "react-native-video-controls": "^2.8.1",
-    "react-native-vision-camera": "^4.7.3",
+    "react-native-vision-camera": "4.7.3",
     "release-it": "^15.0.0",
     "turbo": "^1.10.7",
     "typescript": "^5.8.3"
@@ -150,7 +150,7 @@
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-video": "^6.18.0",
     "react-native-video-controls": "^2.8.1",
-    "react-native-vision-camera": "^4.7.3"
+    "react-native-vision-camera": "4.7.3"
   },
   "engines": {
     "node": ">=20"

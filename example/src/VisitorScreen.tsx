@@ -193,6 +193,9 @@ export default function VisitorScreen({
           <AmityPageRenderer>
             <AmityCreateProfilePage
               userId={signupUserId} // identity used for the signed-in login on save
+              // Host-provided default avatar. Shown when the user doesn't pick a
+              // photo, and uploaded via the from-URL endpoint on save.
+              defaultAvatarImageUrl="https://picsum.photos/seed/amity-create-profile/400"
               onCreated={({ userId, displayName }) => {
                 // Save succeeded. The page already ran Client.login internally;
                 // passing the returned userId + displayName to the provider

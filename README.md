@@ -121,10 +121,12 @@ yarn add \
   react-native-swipe-gestures \
   react-native-video \
   react-native-video-controls \
-  react-native-vision-camera
+  react-native-vision-camera@4.7.3
 ```
 
-> **Versions:** the exact version range required for each package is defined in this package's `peerDependencies` (in its `package.json`). Your package manager will use those ranges to resolve compatible versions; if you need to pin a specific version, check there.
+> **Versions:** most packages above are unpinned — the exact version range required for each is defined in this package's `peerDependencies` (in its `package.json`), and your package manager will resolve a compatible version from there.
+>
+> **`react-native-vision-camera` must be pinned to `4.7.3`.** Newer 4.x/5.x releases migrated to Nitro Modules and require `react-native-nitro-image`, which breaks the Android build with: `Project with path ':react-native-nitro-image' could not be found`. The UIKit is built against `4.7.3`, so install exactly that version.
 
 > **Optional — push notifications.** The UIKit accepts an `fcmToken` prop and registers it for push, but it does not depend on Firebase directly. Only install these if your app wants push notifications:
 >

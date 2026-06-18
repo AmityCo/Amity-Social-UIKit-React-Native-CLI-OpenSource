@@ -21,6 +21,13 @@ export type CreateProfileProps = {
    */
   authToken?: string;
   /**
+   * Optional remote avatar URL supplied by the host. Shown as the default
+   * avatar when the user hasn't picked a photo, and uploaded as the avatar on
+   * save (a locally picked photo takes priority). Requires the network's
+   * "upload image from URL" feature to be enabled.
+   */
+  defaultAvatarImageUrl?: string;
+  /**
    * Fired after the profile is successfully created and the user is signed in.
    * Receives the created userId and the chosen displayName. The host decides
    * what to render next (e.g. swap to the main UIKit / redirect to newsfeed).
@@ -35,6 +42,7 @@ export type CreateProfileProps = {
 export function CreateProfile({
   userId,
   authToken,
+  defaultAvatarImageUrl,
   onCreated,
   onCancel,
 }: CreateProfileProps) {
@@ -46,7 +54,7 @@ export function CreateProfile({
     isSubmitting,
     handleSubmit,
     accessibilityId,
-  } = useCreateProfile({ userId, authToken, onCreated });
+  } = useCreateProfile({ userId, authToken, defaultAvatarImageUrl, onCreated });
 
   return (
     <SafeAreaView testID={accessibilityId} style={styles.container}>
@@ -64,6 +72,7 @@ export function CreateProfile({
                 value={value}
                 onChange={onChange}
                 disabled={isSubmitting}
+                defaultImageUrl={defaultAvatarImageUrl}
               />
             )}
           />

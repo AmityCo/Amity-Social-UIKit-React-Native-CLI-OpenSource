@@ -37,7 +37,30 @@ type CreatedUser = { userId: string; displayName: string };
 type UseCreateProfileParams = {
   userId: string;
   authToken?: string;
+  /**
+   * Optional remote avatar URL supplied by the host. Used as the avatar when
+   * the user does not pick a local photo. A locally picked image always wins.
+   * Uploaded after login via the from-URL REST endpoint.
+   */
+  defaultAvatarImageUrl?: string;
   onCreated?: (user: CreatedUser) => void;
+};
+
+type UploadedFile = { fileId?: string };
+
+// `/api/v4/images/from-url` returns the uploaded file under a single `items`
+// OBJECT (not an array): `{ items: { fileId, ... } }`. Parse defensively across
+// the shapes the API may use so the fileId is never silently dropped.
+const extractFileId = (body: any): string | undefined => {
+  const pickFromArray = (arr?: UploadedFile[]) =>
+    arr?.find((f) => f?.fileId)?.fileId;
+  if (Array.isArray(body)) return pickFromArray(body);
+  const items = body?.items;
+  return (
+    (Array.isArray(items) ? pickFromArray(items) : items?.fileId) ??
+    pickFromArray(body?.data) ??
+    body?.fileId
+  );
 };
 
 // The provider owns visitor login; this page performs the real signed-in login
@@ -48,6 +71,7 @@ type UseCreateProfileParams = {
 export const useCreateProfile = ({
   userId,
   authToken,
+  defaultAvatarImageUrl,
   onCreated,
 }: UseCreateProfileParams) => {
   const { styles, theme } = useStyles();
@@ -110,12 +134,32 @@ export const useCreateProfile = ({
       await Client.login(loginParam, sessionHandler);
 
       // The avatar upload is a write, which a visitor session cannot perform.
-      // Now that login has signed the user in, upload the locally picked image
-      // and then apply the remaining profile fields (about + avatar).
+      // Now that login has signed the user in, resolve the avatar from one of
+      // two sources (a locally picked image always wins over the host-provided
+      // default URL), then apply the remaining profile fields (about + avatar).
       let avatarFileId: string | undefined;
       if (data.image?.uri) {
+        // Local file → binary multipart upload (streams to the upload host).
         const uploaded = await uploadImage({ file: data.image.uri });
         avatarFileId = uploaded?.data?.[0]?.fileId;
+      } else if (defaultAvatarImageUrl) {
+        // Remote URL → from-URL REST endpoint. This is served by the API host
+        // (client.http → apix.{region}.amity.co), NOT the binary upload host;
+        // calling it on client.upload returns 404. The access token is attached
+        // automatically now that login has resolved.
+        const client = Client.getActiveClient();
+        const { data: body } = await client.http.post(
+          '/api/v4/images/from-url',
+          { fileUrl: defaultAvatarImageUrl }
+        );
+        avatarFileId = extractFileId(body);
+        if (!avatarFileId) {
+          throw new Error(
+            `Upload image from URL succeeded but no fileId was returned: ${JSON.stringify(
+              body
+            )}`
+          );
+        }
       }
 
       // displayName is set during login; apply the remaining fields here.

@@ -122,16 +122,18 @@ export default function App() {
     return () => unsubscribe?.();
   }, [permissionGranted]);
 
-  if (!fcmToken) return null;
+  // Note: do NOT block rendering on fcmToken. On the iOS simulator APNs tokens
+  // are not issued, so fcmToken stays null — gating here would leave the app on
+  // a blank screen forever. fcmToken is optional (push only); pass it when set.
   // Visitor-mode demo: VisitorScreen owns the AmityUiKitProvider and mounts it
   // without a userId (anonymous visitor). When the visitor hits a gated action
   // it shows a guidelines modal -> AmityCreateProfilePage -> signed-in newsfeed.
   return (
     <VisitorScreen
-      apiKey="YOUR_API_KEY" // Put your apiKey
-      apiRegion="API_REGION" // Put your apiRegion
-      apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
-      fcmToken={fcmToken} // android:fcm iOS:APN
+      apiKey="b0ebeb5939def76019308d4a530b12ddd558dde5bf346e2e" // Put your apiKey
+      apiRegion="us" // Put your apiRegion
+      apiEndpoint="https://api.us.amity.co" //"https://api.{apiRegion}.amity.co"
+      fcmToken={fcmToken ?? undefined} // android:fcm iOS:APN
     />
   );
 }
