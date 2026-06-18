@@ -10,7 +10,7 @@ import {
 import { useStyles } from './styles';
 import {
   useAmityComponent,
-  useCommunityEngagementBehavior,
+  useInteractionBehavior,
 } from '../../../../../hooks';
 import { PageID, ComponentID } from '../../../../../enums';
 import { SvgXml } from 'react-native-svg';
@@ -41,7 +41,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   });
   const styles = useStyles(themeStyles);
   const { AmityGlobalFeedComponentBehavior } = useBehaviour();
-  const { handleCommunityEngagement } = useCommunityEngagementBehavior();
+  const { handleInteraction } = useInteractionBehavior();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [postData, setPostData] = useState<Amity.Post>(null);
@@ -86,11 +86,11 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   }, [isLike, postData, postId]);
 
   const onPressReaction = useCallback(() => {
-    handleCommunityEngagement({
+    handleInteraction({
       defaultBehavior: addReactionToPost,
       isJoined: community ? community.isJoined : true,
     });
-  }, [addReactionToPost, handleCommunityEngagement, community]);
+  }, [addReactionToPost, handleInteraction, community]);
 
   const goToPostDetail = useCallback(() => {
     if (AmityGlobalFeedComponentBehavior.goToPostDetailPage) {
@@ -102,11 +102,11 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   }, [AmityGlobalFeedComponentBehavior, navigation, postId]);
 
   const onPressComment = useCallback(() => {
-    handleCommunityEngagement({
+    handleInteraction({
       defaultBehavior: goToPostDetail,
       isJoined: community ? community.isJoined : true,
     });
-  }, [goToPostDetail, handleCommunityEngagement, community]);
+  }, [goToPostDetail, handleInteraction, community]);
 
   return (
     <Pressable onPress={onPressComment} style={styles.actionSection}>

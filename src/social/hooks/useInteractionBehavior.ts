@@ -7,23 +7,23 @@ import {
   VISITOR_TOAST_DURATION,
 } from '../../core/constants';
 
-type HandleCommunityEngagementParams = {
+type HandleInteractionParams = {
   defaultBehavior?: () => void;
   allowNonMember?: boolean;
   isJoined?: boolean;
 };
 
-export const useCommunityEngagementBehavior = () => {
+export const useInteractionBehavior = () => {
   const { showToast } = useToast();
   const { AmityGlobalBehaviour } = useBehaviour();
   const { handleGlobalBehavior, isVisitorOrBot } = useGlobalBehavior();
 
-  const handleCommunityEngagement = useCallback(
+  const handleInteraction = useCallback(
     ({
       defaultBehavior,
       allowNonMember,
       isJoined,
-    }: HandleCommunityEngagementParams) => {
+    }: HandleInteractionParams) => {
       handleGlobalBehavior({
         defaultBehavior: () => {
           if (allowNonMember || isJoined) {
@@ -43,5 +43,5 @@ export const useCommunityEngagementBehavior = () => {
     [handleGlobalBehavior, AmityGlobalBehaviour, showToast]
   );
 
-  return { handleCommunityEngagement, isVisitorOrBot };
+  return { handleInteraction, isVisitorOrBot };
 };

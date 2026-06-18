@@ -13,7 +13,11 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { FC, memo, useCallback, useRef, useState } from 'react';
-import { useConfigImageUri, useStory } from '../../../../hooks';
+import {
+  useConfigImageUri,
+  useInteractionBehavior,
+  useStory,
+} from '../../../../hooks';
 import { useStyles } from '../styles';
 import Video, { OnLoadData } from 'react-native-video';
 import {
@@ -40,6 +44,7 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import uiSlice from '../../../../../core/stores/slices/uiSlice';
 import { LoadingOverlay } from '../../../../components/legacy/LoadingOverlay';
 import Toast from '../../../../components/legacy/Toast/Toast';
+import GlobalToast from '../../../../components/Toast';
 import { Typography } from '../../../../../core/components/Typography/Typography';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../../../core/providers/AmityUIKitProvider';
@@ -87,6 +92,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
   const progress = useRef(new Animated.Value(0)).current;
   const sheetRef = useRef<BottomSheetMethods>(null);
   const { handleReaction } = useStory();
+  const { handleInteraction } = useInteractionBehavior();
   const currentStory = storyData[current];
   const storyHyperLink = currentStory?.items[0]?.data || undefined;
   const timeDifference = useTimeDifference(currentStory?.createdAt, true);
@@ -204,33 +210,24 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
   }, [progress]);
 
   const onPressReaction = useCallback(() => {
-    if (communityData?.isJoined) {
-      handleReaction({
-        targetId: currentStory?.storyId,
-        reactionName: 'like',
-        isLiked,
-      });
-      setTotalReaction((prev) => (isLiked ? prev - 1 : prev + 1));
-      setIsLiked((prev) => !prev);
-      return;
-    }
-    progress.stopAnimation(() => setPressed(true));
-    Alert.alert('Join community to interact with all stories', null, [
-      {
-        text: 'OK',
-        onPress: () => {
-          startAnimation();
-          setPressed(false);
-        },
+    handleInteraction({
+      defaultBehavior: () => {
+        handleReaction({
+          targetId: currentStory?.storyId,
+          reactionName: 'like',
+          isLiked,
+        });
+        setTotalReaction((prev) => (isLiked ? prev - 1 : prev + 1));
+        setIsLiked((prev) => !prev);
       },
-    ]);
+      isJoined: communityData?.isJoined,
+    });
   }, [
     communityData?.isJoined,
     currentStory?.storyId,
+    handleInteraction,
     handleReaction,
     isLiked,
-    progress,
-    startAnimation,
   ]);
 
   const onCloseBottomSheet = useCallback(() => {
@@ -675,6 +672,7 @@ const AmityViewStoryItem: FC<IAmityViewStoryItem> = ({
       </BottomSheet>
       <LoadingOverlay isLoading={loading} />
       <Toast />
+      <GlobalToast />
     </View>
   );
 };
