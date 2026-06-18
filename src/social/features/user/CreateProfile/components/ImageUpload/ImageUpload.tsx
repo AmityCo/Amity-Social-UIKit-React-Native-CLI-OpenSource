@@ -36,7 +36,13 @@ export function ImageUpload({
       mediaType: 'photo',
       selectionLimit: 1,
       includeBase64: false,
-      quality: 1,
+      // Downscale the avatar at pick time. A full-resolution photo (often
+      // 5-15MB from the simulator/camera roll) makes the post-login upload take
+      // many seconds; the avatar is only ever shown small, so cap it to 1024px
+      // and lightly compress. This cuts the upload to well under a second.
+      maxWidth: 1024,
+      maxHeight: 1024,
+      quality: 0.8,
     });
 
     if (result.didCancel || !result.assets || result.assets.length === 0) {

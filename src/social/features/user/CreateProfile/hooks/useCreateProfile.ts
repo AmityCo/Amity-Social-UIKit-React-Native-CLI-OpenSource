@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useStyles } from '../styles';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -90,6 +90,13 @@ export const useCreateProfile = ({
   );
   useEffect(() => () => clearTimeout(onCreatedTimer.current), []);
 
+  // True from the moment the mutation succeeds until the deferred redirect
+  // fires. react-hook-form's `isSubmitting` flips back to false as soon as the
+  // mutation resolves, which would re-enable the Save button during the
+  // ON_CREATED_DELAY window before the host swaps screens. Keep the flow locked
+  // through that gap so the user can't re-trigger submit.
+  const [isCreated, setIsCreated] = useState(false);
+
   const {
     watch,
     control,
@@ -175,6 +182,9 @@ export const useCreateProfile = ({
       return { userId, displayName: data.displayName || '' };
     },
     onSuccess: (createdUser) => {
+      // Lock the flow until the deferred redirect fires so Save can't be
+      // pressed again during the ON_CREATED_DELAY gap.
+      setIsCreated(true);
       // Replace the loading toast in-place (no hideToast first — a hide->show
       // double dispatch can cancel the success toast's fade-in before it shows).
       showToast({
@@ -206,6 +216,8 @@ export const useCreateProfile = ({
   });
 
   const onSubmit = async (data: CreateProfileFormValues) => {
+    // Already created and waiting to redirect — ignore any further submits.
+    if (isCreated) return;
     if (isConnected === false) {
       showToast({
         type: 'informative',
@@ -225,6 +237,7 @@ export const useCreateProfile = ({
     onSubmit,
     isValid,
     isSubmitting,
+    isCreated,
     accessibilityId,
   };
 };

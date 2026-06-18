@@ -52,13 +52,18 @@ export function CreateProfile({
     onSubmit,
     isValid,
     isSubmitting,
+    isCreated,
     handleSubmit,
     accessibilityId,
   } = useCreateProfile({ userId, authToken, defaultAvatarImageUrl, onCreated });
 
+  // Stay locked while the mutation runs AND through the brief post-success
+  // window before the host redirects, so Save can't be pressed again in the gap.
+  const isBusy = isSubmitting || isCreated;
+
   return (
     <SafeAreaView testID={accessibilityId} style={styles.container}>
-      <TopBar onCancel={onCancel} disabled={isSubmitting} />
+      <TopBar onCancel={onCancel} disabled={isBusy} />
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -71,7 +76,7 @@ export function CreateProfile({
               <ImageUpload
                 value={value}
                 onChange={onChange}
-                disabled={isSubmitting}
+                disabled={isBusy}
                 defaultImageUrl={defaultAvatarImageUrl}
               />
             )}
@@ -85,7 +90,7 @@ export function CreateProfile({
                   value={value}
                   onBlur={onBlur}
                   multiline={false}
-                  editable={!isSubmitting}
+                  editable={!isBusy}
                   onChangeText={onChange}
                   placeholder="Username"
                   pageId={PageID.create_user_profile_page}
@@ -105,7 +110,7 @@ export function CreateProfile({
                   multiline
                   value={value}
                   onBlur={onBlur}
-                  editable={!isSubmitting}
+                  editable={!isBusy}
                   onChangeText={onChange}
                   placeholder="Write something about yourself"
                   pageId={PageID.create_user_profile_page}
@@ -121,7 +126,7 @@ export function CreateProfile({
             onPress={handleSubmit(onSubmit)}
             pageId={PageID.create_user_profile_page}
             elementId={ElementID.create_user_profile_button}
-            disabled={!isValid || isSubmitting}
+            disabled={!isValid || isBusy}
           />
         </View>
       </KeyboardAvoidingView>
