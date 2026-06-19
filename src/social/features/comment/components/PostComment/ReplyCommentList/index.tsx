@@ -146,7 +146,7 @@ const ReplyCommentList = ({
     }
   };
 
-  const { handleGlobalBehavior, isVisitorOrBot } = useGlobalBehavior();
+  const { handleGlobalBehavior } = useGlobalBehavior();
 
   const onPressLike = () =>
     handleGlobalBehavior({ defaultBehavior: addReactionToComment });
@@ -304,15 +304,13 @@ const ReplyCommentList = ({
                   {!isLike ? 'Like' : 'Liked'}
                 </Text>
               </TouchableOpacity>
-              {!isVisitorOrBot && (
-                <TouchableOpacity onPress={openModal} style={styles.threeDots}>
-                  <SvgXml
-                    xml={threeDots(theme.colors.base)}
-                    width="20"
-                    height="16"
-                  />
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity onPress={openModal} style={styles.threeDots}>
+                <SvgXml
+                  xml={threeDots(theme.colors.base)}
+                  width="20"
+                  height="16"
+                />
+              </TouchableOpacity>
             </View>
 
             {likeReaction > 0 && (
@@ -348,6 +346,7 @@ const ReplyCommentList = ({
                 styles.twoOptions,
             ]}
           >
+            <View style={styles.handleBar} />
             {user?.userId === (client as Amity.Client).userId ? (
               <View>
                 <TouchableOpacity
@@ -375,7 +374,12 @@ const ReplyCommentList = ({
               </View>
             ) : (
               <TouchableOpacity
-                onPress={reportCommentObject}
+                onPress={() => {
+                  closeModal();
+                  handleGlobalBehavior({
+                    defaultBehavior: reportCommentObject,
+                  });
+                }}
                 style={styles.modalRow}
               >
                 <SvgXml

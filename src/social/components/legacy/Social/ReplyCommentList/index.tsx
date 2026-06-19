@@ -157,7 +157,7 @@ export default function ReplyCommentList({
     }
   };
 
-  const { handleGlobalBehavior, isVisitorOrBot } = useGlobalBehavior();
+  const { handleGlobalBehavior } = useGlobalBehavior();
 
   const onPressLike = () =>
     handleGlobalBehavior({ defaultBehavior: addReactionToComment });
@@ -283,15 +283,13 @@ export default function ReplyCommentList({
                 </Typography.CaptionBold>
               </TouchableOpacity>
 
-              {!isVisitorOrBot && (
-                <TouchableOpacity onPress={openModal} style={styles.threeDots}>
-                  <SvgXml
-                    xml={threeDots(theme.colors.base)}
-                    width="20"
-                    height="16"
-                  />
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity onPress={openModal} style={styles.threeDots}>
+                <SvgXml
+                  xml={threeDots(theme.colors.base)}
+                  width="20"
+                  height="16"
+                />
+              </TouchableOpacity>
             </View>
             {likeReaction > 0 && (
               <TouchableOpacity
@@ -366,7 +364,12 @@ export default function ReplyCommentList({
               </View>
             ) : (
               <TouchableOpacity
-                onPress={reportCommentObject}
+                onPress={() => {
+                  closeModal();
+                  handleGlobalBehavior({
+                    defaultBehavior: reportCommentObject,
+                  });
+                }}
                 style={styles.modalRow}
               >
                 <SvgXml

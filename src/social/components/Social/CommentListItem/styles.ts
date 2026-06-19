@@ -71,12 +71,13 @@ export const useStyles = () => {
       paddingHorizontal: 8,
       marginTop: 12,
       flexDirection: 'row',
-      justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'flex-start',
     },
     viewMoreText: {
+      fontWeight: '600',
       color: theme.colors.secondaryShade1,
+      paddingHorizontal: 4,
     },
     commentText: {
       fontSize: 15,
