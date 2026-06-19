@@ -1,11 +1,31 @@
-import { TouchableOpacity, View } from 'react-native';
+import {
+  ActionSheetIOS,
+  Alert,
+  Platform,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useStyles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { camera } from '../../../../../../core/assets/icons';
-import { getFileUrlWithSize } from '../../../../../utils';
 import { Avatar } from '../../../../../components';
 import useImagePicker from '../../../../../hooks/useImagePicker';
 import { CircularProgressIndicator } from '../../../../../components/CircularProgressIndicator';
+import type {
+  CameraOptions,
+  ImageLibraryOptions,
+} from 'react-native-image-picker';
+
+// Downscale the avatar at pick time so the upload stays fast (the avatar is
+// only ever shown small). Shared by the camera and library flows.
+const PICKER_OPTIONS: ImageLibraryOptions & CameraOptions = {
+  mediaType: 'photo',
+  selectionLimit: 1,
+  includeBase64: false,
+  maxWidth: 1024,
+  maxHeight: 1024,
+  quality: 0.8,
+};
 
 type ImageUploadProps = {
   user?: Amity.User;
@@ -15,7 +35,41 @@ type ImageUploadProps = {
 
 export function ImageUpload({ user, value, onChange }: ImageUploadProps) {
   const { styles, theme } = useStyles();
-  const { openImageGallery, progress } = useImagePicker();
+  const { openImageGallery, openCamera, progress } = useImagePicker();
+
+  const handlePickedFile = (file: void | Amity.File<'image'>) => {
+    if (file) onChange(file);
+  };
+
+  const takePhoto = () => openCamera(PICKER_OPTIONS).then(handlePickedFile);
+  const uploadPhoto = () =>
+    openImageGallery(PICKER_OPTIONS).then(handlePickedFile);
+
+  // Let the user choose between the camera and the photo library using the
+  // native action sheet. iOS has a real action sheet (ActionSheetIOS); Android
+  // has no system equivalent, so fall back to a native Alert with the same
+  // options. The picker uploads immediately (the user is already signed in).
+  const onPickImage = () => {
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ['Take photo', 'Upload photo', 'Cancel'],
+          cancelButtonIndex: 2,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 0) takePhoto();
+          else if (buttonIndex === 1) uploadPhoto();
+        }
+      );
+      return;
+    }
+
+    Alert.alert('Profile photo', undefined, [
+      { text: 'Take photo', onPress: takePhoto },
+      { text: 'Upload photo', onPress: uploadPhoto },
+      { text: 'Cancel', style: 'cancel' },
+    ]);
+  };
 
   return (
     <View style={styles.container}>
@@ -24,18 +78,7 @@ export function ImageUpload({ user, value, onChange }: ImageUploadProps) {
         activeOpacity={0.7}
         style={styles.imageContainer}
         disabled={progress > 0}
-        onPress={() => {
-          openImageGallery({
-            mediaType: 'photo',
-            selectionLimit: 1,
-            includeBase64: false,
-            quality: 1,
-          }).then((file) => {
-            if (file) {
-              onChange(file);
-            }
-          });
-        }}
+        onPress={onPickImage}
       >
         <Avatar.User
           viewable={false}
@@ -43,7 +86,10 @@ export function ImageUpload({ user, value, onChange }: ImageUploadProps) {
           imageStyle={styles.image}
           userId={user?.userId || ''}
           shouldRedirectToUserProfile={false}
-          uri={getFileUrlWithSize(value?.fileUrl || user?.avatar?.fileUrl)}
+          // Pass the raw fileUrl — Avatar.User applies fileUrlWithSize itself.
+          // Pre-sizing here double-applies the size param and yields a broken
+          // URL, so the image fails to load.
+          uri={value?.fileUrl || user?.avatar?.fileUrl}
         />
         <View style={styles.iconContainer}>
           {progress > 0 ? (

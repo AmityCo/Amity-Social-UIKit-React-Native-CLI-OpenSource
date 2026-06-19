@@ -1,9 +1,14 @@
-import { navigate } from '@amityco/react-native-social-uikit';
+import {
+  AmityUiKitProvider,
+  AmityUiKitSocial,
+  navigate,
+} from '@amityco/react-native-social-uikit';
+import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
+import NetworkLogger from 'react-native-network-logger';
 import { LogBox } from 'react-native';
-import VisitorScreen from './VisitorScreen';
 
 function handleNotificationNavigation(remoteMessage: {
   data?: Record<string, any>;
@@ -43,6 +48,7 @@ LogBox.ignoreAllLogs(true);
 
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
+  const logger = false;
   const [permissionGranted, setPermissionGranted] = useState(false);
 
   useEffect(() => {
@@ -123,15 +129,18 @@ export default function App() {
   }, [permissionGranted]);
 
   if (!fcmToken) return null;
-  // Visitor-mode demo: VisitorScreen owns the AmityUiKitProvider and mounts it
-  // without a userId (anonymous visitor). When the visitor hits a gated action
-  // it shows a guidelines modal -> AmityCreateProfilePage -> signed-in newsfeed.
   return (
-    <VisitorScreen
+    <AmityUiKitProvider
+      configs={config} //put your config json object
       apiKey="YOUR_API_KEY" // Put your apiKey
       apiRegion="API_REGION" // Put your apiRegion
+      userId="USER_ID" // Put your UserId
+      displayName="DISPLAYNAME" // Put your displayName
       apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
       fcmToken={fcmToken} // android:fcm iOS:APN
-    />
+    >
+      <AmityUiKitSocial />
+      {logger && <NetworkLogger />}
+    </AmityUiKitProvider>
   );
 }

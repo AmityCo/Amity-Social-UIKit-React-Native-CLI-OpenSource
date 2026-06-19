@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useStyles } from '../styles';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,7 +37,30 @@ type CreatedUser = { userId: string; displayName: string };
 type UseCreateProfileParams = {
   userId: string;
   authToken?: string;
+  /**
+   * Optional remote avatar URL supplied by the host. Used as the avatar when
+   * the user does not pick a local photo. A locally picked image always wins.
+   * Uploaded after login via the from-URL REST endpoint.
+   */
+  defaultAvatarImageUrl?: string;
   onCreated?: (user: CreatedUser) => void;
+};
+
+type UploadedFile = { fileId?: string };
+
+// `/api/v4/images/from-url` returns the uploaded file under a single `items`
+// OBJECT (not an array): `{ items: { fileId, ... } }`. Parse defensively across
+// the shapes the API may use so the fileId is never silently dropped.
+const extractFileId = (body: any): string | undefined => {
+  const pickFromArray = (arr?: UploadedFile[]) =>
+    arr?.find((f) => f?.fileId)?.fileId;
+  if (Array.isArray(body)) return pickFromArray(body);
+  const items = body?.items;
+  return (
+    (Array.isArray(items) ? pickFromArray(items) : items?.fileId) ??
+    pickFromArray(body?.data) ??
+    body?.fileId
+  );
 };
 
 // The provider owns visitor login; this page performs the real signed-in login
@@ -48,6 +71,7 @@ type UseCreateProfileParams = {
 export const useCreateProfile = ({
   userId,
   authToken,
+  defaultAvatarImageUrl,
   onCreated,
 }: UseCreateProfileParams) => {
   const { styles, theme } = useStyles();
@@ -65,6 +89,13 @@ export const useCreateProfile = ({
     undefined
   );
   useEffect(() => () => clearTimeout(onCreatedTimer.current), []);
+
+  // True from the moment the mutation succeeds until the deferred redirect
+  // fires. react-hook-form's `isSubmitting` flips back to false as soon as the
+  // mutation resolves, which would re-enable the Save button during the
+  // ON_CREATED_DELAY window before the host swaps screens. Keep the flow locked
+  // through that gap so the user can't re-trigger submit.
+  const [isCreated, setIsCreated] = useState(false);
 
   const {
     watch,
@@ -110,12 +141,32 @@ export const useCreateProfile = ({
       await Client.login(loginParam, sessionHandler);
 
       // The avatar upload is a write, which a visitor session cannot perform.
-      // Now that login has signed the user in, upload the locally picked image
-      // and then apply the remaining profile fields (about + avatar).
+      // Now that login has signed the user in, resolve the avatar from one of
+      // two sources (a locally picked image always wins over the host-provided
+      // default URL), then apply the remaining profile fields (about + avatar).
       let avatarFileId: string | undefined;
       if (data.image?.uri) {
+        // Local file → binary multipart upload (streams to the upload host).
         const uploaded = await uploadImage({ file: data.image.uri });
         avatarFileId = uploaded?.data?.[0]?.fileId;
+      } else if (defaultAvatarImageUrl) {
+        // Remote URL → from-URL REST endpoint. This is served by the API host
+        // (client.http → apix.{region}.amity.co), NOT the binary upload host;
+        // calling it on client.upload returns 404. The access token is attached
+        // automatically now that login has resolved.
+        const client = Client.getActiveClient();
+        const { data: body } = await client.http.post(
+          '/api/v4/images/from-url',
+          { fileUrl: defaultAvatarImageUrl }
+        );
+        avatarFileId = extractFileId(body);
+        if (!avatarFileId) {
+          throw new Error(
+            `Upload image from URL succeeded but no fileId was returned: ${JSON.stringify(
+              body
+            )}`
+          );
+        }
       }
 
       // displayName is set during login; apply the remaining fields here.
@@ -131,6 +182,9 @@ export const useCreateProfile = ({
       return { userId, displayName: data.displayName || '' };
     },
     onSuccess: (createdUser) => {
+      // Lock the flow until the deferred redirect fires so Save can't be
+      // pressed again during the ON_CREATED_DELAY gap.
+      setIsCreated(true);
       // Replace the loading toast in-place (no hideToast first — a hide->show
       // double dispatch can cancel the success toast's fade-in before it shows).
       showToast({
@@ -162,6 +216,8 @@ export const useCreateProfile = ({
   });
 
   const onSubmit = async (data: CreateProfileFormValues) => {
+    // Already created and waiting to redirect — ignore any further submits.
+    if (isCreated) return;
     if (isConnected === false) {
       showToast({
         type: 'informative',
@@ -181,6 +237,7 @@ export const useCreateProfile = ({
     onSubmit,
     isValid,
     isSubmitting,
+    isCreated,
     accessibilityId,
   };
 };

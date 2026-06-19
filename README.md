@@ -78,19 +78,61 @@ Here are the steps to install ui-kit together with another React Native project.
 
 ```sh
 1. git clone https://github.com/AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource.git
-2. cd Amity-Social-Cloud-UIKit-React-Native-OpenSource
+2. cd Amity-Social-UIKit-React-Native-CLI-OpenSource
 3. yarn or npm install
 4. npm pack
 ```
 
-This step will build the app and return amityco-asc-react-native-ui-kit-x.x.x.tgz file in inside the folder
+This step will build the package and return an `amityco-react-native-social-uikit-x.x.x.tgz` file inside the folder.
 
-Then, inside another project, Copy tgz file to your application folder where you need to use ui-kit:
+Then, inside another project, copy the `.tgz` file to your application folder where you need to use ui-kit and install it:
 
 ```sh
-1. yarn add ./amity-react-native-social-ui-kit-x.x.x.tgz
-2. yarn add react-native-safe-area-context react-native-image-picker @react-native-async-storage/async-storage react-native-svg react-native-gesture-handler react-native-screens react-native-video react-native-compressor @react-native-community/netinfo @react-navigation/native \@react-navigation/native-stack @react-navigation/stack react-native-vision-camera  react-native-get-random-values react-native-fs@2.20.0 @react-native-community/datetimepicker react-native-video-controls @amityco/ts-sdk-react-native @babel/plugin-transform-export-namespace-from metro-react-native-babel-preset react-native-linear-gradient
+yarn add ./amityco-react-native-social-uikit-x.x.x.tgz
 ```
+
+Next, install the required peer dependencies. These are the packages the UIKit imports at runtime, so they must exist in your app:
+
+```sh
+yarn add \
+  @amityco/ts-sdk-react-native \
+  @babel/plugin-transform-export-namespace-from \
+  @livekit/react-native \
+  @livekit/react-native-webrtc \
+  @react-native-async-storage/async-storage \
+  @react-native-clipboard/clipboard \
+  @react-native-community/datetimepicker \
+  @react-native-community/netinfo \
+  @react-navigation/native \
+  @react-navigation/native-stack \
+  @react-navigation/stack \
+  livekit-client \
+  react-native-compressor \
+  react-native-fs \
+  react-native-gesture-handler \
+  react-native-get-random-values \
+  react-native-haptic-feedback \
+  react-native-image-picker \
+  react-native-linear-gradient \
+  react-native-modalbox \
+  react-native-safe-area-context \
+  react-native-screens \
+  react-native-svg \
+  react-native-swipe-gestures \
+  react-native-video \
+  react-native-video-controls \
+  react-native-vision-camera@4.7.3
+```
+
+> **Versions:** most packages above are unpinned — the exact version range required for each is defined in this package's `peerDependencies` (in its `package.json`), and your package manager will resolve a compatible version from there.
+>
+> **`react-native-vision-camera` must be pinned to `4.7.3`.** Newer 4.x/5.x releases migrated to Nitro Modules and require `react-native-nitro-image`, which breaks the Android build with: `Project with path ':react-native-nitro-image' could not be found`. The UIKit is built against `4.7.3`, so install exactly that version.
+
+> **Optional — push notifications.** The UIKit accepts an `fcmToken` prop and registers it for push, but it does not depend on Firebase directly. Only install these if your app wants push notifications:
+>
+> ```sh
+> yarn add @react-native-firebase/app @react-native-firebase/messaging
+> ```
 
 ### Babel Config
 
