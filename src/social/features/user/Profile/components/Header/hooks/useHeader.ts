@@ -112,24 +112,28 @@ export function useHeader(user?: Amity.User) {
 
   const navigateToRelationship = (tab: UserRelationshipTab) => {
     if (!user?.userId) return;
-    if (!isMyProfile && isPrivateNetwork && !isFollowing) {
-      showToast({
-        type: 'informative',
-        message: TOAST.USER.RELATIONSHIP.FOLLOW_TO_INTERACT,
-      });
-      return;
-    }
-    if (AmityUserProfileHeaderComponentBehavior?.goToUserRelationshipPage) {
-      AmityUserProfileHeaderComponentBehavior.goToUserRelationshipPage({
-        userId: user.userId,
-        selectedTab: tab,
-      });
-    } else {
-      navigation.push('UserRelationship', {
-        userId: user.userId,
-        selectedTab: tab,
-      });
-    }
+    handleGlobalBehavior({
+      defaultBehavior: () => {
+        if (!isMyProfile && isPrivateNetwork && !isFollowing) {
+          showToast({
+            type: 'informative',
+            message: TOAST.USER.RELATIONSHIP.FOLLOW_TO_INTERACT,
+          });
+          return;
+        }
+        if (AmityUserProfileHeaderComponentBehavior?.goToUserRelationshipPage) {
+          AmityUserProfileHeaderComponentBehavior.goToUserRelationshipPage({
+            userId: user.userId,
+            selectedTab: tab,
+          });
+        } else {
+          navigation.push('UserRelationship', {
+            userId: user.userId,
+            selectedTab: tab,
+          });
+        }
+      },
+    });
   };
 
   return {
