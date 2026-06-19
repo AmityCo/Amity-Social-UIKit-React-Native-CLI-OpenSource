@@ -3,7 +3,7 @@ import { Alert, View } from 'react-native';
 import { getCommunityById } from '../../../core/legacy/community';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useFlagPost, isModerator } from '../../hooks';
+import { useFlagPost, isModerator, useGlobalBehavior } from '../../hooks';
 import { deletePostById } from '../../../core/legacy/feed';
 import useAuth from '../../../core/hooks/useAuth';
 import globalFeedSlice from '../../../core/stores/slices/globalfeedSlice';
@@ -30,6 +30,7 @@ type PostMenuProps = {
 
 export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   const { showToast } = useToast();
+  const { handleGlobalBehavior } = useGlobalBehavior();
   const { closePoll } = useClosePoll();
   const { client } = useAuth();
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
@@ -121,7 +122,7 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
           iconProps={{ xml: report() }}
           onPress={() => {
             closeBottomSheet();
-            reportPost(postId);
+            handleGlobalBehavior({ defaultBehavior: () => reportPost(postId) });
           }}
         />
       ),
@@ -136,7 +137,9 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
           label={'Unreport post'}
           onPress={() => {
             closeBottomSheet();
-            unreportPost(postId);
+            handleGlobalBehavior({
+              defaultBehavior: () => unreportPost(postId),
+            });
           }}
         />
       ),

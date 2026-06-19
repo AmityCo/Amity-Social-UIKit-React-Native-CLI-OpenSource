@@ -35,7 +35,6 @@ import { PostMenu } from '../../../../components/PostMenu';
 import PinBadge from '../../../../elements/PinBadge';
 import AnnouncementBadge from '../../../../elements/AnnouncementBadge';
 import { Typography } from '../../../../../core/components/Typography/Typography';
-import useAuth from '../../../../../core/hooks/useAuth';
 
 type AmityPostContentComponentProps = {
   post: Amity.Post;
@@ -75,7 +74,6 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     componentId: componentId,
   });
   const styles = useStyles(themeStyles);
-  const { isVisitorOrBot } = useAuth();
   const [textPost, setTextPost] = useState<string>('');
   const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const navigation =
@@ -294,11 +292,10 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
             category === AmityPostCategory.PIN_AND_ANNOUNCEMENT) && (
             <PinBadge componentId={ComponentID.post_content} />
           )}
-          {!isVisitorOrBot &&
-            AmityPostContentComponentStyle ===
-              AmityPostContentComponentStyleEnum.feed && (
-              <PostMenu post={post} pageId={pageId} componentId={componentId} />
-            )}
+          {AmityPostContentComponentStyle ===
+            AmityPostContentComponentStyleEnum.feed && (
+            <PostMenu post={post} pageId={pageId} componentId={componentId} />
+          )}
         </Pressable>
         <View>
           <View style={styles.bodySection}>
