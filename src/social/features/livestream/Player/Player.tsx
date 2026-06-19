@@ -83,7 +83,7 @@ function AmityLiveStreamPlayerPage() {
   };
   useRoomSubscription({ room });
 
-  const { client } = useAuth();
+  const { client, isVisitorOrBot } = useAuth();
   const videoRef = useRef<any>(null);
   const isStreamEnding = useRef(false);
 
@@ -127,7 +127,7 @@ function AmityLiveStreamPlayerPage() {
   }, []);
 
   useEffect(() => {
-    if (!room?.status) return;
+    if (!room?.status || isVisitorOrBot) return;
 
     const shouldEnd =
       room.status === RoomStatus.ended ||
@@ -149,13 +149,14 @@ function AmityLiveStreamPlayerPage() {
         setVideoKey((prev) => prev + 1);
       }, 50);
     }
-  }, [room?.status, wasLive]);
+  }, [room?.status, wasLive, isVisitorOrBot]);
 
   useEffect(() => {
+    if (isVisitorOrBot) return;
     if (room?.status === RoomStatus.terminated) {
       navigation.replace('LivestreamTerminated', { type: 'viewer' });
     }
-  }, [room?.status, navigation]);
+  }, [room?.status, navigation, isVisitorOrBot]);
 
   const showControlsTemporarily = useCallback(() => {
     setShowControls(true);
@@ -171,9 +172,10 @@ function AmityLiveStreamPlayerPage() {
   }, [showControlsTemporarily]);
 
   const shouldShowEndThumbnail =
-    room?.status === RoomStatus.ended ||
-    (room?.status === RoomStatus.recorded && wasLive) ||
-    (room as any)?.user?.isGlobalBan;
+    !isVisitorOrBot &&
+    (room?.status === RoomStatus.ended ||
+      (room?.status === RoomStatus.recorded && wasLive) ||
+      (room as any)?.user?.isGlobalBan);
 
   if (!room || error) {
     return (
@@ -246,6 +248,7 @@ function AmityLiveStreamPlayerPage() {
                     setIsPaused(false);
                   }
                 }}
+                onEnd={() => setIsPaused(true)}
               />
             )}
 
