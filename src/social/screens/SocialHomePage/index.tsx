@@ -81,6 +81,10 @@ const AmitySocialHomePage = () => {
     display: activeTab === tab ? ('flex' as const) : ('none' as const),
   });
 
+  const tabNames = isVisitorOrBot
+    ? [exploreTab]
+    : [newsFeedTab, exploreTab, myCommunitiesTab, PROFILE_TAB];
+
   return (
     <SafeAreaView
       testID="social_home_page"
@@ -89,15 +93,13 @@ const AmitySocialHomePage = () => {
       style={styles.container}
     >
       <AmitySocialHomeTopNavigationComponent activeTab={activeTab} />
-      <CustomSocialTab
-        activeTab={activeTab}
-        onTabChange={onTabChange}
-        tabNames={
-          isVisitorOrBot
-            ? [exploreTab]
-            : [newsFeedTab, exploreTab, myCommunitiesTab, PROFILE_TAB]
-        }
-      />
+      {tabNames.length > 1 && (
+        <CustomSocialTab
+          activeTab={activeTab}
+          onTabChange={onTabChange}
+          tabNames={tabNames}
+        />
+      )}
       <Divider />
       {!isVisitorOrBot && (
         <View style={tabStyle(newsFeedTab)}>
