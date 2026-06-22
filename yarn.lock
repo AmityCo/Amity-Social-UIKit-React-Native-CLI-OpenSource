@@ -10000,7 +10000,7 @@ react-native-video@^6.18.0:
   resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-6.18.0.tgz#2f8fc0fff27e270f592e5a15a05972f88b20e8b0"
   integrity sha512-9BjAtAh1uGq6h/GNCCh5yzb/iI9qJHuflwNGExyhoUxbhPD1s+15h+CdpJ2MKKJTXw6J7w+nQOp1Ywa54R8w7Q==
 
-react-native-vision-camera@^4.7.3:
+react-native-vision-camera@4.7.3:
   version "4.7.3"
   resolved "https://registry.yarnpkg.com/react-native-vision-camera/-/react-native-vision-camera-4.7.3.tgz#ed03cedabcaec54774f5aa40e69afa30069924d4"
   integrity sha512-g1/neOyjSqn1kaAa2FxI/qp5KzNvPcF0bnQw6NntfbxH6tm0+8WFZszlgb5OV+iYlB6lFUztCbDtyz5IpL47OA==
