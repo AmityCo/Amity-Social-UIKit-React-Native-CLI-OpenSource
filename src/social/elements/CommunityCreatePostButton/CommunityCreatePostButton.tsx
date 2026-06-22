@@ -16,8 +16,14 @@ function CommunityCreatePostButton({
   ...props
 }: CommunityCreatePostButtonProps) {
   const elementId = ElementID.community_create_post_button;
-  const { themeStyles } = useAmityElement({ pageId, componentId, elementId });
+  const { themeStyles, isExcluded } = useAmityElement({
+    pageId,
+    componentId,
+    elementId,
+  });
   const styles = useStyles(themeStyles);
+
+  if (isExcluded) return null;
 
   return (
     <TouchableOpacity
