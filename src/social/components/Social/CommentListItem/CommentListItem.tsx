@@ -291,7 +291,7 @@ const CommentListItem = ({
     onClickReply && onClickReply(user, commentId);
   };
 
-  const { handleInteraction, isVisitorOrBot } = useInteractionBehavior();
+  const { handleInteraction } = useInteractionBehavior();
 
   const onPressLike = () =>
     handleInteraction({
@@ -377,15 +377,13 @@ const CommentListItem = ({
                   Reply
                 </Typography.CaptionBold>
               </TouchableOpacity>
-              {!isVisitorOrBot && (
-                <TouchableOpacity onPress={openModal}>
-                  <SvgXml
-                    xml={threeDots(theme.colors.baseShade2)}
-                    width="20"
-                    height="20"
-                  />
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity onPress={openModal}>
+                <SvgXml
+                  xml={threeDots(theme.colors.baseShade2)}
+                  width="20"
+                  height="20"
+                />
+              </TouchableOpacity>
             </View>
 
             {likeReaction > 0 && (
@@ -435,10 +433,10 @@ const CommentListItem = ({
               style={styles.viewMoreReplyBtn}
             >
               <SvgXml xml={expandIcon} />
-              <Typography.CaptionBold style={styles.viewMoreText}>
+              <Text style={styles.viewMoreText}>
                 View {childrenNumber}{' '}
                 {childrenNumber === 1 ? 'reply' : 'replies'}
-              </Typography.CaptionBold>
+              </Text>
             </TouchableOpacity>
           )}
 
@@ -448,9 +446,7 @@ const CommentListItem = ({
               style={styles.viewMoreReplyBtn}
             >
               <SvgXml xml={expandIcon} />
-              <Typography.CaptionBold style={styles.viewMoreText}>
-                View more replies
-              </Typography.CaptionBold>
+              <Text style={styles.viewMoreText}>View more replies</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -504,7 +500,13 @@ const CommentListItem = ({
               </View>
             ) : (
               <TouchableOpacity
-                onPress={reportCommentObject}
+                onPress={() => {
+                  closeModal();
+                  handleInteraction({
+                    defaultBehavior: reportCommentObject,
+                    allowNonMember: true,
+                  });
+                }}
                 style={styles.modalRow}
               >
                 <SvgXml

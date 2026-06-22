@@ -315,7 +315,7 @@ const CommentListItem = ({
     onClickReply && onClickReply(user, commentId);
   };
 
-  const { handleGlobalBehavior, isVisitorOrBot } = useGlobalBehavior();
+  const { handleGlobalBehavior } = useGlobalBehavior();
 
   const onPressLike = () =>
     handleGlobalBehavior({ defaultBehavior: addReactionToComment });
@@ -415,18 +415,13 @@ const CommentListItem = ({
                 <TouchableOpacity onPress={onPressReply} style={styles.likeBtn}>
                   <Text style={styles.btnText}>Reply</Text>
                 </TouchableOpacity>
-                {!isVisitorOrBot && (
-                  <TouchableOpacity
-                    onPress={openModal}
-                    style={styles.threeDots}
-                  >
-                    <SvgXml
-                      xml={threeDots(theme.colors.base)}
-                      width="20"
-                      height="16"
-                    />
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity onPress={openModal} style={styles.threeDots}>
+                  <SvgXml
+                    xml={threeDots(theme.colors.base)}
+                    width="20"
+                    height="16"
+                  />
+                </TouchableOpacity>
               </View>
 
               {likeReaction > 0 && (
@@ -539,7 +534,12 @@ const CommentListItem = ({
               </View>
             ) : (
               <TouchableOpacity
-                onPress={reportCommentObject}
+                onPress={() => {
+                  closeModal();
+                  handleGlobalBehavior({
+                    defaultBehavior: reportCommentObject,
+                  });
+                }}
                 style={styles.modalRow}
               >
                 <SvgXml

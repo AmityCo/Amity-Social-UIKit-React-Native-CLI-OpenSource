@@ -6,6 +6,14 @@ export const useStyles = () => {
   const theme = useTheme() as MyMD3Theme;
 
   const styles = StyleSheet.create({
+    handleBar: {
+      alignSelf: 'center',
+      width: 36,
+      backgroundColor: theme.colors.baseShade4,
+      height: 5,
+      marginVertical: 10,
+      borderRadius: 10,
+    },
     commentWrap: {
       backgroundColor: theme.colors.background,
       paddingHorizontal: 12,
