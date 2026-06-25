@@ -89,6 +89,7 @@ export const ERROR_CODE = {
   ONLY_ONE_MEMBER: '400318',
   GLOBAL_BAN: '400312',
   VISITOR_USAGE_LIMIT_EXCEEDED: '400323',
+  RATE_LIMIT: '429000',
   INVALID_IMAGE:
     'Amity SDK (500000): Image uploading failed: Request has invalid image format',
   DISPLAY_NAME_UPDATE: '400301',

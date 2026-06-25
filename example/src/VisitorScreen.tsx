@@ -195,7 +195,7 @@ export default function VisitorScreen({
               userId={signupUserId} // identity used for the signed-in login on save
               // Host-provided default avatar. Shown when the user doesn't pick a
               // photo, and uploaded via the from-URL endpoint on save.
-              defaultAvatarImageUrl="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop"
+
               onCreated={({ userId, displayName }) => {
                 // Save succeeded. The page already ran Client.login internally;
                 // passing the returned userId + displayName to the provider

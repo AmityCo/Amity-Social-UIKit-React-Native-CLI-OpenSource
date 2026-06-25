@@ -1,11 +1,13 @@
 import { FileRepository } from '@amityco/ts-sdk-react-native';
 
 export const isValidImageType = (mimeType: string | undefined): boolean => {
-  if (!mimeType) return false;
+  // Some Android pickers/cameras return no MIME or a non-JPEG/PNG image type
+  // (e.g. image/heic, image/webp). Treat a missing MIME as acceptable (let the
+  // upload host validate it) and accept any image/* type, so a valid photo is
+  // never silently dropped by client-side validation.
+  if (!mimeType) return true;
 
-  const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-
-  return validTypes.includes(mimeType.toLowerCase());
+  return mimeType.toLowerCase().startsWith('image/');
 };
 
 export const getFileUrlWithSize = (

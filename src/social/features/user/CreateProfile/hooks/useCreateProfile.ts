@@ -208,6 +208,13 @@ export const useCreateProfile = ({
         });
         return;
       }
+      if (error.message?.includes(ERROR_CODE.RATE_LIMIT)) {
+        showToast({
+          type: 'informative',
+          message: 'Too many requests. Please wait a moment and try again.',
+        });
+        return;
+      }
       showToast({
         type: 'informative',
         message: 'Failed to save your profile. Please try again.',
@@ -225,7 +232,15 @@ export const useCreateProfile = ({
       });
       return;
     }
-    await mutateAsync(data);
+    // Swallow the rejection here: the failure is already surfaced to the user
+    // via the mutation's onError toast (rate limit / upload / network errors).
+    // Without this catch the rejected promise escapes as an uncaught promise
+    // rejection and crashes to a red-box in dev builds.
+    try {
+      await mutateAsync(data);
+    } catch {
+      // handled in onError
+    }
   };
 
   return {

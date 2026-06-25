@@ -1,7 +1,8 @@
 import { FileRepository } from '@amityco/ts-sdk-react-native';
-import { Alert, Platform } from 'react-native';
+import { Alert } from 'react-native';
 import { useMutation } from '@tanstack/react-query';
 import { ERROR_CODE } from '../constants';
+import { appendFileToFormData } from '../utils/fileUpload';
 
 type UploadImageResponse = Awaited<
   ReturnType<typeof FileRepository.uploadImage>
@@ -39,14 +40,11 @@ export function useUpload() {
     const formData = new FormData();
     const parts = file.split('/');
     const fileName = parts[parts.length - 1];
-    const fileType = Platform.OS === 'ios' ? 'image/jpeg' : 'image/jpg';
-    const uri = Platform.OS === 'android' ? file : file.replace('file://', '');
 
-    formData.append('files', {
-      name: fileName,
-      type: fileType,
-      uri: uri,
-    });
+    // Attach the file as a React-Native { uri, name, type } multipart part.
+    // This works on both the Old and New (Bridgeless) Architecture and is what
+    // the SDK's uploadImage expects (it reads files[0].name for preferredFilename).
+    appendFileToFormData(formData, 'files', file, fileName, 'image/jpeg');
 
     return await mutateAsync(
       {
