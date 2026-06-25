@@ -41,10 +41,10 @@ export function useUpload() {
     const parts = file.split('/');
     const fileName = parts[parts.length - 1];
 
-    // Use appendFileToFormData for New Architecture (RN ≥ 0.73 Bridgeless)
-    // compatibility. The legacy { uri, name, type } plain-object pattern no
-    // longer works in New Arch — we read the file into a real Blob via fetch().
-    await appendFileToFormData(formData, 'files', file, fileName, 'image/jpeg');
+    // Attach the file as a React-Native { uri, name, type } multipart part.
+    // This works on both the Old and New (Bridgeless) Architecture and is what
+    // the SDK's uploadImage expects (it reads files[0].name for preferredFilename).
+    appendFileToFormData(formData, 'files', file, fileName, 'image/jpeg');
 
     return await mutateAsync(
       {

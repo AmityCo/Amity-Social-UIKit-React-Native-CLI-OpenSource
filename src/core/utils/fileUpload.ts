@@ -1,69 +1,60 @@
 /**
  * fileUpload.ts
  *
- * New-Architecture-compatible helper for attaching local files to a FormData.
+ * Helper for attaching a local file to a FormData for upload to the Amity SDK.
  *
- * Background
- * ----------
- * In React Native ≤ 0.82 (Old Architecture) you could pass a plain object
- * `{ uri, name, type }` to `FormData.append()` and the bridge would convert it
- * into a proper multipart file part automatically.
+ * Why the `{ uri, name, type }` object (and NOT a Blob)
+ * -----------------------------------------------------
+ * React Native's `FormData.getParts()` only turns a value into a multipart
+ * *file* part when that value is an object carrying a `uri`:
  *
- * React Native 0.73+ New Architecture (Bridgeless / JSI) removed that implicit
- * conversion.  Passing the plain object now results in one of:
- *   • `TypeError: formData.get is not a function`  (axios ≥ 1 checks for this)
- *   • The upload body being sent without file bytes
+ *   • `name` → the `filename` in the `Content-Disposition` header
+ *   • `type` → the part's `Content-Type`
+ *   • `uri`  → the local path the native networking layer streams bytes from
  *
- * Fix: use the standard `fetch()` API to open the local URI and read it into a
- * real `Blob`, then append that Blob.  This works on both Old and New
- * Architecture, and handles `file://` (iOS & Android) and `content://`
- * (Android) URIs.
+ * This is the canonical React Native upload pattern and works on BOTH the Old
+ * and the New (Bridgeless / JSI) Architecture — RN 0.83 did not change this JS
+ * API. The Amity SDK's `uploadImage` is built around it too: it calls
+ * `formData.getAll('files')` and reads `files[0].name` to set
+ * `preferredFilename`.
+ *
+ * Do NOT append a Blob here. A Blob produced by `fetch(uri).blob()` has:
+ *   • no `uri`            → RN attaches no file body, so the request carries no
+ *                           bytes and the server responds `400 "No files
+ *                           uploaded."`
+ *   • no top-level `name` → `files[0].name` is `null`, so `preferredFilename`
+ *                           is sent as `null`.
+ * That combination is exactly the failure seen in PDT-3461.
  */
 
+import { Platform } from 'react-native';
+
 /**
- * Append a local file to `formData` in a New-Architecture-safe way.
+ * Append a local file to `formData` as a React-Native multipart file part.
  *
  * @param formData   The FormData instance to mutate.
  * @param fieldName  The multipart field name (e.g. `'files'`).
  * @param fileUri    Local file URI (`file://…` or `content://…`).
- *                   If the scheme is absent it is assumed to be a bare iOS
- *                   path and `file://` is prepended automatically.
  * @param fileName   The filename sent in the Content-Disposition header.
  * @param mimeType   MIME type for the part (e.g. `'image/jpeg'`).
- *                   Used as a fallback when the Blob has no type or reports
- *                   `application/octet-stream`.
  */
-export async function appendFileToFormData(
+export function appendFileToFormData(
   formData: FormData,
   fieldName: string,
   fileUri: string,
   fileName: string,
   mimeType: string
-): Promise<void> {
-  // Normalise the URI so fetch() can handle it on both platforms.
-  // iOS image-picker returns bare paths after stripping "file://" in old code;
-  // re-attach the scheme here so fetch() knows to read a local file.
-  const normalizedUri =
-    fileUri.startsWith('file://') || fileUri.startsWith('content://')
-      ? fileUri
-      : `file://${fileUri}`;
+): void {
+  // Android keeps the URI as-is (`content://` / `file://` are both streamable);
+  // iOS expects the `file://` scheme stripped to a bare path.
+  const uri =
+    Platform.OS === 'android' ? fileUri : fileUri.replace('file://', '');
 
-  const response = await fetch(normalizedUri);
-  const blob = await response.blob();
-
-  // RN's fetch() sometimes returns 'application/octet-stream' for local files
-  // even when the file is an image/video.  Override with the caller-supplied
-  // MIME type so the server receives the correct Content-Type for the part.
-  //
-  // Type notes:
-  //  • RN's BlobOptions requires `lastModified` — we supply Date.now().
-  //  • RN's FormData.append is typed for the legacy `{ uri, name, type }` object
-  //    and doesn't accept Blob as a second argument; we cast to `any` here.
-  //    At runtime, RN's networking layer handles Blob values correctly.
-  const typedBlob =
-    blob.type && blob.type !== 'application/octet-stream'
-      ? blob
-      : new Blob([blob], { type: mimeType, lastModified: Date.now() });
-
-  (formData as any).append(fieldName, typedBlob, fileName);
+  // RN's FormData.append is typed for the legacy `{ uri, name, type }` object
+  // but its TS types don't expose that overload, so we cast to `any`.
+  formData.append(fieldName, {
+    uri,
+    name: fileName,
+    type: mimeType,
+  } as any);
 }
