@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/compare/v4.0.0...v4.0.1) (2026-06-25)
+
+### Bug Fixes
+
+- upload image ([3a666f2](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/3a666f27beccb405c2d6b285a7549b006b02ae8c))
+- upload image ([dc0bb90](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/dc0bb909fc779fe5f6daa12ace07c2ade05ed9a4))
+
 ## [4.0.0](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/compare/v4.0.0-RC.24...v4.0.0) (2026-06-12)
 
 ### Features
