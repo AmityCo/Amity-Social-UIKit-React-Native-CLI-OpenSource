@@ -94,13 +94,15 @@ const AmitySocialHomePage = () => {
     >
       <AmitySocialHomeTopNavigationComponent activeTab={activeTab} />
       {tabNames.length > 1 && (
-        <CustomSocialTab
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-          tabNames={tabNames}
-        />
+        <>
+          <CustomSocialTab
+            activeTab={activeTab}
+            onTabChange={onTabChange}
+            tabNames={tabNames}
+          />
+          <Divider />
+        </>
       )}
-      <Divider />
       {!isVisitorOrBot && (
         <View style={tabStyle(newsFeedTab)}>
           <AmityNewsFeedComponent
