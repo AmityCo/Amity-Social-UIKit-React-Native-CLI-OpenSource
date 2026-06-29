@@ -1,6 +1,6 @@
 {
   "name": "@amityco/react-native-social-uikit",
-  "version": "4.0.1",
+  "version": "4.0.1-beta-3",
   "description": "Social UIKit",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -57,7 +57,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@amityco/ts-sdk-react-native": "7.18.1-72bd324a.0",
+    "@amityco/ts-sdk-react-native": "7.22.1-f15e84ea.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.2.2",
@@ -101,12 +101,14 @@
     "react-native-haptic-feedback": "^2.3.3",
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
+    "react-native-modalbox": "^2.0.2",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.18.0",
     "react-native-svg": "^15.15.1",
+    "react-native-swipe-gestures": "^1.0.5",
     "react-native-video": "^6.18.0",
     "react-native-video-controls": "^2.8.1",
-    "react-native-vision-camera": "^4.7.3",
+    "react-native-vision-camera": "4.7.3",
     "release-it": "^15.0.0",
     "turbo": "^1.10.7",
     "typescript": "^5.8.3"
@@ -119,11 +121,12 @@
     "@types/react": "^19.1.0"
   },
   "peerDependencies": {
-    "@amityco/ts-sdk-react-native": "7.18.1-72bd324a.0",
+    "@amityco/ts-sdk-react-native": "7.22.1-f15e84ea.0",
     "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-clipboard/clipboard": "^1.16.3",
+    "@react-native-community/datetimepicker": "^8.4.4",
     "@react-native-community/netinfo": "^11.3.1",
     "@react-native-firebase/app": "^20.1.0",
     "@react-native-firebase/messaging": "^20.1.0",
@@ -140,12 +143,14 @@
     "react-native-haptic-feedback": "^2.3.3",
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
-    "react-native-netinfo": "^1.1.0",
+    "react-native-modalbox": "^2.0.2",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.18.0",
     "react-native-svg": "^15.15.1",
+    "react-native-swipe-gestures": "^1.0.5",
     "react-native-video": "^6.18.0",
-    "react-native-vision-camera": "^4.7.3"
+    "react-native-video-controls": "^2.8.1",
+    "react-native-vision-camera": "4.7.3"
   },
   "engines": {
     "node": ">=20"

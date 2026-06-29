@@ -1,9 +1,5 @@
-import {
-  AmityUiKitProvider,
-  AmityUiKitSocial,
-  navigate,
-} from '@amityco/react-native-social-uikit';
-import config from '../uikit.config.json';
+import { navigate } from '@amityco/react-native-social-uikit';
+import VisitorScreen from './VisitorScreen';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
@@ -130,17 +126,16 @@ export default function App() {
 
   if (!fcmToken) return null;
   return (
-    <AmityUiKitProvider
-      configs={config} //put your config json object
-      apiKey="YOUR_API_KEY" // Put your apiKey
-      apiRegion="API_REGION" // Put your apiRegion
-      userId="USER_ID" // Put your UserId
-      displayName="DISPLAYNAME" // Put your displayName
-      apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
-      fcmToken={fcmToken} // android:fcm iOS:APN
-    >
-      <AmityUiKitSocial />
+    <>
+      <VisitorScreen
+        apiKey="YOUR_API_KEY" // Put your apiKey
+        apiRegion="API_REGION" // Put your apiRegion
+        signupUserId="USER_ID" // Put your UserId
+        apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
+        fcmToken={fcmToken} // android:fcm iOS:APN
+      />
       {logger && <NetworkLogger />}
-    </AmityUiKitProvider>
+    </>
   );
 }
+

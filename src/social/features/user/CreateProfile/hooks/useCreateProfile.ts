@@ -1,0 +1,308 @@
+import * as z from 'zod';
+import { useEffect, useRef, useState } from 'react';
+import { useStyles } from '../styles';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { Client, UserRepository } from '@amityco/ts-sdk-react-native';
+import { useToast } from '../../../../../core/stores/slices/toastSlice';
+import { CHARACTER_LIMIT, ERROR_CODE } from '../../../../../core/constants';
+import { PageID } from '../../../../enums';
+import { useAmityPage } from '../../../../hooks';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { useUpload } from '../../../../../core/hooks';
+
+// A visitor session is read-only, so the avatar cannot be uploaded while the
+// page is shown (still a visitor). Instead we hold the locally picked image
+// (just its uri) and upload it AFTER Client.login signs the user in.
+export type LocalImage = { uri: string };
+
+// The success toast is hosted inside this page's tree. onCreated typically
+// tears that tree down (host swaps to the signed-in app), which would unmount
+// the toast before it finishes fading in. Defer onCreated so the success toast
+// stays visible across the transition. Sized to the toast fade-in + a brief
+// display window.
+const ON_CREATED_DELAY = 800;
+
+const schema = z.object({
+  image: z.custom<LocalImage>().nullish(),
+  displayName: z.string().min(1).max(CHARACTER_LIMIT.USER_DISPLAY_NAME),
+  description: z.string().max(CHARACTER_LIMIT.USER_DESCRIPTION).optional(),
+});
+
+export type CreateProfileFormValues = z.infer<typeof schema>;
+
+export type CreatedUser = {
+  userId: string;
+  displayName: string;
+  /** The about/description text the user entered, if any. */
+  about?: string;
+  /** The uploaded avatar's file URL, if an avatar was set. */
+  imageUrl?: string;
+};
+
+/** The profile data passed to `generateUserId` so the host can mint/create an
+ * account record matching what the user entered. */
+export type GenerateUserIdInput = { displayName: string; about?: string };
+
+type UseCreateProfileParams = {
+  /**
+   * Static userId to create / sign in as. Provide this OR `generateUserId`.
+   */
+  userId?: string;
+  /**
+   * Called on Save (before login) to obtain the userId — use when the host
+   * generates the userId from its own API at create time rather than knowing
+   * it up front. Receives the entered profile data. Whatever it resolves is
+   * used for the signed-in login and profile update. Provide this OR `userId`.
+   */
+  generateUserId?: (input: GenerateUserIdInput) => Promise<string> | string;
+  authToken?: string;
+  /**
+   * Optional remote avatar URL supplied by the host. Used as the avatar when
+   * the user does not pick a local photo. A locally picked image always wins.
+   * Uploaded after login via the from-URL REST endpoint.
+   */
+  defaultAvatarImageUrl?: string;
+  onCreated?: (user: CreatedUser) => void;
+};
+
+type UploadedFile = { fileId?: string; fileUrl?: string };
+
+// `/api/v4/images/from-url` returns the uploaded file under a single `items`
+// OBJECT (not an array): `{ items: { fileId, ... } }`. Parse defensively across
+// the shapes the API may use so the uploaded file is never silently dropped.
+const extractUploadedFile = (body: any): UploadedFile | undefined => {
+  const pickFromArray = (arr?: UploadedFile[]) => arr?.find((f) => f?.fileId);
+  if (Array.isArray(body)) return pickFromArray(body);
+  const items = body?.items;
+  return (
+    (Array.isArray(items)
+      ? pickFromArray(items)
+      : items?.fileId
+      ? items
+      : undefined) ??
+    pickFromArray(body?.data) ??
+    (body?.fileId ? body : undefined)
+  );
+};
+
+// The provider owns visitor login; this page performs the real signed-in login
+// itself on save (mirroring the Web UIKit's CreateUserProfilePage). Logging in
+// with a userId creates the user on the network if it does not exist yet and
+// sets the initial display name — the visitor -> signed-in transition. The host
+// then settles the session by passing the returned userId to the provider.
+export const useCreateProfile = ({
+  userId,
+  generateUserId,
+  authToken,
+  defaultAvatarImageUrl,
+  onCreated,
+}: UseCreateProfileParams) => {
+  const { styles, theme } = useStyles();
+  const { accessibilityId } = useAmityPage({
+    pageId: PageID.create_user_profile_page,
+  });
+
+  const { showToast, hideToast } = useToast();
+  const { isConnected } = useNetInfo();
+  const { uploadImage } = useUpload();
+
+  // Tracks the deferred onCreated call so it can be cleared if the page
+  // unmounts before it fires.
+  const onCreatedTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+  useEffect(() => () => clearTimeout(onCreatedTimer.current), []);
+
+  // True from the moment the mutation succeeds until the deferred redirect
+  // fires. react-hook-form's `isSubmitting` flips back to false as soon as the
+  // mutation resolves, which would re-enable the Save button during the
+  // ON_CREATED_DELAY window before the host swaps screens. Keep the flow locked
+  // through that gap so the user can't re-trigger submit.
+  const [isCreated, setIsCreated] = useState(false);
+
+  const {
+    watch,
+    control,
+    handleSubmit,
+    formState: { isValid, isSubmitting },
+  } = useForm<CreateProfileFormValues>({
+    resolver: zodResolver(schema),
+    mode: 'onChange',
+    defaultValues: {
+      image: null,
+      displayName: '',
+      description: '',
+    },
+  });
+
+  const sessionHandler: Amity.SessionHandler = {
+    sessionWillRenewAccessToken(renewal) {
+      renewal.renew();
+    },
+  };
+
+  const { mutateAsync } = useMutation<
+    CreatedUser,
+    Error,
+    CreateProfileFormValues
+  >({
+    mutationKey: ['create-user-profile', userId],
+    onMutate: () => {
+      // Long-running toast shown while the SDK calls run, matching the loading
+      // toast used by other composers (e.g. PollPostComposer).
+      showToast({ message: 'Creating profile...', type: 'loading' });
+    },
+    mutationFn: async (data) => {
+      // Resolve the userId. The host either passes a static `userId`, or a
+      // `generateUserId` function (e.g. their own API that mints the id) which
+      // runs here — on Save, before login — so a failure surfaces through the
+      // same loading/error toast as the rest of the flow.
+      const resolvedUserId =
+        userId ??
+        (await generateUserId?.({
+          displayName: data.displayName,
+          about: data.description || undefined,
+        }));
+      if (!resolvedUserId) {
+        throw new Error(
+          'CreateProfile: no userId. Pass `userId` or a `generateUserId` that returns one.'
+        );
+      }
+
+      let loginParam: Amity.ConnectClientParams = {
+        userId: resolvedUserId,
+        displayName: data.displayName || undefined,
+      };
+      if (authToken && authToken.length > 0) {
+        loginParam = { ...loginParam, authToken };
+      }
+
+      await Client.login(loginParam, sessionHandler);
+
+      // The avatar upload is a write, which a visitor session cannot perform.
+      // Now that login has signed the user in, resolve the avatar from one of
+      // two sources (a locally picked image always wins over the host-provided
+      // default URL), then apply the remaining profile fields (about + avatar).
+      let avatarFileId: string | undefined;
+      let avatarFileUrl: string | undefined;
+      if (data.image?.uri) {
+        // Local file → binary multipart upload (streams to the upload host).
+        const uploaded = await uploadImage({ file: data.image.uri });
+        avatarFileId = uploaded?.data?.[0]?.fileId;
+        avatarFileUrl = uploaded?.data?.[0]?.fileUrl;
+      } else if (defaultAvatarImageUrl) {
+        // Remote URL → from-URL REST endpoint. This is served by the API host
+        // (client.http → apix.{region}.amity.co), NOT the binary upload host;
+        // calling it on client.upload returns 404. The access token is attached
+        // automatically now that login has resolved.
+        const client = Client.getActiveClient();
+        const { data: body } = await client.http.post(
+          '/api/v4/images/from-url',
+          { fileUrl: defaultAvatarImageUrl }
+        );
+        const uploadedFile = extractUploadedFile(body);
+        avatarFileId = uploadedFile?.fileId;
+        avatarFileUrl = uploadedFile?.fileUrl;
+        if (!avatarFileId) {
+          throw new Error(
+            `Upload image from URL succeeded but no fileId was returned: ${JSON.stringify(
+              body
+            )}`
+          );
+        }
+      }
+
+      // displayName is set during login; apply the remaining fields here.
+      const payload: Parameters<typeof UserRepository.updateUser>[1] = {
+        description: data.description || undefined,
+        avatarFileId,
+      };
+
+      if (payload.description != null || payload.avatarFileId != null) {
+        await UserRepository.updateUser(resolvedUserId, payload);
+      }
+
+      return {
+        userId: resolvedUserId,
+        displayName: data.displayName || '',
+        about: data.description || undefined,
+        imageUrl: avatarFileUrl,
+      };
+    },
+    onSuccess: (createdUser) => {
+      // Lock the flow until the deferred redirect fires so Save can't be
+      // pressed again during the ON_CREATED_DELAY gap.
+      setIsCreated(true);
+      // Replace the loading toast in-place (no hideToast first — a hide->show
+      // double dispatch can cancel the success toast's fade-in before it shows).
+      showToast({
+        type: 'success',
+        message: 'Successfully created your profile!',
+      });
+      // Defer the transition briefly so the toast starts showing here before the
+      // host swaps screens. The toast state is shared (Redux), so it keeps
+      // displaying on the destination (signed-in) screen too.
+      onCreatedTimer.current = setTimeout(
+        () => onCreated?.(createdUser),
+        ON_CREATED_DELAY
+      );
+    },
+    onError: (error) => {
+      hideToast();
+      if (error.message?.includes(ERROR_CODE.BLOCKED_WORD)) {
+        showToast({
+          type: 'informative',
+          message: "Your profile wasn't saved as it contains a blocked word.",
+        });
+        return;
+      }
+      if (error.message?.includes(ERROR_CODE.RATE_LIMIT)) {
+        showToast({
+          type: 'informative',
+          message: 'Too many requests. Please wait a moment and try again.',
+        });
+        return;
+      }
+      showToast({
+        type: 'informative',
+        message: 'Failed to save your profile. Please try again.',
+      });
+    },
+  });
+
+  const onSubmit = async (data: CreateProfileFormValues) => {
+    // Already created and waiting to redirect — ignore any further submits.
+    if (isCreated) return;
+    if (isConnected === false) {
+      showToast({
+        type: 'informative',
+        message: 'Failed to save your profile. Please try again.',
+      });
+      return;
+    }
+    // Swallow the rejection here: the failure is already surfaced to the user
+    // via the mutation's onError toast (rate limit / upload / network errors).
+    // Without this catch the rejected promise escapes as an uncaught promise
+    // rejection and crashes to a red-box in dev builds.
+    try {
+      await mutateAsync(data);
+    } catch {
+      // handled in onError
+    }
+  };
+
+  return {
+    styles,
+    theme,
+    watch,
+    control,
+    handleSubmit,
+    onSubmit,
+    isValid,
+    isSubmitting,
+    isCreated,
+    accessibilityId,
+  };
+};

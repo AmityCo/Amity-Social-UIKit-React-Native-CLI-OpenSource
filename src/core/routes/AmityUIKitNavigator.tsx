@@ -1,7 +1,9 @@
+import { useEffect, useRef } from 'react';
 import {
   NavigationContainer,
   NavigationIndependentTree,
 } from '@react-navigation/native';
+import { View } from 'react-native';
 import { navigationRef, onNavigationReady } from './navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
@@ -43,6 +45,8 @@ import { CommunityStoriesNotificationSettingScreen } from '../../social/screens/
 import { CommunityLivestreamsNotificationSettingScreen } from '../../social/screens/CommunityLivestreamsNotificationSetting';
 import CommunityPendingRequest from '../../social/screens/CommunityPendingRequest';
 import { GlobalBan } from '../../social/screens/GlobalBan';
+import { VisitorUsageLimit } from '../../social/screens/VisitorUsageLimit';
+import { useBehaviour } from '../../social/providers/BehaviourProvider';
 import {
   ImageViewerScreen,
   VideoPlayerScreen,
@@ -60,9 +64,42 @@ const Stack = createNativeStackNavigator<
 
 export default function AmitySocialUIKitV4Navigator() {
   const theme = useTheme<MyMD3Theme>();
-  const { isGlobalBan } = useAuth();
+  const { isGlobalBan, isVisitorUsageLimitReached, isConnected } = useAuth();
+  const { AmityGlobalBehavior } = useBehaviour();
+
+  const handleVisitorUsageLimitReached =
+    AmityGlobalBehavior?.handleVisitorUsageLimitReached;
+  const hasHandledUsageLimit = useRef(false);
+
+  useEffect(() => {
+    if (!isVisitorUsageLimitReached) {
+      hasHandledUsageLimit.current = false;
+      return;
+    }
+    // Customer override replaces the default full-page swap; guard so rapid
+    // repeat events trigger a single navigation.
+    if (handleVisitorUsageLimitReached && !hasHandledUsageLimit.current) {
+      hasHandledUsageLimit.current = true;
+      handleVisitorUsageLimitReached();
+    }
+  }, [isVisitorUsageLimitReached, handleVisitorUsageLimitReached]);
 
   if (isGlobalBan) return <GlobalBan />;
+
+  // Wait for the session to establish before mounting the home page. Until then
+  // isVisitorOrBot is unknown (defaults to false), so rendering now would flash
+  // the full signed-in UIKit for a frame before resolving to visitor mode.
+  if (!isConnected) {
+    return (
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }} />
+    );
+  }
+
+  // Default usage-limit handling: replace the whole navigation tree with the
+  // dead-end error page so back-navigation cannot escape it.
+  if (isVisitorUsageLimitReached && !handleVisitorUsageLimitReached) {
+    return <VisitorUsageLimit />;
+  }
 
   return (
     <NavigationIndependentTree>

@@ -2,6 +2,7 @@ export { default as AmityCreateStoryPage } from './features/story/Create';
 export { default as AmityDraftStoryPage } from './features/story/Draft/Draft';
 export { default as AmityViewStoryPage } from './features/story/View/View';
 export { default as AmitySocialHomePage } from './screens/SocialHomePage';
+export { VisitorUsageLimit } from './screens/VisitorUsageLimit';
 export { default as AmitySocialGlobalSearchPage } from './screens/SocialGlobalSearch';
 export { default as AmityPostDetailPage } from './features/post/Detail';
 export { default as AmityPostTargetSelectionPage } from './features/post/TargetSelection';
@@ -22,6 +23,7 @@ export { default as AmityLivestreamPlayerPage } from './features/livestream/Play
 export {
   UserRelationshipScreen as AmityUserRelationshipPage,
   EditUserScreen as AmityEditUserProfilePage,
+  CreateUserProfileScreen as AmityCreateProfilePage,
   UserProfileScreen as AmityUserProfilePage,
   BlockedUsersScreen as AmityBlockedUsersPage,
   UserPendingFollowRequests as AmityUserPendingFollowRequestsPage,

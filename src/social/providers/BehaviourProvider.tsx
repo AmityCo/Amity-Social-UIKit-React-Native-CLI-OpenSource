@@ -14,6 +14,7 @@ export const BehaviourProvider = ({
 }: IBehavioudProviderProps) => {
   const defaultBehaviour = useMemo(
     () => ({
+      AmityGlobalBehavior: {},
       AmitySocialHomePageBehaviour: {},
       AmityGlobalFeedComponentBehavior: {},
       AmityPostContentComponentBehavior: {},

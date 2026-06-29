@@ -22,6 +22,7 @@ import { useTheme } from 'react-native-paper';
 import PostTypeChoiceModal from '../../social/components/legacy/PostTypeChoiceModal/PostTypeChoiceModal';
 import CreateStoryScreen from '../../social/screens/CreateStory/CreateStoryScreen';
 import Toast from '../../social/components/legacy/Toast/Toast';
+import SnackbarToast from '../../social/components/Toast';
 import AmitySocialGlobalSearchPage from '../../social/screens/SocialGlobalSearch';
 import AmityMyCommunitiesSearchPage from '../../social/screens/MyCommunitiesSearch';
 import PostTargetSelection from '../../social/screens/PostTargetSelection';
@@ -89,6 +90,13 @@ export default function PageRenderer({ children }: PageRendererProps) {
             />
             <Stack.Screen
               name="AmityPostEngagementContentComponent"
+              children={() => children}
+            />
+            {/* Prop-driven page (e.g. AmityCreateProfilePage) rendered directly
+                by the host. The component's displayName resolves to this route
+                so it can be the navigator's initialRouteName. */}
+            <Stack.Screen
+              name="AmityCreateUserProfilePage"
               children={() => children}
             />
 
@@ -251,6 +259,9 @@ export default function PageRenderer({ children }: PageRendererProps) {
         )}
         <PostTypeChoiceModal />
         <Toast />
+        {/* Redux toastSlice renderer (useToast). The legacy Toast above reads a
+            different slice (state.ui), so pages using useToast need this. */}
+        <SnackbarToast />
       </NavigationContainer>
     </NavigationIndependentTree>
   );

@@ -21,6 +21,12 @@ import { getFileUrlWithSize } from '../../utils';
 import { useUser } from '../../hooks/objects/user/useUser';
 import { FileRepository } from '@amityco/ts-sdk-react-native';
 
+// Amity file URLs are served from the Amity file/upload hosts; only these can
+// be rewritten by `fileUrlWithSize`. Any other URL (e.g. a host-provided
+// default avatar pointing at a third-party CDN) must be used verbatim.
+const isAmityFileUrl = (url: string): boolean =>
+  /\.amity\.(co|io)\b/i.test(url);
+
 type AvatarProps = {
   uri?: string;
   imageProps: Omit<ImageProps, 'source'>;
@@ -147,7 +153,12 @@ function UserAvatar({
   const resolvedUri = useMemo(() => {
     const url = uri ?? user?.avatarCustomUrl ?? user?.avatar?.fileUrl;
     if (!url) return undefined;
-    return FileRepository.fileUrlWithSize(url, 'small');
+    // `fileUrlWithSize` rewrites Amity file URLs to request a sized variant.
+    // It mangles arbitrary external URLs (e.g. a host-provided default avatar),
+    // so only apply it to Amity file URLs and pass any other URL through as-is.
+    return isAmityFileUrl(url)
+      ? FileRepository.fileUrlWithSize(url, 'small')
+      : url;
   }, [uri, user?.avatarCustomUrl, user?.avatar?.fileUrl]);
 
   const resolvedName = userName ?? user?.displayName ?? user?.userId;

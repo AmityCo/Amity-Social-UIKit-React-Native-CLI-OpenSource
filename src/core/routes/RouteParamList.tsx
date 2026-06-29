@@ -140,6 +140,10 @@ export type RootStackParamList = {
     userId: string;
   };
 
+  // Prop-driven page rendered via AmityPageRenderer (no route params). The
+  // route only exists so the renderer can register a pass-through screen.
+  AmityCreateUserProfilePage: undefined;
+
   UserRelationship: {
     userId: string;
     selectedTab?: UserRelationshipTab;

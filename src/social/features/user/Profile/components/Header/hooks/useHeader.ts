@@ -8,7 +8,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../../../core/routes/RouteParamList';
 import { UserRelationshipTab } from '../../../../../../types';
 import { useBehaviour } from '../../../../../../providers/BehaviourProvider';
-import { useBlockUser } from '../../../../../../hooks';
+import { useBlockUser, useGlobalBehavior } from '../../../../../../hooks';
 import useAuth from '../../../../../../../core/hooks/useAuth';
 import { useFollowUser } from '../../../../../../hooks/queries/useFollowUser';
 import useSocialSettings from '../../../../../../../core/hooks/useSocialSettings';
@@ -31,6 +31,7 @@ export function useHeader(user?: Amity.User) {
   const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
     useBottomSheet();
   const { showToast } = useToast();
+  const { handleGlobalBehavior } = useGlobalBehavior();
   const {
     followUser,
     unfollowUser,
@@ -56,7 +57,9 @@ export function useHeader(user?: Amity.User) {
 
   const handleFollow = () => {
     if (!user?.userId) return;
-    followUser(user.userId);
+    handleGlobalBehavior({
+      defaultBehavior: () => followUser(user.userId),
+    });
   };
 
   const handleUnfollow = () => {

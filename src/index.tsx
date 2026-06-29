@@ -73,8 +73,10 @@ import {
   PostDetail,
   AmityUserProfilePage,
   AmityEditUserProfilePage,
+  AmityCreateProfilePage,
   AmityUserRelationshipPage,
   AmityBlockedUsersPage,
+  VisitorUsageLimit,
 } from './social';
 
 // Polyfill for BackHandler compatibility with older libraries like react-native-modalbox
@@ -106,6 +108,7 @@ export {
   AmityUiKitProvider,
   ErrorBoundary,
   AmityUiKitSocial,
+  VisitorUsageLimit,
   AmityStoryTabComponent,
   AmityStoryTabComponentEnum,
   AmityCreateStoryPage,
@@ -141,6 +144,7 @@ export {
   PostDetail,
   AmityUserProfilePage,
   AmityEditUserProfilePage,
+  AmityCreateProfilePage,
   AmityUserRelationshipPage,
   AmityBlockedUsersPage,
   AmityAllCategoriesPage,
