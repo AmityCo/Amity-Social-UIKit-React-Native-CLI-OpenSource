@@ -196,11 +196,13 @@ export default function VisitorScreen({
               // Host-provided default avatar. Shown when the user doesn't pick a
               // photo, and uploaded via the from-URL endpoint on save.
 
-              onCreated={({ userId, displayName }) => {
+              onCreated={({ userId, displayName, about, imageUrl }) => {
                 // Save succeeded. The page already ran Client.login internally;
                 // passing the returned userId + displayName to the provider
                 // re-runs its login so the app renders as this signed-in user
-                // instead of a visitor.
+                // instead of a visitor. `about` is the entered description and
+                // `imageUrl` is the uploaded avatar's file URL, if set.
+                console.log('Profile created:', { about, imageUrl });
                 setAuthUserId(userId);
                 setAuthDisplayName(displayName);
                 setView('social');

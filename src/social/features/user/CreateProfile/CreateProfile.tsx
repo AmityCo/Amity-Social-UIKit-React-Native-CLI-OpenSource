@@ -2,7 +2,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { Controller } from 'react-hook-form';
 import { TopBar, ImageUpload } from './components';
-import { useCreateProfile } from './hooks';
+import {
+  useCreateProfile,
+  type CreatedUser,
+  type GenerateUserIdInput,
+} from './hooks';
 import FormInput from '../../../components/FormInput';
 import { CHARACTER_LIMIT } from '../../../../core/constants';
 import { ElementID, PageID } from '../../../enums';
@@ -11,10 +15,15 @@ import ActionButton from '../../../elements/ActionButton';
 export type CreateProfileProps = {
   /**
    * The userId to create / sign in as. The profile is created on the network
-   * the first time this user logs in. Required because the page performs the
-   * real (signed-in) login on save.
+   * the first time this user logs in. Provide this OR `generateUserId`.
    */
-  userId: string;
+  userId?: string;
+  /**
+   * Called on Save (before login) to obtain the userId — use when the host
+   * generates the userId from its own API at create time. Receives the entered
+   * profile data ({ displayName, about }). Provide this OR `userId`.
+   */
+  generateUserId?: (input: GenerateUserIdInput) => Promise<string> | string;
   /**
    * Optional auth token for the signed-in login when the network uses secure
    * mode. Mirrors `authToken` on AmityUiKitProvider.
@@ -29,10 +38,11 @@ export type CreateProfileProps = {
   defaultAvatarImageUrl?: string;
   /**
    * Fired after the profile is successfully created and the user is signed in.
-   * Receives the created userId and the chosen displayName. The host decides
-   * what to render next (e.g. swap to the main UIKit / redirect to newsfeed).
+   * Receives the created userId, the chosen displayName, the entered about
+   * text, and the uploaded avatar's file URL (imageUrl). The host decides what
+   * to render next (e.g. swap to the main UIKit / redirect to newsfeed).
    */
-  onCreated?: (user: { userId: string; displayName: string }) => void;
+  onCreated?: (user: CreatedUser) => void;
   /**
    * Fired when the user dismisses the create-profile flow without creating.
    */
@@ -41,6 +51,7 @@ export type CreateProfileProps = {
 
 export function CreateProfile({
   userId,
+  generateUserId,
   authToken,
   defaultAvatarImageUrl,
   onCreated,
@@ -55,7 +66,13 @@ export function CreateProfile({
     isCreated,
     handleSubmit,
     accessibilityId,
-  } = useCreateProfile({ userId, authToken, defaultAvatarImageUrl, onCreated });
+  } = useCreateProfile({
+    userId,
+    generateUserId,
+    authToken,
+    defaultAvatarImageUrl,
+    onCreated,
+  });
 
   // Stay locked while the mutation runs AND through the brief post-success
   // window before the host redirects, so Save can't be pressed again in the gap.

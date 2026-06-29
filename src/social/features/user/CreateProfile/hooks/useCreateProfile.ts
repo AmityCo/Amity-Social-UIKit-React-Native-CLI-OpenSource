@@ -32,10 +32,31 @@ const schema = z.object({
 
 export type CreateProfileFormValues = z.infer<typeof schema>;
 
-type CreatedUser = { userId: string; displayName: string };
+export type CreatedUser = {
+  userId: string;
+  displayName: string;
+  /** The about/description text the user entered, if any. */
+  about?: string;
+  /** The uploaded avatar's file URL, if an avatar was set. */
+  imageUrl?: string;
+};
+
+/** The profile data passed to `generateUserId` so the host can mint/create an
+ * account record matching what the user entered. */
+export type GenerateUserIdInput = { displayName: string; about?: string };
 
 type UseCreateProfileParams = {
-  userId: string;
+  /**
+   * Static userId to create / sign in as. Provide this OR `generateUserId`.
+   */
+  userId?: string;
+  /**
+   * Called on Save (before login) to obtain the userId — use when the host
+   * generates the userId from its own API at create time rather than knowing
+   * it up front. Receives the entered profile data. Whatever it resolves is
+   * used for the signed-in login and profile update. Provide this OR `userId`.
+   */
+  generateUserId?: (input: GenerateUserIdInput) => Promise<string> | string;
   authToken?: string;
   /**
    * Optional remote avatar URL supplied by the host. Used as the avatar when
@@ -46,20 +67,23 @@ type UseCreateProfileParams = {
   onCreated?: (user: CreatedUser) => void;
 };
 
-type UploadedFile = { fileId?: string };
+type UploadedFile = { fileId?: string; fileUrl?: string };
 
 // `/api/v4/images/from-url` returns the uploaded file under a single `items`
 // OBJECT (not an array): `{ items: { fileId, ... } }`. Parse defensively across
-// the shapes the API may use so the fileId is never silently dropped.
-const extractFileId = (body: any): string | undefined => {
-  const pickFromArray = (arr?: UploadedFile[]) =>
-    arr?.find((f) => f?.fileId)?.fileId;
+// the shapes the API may use so the uploaded file is never silently dropped.
+const extractUploadedFile = (body: any): UploadedFile | undefined => {
+  const pickFromArray = (arr?: UploadedFile[]) => arr?.find((f) => f?.fileId);
   if (Array.isArray(body)) return pickFromArray(body);
   const items = body?.items;
   return (
-    (Array.isArray(items) ? pickFromArray(items) : items?.fileId) ??
+    (Array.isArray(items)
+      ? pickFromArray(items)
+      : items?.fileId
+      ? items
+      : undefined) ??
     pickFromArray(body?.data) ??
-    body?.fileId
+    (body?.fileId ? body : undefined)
   );
 };
 
@@ -70,6 +94,7 @@ const extractFileId = (body: any): string | undefined => {
 // then settles the session by passing the returned userId to the provider.
 export const useCreateProfile = ({
   userId,
+  generateUserId,
   authToken,
   defaultAvatarImageUrl,
   onCreated,
@@ -130,8 +155,24 @@ export const useCreateProfile = ({
       showToast({ message: 'Creating profile...', type: 'loading' });
     },
     mutationFn: async (data) => {
+      // Resolve the userId. The host either passes a static `userId`, or a
+      // `generateUserId` function (e.g. their own API that mints the id) which
+      // runs here — on Save, before login — so a failure surfaces through the
+      // same loading/error toast as the rest of the flow.
+      const resolvedUserId =
+        userId ??
+        (await generateUserId?.({
+          displayName: data.displayName,
+          about: data.description || undefined,
+        }));
+      if (!resolvedUserId) {
+        throw new Error(
+          'CreateProfile: no userId. Pass `userId` or a `generateUserId` that returns one.'
+        );
+      }
+
       let loginParam: Amity.ConnectClientParams = {
-        userId,
+        userId: resolvedUserId,
         displayName: data.displayName || undefined,
       };
       if (authToken && authToken.length > 0) {
@@ -145,10 +186,12 @@ export const useCreateProfile = ({
       // two sources (a locally picked image always wins over the host-provided
       // default URL), then apply the remaining profile fields (about + avatar).
       let avatarFileId: string | undefined;
+      let avatarFileUrl: string | undefined;
       if (data.image?.uri) {
         // Local file → binary multipart upload (streams to the upload host).
         const uploaded = await uploadImage({ file: data.image.uri });
         avatarFileId = uploaded?.data?.[0]?.fileId;
+        avatarFileUrl = uploaded?.data?.[0]?.fileUrl;
       } else if (defaultAvatarImageUrl) {
         // Remote URL → from-URL REST endpoint. This is served by the API host
         // (client.http → apix.{region}.amity.co), NOT the binary upload host;
@@ -159,7 +202,9 @@ export const useCreateProfile = ({
           '/api/v4/images/from-url',
           { fileUrl: defaultAvatarImageUrl }
         );
-        avatarFileId = extractFileId(body);
+        const uploadedFile = extractUploadedFile(body);
+        avatarFileId = uploadedFile?.fileId;
+        avatarFileUrl = uploadedFile?.fileUrl;
         if (!avatarFileId) {
           throw new Error(
             `Upload image from URL succeeded but no fileId was returned: ${JSON.stringify(
@@ -176,10 +221,15 @@ export const useCreateProfile = ({
       };
 
       if (payload.description != null || payload.avatarFileId != null) {
-        await UserRepository.updateUser(userId, payload);
+        await UserRepository.updateUser(resolvedUserId, payload);
       }
 
-      return { userId, displayName: data.displayName || '' };
+      return {
+        userId: resolvedUserId,
+        displayName: data.displayName || '',
+        about: data.description || undefined,
+        imageUrl: avatarFileUrl,
+      };
     },
     onSuccess: (createdUser) => {
       // Lock the flow until the deferred redirect fires so Save can't be
