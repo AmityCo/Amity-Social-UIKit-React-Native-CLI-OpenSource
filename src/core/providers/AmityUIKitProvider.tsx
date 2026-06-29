@@ -31,6 +31,10 @@ export interface IAmityUIkitProvider {
   configs?: IConfigRaw;
   behaviour?: IBehaviour;
   fcmToken?: string;
+  /** When false, hides the community create-post FAB and create-community buttons. Default: true */
+  socialCommunityCreationButtonVisible?: boolean;
+  /** When true, hides the Explore tab on the Social Home page. Default: false */
+  hideExplore?: boolean;
 }
 
 export interface CustomColors {
@@ -75,6 +79,8 @@ export default function AmityUiKitProvider({
   configs,
   behaviour,
   fcmToken,
+  socialCommunityCreationButtonVisible = true,
+  hideExplore = false,
 }: IAmityUIkitProvider) {
   const colorScheme = useColorScheme();
   const SHADE_PERCENTAGES = [0.25, 0.4, 0.45, 0.6];
@@ -101,7 +107,25 @@ export default function AmityUiKitProvider({
     return shades;
   };
   const isValidConfig = useValidateConfig(configs);
-  const configData = isValidConfig ? configs : (fallBackConfig as IConfigRaw);
+  const baseConfigData = isValidConfig
+    ? configs
+    : (fallBackConfig as IConfigRaw);
+  const extraExcludes: string[] = [
+    ...(!socialCommunityCreationButtonVisible
+      ? [
+          'community_profile_page/*/community_create_post_button',
+          'social_home_page/empty_newsfeed/create_community_button',
+        ]
+      : []),
+    ...(hideExplore ? ['social_home_page/*/explore_button'] : []),
+  ];
+  const configData: IConfigRaw =
+    extraExcludes.length === 0
+      ? baseConfigData
+      : {
+          ...baseConfigData,
+          excludes: [...(baseConfigData.excludes ?? []), ...extraExcludes],
+        };
 
   const isDarkTheme =
     configData?.preferred_theme === 'dark' ||
@@ -156,7 +180,7 @@ export default function AmityUiKitProvider({
           <Provider store={store} context={AmityUIKitReduxContext}>
             <AuthContextProvider
               userId={userId}
-              displayName={displayName || userId}
+              displayName={displayName || undefined}
               apiKey={apiKey}
               apiRegion={apiRegion}
               apiEndpoint={apiEndpoint}
