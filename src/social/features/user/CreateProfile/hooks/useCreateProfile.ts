@@ -41,9 +41,11 @@ export type CreatedUser = {
   imageUrl?: string;
 };
 
-/** The profile data passed to `generateUserId` so the host can mint/create an
- * account record matching what the user entered. */
-export type GenerateUserIdInput = { displayName: string; about?: string };
+/** The profile data passed to `generateUserId`, in case the host wants to
+ * create an account record matching what the user entered. All fields are
+ * optional — the host can ignore the argument entirely if its API needs no
+ * input to mint a userId. */
+export type GenerateUserIdInput = { displayName?: string; about?: string };
 
 type UseCreateProfileParams = {
   /**
@@ -56,7 +58,7 @@ type UseCreateProfileParams = {
    * it up front. Receives the entered profile data. Whatever it resolves is
    * used for the signed-in login and profile update. Provide this OR `userId`.
    */
-  generateUserId?: (input: GenerateUserIdInput) => Promise<string> | string;
+  generateUserId?: (input?: GenerateUserIdInput) => Promise<string> | string;
   authToken?: string;
   /**
    * Optional remote avatar URL supplied by the host. Used as the avatar when

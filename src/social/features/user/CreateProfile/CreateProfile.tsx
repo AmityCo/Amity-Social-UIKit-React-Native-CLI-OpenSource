@@ -23,7 +23,7 @@ export type CreateProfileProps = {
    * generates the userId from its own API at create time. Receives the entered
    * profile data ({ displayName, about }). Provide this OR `userId`.
    */
-  generateUserId?: (input: GenerateUserIdInput) => Promise<string> | string;
+  generateUserId?: (input?: GenerateUserIdInput) => Promise<string> | string;
   /**
    * Optional auth token for the signed-in login when the network uses secure
    * mode. Mirrors `authToken` on AmityUiKitProvider.
