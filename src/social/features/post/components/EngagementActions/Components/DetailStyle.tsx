@@ -8,7 +8,10 @@ import {
 } from '@amityco/ts-sdk-react-native';
 import { AmityPostEngagementActionsSubComponentType } from './type';
 import { useStyles } from './styles';
-import { useAmityComponent } from '../../../../../hooks';
+import {
+  useAmityComponent,
+  useInteractionBehavior,
+} from '../../../../../hooks';
 import { PageID, ComponentID } from '../../../../../enums';
 import { SvgXml } from 'react-native-svg';
 import { likeReaction } from '../../../../../../core/assets/icons/xml';
@@ -34,6 +37,7 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
     componentId: ComponentID.post_content,
   });
   const styles = useStyles(themeStyles);
+  const { handleInteraction } = useInteractionBehavior();
   const [postData, setPostData] = useState<Amity.Post>(null);
 
   const { shareLink, handleSharePress } = usePostShareAction({
@@ -95,19 +99,20 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
     }
   }, [isLike, postId]);
 
-  const onClickReactions = useCallback(() => {
-    setIsReactionListVisible(true);
-  }, []);
+  const onPressReaction = useCallback(() => {
+    handleInteraction({
+      defaultBehavior: addReactionToPost,
+      isJoined: community ? community.isJoined : true,
+    });
+  }, [addReactionToPost, handleInteraction, community]);
 
-  if (community && community.isJoined === false) {
-    return (
-      <View style={styles.actionSection}>
-        <Text style={styles.btnText}>
-          Join community to interact with all posts
-        </Text>
-      </View>
-    );
-  }
+  const onClickReactions = useCallback(() => {
+    handleInteraction({
+      defaultBehavior: () => setIsReactionListVisible(true),
+      allowNonMember: true,
+      isJoined: community?.isJoined,
+    });
+  }, [handleInteraction, community]);
 
   return (
     <>
@@ -136,7 +141,7 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
       </View>
       <View style={[styles.actionSection, styles.detailActionSection]}>
         <View style={styles.row}>
-          <TouchableOpacity onPress={addReactionToPost} style={styles.likeBtn}>
+          <TouchableOpacity onPress={onPressReaction} style={styles.likeBtn}>
             {isLike ? (
               <SvgXml
                 xml={likeReaction(themeStyles.colors.background)}

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import {
   NavigationContainer,
   NavigationIndependentTree,
@@ -43,6 +44,8 @@ import { CommunityStoriesNotificationSettingScreen } from '../../social/screens/
 import { CommunityLivestreamsNotificationSettingScreen } from '../../social/screens/CommunityLivestreamsNotificationSetting';
 import CommunityPendingRequest from '../../social/screens/CommunityPendingRequest';
 import { GlobalBan } from '../../social/screens/GlobalBan';
+import { VisitorUsageLimit } from '../../social/screens/VisitorUsageLimit';
+import { useBehaviour } from '../../social/providers/BehaviourProvider';
 import {
   ImageViewerScreen,
   VideoPlayerScreen,
@@ -60,9 +63,31 @@ const Stack = createNativeStackNavigator<
 
 export default function AmitySocialUIKitV4Navigator() {
   const theme = useTheme<MyMD3Theme>();
-  const { isGlobalBan } = useAuth();
+  const { isGlobalBan, isVisitorUsageLimitReached } = useAuth();
+  const { AmityGlobalBehaviour } = useBehaviour();
+
+  const handleVisitorUsageLimitReached =
+    AmityGlobalBehaviour?.handleVisitorUsageLimitReached;
+
+  const hasHandledUsageLimit = useRef(false);
+
+  useEffect(() => {
+    if (!isVisitorUsageLimitReached) {
+      hasHandledUsageLimit.current = false;
+      return;
+    }
+
+    if (handleVisitorUsageLimitReached && !hasHandledUsageLimit.current) {
+      hasHandledUsageLimit.current = true;
+      handleVisitorUsageLimitReached();
+    }
+  }, [isVisitorUsageLimitReached, handleVisitorUsageLimitReached]);
 
   if (isGlobalBan) return <GlobalBan />;
+
+  if (isVisitorUsageLimitReached && !handleVisitorUsageLimitReached) {
+    return <VisitorUsageLimit />;
+  }
 
   return (
     <NavigationIndependentTree>

@@ -8,7 +8,10 @@ import {
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
-import { useAmityComponent } from '../../../../../hooks';
+import {
+  useAmityComponent,
+  useInteractionBehavior,
+} from '../../../../../hooks';
 import { PageID, ComponentID } from '../../../../../enums';
 import { SvgXml } from 'react-native-svg';
 import { likeReaction } from '../../../../../../core/assets/icons/xml';
@@ -38,6 +41,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   });
   const styles = useStyles(themeStyles);
   const { AmityGlobalFeedComponentBehavior } = useBehaviour();
+  const { handleInteraction } = useInteractionBehavior();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [postData, setPostData] = useState<Amity.Post>(null);
@@ -81,7 +85,14 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
     }
   }, [isLike, postData, postId]);
 
-  const onPressComment = useCallback(() => {
+  const onPressReaction = useCallback(() => {
+    handleInteraction({
+      defaultBehavior: addReactionToPost,
+      isJoined: community ? community.isJoined : true,
+    });
+  }, [addReactionToPost, handleInteraction, community]);
+
+  const goToPostDetail = useCallback(() => {
     if (AmityGlobalFeedComponentBehavior.goToPostDetailPage) {
       return AmityGlobalFeedComponentBehavior.goToPostDetailPage();
     }
@@ -90,20 +101,17 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
     });
   }, [AmityGlobalFeedComponentBehavior, navigation, postId]);
 
-  if (community && community.isJoined === false) {
-    return (
-      <View style={styles.actionSection}>
-        <Text style={styles.btnText}>
-          Join community to interact with all posts
-        </Text>
-      </View>
-    );
-  }
+  const onPressComment = useCallback(() => {
+    handleInteraction({
+      defaultBehavior: goToPostDetail,
+      isJoined: community ? community.isJoined : true,
+    });
+  }, [goToPostDetail, handleInteraction, community]);
 
   return (
     <Pressable onPress={onPressComment} style={styles.actionSection}>
       <View style={styles.row}>
-        <TouchableOpacity onPress={addReactionToPost} style={styles.likeBtn}>
+        <TouchableOpacity onPress={onPressReaction} style={styles.likeBtn}>
           {isLike ? (
             <SvgXml
               xml={likeReaction(themeStyles.colors.background)}

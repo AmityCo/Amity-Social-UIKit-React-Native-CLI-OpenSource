@@ -27,6 +27,7 @@ import {
 import { Pressable } from 'react-native';
 import useAuth from '../../../../../../core/hooks/useAuth';
 import { useTimeDifference } from '../../../../../hooks/useTimeDifference';
+import { useGlobalBehavior } from '../../../../../hooks/useGlobalBehavior';
 import {
   isReportTarget,
   reportTargetById,
@@ -144,6 +145,12 @@ const ReplyCommentList = ({
       await addCommentReaction(commentId, 'like');
     }
   };
+
+  const { handleGlobalBehavior } = useGlobalBehavior();
+
+  const onPressLike = () =>
+    handleGlobalBehavior({ defaultBehavior: addReactionToComment });
+
   const deleteReplyComment = () => {
     Alert.alert('Delete reply', 'This reply will be permanently deleted.', [
       {
@@ -292,10 +299,7 @@ const ReplyCommentList = ({
                 )}
               </View>
 
-              <TouchableOpacity
-                onPress={() => addReactionToComment()}
-                style={styles.likeBtn}
-              >
+              <TouchableOpacity onPress={onPressLike} style={styles.likeBtn}>
                 <Text style={isLike ? styles.likedText : styles.btnText}>
                   {!isLike ? 'Like' : 'Liked'}
                 </Text>
@@ -342,6 +346,7 @@ const ReplyCommentList = ({
                 styles.twoOptions,
             ]}
           >
+            <View style={styles.handleBar} />
             {user?.userId === (client as Amity.Client).userId ? (
               <View>
                 <TouchableOpacity
@@ -369,7 +374,12 @@ const ReplyCommentList = ({
               </View>
             ) : (
               <TouchableOpacity
-                onPress={reportCommentObject}
+                onPress={() => {
+                  closeModal();
+                  handleGlobalBehavior({
+                    defaultBehavior: reportCommentObject,
+                  });
+                }}
                 style={styles.modalRow}
               >
                 <SvgXml

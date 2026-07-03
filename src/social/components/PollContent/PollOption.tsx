@@ -9,6 +9,7 @@ import Button, { BUTTON_SIZE } from '../Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
+import { useInteractionBehavior } from '../../hooks/useInteractionBehavior';
 
 type PollOptionsProps = {
   post?: Amity.Post<any>;
@@ -42,10 +43,10 @@ export function PollOptions({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const { styles } = useStyles();
+  const { handleInteraction } = useInteractionBehavior();
   const [selectedOption, setSelectedOption] = useState<Amity.PollAnswer[]>([]);
 
   const btnDisabled = selectedOption.length === 0;
-  const optionDisabled = !!disabledPoll;
 
   return (
     <View>
@@ -60,7 +61,6 @@ export function PollOptions({
         <Radio.Group<Amity.PollAnswer>
           value={selectedOption[0]}
           style={styles.optionGroup}
-          disabled={optionDisabled}
           onChange={(value) => setSelectedOption([value])}
           select={(value, option) => value.id === option.id}
         >
@@ -79,11 +79,7 @@ export function PollOptions({
                 ]}
               >
                 <Radio.Label style={styles.optionLabel}>
-                  <Typography.BodyBold
-                    style={[optionDisabled && styles.optionLabelDisabled]}
-                  >
-                    {option.data}
-                  </Typography.BodyBold>
+                  <Typography.BodyBold>{option.data}</Typography.BodyBold>
                 </Radio.Label>
                 <Radio.Icon />
               </Radio.Option>
@@ -93,7 +89,6 @@ export function PollOptions({
         <CheckBox.Group<Amity.PollAnswer>
           value={selectedOption}
           style={styles.optionGroup}
-          disabled={optionDisabled}
           onChange={(value) => setSelectedOption(value)}
           select={(value, option) =>
             !!value.find((item) => item.id === option.id)
@@ -115,11 +110,7 @@ export function PollOptions({
                 ]}
               >
                 <CheckBox.Label style={styles.optionLabel}>
-                  <Typography.BodyBold
-                    style={[optionDisabled && styles.optionLabelDisabled]}
-                  >
-                    {option.data}
-                  </Typography.BodyBold>
+                  <Typography.BodyBold>{option.data}</Typography.BodyBold>
                 </CheckBox.Label>
                 <CheckBox.Icon />
               </CheckBox.Option>
@@ -144,12 +135,15 @@ export function PollOptions({
       )}
       {!isPollClosed && !isAlreadyVoted && (
         <TouchableOpacity
-          disabled={btnDisabled || optionDisabled}
-          style={[
-            styles.voteBtn,
-            (btnDisabled || optionDisabled) && styles.voteBtnDisabled,
-          ]}
-          onPress={() => votePoll(selectedOption.map((option) => option.id))}
+          disabled={btnDisabled}
+          style={[styles.voteBtn, btnDisabled && styles.voteBtnDisabled]}
+          onPress={() =>
+            handleInteraction({
+              defaultBehavior: () =>
+                votePoll(selectedOption.map((option) => option.id)),
+              isJoined: !disabledPoll,
+            })
+          }
         >
           <Typography.BodyBold style={styles.voteBtnLabel}>
             Vote

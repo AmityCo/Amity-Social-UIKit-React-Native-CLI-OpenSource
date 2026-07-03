@@ -44,6 +44,7 @@ import ReplyCommentList from '../../legacy/Social/ReplyCommentList';
 import AmityReactionListComponent from '../../../features/reaction/components/List';
 import { CommentRepository } from '@amityco/ts-sdk-react-native';
 import { useTimeDifference } from '../../../hooks/useTimeDifference';
+import { useInteractionBehavior } from '../../../hooks/useInteractionBehavior';
 import { LinkPreview } from '../../PreviewLink';
 import { Typography } from '../../../../core/components/Typography/Typography';
 import { pen, report, trash, unreport } from '../../../../core/assets/icons';
@@ -290,6 +291,20 @@ const CommentListItem = ({
     onClickReply && onClickReply(user, commentId);
   };
 
+  const { handleInteraction } = useInteractionBehavior();
+
+  const onPressLike = () =>
+    handleInteraction({
+      defaultBehavior: addReactionToComment,
+      isJoined: !disabledInteraction,
+    });
+
+  const onPressReply = () =>
+    handleInteraction({
+      defaultBehavior: onHandleReply,
+      isJoined: !disabledInteraction,
+    });
+
   const onPressCommentReaction = () => {
     setIsReactionListVisible(true);
   };
@@ -334,60 +349,55 @@ const CommentListItem = ({
               />
             )}
           </View>
-          {!disabledInteraction && (
-            <View style={styles.actionSection}>
-              <View style={styles.rowContainer}>
-                <View style={styles.timeRow}>
+          <View style={styles.actionSection}>
+            <View style={styles.rowContainer}>
+              <View style={styles.timeRow}>
+                <Typography.Caption style={styles.headerTextTime}>
+                  {timeDifference}
+                </Typography.Caption>
+                {(editedAt !== createdAt || isEditComment) && (
                   <Typography.Caption style={styles.headerTextTime}>
-                    {timeDifference}
+                    {' '}
+                    (edited)
                   </Typography.Caption>
-                  {(editedAt !== createdAt || isEditComment) && (
-                    <Typography.Caption style={styles.headerTextTime}>
-                      {' '}
-                      (edited)
-                    </Typography.Caption>
-                  )}
-                </View>
-                <TouchableOpacity
-                  onPress={() => addReactionToComment()}
-                  style={styles.likeBtn}
-                >
-                  <Typography.CaptionBold
-                    style={isLike ? styles.likedText : styles.btnText}
-                  >
-                    Like
-                  </Typography.CaptionBold>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={disabledComment ? undefined : onHandleReply}
-                  style={styles.likeBtn}
-                >
-                  <Typography.CaptionBold style={styles.btnText}>
-                    Reply
-                  </Typography.CaptionBold>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={openModal}>
-                  <SvgXml
-                    xml={threeDots(theme.colors.baseShade2)}
-                    width="20"
-                    height="20"
-                  />
-                </TouchableOpacity>
+                )}
               </View>
-
-              {likeReaction > 0 && (
-                <TouchableOpacity
-                  onPress={onPressCommentReaction}
-                  style={styles.likeBtn}
+              <TouchableOpacity onPress={onPressLike} style={styles.likeBtn}>
+                <Typography.CaptionBold
+                  style={isLike ? styles.likedText : styles.btnText}
                 >
-                  <Typography.Caption style={styles.btnText}>
-                    {likeReaction}
-                  </Typography.Caption>
-                  <SvgXml xml={likeCircle} width="20" height="20" />
-                </TouchableOpacity>
-              )}
+                  Like
+                </Typography.CaptionBold>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={disabledComment ? undefined : onPressReply}
+                style={styles.likeBtn}
+              >
+                <Typography.CaptionBold style={styles.btnText}>
+                  Reply
+                </Typography.CaptionBold>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={openModal}>
+                <SvgXml
+                  xml={threeDots(theme.colors.baseShade2)}
+                  width="20"
+                  height="20"
+                />
+              </TouchableOpacity>
             </View>
-          )}
+
+            {likeReaction > 0 && (
+              <TouchableOpacity
+                onPress={onPressCommentReaction}
+                style={styles.likeBtn}
+              >
+                <Typography.Caption style={styles.btnText}>
+                  {likeReaction}
+                </Typography.Caption>
+                <SvgXml xml={likeCircle} width="20" height="20" />
+              </TouchableOpacity>
+            )}
+          </View>
 
           {previewReplyCommentList.length > 0 && !isOpenReply && (
             <ReplyCommentList
@@ -423,10 +433,10 @@ const CommentListItem = ({
               style={styles.viewMoreReplyBtn}
             >
               <SvgXml xml={expandIcon} />
-              <Typography.CaptionBold style={styles.viewMoreText}>
+              <Text style={styles.viewMoreText}>
                 View {childrenNumber}{' '}
                 {childrenNumber === 1 ? 'reply' : 'replies'}
-              </Typography.CaptionBold>
+              </Text>
             </TouchableOpacity>
           )}
 
@@ -436,9 +446,7 @@ const CommentListItem = ({
               style={styles.viewMoreReplyBtn}
             >
               <SvgXml xml={expandIcon} />
-              <Typography.CaptionBold style={styles.viewMoreText}>
-                View more replies
-              </Typography.CaptionBold>
+              <Text style={styles.viewMoreText}>View more replies</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -492,7 +500,13 @@ const CommentListItem = ({
               </View>
             ) : (
               <TouchableOpacity
-                onPress={reportCommentObject}
+                onPress={() => {
+                  closeModal();
+                  handleInteraction({
+                    defaultBehavior: reportCommentObject,
+                    allowNonMember: true,
+                  });
+                }}
                 style={styles.modalRow}
               >
                 <SvgXml

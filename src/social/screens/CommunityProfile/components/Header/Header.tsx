@@ -6,6 +6,7 @@ import {
   useCommunity,
   isModerator,
   useUser,
+  useGlobalBehavior,
 } from '../../../../hooks';
 import { useStyles } from './styles';
 import { CommunityCover } from '../../elements/CommunityCover/CommunityCover';
@@ -50,6 +51,7 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
   const client = Client.getActiveClient();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { handleGlobalBehavior } = useGlobalBehavior();
   const componentId = ComponentID.community_header;
   const { community } = useCommunity(communityId);
   const { posts: pendingPosts } = usePosts({
@@ -153,8 +155,12 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
             community={community}
             style={styles.infoWrap}
             onPress={() => {
-              navigation.navigate('CommunityMembership', {
-                community: community,
+              handleGlobalBehavior({
+                defaultBehavior: () => {
+                  navigation.navigate('CommunityMembership', {
+                    community: community,
+                  });
+                },
               });
             }}
           />

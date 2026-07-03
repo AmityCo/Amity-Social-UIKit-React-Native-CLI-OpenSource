@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import CustomSocialTab from '../../components/CustomSocialTab/CustomSocialTab';
 import { useAmityElement, useUiKitConfig } from '../../hooks';
@@ -20,7 +20,7 @@ const PROFILE_TAB = 'Profile';
 
 const AmitySocialHomePage = () => {
   const theme = useTheme() as MyMD3Theme;
-  const { client } = useAuth();
+  const { client, isVisitorOrBot } = useAuth();
 
   const styles = StyleSheet.create({
     container: {
@@ -59,12 +59,21 @@ const AmitySocialHomePage = () => {
   });
 
   const allTabs = [newsFeedTab, exploreTab, myCommunitiesTab, PROFILE_TAB];
+
   const visibleTabs = isExploreExcluded
     ? allTabs.filter((t) => t !== exploreTab)
     : allTabs;
 
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
+
   const visitedTabs = useRef<Set<string>>(new Set([newsFeedTab]));
+
+  useEffect(() => {
+    if (isVisitorOrBot) {
+      visitedTabs.current.add(exploreTab);
+      setActiveTab(exploreTab);
+    }
+  }, [isVisitorOrBot, exploreTab]);
 
   const onTabChange = useCallback(
     (tabName: string) => {
@@ -85,6 +94,8 @@ const AmitySocialHomePage = () => {
     display: activeTab === tab ? ('flex' as const) : ('none' as const),
   });
 
+  const tabNames = isVisitorOrBot ? [exploreTab] : visibleTabs;
+
   return (
     <SafeAreaView
       testID="social_home_page"
@@ -93,24 +104,30 @@ const AmitySocialHomePage = () => {
       style={styles.container}
     >
       <AmitySocialHomeTopNavigationComponent activeTab={activeTab} />
-      <CustomSocialTab
-        activeTab={activeTab}
-        onTabChange={onTabChange}
-        tabNames={visibleTabs}
-      />
-      <Divider />
-      <View style={tabStyle(newsFeedTab)}>
-        <AmityNewsFeedComponent
-          pageId={PageID.social_home_page}
-          onPressExploreCommunity={onPressExploreCommunity}
-        />
-      </View>
+      {tabNames.length > 1 && (
+        <>
+          <CustomSocialTab
+            activeTab={activeTab}
+            onTabChange={onTabChange}
+            tabNames={tabNames}
+          />
+          <Divider />
+        </>
+      )}
+      {!isVisitorOrBot && (
+        <View style={tabStyle(newsFeedTab)}>
+          <AmityNewsFeedComponent
+            pageId={PageID.social_home_page}
+            onPressExploreCommunity={onPressExploreCommunity}
+          />
+        </View>
+      )}
       {visitedTabs.current.has(exploreTab) && (
         <View style={tabStyle(exploreTab)}>
           <AmityExploreComponent pageId={PageID.social_home_page} />
         </View>
       )}
-      {visitedTabs.current.has(myCommunitiesTab) && (
+      {!isVisitorOrBot && visitedTabs.current.has(myCommunitiesTab) && (
         <View style={tabStyle(myCommunitiesTab)}>
           <AmityMyCommunitiesComponent
             pageId={PageID.social_home_page}
@@ -118,7 +135,7 @@ const AmitySocialHomePage = () => {
           />
         </View>
       )}
-      {visitedTabs.current.has(PROFILE_TAB) && (
+      {!isVisitorOrBot && visitedTabs.current.has(PROFILE_TAB) && (
         <View style={tabStyle(PROFILE_TAB)}>
           <UserProfile inline stickyTab={false} userId={client?.userId ?? ''} />
         </View>

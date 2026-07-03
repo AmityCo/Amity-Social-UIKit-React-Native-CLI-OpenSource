@@ -88,10 +88,25 @@ export const ERROR_CODE = {
   ONLY_ONE_MODERATOR: '400317',
   ONLY_ONE_MEMBER: '400318',
   GLOBAL_BAN: '400312',
+  VISITOR_USAGE_LIMIT_EXCEEDED: '400323',
   INVALID_IMAGE:
     'Amity SDK (500000): Image uploading failed: Request has invalid image format',
   DISPLAY_NAME_UPDATE: '400301',
 };
+
+export const VISITOR_USAGE_LIMIT_MESSAGE = {
+  TITLE: "You've reached your daily limit.",
+  SUBTITLE: 'Create an account or sign in to keep exploring the community.',
+  SIGN_IN: 'Sign in',
+  TOAST: 'Create an account or sign in to continue.',
+};
+
+export const VISITOR_USER_ACTION_TOAST =
+  'Create an account or sign in to continue.';
+
+export const NON_MEMBER_ACTION_TOAST = 'Join community to interact.';
+
+export const VISITOR_TOAST_DURATION = 3000;
 
 export const COMMENT_ERROR_MESSAGE = {
   BLOCKED_WORD:

@@ -17,6 +17,7 @@ import { useUserFlaggedByMeQuery } from '../../../../../../hooks/queries/useFlag
 import { useBlockUser } from '../../../../../../hooks/queries/useBlockUser';
 import { useFollowInfo } from '../../../../../../hooks/objects';
 import { useBehaviour } from '../../../../../../providers/BehaviourProvider';
+import { useGlobalBehavior } from '../../../../../../hooks';
 
 type UseMenuParams = {
   userId?: string;
@@ -28,6 +29,7 @@ export function useMenu({ userId, displayName }: UseMenuParams) {
 
   const { client } = useAuth();
   const { getShareLink } = useShareableLink();
+  const { handleGlobalBehavior } = useGlobalBehavior();
   const { AmityUserProfilePageBehavior } = useBehaviour();
   const { accessibilityId: menuButtonId } = useAmityElement({
     pageId,
@@ -97,8 +99,10 @@ export function useMenu({ userId, displayName }: UseMenuParams) {
       testID: 'report-user-button',
       accessibilityLabel: 'Report user',
       onPress: () => {
-        if (userId) reportUser(userId);
         closeBottomSheet();
+        handleGlobalBehavior({
+          defaultBehavior: () => userId && reportUser(userId),
+        });
       },
     },
     {
@@ -108,8 +112,10 @@ export function useMenu({ userId, displayName }: UseMenuParams) {
       testID: 'unreport-user-button',
       accessibilityLabel: 'Unreport user',
       onPress: () => {
-        if (userId) unreportUser(userId);
         closeBottomSheet();
+        handleGlobalBehavior({
+          defaultBehavior: () => userId && unreportUser(userId),
+        });
       },
     },
     {
@@ -120,7 +126,10 @@ export function useMenu({ userId, displayName }: UseMenuParams) {
       accessibilityLabel: 'Block user',
       onPress: () => {
         closeBottomSheet();
-        if (userId) blockUser(userId, displayName ?? userId);
+        handleGlobalBehavior({
+          defaultBehavior: () =>
+            userId && blockUser(userId, displayName ?? userId),
+        });
       },
     },
     {
@@ -131,7 +140,10 @@ export function useMenu({ userId, displayName }: UseMenuParams) {
       accessibilityLabel: 'Unblock user',
       onPress: () => {
         closeBottomSheet();
-        if (userId) unBlockUser(userId, displayName ?? userId);
+        handleGlobalBehavior({
+          defaultBehavior: () =>
+            userId && unBlockUser(userId, displayName ?? userId),
+        });
       },
     },
   ].filter((action) => action.visible);

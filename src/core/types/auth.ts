@@ -10,4 +10,6 @@ export type AuthContextInterface = {
   authToken?: string;
   fcmToken?: string;
   isGlobalBan: boolean;
+  isVisitorUsageLimitReached: boolean;
+  isVisitorOrBot: boolean;
 };

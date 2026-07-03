@@ -44,6 +44,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import { useTimeDifference } from '../../../../hooks';
+import { useGlobalBehavior } from '../../../../hooks/useGlobalBehavior';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';
 import AmityReactionListComponent from '../../../../features/reaction/components/List';
 
@@ -155,6 +156,12 @@ export default function ReplyCommentList({
       await addCommentReaction(commentId, 'like');
     }
   };
+
+  const { handleGlobalBehavior } = useGlobalBehavior();
+
+  const onPressLike = () =>
+    handleGlobalBehavior({ defaultBehavior: addReactionToComment });
+
   const deletePostObject = () => {
     Alert.alert('Delete reply', `This reply will be permanently deleted.`, [
       {
@@ -169,6 +176,7 @@ export default function ReplyCommentList({
     ]);
     setIsVisible(false);
   };
+
   const reportCommentObject = async () => {
     if (isReportByMe) {
       const unReportPost = await unReportTargetById('comment', commentId);
@@ -267,10 +275,7 @@ export default function ReplyCommentList({
                   </Typography.Caption>
                 )}
               </View>
-              <TouchableOpacity
-                onPress={() => addReactionToComment()}
-                style={styles.likeBtn}
-              >
+              <TouchableOpacity onPress={onPressLike} style={styles.likeBtn}>
                 <Typography.CaptionBold
                   style={isLike ? styles.likedText : styles.btnText}
                 >
@@ -359,7 +364,12 @@ export default function ReplyCommentList({
               </View>
             ) : (
               <TouchableOpacity
-                onPress={reportCommentObject}
+                onPress={() => {
+                  closeModal();
+                  handleGlobalBehavior({
+                    defaultBehavior: reportCommentObject,
+                  });
+                }}
                 style={styles.modalRow}
               >
                 <SvgXml

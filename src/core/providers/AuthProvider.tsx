@@ -24,6 +24,8 @@ export const AuthContext = createContext<AuthContextInterface>({
   authToken: '',
   fcmToken: undefined,
   isGlobalBan: false,
+  isVisitorUsageLimitReached: false,
+  isVisitorOrBot: false,
 });
 
 export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
@@ -44,6 +46,9 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     apiEndpoint: { http: apiEndpoint },
   });
   const [isGlobalBan, setIsGlobalBan] = useState(false);
+  const [isVisitorUsageLimitReached, setIsVisitorUsageLimitReached] =
+    useState(false);
+  const [isVisitorOrBot, setIsVisitorOrBot] = useState(false);
 
   const sessionHandler: Amity.SessionHandler = {
     sessionWillRenewAccessToken(renewal) {
@@ -64,28 +69,43 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     if (sessionState === 'established') {
       setIsConnected(true);
       onSdkReady();
+      setIsVisitorOrBot(Client.getCurrentUserType() !== 'signed-in');
     }
   }, [sessionState]);
 
-  const handleConnect = useCallback(async () => {
-    let loginParam;
+  useEffect(() => {
+    const unsubscribe = Client.onVisitorUsageLimitReached(() => {
+      setIsVisitorUsageLimitReached(true);
+    });
 
-    // Spec: omit displayName entirely when blank — do not substitute userId
-    loginParam = { userId: userId };
-    if (displayName) loginParam = { ...loginParam, displayName };
-    if (authToken?.length > 0) {
-      loginParam = { ...loginParam, authToken: authToken };
-    }
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const handleConnect = useCallback(async () => {
     try {
-      const response = await Client.login(loginParam, sessionHandler);
-      if (!response) return;
+      if (userId) {
+        // Spec: omit displayName entirely when blank — do not substitute userId
+        let loginParam: Amity.ConnectClientParams = { userId: userId };
+        if (displayName) loginParam = { ...loginParam, displayName };
+        if (authToken?.length > 0) {
+          loginParam = { ...loginParam, authToken: authToken };
+        }
+        const response = await Client.login(loginParam, sessionHandler);
+        if (!response) return;
+      } else {
+        const response = await Client.loginAsVisitor({ sessionHandler });
+        if (!response) return;
+      }
     } catch (err) {
       if (err?.message?.includes(ERROR_CODE.GLOBAL_BAN)) {
         setIsGlobalBan(true);
       }
     }
 
-    if (fcmToken) {
+    // Visitors/bots are GET-only with no MQTT — skip push registration for them.
+    if (fcmToken && userId) {
       try {
         await Client.registerPushNotification(fcmToken);
       } catch (err) {
@@ -109,7 +129,9 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
       setLoading(false);
     }
   };
+
   useEffect(() => {
+    setIsVisitorUsageLimitReached(false);
     login();
   }, [userId]);
 
@@ -137,6 +159,8 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
         sessionState,
         apiRegion: apiRegion.toLowerCase(),
         isGlobalBan,
+        isVisitorUsageLimitReached,
+        isVisitorOrBot,
       }}
     >
       {children}
