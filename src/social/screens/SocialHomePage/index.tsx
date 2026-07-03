@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import CustomSocialTab from '../../components/CustomSocialTab/CustomSocialTab';
-import { useUiKitConfig } from '../../hooks';
+import { useAmityElement, useUiKitConfig } from '../../hooks';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import { useTheme } from 'react-native-paper';
 import { useBehaviour } from '../../providers/BehaviourProvider';
@@ -52,7 +52,20 @@ const AmitySocialHomePage = () => {
     keys: ['text'],
   }) as string[];
 
+  const { isExcluded: isExploreExcluded } = useAmityElement({
+    pageId: PageID.social_home_page,
+    componentId: ComponentID.WildCardComponent,
+    elementId: ElementID.explore_button,
+  });
+
+  const allTabs = [newsFeedTab, exploreTab, myCommunitiesTab, PROFILE_TAB];
+
+  const visibleTabs = isExploreExcluded
+    ? allTabs.filter((t) => t !== exploreTab)
+    : allTabs;
+
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
+
   const visitedTabs = useRef<Set<string>>(new Set([newsFeedTab]));
 
   useEffect(() => {
@@ -81,9 +94,7 @@ const AmitySocialHomePage = () => {
     display: activeTab === tab ? ('flex' as const) : ('none' as const),
   });
 
-  const tabNames = isVisitorOrBot
-    ? [exploreTab]
-    : [newsFeedTab, exploreTab, myCommunitiesTab, PROFILE_TAB];
+  const tabNames = isVisitorOrBot ? [exploreTab] : visibleTabs;
 
   return (
     <SafeAreaView

@@ -86,10 +86,9 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
   const handleConnect = useCallback(async () => {
     try {
       if (userId) {
-        let loginParam: Amity.ConnectClientParams = {
-          userId: userId,
-          displayName: displayName,
-        };
+        // Spec: omit displayName entirely when blank — do not substitute userId
+        let loginParam: Amity.ConnectClientParams = { userId: userId };
+        if (displayName) loginParam = { ...loginParam, displayName };
         if (authToken?.length > 0) {
           loginParam = { ...loginParam, authToken: authToken };
         }

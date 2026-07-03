@@ -29,6 +29,7 @@ import { useFile } from '../../../hooks/useFile';
 import { getMediaTypeFromUrl } from '../../../../core/utils/url';
 import { LoadingOverlay } from '../../../components/legacy/LoadingOverlay';
 import mime from 'mime';
+import { appendFileToFormData } from '../../../../core/utils/fileUpload';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -119,11 +120,14 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
     const isImage = type === StoryType.image;
     const mimeType =
       mime.getType(mediaType.uri) ?? (isImage ? 'image/jpeg' : 'video/mp4');
-    formData.append('files', {
-      uri: mediaType.uri,
-      name: mediaType.name,
-      type: mimeType,
-    } as unknown as Blob);
+
+    await appendFileToFormData(
+      formData,
+      'files',
+      mediaType.uri,
+      mediaType.name,
+      mimeType
+    );
 
     try {
       setLoading(true);
