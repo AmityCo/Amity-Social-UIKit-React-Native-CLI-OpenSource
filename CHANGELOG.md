@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/compare/v4.0.1...v4.1.0) (2026-07-03)
+
+### Features
+
+- apply config login ([a8da43b](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/a8da43b53e6a8d294f21c0113a6b1b17a7d10439))
+- bump sdk ([a26dde9](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/a26dde92e475ce1f2bdb7f87314ea9686e24f3c7))
+- PDT-0000 - export VisitorUsageLimit page from public api ([dbc3c63](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/dbc3c63907d8a1ee36c858efd774cb12ca455bba))
+- PDT-0000 - visitor mode with enhanced usage limit handling ([9f889a1](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/9f889a1ee1617cdb1f3de8001e0e52dc256208ae))
+- PDT-3283 - show engagement bar for non-members with gated like/comment toasts ([183811f](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/183811fd3602d0292485d7dbfbf4d970cd111d35))
+
+### Bug Fixes
+
+- PDT-3283 - visitor usage limit spec fixes (figma icon, a11y, max width, push guard) ([00d805a](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/00d805a4a4bb91061179f68d77268951b649f907))
+- PDT-3325 - show sign-in toast when visitor taps community member count ([87a6e6b](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/87a6e6b97348cc0b1bc3c16e122001c16759fdf7))
+- PDT-3326 - freeze livestream last frame for visitors on stream end ([f61c8da](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/f61c8da050b5596a2bdc854128c12b26211394c1))
+- PDT-3327 - show toast instead of join modal when visitor reacts on story ([8240cc3](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/8240cc3b8d70d4da2e43027a61e64ede2fa71c6a))
+- PDT-3328 - show action controls on story comments ([5a4a954](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/5a4a954d5183a2aab48e48313149d0961b3d1e39))
+- PDT-3337 - hide divider when explore is the only tab ([2f009c1](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/2f009c1c17c6bdbbf0c53694e4326ce47bef209d))
+- PDT-3337 - hide tab navigation when explore is the only tab ([c08239d](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/c08239d37b5b0c2ac5f12431ebd1bd2649b61c3c))
+- PDT-3351 - show comment/reply menu for visitors with gated report ([0d5d7fc](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/0d5d7fc6bc87ba2302336a95b9fce30d08e08502))
+- PDT-3352 - let visitor tap poll vote and show sign-in toast ([6bdc5f4](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/6bdc5f48f3cd937de229184ce88a83742c9c5bc9))
+- PDT-3353 - truncate long user profile description on iOS ([848b306](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/848b306ea028cae28818397f3ccf4c8f5e4b6bc5))
+- PDT-3354 - show sign-in toast when visitor reports or blocks a user ([0ec7ca6](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/0ec7ca69e610f6e4c2cf2d2dd65427eafffb45d4))
+- PDT-3355 - show sign-in toast when visitor taps follower/following count ([f5292b0](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/f5292b0268a2deffe61f7b1415659bb7b022fdec))
+- PDT-3356 - show post menu for visitors and sign-in toast on report ([786b8e0](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/786b8e0030af06bda271101a7ad7a28933168e85))
+
 ### [4.0.1](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/compare/v4.0.0...v4.0.1) (2026-06-25)
 
 ### Bug Fixes
