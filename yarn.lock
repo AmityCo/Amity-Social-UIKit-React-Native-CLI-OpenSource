@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@7.22.1-f15e84ea.0":
-  version "7.22.1-f15e84ea.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.22.1-f15e84ea.0.tgz#2c048a053daba37019deb224b118387a59266f7e"
-  integrity sha512-KfV29BEBAYnP9AtCSIrf+hMUSdgkSPvbt74IzAJJ+oV86kTeJK58diMtqSc11uaWfsiO54Q3xNC9bRHJVyHBuQ==
+"@amityco/ts-sdk-react-native@^7.23.0":
+  version "7.23.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.23.0.tgz#125bda1c82f1a7ddfca0b8e17c40cb4094ed4357"
+  integrity sha512-fE3+ZvSGSQ8EUsbwLl/Mh3391vLDBii2//oNaRe9HV1iNJlBIba2MxEPUJnYqksYhUlOhe/LPWwpDFklsr3lxA==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
@@ -7818,9 +7818,9 @@ jose@^6.0.12, jose@^6.1.0:
   integrity sha512-0TpaTfihd4QMNwrz/ob2Bp7X04yuxJkjRGi4aKmOqwhov54i6u79oCv7T+C7lo70MKH6BesI3vscD1yb/yzKXQ==
 
 js-base64@^3.7.2:
-  version "3.7.8"
-  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.7.8.tgz#af44496bc09fa178ed9c4adf67eb2b46f5c6d2a4"
-  integrity sha512-hNngCeKxIUQiEUN3GPJOkz4wF/YvdUdbNL9hsBcMQTkKzboD7T/q3OYOuuPZLUE6dBxSGpwhk5mwuDud7JVAow==
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.8.0.tgz#cfc7b3d0f15dc6f69403c50df8ff2decca1a23ad"
+  integrity sha512-65kvbemyZhj+ExQt1PEFyBEjL5vAHysu1lJdW1AwhhChkO8ZBPizYk/m9GVrpbS2Je1hF+UYZ+6KywqtZV8mHw==
 
 js-sdsl@4.3.0:
   version "4.3.0"
