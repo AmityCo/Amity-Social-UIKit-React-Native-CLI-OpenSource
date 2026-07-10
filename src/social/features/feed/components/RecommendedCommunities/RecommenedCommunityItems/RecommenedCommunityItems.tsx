@@ -13,6 +13,7 @@ import { getFileUrlWithSize } from '../../../../../utils';
 
 import { ComponentID, PageID } from '../../../../../enums';
 import { CommunityCategories } from '../../CommunityCategories/CommunityCategories';
+import { useExplore } from '../../../../../providers/ExploreProvider';
 
 type RecommendedCommunityItemProps = {
   pageId?: PageID;
@@ -24,6 +25,7 @@ export const RecommendedCommunityItem: React.FC<
 > = ({ community, pageId = PageID.WildCardPage }) => {
   const componentId = ComponentID.recommended_communities;
   const styles = useStyles();
+  const { onJoinRecommendedCommunity, refresh } = useExplore();
 
   return (
     <View style={styles.container}>
@@ -79,6 +81,14 @@ export const RecommendedCommunityItem: React.FC<
                 pageId={pageId}
                 componentId={componentId}
                 communityId={community.communityId}
+                communityName={community.displayName}
+                onJoinSuccess={() => {
+                  // Optimistically drop it from the recommended list for instant
+                  // feedback, then refresh the whole Explore page so every
+                  // section (trending, categories) reflects the true join state.
+                  onJoinRecommendedCommunity(community.communityId);
+                  refresh();
+                }}
               />
             )}
           </View>

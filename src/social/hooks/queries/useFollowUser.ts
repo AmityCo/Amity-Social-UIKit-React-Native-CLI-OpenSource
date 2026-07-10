@@ -3,6 +3,7 @@ import { UserRepository } from '@amityco/ts-sdk-react-native';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from '../../../core/stores/slices/toastSlice';
 import { ALERT, TOAST } from '../../../core/constants';
+import { useCustomRankingGlobalFeed } from '../useCustomRankingGlobalFeed';
 
 type FollowPayload = Awaited<
   ReturnType<typeof UserRepository.Relationship.follow>
@@ -18,6 +19,13 @@ type UnfollowParam = Parameters<typeof UserRepository.Relationship.unfollow>[0];
 
 export const useFollowUser = () => {
   const { showToast } = useToast();
+  // Refresh handle for the global feed (no re-subscribe). After following a
+  // user, the global feed should include that user's posts — but the feed is a
+  // live collection cached into Redux, so it only updates on an explicit
+  // re-fetch. Same pattern the community Join button uses.
+  const { refresh: refreshGlobalFeed } = useCustomRankingGlobalFeed({
+    enabled: false,
+  });
 
   const { mutate: followMutate, isPending: isFollowPending } = useMutation<
     FollowPayload,
@@ -37,6 +45,10 @@ export const useFollowUser = () => {
 
   const followUser = (userId: string) => {
     followMutate(userId, {
+      onSuccess: () => {
+        // Pull the newly-followed user's posts into the global feed.
+        refreshGlobalFeed();
+      },
       onError: () => {
         Alert.alert(ALERT.USER.FOLLOW.TITLE, ALERT.USER.FOLLOW.MESSAGE, [
           { text: ALERT.ACTION.OK },

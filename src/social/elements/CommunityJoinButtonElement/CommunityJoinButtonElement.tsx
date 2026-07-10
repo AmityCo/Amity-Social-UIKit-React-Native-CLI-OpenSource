@@ -9,11 +9,14 @@ import {
 import { Button, BUTTON_SIZE } from '../../components/Button/Button';
 import { plus } from '../../../core/assets/icons';
 import { useCustomRankingGlobalFeed } from '../../hooks/useCustomRankingGlobalFeed';
+import { useToast } from '../../../core/stores/slices/toastSlice';
 
 type CommunityJoinButtonType = {
   pageId?: PageID;
   componentId?: ComponentID;
   communityId?: string;
+  /** Community display name, used in the success toast ("You joined {name}"). */
+  communityName?: string;
   size?: BUTTON_SIZE;
   onJoinSuccess?: () => void;
 } & TouchableOpacityProps;
@@ -22,7 +25,9 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
   communityId,
+  communityName,
   size = BUTTON_SIZE.SMALL,
+  onJoinSuccess,
   ...props
 }) => {
   const { config, accessibilityId, isExcluded, themeStyles } = useAmityElement({
@@ -31,12 +36,28 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
     elementId: ElementID.community_join_button,
   });
 
-  const { refresh, globalFeedPosts } = useCustomRankingGlobalFeed({
+  const { showToast } = useToast();
+  const { refresh } = useCustomRankingGlobalFeed({
     enabled: false,
   });
   const { joinCommunity, isPending } = useJoinCommunity({
     onSuccess: () => {
-      globalFeedPosts.length === 0 && refresh();
+      showToast({
+        message: communityName
+          ? `You joined ${communityName}.`
+          : 'You joined the community.',
+        type: 'success',
+      });
+      // Refresh the global feed so the joined community's posts appear.
+      refresh();
+      // Let the parent react (e.g. remove the community from the Explore list).
+      onJoinSuccess?.();
+    },
+    onError: () => {
+      showToast({
+        message: 'Failed to join the community. Please try again.',
+        type: 'informative',
+      });
     },
   });
 

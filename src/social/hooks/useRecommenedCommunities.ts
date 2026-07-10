@@ -43,17 +43,13 @@ export const useRecommendedCommunities = (
   };
 
   const onJoinCommunity = (communityId: string) => {
-    setCommunities((prev) => [
-      ...prev?.filter((community) => {
-        if (community.communityId === communityId) {
-          return {
-            ...community,
-            isJoined: true,
-          };
-        }
-        return community;
-      }),
-    ]);
+    // Drop the just-joined community from the list. The initial fetch only
+    // keeps `!isJoined` communities, so once joined it should disappear too.
+    // (Previously this used `.filter` but returned objects instead of
+    // booleans, so every item was kept and nothing was ever removed.)
+    setCommunities((prev) =>
+      prev?.filter((community) => community.communityId !== communityId)
+    );
   };
 
   useEffect(() => {

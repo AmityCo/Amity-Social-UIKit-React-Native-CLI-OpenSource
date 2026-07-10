@@ -128,10 +128,11 @@ export default function App() {
   return (
     <>
       <VisitorScreen
-        apiKey="YOUR_API_KEY" // Put your apiKey
-        apiRegion="API_REGION" // Put your apiRegion
-        signupUserId="USER_ID" // Put your UserId
-        apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
+      apiKey="b0ebeb5939def76019308d4a530b12ddd558dde5bf346e2e" // Put your apiKey
+      apiRegion="us" // Put your apiRegion
+      apiEndpoint="https://api.us.amity.co" 
+      
+
         fcmToken={fcmToken} // android:fcm iOS:APN
       />
       {logger && <NetworkLogger />}

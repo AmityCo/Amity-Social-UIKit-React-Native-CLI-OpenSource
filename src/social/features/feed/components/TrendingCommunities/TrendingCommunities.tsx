@@ -22,7 +22,7 @@ const AmityTrendingCommunitiesCommunity: FC<
     pageId,
     componentId,
   });
-  const { trendingCommunities } = useExplore();
+  const { trendingCommunities, refresh } = useExplore();
   const styles = useStyles();
 
   const navigation =
@@ -58,6 +58,9 @@ const AmityTrendingCommunitiesCommunity: FC<
                 community={community}
                 label={`0${index + 1}`}
                 componentId={componentId}
+                // Refresh Explore after joining so trending reflects the new
+                // join state (button flips to "Joined").
+                onJoinSuccess={refresh}
               />
             </Pressable>
           );

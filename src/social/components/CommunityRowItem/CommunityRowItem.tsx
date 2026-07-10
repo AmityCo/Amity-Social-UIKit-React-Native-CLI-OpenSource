@@ -19,6 +19,8 @@ type CommunityRowItemProps = {
   community: Amity.Community;
   showJoinButton?: boolean;
   label?: string;
+  /** Fired after the user successfully joins from this row's Join button. */
+  onJoinSuccess?: () => void;
 };
 
 const CommunityRowItem: FC<CommunityRowItemProps> = ({
@@ -27,6 +29,7 @@ const CommunityRowItem: FC<CommunityRowItemProps> = ({
   showJoinButton = true,
   community,
   label,
+  onJoinSuccess,
 }) => {
   const styles = useStyles();
   return (
@@ -78,6 +81,8 @@ const CommunityRowItem: FC<CommunityRowItemProps> = ({
                   pageId={pageId}
                   componentId={componentId}
                   communityId={community.communityId}
+                  communityName={community.displayName}
+                  onJoinSuccess={onJoinSuccess}
                 />
               ))}
           </View>

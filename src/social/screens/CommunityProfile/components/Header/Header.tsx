@@ -51,7 +51,7 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const componentId = ComponentID.community_header;
-  const { community } = useCommunity(communityId);
+  const { community, refresh: refreshCommunity } = useCommunity(communityId);
   const { posts: pendingPosts } = usePosts({
     targetType: 'community',
     targetId: communityId,
@@ -164,7 +164,11 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
                 pageId={pageId}
                 componentId={componentId}
                 communityId={community.communityId}
+                communityName={community.displayName}
                 size={BUTTON_SIZE.LARGE}
+                // Re-fetch the community so `isJoined` flips and this button
+                // switches to the "Joined" state without a manual reload.
+                onJoinSuccess={refreshCommunity}
               />
             </View>
           )}
