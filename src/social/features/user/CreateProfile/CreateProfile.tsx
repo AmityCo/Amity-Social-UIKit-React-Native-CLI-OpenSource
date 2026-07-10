@@ -44,6 +44,13 @@ export type CreateProfileProps = {
    */
   onCreated?: (user: CreatedUser) => void;
   /**
+   * Fired when profile creation fails at any step (generating the userId,
+   * login, avatar upload, or profile update). Receives the thrown error so the
+   * host can capture/log it or show its own UI. The UIKit still shows its own
+   * failure toast in addition to calling this.
+   */
+  onError?: (error: Error) => void;
+  /**
    * Fired when the user dismisses the create-profile flow without creating.
    */
   onCancel?: () => void;
@@ -55,6 +62,7 @@ export function CreateProfile({
   authToken,
   defaultAvatarImageUrl,
   onCreated,
+  onError,
   onCancel,
 }: CreateProfileProps) {
   const {
@@ -72,6 +80,7 @@ export function CreateProfile({
     authToken,
     defaultAvatarImageUrl,
     onCreated,
+    onError,
   });
 
   // Stay locked while the mutation runs AND through the brief post-success

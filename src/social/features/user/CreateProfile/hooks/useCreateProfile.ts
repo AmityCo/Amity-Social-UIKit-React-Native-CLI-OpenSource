@@ -67,6 +67,14 @@ type UseCreateProfileParams = {
    */
   defaultAvatarImageUrl?: string;
   onCreated?: (user: CreatedUser) => void;
+  /**
+   * Fired when profile creation fails at any step of the save transaction —
+   * generating the userId, `Client.login`, the avatar upload, or `updateUser`.
+   * Receives the thrown error so the host can react (log it, show its own UI,
+   * retry, etc.). The UIKit still shows its own failure toast in addition to
+   * calling this. Mirrors `onCreated` for the failure path.
+   */
+  onError?: (error: Error) => void;
 };
 
 type UploadedFile = { fileId?: string; fileUrl?: string };
@@ -100,6 +108,7 @@ export const useCreateProfile = ({
   authToken,
   defaultAvatarImageUrl,
   onCreated,
+  onError,
 }: UseCreateProfileParams) => {
   const { styles, theme } = useStyles();
   const { accessibilityId } = useAmityPage({
@@ -252,6 +261,10 @@ export const useCreateProfile = ({
       );
     },
     onError: (error) => {
+      // Hand the failure back to the host so it can react (log, retry, show its
+      // own UI). Fires for every failure path, alongside the UIKit's own toast.
+      onError?.(error instanceof Error ? error : new Error(String(error)));
+
       hideToast();
       if (error.message?.includes(ERROR_CODE.BLOCKED_WORD)) {
         showToast({
