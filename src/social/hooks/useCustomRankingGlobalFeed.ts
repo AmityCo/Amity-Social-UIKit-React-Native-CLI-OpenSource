@@ -38,6 +38,11 @@ export const useCustomRankingGlobalFeed = ({
 
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(false);
+  // Kept in state (not just the ref) so that when the SDK callback provides the
+  // next-page function, the consumer re-renders and receives it. A ref alone
+  // never triggers a re-render, so the list's `onNextPage` stayed null and
+  // pagination never fired.
+  const [onNextPageFn, setOnNextPageFn] = useState<(() => void) | null>(null);
   const postList = useUIKitSelector(
     (state: RootState) => state.globalFeed.postList
   );
@@ -68,7 +73,12 @@ export const useCustomRankingGlobalFeed = ({
           return;
         }
 
-        if (onNextPage) onNextPageRef.current = onNextPage;
+        if (onNextPage) {
+          onNextPageRef.current = onNextPage;
+          // Store as state too so the consumer re-renders with the fresh
+          // paginator. Wrap in a thunk so setState doesn't invoke it.
+          setOnNextPageFn(() => onNextPage);
+        }
         if ($error) setError($error);
 
         if (data) {
@@ -110,6 +120,7 @@ export const useCustomRankingGlobalFeed = ({
     interactionHandleRef.current?.cancel();
     interactionHandleRef.current = null;
     onNextPageRef.current = null;
+    setOnNextPageFn(null);
     hasInitialDataRef.current = false;
 
     unsubscribeRef.current = fetchCustomRanking();
@@ -119,7 +130,7 @@ export const useCustomRankingGlobalFeed = ({
     loading: fetching,
     refresh,
     itemWithAds,
-    onNextPage: onNextPageRef.current,
+    onNextPage: onNextPageFn,
     error,
     globalFeedPosts: postList,
   };
