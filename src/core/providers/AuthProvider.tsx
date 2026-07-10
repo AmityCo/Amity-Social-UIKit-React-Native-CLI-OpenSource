@@ -5,7 +5,11 @@ import {
   useState,
   type FC,
 } from 'react';
-import { Client } from '@amityco/ts-sdk-react-native';
+import { Client, CommunityRepository } from '@amityco/ts-sdk-react-native';
+import {
+  consumePendingVisitorJoin,
+  notifyVisitorAutoJoinCompleted,
+} from '../stores/pendingVisitorJoin';
 import type { AuthContextInterface } from '../types/auth';
 import { Alert } from 'react-native';
 import type { IAmityUIkitProvider } from './AmityUIKitProvider';
@@ -70,7 +74,27 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
       setIsConnected(true);
       onSdkReady();
       // Same check as the Web UIKit's isVisitorOrBot in SDKProvider
-      setIsVisitorOrBot(Client.getCurrentUserType() !== 'signed-in');
+      const isSignedIn = Client.getCurrentUserType() === 'signed-in';
+      setIsVisitorOrBot(!isSignedIn);
+
+      // Auto-join the community a visitor tapped Join on before signing in.
+      // A visitor session can't join (read-only); now that the session is a
+      // signed-in one, consume the pending id and join so the community's posts
+      // appear in the feed. consume-once, so re-runs of this effect are safe.
+      if (isSignedIn) {
+        const pendingCommunityId = consumePendingVisitorJoin();
+        if (pendingCommunityId) {
+          CommunityRepository.joinCommunity(pendingCommunityId)
+            .then(() => {
+              // Tell join-state-dependent screens (Explore) to re-fetch now
+              // that the join is committed — they may have loaded before it.
+              notifyVisitorAutoJoinCompleted();
+            })
+            .catch((error: unknown) =>
+              console.log('Auto-join community failed:', error)
+            );
+        }
+      }
     }
   }, [sessionState]);
 

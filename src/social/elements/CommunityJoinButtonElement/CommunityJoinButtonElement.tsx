@@ -67,6 +67,9 @@ const CommunityJoinButton: FC<CommunityJoinButtonType> = ({
     if (!communityId) return;
     handleGlobalBehavior({
       defaultBehavior: () => joinCommunity(communityId),
+      // Forwarded to handleVisitorUserAction so a visitor host can auto-join
+      // this community after the visitor creates a profile / signs in.
+      communityId,
     });
   };
 

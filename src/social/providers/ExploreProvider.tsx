@@ -1,11 +1,12 @@
 // ExploreContext.tsx
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useEffect } from 'react';
 
 import {
   useRecommendedCommunities,
   useTrendingCommunities,
   useCategories,
 } from '../hooks';
+import { onVisitorAutoJoinCompleted } from '../../core/stores/pendingVisitorJoin';
 
 interface ExploreContextType {
   refresh: () => void;
@@ -55,6 +56,16 @@ export const ExploreProvider: React.FC<{ children: ReactNode }> = ({
     refreshTrendingCommunities();
     refreshCategories();
   };
+
+  // The visitor auto-join (after sign-in) may complete AFTER Explore has
+  // already loaded, leaving the just-joined community in the list. Re-fetch
+  // when the auto-join finishes so the lists reflect the new join state.
+  useEffect(() => {
+    return onVisitorAutoJoinCompleted(() => {
+      refreshRecommendedCommunities();
+      refreshTrendingCommunities();
+    });
+  }, []);
 
   return (
     <ExploreContext.Provider

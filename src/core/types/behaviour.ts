@@ -21,8 +21,12 @@ export interface IBehaviour {
     /**
      * Called when a visitor attempts a restricted action (comment, react,
      * follow, join…). Default shows a toast; override to open a sign-in flow.
+     *
+     * When the gated action is joining a community, the tapped `communityId` is
+     * passed so the host can, for example, auto-join that community once the
+     * visitor finishes creating a profile / signing in.
      */
-    handleVisitorUserAction?: () => void;
+    handleVisitorUserAction?: (communityId?: string) => void;
     /**
      * Called when a visitor session exceeds its daily usage limit (error
      * 400323). Providing this skips the default full-page
