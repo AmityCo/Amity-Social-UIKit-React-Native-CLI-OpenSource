@@ -20,7 +20,6 @@ target 'AmityReactNativeSocialUiKitExample' do
   pod 'DVAssetLoaderDelegate', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
-  pod 'livekit-react-native', :path => '../node_modules/@livekit/react-native'
   $RNVideoUseVideoCaching = true
   $RNFirebaseAsStaticFramework = true
 

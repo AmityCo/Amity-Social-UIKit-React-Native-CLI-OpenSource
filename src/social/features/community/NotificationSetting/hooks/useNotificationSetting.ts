@@ -5,9 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   commentNotification,
-  livestream,
   postNotification,
-  story,
 } from '../../../../../core/assets/icons';
 import { RootStackParamList } from '../../../../../core/routes/RouteParamList';
 import { useBehaviour } from '../../../../providers/BehaviourProvider';
@@ -95,46 +93,6 @@ export function useNotificationSetting({
           );
         }
         navigation.navigate('CommunityCommentsNotificationSetting', {
-          community,
-        });
-      },
-    },
-    {
-      visible: true,
-      label: 'Stories',
-      iconProps: { xml: story(), noContainer: true, width: 24, height: 24 },
-      onPress: () => {
-        if (
-          AmityCommunityNotificationSettingPageBehavior?.goToStoriesNotificationSettingPage
-        ) {
-          return AmityCommunityNotificationSettingPageBehavior.goToStoriesNotificationSettingPage(
-            { community }
-          );
-        }
-        navigation.navigate('CommunityStoriesNotificationSetting', {
-          community,
-        });
-      },
-    },
-    {
-      // livestream notification setting is now visible
-      visible: true,
-      label: 'Live streams',
-      iconProps: {
-        xml: livestream(),
-        noContainer: true,
-        width: 24,
-        height: 24,
-      },
-      onPress: () => {
-        if (
-          AmityCommunityNotificationSettingPageBehavior?.goToLivestreamsNotificationSettingPage
-        ) {
-          return AmityCommunityNotificationSettingPageBehavior.goToLivestreamsNotificationSettingPage(
-            { community }
-          );
-        }
-        navigation.navigate('CommunityLivestreamsNotificationSetting', {
           community,
         });
       },

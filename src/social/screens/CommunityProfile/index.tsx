@@ -19,7 +19,7 @@ import {
 } from 'react';
 import { useStyles } from './styles';
 import { ComponentID, PageID } from '../../enums';
-import { useAmityPage, useCommunity, useStoryPermission } from '../../hooks';
+import { useAmityPage, useCommunity } from '../../hooks';
 import AmityCommunityHeaderComponent from './components/Header';
 import AmityCommunityFeedComponent, {
   AmityCommunityFeedRef,
@@ -35,7 +35,7 @@ import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import CommunityCreatePostButton from '../../elements/CommunityCreatePostButton/CommunityCreatePostButton';
 import { SvgXml } from 'react-native-svg';
 import { useBehaviour } from '../../providers/BehaviourProvider';
-import { livestream, poll, post, story } from '../../../core/assets/icons';
+import { poll, post } from '../../../core/assets/icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from 'react-native-paper';
 import { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
@@ -271,15 +271,11 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
   const {
     AmityPostTargetSelectionPageBehavior,
     AmityPollTargetSelectionPageBehavior,
-    AmityStoryTargetSelectionPageBehavior,
-    AmityLivestreamPostTargetSelectionPageBehavior,
   } = useBehaviour();
   const navigation =
     useNavigation<
       NativeStackNavigationProp<RootStackParamList, 'CreatePost'>
     >();
-
-  const { hasStoryPermission } = useStoryPermission(communityId);
 
   const hasPostPermission = usePostPermission({ community });
 
@@ -305,42 +301,6 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
-  const handleCreateStory = () => {
-    closeBottomSheet();
-
-    if (AmityStoryTargetSelectionPageBehavior.goToStoryComposerPage) {
-      return AmityStoryTargetSelectionPageBehavior.goToStoryComposerPage({
-        targetId: communityId,
-        targetType: 'community',
-      });
-    }
-    navigation.navigate('CreateStory', {
-      targetId: communityId,
-      targetType: 'community',
-    });
-  };
-
-  const handleCreateLivestream = () => {
-    closeBottomSheet();
-
-    if (
-      AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage
-    ) {
-      return AmityLivestreamPostTargetSelectionPageBehavior.goToCreateLivestreamPage(
-        {
-          targetId: communityId,
-          targetType: 'community',
-          targetName: community?.displayName,
-        }
-      );
-    }
-    navigation.navigate('CreateLivestream', {
-      targetId: communityId,
-      targetType: 'community',
-      targetName: community?.displayName,
-    });
-  };
-
   const handleCreatePoll = () => {
     closeBottomSheet();
 
@@ -360,8 +320,7 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
     });
   };
 
-  if (!community?.isJoined || (!hasPostPermission && !hasStoryPermission))
-    return null;
+  if (!community?.isJoined || !hasPostPermission) return null;
 
   return (
     <Fragment>
@@ -389,20 +348,6 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
                 <Text style={styles.bottomSheetOptionText}>Post</Text>
               </TouchableOpacity>
             )}
-            {hasStoryPermission && (
-              <TouchableOpacity
-                onPress={handleCreateStory}
-                style={styles.bottomSheetOption}
-              >
-                <SvgXml
-                  width={24}
-                  height={24}
-                  xml={story({ fill: colors.base })}
-                  fill={colors.base}
-                />
-                <Text style={styles.bottomSheetOptionText}>Story</Text>
-              </TouchableOpacity>
-            )}
             {hasPostPermission && (
               <TouchableOpacity
                 onPress={handleCreatePoll}
@@ -415,20 +360,6 @@ function CommunityProfileActions({ pageId, communityId, styles }) {
                   color={colors.base}
                 />
                 <Text style={styles.bottomSheetOptionText}>Poll</Text>
-              </TouchableOpacity>
-            )}
-            {hasPostPermission && (
-              <TouchableOpacity
-                onPress={handleCreateLivestream}
-                style={styles.bottomSheetOption}
-              >
-                <SvgXml
-                  width={24}
-                  height={24}
-                  xml={livestream()}
-                  color={colors.base}
-                />
-                <Text style={styles.bottomSheetOptionText}>Livestream</Text>
               </TouchableOpacity>
             )}
           </Animated.View>

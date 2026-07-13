@@ -1,5 +1,5 @@
 import { PostTargetType } from '../../../../../enums/postTargetType';
-import { livestream, poll, post } from '../../../../../../core/assets/icons';
+import { poll, post } from '../../../../../../core/assets/icons';
 import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
 import { FloatingActionButton } from '../../../../../components';
 import MenuAction from '../../../../../elements/MenuAction';
@@ -71,29 +71,6 @@ export function Action({ userId }: ActionProps) {
                     navigation.navigate('PollPostComposer', {
                       targetId: userId,
                       targetType: PostTargetType.user,
-                    });
-                  }
-                }}
-              />
-              <MenuAction
-                gap="small"
-                label="Livestream"
-                iconProps={{
-                  xml: livestream(),
-                }}
-                onPress={() => {
-                  closeBottomSheet();
-                  if (AmityUserProfilePageBehavior?.goToCreateLivestreamPage) {
-                    AmityUserProfilePageBehavior?.goToCreateLivestreamPage?.({
-                      targetId: userId,
-                      targetType: 'user',
-                      targetName: 'My timeline',
-                    });
-                  } else {
-                    navigation.navigate('CreateLivestream', {
-                      targetId: userId,
-                      targetType: PostTargetType.user,
-                      targetName: 'My timeline',
                     });
                   }
                 }}

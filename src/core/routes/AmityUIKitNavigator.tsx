@@ -15,20 +15,14 @@ import CreateCommunity from '../../social/screens/CreateCommunity';
 import type { MyMD3Theme } from '../providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
 import PostTypeChoiceModal from '../../social/components/legacy/PostTypeChoiceModal/PostTypeChoiceModal';
-import CreateStoryScreen from '../../social/screens/CreateStory/CreateStoryScreen';
 import Toast from '../../social/components/legacy/Toast/Toast';
 import AmitySocialGlobalSearchPage from '../../social/screens/SocialGlobalSearch';
 import AmityMyCommunitiesSearchPage from '../../social/screens/MyCommunitiesSearch';
-import CreateLivestream from '../../social/screens/CreateLivestream';
 import PostTargetSelection from '../../social/screens/PostTargetSelection';
-import StoryTargetSelection from '../../social/features/story/TargetSelection/TargetSelection';
-import LivestreamPostTargetSelection from '../../social/screens/LivestreamPostTargetSelection';
 import AmityAllCategoriesPage from '../../social/screens/AllCategories';
 import AmityCommunitiesByCategoryPage from '../../social/screens/CommunitiesByCategory';
 import AmityCommunityProfilePage from '../../social/screens/CommunityProfile';
 import EditPost from '../../social/screens/EditPost/EditPost';
-import LivestreamPlayer from '../../social/screens/LivestreamPlayer';
-import LivestreamTerminated from '../../social/screens/LivestreamTerminated';
 import PollTargetSelection from '../../social/screens/PollTargetSelection';
 import PollPostComposer from '../../social/screens/PollPostComposer';
 import CommunityAddCategory from '../../social/screens/CommunityAddCategory';
@@ -37,12 +31,9 @@ import EditCommunity from '../../social/screens/EditCommunity';
 import CommunitySetting from '../../social/screens/CommunitySetting';
 import CommunityMembership from '../../social/screens/CommunityMembership';
 import CommunityPostPermission from '../../social/screens/CommunityPostPermission';
-import CommunityStorySetting from '../../social/screens/CommunityStorySetting';
 import { CommunityNotificationSettingScreen } from '../../social/screens/CommunityNotificationSetting';
 import { CommunityPostsNotificationSettingScreen } from '../../social/screens/CommunityPostsNotificationSetting';
 import { CommunityCommentsNotificationSettingScreen } from '../../social/screens/CommunityCommentsNotificationSetting';
-import { CommunityStoriesNotificationSettingScreen } from '../../social/screens/CommunityStoriesNotificationSetting';
-import { CommunityLivestreamsNotificationSettingScreen } from '../../social/screens/CommunityLivestreamsNotificationSetting';
 import CommunityPendingRequest from '../../social/screens/CommunityPendingRequest';
 import { GlobalBan } from '../../social/screens/GlobalBan';
 import { VisitorUsageLimit } from '../../social/screens/VisitorUsageLimit';
@@ -173,10 +164,6 @@ export default function AmitySocialUIKitV4Navigator() {
             component={CommunityPostPermission}
           />
           <Stack.Screen
-            name="CommunityStorySetting"
-            component={CommunityStorySetting}
-          />
-          <Stack.Screen
             name="CommunityNotificationSetting"
             component={CommunityNotificationSettingScreen}
           />
@@ -187,14 +174,6 @@ export default function AmitySocialUIKitV4Navigator() {
           <Stack.Screen
             name="CommunityCommentsNotificationSetting"
             component={CommunityCommentsNotificationSettingScreen}
-          />
-          <Stack.Screen
-            name="CommunityStoriesNotificationSetting"
-            component={CommunityStoriesNotificationSettingScreen}
-          />
-          <Stack.Screen
-            name="CommunityLivestreamsNotificationSetting"
-            component={CommunityLivestreamsNotificationSettingScreen}
           />
 
           {/* --- POST --- */}
@@ -226,40 +205,6 @@ export default function AmitySocialUIKitV4Navigator() {
           <Stack.Screen
             name="UserPendingFollowRequests"
             component={UserPendingFollowRequests}
-          />
-
-          {/* --- Story --- */}
-          <Stack.Screen
-            name="StoryTargetSelection"
-            component={StoryTargetSelection}
-            options={{ animation: 'slide_from_bottom' }}
-          />
-          <Stack.Screen
-            name="CreateStory"
-            component={CreateStoryScreen}
-            options={{ animation: 'slide_from_bottom' }}
-          />
-
-          {/* --- Livestream --- */}
-          <Stack.Screen
-            name="LivestreamPostTargetSelection"
-            component={LivestreamPostTargetSelection}
-            options={{ animation: 'slide_from_bottom' }}
-          />
-          <Stack.Screen
-            name="CreateLivestream"
-            component={CreateLivestream}
-            options={{ animation: 'slide_from_bottom' }}
-          />
-          <Stack.Screen
-            name="LivestreamPlayer"
-            component={LivestreamPlayer}
-            options={{ animation: 'slide_from_bottom' }}
-          />
-          <Stack.Screen
-            name="LivestreamTerminated"
-            component={LivestreamTerminated}
-            options={{ animation: 'slide_from_bottom' }}
           />
 
           {/* --- Image --- */}

@@ -17,8 +17,6 @@ import CommunityInfo from '../../../../elements/CommunityInfo/CommunityInfo';
 import CommunityJoinButtonElement from '../../../../elements/CommunityJoinButtonElement/CommunityJoinButtonElement';
 import CommunityPendingPost from '../../../../elements/CommunityPendingPost/CommunityPendingPost';
 import { usePosts } from '../../../../hooks/usePosts';
-import AmityStoryTabComponent from '../../../../features/story/components/Tab/Tab';
-import { AmityStoryTabComponentEnum } from '../../../../types';
 import { BUTTON_SIZE } from '../../../../components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -192,10 +190,6 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
                 }}
               />
             )}
-          <AmityStoryTabComponent
-            type={AmityStoryTabComponentEnum.communityFeed}
-            targetId={communityId}
-          />
         </View>
       )}
     </>

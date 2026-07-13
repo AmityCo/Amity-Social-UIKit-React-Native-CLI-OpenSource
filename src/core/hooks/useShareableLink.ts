@@ -6,7 +6,6 @@ const REFERENCE_KEY: Record<ShareableLinkModel, string> = {
   [ShareableLinkModel.posts]: 'postId',
   [ShareableLinkModel.communities]: 'communityId',
   [ShareableLinkModel.users]: 'userId',
-  [ShareableLinkModel.livestreams]: 'livestreamId',
 };
 
 export function useShareableLink() {

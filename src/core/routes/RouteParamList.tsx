@@ -1,6 +1,5 @@
 import {
   AmityPostComposerPageType,
-  AmityStoryTabComponentEnum,
   UserRelationshipTab,
 } from '../../social/types';
 import { AmityPostTargetSelectionPageType } from '../../social/enums';
@@ -32,31 +31,12 @@ export type RootStackParamList = {
 
   AllMyCommunity: undefined;
   ReactionList: { referenceId: string; referenceType: string };
-  CreateStory: {
-    targetId: string;
-    targetType: Amity.StoryTargetType;
-  };
   FollowerList: Amity.User;
   PostTargetSelection: { postType: AmityPostTargetSelectionPageType };
-  StoryTargetSelection: undefined;
 
   AllCategoriesPage: undefined;
   CommunitiesByCategoryPage: {
     category: Amity.Category;
-  };
-  LivestreamPostTargetSelection: undefined;
-  CreateLivestream: {
-    pop?: number;
-    targetId: string;
-    targetName: string;
-    targetType: string;
-  };
-  LivestreamPlayer: {
-    roomId: string;
-    post: Amity.Post;
-  };
-  LivestreamTerminated: {
-    type: 'streamer' | 'viewer';
   };
   CommunityProfilePage: {
     communityId: string;
@@ -97,10 +77,6 @@ export type RootStackParamList = {
     community: Amity.Community;
   };
 
-  CommunityStorySetting: {
-    community: Amity.Community;
-  };
-
   CommunityNotificationSetting: {
     community: Amity.Community;
   };
@@ -111,19 +87,6 @@ export type RootStackParamList = {
 
   CommunityCommentsNotificationSetting: {
     community: Amity.Community;
-  };
-
-  CommunityStoriesNotificationSetting: {
-    community: Amity.Community;
-  };
-
-  CommunityLivestreamsNotificationSetting: {
-    community: Amity.Community;
-  };
-
-  AmityStoryTabComponent: {
-    type: AmityStoryTabComponentEnum;
-    targetId?: string;
   };
 
   AmityPostEngagementContentComponent: {

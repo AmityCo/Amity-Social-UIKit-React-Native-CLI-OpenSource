@@ -1,13 +1,11 @@
 import React, { FC, memo, useCallback, useMemo, useRef, useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList } from 'react-native';
 
 import { RefreshControl } from 'react-native';
 import AmityPostContentComponent from '../../../post/components/Content/Content';
 import { ComponentID, PageID } from '../../../../enums/enumUIKitID';
 import { useAmityComponent } from '../../../../hooks/useUiKitReference';
 import { AmityPostContentComponentStyleEnum } from '../../../../enums/AmityPostContentComponentStyle';
-import AmityStoryTabComponent from '../../../story/components/Tab/Tab';
-import { AmityStoryTabComponentEnum } from '../../../../types';
 import { usePostImpression } from '../../../../hooks/usePostImpression';
 import { useStyle } from './styles';
 import { isAmityAd } from '../../../../hooks/useCustomRankingGlobalFeed';
@@ -16,7 +14,6 @@ import Divider from '../../../../components/Divider';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
-  isShowStoryTab?: boolean;
   GlobalFeedHeaderComponent?: React.ReactElement;
   itemWithAds: (Amity.Post | Amity.Ad)[] | undefined;
   refresh: () => void;
@@ -28,7 +25,6 @@ export const globalFeedPageLimit = 20;
 
 const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
-  isShowStoryTab = true,
   GlobalFeedHeaderComponent,
   itemWithAds,
   refresh,
@@ -67,18 +63,8 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   }).current;
 
   const listHeaderComponent = useMemo(() => {
-    if (isShowStoryTab) {
-      return (
-        <View>
-          {GlobalFeedHeaderComponent}
-          <AmityStoryTabComponent
-            type={AmityStoryTabComponentEnum.globalFeed}
-          />
-        </View>
-      );
-    }
     return GlobalFeedHeaderComponent || null;
-  }, [isShowStoryTab, GlobalFeedHeaderComponent]);
+  }, [GlobalFeedHeaderComponent]);
 
   if (isExcluded) return null;
 

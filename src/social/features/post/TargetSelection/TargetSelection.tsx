@@ -64,22 +64,6 @@ const AmityPostTargetSelectionPage = ({
         isPublic,
       });
     }
-
-    if (postType === AmityPostTargetSelectionPageType.livestream) {
-      if (AmityPostTargetSelectionPageBehavior.goToCreateLivestreamPage) {
-        return AmityPostTargetSelectionPageBehavior.goToCreateLivestreamPage({
-          targetId,
-          targetType,
-          targetName,
-        });
-      }
-
-      return navigation.navigate('CreateLivestream', {
-        targetId,
-        targetType,
-        targetName,
-      });
-    }
   };
 
   const onClickClose = () => {
