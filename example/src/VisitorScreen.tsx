@@ -152,7 +152,7 @@ export default function VisitorScreen({
   apiRegion,
   apiEndpoint,
   fcmToken,
-  signupUserId = 'visitor-user-test-8',
+  signupUserId = 'visitor-user-test-10',
 }: VisitorScreenProps) {
   const [view, setView] = useState<ViewName>('social');
   const [showGuidelines, setShowGuidelines] = useState(false);

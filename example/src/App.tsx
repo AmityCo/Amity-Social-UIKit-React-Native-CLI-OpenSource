@@ -1,10 +1,30 @@
 import { navigate } from '@amityco/react-native-social-uikit';
 import VisitorScreen from './VisitorScreen';
+import SignedInScreen from './SignedInScreen';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
-import { PermissionsAndroid, Platform } from 'react-native';
+import {
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import NetworkLogger from 'react-native-network-logger';
 import { LogBox } from 'react-native';
+
+const API_KEY = "YOUR_API_KEY"; // Put your apiKey
+const API_REGION = "API_REGION"; // Put your apiRegion
+const API_ENDPOINT ="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
+
+// Shared test userId. The Visitor tab creates a profile as this user (via the
+// create-profile flow), and the Signed-in tab logs straight in as the same
+// user — so you can create the profile once on Visitor, then switch to
+// Signed-in and see the same account.
+const TEST_USER_ID = 'visitor-user-test-10';
+
+type TabName = 'visitor' | 'signedIn';
 
 function handleNotificationNavigation(remoteMessage: {
   data?: Record<string, any>;
@@ -44,8 +64,9 @@ LogBox.ignoreAllLogs(true);
 
 export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
-  const logger = false;
+  const [showLogger, setShowLogger] = useState(false);
   const [permissionGranted, setPermissionGranted] = useState(false);
+  const [tab, setTab] = useState<TabName>('visitor');
 
   useEffect(() => {
     let granted: boolean;
@@ -126,17 +147,143 @@ export default function App() {
 
   if (!fcmToken) return null;
   return (
-    <>
-      <VisitorScreen
-      apiKey="b0ebeb5939def76019308d4a530b12ddd558dde5bf346e2e" // Put your apiKey
-      apiRegion="us" // Put your apiRegion
-      apiEndpoint="https://api.us.amity.co" 
-      
+    <View style={styles.appRoot}>
+      <View style={styles.screenArea}>
+        {/* Only the active tab is mounted. Each screen owns its own
+            AmityUiKitProvider (and its own login), so keeping just one mounted
+            avoids two providers logging in at once. Keying by tab forces a
+            clean remount when switching so the provider re-runs login. */}
+        {tab === 'visitor' ? (
+          <VisitorScreen
+            key="visitor"
+            apiKey={API_KEY}
+            apiRegion={API_REGION}
+            apiEndpoint={API_ENDPOINT}
+            fcmToken={fcmToken} // android:fcm iOS:APN
+            // Create the profile as the same user the Signed-in tab logs in as.
+            signupUserId={TEST_USER_ID}
+          />
+        ) : (
+          <SignedInScreen
+            key="signedIn"
+            apiKey={API_KEY}
+            apiRegion={API_REGION}
+            apiEndpoint={API_ENDPOINT}
+            fcmToken={fcmToken}
+            // Sign in directly as this user — no visitor / create-profile step.
+            userId={TEST_USER_ID}
+            // displayName intentionally omitted to test the "userId only" login
+            // path (existing displayName is preserved, not overwritten).
+          />
+        )}
+      </View>
 
-        fcmToken={fcmToken} // android:fcm iOS:APN
-      />
-      {logger && <NetworkLogger />}
-    </>
+      <View style={styles.tabBar}>
+        <TouchableOpacity
+          style={styles.tabButton}
+          onPress={() => setTab('visitor')}
+        >
+          <Text
+            style={[styles.tabLabel, tab === 'visitor' && styles.tabLabelActive]}
+          >
+            Visitor
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.tabButton}
+          onPress={() => setTab('signedIn')}
+        >
+          <Text
+            style={[
+              styles.tabLabel,
+              tab === 'signedIn' && styles.tabLabelActive,
+            ]}
+          >
+            Signed-in
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Full-screen network logger overlay, toggled by the floating button. */}
+      {showLogger && (
+        <View style={styles.loggerOverlay}>
+          <View style={styles.loggerContainer}>
+            <NetworkLogger />
+          </View>
+        </View>
+      )}
+
+      {/* Floating Show/Hide button, always on top. */}
+      <TouchableOpacity
+        style={styles.loggerToggle}
+        onPress={() => setShowLogger((v) => !v)}
+      >
+        <Text style={styles.loggerToggleText}>
+          {showLogger ? 'Hide Logs' : 'Show Logs'}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  appRoot: {
+    flex: 1,
+  },
+  screenArea: {
+    flex: 1,
+  },
+  tabBar: {
+    flexDirection: 'row',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: '#d9dbe0',
+    backgroundColor: '#ffffff',
+    paddingBottom: 24, // clear the home indicator
+    paddingTop: 8,
+  },
+  tabButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 6,
+  },
+  tabLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#898e9e',
+  },
+  tabLabelActive: {
+    color: '#1054de',
+  },
+  loggerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#ffffff',
+    zIndex: 10,
+  },
+  loggerContainer: {
+    flex: 1,
+    // Leave room at the top for the status bar and the floating toggle button.
+    paddingTop: 100,
+  },
+  loggerToggle: {
+    position: 'absolute',
+    top: 60,
+    right: 16,
+    zIndex: 20,
+    backgroundColor: '#1054de',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
+  },
+  loggerToggleText: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+});
 
