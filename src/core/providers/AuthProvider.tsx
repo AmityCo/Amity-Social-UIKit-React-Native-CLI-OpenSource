@@ -113,8 +113,14 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
       if (userId) {
         let loginParam: Amity.ConnectClientParams = {
           userId: userId,
-          displayName: displayName,
         };
+        // Only send displayName when the host actually supplied one. The SDK
+        // overwrites an existing user's displayName whenever a value is passed,
+        // so omitting the field entirely (rather than passing undefined) keeps
+        // the server-side name intact for returning users.
+        if (displayName) {
+          loginParam = { ...loginParam, displayName: displayName };
+        }
         if (authToken?.length > 0) {
           loginParam = { ...loginParam, authToken: authToken };
         }
