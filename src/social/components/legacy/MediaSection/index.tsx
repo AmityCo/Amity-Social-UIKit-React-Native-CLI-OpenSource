@@ -15,7 +15,6 @@ import ImageView from '../react-native-image-viewing/dist';
 import { RootState, useUIKitSelector } from '../../../../core/stores/store';
 import { playBtn } from '../../../../core/assets/icons/xml';
 import PollSection from '../PollSection/PollSection';
-import LivestreamContent from '../../LivestreamContent';
 
 interface IMediaSection {
   childrenPosts: string[];
@@ -25,7 +24,6 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
   const [imagePosts, setImagePosts] = useState<string[]>([]);
   const [videoPosts, setVideoPosts] = useState<IVideoPost[]>([]);
   const [pollIds, setPollIds] = useState<{ pollId: string }[]>([]);
-  const [livestreamId, setLivestreamId] = useState<Amity.Room['roomId'][]>([]);
 
   const [imagePostsFullSize, setImagePostsFullSize] = useState<MediaUri[]>([]);
   const [videoPostsFullSize, setVideoPostsFullSize] = useState<MediaUri[]>([]);
@@ -92,12 +90,6 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
         } else if (item?.dataType === 'poll') {
           setPollIds((prev) => {
             return !prev.includes(item.data) ? [...prev, item.data] : [...prev];
-          });
-        } else if (item?.dataType === 'room') {
-          setLivestreamId((prev) => {
-            return !prev.includes(item.data)
-              ? [...prev, item.data.roomId]
-              : [...prev];
           });
         }
       });
@@ -260,12 +252,6 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
     <View>
       {pollIds.length > 0 ? (
         <PollSection pollId={pollIds[0].pollId} />
-      ) : livestreamId.length > 0 ? (
-        <LivestreamContent
-          roomId={livestreamId[0]}
-          post={null}
-          onPressPost={() => {}}
-        />
       ) : (
         renderMediaPosts()
       )}

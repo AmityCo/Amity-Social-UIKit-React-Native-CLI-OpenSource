@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
   StatusBar,
-  Linking,
 } from 'react-native';
 import { FC, memo, useCallback, useEffect, useState } from 'react';
 import {
@@ -22,7 +21,6 @@ import {
 import {
   TSearchItem,
   useAmityPage,
-  useRequestPermission,
   useUser,
   isModerator,
 } from '../../../hooks';
@@ -81,12 +79,6 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   community,
   post,
 }) => {
-  useRequestPermission({
-    onRequestPermissionFailed: () => {
-      Linking.openSettings();
-    },
-    shouldCall: true,
-  });
   const pageId = PageID.post_composer_page;
   const { AmityPostComposerPageBehavior } = useBehaviour();
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });

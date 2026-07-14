@@ -1,5 +1,5 @@
 PODS:
-  - amity-react-native-social-ui-kit (4.0.1-beta-4):
+  - amity-react-native-social-ui-kit (4.0.1-beta-5):
     - boost
     - DoubleConversion
     - fast_float
@@ -114,38 +114,6 @@ PODS:
   - hermes-engine (0.82.1):
     - hermes-engine/Pre-built (= 0.82.1)
   - hermes-engine/Pre-built (0.82.1)
-  - livekit-react-native (2.9.6):
-    - boost
-    - DoubleConversion
-    - fast_float
-    - fmt
-    - glog
-    - hermes-engine
-    - livekit-react-native-webrtc
-    - RCT-Folly
-    - RCT-Folly/Fabric
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-jsi
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-renderercss
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - SocketRocket
-    - Yoga
-  - livekit-react-native-webrtc (137.0.2):
-    - React-Core
-    - WebRTC-SDK (= 137.7151.04)
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
     - nanopb/encode (= 2.30910.0)
@@ -2968,13 +2936,6 @@ PODS:
     - Yoga
   - SocketRocket (0.7.1)
   - SPTPersistentCache (1.1.0)
-  - VisionCamera (4.7.3):
-    - VisionCamera/Core (= 4.7.3)
-    - VisionCamera/React (= 4.7.3)
-  - VisionCamera/Core (4.7.3)
-  - VisionCamera/React (4.7.3):
-    - React-Core
-  - WebRTC-SDK (137.7151.04)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -2990,8 +2951,6 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - GoogleUtilities
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
-  - "livekit-react-native (from `../node_modules/@livekit/react-native`)"
-  - "livekit-react-native-webrtc (from `../node_modules/@livekit/react-native-webrtc`)"
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
   - RCTRequired (from `../node_modules/react-native/Libraries/Required`)
@@ -3076,7 +3035,6 @@ DEPENDENCIES:
   - RNSVG (from `../node_modules/react-native-svg`)
   - SocketRocket (~> 0.7.1)
   - SPTPersistentCache
-  - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -3094,7 +3052,6 @@ SPEC REPOS:
     - PromisesObjC
     - SocketRocket
     - SPTPersistentCache
-    - WebRTC-SDK
 
 EXTERNAL SOURCES:
   amity-react-native-social-ui-kit:
@@ -3116,10 +3073,6 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2025-09-01-RNv0.82.0-265ef62ff3eb7289d17e366664ac0da82303e101
-  livekit-react-native:
-    :path: "../node_modules/@livekit/react-native"
-  livekit-react-native-webrtc:
-    :path: "../node_modules/@livekit/react-native-webrtc"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -3282,13 +3235,11 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  VisionCamera:
-    :path: "../node_modules/react-native-vision-camera"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  amity-react-native-social-ui-kit: d6fc322cdd885d30957e0c7bdc5a267e8957175f
+  amity-react-native-social-ui-kit: 7544e9cfd2081a47dc955da86d904f030bc17a0d
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
@@ -3306,8 +3257,6 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   hermes-engine: 273e30e7fb618279934b0b95ffab60ecedb7acf5
-  livekit-react-native: 96bdf7f7ca8ad7c151d1e72e230cbb693f747ca4
-  livekit-react-native-webrtc: 3bb1be767c4e489f69bca662eba1c5e7b1e1be0d
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
@@ -3393,10 +3342,8 @@ SPEC CHECKSUMS:
   RNSVG: 7da7ec33015df45de2516f43bb67ab85c58754bc
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SPTPersistentCache: df36ea46762d7cf026502bbb86a8b79d0080dff4
-  VisionCamera: 3ea10c46a5c612f5f89fb46a54bef4a0de8b58a7
-  WebRTC-SDK: 40d4f5ba05cadff14e4db5614aec402a633f007e
   Yoga: 689c8e04277f3ad631e60fe2a08e41d411daf8eb
 
-PODFILE CHECKSUM: a4f5d544af314b0276d905ce4d5aa4469710ef0d
+PODFILE CHECKSUM: ec08a222949551010ffb837204fa388df189e6c8
 
 COCOAPODS: 1.14.3

@@ -82,11 +82,7 @@ export interface IBehaviour {
     }) => void;
   };
   AmityCreatePostMenuComponentBehavior?: {
-    goToSelectPostTargetPage?: (arg?: {
-      postType: 'post' | 'story' | 'poll' | 'livestream';
-    }) => void;
-    goToSelectStoryTargetPage?: () => void;
-    goToSelectLivestreamPostTargetPage?: () => void;
+    goToSelectPostTargetPage?: (arg?: { postType: 'post' | 'poll' }) => void;
     goToSelectPollPostTargetPage?: () => void;
   };
   AmityPostTargetSelectionPageBehavior?: {
@@ -109,52 +105,12 @@ export interface IBehaviour {
       needApprovalOnPostCreation?: boolean;
       isPublic?: boolean;
     }) => void;
-    goToCreateLivestreamPage?: (arg?: {
-      targetId: string;
-      targetType: 'community' | 'user';
-      targetName?: string;
-      postSetting?: ValueOf<
-        Readonly<{
-          ONLY_ADMIN_CAN_POST: 'ONLY_ADMIN_CAN_POST';
-          ADMIN_REVIEW_POST_REQUIRED: 'ADMIN_REVIEW_POST_REQUIRED';
-          ANYONE_CAN_POST: 'ANYONE_CAN_POST';
-        }>
-      >;
-      needApprovalOnPostCreation?: boolean;
-      isPublic?: boolean;
-    }) => void;
-    onClickClose?: () => void;
-  };
-  AmityStoryTargetSelectionPageBehavior?: {
-    goToStoryComposerPage?: (arg?: {
-      targetId: string;
-      targetType: 'community' | 'user';
-    }) => void;
-    onClickClose?: () => void;
-  };
-  AmityLivestreamPostTargetSelectionPageBehavior?: {
-    goToCreateLivestreamPage?: (arg?: {
-      targetId: string;
-      targetType: 'community' | 'user';
-      targetName?: string;
-      pop?: number;
-      postSetting?: ValueOf<
-        Readonly<{
-          ONLY_ADMIN_CAN_POST: 'ONLY_ADMIN_CAN_POST';
-          ADMIN_REVIEW_POST_REQUIRED: 'ADMIN_REVIEW_POST_REQUIRED';
-          ANYONE_CAN_POST: 'ANYONE_CAN_POST';
-        }>
-      >;
-      needApprovalOnPostCreation?: boolean;
-      isPublic?: boolean;
-    }) => void;
     onClickClose?: () => void;
   };
   AmityCommunityProfilePageBehavior?: {
     goToPendingPostPage?: () => void;
     goToCommunitySettingPage?: () => void;
     goToPostComposerPage?: () => void;
-    goToCreateStoryPage?: () => void;
     goToMemberListPage?: () => void;
     goToPostDetailPage?: (arg?: string) => void;
   };
@@ -178,7 +134,6 @@ export interface IBehaviour {
     goToMembershipPage?: (context: CommunitySettingPageContext) => void;
     goToNotificationPage?: (context: CommunitySettingPageContext) => void;
     goToPostPermissionPage?: (context: CommunitySettingPageContext) => void;
-    goToStorySettingPage?: (context: CommunitySettingPageContext) => void;
   };
   AmityCommunityMembershipPageBehavior?: {
     goToAddMemberPage?: (context: AddMemberPageContext) => void;
@@ -192,22 +147,11 @@ export interface IBehaviour {
     goToCommentsNotificationSettingPage?: (
       context: CommunitySettingPageContext
     ) => void;
-
-    goToStoriesNotificationSettingPage?: (
-      context: CommunitySettingPageContext
-    ) => void;
-
-    goToLivestreamsNotificationSettingPage?: (
-      context: CommunitySettingPageContext
-    ) => void;
   };
   AmityUserProfilePageBehavior?: {
     goToPostComposerPage?: (context: RootStackParamList['CreatePost']) => void;
     goToPollPostComposerPage?: (
       context: RootStackParamList['PollPostComposer']
-    ) => void;
-    goToCreateLivestreamPage?: (
-      context: RootStackParamList['CreateLivestream']
     ) => void;
     goToEditUserPage?: (context: RootStackParamList['EditUser']) => void;
     goToBlockedUsersPage?: () => void;

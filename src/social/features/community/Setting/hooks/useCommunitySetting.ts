@@ -127,15 +127,6 @@ export function useCommunitySetting(community: Amity.Community) {
     navigation.navigate('CommunityPostPermission', { community });
   };
 
-  const handleCommunityStorySetting = () => {
-    if (AmityCommunitySettingPageBehavior.goToStorySettingPage) {
-      return AmityCommunitySettingPageBehavior.goToStorySettingPage({
-        community,
-      });
-    }
-    navigation.navigate('CommunityStorySetting', { community });
-  };
-
   const isNetworkNotificationsEnabled =
     !notificationSettings ||
     notificationSettings.events.length === 0 ||
@@ -157,7 +148,6 @@ export function useCommunitySetting(community: Amity.Community) {
     handleEditCommunity,
     handleCommunityMembership,
     handleCommunityPostPermission,
-    handleCommunityStorySetting,
     handleCommunityNotificationSetting,
     isNotificationEnabled: notificationSettings?.isEnabled ?? false,
     isNetworkNotificationsEnabled,

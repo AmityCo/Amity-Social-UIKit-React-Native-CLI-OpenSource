@@ -16,7 +16,6 @@ import {
 } from '../../../core/stores/store';
 import { useFocusEffect } from '@react-navigation/native';
 import { RefreshControl } from 'react-native';
-import MyStories from '../../components/legacy/MyStories';
 
 export default function GlobalFeed() {
   const { postList } = useUIKitSelector((state: RootState) => state.globalFeed);
@@ -97,7 +96,6 @@ export default function GlobalFeed() {
             />
           }
           extraData={postList}
-          ListHeaderComponent={<MyStories />}
         />
       </View>
     </View>

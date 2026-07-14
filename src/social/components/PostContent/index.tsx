@@ -15,7 +15,6 @@ import { getPostById } from '../../../core/legacy/feed';
 import ImageView from '../legacy/react-native-image-viewing/dist';
 import { RootState, useUIKitSelector } from '../../../core/stores/store';
 import { playBtn } from '../../../core/assets/icons/xml';
-import LivestreamContent from '../LivestreamContent';
 import { LinkPreview } from '../PreviewLink';
 import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
 import { IMentionPosition } from '../../../core/types';
@@ -43,7 +42,6 @@ const PostContent: React.FC<IPostContent> = ({
   const [imagePosts, setImagePosts] = useState<string[]>([]);
   const [videoPosts, setVideoPosts] = useState<IVideoPost[]>([]);
   const [pollIds, setPollIds] = useState<{ pollId: string }[]>([]);
-  const [livestreamId, setLivestreamId] = useState<Amity.Room['roomId'][]>([]);
 
   const [imagePostsFullSize, setImagePostsFullSize] = useState<MediaUri[]>([]);
   const [videoPostsFullSize, setVideoPostsFullSize] = useState<MediaUri[]>([]);
@@ -94,7 +92,6 @@ const PostContent: React.FC<IPostContent> = ({
       const images: string[] = [];
       const videos: IVideoPost[] = [];
       const polls: { pollId: string }[] = [];
-      const livestreams: Amity.Room['roomId'][] = [];
 
       response.forEach((item) => {
         if (item?.dataType === 'image' && item?.data?.fileId) {
@@ -117,10 +114,6 @@ const PostContent: React.FC<IPostContent> = ({
           if (!polls.some((poll) => poll.pollId === item.data.pollId)) {
             polls.push(item.data);
           }
-        } else if (item?.dataType === 'room') {
-          if (!livestreams.includes(item.data.roomId)) {
-            livestreams.push(item.data.roomId);
-          }
         }
       });
 
@@ -132,9 +125,6 @@ const PostContent: React.FC<IPostContent> = ({
       }
       if (polls.length > 0) {
         setPollIds(polls);
-      }
-      if (livestreams.length > 0) {
-        setLivestreamId(livestreams);
       }
     } catch (error) {
       console.log('error: ', error);
@@ -315,34 +305,26 @@ const PostContent: React.FC<IPostContent> = ({
 
   return (
     <Fragment>
-      {livestreamId.length <= 0 && (
-        <Pressable onPress={onPressPost}>
-          {textPost && childrenPosts?.length === 0 && (
-            <LinkPreview
-              text={textPost}
-              mentionPositionArr={[...mentionPositionArr]}
-            />
-          )}
-          {textPost && childrenPosts?.length > 0 && (
-            <RenderTextWithMention
-              textPost={textPost}
-              mentionPositionArr={[...mentionPositionArr]}
-            />
-          )}
-        </Pressable>
-      )}
+      <Pressable onPress={onPressPost}>
+        {textPost && childrenPosts?.length === 0 && (
+          <LinkPreview
+            text={textPost}
+            mentionPositionArr={[...mentionPositionArr]}
+          />
+        )}
+        {textPost && childrenPosts?.length > 0 && (
+          <RenderTextWithMention
+            textPost={textPost}
+            mentionPositionArr={[...mentionPositionArr]}
+          />
+        )}
+      </Pressable>
       {pollIds.length > 0 ? (
         <PollContent
           post={post}
           pollId={pollIds[0].pollId}
           disabledPoll={disabledPoll}
           showedAllOptions={showedAllOptions}
-        />
-      ) : livestreamId.length > 0 ? (
-        <LivestreamContent
-          post={post}
-          onPressPost={onPressPost}
-          roomId={livestreamId[0]}
         />
       ) : (
         renderMediaPosts()

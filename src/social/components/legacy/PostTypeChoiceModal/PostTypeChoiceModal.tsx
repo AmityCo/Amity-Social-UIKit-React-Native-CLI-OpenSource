@@ -8,11 +8,7 @@ import {
 import { memo, useEffect, useRef, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import CreatePostChooseTargetModal from '../CreatePostChooseTargetModal/CreatePostChooseTargetModal';
-import {
-  livestreamIcon,
-  pollIcon,
-  postIconOutlined,
-} from '../../../../core/assets/icons/xml';
+import { pollIcon, postIconOutlined } from '../../../../core/assets/icons/xml';
 import { useStyles } from './style';
 import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useTheme } from 'react-native-paper';
@@ -48,12 +44,6 @@ const PostTypeChoiceModal = () => {
     if (type === 'post') {
       navigation.navigate('CreatePost', {
         targetId,
-        targetType,
-      });
-    } else if (type === 'livestream') {
-      navigation.navigate('CreateLivestream', {
-        targetId,
-        targetName,
         targetType,
       });
     } else if (type === 'poll') {
@@ -129,17 +119,6 @@ const PostTypeChoiceModal = () => {
           >
             <SvgXml xml={pollIcon(theme.colors.base)} width="24" height="24" />
             <Text style={styles.postText}>Poll</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => onChooseType('livestream')}
-            style={styles.modalRow}
-          >
-            <SvgXml
-              xml={livestreamIcon(theme.colors.base)}
-              width="24"
-              height="24"
-            />
-            <Text style={styles.postText}>Livestream</Text>
           </TouchableOpacity>
           <CreatePostChooseTargetModal
             visible={createPostModalVisible}

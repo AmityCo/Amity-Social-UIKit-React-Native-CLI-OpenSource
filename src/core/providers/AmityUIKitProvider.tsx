@@ -157,7 +157,11 @@ export default function AmityUiKitProvider({
           <Provider store={store} context={AmityUIKitReduxContext}>
             <AuthContextProvider
               userId={userId}
-              displayName={displayName || userId}
+              // Pass displayName through untouched. The SDK only overwrites an
+              // existing user's displayName when a value is supplied, so leaving
+              // it undefined preserves the server-side name (host can pass only
+              // userId; new users set displayName later on the CreateProfile page).
+              displayName={displayName}
               apiKey={apiKey}
               apiRegion={apiRegion}
               apiEndpoint={apiEndpoint}

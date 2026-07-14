@@ -7,7 +7,6 @@ import {
   member,
   penFill,
   postPermission,
-  story,
 } from '../../../../core/assets/icons';
 import Action from '../shared/elements/Action';
 import { ElementID, PageID } from '../../../enums';
@@ -32,7 +31,6 @@ const CommunitySetting = ({ community }: CommunitySettingProps) => {
     handleEditCommunity,
     handleCommunityMembership,
     handleCommunityPostPermission,
-    handleCommunityStorySetting,
     handleCommunityNotificationSetting,
     isNotificationEnabled,
     isNetworkNotificationsEnabled,
@@ -69,12 +67,6 @@ const CommunitySetting = ({ community }: CommunitySettingProps) => {
               onPress={handleCommunityPostPermission}
               iconProps={{ xml: postPermission() }}
               elementId={ElementID.post_permission}
-              pageId={PageID.community_setting_page}
-            />
-            <Action
-              iconProps={{ xml: story() }}
-              elementId={ElementID.story_setting}
-              onPress={handleCommunityStorySetting}
               pageId={PageID.community_setting_page}
             />
             <View style={styles.divider} />

@@ -200,11 +200,8 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
         })
       );
     } else {
-      if (routes[routes.length - 2]?.name === 'CreateLivestream')
-        return navigation.pop(3);
       navigation.goBack();
     }
-    // if the previous screen is CreateLivestream, skip createLivestream and selectTarget screen
   }, [navigation, isFromComponent]);
 
   const onCloseReply = () => {
