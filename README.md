@@ -97,8 +97,6 @@ Next, install the required peer dependencies. These are the packages the UIKit i
 yarn add \
   @amityco/ts-sdk-react-native \
   @babel/plugin-transform-export-namespace-from \
-  @livekit/react-native \
-  @livekit/react-native-webrtc \
   @react-native-async-storage/async-storage \
   @react-native-clipboard/clipboard \
   @react-native-community/datetimepicker \
@@ -106,7 +104,6 @@ yarn add \
   @react-navigation/native \
   @react-navigation/native-stack \
   @react-navigation/stack \
-  livekit-client \
   react-native-compressor \
   react-native-fs \
   react-native-gesture-handler \
@@ -120,13 +117,12 @@ yarn add \
   react-native-svg \
   react-native-swipe-gestures \
   react-native-video \
-  react-native-video-controls \
-  react-native-vision-camera@4.7.3
+  react-native-video-controls
 ```
 
 > **Versions:** most packages above are unpinned — the exact version range required for each is defined in this package's `peerDependencies` (in its `package.json`), and your package manager will resolve a compatible version from there.
 >
-> **`react-native-vision-camera` must be pinned to `4.7.3`.** Newer 4.x/5.x releases migrated to Nitro Modules and require `react-native-nitro-image`, which breaks the Android build with: `Project with path ':react-native-nitro-image' could not be found`. The UIKit is built against `4.7.3`, so install exactly that version.
+> **Livestream & Story features removed.** This build no longer includes the Livestream and Story features, so the LiveKit (`@livekit/react-native`, `@livekit/react-native-webrtc`, `livekit-client`) and `react-native-vision-camera` dependencies are no longer required. This significantly reduces the final app size. All other features — image/video posts, avatars, etc. — are unaffected.
 
 > **Optional — push notifications.** The UIKit accepts an `fcmToken` prop and registers it for push, but it does not depend on Firebase directly. Only install these if your app wants push notifications:
 >
@@ -181,24 +177,21 @@ buildToolsVersion = "34.0.0"
 
 ### Add Camera permission (iOS)
 
-Add following permissions to `info.plist` file (ios/{YourAppName}/Info.plist)
+Add following permissions to `info.plist` file (ios/{YourAppName}/Info.plist). These are used for taking photos and selecting images (posts and profile avatars):
 
 ```sh
  <key>NSCameraUsageDescription</key>
  <string>App needs access to the camera to take photos.</string>
- <key>NSMicrophoneUsageDescription</key>
- <string>App needs access to the microphone to record audio.</string>
  <key>NSPhotoLibraryUsageDescription</key>
  <string>App needs access to the gallery to select photos.</string>
 ```
 
 ### Add Camera permission (Android)
 
-Add following permissions to `AndroidManifest.xml` file (android/app/src/main/AndroidManifest.xml)
+Add following permission to `AndroidManifest.xml` file (android/app/src/main/AndroidManifest.xml)
 
 ```xml
 <uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.RECORD_AUDIO" />
 ```
 
 ### Usage
@@ -217,6 +210,9 @@ export default function App() {
       apiKey="API_KEY"
       apiRegion="API_REGION"
       userId="userId"
+      // displayName is optional. If omitted, the user's existing display name
+      // is preserved (it is NOT overwritten with the userId). New users can set
+      // their display name later via the Create Profile page.
       displayName="displayName"
       apiEndpoint="https://api.{API_REGION}.amity.co"
     >
@@ -238,7 +234,6 @@ You can import and use the following screens individually in your application:
 - [PostDetail](#)
 - [UserProfile](#)
 - [AmityGlobalFeedComponent](#)
-- [AmityStoryTabComponent](#)
 - [AmityExploreComponent](#)
 
 > ✅ Make sure your screen component is wrapped with **`AmityPageRenderer`** at the root level.
@@ -247,14 +242,13 @@ You can import and use the following screens individually in your application:
 
 ### 📝 Component Props
 
-| Component                  | Required Props                                         | Notes                                                                                                                                                                                                                                                                     |
-| -------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CommunityProfilePage`     | `defaultCommunityId: string`                           | Community to display                                                                                                                                                                                                                                                      |
-| `PostDetail`               | `defaultPostId: string`                                | Post Detail page to display                                                                                                                                                                                                                                               |
-| `AmityExploreComponent`    | -                                                      | Explore page to display                                                                                                                                                                                                                                                   |
-| `UserProfile`              | `defaultUserId: string` , `isShowBackButton?: boolean` | User profile to display                                                                                                                                                                                                                                                   |
-| `AmityGlobalFeedComponent` | `isShowStoryTab: boolean`                              | default value of `isShowStoryTab` is `true`                                                                                                                                                                                                                               |
-| `AmityStoryTabComponent`   | `type: AmityStoryTabComponentEnum`                     | This component should be wrapped with ` <AmityGlobalStoryTabWrapper>` The `targetId` is required only when the type is set to `AmityStoryTabComponentEnum.communityFeed`. For the global story tab component, use the type set to `AmityStoryTabComponentEnum.globalFeed` |
+| Component                  | Required Props                                         | Notes                       |
+| -------------------------- | ------------------------------------------------------ | --------------------------- |
+| `CommunityProfilePage`     | `defaultCommunityId: string`                           | Community to display        |
+| `PostDetail`               | `defaultPostId: string`                                | Post Detail page to display |
+| `AmityExploreComponent`    | -                                                      | Explore page to display     |
+| `UserProfile`              | `defaultUserId: string` , `isShowBackButton?: boolean` | User profile to display     |
+| `AmityGlobalFeedComponent` | -                                                      | Global feed to display      |
 
 ### Component Usage
 
@@ -283,39 +277,6 @@ export default function App() {
       <AmityPageRenderer>
         <CommunityHome defaultCommunityId={'communityID'} />
       </AmityPageRenderer>
-    </AmityUiKitProvider>
-  );
-}
-```
-
-### Story Tab component Usage
-
-```js
-import * as React from 'react';
-import config from './uikit.config.json';
-import {
-  AmityStoryTabComponent,
-  AmityStoryTabComponentEnum,
-  AmityStoryTabComponentStyle,
-  AmityGlobalStoryTabWrapper,
-} from 'amity-react-native-social-ui-kit';
-
-export default function App() {
-  return (
-    <AmityUiKitProvider
-      configs={config}
-      apiKey="API_KEY"
-      apiRegion="API_REGION"
-      userId="userId"
-      displayName="displayName"
-    >
-      <AmityGlobalStoryTabWrapper>
-        <AmityPageRenderer>
-          <AmityStoryTabComponent
-            type={AmityStoryTabComponentEnum.globalFeed}
-          />
-        </AmityPageRenderer>
-      </AmityGlobalStoryTabWrapper>
     </AmityUiKitProvider>
   );
 }
