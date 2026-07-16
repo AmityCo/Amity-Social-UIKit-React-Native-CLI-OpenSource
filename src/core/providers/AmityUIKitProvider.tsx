@@ -29,6 +29,15 @@ export interface IAmityUIkitProvider {
   apiEndpoint?: string;
   children: any;
   authToken?: string;
+  /**
+   * Secure-mode auth-token provider. Only needed when secure mode is enabled on
+   * the network. Given the `userId`, return a short-lived auth token minted by
+   * your backend with your Server Key. The UIKit calls this on login and again
+   * on every session renewal (auth tokens are short-lived), so it must always
+   * return a fresh token. Omit it entirely for unsecure mode. Takes precedence
+   * over the static `authToken` prop when both are provided.
+   */
+  getAuthToken?: (userId: string) => Promise<string> | string;
   configs?: IConfigRaw;
   behaviour?: IBehaviour;
   fcmToken?: string;
@@ -73,6 +82,7 @@ export default function AmityUiKitProvider({
   apiEndpoint,
   children,
   authToken,
+  getAuthToken,
   configs,
   behaviour,
   fcmToken,
@@ -166,6 +176,7 @@ export default function AmityUiKitProvider({
               apiRegion={apiRegion}
               apiEndpoint={apiEndpoint}
               authToken={authToken}
+              getAuthToken={getAuthToken}
               fcmToken={fcmToken}
             >
               <AdEngineProvider>

@@ -26,6 +26,7 @@ export const AuthContext = createContext<AuthContextInterface>({
   sessionState: '',
   apiRegion: 'sg',
   authToken: '',
+  getAuthToken: undefined,
   fcmToken: undefined,
   isGlobalBan: false,
   isVisitorUsageLimitReached: false,
@@ -40,6 +41,7 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
   apiEndpoint,
   children,
   authToken,
+  getAuthToken,
   fcmToken,
 }: IAmityUIkitProvider) => {
   const [error, setError] = useState('');
@@ -56,6 +58,25 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
 
   const sessionHandler: Amity.SessionHandler = {
     sessionWillRenewAccessToken(renewal) {
+      // Secure mode: fetch a fresh auth token from the host backend and renew
+      // with it. Auth tokens are short-lived, so we must re-fetch every renewal
+      // rather than reuse the initial one. Falls back to a plain renew() if the
+      // host didn't supply getAuthToken (unsecure mode) or if fetching fails.
+      if (getAuthToken && userId) {
+        Promise.resolve(getAuthToken(userId))
+          .then((token) => {
+            if (token) {
+              renewal.renewWithAuthToken(token);
+            } else {
+              renewal.renew();
+            }
+          })
+          .catch((err) => {
+            console.log('getAuthToken (renewal) failed:', err);
+            renewal.renew();
+          });
+        return;
+      }
       renewal.renew();
     },
   };
@@ -121,8 +142,14 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
         if (displayName) {
           loginParam = { ...loginParam, displayName: displayName };
         }
-        if (authToken?.length > 0) {
-          loginParam = { ...loginParam, authToken: authToken };
+        // Secure mode: resolve the auth token from the host backend for this
+        // userId. getAuthToken takes precedence over the static authToken prop.
+        // If neither is present the session is unsecure (dev / secure mode off).
+        const resolvedAuthToken = getAuthToken
+          ? await getAuthToken(userId)
+          : authToken;
+        if (resolvedAuthToken && resolvedAuthToken.length > 0) {
+          loginParam = { ...loginParam, authToken: resolvedAuthToken };
         }
         const response = await Client.login(loginParam, sessionHandler);
         if (!response) return;
@@ -149,7 +176,7 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
     // switches a visitor session to a signed-in one by passing a userId, this
     // callback re-reads the new value and calls Client.login instead of
     // re-using the stale (undefined) userId and re-connecting as a visitor.
-  }, [userId, displayName, authToken, fcmToken]);
+  }, [userId, displayName, authToken, getAuthToken, fcmToken]);
 
   const login = async () => {
     setError('');
@@ -194,6 +221,9 @@ export const AuthContextProvider: FC<IAmityUIkitProvider> = ({
         isConnected,
         sessionState,
         apiRegion: apiRegion.toLowerCase(),
+        authToken,
+        getAuthToken,
+        fcmToken,
         isGlobalBan,
         isVisitorUsageLimitReached,
         isVisitorOrBot,

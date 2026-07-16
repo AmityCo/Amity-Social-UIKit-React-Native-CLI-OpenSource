@@ -11,6 +11,7 @@ import { PageID } from '../../../../enums';
 import { useAmityPage } from '../../../../hooks';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { useUpload } from '../../../../../core/hooks';
+import useAuth from '../../../../../core/hooks/useAuth';
 
 // A visitor session is read-only, so the avatar cannot be uploaded while the
 // page is shown (still a visitor). Instead we hold the locally picked image
@@ -61,6 +62,15 @@ type UseCreateProfileParams = {
   generateUserId?: (input?: GenerateUserIdInput) => Promise<string> | string;
   authToken?: string;
   /**
+   * Secure-mode auth-token provider. Usually set once on AmityUiKitProvider and
+   * inherited from there automatically — only pass it here to override that.
+   * Called after the userId is resolved (static or via `generateUserId`) with
+   * that userId; return a short-lived auth token minted by your backend with
+   * your Server Key. The token is passed to `Client.login`. Omit for unsecure
+   * mode. Takes precedence over the static `authToken` when both are provided.
+   */
+  getAuthToken?: (userId: string) => Promise<string> | string;
+  /**
    * Optional remote avatar URL supplied by the host. Used as the avatar when
    * the user does not pick a local photo. A locally picked image always wins.
    * Uploaded after login via the from-URL REST endpoint.
@@ -106,10 +116,16 @@ export const useCreateProfile = ({
   userId,
   generateUserId,
   authToken,
+  getAuthToken: getAuthTokenProp,
   defaultAvatarImageUrl,
   onCreated,
   onError,
 }: UseCreateProfileParams) => {
+  // Secure-mode token provider. Prefer the page prop, but fall back to the one
+  // set once on AmityUiKitProvider (exposed via AuthContext) so the host does
+  // not have to pass getAuthToken again here.
+  const { getAuthToken: getAuthTokenFromContext } = useAuth();
+  const getAuthToken = getAuthTokenProp ?? getAuthTokenFromContext;
   const { styles, theme } = useStyles();
   const { accessibilityId } = useAmityPage({
     pageId: PageID.create_user_profile_page,
@@ -186,8 +202,15 @@ export const useCreateProfile = ({
         userId: resolvedUserId,
         displayName: data.displayName || undefined,
       };
-      if (authToken && authToken.length > 0) {
-        loginParam = { ...loginParam, authToken };
+      // Secure mode: mint the auth token for the just-resolved userId. This is
+      // why a callback (not a static token) is needed here — with generateUserId
+      // the userId doesn't exist until now, so the token can only be requested
+      // after it's known. getAuthToken takes precedence over the static token.
+      const resolvedAuthToken = getAuthToken
+        ? await getAuthToken(resolvedUserId)
+        : authToken;
+      if (resolvedAuthToken && resolvedAuthToken.length > 0) {
+        loginParam = { ...loginParam, authToken: resolvedAuthToken };
       }
 
       await Client.login(loginParam, sessionHandler);

@@ -30,6 +30,14 @@ export type CreateProfileProps = {
    */
   authToken?: string;
   /**
+   * Secure-mode auth-token provider. Normally you set this ONCE on
+   * AmityUiKitProvider and this page inherits it automatically — you only need
+   * to pass it here to override the provider's. Called with the resolved userId
+   * (after `generateUserId` runs) to mint a short-lived auth token from your
+   * backend. Omit for unsecure mode.
+   */
+  getAuthToken?: (userId: string) => Promise<string> | string;
+  /**
    * Optional remote avatar URL supplied by the host. Shown as the default
    * avatar when the user hasn't picked a photo, and uploaded as the avatar on
    * save (a locally picked photo takes priority). Requires the network's
@@ -60,6 +68,7 @@ export function CreateProfile({
   userId,
   generateUserId,
   authToken,
+  getAuthToken,
   defaultAvatarImageUrl,
   onCreated,
   onError,
@@ -78,6 +87,7 @@ export function CreateProfile({
     userId,
     generateUserId,
     authToken,
+    getAuthToken,
     defaultAvatarImageUrl,
     onCreated,
     onError,

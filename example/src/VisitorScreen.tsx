@@ -192,6 +192,7 @@ export default function VisitorScreen({
           // (AmityUiKitSocial below has its own navigator, so it isn't wrapped.)
           <AmityPageRenderer>
             <AmityCreateProfilePage
+   
               userId={signupUserId} // identity used for the signed-in login on save
               // Host-provided default avatar. Shown when the user doesn't pick a
               // photo, and uploaded via the from-URL endpoint on save.
