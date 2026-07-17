@@ -11,8 +11,11 @@ export const useTrendingCommunities = () => {
 
   const fetchTrendingCommunities = () => {
     setLoading(true);
+    // Over-fetch by 1 (6 instead of 5) so the ExploreProvider can drop any
+    // pinned-tagged community client-side and still show up to 5. The trending
+    // endpoint has no server-side tag-exclude param, hence the over-fetch.
     return CommunityRepository.getTrendingCommunities(
-      { limit: 5 },
+      { limit: 6 },
       ({ error, loading, data }) => {
         setLoading(loading);
         if (error) setError(error);

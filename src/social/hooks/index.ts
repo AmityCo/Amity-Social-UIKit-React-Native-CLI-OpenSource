@@ -18,6 +18,7 @@ export * from './useJoinCommunity';
 export * from './useLeaveCommunity';
 export * from './useRecommenedCommunities';
 export * from './useTrendingCommunities';
+export * from './usePinnedCommunities';
 export * from './useCategories';
 export * from '../features/community/Create/components/Header/Header';
 export * from './usePermissions';
