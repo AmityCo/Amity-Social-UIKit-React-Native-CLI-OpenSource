@@ -61,6 +61,7 @@ export const RN = {
   configTemplate: resolve(REPO_ROOT, 'src/core/design/tokens/amity-uikit-config.json'),
   colorTokensTs: resolve(REPO_ROOT, 'src/core/design/tokens/amity-color-tokens.ts'),
   spacingTs: resolve(REPO_ROOT, 'src/core/design/tokens/spacing.ts'),
+  geometryJson: resolve(REPO_ROOT, 'src/core/design/tokens/geometry.json'),
   checksums: resolve(REPO_ROOT, 'src/core/design/tokens/CHECKSUMS.json'),
   iconRegistry: resolve(REPO_ROOT, 'src/core/design/icons/generated/iconRegistry.ts'),
   chatFeatureDir: resolve(REPO_ROOT, 'src/social/features/chat'),
