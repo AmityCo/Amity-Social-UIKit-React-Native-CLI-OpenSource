@@ -1,0 +1,9 @@
+{
+  "schema_version": 3,
+  "tokenCount": 717,
+  "files": {
+    "AmityColorToken.swift": "b120a6db579045fa1d9a083ea7e0bfeb57d3e78757fb2ab87a325bfe393a4844",
+    "AmityColorToken.kt": "0ed41308998a8c63a6025566416969abfba73a7b8ad50cccac0367a3e1faf93f",
+    "amity-color-tokens.ts": "09a5fe28d1912e3783c3004cc73745ea18862491d879e914dfd69d276236c648"
+  }
+}
