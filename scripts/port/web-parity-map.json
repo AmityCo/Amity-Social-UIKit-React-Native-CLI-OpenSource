@@ -12,7 +12,8 @@
     "chat/elements": "src/v4/chat/elements",
     "chat/components": "src/v4/chat/components",
     "chat/internal-components": "src/v4/chat/internal-components",
-    "chat/pages": "src/v4/chat/pages"
+    "chat/pages": "src/v4/chat/pages",
+    "chat/features/home/elements": "src/v4/chat/features/home/elements"
   },
   "rnDesignRoot": "src/core/design",
   "_curatedNote": "The guide's 10 feature-level components live nested under src/v4/chat/features/** (not a single enumerable root), so they are tracked here explicitly. check-web-parity verifies each 'web' source path still exists (drift) and each RN target exists (coverage). kind 'hooks-only' has no standalone folder.",
@@ -272,6 +273,24 @@
       "status": "port",
       "rn": "src/social/features/chat/elements/SettingMenu",
       "milestone": 3
+    },
+    "chat/features/home/elements/CreateChatMenu": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/elements/CreateChatMenu",
+      "milestone": 2,
+      "note": "the '+' new-chat header button. Composes atoms/Button + components/Popover+Menu (all M2). Direct-chat path wires to CreateConversationPage (M2); group path (SelectGroupMemberPage) lights up in M3."
+    },
+    "chat/features/home/elements/SearchButton": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/elements/SearchButton",
+      "milestone": 4,
+      "note": "the search header button. Composes atoms/Button (M1, done) + Search icon; only its destination SearchChannelPage (M4) is missing."
+    },
+    "chat/features/home/elements/ChatHomeMenu": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/elements/ChatHomeMenu",
+      "milestone": 4,
+      "note": "the '⋯' header menu → ArchivedChatPage. Composes atoms/Button + components/Popover+Menu; destination ArchivedChatPage (M4)."
     },
     "chat/components/ActionMenu": {
       "status": "skip",
