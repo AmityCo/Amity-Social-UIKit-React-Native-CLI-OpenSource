@@ -1,210 +1,426 @@
-import React, {useState} from 'react';
+// Screen 1 — "React Native UI-Kit"
+// LoginFlow container: manages screen state 1 → 2 → 3.
+
+import React, {useCallback, useState} from 'react';
 import {
-  View,
+  Platform,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Image,
+  View,
 } from 'react-native';
-import {ILoginForm} from './App';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import RNPickerSelect from 'react-native-picker-select';
-interface ILoginPage {
-  onSubmit: (value: ILoginForm) => void;
+
+import {VERSION_CODE} from './version.json';
+import {
+  DEFAULT_CONFIG,
+  LoginConfig,
+  REGION_CONFIG,
+  REGION_LABELS,
+  RegionLabel,
+} from './config';
+import MoreOptions from './MoreOptions';
+
+interface Props {
+  onSubmit: (config: LoginConfig) => void;
+  /** Last-applied config to prefill the form (e.g. after "Change User"). Defaults to DEFAULT_CONFIG. */
+  initialConfig?: LoginConfig;
 }
-const LoginPage = ({onSubmit}: ILoginPage) => {
-  const [userId, setUserId] = useState('top');
-  const [apiKey, setApiKey] = useState(
-    'b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f',
+
+/**
+ * Login button label (spec §1.8): when any network field (region/key/upload URL)
+ * has changed since the last applied environment, `setup()` will re-run, so the
+ * button reads "Apply & Log in →". Otherwise it reads "Log in →".
+ */
+const loginLabelFor = (config: LoginConfig, applied: LoginConfig): string => {
+  const envChanged =
+    config.regionLabel !== applied.regionLabel ||
+    config.apiKey !== applied.apiKey ||
+    config.uploadUrl !== applied.uploadUrl;
+  return envChanged ? 'Apply & Log in →' : 'Log in →';
+};
+
+// ── LoginFlow container ───────────────────────────────────────────────────────
+
+const LoginFlow = ({onSubmit, initialConfig = DEFAULT_CONFIG}: Props) => {
+  const [screen, setScreen] = useState<1 | 2>(1);
+  const [config, setConfig] = useState<LoginConfig>(initialConfig);
+
+  const update = useCallback((partial: Partial<LoginConfig>) => {
+    setConfig(c => ({...c, ...partial}));
+  }, []);
+
+  // Hands resolved config to App.tsx, which shows SelectModule next.
+  const handleLogin = useCallback(() => {
+    onSubmit(config);
+  }, [config, onSubmit]);
+
+  const loginLabel = loginLabelFor(config, initialConfig);
+
+  if (screen === 2) {
+    return (
+      <MoreOptions
+        config={config}
+        onUpdate={update}
+        onBack={() => setScreen(1)}
+        onLogin={handleLogin}
+        loginLabel={loginLabel}
+      />
+    );
+  }
+
+  return (
+    <Screen1
+      config={config}
+      onUpdate={update}
+      onMoreOptions={() => setScreen(2)}
+      onLogin={handleLogin}
+      loginLabel={loginLabel}
+    />
   );
-  const [selectedOption, setSelectedOption] = useState('');
-  const [selectedApiKeyOption, setSelectedApiKeyOption] = useState(
-    'b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f',
-  );
-  const [selectedRegionOption, setSelectedRegionOption] = useState('sg');
-  const options = [
-    {label: 'Social', value: 'social'},
-    {label: 'Chat', value: 'chat'},
-  ];
-  const regionOptions = [
-    {label: 'sg', value: 'sg'},
-    {label: 'eu', value: 'eu'},
-    {label: 'us', value: 'us'},
-    {label: 'staging', value: 'staging'},
-    {label: 'dev', value: 'dev'},
-  ];
-  const apiKeyOptions = [
-    {
-      label: 'b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f',
-      value: 'b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f',
-    },
-    {
-      label: 'b0efe90c69ddf2604a63d81853081688840088b6e967397e',
-      value: 'b0efe90c69ddf2604a63d81853081688840088b6e967397e',
-    },
-    {
-      label: 'b0efe90c3bdda2304d628918520c1688845889e4bc363d2c',
-      value: 'b0efe90c3bdda2304d628918520c1688845889e4bc363d2c',
-    },
-    {
-      label: 'b0ebeb5939def76019308d4a530b12ddd558dde5bf346e2e',
-      value: 'b0ebeb5939def76019308d4a530b12ddd558dde5bf346e2e',
-    },
-    {label: 'custom', value: ''},
-  ];
-  const handleLogin = () => {
-    // Perform login logic here
-    onSubmit &&
-      onSubmit({
-        userId: userId,
-        apiRegion: selectedRegionOption,
-        apiKey: selectedApiKeyOption || apiKey,
-        module: selectedOption,
-      });
+};
+
+// ── Screen 1 ─────────────────────────────────────────────────────────────────
+
+interface Screen1Props {
+  config: LoginConfig;
+  onUpdate: (partial: Partial<LoginConfig>) => void;
+  onMoreOptions: () => void;
+  onLogin: () => void;
+  loginLabel: string;
+}
+
+const Screen1 = ({
+  config,
+  onUpdate,
+  onMoreOptions,
+  onLogin,
+  loginLabel,
+}: Screen1Props) => {
+  const preset = REGION_CONFIG[config.regionLabel];
+  // API Key is masked by default; the eye toggle reveals it. (spec §1.5)
+  const [revealApiKey, setRevealApiKey] = useState(false);
+
+  const handleRegionChange = (label: RegionLabel) => {
+    if (!label) {
+      return;
+    }
+    const p = REGION_CONFIG[label];
+    onUpdate({
+      regionLabel: label,
+      apiKey: p.defaultApiKey,
+      uploadUrl: p.uploadUrl,
+    });
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require('./amity-logo-banner.png')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-      <Text style={styles.title}>React Native UIkit</Text>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Userid</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your Userid"
-          onChangeText={text => setUserId(text)}
-          value={userId}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>API Key</Text>
-        {!selectedApiKeyOption ? (
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your API Key"
-            onChangeText={text => setApiKey(text)}
-            value={apiKey}
-          />
-        ) : (
-          <View>
-            <RNPickerSelect
-              onValueChange={value => setSelectedApiKeyOption(value)}
-              items={apiKeyOptions}
-              value={selectedApiKeyOption}
-              style={dropdownStyles}
-            />
-            <Text style={{color: 'gray', paddingVertical: 6}}>
-              {selectedApiKeyOption}
-            </Text>
+    <SafeAreaView style={styles.safe}>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled">
+        <Text style={styles.title}>React Native UI-Kit</Text>
+
+        {/* ── USER ── */}
+        <Text style={styles.sectionLabel}>USER</Text>
+        <View style={styles.section}>
+          {/* User ID */}
+          <View style={styles.fieldRow}>
+            <Text style={styles.fieldLabel}>User ID</Text>
+            <View style={styles.inputWrap}>
+              <TextInput
+                style={styles.textInput}
+                value={config.userId}
+                onChangeText={t => onUpdate({userId: t})}
+                placeholder="rn-test"
+                placeholderTextColor="#C7C7CC"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              {config.userId.length > 0 && (
+                <TouchableOpacity
+                  style={styles.iconBtn}
+                  onPress={() => onUpdate({userId: ''})}>
+                  <View style={styles.iconCircle}>
+                    <Text style={styles.iconText}>✕</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
-        )}
+
+          <View style={styles.rowDivider} />
+
+          {/* Display Name */}
+          <View style={styles.fieldRow}>
+            <Text style={styles.fieldLabel}>Display Name (Optional)</Text>
+            <TextInput
+              style={styles.textInput}
+              value={config.displayName}
+              onChangeText={t => onUpdate({displayName: t})}
+              placeholder="Optional — leave blank to omit"
+              placeholderTextColor="#C7C7CC"
+            />
+          </View>
+
+          <View style={styles.rowDivider} />
+
+          {/* User Type */}
+          <View style={styles.fieldRow}>
+            <Text style={styles.fieldLabel}>User Type</Text>
+            <View style={styles.pickerWrap}>
+              <RNPickerSelect
+                onValueChange={value => {
+                  if (value != null) {
+                    onUpdate({userType: value});
+                  }
+                }}
+                value={config.userType}
+                items={[
+                  {label: 'Signed-in', value: 'signed-in'},
+                  {label: 'Visitor', value: 'visitor'},
+                ]}
+                placeholder={{}}
+                useNativeAndroidPickerStyle={false}
+                style={pickerStyles}
+                Icon={() => <Text style={styles.pickerChevron}>⌄</Text>}
+              />
+            </View>
+          </View>
+        </View>
+
+        {/* ── NETWORK ── */}
+        <Text style={styles.sectionLabel}>NETWORK</Text>
+        <View style={styles.section}>
+          {/* API Region */}
+          <View style={styles.fieldRow}>
+            <Text style={styles.fieldLabel}>API Region</Text>
+            <View style={styles.pickerWrap}>
+              <RNPickerSelect
+                onValueChange={value => {
+                  if (value != null) {
+                    handleRegionChange(value);
+                  }
+                }}
+                value={config.regionLabel}
+                items={REGION_LABELS.map(l => ({label: l, value: l}))}
+                placeholder={{}}
+                useNativeAndroidPickerStyle={false}
+                style={pickerStyles}
+                Icon={() => <Text style={styles.pickerChevron}>⌄</Text>}
+              />
+            </View>
+          </View>
+
+          <View style={styles.rowDivider} />
+
+          {/* API Key — masked by default; 👁 reveals; ✕ clears the field so a
+              custom key can be entered for any region (incl. Staging). Switching
+              region re-fills that region's default key. */}
+          <View style={styles.fieldRow}>
+            <Text style={styles.fieldLabel}>API Key (linked to region)</Text>
+            <View style={styles.inputWrap}>
+              <TextInput
+                style={[styles.textInput, styles.mono]}
+                value={config.apiKey}
+                onChangeText={t => onUpdate({apiKey: t})}
+                secureTextEntry={!revealApiKey}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              <TouchableOpacity
+                style={styles.iconBtn}
+                onPress={() => setRevealApiKey(r => !r)}>
+                <Text style={styles.eyeText}>{revealApiKey ? '🙈' : '👁'}</Text>
+              </TouchableOpacity>
+              {config.apiKey?.length > 0 && (
+                <TouchableOpacity
+                  style={styles.iconBtn}
+                  onPress={() => onUpdate({apiKey: ''})}>
+                  <View style={styles.iconCircle}>
+                    <Text style={styles.iconText}>✕</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.rowDivider} />
+
+          {/* Upload URL */}
+          <View style={styles.fieldRow}>
+            <Text style={styles.fieldLabel}>Upload URL (linked to region)</Text>
+            <TextInput
+              style={[styles.textInput, styles.mono]}
+              value={config.uploadUrl}
+              onChangeText={t => onUpdate({uploadUrl: t})}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+          </View>
+        </View>
+
+        {/* ── More Options nav row ── */}
+        <TouchableOpacity style={styles.moreOptionsRow} onPress={onMoreOptions}>
+          <View style={styles.moreOptionsIconBox}>
+            <Text style={styles.moreOptionsIconText}>⚙</Text>
+          </View>
+          <Text style={styles.moreOptionsLabel}>Advanced options...</Text>
+          <Text style={styles.moreOptionsChevron}>›</Text>
+        </TouchableOpacity>
+      </ScrollView>
+
+      {/* ── Log in button + build info — pinned to bottom ── */}
+      <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.loginBtn} onPress={onLogin}>
+          <Text style={styles.loginBtnText}>{loginLabel}</Text>
+        </TouchableOpacity>
+        <Text style={styles.buildInfo}>
+          Build {VERSION_CODE} · {preset.sdkRegion}
+        </Text>
       </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>API Region</Text>
-        <RNPickerSelect
-          onValueChange={value => setSelectedRegionOption(value)}
-          items={regionOptions}
-          value={selectedRegionOption}
-          style={dropdownStyles}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>UIKit Module</Text>
-        <RNPickerSelect
-          onValueChange={value => setSelectedOption(value)}
-          items={options}
-          value={selectedOption}
-          style={dropdownStyles}
-        />
-      </View>
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
-const dropdownStyles = {
-  inputIOS: {
-    fontSize: 14, // Adjust the font size here
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-  },
-  inputIOSContainer: {
-    zIndex: 100,
-  },
-  inputAndroid: {
-    fontSize: 14, // Adjust the font size here
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30,
-  },
-};
+
+// ── Styles ────────────────────────────────────────────────────────────────────
+
+const CARD_RADIUS = 12;
+const BG = '#F2F2F7';
+const CARD = '#FFFFFF';
+const DARK = '#1C1C1E';
+const LABEL = '#8E8E93';
+const BORDER = '#D1D1D6';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 20,
-  },
+  safe: {flex: 1, backgroundColor: BG},
+  scroll: {paddingHorizontal: 16, paddingTop: 8, paddingBottom: 16},
+
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#06be8b',
+    fontSize: 22,
+    fontWeight: '700',
+    color: DARK,
+    textAlign: 'center',
+    marginBottom: 24,
+    marginTop: 8,
   },
-  inputContainer: {
-    width: '80%',
+
+  sectionLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: LABEL,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 6,
+    marginLeft: 4,
+  },
+  section: {
+    backgroundColor: CARD,
+    borderRadius: CARD_RADIUS,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+
+  fieldRow: {paddingHorizontal: 14, paddingVertical: 10},
+  fieldLabel: {fontSize: 12, color: LABEL, marginBottom: 4},
+  rowDivider: {height: 1, backgroundColor: BORDER, marginLeft: 14},
+
+  inputWrap: {flexDirection: 'row', alignItems: 'center'},
+  textInput: {flex: 1, fontSize: 15, color: DARK, paddingVertical: 2},
+  mono: {fontFamily: 'Courier', fontSize: 12, color: '#555'},
+
+  pickerWrap: {
+    borderWidth: 1,
+    borderColor: BORDER,
+    borderRadius: 8,
+    backgroundColor: '#F8F8F8',
+    overflow: 'hidden',
+  },
+  pickerChevron: {
+    fontSize: 18,
+    color: LABEL,
+    lineHeight: 22,
+  },
+
+  iconBtn: {marginLeft: 8},
+  iconCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#C7C7CC',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconText: {fontSize: 10, color: '#FFFFFF', fontWeight: '700'},
+  eyeText: {fontSize: 16},
+
+  moreOptionsRow: {
+    backgroundColor: CARD,
+    borderRadius: CARD_RADIUS,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 12,
+  },
+  moreOptionsIconBox: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    backgroundColor: '#EEF0FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  moreOptionsIconText: {fontSize: 14},
+  moreOptionsLabel: {flex: 1, fontSize: 15, color: DARK},
+  moreOptionsChevron: {fontSize: 20, color: BORDER},
+
+  bottomBar: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 8,
+    backgroundColor: BG,
+    borderTopWidth: 1,
+    borderTopColor: BORDER,
+  },
+  loginBtn: {
+    backgroundColor: DARK,
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: 'center',
     marginBottom: 10,
   },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: 'black',
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'black',
-  },
-  button: {
-    width: '80%',
-    height: 40,
-    backgroundColor: '#06be8b',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+  loginBtnText: {color: '#FFFFFF', fontSize: 16, fontWeight: '600'},
+
+  buildInfo: {
+    textAlign: 'center',
+    fontSize: 11,
+    color: LABEL,
   },
 });
 
-export default LoginPage;
+export const pickerStyles = {
+  inputIOS: {
+    fontSize: 15,
+    color: DARK,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    paddingRight: 32,
+  },
+  inputAndroid: {
+    fontSize: 15,
+    color: DARK,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingRight: 32,
+  },
+  iconContainer: {
+    top: Platform.OS === 'ios' ? 9 : 7,
+    right: 10,
+  },
+};
+
+export default LoginFlow;
