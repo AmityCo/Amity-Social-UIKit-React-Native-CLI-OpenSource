@@ -6,6 +6,7 @@
 
 // 1. React / RN imports
 import { View } from 'react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 // 2. Internal imports
 import useFile from '../../../../../../../core/hooks/useFile';
@@ -13,6 +14,7 @@ import { Typography } from '../../../../../../../core/design/components/Typograp
 import { useString } from '../../../../../../../core/localization';
 import { Avatar } from '../../../../elements/Avatar';
 import { AmityMessageBubble } from '../../../../components/AmityMessageBubble';
+import { AmityMessageActionMenu } from '../../../../components/AmityMessageActionMenu';
 import { formatMessageTime } from '../../../../utils/timestamp';
 import { useStyles } from './styles';
 
@@ -21,7 +23,12 @@ type MessageRowProps = {
   message: Amity.Message;
   isUser: boolean;
   isGroupChat?: boolean;
-  onLongPress?: (message: Amity.Message) => void;
+  currentUserId?: string | null;
+  onOpenImage?: (url: string, message: Amity.Message) => void;
+  onOpenVideo?: (message: Amity.Message) => void;
+  onReplyMessage?: (message: Amity.Message) => void;
+  onEditMessage?: (message: Amity.Message) => void;
+  onDeleteMessage?: (message: Amity.Message) => void;
 };
 
 // 4. Named function component
@@ -29,7 +36,12 @@ export function MessageRow({
   message,
   isUser,
   isGroupChat = false,
-  onLongPress,
+  currentUserId,
+  onOpenImage,
+  onOpenVideo,
+  onReplyMessage,
+  onEditMessage,
+  onDeleteMessage,
 }: MessageRowProps) {
   const { styles } = useStyles();
   const sendingLabel = useString('amity_chat_sending_status');
@@ -92,11 +104,34 @@ export function MessageRow({
         ) : null}
         <View style={styles.bubbleRow}>
           {ownSide}
-          <AmityMessageBubble
-            message={message}
-            isUser={isUser}
-            onLongPress={onLongPress}
-          />
+          {isDeleted ? (
+            <AmityMessageBubble message={message} isUser={isUser} />
+          ) : (
+            <AmityMessageActionMenu
+              message={message}
+              currentUserId={currentUserId}
+              handlers={{
+                onEdit: () => onEditMessage?.(message),
+                onReply: () => onReplyMessage?.(message),
+                onDelete: () => onDeleteMessage?.(message),
+                onCopy: () =>
+                  Clipboard.setString(
+                    (message.data as { text?: string })?.text ?? ''
+                  ),
+                onSave: () => {},
+                onReport: () => {},
+              }}
+              anchor={({ openPopover }) => (
+                <AmityMessageBubble
+                  message={message}
+                  isUser={isUser}
+                  onLongPress={() => openPopover()}
+                  onOpenImage={onOpenImage}
+                  onOpenVideo={onOpenVideo}
+                />
+              )}
+            />
+          )}
           {otherSide}
         </View>
       </View>

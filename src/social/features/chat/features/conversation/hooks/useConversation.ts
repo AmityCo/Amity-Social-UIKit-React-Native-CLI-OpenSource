@@ -8,9 +8,19 @@ import { useCallback, useEffect, useState } from 'react';
 import { ChannelRepository, Client } from '@amityco/ts-sdk-react-native';
 
 import useAuth from '../../../../../../core/hooks/useAuth';
-import { useCreateMessage, useMessagesCollection } from '../../../hooks';
+import {
+  useCreateMessage,
+  useDeleteMessage,
+  useEditMessage,
+  useMessagesCollection,
+} from '../../../hooks';
 
 const MESSAGE_PAGE_SIZE = 20;
+
+type SendExtras = {
+  mentionees?: (Amity.UserMention | Amity.ChannelMention)[];
+  parentId?: string;
+};
 
 export function useConversation(channelId?: string) {
   // Current user id — same source AmityChatListItem uses to tell "me" apart.
@@ -40,14 +50,45 @@ export function useConversation(channelId?: string) {
   );
 
   const { createMessage } = useCreateMessage();
+  const { editMessage } = useEditMessage();
+  const { deleteMessage } = useDeleteMessage();
 
   const sendText = useCallback(
-    async (text: string) => {
+    async (text: string, extras?: SendExtras) => {
       const trimmed = text.trim();
       if (!trimmed || !subChannelId) return;
-      await createMessage({ subChannelId, data: { text: trimmed } });
+      const mentionees = extras?.mentionees;
+      await createMessage({
+        subChannelId,
+        data: { text: trimmed },
+        ...(mentionees && mentionees.length ? { mentionees } : {}),
+        ...(extras?.parentId ? { parentId: extras.parentId } : {}),
+      });
     },
     [createMessage, subChannelId]
+  );
+
+  const editText = useCallback(
+    async (messageId: string, text: string, extras?: SendExtras) => {
+      const trimmed = text.trim();
+      if (!trimmed) return;
+      const mentionees = extras?.mentionees;
+      await editMessage({
+        messageId,
+        patch: {
+          data: { text: trimmed },
+          ...(mentionees && mentionees.length ? { mentionees } : {}),
+        },
+      });
+    },
+    [editMessage]
+  );
+
+  const removeMessage = useCallback(
+    async (messageId: string) => {
+      await deleteMessage(messageId);
+    },
+    [deleteMessage]
   );
 
   return {
@@ -58,6 +99,8 @@ export function useConversation(channelId?: string) {
     hasNextPage,
     loadMore,
     sendText,
+    editText,
+    removeMessage,
     currentUserId,
   };
 }

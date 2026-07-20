@@ -28,6 +28,9 @@ export default function AmityChatHomePage() {
             userDisplayName: displayName,
           })
         }
+        onCreatePress={() =>
+          navigation.navigate('AmityChannelCreateConversationPage')
+        }
       />
     </SafeAreaView>
   );

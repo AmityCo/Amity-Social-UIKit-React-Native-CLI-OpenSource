@@ -18,7 +18,11 @@ type MessageListProps = {
   isGroupChat?: boolean;
   hasNextPage?: boolean;
   onLoadMore?: () => void;
-  onLongPressMessage?: (message: Amity.Message) => void;
+  onOpenImage?: (url: string, message: Amity.Message) => void;
+  onOpenVideo?: (message: Amity.Message) => void;
+  onReplyMessage?: (message: Amity.Message) => void;
+  onEditMessage?: (message: Amity.Message) => void;
+  onDeleteMessage?: (message: Amity.Message) => void;
 };
 
 // 4. Named function component
@@ -28,7 +32,11 @@ export function MessageList({
   isGroupChat,
   hasNextPage,
   onLoadMore,
-  onLongPressMessage,
+  onOpenImage,
+  onOpenVideo,
+  onReplyMessage,
+  onEditMessage,
+  onDeleteMessage,
 }: MessageListProps) {
   const { styles } = useStyles();
 
@@ -56,7 +64,12 @@ export function MessageList({
             message={item}
             isUser={isUser}
             isGroupChat={isGroupChat}
-            onLongPress={onLongPressMessage}
+            currentUserId={currentUserId}
+            onOpenImage={onOpenImage}
+            onOpenVideo={onOpenVideo}
+            onReplyMessage={onReplyMessage}
+            onEditMessage={onEditMessage}
+            onDeleteMessage={onDeleteMessage}
           />
         );
       }}
