@@ -5,16 +5,18 @@
 // scripts/port/web-parity-map.json and (for 'port' units) has a matching RN file.
 // This catches anything web has that we haven't consciously handled — no silent gaps.
 //
-//   node scripts/check-web-parity.mjs                 # all milestones
-//   node scripts/check-web-parity.mjs --milestone=1   # gate just M1
+//   node scripts/check-web-parity.mjs                     # all milestones
+//   node scripts/check-web-parity.mjs --milestone=1       # gate just M1
+//   node scripts/check-web-parity.mjs --milestone=1 --no-stubs   # also fail on unfinished stubs
 //   node scripts/check-web-parity.mjs --web=/abs/AmityUiKitWeb
 //
-// Exit 1 if: any web unit is UNACCOUNTED, or any 'port' unit in scope is MISSING its RN file.
+// Exit 1 if: any web unit is UNACCOUNTED, MISSING its RN file, DRIFTed, or (with --no-stubs)
+// still contains a PORT STUB / TODO(port) marker (i.e. scaffolded but not actually ported).
 
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { REPO_ROOT, RN, WEB_ROOT, WEB_BRANCH_EXPECTED, webPath, c } from './port/paths.mjs';
+import { REPO_ROOT, RN, WEB_ROOT, WEB_BRANCH_EXPECTED, webPath, c, hasFlag } from './port/paths.mjs';
 
 const argVal = (k, d) => {
   const a = process.argv.find((x) => x.startsWith(`--${k}=`));
@@ -23,6 +25,22 @@ const argVal = (k, d) => {
 const manifest = JSON.parse(readFileSync(resolve(RN.portDir, 'web-parity-map.json'), 'utf8'));
 const milestoneArg = argVal('milestone', '');
 const milestone = milestoneArg ? Number(milestoneArg) : null;
+const noStubs = hasFlag('--no-stubs');
+
+const STUB_RE = /PORT STUB|TODO\(port\)/;
+function collectTs(abs, out = []) {
+  if (!existsSync(abs)) return out;
+  if (statSync(abs).isFile()) { if (/\.[jt]sx?$/.test(abs)) out.push(abs); return out; }
+  for (const name of readdirSync(abs)) collectTs(resolve(abs, name), out);
+  return out;
+}
+/** True if the RN target still carries an unfinished stub marker. */
+function isStub(rnRel, kind) {
+  const abs = resolve(REPO_ROOT, rnRel);
+  const files =
+    kind === 'hooks-only' && existsSync(`${abs}.ts`) ? [`${abs}.ts`] : collectTs(abs);
+  return files.length > 0 && files.some((f) => STUB_RE.test(readFileSync(f, 'utf8')));
+}
 
 // verify web checkout is present (and warn if not on the expected branch)
 if (!existsSync(webPath('src/v4/chat'))) {
@@ -51,7 +69,13 @@ function topUnits(rootRel) {
 }
 
 const inScope = (u) => milestone == null || u.milestone === milestone;
-const buckets = { covered: [], missing: [], skip: [], unaccounted: [], drift: [] };
+const buckets = { covered: [], missing: [], stubbed: [], skip: [], unaccounted: [], drift: [] };
+
+// route a present RN target to covered or (with --no-stubs) stubbed
+function classifyPresent(key, rnRel, kind) {
+  if (noStubs && isStub(rnRel, kind)) buckets.stubbed.push(key);
+  else buckets.covered.push(key);
+}
 
 // (a) enumerable roots: enumerate web folder → must be classified in manifest.units
 for (const [rootKey, rootRel] of Object.entries(manifest.roots)) {
@@ -63,7 +87,7 @@ for (const [rootKey, rootRel] of Object.entries(manifest.roots)) {
     if (!entry) { buckets.unaccounted.push(key); continue; }
     if (entry.status === 'skip') { buckets.skip.push(key); continue; }
     if (!inScope(entry)) continue;
-    if (entry.rn && existsSync(resolve(REPO_ROOT, entry.rn))) buckets.covered.push(key);
+    if (entry.rn && existsSync(resolve(REPO_ROOT, entry.rn))) classifyPresent(key, entry.rn);
     else buckets.missing.push({ key, rn: entry.rn, milestone: entry.milestone });
   }
 }
@@ -75,16 +99,20 @@ for (const [name, entry] of Object.entries(manifest.curated || {})) {
   const rnOk = entry.kind === 'hooks-only'
     ? existsSync(resolve(REPO_ROOT, `${entry.rn}.ts`)) || existsSync(resolve(REPO_ROOT, entry.rn))
     : existsSync(resolve(REPO_ROOT, entry.rn));
-  if (rnOk) buckets.covered.push(`curated/${name}`);
+  if (rnOk) classifyPresent(`curated/${name}`, entry.rn, entry.kind);
   else buckets.missing.push({ key: `curated/${name}`, rn: entry.rn, milestone: entry.milestone });
 }
 
 // ---- report ----
 const scopeLabel = milestone ? `milestone ${milestone}` : 'all milestones';
 console.log(c.bold(`\nWeb→RN parity  ${c.dim(`(${scopeLabel}) · local ${WEB_ROOT.replace(REPO_ROOT + '/..', '..')}`)}\n`));
-const portInScope = buckets.covered.length + buckets.missing.length;
+const portInScope = buckets.covered.length + buckets.missing.length + buckets.stubbed.length;
 console.log(`  ${c.green('✓')} covered      ${buckets.covered.length}/${portInScope} port units`);
 for (const m of buckets.missing) console.log(`    ${c.red('✗ missing')} ${m.key} ${c.dim('→ ' + (m.rn || '(no rn)') + ` [M${m.milestone}]`)}`);
+if (noStubs) {
+  console.log(`  ${buckets.stubbed.length ? c.red('✗') : c.green('✓')} stubbed      ${buckets.stubbed.length} ${c.dim('(scaffolded but PORT STUB/TODO still present)')}`);
+  for (const s of buckets.stubbed) console.log(`      ${c.red(s)}`);
+}
 console.log(`  ${c.dim('–')} skip         ${buckets.skip.length} ${c.dim('(intentionally not ported)')}`);
 if (buckets.drift.length) {
   console.log(`  ${c.red('✗')} DRIFT        ${buckets.drift.length} ${c.red('(curated web source moved/removed — update web-parity-map.json)')}`);
@@ -97,6 +125,10 @@ if (buckets.unaccounted.length) {
   console.log(`  ${c.green('✓')} unaccounted  0 ${c.dim('(every web unit is classified)')}`);
 }
 
-const failed = buckets.unaccounted.length + buckets.missing.length + buckets.drift.length;
+const failed =
+  buckets.unaccounted.length +
+  buckets.missing.length +
+  buckets.drift.length +
+  buckets.stubbed.length;
 console.log(`\n  ${failed ? c.red(failed + ' issue(s)') : c.green('parity OK')}\n`);
 process.exit(failed ? 1 : 0);
