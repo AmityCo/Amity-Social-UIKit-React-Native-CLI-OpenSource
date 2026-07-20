@@ -14,6 +14,7 @@ export type RootStackParamList = {
   // --- Chat (PDT-3713) ---
   AmityChatHomePage: undefined;
   AmityChatPage: { channelId: string; userDisplayName?: string };
+  AmityChannelCreateConversationPage: undefined;
   AmitySocialHomePage: { postIdCallBack?: string };
   AmitySocialGlobalSearchPage: undefined;
   AmityMyCommunitiesSearchPage: undefined;

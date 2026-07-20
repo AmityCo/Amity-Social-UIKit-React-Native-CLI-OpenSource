@@ -9,6 +9,7 @@ import type { RootStackParamList } from './RouteParamList';
 import useAuth from '../hooks/useAuth';
 import AmityChatHomePage from '../../social/features/chat/pages/AmityChatHomePage';
 import AmityChatPage from '../../social/features/chat/pages/AmityChatPage';
+import AmityChannelCreateConversationPage from '../../social/features/chat/pages/AmityChannelCreateConversationPage';
 import AmitySocialHomePage from '../../social/screens/SocialHomePage';
 import PostDetail from '../../social/screens/PostDetail';
 import CreatePost from '../../social/screens/CreatePost';
@@ -122,6 +123,10 @@ export default function AmitySocialUIKitV4Navigator({
             component={AmityChatHomePage}
           />
           <Stack.Screen name="AmityChatPage" component={AmityChatPage} />
+          <Stack.Screen
+            name="AmityChannelCreateConversationPage"
+            component={AmityChannelCreateConversationPage}
+          />
           {/* --- Social Home --- */}
           <Stack.Screen
             name="AmitySocialHomePage"

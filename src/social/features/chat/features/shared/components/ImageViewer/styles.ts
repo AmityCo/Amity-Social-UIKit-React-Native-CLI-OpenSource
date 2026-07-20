@@ -1,0 +1,61 @@
+// Styles for ImageViewer — the header/footer chrome layered over
+// react-native-image-viewing. Mirrors MediaViewer's bars (padding 1rem→16, buttons
+// 32/40, radius 9999). SafeArea top/bottom padding keeps the bars clear of the notch
+// and home indicator since the viewer renders edge-to-edge.
+
+import { StyleSheet } from 'react-native';
+import { useToken } from '../../../../../../../core/design/theme/useToken';
+import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-color-tokens';
+
+export const useStyles = () => {
+  const token = useToken();
+
+  const styles = StyleSheet.create({
+    topBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      paddingHorizontal: 16,
+      paddingTop: 44,
+      paddingBottom: 16,
+      backgroundColor: token(
+        AmityColorToken.SurfaceBadgeSemanticBadgePostStatusTotalMedia
+      ),
+    },
+    bottomBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
+      paddingTop: 16,
+      paddingBottom: 32,
+      backgroundColor: token(
+        AmityColorToken.SurfaceBadgeSemanticBadgePostStatusTotalMedia
+      ),
+    },
+    closeButton: {
+      width: 32,
+      height: 32,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 4,
+      borderRadius: 9999,
+      backgroundColor: token(
+        AmityColorToken.SurfaceIconButtonTransparentPrimaryEnabled
+      ),
+    },
+    bottomIconButton: {
+      width: 40,
+      height: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 8,
+      borderRadius: 9999,
+      backgroundColor: token(
+        AmityColorToken.SurfaceIconButtonTransparentPrimaryEnabled
+      ),
+    },
+  });
+
+  return { styles, token };
+};

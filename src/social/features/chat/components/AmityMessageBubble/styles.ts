@@ -53,6 +53,72 @@ export const useStyles = () => {
     deletedText: {
       fontStyle: 'italic',
     },
+
+    // --- Media (image / video) ---
+    // Web used height 15rem→240 with variable width (inline-block, capped at 20rem/320).
+    // In an RN flex row an Image has no intrinsic width to size against, so we pin a
+    // fixed 240×240 frame (media fills it, cover-cropped) — reported as a fidelity delta
+    // vs web's variable width.
+    imageBubble: {
+      position: 'relative',
+      width: 240,
+      height: 240,
+      borderRadius: 20,
+      overflow: 'hidden',
+      backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
+    },
+    videoBubble: {
+      position: 'relative',
+      width: 240,
+      height: 240,
+      borderRadius: 20,
+      overflow: 'hidden',
+      backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
+    },
+    mediaImage: {
+      width: '100%',
+      height: '100%',
+    },
+    mediaPlaceholder: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 240,
+      height: 240,
+      borderRadius: 20,
+      backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
+    },
+    mediaBroken: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 240,
+      height: 240,
+      borderRadius: 20,
+      backgroundColor: token(AmityColorToken.SurfaceMediaImageBroken),
+    },
+    mediaPressedScrim: {
+      ...StyleSheet.absoluteFillObject,
+      // Web used --asc-color-message-overlay (no RN token); substituted with the
+      // closest media-context dark scrim (reported as a gap).
+      backgroundColor: token(
+        AmityColorToken.SurfaceBadgeSemanticBadgePostStatusTotalMedia
+      ),
+    },
+    videoPlayChip: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      marginTop: -20,
+      marginLeft: -20,
+      width: 40,
+      height: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 4,
+      borderRadius: 9999,
+      backgroundColor: token(
+        AmityColorToken.SurfaceIconButtonTransparentPrimaryEnabled
+      ),
+    },
   });
 
   return { styles, token };
