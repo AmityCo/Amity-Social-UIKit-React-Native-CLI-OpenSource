@@ -1,0 +1,24 @@
+{
+  "_comment": "High-fidelity geometry gate. Per RN component: rn styles path + a list of {rnProp, sot} where 'sot' is a dot-path into src/core/design/tokens/geometry.json (array indices allowed, e.g. lists.listItem.padding.0). check-geometry.mjs resolves the expected value FROM geometry.json (single source of truth — no duplicated numbers here) and asserts the RN styles.ts declares `rnProp: <value>`. Add an entry when you port a component; check-geometry skips entries whose rn styles.ts doesn't exist yet. 'oneOf: true' means the RN value must be ONE of a SoT array (e.g. avatar sizes).",
+  "components": {
+    "Divider": {
+      "rn": "src/core/design/atoms/Divider",
+      "props": [{ "rnProp": "height", "sot": "divider.types.0.thickness" }]
+    },
+    "Avatar": {
+      "rn": "src/core/design/atoms/Avatar",
+      "props": [
+        { "rnProp": "width", "sot": "avatarIcon.avatar.sizes", "oneOf": true }
+      ]
+    },
+    "AmityChatListItem": {
+      "rn": "src/social/features/chat/components/AmityChatListItem",
+      "props": [
+        { "rnProp": "minHeight", "sot": "lists.listItem.minHeight" },
+        { "rnProp": "gap", "sot": "lists.listItem.gap" },
+        { "rnProp": "paddingVertical", "sot": "lists.listItem.padding.0" },
+        { "rnProp": "paddingHorizontal", "sot": "lists.listItem.padding.1" }
+      ]
+    }
+  }
+}
