@@ -9,7 +9,7 @@
 // Response is text/plain (the raw token, wrapped in double quotes).
 
 const TEST_SERVER_KEY =
-  'fcc43cdf4ca243ffa52e4ccf0028e974cc8bb83baee582f3ea60cf869a8805e1db496280b64da7b56d009eea4c168a203b90f91b0237b633f91245a908';
+  'SERVER_KEY';
 
 /**
  * Returns a `getAuthToken(userId)` for the given region. Mints a short-lived
