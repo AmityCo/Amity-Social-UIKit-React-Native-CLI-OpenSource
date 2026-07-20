@@ -4,7 +4,14 @@ import {
   AmityUiKitChat,
   navigate,
 } from '@amityco/react-native-social-uikit';
-import LoginPage, { type ILoginForm } from './Login';
+import LoginPage from './Login';
+
+export interface ILoginForm {
+  userId: string;
+  apiKey: string;
+  apiRegion: string;
+  module: string;
+}
 import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
