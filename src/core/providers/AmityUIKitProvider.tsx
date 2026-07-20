@@ -18,6 +18,7 @@ import Toast from '../../social/components/Toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { AmityThemeProvider } from '../design/theme';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
@@ -193,9 +194,13 @@ export default function AmityUiKitProvider({
                   <BehaviourProvider behaviour={behaviour}>
                     <ExploreProvider>
                       <PaperProvider theme={globalTheme}>
-                        {children}
-                        <BottomSheetComponent />
-                        <Toast />
+                        <AmityThemeProvider
+                          mode={isDarkTheme ? 'dark' : 'light'}
+                        >
+                          {children}
+                          <BottomSheetComponent />
+                          <Toast />
+                        </AmityThemeProvider>
                       </PaperProvider>
                     </ExploreProvider>
                   </BehaviourProvider>
