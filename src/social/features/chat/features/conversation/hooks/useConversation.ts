@@ -5,15 +5,15 @@
 // useCreateMessage. Reactions / reply / media / mentions layer on in later tasks.
 
 import { useCallback } from 'react';
+import { Client } from '@amityco/ts-sdk-react-native';
 
-import useAuth from '../../../../../../core/hooks/useAuth';
 import { useCreateMessage, useMessagesCollection } from '../../../hooks';
 
 const MESSAGE_PAGE_SIZE = 20;
 
 export function useConversation(channelId?: string) {
-  const { client } = useAuth();
-  const currentUserId = (client as { userId?: string } | undefined)?.userId;
+  // Current user id — same source AmityChatListItem uses to tell "me" apart.
+  const currentUserId = Client.getCurrentUser()?.userId;
 
   const subChannelId = channelId ?? '';
 
