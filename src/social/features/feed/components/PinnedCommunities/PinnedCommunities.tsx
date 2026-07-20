@@ -38,7 +38,7 @@ const AmityPinnedCommunitiesComponent: FC<
 
   // Singular when there's exactly one pinned community, plural otherwise.
   const isSingle = pinnedCommunities.length === 1;
-  const title = isSingle ? 'Welcome to the community' : 'Pinned communities';
+  const title = 'Welcome to our Community';
 
   return (
     <View>

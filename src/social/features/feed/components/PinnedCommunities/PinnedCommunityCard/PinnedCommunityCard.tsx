@@ -16,10 +16,6 @@ type PinnedCommunityCardProps = {
   community: Amity.Community;
 };
 
-// Full-width card for the (single) pinned "Welcome to the community" section.
-// Layout differs from the Recommended carousel card: a taller banner image,
-// then name -> category chips -> member count stacked vertically. No join/leave
-// action (pinned memberships are auto-joined and permanent).
 export const PinnedCommunityCard: React.FC<PinnedCommunityCardProps> = ({
   community,
   pageId = PageID.WildCardPage,
