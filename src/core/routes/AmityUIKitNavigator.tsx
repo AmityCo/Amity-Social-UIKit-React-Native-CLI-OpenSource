@@ -7,6 +7,7 @@ import { navigationRef, onNavigationReady } from './navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
 import useAuth from '../hooks/useAuth';
+import AmityChatHomePage from '../../social/features/chat/pages/AmityChatHomePage';
 import AmitySocialHomePage from '../../social/screens/SocialHomePage';
 import PostDetail from '../../social/screens/PostDetail';
 import CreatePost from '../../social/screens/CreatePost';
@@ -94,6 +95,7 @@ export default function AmitySocialUIKitV4Navigator() {
       <NavigationContainer ref={navigationRef} onReady={onNavigationReady}>
         <Stack.Navigator
           id="AmitySocialUIKit"
+          initialRouteName="AmitySocialHomePage"
           screenOptions={{
             headerShown: false,
             headerShadowVisible: false,
@@ -108,6 +110,11 @@ export default function AmitySocialUIKitV4Navigator() {
             },
           }}
         >
+          {/* --- Chat (PDT-3713) --- */}
+          <Stack.Screen
+            name="AmityChatHomePage"
+            component={AmityChatHomePage}
+          />
           {/* --- Social Home --- */}
           <Stack.Screen
             name="AmitySocialHomePage"
