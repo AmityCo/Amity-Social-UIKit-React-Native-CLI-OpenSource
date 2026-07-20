@@ -9,6 +9,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { ChannelRepository } from '@amityco/ts-sdk-react-native';
+import useAuth from '../../../../../core/hooks/useAuth';
 
 export type UseChannelsCollectionParams = {
   types?: Amity.ChannelType[];
@@ -39,11 +40,19 @@ export function useChannelsCollection({
   const [hasNextPage, setHasNextPage] = useState(false);
   const onNextPageRef = useRef<(() => void) | undefined>(undefined);
 
+  // The SDK's ChannelRepository needs a connected client — calling getChannels
+  // before the session is 'established' throws. Gate the subscription on it.
+  const { isConnected } = useAuth();
+
   // Re-subscribe on any query-param change. `types` is an array, so key on a
   // stable string rather than its identity to avoid a resubscribe every render.
   const typesKey = types?.join(',') ?? '';
 
   useEffect(() => {
+    if (!isConnected) {
+      setLoading(true);
+      return undefined;
+    }
     setLoading(true);
 
     const params: Amity.ChannelLiveCollection = {
@@ -67,7 +76,7 @@ export function useChannelsCollection({
     return () => {
       unsub();
     };
-  }, [typesKey, membership, sortBy, isDeleted, limit]);
+  }, [isConnected, typesKey, membership, sortBy, isDeleted, limit]);
 
   function loadMore() {
     onNextPageRef.current?.();
