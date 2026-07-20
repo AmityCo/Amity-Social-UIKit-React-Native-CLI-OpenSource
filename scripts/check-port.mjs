@@ -26,9 +26,9 @@ function walk(dir, exts, out = []) {
     const p = join(dir, e);
     const s = statSync(p);
     if (s.isDirectory()) {
-      if (e === 'node_modules' || e === 'generated') continue;
+      if (e === 'node_modules' || e === 'generated' || e === '__tests__') continue;
       walk(p, exts, out);
-    } else if (exts.some((x) => p.endsWith(x))) out.push(p);
+    } else if (exts.some((x) => p.endsWith(x)) && !/\.(test|spec)\.[jt]sx?$/.test(e)) out.push(p);
   }
   return out;
 }
