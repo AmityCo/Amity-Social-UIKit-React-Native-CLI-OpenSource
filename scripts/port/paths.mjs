@@ -68,6 +68,9 @@ export const RN = {
   iconRegistry: resolve(REPO_ROOT, 'src/core/design/icons/generated/iconRegistry.ts'),
   chatFeatureDir: resolve(REPO_ROOT, 'src/social/features/chat'),
   designAtomsDir: resolve(REPO_ROOT, 'src/core/design/atoms'),
+  // Whole design system (atoms/molecules/components/elements) — for hex/token scans.
+  // Excludes tokens/ + icons/generated/ (vendored) via the caller's walk.
+  designDir: resolve(REPO_ROOT, 'src/core/design'),
   portDir: resolve(REPO_ROOT, 'scripts/port'),
 };
 

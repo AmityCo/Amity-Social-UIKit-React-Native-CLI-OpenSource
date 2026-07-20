@@ -26,7 +26,7 @@ function walk(dir, exts, out = []) {
     const p = join(dir, e);
     const s = statSync(p);
     if (s.isDirectory()) {
-      if (e === 'node_modules' || e === 'generated' || e === '__tests__') continue;
+      if (e === 'node_modules' || e === 'generated' || e === '__tests__' || e === 'tokens') continue;
       walk(p, exts, out);
     } else if (exts.some((x) => p.endsWith(x)) && !/\.(test|spec)\.[jt]sx?$/.test(e)) out.push(p);
   }
@@ -143,7 +143,7 @@ try {
 
 // ================= CHECK 3: no hardcoded hex in design + chat source =================
 try {
-  const scanDirs = [RN.designAtomsDir, resolve(RN.tokensDir, '..', 'theme'), RN.chatFeatureDir];
+  const scanDirs = [RN.designDir, RN.chatFeatureDir];
   const files = scanDirs.flatMap((d) => walk(d, ['.ts', '.tsx']));
   if (!files.length) {
     record('no hardcoded hex', SKIP, 'no design/chat source yet');
@@ -167,7 +167,7 @@ try {
     record('token refs valid', SKIP, 'tokens not vendored');
   } else {
     const { nameSet } = buildIndexes(parseColorTokens(RN.colorTokensTs));
-    const files = [RN.designAtomsDir, RN.chatFeatureDir].flatMap((d) => walk(d, ['.ts', '.tsx']));
+    const files = [RN.designDir, RN.chatFeatureDir].flatMap((d) => walk(d, ['.ts', '.tsx']));
     const bad = [];
     const REF = /AmityColorToken\.([A-Za-z0-9_]+)/g;
     for (const f of files) {
@@ -244,7 +244,7 @@ try {
     record('string keys valid', SKIP, 'localization not vendored — run sync-strings.mjs');
   } else {
     const en = JSON.parse(readFileSync(RN.localeEnJson, 'utf8'));
-    const files = [RN.designAtomsDir, RN.chatFeatureDir].flatMap((d) => walk(d, ['.ts', '.tsx']));
+    const files = [RN.designDir, RN.chatFeatureDir].flatMap((d) => walk(d, ['.ts', '.tsx']));
     const bad = [];
     const USE = /useString\(\s*['"]([^'"]+)['"]/g;
     for (const f of files) {
