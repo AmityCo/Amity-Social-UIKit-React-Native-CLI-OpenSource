@@ -15,7 +15,11 @@ const STUB_RE = /PORT STUB|TODO\(port\)/;
 function stateOf(rn, kind) {
   if (!rn) return 'todo';
   const abs = resolve(REPO_ROOT, rn);
-  const filePath = kind === 'hooks-only' && existsSync(`${abs}.ts`) ? `${abs}.ts` : abs;
+  // Resolve to a dir, or a single .tsx/.ts file at that path (feature entries are files).
+  let filePath = abs;
+  if (kind === 'hooks-only' && existsSync(`${abs}.ts`)) filePath = `${abs}.ts`;
+  else if (!existsSync(abs) && existsSync(`${abs}.tsx`)) filePath = `${abs}.tsx`;
+  else if (!existsSync(abs) && existsSync(`${abs}.ts`)) filePath = `${abs}.ts`;
   if (!existsSync(filePath)) return 'todo';
   // collect files, check for stub markers
   const files = [];
@@ -36,6 +40,10 @@ for (const [k, u] of Object.entries(manifest.units)) {
 }
 for (const [k, u] of Object.entries(manifest.curated || {})) {
   rows.push({ ms: u.milestone, key: `curated/${k}`, state: stateOf(u.rn, u.kind) });
+}
+for (const [k, u] of Object.entries(manifest.features || {})) {
+  if (u.status !== 'port') continue;
+  rows.push({ ms: u.milestone, key: k, state: stateOf(u.rn, u.kind) });
 }
 
 const mark = { done: '[x]', stub: '[~]', todo: '[ ]' };

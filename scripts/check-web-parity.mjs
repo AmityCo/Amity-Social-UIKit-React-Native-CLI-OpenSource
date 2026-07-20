@@ -34,6 +34,12 @@ function collectTs(abs, out = []) {
   for (const name of readdirSync(abs)) collectTs(resolve(abs, name), out);
   return out;
 }
+/** True if the RN target exists — as a dir, or a single .tsx/.ts file at that path. */
+function rnExists(rnRel) {
+  const abs = resolve(REPO_ROOT, rnRel);
+  return existsSync(abs) || existsSync(`${abs}.tsx`) || existsSync(`${abs}.ts`);
+}
+
 /** True if the RN target still carries an unfinished stub marker. */
 function isStub(rnRel, kind) {
   const abs = resolve(REPO_ROOT, rnRel);
@@ -51,6 +57,32 @@ try {
   const b = execFileSync('git', ['-C', WEB_ROOT, 'branch', '--show-current'], { encoding: 'utf8' }).trim();
   if (b !== WEB_BRANCH_EXPECTED) console.log(c.yellow(`  note: web is on '${b}', expected '${WEB_BRANCH_EXPECTED}'`));
 } catch { /* not fatal */ }
+
+// Recursively enumerate every component unit under the feature tree. A unit is a
+// PascalCase <Name>.tsx (not index). Key = path from src/v4/chat/ minus .tsx, with the
+// duplicate leaf filename collapsed for own-dir components (MessageRow/MessageRow →
+// features/shared/components/MessageRow) but kept for feature entries whose file name
+// differs from its dir (conversation/chat/Chat → features/conversation/chat/Chat).
+function featureUnits() {
+  const base = webPath('src/v4/chat');
+  const featBase = resolve(base, manifest.featureRoot.replace(/^src\/v4\/chat\//, ''));
+  if (!existsSync(featBase)) return [];
+  const out = [];
+  (function walk(dir) {
+    for (const name of readdirSync(dir)) {
+      const p = resolve(dir, name);
+      if (statSync(p).isDirectory()) walk(p);
+      else if (name.endsWith('.tsx') && /^[A-Z]/.test(name) && name !== 'index.tsx') {
+        const rel = p.slice(base.length + 1).replace(/\.tsx$/, '');
+        const parts = rel.split('/');
+        const stem = parts[parts.length - 1];
+        const dirbase = parts[parts.length - 2];
+        out.push(dirbase === stem ? parts.slice(0, -1).join('/') : rel);
+      }
+    }
+  })(featBase);
+  return [...new Set(out)].sort();
+}
 
 // Enumerate top-level component units (immediate child that is <Name>.tsx or a dir with <Name>.tsx/index.tsx).
 function topUnits(rootRel) {
@@ -87,7 +119,21 @@ for (const [rootKey, rootRel] of Object.entries(manifest.roots)) {
     if (!entry) { buckets.unaccounted.push(key); continue; }
     if (entry.status === 'skip') { buckets.skip.push(key); continue; }
     if (!inScope(entry)) continue;
-    if (entry.rn && existsSync(resolve(REPO_ROOT, entry.rn))) classifyPresent(key, entry.rn);
+    if (entry.rn && rnExists(entry.rn)) classifyPresent(key, entry.rn);
+    else buckets.missing.push({ key, rn: entry.rn, milestone: entry.milestone });
+  }
+}
+
+// (a2) feature tree: recursively enumerate the whole chat/features/** component tree.
+// Every unit must be classified in manifest.features (port/skip + milestone) or it is
+// UNACCOUNTED — this is what stops feature "abilities" being silently missed.
+if (manifest.featureRoot && manifest.features) {
+  for (const key of featureUnits()) {
+    const entry = manifest.features[key];
+    if (!entry) { buckets.unaccounted.push(key); continue; }
+    if (entry.status === 'skip') { buckets.skip.push(key); continue; }
+    if (!inScope(entry)) continue;
+    if (entry.rn && rnExists(entry.rn)) classifyPresent(key, entry.rn, entry.kind);
     else buckets.missing.push({ key, rn: entry.rn, milestone: entry.milestone });
   }
 }
@@ -98,7 +144,7 @@ for (const [name, entry] of Object.entries(manifest.curated || {})) {
   if (!inScope(entry)) continue;
   const rnOk = entry.kind === 'hooks-only'
     ? existsSync(resolve(REPO_ROOT, `${entry.rn}.ts`)) || existsSync(resolve(REPO_ROOT, entry.rn))
-    : existsSync(resolve(REPO_ROOT, entry.rn));
+    : rnExists(entry.rn);
   if (rnOk) classifyPresent(`curated/${name}`, entry.rn, entry.kind);
   else buckets.missing.push({ key: `curated/${name}`, rn: entry.rn, milestone: entry.milestone });
 }
