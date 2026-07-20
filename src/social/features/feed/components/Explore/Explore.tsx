@@ -7,6 +7,7 @@ import { PageID } from '../../../../enums';
 import AmityRecommendedCommunityComponent from '../RecommendedCommunities';
 import AmityCommunityCategoriesComponent from '../Categories';
 import AmityTrendingCommunitiesComponent from '../TrendingCommunities';
+import AmityPinnedCommunitiesComponent from '../PinnedCommunities';
 import AmityExploreCommunityEmptyComponent from '../ExploreCommunityEmpty';
 import AmityExploreEmptyComponent from '../ExploreEmpty';
 import { useExplore } from '../../../../providers/ExploreProvider';
@@ -30,6 +31,7 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
     isCategoryEmpty,
     isRecommendedCommunitiesEmpty,
     isTrendingCommunitiesEmpty,
+    isPinnedCommunitiesEmpty,
     isAllError,
     isAllCommunitiesError,
   } = useExplore();
@@ -44,7 +46,8 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
     !isLoading &&
     isCategoryEmpty &&
     isRecommendedCommunitiesEmpty &&
-    isTrendingCommunitiesEmpty;
+    isTrendingCommunitiesEmpty &&
+    isPinnedCommunitiesEmpty;
 
   const isNoCommunities =
     !isLoading &&
@@ -88,6 +91,13 @@ const AmityExploreComponent: React.FC<AmityExploreComponentProps> = ({
           {!isCategoryEmpty && (
             <View style={styles.categoriesContainer}>
               <AmityCommunityCategoriesComponent pageId={pageId} />
+            </View>
+          )}
+          {/* Pinned communities: below the category chips, above Recommended.
+              Self-hides when empty; component also returns null defensively. */}
+          {!isPinnedCommunitiesEmpty && (
+            <View style={styles.pinnedContainer}>
+              <AmityPinnedCommunitiesComponent pageId={pageId} />
             </View>
           )}
           <View style={styles.communitiesSection}>

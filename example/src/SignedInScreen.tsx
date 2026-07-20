@@ -4,6 +4,8 @@ import {
 } from '@amityco/react-native-social-uikit';
 import { View, StyleSheet } from 'react-native';
 import config from '../uikit.config.json';
+// ⚠️ TEST ONLY — remove with example/src/testAuth.ts before shipping.
+import { makeTestGetAuthToken } from './testAuth';
 
 type SignedInScreenProps = {
   apiKey: string;
@@ -28,6 +30,7 @@ type SignedInScreenProps = {
  * user, and to verify that passing only `userId` (no `displayName`) preserves
  * the existing server-side displayName.
  */
+
 export default function SignedInScreen({
   apiKey,
   apiRegion,
@@ -35,17 +38,22 @@ export default function SignedInScreen({
   fcmToken,
   userId = '',
 }: SignedInScreenProps) {
+  // ⚠️ TEST ONLY — remove with example/src/testAuth.ts before shipping.
+  const getAuthToken = makeTestGetAuthToken(apiRegion);
+
   return (
     <AmityUiKitProvider
       apiKey={apiKey}
       apiRegion={apiRegion}
       apiEndpoint={apiEndpoint}
       userId={userId}
-
+      // ⚠️ TEST ONLY: exercises secure-mode auth-token flow. Remove before ship.
+      getAuthToken={getAuthToken}
       // Cast: node_modules has two copies of the config type, so the JSON's
       // inferred type and the provider's expected type are nominally distinct.
       configs={config as any}
       fcmToken={fcmToken}
+      
     >
       <View style={styles.root}>
         <AmityUiKitSocial />

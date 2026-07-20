@@ -15,14 +15,14 @@ import {
   View,
 } from 'react-native';
 import config from '../uikit.config.json';
+// ⚠️ TEST ONLY — remove with example/src/testAuth.ts before shipping.
+import { makeTestGetAuthToken, makeTestGenerateUserId } from './testAuth';
 
 type VisitorScreenProps = {
   apiKey: string;
   apiRegion: string;
   apiEndpoint: string;
   fcmToken?: string;
-  /** The userId the visitor will create a profile as on save. */
-  signupUserId?: string;
 };
 
 /** Which view the visitor is currently looking at. */
@@ -152,8 +152,14 @@ export default function VisitorScreen({
   apiRegion,
   apiEndpoint,
   fcmToken,
-  signupUserId = 'visitor-user-test-10',
 }: VisitorScreenProps) {
+  // ⚠️ TEST ONLY — remove with example/src/testAuth.ts before shipping.
+  // Mock the host's "mint a userId" API, and the secure-mode auth-token
+  // provider. The CreateProfile page chains them on Save: generateUserId()
+  // resolves the userId first, then getAuthToken(userId) mints the token for it.
+  const generateUserId = makeTestGenerateUserId();
+  const getAuthToken = makeTestGetAuthToken(apiRegion);
+
   const [view, setView] = useState<ViewName>('social');
   const [showGuidelines, setShowGuidelines] = useState(false);
   // The signed-in identity. Empty while in visitor mode; set after the profile
@@ -192,10 +198,14 @@ export default function VisitorScreen({
           // (AmityUiKitSocial below has its own navigator, so it isn't wrapped.)
           <AmityPageRenderer>
             <AmityCreateProfilePage
-              userId={signupUserId} // identity used for the signed-in login on save
-              // Host-provided default avatar. Shown when the user doesn't pick a
-              // photo, and uploaded via the from-URL endpoint on save.
-
+              // ⚠️ TEST ONLY: instead of a static userId, mint it on Save via
+              // the mocked host API. The page awaits this, then calls
+              // getAuthToken with the resulting userId for secure-mode login.
+              generateUserId={generateUserId}
+              // ⚠️ TEST ONLY: secure-mode auth-token provider. Called with the
+              // userId returned by generateUserId above. (Could also be set once
+              // on AmityUiKitProvider; passing here to test the page-level prop.)
+              getAuthToken={getAuthToken}
               onCreated={({ userId, displayName, about, imageUrl }) => {
                 // Save succeeded. The page already ran Client.login internally;
                 // passing the returned userId + displayName to the provider
@@ -207,10 +217,12 @@ export default function VisitorScreen({
                 setAuthDisplayName(displayName);
                 setView('social');
               }}
+       
               onCancel={() => {
                 // Dismiss create-profile -> back to the social app.
                 setView('social');
               }}
+              
             />
           </AmityPageRenderer>
         ) : (

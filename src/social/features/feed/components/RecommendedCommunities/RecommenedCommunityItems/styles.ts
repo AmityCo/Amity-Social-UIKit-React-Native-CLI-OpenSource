@@ -13,6 +13,10 @@ export const useStyles = () => {
       borderWidth: 1,
       borderColor: theme.colors.baseShade4,
     },
+    // Overrides the fixed carousel width so a lone card fills its row.
+    containerFullWidth: {
+      width: '100%',
+    },
     imagePlaceholder: {
       width: '100%',
       height: 134,

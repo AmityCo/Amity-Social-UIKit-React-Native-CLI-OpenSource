@@ -18,11 +18,6 @@ const API_KEY = "YOUR_API_KEY"; // Put your apiKey
 const API_REGION = "API_REGION"; // Put your apiRegion
 const API_ENDPOINT ="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
 
-// Shared test userId. The Visitor tab creates a profile as this user (via the
-// create-profile flow), and the Signed-in tab logs straight in as the same
-// user — so you can create the profile once on Visitor, then switch to
-// Signed-in and see the same account.
-const TEST_USER_ID = 'visitor-user-test-10';
 
 type TabName = 'visitor' | 'signedIn';
 
@@ -160,8 +155,6 @@ export default function App() {
             apiRegion={API_REGION}
             apiEndpoint={API_ENDPOINT}
             fcmToken={fcmToken} // android:fcm iOS:APN
-            // Create the profile as the same user the Signed-in tab logs in as.
-            signupUserId={TEST_USER_ID}
           />
         ) : (
           <SignedInScreen
@@ -171,7 +164,7 @@ export default function App() {
             apiEndpoint={API_ENDPOINT}
             fcmToken={fcmToken}
             // Sign in directly as this user — no visitor / create-profile step.
-            userId={TEST_USER_ID}
+            userId="visitor-user-test-10"
             // displayName intentionally omitted to test the "userId only" login
             // path (existing displayName is preserved, not overwritten).
           />

@@ -18,17 +18,34 @@ import { useExplore } from '../../../../../providers/ExploreProvider';
 type RecommendedCommunityItemProps = {
   pageId?: PageID;
   community: Amity.Community;
+  /**
+   * Hide the join / joined action button entirely. Used by the Pinned
+   * communities section: those memberships are auto-joined and meant to feel
+   * permanent, so there is no join or leave affordance on the card.
+   */
+  hideActionButton?: boolean;
+  /**
+   * Stretch the card to fill its parent's width instead of the default fixed
+   * carousel width. Used when a single card is shown on its own row (e.g. a lone
+   * pinned community) so it doesn't leave a large empty gap.
+   */
+  fullWidth?: boolean;
 };
 
 export const RecommendedCommunityItem: React.FC<
   RecommendedCommunityItemProps
-> = ({ community, pageId = PageID.WildCardPage }) => {
+> = ({
+  community,
+  pageId = PageID.WildCardPage,
+  hideActionButton = false,
+  fullWidth = false,
+}) => {
   const componentId = ComponentID.recommended_communities;
   const styles = useStyles();
   const { onJoinRecommendedCommunity, refresh } = useExplore();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, fullWidth && styles.containerFullWidth]}>
       {community.avatar?.fileUrl ? (
         <Image
           style={styles.image}
@@ -70,7 +87,7 @@ export const RecommendedCommunityItem: React.FC<
             />
           </View>
           <View style={styles.detailBottomWrapRight}>
-            {community.isJoined ? (
+            {hideActionButton ? null : community.isJoined ? (
               <CommunityJoinedButton
                 pageId={pageId}
                 componentId={componentId}
