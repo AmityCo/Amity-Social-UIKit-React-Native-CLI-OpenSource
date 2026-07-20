@@ -20,8 +20,8 @@ import { useStyles } from './styles';
 
 // 3. Types
 export type ChatHomeProps = {
-  /** Called with the pressed channel id — the page wires navigation. */
-  onChannelPress?: (channelId: string) => void;
+  /** Called with the pressed channel id + display name — the page wires navigation. */
+  onChannelPress?: (channelId: string, displayName?: string) => void;
   /** Called when the empty-state create button is pressed. */
   onCreatePress?: () => void;
 };

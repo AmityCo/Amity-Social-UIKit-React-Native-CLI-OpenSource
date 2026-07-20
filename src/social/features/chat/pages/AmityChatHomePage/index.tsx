@@ -1,7 +1,7 @@
 // AmityChatHomePage — the navigation-destination wrapper for the chat home
 // (channel list). It mounts ChatHome inside a SafeAreaView and wires row presses
 // to React Navigation. The target `AmityChatPage` route is not registered yet;
-// wiring the call now is intentional (M1 renders the live list).
+// AmityChatPage is registered in the navigator (M2); pressing a row opens the thread.
 
 // 1. React / RN imports
 import { SafeAreaView } from 'react-native';
@@ -22,8 +22,11 @@ export default function AmityChatHomePage() {
   return (
     <SafeAreaView style={styles.container}>
       <ChatHome
-        onChannelPress={(channelId) =>
-          navigation.navigate('AmityChatPage', { channelId })
+        onChannelPress={(channelId, displayName) =>
+          navigation.navigate('AmityChatPage', {
+            channelId,
+            userDisplayName: displayName,
+          })
         }
       />
     </SafeAreaView>

@@ -235,14 +235,12 @@
       "milestone": 1
     },
     "chat/elements/SenderMessageBubble": {
-      "status": "port",
-      "rn": "src/social/features/chat/elements/SenderMessageBubble",
-      "milestone": 2
+      "status": "skip",
+      "reason": "legacy LiveChat element — renders internal-components/LiveChatMessageContent (skip) and is imported only by the legacy chat/components/MessageList (skip). The v4 thread bubble is features/shared/components/MessageBubble → tracked as curated/AmityMessageBubble."
     },
     "chat/elements/ReceiverMessageBubble": {
-      "status": "port",
-      "rn": "src/social/features/chat/elements/ReceiverMessageBubble",
-      "milestone": 2
+      "status": "skip",
+      "reason": "legacy LiveChat element — renders internal-components/LiveChatMessageContent (skip) and is imported only by the legacy chat/components/MessageList (skip). The v4 thread bubble is features/shared/components/MessageBubble → tracked as curated/AmityMessageBubble."
     },
     "chat/elements/MediaUploadOverlay": {
       "status": "port",

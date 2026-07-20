@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
 import useAuth from '../hooks/useAuth';
 import AmityChatHomePage from '../../social/features/chat/pages/AmityChatHomePage';
+import AmityChatPage from '../../social/features/chat/pages/AmityChatPage';
 import AmitySocialHomePage from '../../social/screens/SocialHomePage';
 import PostDetail from '../../social/screens/PostDetail';
 import CreatePost from '../../social/screens/CreatePost';
@@ -120,6 +121,7 @@ export default function AmitySocialUIKitV4Navigator({
             name="AmityChatHomePage"
             component={AmityChatHomePage}
           />
+          <Stack.Screen name="AmityChatPage" component={AmityChatPage} />
           {/* --- Social Home --- */}
           <Stack.Screen
             name="AmitySocialHomePage"

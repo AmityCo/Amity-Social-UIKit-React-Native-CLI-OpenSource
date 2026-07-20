@@ -13,7 +13,7 @@ import { AmityPostCategory } from '../../social/enums/AmityPostContentComponentS
 export type RootStackParamList = {
   // --- Chat (PDT-3713) ---
   AmityChatHomePage: undefined;
-  AmityChatPage: { channelId: string }; // screen lands in M2; typed here for navigate()
+  AmityChatPage: { channelId: string; userDisplayName?: string };
   AmitySocialHomePage: { postIdCallBack?: string };
   AmitySocialGlobalSearchPage: undefined;
   AmityMyCommunitiesSearchPage: undefined;
