@@ -150,7 +150,8 @@
     {
       "selector": ".reactionPickerContainer",
       "prop": "gap",
-      "raw": "var(--asc-spacing-xxs3)"
+      "raw": "var(--asc-spacing-xxs3)",
+      "px": 6
     },
     {
       "selector": ".reactionPickerContainer",
@@ -225,7 +226,8 @@
     {
       "selector": ".reactionPreviewContainer",
       "prop": "padding",
-      "raw": "var(--asc-spacing-xxs2) var(--asc-spacing-xxs3)"
+      "raw": "var(--asc-spacing-xxs2) var(--asc-spacing-xxs3)",
+      "px": [4, 6]
     },
     {
       "selector": ".reactionPreviewContainer",
@@ -5231,7 +5233,8 @@
     {
       "selector": ".messageBubbleWrap",
       "prop": "gap",
-      "raw": "var(--asc-spacing-xxs3)"
+      "raw": "var(--asc-spacing-xxs3)",
+      "px": 6
     },
     {
       "selector": ".messageReaction",
