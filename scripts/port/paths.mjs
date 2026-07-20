@@ -50,6 +50,7 @@ export const SOT = {
   colorTokensTs: resolve(TOKENS_PKG, 'generated/amity-color-tokens.ts'), // AmityColorToken vocabulary (names+paths)
   checksums: resolve(TOKENS_PKG, 'generated/CHECKSUMS.json'),
   iconsDir: resolve(SOT_ROOT, 'uikit/assets/icons'),
+  tokensRaw: resolve(SOT_ROOT, 'uikit/uikit.tokens.json'), // /layout/spacing (px) etc.
 };
 
 // --- RN destination layout ----------------------------------------------------
@@ -59,6 +60,7 @@ export const RN = {
   resolver: resolve(REPO_ROOT, 'src/core/design/tokens/config-resolver.js'),
   configTemplate: resolve(REPO_ROOT, 'src/core/design/tokens/amity-uikit-config.json'),
   colorTokensTs: resolve(REPO_ROOT, 'src/core/design/tokens/amity-color-tokens.ts'),
+  spacingTs: resolve(REPO_ROOT, 'src/core/design/tokens/spacing.ts'),
   checksums: resolve(REPO_ROOT, 'src/core/design/tokens/CHECKSUMS.json'),
   iconRegistry: resolve(REPO_ROOT, 'src/core/design/icons/generated/iconRegistry.ts'),
   chatFeatureDir: resolve(REPO_ROOT, 'src/social/features/chat'),
