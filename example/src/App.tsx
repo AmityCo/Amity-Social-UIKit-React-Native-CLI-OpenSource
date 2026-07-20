@@ -131,7 +131,8 @@ export default function App() {
     return () => unsubscribe?.();
   }, [permissionGranted]);
 
-  if (!fcmToken) return null;
+  // fcmToken gate skipped for dev/QA (no Firebase needed to reach the UIKit).
+  // if (!fcmToken) return null;
 
   if (!form) return <LoginPage onSubmit={setForm} />;
 
