@@ -63,6 +63,8 @@ export const RN = {
   spacingTs: resolve(REPO_ROOT, 'src/core/design/tokens/spacing.ts'),
   geometryJson: resolve(REPO_ROOT, 'src/core/design/tokens/geometry.json'),
   checksums: resolve(REPO_ROOT, 'src/core/design/tokens/CHECKSUMS.json'),
+  localizationDir: resolve(REPO_ROOT, 'src/core/localization'),
+  localeEnJson: resolve(REPO_ROOT, 'src/core/localization/defaults/en.json'),
   iconRegistry: resolve(REPO_ROOT, 'src/core/design/icons/generated/iconRegistry.ts'),
   chatFeatureDir: resolve(REPO_ROOT, 'src/social/features/chat'),
   designAtomsDir: resolve(REPO_ROOT, 'src/core/design/atoms'),

@@ -8,4 +8,5 @@
 # Vendored design-token contract (synced verbatim from cleverden SoT — do not lint)
 /src/core/design/tokens/
 # Generated icon registry (from scripts/sync-icons.mjs)
-/src/core/design/icons/generated/
+/src/core/design/icons/generated/# Vendored localization (synced from web via sync-strings — do not lint)
+/src/core/localization/

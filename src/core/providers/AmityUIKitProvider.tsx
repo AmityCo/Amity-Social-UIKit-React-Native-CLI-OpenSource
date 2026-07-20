@@ -19,6 +19,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { AmityThemeProvider } from '../design/theme';
+import { LocaleProvider } from '../localization';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
@@ -197,9 +198,11 @@ export default function AmityUiKitProvider({
                         <AmityThemeProvider
                           mode={isDarkTheme ? 'dark' : 'light'}
                         >
-                          {children}
-                          <BottomSheetComponent />
-                          <Toast />
+                          <LocaleProvider>
+                            {children}
+                            <BottomSheetComponent />
+                            <Toast />
+                          </LocaleProvider>
                         </AmityThemeProvider>
                       </PaperProvider>
                     </ExploreProvider>

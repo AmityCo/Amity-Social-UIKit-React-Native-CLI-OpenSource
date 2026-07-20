@@ -235,6 +235,28 @@ try {
   }
 } catch (e) { if (!e.__skip) record('structural parity', FAIL, e.message); }
 
+// ============ CHECK: localization string keys valid ============
+// Every useString('amity_*') key referenced in chat/design source must exist in the
+// vendored en.json (mirrors token-refs-valid — catches typos / missing copy).
+try {
+  if (!existsSync(RN.localeEnJson)) {
+    record('string keys valid', SKIP, 'localization not vendored — run sync-strings.mjs');
+  } else {
+    const en = JSON.parse(readFileSync(RN.localeEnJson, 'utf8'));
+    const files = [RN.designAtomsDir, RN.chatFeatureDir].flatMap((d) => walk(d, ['.ts', '.tsx']));
+    const bad = [];
+    const USE = /useString\(\s*['"]([^'"]+)['"]/g;
+    for (const f of files) {
+      const src = readFileSync(f, 'utf8');
+      let m;
+      while ((m = USE.exec(src)) !== null) if (!(m[1] in en)) bad.push(`${relative(REPO_ROOT, f)}: ${m[1]}`);
+    }
+    if (!files.length) record('string keys valid', SKIP, 'no design/chat source yet');
+    else if (bad.length) record('string keys valid', FAIL, `${bad.length} unknown key(s): ${bad.slice(0, 3).join(', ')}`);
+    else record('string keys valid', PASS, `all useString() keys exist in en.json`);
+  }
+} catch (e) { record('string keys valid', FAIL, e.message); }
+
 // ================= CHECK 7 (optional): toolchain =================
 if (hasFlag('--full')) {
   for (const [name, cmd] of [['typecheck', 'yarn typecheck'], ['lint', 'yarn lint']]) {
