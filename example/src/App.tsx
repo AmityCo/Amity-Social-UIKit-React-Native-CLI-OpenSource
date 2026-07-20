@@ -1,8 +1,10 @@
 import {
   AmityUiKitProvider,
   AmityUiKitSocial,
+  AmityUiKitChat,
   navigate,
 } from '@amityco/react-native-social-uikit';
+import LoginPage, { type ILoginForm } from './Login';
 import config from '../uikit.config.json';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect, useState } from 'react';
@@ -50,6 +52,7 @@ export default function App() {
   const [fcmToken, setFcmToken] = useState(null);
   const logger = false;
   const [permissionGranted, setPermissionGranted] = useState(false);
+  const [form, setForm] = useState<ILoginForm>();
 
   useEffect(() => {
     let granted: boolean;
@@ -129,17 +132,20 @@ export default function App() {
   }, [permissionGranted]);
 
   if (!fcmToken) return null;
+
+  if (!form) return <LoginPage onSubmit={setForm} />;
+
   return (
     <AmityUiKitProvider
-      configs={config} //put your config json object
-      apiKey="YOUR_API_KEY" // Put your apiKey
-      apiRegion="API_REGION" // Put your apiRegion
-      userId="USER_ID" // Put your UserId
-      displayName="DISPLAYNAME" // Put your displayName
-      apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
+      configs={config}
+      apiKey={form.apiKey}
+      apiRegion={form.apiRegion}
+      userId={form.userId}
+      displayName={form.userId}
+      apiEndpoint={`https://apix.${form.apiRegion}.amity.co`}
       fcmToken={fcmToken} // android:fcm iOS:APN
     >
-      <AmityUiKitSocial />
+      {form.module === 'chat' ? <AmityUiKitChat /> : <AmityUiKitSocial />}
       {logger && <NetworkLogger />}
     </AmityUiKitProvider>
   );

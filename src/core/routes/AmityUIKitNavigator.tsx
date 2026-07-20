@@ -62,7 +62,12 @@ const Stack = createNativeStackNavigator<
   'AmitySocialUIKit'
 >();
 
-export default function AmitySocialUIKitV4Navigator() {
+export default function AmitySocialUIKitV4Navigator({
+  initialRouteName = 'AmitySocialHomePage',
+}: {
+  /** Entry screen. Defaults to Social; AmityUiKitChat passes 'AmityChatHomePage'. */
+  initialRouteName?: keyof RootStackParamList;
+} = {}) {
   const theme = useTheme<MyMD3Theme>();
   const { isGlobalBan, isVisitorUsageLimitReached } = useAuth();
   const { AmityGlobalBehaviour } = useBehaviour();
@@ -95,7 +100,7 @@ export default function AmitySocialUIKitV4Navigator() {
       <NavigationContainer ref={navigationRef} onReady={onNavigationReady}>
         <Stack.Navigator
           id="AmitySocialUIKit"
-          initialRouteName="AmitySocialHomePage"
+          initialRouteName={initialRouteName}
           screenOptions={{
             headerShown: false,
             headerShadowVisible: false,
