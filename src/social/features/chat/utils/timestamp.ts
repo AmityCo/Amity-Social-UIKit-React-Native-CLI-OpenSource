@@ -20,6 +20,15 @@ function formatShortDate(date: Date, withYear: boolean): string {
   return withYear ? `${day} ${month} ${date.getFullYear()}` : `${day} ${month}`;
 }
 
+// formatMessageTime — ported from AmityUiKitWeb v4/chat/utils/formatMessageTime.
+// A single message's time as 24-hour HH:MM (shown beside each bubble).
+export function formatMessageTime(input: string | Date | number): string {
+  const d = input instanceof Date ? input : new Date(input);
+  const hh = d.getHours().toString().padStart(2, '0');
+  const mm = d.getMinutes().toString().padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
 export function formatTimestamp(input: string | Date): string {
   const now = dayjs();
   const time = dayjs(input);

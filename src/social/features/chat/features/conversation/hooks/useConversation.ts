@@ -4,9 +4,10 @@
 // messages with useMessagesCollection({ subChannelId: channelId }) and send with
 // useCreateMessage. Reactions / reply / media / mentions layer on in later tasks.
 
-import { useCallback } from 'react';
-import { Client } from '@amityco/ts-sdk-react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { ChannelRepository, Client } from '@amityco/ts-sdk-react-native';
 
+import useAuth from '../../../../../../core/hooks/useAuth';
 import { useCreateMessage, useMessagesCollection } from '../../../hooks';
 
 const MESSAGE_PAGE_SIZE = 20;
@@ -14,8 +15,24 @@ const MESSAGE_PAGE_SIZE = 20;
 export function useConversation(channelId?: string) {
   // Current user id — same source AmityChatListItem uses to tell "me" apart.
   const currentUserId = Client.getCurrentUser()?.userId;
+  const { isConnected } = useAuth();
 
   const subChannelId = channelId ?? '';
+
+  // Live channel object — drives group-vs-direct behaviour (sender names show only
+  // in group chats) and the header title/avatar.
+  const [channel, setChannel] = useState<Amity.Channel | undefined>(undefined);
+  useEffect(() => {
+    if (!isConnected || !channelId) return undefined;
+    const unsub = ChannelRepository.getChannel(channelId, ({ data }) => {
+      if (data) setChannel(data);
+    });
+    return () => {
+      unsub();
+    };
+  }, [isConnected, channelId]);
+
+  const isGroupChat = channel?.type === 'community';
 
   const { messages, loading, hasNextPage, loadMore } = useMessagesCollection(
     { subChannelId, limit: MESSAGE_PAGE_SIZE },
@@ -34,6 +51,8 @@ export function useConversation(channelId?: string) {
   );
 
   return {
+    channel,
+    isGroupChat,
     messages,
     loading,
     hasNextPage,

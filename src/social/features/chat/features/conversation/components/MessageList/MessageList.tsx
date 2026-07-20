@@ -5,16 +5,17 @@
 
 // 1. React / RN imports
 import { useMemo } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList } from 'react-native';
 
 // 2. Internal imports
-import { AmityMessageBubble } from '../../../../components/AmityMessageBubble';
+import { MessageRow } from '../MessageRow';
 import { useStyles } from './styles';
 
 // 3. Types
 type MessageListProps = {
   messages: Amity.Message[];
   currentUserId?: string;
+  isGroupChat?: boolean;
   hasNextPage?: boolean;
   onLoadMore?: () => void;
   onLongPressMessage?: (message: Amity.Message) => void;
@@ -24,6 +25,7 @@ type MessageListProps = {
 export function MessageList({
   messages,
   currentUserId,
+  isGroupChat,
   hasNextPage,
   onLoadMore,
   onLongPressMessage,
@@ -50,13 +52,12 @@ export function MessageList({
       renderItem={({ item }) => {
         const isUser = !!currentUserId && item.creatorId === currentUserId;
         return (
-          <View style={[styles.row, isUser ? styles.rowOwn : styles.rowOther]}>
-            <AmityMessageBubble
-              message={item}
-              isUser={isUser}
-              onLongPress={onLongPressMessage}
-            />
-          </View>
+          <MessageRow
+            message={item}
+            isUser={isUser}
+            isGroupChat={isGroupChat}
+            onLongPress={onLongPressMessage}
+          />
         );
       }}
       onEndReached={hasNextPage ? onLoadMore : undefined}

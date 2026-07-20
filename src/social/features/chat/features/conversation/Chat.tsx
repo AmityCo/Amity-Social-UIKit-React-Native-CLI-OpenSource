@@ -23,8 +23,14 @@ export type ChatProps = {
 // 4. Named function component
 export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   const { styles } = useStyles();
-  const { messages, hasNextPage, loadMore, sendText, currentUserId } =
-    useConversation(channelId);
+  const {
+    messages,
+    hasNextPage,
+    loadMore,
+    sendText,
+    currentUserId,
+    isGroupChat,
+  } = useConversation(channelId);
 
   return (
     <KeyboardAvoidingView
@@ -36,6 +42,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
         <MessageList
           messages={messages}
           currentUserId={currentUserId}
+          isGroupChat={isGroupChat}
           hasNextPage={hasNextPage}
           onLoadMore={loadMore}
         />
