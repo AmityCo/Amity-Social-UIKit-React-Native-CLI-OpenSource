@@ -1,0 +1,6176 @@
+{
+  "src/v4/chat/components/ChatHeader/ChatHeader.module.css": [
+    {
+      "selector": ".messageListHeader",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-m1)",
+      "px": 16
+    },
+    {
+      "selector": ".messageListHeader",
+      "prop": "padding-top",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageListHeader",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-s1)",
+      "px": 8
+    },
+    {
+      "selector": ".memberIcon",
+      "prop": "width",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".memberIcon",
+      "prop": "height",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".memberIcon",
+      "prop": "margin-right",
+      "raw": "var(--asc-spacing-xxs2)",
+      "px": 4
+    },
+    {
+      "selector": ".avatar",
+      "prop": "width",
+      "raw": "3rem",
+      "px": 48
+    },
+    {
+      "selector": ".avatar",
+      "prop": "height",
+      "raw": "3rem",
+      "px": 48
+    }
+  ],
+  "src/v4/chat/components/MessageList/MessageList.module.css": [
+    {
+      "selector": ".infiniteScrollContainer",
+      "prop": "flex-grow",
+      "raw": "1"
+    },
+    {
+      "selector": ".loadingIndicatorWrap",
+      "prop": "margin",
+      "raw": "auto"
+    },
+    {
+      "selector": ".loadingIndicatorWrap",
+      "prop": "padding-top",
+      "raw": "var(--asc-spacing-m1)",
+      "px": 16
+    },
+    {
+      "selector": ".loadingIndicatorWrap",
+      "prop": "padding-bottom",
+      "raw": "var(--asc-spacing-m1)",
+      "px": 16
+    },
+    {
+      "selector": ".loadingIndicator",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".loadingIndicator",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".customStatusContainer",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".customStatusContainer",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".customStatusContainer",
+      "prop": "font-weight",
+      "raw": "var(--asc-text-font-weight-light)"
+    },
+    {
+      "selector": ".customStatusContainer",
+      "prop": "font-size",
+      "raw": "var(--asc-text-font-size-md)"
+    },
+    {
+      "selector": ".iconContainer",
+      "prop": "margin-bottom",
+      "raw": "var(--asc-spacing-m1)",
+      "px": 16
+    },
+    {
+      "selector": ".icon",
+      "prop": "width",
+      "raw": "1.75rem",
+      "px": 28
+    },
+    {
+      "selector": ".icon",
+      "prop": "height",
+      "raw": "1.75rem",
+      "px": 28
+    }
+  ],
+  "src/v4/chat/components/MessageQuickReaction/MessageQuickReaction.module.css": [
+    {
+      "selector": ".quickReactionIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".quickReactionIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".quickReactionIconContainer:hover",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-sm)"
+    }
+  ],
+  "src/v4/chat/components/MessageReactionPicker/styles.module.css": [
+    {
+      "selector": ".reactionPickerContainer",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-full)"
+    },
+    {
+      "selector": ".reactionPickerContainer",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-xxs3)"
+    },
+    {
+      "selector": ".reactionPickerContainer",
+      "prop": "width",
+      "raw": "max-content"
+    },
+    {
+      "selector": ".reactionPickerContainer",
+      "prop": "padding",
+      "raw": "0.313rem 0.438rem",
+      "px": [5.01, 7.01]
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "border",
+      "raw": "0.313rem var(--asc-color-base-shade4) solid"
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-full)"
+    },
+    {
+      "selector": ".reactionButton[data-active='true']",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-full)"
+    },
+    {
+      "selector": ".reactionButton[data-active='true']",
+      "prop": "border",
+      "raw": "0.313rem var(--asc-color-base-shade1) solid"
+    },
+    {
+      "selector": ".reactionButton[data-active='true']:hover",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-full)"
+    },
+    {
+      "selector": ".reactionButton[data-active='true']:hover",
+      "prop": "border",
+      "raw": "0.313rem var(--asc-color-base-shade1) solid"
+    },
+    {
+      "selector": ".reactionButton:hover",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-full)"
+    },
+    {
+      "selector": ".reactionButton:hover",
+      "prop": "border",
+      "raw": "0.313rem var(--asc-color-secondary-shade3) solid"
+    }
+  ],
+  "src/v4/chat/components/MessageReactionPreview/styles.module.css": [
+    {
+      "selector": ".reactionPreviewContainer",
+      "prop": "border",
+      "raw": "1px solid var(--asc-color-secondary-shade4)"
+    },
+    {
+      "selector": ".reactionPreviewContainer",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-xxs2) var(--asc-spacing-xxs3)"
+    },
+    {
+      "selector": ".reactionPreviewContainer",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-full)"
+    },
+    {
+      "selector": ".reactionPreviewContainer[data-myreaction='true']",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".reactionIconContainer > :not(:first-child)",
+      "prop": "margin-right",
+      "raw": "calc(var(--asc-spacing-s1) * -1)"
+    },
+    {
+      "selector": ".reactionIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".reactionIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".reactionCount",
+      "prop": "margin-left",
+      "raw": "var(--asc-spacing-xxs1)",
+      "px": 2
+    },
+    {
+      "selector": ".fallbackIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".fallbackIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    }
+  ],
+  "src/v4/chat/components/ReactionBar/styles.module.css": [
+    {
+      "selector": ".reactionBarContainer",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-full)"
+    },
+    {
+      "selector": ".reactionBarContainer",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".reactionBarContainer",
+      "prop": "width",
+      "raw": "max-content"
+    },
+    {
+      "selector": ".reactionBarContainer",
+      "prop": "padding",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-full)"
+    }
+  ],
+  "src/v4/chat/components/SwipeToLeft/SwipeToLeft.module.css": [
+    {
+      "selector": ".swipeToLeft",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".swipeToLeft__actionContent",
+      "prop": "width",
+      "raw": "5rem",
+      "px": 80
+    },
+    {
+      "selector": ".swipeToLeft__actionContent",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".swipeToLeft__actionContent",
+      "prop": "padding",
+      "raw": "1rem 0.5rem",
+      "px": [16, 8]
+    },
+    {
+      "selector": ".swipeToLeft__actionIcon",
+      "prop": "width",
+      "raw": "1.75rem",
+      "px": 28
+    },
+    {
+      "selector": ".swipeToLeft__actionIcon",
+      "prop": "height",
+      "raw": "1.75rem",
+      "px": 28
+    },
+    {
+      "selector": ".swipeToLeft__actionLabel",
+      "prop": "font-size",
+      "raw": "0.8125rem",
+      "px": 13
+    },
+    {
+      "selector": ".swipeToLeft__actionLabel",
+      "prop": "font-weight",
+      "raw": "600"
+    },
+    {
+      "selector": ".swipeToLeft__actionLabel",
+      "prop": "line-height",
+      "raw": "1.125rem",
+      "px": 18
+    },
+    {
+      "selector": ".swipeToLeft__actionLabel",
+      "prop": "letter-spacing",
+      "raw": "-0.005em",
+      "px": -0.08
+    }
+  ],
+  "src/v4/chat/elements/ArchivedBadge/ArchivedBadge.module.css": [
+    {
+      "selector": ".archivedBadge",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".archivedBadge",
+      "prop": "min-width",
+      "raw": "1.375rem",
+      "px": 22
+    },
+    {
+      "selector": ".archivedBadge",
+      "prop": "padding",
+      "raw": "0 0.25rem"
+    },
+    {
+      "selector": ".archivedBadge",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".archivedBadge__icon",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".archivedBadge__icon",
+      "prop": "width",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".archivedBadge__icon",
+      "prop": "height",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".archivedBadge__text",
+      "prop": "padding",
+      "raw": "0 0.125rem"
+    },
+    {
+      "selector": ".archivedBadge__text",
+      "prop": "font-size",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".archivedBadge__text",
+      "prop": "line-height",
+      "raw": "0.8125rem",
+      "px": 13
+    }
+  ],
+  "src/v4/chat/elements/Avatar/Avatar.module.css": [
+    {
+      "selector": ".avatar__user",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".avatar__user[data-size='md']",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".avatar__user[data-size='md']",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".avatar__user[data-size='sm']",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".avatar__user[data-size='sm']",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".avatar__userImg",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__userImg",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__userImg",
+      "prop": "border-radius",
+      "raw": "50%"
+    },
+    {
+      "selector": ".avatar__userPlaceholder",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__userPlaceholder",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__userPlaceholder",
+      "prop": "border-radius",
+      "raw": "50%"
+    },
+    {
+      "selector": ".avatar__userPlaceholderText",
+      "prop": "font-weight",
+      "raw": "400"
+    },
+    {
+      "selector": ".avatar__userDeletedIcon",
+      "prop": "width",
+      "raw": "60%"
+    },
+    {
+      "selector": ".avatar__userDeletedIcon",
+      "prop": "height",
+      "raw": "60%"
+    },
+    {
+      "selector": ".avatar__userModeratorBadge",
+      "prop": "bottom",
+      "raw": "-0.125rem",
+      "px": -2
+    },
+    {
+      "selector": ".avatar__userModeratorBadge",
+      "prop": "right",
+      "raw": "-0.125rem",
+      "px": -2
+    },
+    {
+      "selector": ".avatar__groupChat",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__groupChat",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__groupChatImageWrapper",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__groupChatImageWrapper",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__groupChatImageWrapper",
+      "prop": "border-radius",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".avatar__groupChatImage",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__groupChatImage",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__groupChatPlaceholder",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__groupChatPlaceholder",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatar__groupChatPlaceholderIcon",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".avatar__groupChatPlaceholderIcon",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".avatar__groupChat[data-size='lg'] .avatar__groupChatPlaceholderIcon",
+      "prop": "width",
+      "raw": "3rem",
+      "px": 48
+    },
+    {
+      "selector": ".avatar__groupChat[data-size='lg'] .avatar__groupChatPlaceholderIcon",
+      "prop": "height",
+      "raw": "3rem",
+      "px": 48
+    },
+    {
+      "selector": ".avatar__groupChatPrivateBadge",
+      "prop": "bottom",
+      "raw": "-0.125rem",
+      "px": -2
+    },
+    {
+      "selector": ".avatar__groupChatPrivateBadge",
+      "prop": "right",
+      "raw": "-0.125rem",
+      "px": -2
+    },
+    {
+      "selector": ".avatar__groupChat[data-size='lg'] .avatar__groupChatPrivateBadge",
+      "prop": "bottom",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".avatar__groupChat[data-size='lg'] .avatar__groupChatPrivateBadge",
+      "prop": "right",
+      "raw": "0.25rem",
+      "px": 4
+    }
+  ],
+  "src/v4/chat/elements/AvatarPicker/AvatarPicker.module.css": [
+    {
+      "selector": ".avatarPicker",
+      "prop": "width",
+      "raw": "7.5rem",
+      "px": 120
+    },
+    {
+      "selector": ".avatarPicker",
+      "prop": "height",
+      "raw": "7.5rem",
+      "px": 120
+    },
+    {
+      "selector": ".avatarPicker",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".avatarPicker",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".avatarPicker",
+      "prop": "border-radius",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".avatarPicker__image",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatarPicker__image",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatarPicker__placeholder",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatarPicker__placeholder",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".avatarPicker__placeholderIcon",
+      "prop": "width",
+      "raw": "3rem",
+      "px": 48
+    },
+    {
+      "selector": ".avatarPicker__placeholderIcon",
+      "prop": "height",
+      "raw": "3rem",
+      "px": 48
+    },
+    {
+      "selector": ".avatarPicker__cameraIcon",
+      "prop": "width",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".avatarPicker__cameraIcon",
+      "prop": "height",
+      "raw": "4rem",
+      "px": 64
+    }
+  ],
+  "src/v4/chat/elements/GroupNameField/GroupNameField.module.css": [
+    {
+      "selector": ".groupNameField",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".groupNameField",
+      "prop": "padding",
+      "raw": "1.5rem 1rem 0"
+    }
+  ],
+  "src/v4/chat/elements/ReactionPicker/ReactionPicker.module.css": [
+    {
+      "selector": ".reactionPickerContainer",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".reactionPickerContainer",
+      "prop": "width",
+      "raw": "max-content"
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton__icon",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton__icon",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton__icon",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-full)"
+    },
+    {
+      "selector": ".reactionButton__activeBackground",
+      "prop": "top",
+      "raw": "52%"
+    },
+    {
+      "selector": ".reactionButton__activeBackground",
+      "prop": "left",
+      "raw": "50%"
+    },
+    {
+      "selector": ".reactionButton__activeBackground",
+      "prop": "border-radius",
+      "raw": "50%"
+    },
+    {
+      "selector": ".reactionButton__activeBackground",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton__activeBackground",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton__text",
+      "prop": "top",
+      "raw": "-2.05rem",
+      "px": -32.8
+    },
+    {
+      "selector": ".reactionButton__text",
+      "prop": "left",
+      "raw": "50%"
+    },
+    {
+      "selector": ".reactionButton__text",
+      "prop": "max-width",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".reactionButton__text",
+      "prop": "padding",
+      "raw": "0.125rem 0.375rem",
+      "px": [2, 6]
+    },
+    {
+      "selector": ".reactionButton__text",
+      "prop": "border-radius",
+      "raw": "1.75rem",
+      "px": 28
+    },
+    {
+      "selector": ".reactionPickerContainer[data-position='below'] .reactionButton__text",
+      "prop": "top",
+      "raw": "2.75rem",
+      "px": 44
+    },
+    {
+      "selector": ".reactionButton__text",
+      "prop": "top",
+      "raw": "-1.65rem",
+      "px": -26.4
+    },
+    {
+      "selector": ".reactionPickerContainer[data-position='below'] .reactionButton__text",
+      "prop": "top",
+      "raw": "2.25rem",
+      "px": 36
+    }
+  ],
+  "src/v4/chat/elements/SettingMenu/SettingMenu.module.css": [
+    {
+      "selector": ".settingMenu",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".settingMenu",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".settingMenu",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".settingMenu",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".settingMenu__leading",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".settingMenu__leading",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".settingMenu__leading",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".settingMenu__iconBadge",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".settingMenu__iconBadge",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".settingMenu__iconBadge",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".settingMenu__iconBadge",
+      "prop": "padding",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".settingMenu__iconBadge",
+      "prop": "border-radius",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".settingMenu__icon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".settingMenu__icon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".settingMenu__trailing",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".settingMenu__trailing",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".settingMenu__chevron",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".settingMenu__chevron",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    }
+  ],
+  "src/v4/chat/elements/TopBar/TopBar.module.css": [
+    {
+      "selector": ".topBar",
+      "prop": "top",
+      "raw": "0"
+    },
+    {
+      "selector": ".topBar",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".topBar",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".topBar",
+      "prop": "height",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".topBar__leftAction",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".topBar__leftAction",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".topBar__rightAction",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".topBar__rightAction",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".topBar__title",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".topBar__title",
+      "prop": "max-width",
+      "raw": "16rem",
+      "px": 256
+    }
+  ],
+  "src/v4/chat/elements/WaitingForNetwork/WaitingForNetwork.module.css": [
+    {
+      "selector": ".waitingForNetwork",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".waitingForNetwork",
+      "prop": "flex-shrink",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/archive/ArchivedChat.module.css": [
+    {
+      "selector": ".archivedChat",
+      "prop": "min-height",
+      "raw": "100svh"
+    }
+  ],
+  "src/v4/chat/features/archive/components/ArchivedChannelList/ArchivedChannelList.module.css": [
+    {
+      "selector": ".archivedChannelList",
+      "prop": "flex",
+      "raw": "1"
+    }
+  ],
+  "src/v4/chat/features/conversation/chat/Chat.module.css": [
+    {
+      "selector": ".chat",
+      "prop": "height",
+      "raw": "100svh"
+    }
+  ],
+  "src/v4/chat/features/conversation/chat/components/Header/Header.module.css": [
+    {
+      "selector": ".header",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".header",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".header",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__identity",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".header__identity",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".header__identity",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__identity",
+      "prop": "height",
+      "raw": "2.625rem",
+      "px": 42
+    },
+    {
+      "selector": ".header__avatarButton",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__avatarButton",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".header__title",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".header__title",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__name",
+      "prop": "font-size",
+      "raw": "0.9375rem",
+      "px": 15
+    },
+    {
+      "selector": ".header__name",
+      "prop": "line-height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".header__name",
+      "prop": "font-weight",
+      "raw": "700"
+    },
+    {
+      "selector": ".header__name",
+      "prop": "letter-spacing",
+      "raw": "-0.0256rem",
+      "px": -0.41
+    },
+    {
+      "selector": ".header__name",
+      "prop": "max-width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".header__subtitle",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    }
+  ],
+  "src/v4/chat/features/conversation/create/components/Header/Header.module.css": [
+    {
+      "selector": ".header",
+      "prop": "top",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__searchBar",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    }
+  ],
+  "src/v4/chat/features/conversation/create/components/UserItem/UserItem.module.css": [
+    {
+      "selector": ".userItem__skeletonRow",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".userItem__skeletonRow",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".userItem__skeletonRow",
+      "prop": "height",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".userItem",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".userItem",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".userItem",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".userItem",
+      "prop": "height",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".userItem",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".userItem__nameRow",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".userItem__nameRow",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".userItem__nameRow",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".userItem__name",
+      "prop": "flex",
+      "raw": "0 1 auto"
+    },
+    {
+      "selector": ".userItem__name",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".userItem__brandBadge",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".userItem__brandBadge",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".userItem__brandBadge",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/features/group/add-member/AddGroupMember.module.css": [
+    {
+      "selector": ".addGroupMember",
+      "prop": "height",
+      "raw": "100dvh"
+    },
+    {
+      "selector": ".addGroupMember__list",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".addGroupMember__list",
+      "prop": "min-height",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/group/add-member/components/AddMemberButton/AddMemberButton.module.css": [
+    {
+      "selector": ".addMemberButton__container",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".addMemberButton__container",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".addMemberButton",
+      "prop": "width",
+      "raw": "100%"
+    }
+  ],
+  "src/v4/chat/features/group/add-member/components/Header/Header.module.css": [
+    {
+      "selector": ".header",
+      "prop": "top",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__searchBar",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    }
+  ],
+  "src/v4/chat/features/group/banned-members/BannedGroupMembers.module.css": [
+    {
+      "selector": ".bannedGroupMembers",
+      "prop": "min-height",
+      "raw": "100svh"
+    },
+    {
+      "selector": ".bannedGroupMembers__searchBar",
+      "prop": "top",
+      "raw": "3.625rem",
+      "px": 58
+    },
+    {
+      "selector": ".bannedGroupMembers__searchBar",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    }
+  ],
+  "src/v4/chat/features/group/chat/GroupChat.module.css": [
+    {
+      "selector": ".groupChat",
+      "prop": "height",
+      "raw": "100svh"
+    }
+  ],
+  "src/v4/chat/features/group/chat/components/BannedEmptyState/BannedEmptyState.module.css": [
+    {
+      "selector": ".bannedEmptyState",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".bannedEmptyState",
+      "prop": "gap",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".bannedEmptyState",
+      "prop": "padding",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".bannedEmptyState__icon",
+      "prop": "width",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".bannedEmptyState__icon",
+      "prop": "height",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".bannedEmptyState__text",
+      "prop": "max-width",
+      "raw": "15.75rem",
+      "px": 252
+    }
+  ],
+  "src/v4/chat/features/group/chat/components/Header/Header.module.css": [
+    {
+      "selector": ".header",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".header",
+      "prop": "padding",
+      "raw": "0.625rem 1rem",
+      "px": [10, 16]
+    },
+    {
+      "selector": ".header",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__identity",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".header__identity",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".header__identity",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__identity",
+      "prop": "height",
+      "raw": "2.625rem",
+      "px": 42
+    },
+    {
+      "selector": ".header__identity",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__identity",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".header__avatar",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".header__avatar",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".header__avatar",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__title",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".header__title",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__name",
+      "prop": "font-size",
+      "raw": "1.0625rem",
+      "px": 17
+    },
+    {
+      "selector": ".header__name",
+      "prop": "line-height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".header__name",
+      "prop": "font-weight",
+      "raw": "600"
+    },
+    {
+      "selector": ".header__name",
+      "prop": "letter-spacing",
+      "raw": "-0.0256rem",
+      "px": -0.41
+    },
+    {
+      "selector": ".header__name",
+      "prop": "max-width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".header__subtitle",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".header__avatar[data-variant='banned']",
+      "prop": "border-radius",
+      "raw": "0.625rem",
+      "px": 10
+    }
+  ],
+  "src/v4/chat/features/group/create/CreateGroupChat.module.css": [
+    {
+      "selector": ".createGroupChat",
+      "prop": "min-height",
+      "raw": "100svh"
+    },
+    {
+      "selector": ".createGroupChat__avatarWrapper",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/features/group/create/components/Header/Header.module.css": [
+    {
+      "selector": ".header__createButton",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__createButton",
+      "prop": "border",
+      "raw": "none"
+    }
+  ],
+  "src/v4/chat/features/group/create/components/MemberGrid/MemberGrid.module.css": [
+    {
+      "selector": ".memberGrid",
+      "prop": "padding",
+      "raw": "0 1rem"
+    },
+    {
+      "selector": ".memberGrid__heading",
+      "prop": "padding",
+      "raw": "1.5rem 0 0.25rem"
+    },
+    {
+      "selector": ".memberGrid__list",
+      "prop": "gap",
+      "raw": "1rem 1.75rem",
+      "px": [16, 28]
+    },
+    {
+      "selector": ".memberGrid__list",
+      "prop": "padding",
+      "raw": "1rem 0"
+    }
+  ],
+  "src/v4/chat/features/group/create/components/PrivacySection/PrivacySection.module.css": [
+    {
+      "selector": ".privacySection__heading",
+      "prop": "padding",
+      "raw": "1.5rem 1rem 0.25rem",
+      "px": [24, 16, 4]
+    },
+    {
+      "selector": ".privacySection__row",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".privacySection__row",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".privacySection__row",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".privacySection__iconCircle",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".privacySection__iconCircle",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".privacySection__iconCircle",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".privacySection__iconCircle",
+      "prop": "border-radius",
+      "raw": "50%"
+    },
+    {
+      "selector": ".privacySection__icon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".privacySection__icon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".privacySection__text",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".privacySection__text",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".privacySection__text",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".privacySection__banner",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    }
+  ],
+  "src/v4/chat/features/group/edit-notification/EditGroupNotification.module.css": [
+    {
+      "selector": ".editGroupNotification",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".editGroupNotification",
+      "prop": "min-height",
+      "raw": "100svh"
+    },
+    {
+      "selector": ".editGroupNotification__radios",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".editGroupNotification__radio",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/features/group/edit-notification/components/NotificationMode/NotificationMode.module.css": [
+    {
+      "selector": ".notificationMode",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".notificationMode",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".notificationMode",
+      "prop": "min-width",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/group/edit-notification/components/NotificationModeRow/NotificationModeRow.module.css": [
+    {
+      "selector": ".notificationModeRow",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".notificationModeRow",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".notificationModeRow",
+      "prop": "min-width",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/group/edit-permission/EditGroupMemberPermissions.module.css": [
+    {
+      "selector": ".editGroupMemberPermissions",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".editGroupMemberPermissions",
+      "prop": "min-height",
+      "raw": "100svh"
+    },
+    {
+      "selector": ".editGroupMemberPermissions__sectionTitle",
+      "prop": "padding",
+      "raw": "1rem 1rem 0.5rem",
+      "px": [16, 16, 8]
+    },
+    {
+      "selector": ".editGroupMemberPermissions__radios",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".editGroupMemberPermissions__radio",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/features/group/edit-permission/components/MemberPermission/MemberPermission.module.css": [
+    {
+      "selector": ".memberPermission",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".memberPermission",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".memberPermission",
+      "prop": "min-width",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/group/edit-profile/EditGroupProfile.module.css": [
+    {
+      "selector": ".editGroupProfile",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".editGroupProfile",
+      "prop": "min-height",
+      "raw": "100svh"
+    },
+    {
+      "selector": ".editGroupProfile__avatarWrapper",
+      "prop": "padding",
+      "raw": "1rem 0"
+    }
+  ],
+  "src/v4/chat/features/group/members/GroupMembers.module.css": [
+    {
+      "selector": ".groupMembers",
+      "prop": "min-height",
+      "raw": "100svh"
+    }
+  ],
+  "src/v4/chat/features/group/members/components/MemberItem/MemberItem.module.css": [
+    {
+      "selector": ".memberItem",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".memberItem",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".memberItem",
+      "prop": "height",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".memberItem__nameRow",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".memberItem__nameRow",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".memberItem__name",
+      "prop": "flex",
+      "raw": "0 1 auto"
+    },
+    {
+      "selector": ".memberItem__name",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".memberItem__brandBadge",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".memberItem__brandBadge",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".memberItem__brandBadge",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".memberItem__brandBadge",
+      "prop": "margin-left",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".memberItem__youSuffix",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".memberItem__youSuffix",
+      "prop": "margin-left",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".memberItem__mutedIcon",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".memberItem__mutedIcon",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".memberItem__mutedIcon",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".memberItem__mutedIcon",
+      "prop": "margin-left",
+      "raw": "0.25rem",
+      "px": 4
+    }
+  ],
+  "src/v4/chat/features/group/members/components/MemberList/MemberList.module.css": [
+    {
+      "selector": ".memberList__ellipsisButton",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".memberList__ellipsisButton",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".memberList__ellipsisButton",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".memberList__ellipsisButton",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".memberList__ellipsisIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".memberList__ellipsisIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    }
+  ],
+  "src/v4/chat/features/group/members/components/MemberTabs/MemberTabs.module.css": [
+    {
+      "selector": ".memberTabs__list",
+      "prop": "top",
+      "raw": "3.625rem",
+      "px": 58
+    },
+    {
+      "selector": ".memberTabs__searchBar",
+      "prop": "top",
+      "raw": "7rem",
+      "px": 112
+    },
+    {
+      "selector": ".memberTabs__searchBar",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    }
+  ],
+  "src/v4/chat/features/group/notification-preference/NotificationPreference.module.css": [
+    {
+      "selector": ".notificationPreference",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".notificationPreference",
+      "prop": "min-height",
+      "raw": "100svh"
+    }
+  ],
+  "src/v4/chat/features/group/notification-preference/components/AllowNotifications/AllowNotifications.module.css": [
+    {
+      "selector": ".allowNotifications",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".allowNotifications",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".allowNotifications__textBlock",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".allowNotifications__textBlock",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".allowNotifications__textBlock",
+      "prop": "min-width",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/group/notification-preference/components/DisabledByModeratorBanner/DisabledByModeratorBanner.module.css": [
+    {
+      "selector": ".disabledByModeratorBanner",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".disabledByModeratorBanner",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".disabledByModeratorBanner__icon",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".disabledByModeratorBanner__icon",
+      "prop": "width",
+      "raw": "1.125rem",
+      "px": 18
+    },
+    {
+      "selector": ".disabledByModeratorBanner__icon",
+      "prop": "height",
+      "raw": "1.125rem",
+      "px": 18
+    }
+  ],
+  "src/v4/chat/features/group/select-member/SelectGroupMember.module.css": [
+    {
+      "selector": ".selectGroupMember",
+      "prop": "min-height",
+      "raw": "100svh"
+    }
+  ],
+  "src/v4/chat/features/group/select-member/components/Header/Header.module.css": [
+    {
+      "selector": ".header",
+      "prop": "top",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__searchBar",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    }
+  ],
+  "src/v4/chat/features/group/select-member/components/SelectedUsersBar/SelectedUsersBar.module.css": [
+    {
+      "selector": ".selectedUsersBar__list",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".selectedUsersBar__list",
+      "prop": "padding",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".selectedUsersBar__divider",
+      "prop": "height",
+      "raw": "0.0625rem",
+      "px": 1
+    }
+  ],
+  "src/v4/chat/features/group/select-member/components/UserItem/UserItem.module.css": [
+    {
+      "selector": ".userItem__skeletonRow",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".userItem__skeletonRow",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".userItem__skeletonRow",
+      "prop": "height",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".userItem",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".userItem",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".userItem",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".userItem__nameRow",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".userItem__nameRow",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".userItem__nameRow",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".userItem__name",
+      "prop": "flex",
+      "raw": "0 1 auto"
+    },
+    {
+      "selector": ".userItem__name",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".userItem__brandBadge",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".userItem__brandBadge",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".userItem__brandBadge",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/features/group/setting/GroupSetting.module.css": [
+    {
+      "selector": ".groupSetting",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".groupSetting",
+      "prop": "min-height",
+      "raw": "100svh"
+    },
+    {
+      "selector": ".groupSetting__avatarWrapper",
+      "prop": "padding",
+      "raw": "1rem 0"
+    },
+    {
+      "selector": ".groupSetting__avatar",
+      "prop": "width",
+      "raw": "7.5rem",
+      "px": 120
+    },
+    {
+      "selector": ".groupSetting__avatar",
+      "prop": "height",
+      "raw": "7.5rem",
+      "px": 120
+    },
+    {
+      "selector": ".groupSetting__avatar",
+      "prop": "border-radius",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".groupSetting__section",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".groupSetting__sectionTitle",
+      "prop": "padding",
+      "raw": "1.5rem 1rem 0.25rem",
+      "px": [24, 16, 4]
+    },
+    {
+      "selector": ".groupSetting__divider",
+      "prop": "width",
+      "raw": "calc(100% - 2rem)"
+    },
+    {
+      "selector": ".groupSetting__divider",
+      "prop": "height",
+      "raw": "0.0625rem",
+      "px": 1
+    },
+    {
+      "selector": ".groupSetting__divider",
+      "prop": "margin",
+      "raw": "0 1rem"
+    },
+    {
+      "selector": ".groupSetting__divider",
+      "prop": "border",
+      "raw": "none"
+    }
+  ],
+  "src/v4/chat/features/home/ChatHome.module.css": [
+    {
+      "selector": ".chatHome__tabs",
+      "prop": "gap",
+      "raw": "0"
+    },
+    {
+      "selector": ".chatHome__tabList",
+      "prop": "top",
+      "raw": "var(--chat-home-header-height)"
+    }
+  ],
+  "src/v4/chat/features/home/components/ChannelItem/ChannelItem.module.css": [
+    {
+      "selector": ".channelItem__previewMention",
+      "prop": "font-weight",
+      "raw": "600"
+    },
+    {
+      "selector": ".channelItem__highlightBold",
+      "prop": "font-weight",
+      "raw": "600"
+    },
+    {
+      "selector": ".channelItem__skeletonRow",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".channelItem__skeletonRow",
+      "prop": "height",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".channelItem__skeletonRow",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".channelItem",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".channelItem",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".channelItem",
+      "prop": "min-height",
+      "raw": "5.125rem",
+      "px": 82
+    },
+    {
+      "selector": ".channelItem__avatarWrapper",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".channelItem__avatarWrapper",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".channelItem__avatarWrapper",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".channelItem__body",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".channelItem__body",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".channelItem__body",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".channelItem__nameRow",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".channelItem__nameGroup",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".channelItem__nameGroup",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".channelItem__nameGroup",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".channelItem__name",
+      "prop": "flex-shrink",
+      "raw": "1"
+    },
+    {
+      "selector": ".channelItem__name",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".channelItem__memberCount",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".channelItem__timestamp",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".channelItem__previewRow",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".channelItem__preview",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".channelItem__preview",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".channelItem__previewWithIcon",
+      "prop": "flex",
+      "raw": "1 1 0"
+    },
+    {
+      "selector": ".channelItem__previewWithIcon",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".channelItem__previewWithIcon",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".channelItem__previewLeadingIcon",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".channelItem__previewLeadingIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".channelItem__previewLeadingIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".channelItem__notifications",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".channelItem__notifications",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    }
+  ],
+  "src/v4/chat/features/home/components/ChannelList/ChannelList.module.css": [
+    {
+      "selector": ".channelList__empty",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".channelList__empty",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".channelList__empty",
+      "prop": "min-height",
+      "raw": "calc(100svh - var(--chat-home-header-height, 3rem) - 3.25rem)"
+    },
+    {
+      "selector": ".channelList__emptyContent",
+      "prop": "gap",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".channelList__emptyContent",
+      "prop": "width",
+      "raw": "100%"
+    }
+  ],
+  "src/v4/chat/features/home/components/Header/Header.module.css": [
+    {
+      "selector": ".header",
+      "prop": "top",
+      "raw": "0"
+    },
+    {
+      "selector": ".header",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".header",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".header__title",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".header__title",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__title",
+      "prop": "margin",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__actions",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".header__actions",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".header__actions",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    }
+  ],
+  "src/v4/chat/features/home/components/NotificationsDisabledBanner/NotificationsDisabledBanner.module.css": [
+    {
+      "selector": ".notificationsDisabledBanner",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".notificationsDisabledBanner",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".notificationsDisabledBanner__icon",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".notificationsDisabledBanner__icon",
+      "prop": "width",
+      "raw": "1.125rem",
+      "px": 18
+    },
+    {
+      "selector": ".notificationsDisabledBanner__icon",
+      "prop": "height",
+      "raw": "1.125rem",
+      "px": 18
+    }
+  ],
+  "src/v4/chat/features/search/SearchChannel.module.css": [
+    {
+      "selector": ".searchChannel",
+      "prop": "min-height",
+      "raw": "100svh"
+    },
+    {
+      "selector": ".searchChannel__tabList",
+      "prop": "top",
+      "raw": "3.5rem",
+      "px": 56
+    }
+  ],
+  "src/v4/chat/features/search/components/Header/Header.module.css": [
+    {
+      "selector": ".header",
+      "prop": "top",
+      "raw": "0"
+    },
+    {
+      "selector": ".header",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".header__input",
+      "prop": "flex",
+      "raw": "1 1 auto"
+    },
+    {
+      "selector": ".header__input",
+      "prop": "min-width",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/shared/components/AddTile/AddTile.module.css": [
+    {
+      "selector": ".addTile",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".addTile",
+      "prop": "width",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".addTile__name",
+      "prop": "max-width",
+      "raw": "4rem",
+      "px": 64
+    }
+  ],
+  "src/v4/chat/features/shared/components/DateSeparator/DateSeparator.module.css": [
+    {
+      "selector": ".dateSeparator",
+      "prop": "padding",
+      "raw": "0.5rem 0"
+    },
+    {
+      "selector": ".dateSeparator__pill",
+      "prop": "padding",
+      "raw": "0.25rem 0.5rem",
+      "px": [4, 8]
+    },
+    {
+      "selector": ".dateSeparator__pill",
+      "prop": "border-radius",
+      "raw": "1rem",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/features/shared/components/DeletedMessagePill/DeletedMessagePill.module.css": [
+    {
+      "selector": ".deletedMessagePill",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".deletedMessagePill",
+      "prop": "padding",
+      "raw": "0.25rem 0.5rem",
+      "px": [4, 8]
+    },
+    {
+      "selector": ".deletedMessagePill",
+      "prop": "border",
+      "raw": "0.0625rem solid currentcolor"
+    },
+    {
+      "selector": ".deletedMessagePill",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".deletedMessagePill__icon",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".deletedMessagePill__icon",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/features/shared/components/EmptyState/EmptyState.module.css": [
+    {
+      "selector": ".emptyState",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".emptyState",
+      "prop": "padding",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".emptyState",
+      "prop": "min-height",
+      "raw": "calc(100svh - var(--empty-state-offset-top, 7.125rem))"
+    },
+    {
+      "selector": ".emptyState__icon",
+      "prop": "width",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".emptyState__icon",
+      "prop": "height",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".emptyState__text",
+      "prop": "max-width",
+      "raw": "15.75rem",
+      "px": 252
+    }
+  ],
+  "src/v4/chat/features/shared/components/FailedToShow/FailedToShow.module.css": [
+    {
+      "selector": ".failedToShow",
+      "prop": "flex",
+      "raw": "1 1 auto"
+    },
+    {
+      "selector": ".failedToShow",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".failedToShow",
+      "prop": "padding",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".failedToShow__icon",
+      "prop": "width",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".failedToShow__icon",
+      "prop": "height",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".failedToShow__icon",
+      "prop": "flex-shrink",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/shared/components/ImageViewer/ImageViewer.module.css": [
+    {
+      "selector": ".imageViewer__img",
+      "prop": "max-width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".imageViewer__img",
+      "prop": "max-height",
+      "raw": "100%"
+    }
+  ],
+  "src/v4/chat/features/shared/components/MediaViewer/MediaViewer.module.css": [
+    {
+      "selector": ".mediaViewer__modal",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".mediaViewer__modal",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".mediaViewer__dialog",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".mediaViewer__dialog",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".mediaViewer__topBar",
+      "prop": "top",
+      "raw": "0"
+    },
+    {
+      "selector": ".mediaViewer__topBar",
+      "prop": "left",
+      "raw": "0"
+    },
+    {
+      "selector": ".mediaViewer__topBar",
+      "prop": "right",
+      "raw": "0"
+    },
+    {
+      "selector": ".mediaViewer__topBar",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".mediaViewer__bottomBar",
+      "prop": "bottom",
+      "raw": "0"
+    },
+    {
+      "selector": ".mediaViewer__bottomBar",
+      "prop": "left",
+      "raw": "0"
+    },
+    {
+      "selector": ".mediaViewer__bottomBar",
+      "prop": "right",
+      "raw": "0"
+    },
+    {
+      "selector": ".mediaViewer__bottomBar",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".mediaViewer__closeButton.mediaViewer__closeButton",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".mediaViewer__closeButton.mediaViewer__closeButton",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".mediaViewer__closeButton.mediaViewer__closeButton",
+      "prop": "padding",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".mediaViewer__closeButton.mediaViewer__closeButton",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".mediaViewer__closeButton.mediaViewer__closeButton",
+      "prop": "border-radius",
+      "raw": "9999px",
+      "px": 9999
+    },
+    {
+      "selector": ".mediaViewer__closeIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".mediaViewer__closeIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".mediaViewer__bottomIconButton",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".mediaViewer__bottomIconButton",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".mediaViewer__bottomIconButton",
+      "prop": "padding",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".mediaViewer__bottomIconButton",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".mediaViewer__bottomIconButton",
+      "prop": "border-radius",
+      "raw": "9999px",
+      "px": 9999
+    },
+    {
+      "selector": ".mediaViewer__bottomIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".mediaViewer__bottomIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageActionsPopover/MessageActionsPopover.module.css": [
+    {
+      "selector": ".messageActionsPopover",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageActionsPopover__reactionPicker",
+      "prop": "padding",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageActionsPopover__reactionPicker",
+      "prop": "border-radius",
+      "raw": "9999px",
+      "px": 9999
+    },
+    {
+      "selector": ".messageActionsPopover__menu",
+      "prop": "min-width",
+      "raw": "10rem",
+      "px": 160
+    },
+    {
+      "selector": ".messageActionsPopover__menu",
+      "prop": "padding",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".messageActionsPopover__menu",
+      "prop": "border-radius",
+      "raw": "0.75rem",
+      "px": 12
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageBubble/MessageBubble.module.css": [
+    {
+      "selector": ".textBubble",
+      "prop": "max-width",
+      "raw": "60vw"
+    },
+    {
+      "selector": ".textBubble",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".textBubble__text",
+      "prop": "padding",
+      "raw": "0.625rem 1rem 0"
+    },
+    {
+      "selector": ".textBubble__text",
+      "prop": "margin-bottom",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".textBubble__text",
+      "prop": "font-size",
+      "raw": "0.875rem",
+      "px": 14
+    },
+    {
+      "selector": ".textBubble__text",
+      "prop": "line-height",
+      "raw": "1.3"
+    },
+    {
+      "selector": ".textBubble__mention",
+      "prop": "font-weight",
+      "raw": "500"
+    },
+    {
+      "selector": ".textBubble__divider",
+      "prop": "height",
+      "raw": "0.0625rem",
+      "px": 1
+    },
+    {
+      "selector": ".textBubble__seeMore",
+      "prop": "padding",
+      "raw": "0.625rem 1rem",
+      "px": [10, 16]
+    },
+    {
+      "selector": ".textBubble__seeMore",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".textBubble__seeMoreIcon",
+      "prop": "width",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".textBubble__seeMoreIcon",
+      "prop": "height",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".textBubble__editedCaption",
+      "prop": "padding",
+      "raw": "0 1rem 0.625rem"
+    },
+    {
+      "selector": ".textBubble__preview",
+      "prop": "padding",
+      "raw": "0 0.625rem 0.625rem"
+    },
+    {
+      "selector": ".imageBubble",
+      "prop": "min-height",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".imageBubble",
+      "prop": "max-height",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".imageBubble",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".imageBubble",
+      "prop": "max-width",
+      "raw": "20rem",
+      "px": 320
+    },
+    {
+      "selector": ".imageBubble",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".imageBubble__img",
+      "prop": "height",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".imageBubble__img",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".mediaBubble__placeholder",
+      "prop": "width",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".mediaBubble__placeholder",
+      "prop": "height",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".mediaBubble__placeholder",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".mediaBubble__broken",
+      "prop": "width",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".mediaBubble__broken",
+      "prop": "height",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".mediaBubble__broken",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".mediaBubble__brokenIcon",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".mediaBubble__brokenIcon",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".mediaBubble__preload",
+      "prop": "width",
+      "raw": "1px",
+      "px": 1
+    },
+    {
+      "selector": ".mediaBubble__preload",
+      "prop": "height",
+      "raw": "1px",
+      "px": 1
+    },
+    {
+      "selector": ".mediaBubble__spinner",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".mediaBubble__spinner",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".videoBubble",
+      "prop": "min-height",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".videoBubble",
+      "prop": "max-height",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".videoBubble",
+      "prop": "max-width",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".videoBubble",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".videoBubble",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".videoBubble__media",
+      "prop": "height",
+      "raw": "15rem",
+      "px": 240
+    },
+    {
+      "selector": ".videoBubble__media",
+      "prop": "width",
+      "raw": "auto"
+    },
+    {
+      "selector": ".videoBubble__media",
+      "prop": "max-width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".videoBubble__playChip",
+      "prop": "top",
+      "raw": "50%"
+    },
+    {
+      "selector": ".videoBubble__playChip",
+      "prop": "left",
+      "raw": "50%"
+    },
+    {
+      "selector": ".videoBubble__playChip",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".videoBubble__playChip",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".videoBubble__playChip",
+      "prop": "padding",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".videoBubble__playChip",
+      "prop": "border-radius",
+      "raw": "9999px",
+      "px": 9999
+    },
+    {
+      "selector": ".videoBubble__playIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".videoBubble__playIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".customBubble",
+      "prop": "padding",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".customBubble",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".mediaBubble__failedWrapper",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".mediaBubble__failedCaption",
+      "prop": "font-size",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".mediaBubble__failedCaption",
+      "prop": "line-height",
+      "raw": "0.8125rem",
+      "px": 13
+    },
+    {
+      "selector": ".mediaBubble__failedCaption",
+      "prop": "letter-spacing",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageComposer/MessageComposer.module.css": [
+    {
+      "selector": ".messageComposer",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageComposer",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__mentionSlot",
+      "prop": "bottom",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageComposer__mentionSlot",
+      "prop": "left",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__mentionSlot",
+      "prop": "right",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__editPanel",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".messageComposer__editPanel",
+      "prop": "padding",
+      "raw": "0.75rem 0.75rem 0.75rem 1rem",
+      "px": [12, 12, 12, 16]
+    },
+    {
+      "selector": ".messageComposer__editPanelTitle",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".messageComposer__editPanelTitle",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__editPanelClose.messageComposer__editPanelClose, .messageComposer__editPanelClose.messageComposer__editPanelClose:hover",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageComposer__editPanelClose.messageComposer__editPanelClose, .messageComposer__editPanelClose.messageComposer__editPanelClose:hover",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageComposer__editPanelClose.messageComposer__editPanelClose, .messageComposer__editPanelClose.messageComposer__editPanelClose:hover",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__editPanelClose.messageComposer__editPanelClose, .messageComposer__editPanelClose.messageComposer__editPanelClose:hover",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".messageComposer__editPanelClose.messageComposer__editPanelClose, .messageComposer__editPanelClose.messageComposer__editPanelClose:hover",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__editPanelCloseIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageComposer__editPanelCloseIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageComposer__inputRow",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".messageComposer__inputRow",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".messageComposer__inputRow",
+      "prop": "min-height",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".messageComposer__iconButton.messageComposer__iconButton, .messageComposer__iconButton.messageComposer__iconButton:hover",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".messageComposer__iconButton.messageComposer__iconButton, .messageComposer__iconButton.messageComposer__iconButton:hover",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".messageComposer__iconButton.messageComposer__iconButton, .messageComposer__iconButton.messageComposer__iconButton:hover",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__iconButton.messageComposer__iconButton, .messageComposer__iconButton.messageComposer__iconButton:hover",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".messageComposer__iconButton.messageComposer__iconButton, .messageComposer__iconButton.messageComposer__iconButton:hover",
+      "prop": "border-radius",
+      "raw": "9999px",
+      "px": 9999
+    },
+    {
+      "selector": ".messageComposer__iconButton.messageComposer__iconButton, .messageComposer__iconButton.messageComposer__iconButton:hover",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__icon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageComposer__icon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageComposer__sendButton.messageComposer__sendButton, .messageComposer__sendButton.messageComposer__sendButton:hover",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".messageComposer__sendButton.messageComposer__sendButton, .messageComposer__sendButton.messageComposer__sendButton:hover",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".messageComposer__sendButton.messageComposer__sendButton, .messageComposer__sendButton.messageComposer__sendButton:hover",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__sendButton.messageComposer__sendButton, .messageComposer__sendButton.messageComposer__sendButton:hover",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".messageComposer__sendButton.messageComposer__sendButton, .messageComposer__sendButton.messageComposer__sendButton:hover",
+      "prop": "border-radius",
+      "raw": "9999px",
+      "px": 9999
+    },
+    {
+      "selector": ".messageComposer__sendButton.messageComposer__sendButton, .messageComposer__sendButton.messageComposer__sendButton:hover",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__sendIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageComposer__sendIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageComposer__inputWrapper",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".messageComposer__inputWrapper",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__inputWrapper",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageComposer__inputWrapper",
+      "prop": "padding",
+      "raw": "0.625rem 0.75rem",
+      "px": [10, 12]
+    },
+    {
+      "selector": ".messageComposer__inputWrapper",
+      "prop": "min-height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".messageComposer__inputWrapper",
+      "prop": "max-height",
+      "raw": "7.5rem",
+      "px": 120
+    },
+    {
+      "selector": ".messageComposer__editor",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".messageComposer__editor",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageComposer__editor",
+      "prop": "font-size",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageComposer__editor",
+      "prop": "line-height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageComposer__editor :global([contenteditable])",
+      "prop": "min-height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageComposer__editor :global([contenteditable])",
+      "prop": "font-size",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageComposer__editor :global([contenteditable])",
+      "prop": "line-height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageComposer__placeholder",
+      "prop": "font-size",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageComposer__placeholder",
+      "prop": "line-height",
+      "raw": "1.25rem",
+      "px": 20
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageComposer/components/MediaSection/MediaSection.module.css": [
+    {
+      "selector": ".mediaSection",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".mediaSection",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".mediaSection",
+      "prop": "padding",
+      "raw": "0.5rem 0"
+    },
+    {
+      "selector": ".mediaSection",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".mediaSection__row",
+      "prop": "gap",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".mediaSection__row",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".mediaSection__row",
+      "prop": "height",
+      "raw": "5.625rem",
+      "px": 90
+    },
+    {
+      "selector": ".mediaSection__item",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".mediaSection__item",
+      "prop": "width",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".mediaSection__item",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".mediaSection__item",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".mediaSection__chip",
+      "prop": "padding",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".mediaSection__chip",
+      "prop": "border-radius",
+      "raw": "6.1875rem",
+      "px": 99
+    },
+    {
+      "selector": ".mediaSection__icon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".mediaSection__icon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".mediaSection__label",
+      "prop": "width",
+      "raw": "100%"
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageFullTextScreen/MessageFullTextScreen.module.css": [
+    {
+      "selector": ".fullTextScreen__header",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".fullTextScreen__header",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".fullTextScreen__header",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".fullTextScreen__title",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".fullTextScreen__title",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".fullTextScreen__headerSpacer",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".fullTextScreen__headerSpacer",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".fullTextScreen__headerSpacer",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".fullTextScreen__body",
+      "prop": "flex",
+      "raw": "1 1 auto"
+    },
+    {
+      "selector": ".fullTextScreen__body",
+      "prop": "min-height",
+      "raw": "0"
+    },
+    {
+      "selector": ".fullTextScreen__body",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".fullTextScreen__text",
+      "prop": "margin",
+      "raw": "0"
+    },
+    {
+      "selector": ".fullTextScreen__text",
+      "prop": "font-size",
+      "raw": "1.0625rem",
+      "px": 17
+    },
+    {
+      "selector": ".fullTextScreen__text",
+      "prop": "font-weight",
+      "raw": "400"
+    },
+    {
+      "selector": ".fullTextScreen__text",
+      "prop": "line-height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".fullTextScreen__text",
+      "prop": "letter-spacing",
+      "raw": "normal"
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageLinkPreview/MessageLinkPreview.module.css": [
+    {
+      "selector": ".messageLinkPreview",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".messageLinkPreview",
+      "prop": "margin",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageLinkPreview",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageLinkPreview",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageLinkPreview",
+      "prop": "border-radius",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".messageLinkPreview__thumbnail",
+      "prop": "flex",
+      "raw": "0 0 6rem"
+    },
+    {
+      "selector": ".messageLinkPreview__thumbnail",
+      "prop": "width",
+      "raw": "6rem",
+      "px": 96
+    },
+    {
+      "selector": ".messageLinkPreview__thumbnail",
+      "prop": "height",
+      "raw": "6rem",
+      "px": 96
+    },
+    {
+      "selector": ".messageLinkPreview__thumbnailImg",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageLinkPreview__thumbnailImg",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageLinkPreview__thumbnailIcon",
+      "prop": "width",
+      "raw": "1.125rem",
+      "px": 18
+    },
+    {
+      "selector": ".messageLinkPreview__thumbnailIcon",
+      "prop": "height",
+      "raw": "1.125rem",
+      "px": 18
+    },
+    {
+      "selector": ".messageLinkPreview__info",
+      "prop": "flex",
+      "raw": "1 1 auto"
+    },
+    {
+      "selector": ".messageLinkPreview__info",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageLinkPreview__info",
+      "prop": "padding",
+      "raw": "0.5rem 0.625rem",
+      "px": [8, 10]
+    },
+    {
+      "selector": ".messageLinkPreview__info",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".messageLinkPreview__info[data-state='loading']",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageLinkPreview__title",
+      "prop": "font-size",
+      "raw": "0.8125rem",
+      "px": 13
+    },
+    {
+      "selector": ".messageLinkPreview__title",
+      "prop": "line-height",
+      "raw": "1.125rem",
+      "px": 18
+    },
+    {
+      "selector": ".messageLinkPreview__title",
+      "prop": "letter-spacing",
+      "raw": "-0.005rem",
+      "px": -0.08
+    },
+    {
+      "selector": ".messageLinkPreview__title",
+      "prop": "font-weight",
+      "raw": "590"
+    },
+    {
+      "selector": ".messageLinkPreview__title",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageLinkPreview__domain",
+      "prop": "font-size",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".messageLinkPreview__domain",
+      "prop": "line-height",
+      "raw": "0.8125rem",
+      "px": 13
+    },
+    {
+      "selector": ".messageLinkPreview__domain",
+      "prop": "letter-spacing",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageLinkPreview__domain",
+      "prop": "font-weight",
+      "raw": "400"
+    },
+    {
+      "selector": ".messageLinkPreview__domain",
+      "prop": "width",
+      "raw": "100%"
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageList/MessageList.module.css": [
+    {
+      "selector": ".messageList",
+      "prop": "flex",
+      "raw": "1"
+    },
+    {
+      "selector": ".messageList",
+      "prop": "min-height",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageList__scroll",
+      "prop": "flex",
+      "raw": "1"
+    },
+    {
+      "selector": ".messageList__scroll",
+      "prop": "min-height",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageList__scroll",
+      "prop": "padding",
+      "raw": "0.5rem 0"
+    },
+    {
+      "selector": ".messageList__virtualArea",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageList__row",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageList__topLoader",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageList__topLoader",
+      "prop": "height",
+      "raw": "3rem",
+      "px": 48
+    },
+    {
+      "selector": ".messageList__topLoader",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageList__bottomLoader",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageList__bottomLoader",
+      "prop": "height",
+      "raw": "3rem",
+      "px": 48
+    },
+    {
+      "selector": ".messageList__bottomLoader",
+      "prop": "flex-shrink",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageReactionBadge/MessageReactionBadge.module.css": [
+    {
+      "selector": ".messageReactionBadge",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".messageReactionBadge",
+      "prop": "height",
+      "raw": "1.75rem",
+      "px": 28
+    },
+    {
+      "selector": ".messageReactionBadge",
+      "prop": "margin-top",
+      "raw": "-0.375rem",
+      "px": -6
+    },
+    {
+      "selector": ".messageReactionBadge",
+      "prop": "padding",
+      "raw": "0.25rem 0.375rem",
+      "px": [4, 6]
+    },
+    {
+      "selector": ".messageReactionBadge",
+      "prop": "border",
+      "raw": "0.0625rem solid var(--asc-color-border-reaction-reactioncount-default)"
+    },
+    {
+      "selector": ".messageReactionBadge",
+      "prop": "border-radius",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageReactionBadge__stack",
+      "prop": "padding-right",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageReactionBadge__icon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageReactionBadge__icon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageReactionBadge__icon",
+      "prop": "margin-right",
+      "raw": "-0.5rem",
+      "px": -8
+    },
+    {
+      "selector": ".messageReactionBadge__icon",
+      "prop": "border-radius",
+      "raw": "9999px",
+      "px": 9999
+    },
+    {
+      "selector": ".messageReactionBadge__iconSvg",
+      "prop": "width",
+      "raw": "1.125rem",
+      "px": 18
+    },
+    {
+      "selector": ".messageReactionBadge__iconSvg",
+      "prop": "height",
+      "raw": "1.125rem",
+      "px": 18
+    },
+    {
+      "selector": ".messageReactionBadge__count",
+      "prop": "font-size",
+      "raw": "0.8125rem",
+      "px": 13
+    },
+    {
+      "selector": ".messageReactionBadge__count",
+      "prop": "line-height",
+      "raw": "1.125rem",
+      "px": 18
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageReactorListSheet/MessageReactorListSheet.module.css": [
+    {
+      "selector": ".messageReactorListSheet",
+      "prop": "margin",
+      "raw": "0 -1rem"
+    },
+    {
+      "selector": ".messageReactorListSheet",
+      "prop": "max-height",
+      "raw": "90vh"
+    },
+    {
+      "selector": ".messageReactorListSheet",
+      "prop": "min-height",
+      "raw": "90vh"
+    },
+    {
+      "selector": ".messageReactorListSheet__tabs",
+      "prop": "flex",
+      "raw": "1"
+    },
+    {
+      "selector": ".messageReactorListSheet__tabs",
+      "prop": "min-height",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageReactorListSheet",
+      "prop": "margin",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageReactorListSheet",
+      "prop": "width",
+      "raw": "30rem",
+      "px": 480
+    },
+    {
+      "selector": ".messageReactorListSheet__tabList",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageReactorListSheet__tabList",
+      "prop": "gap",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageReactorListSheet__tabPanel",
+      "prop": "flex",
+      "raw": "1"
+    },
+    {
+      "selector": ".messageReactorListSheet__tabPanel",
+      "prop": "min-height",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageReactorListSheet__tabLabel",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageReactorListSheet__tabIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageReactorListSheet__tabIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".messageReactorListSheet__list",
+      "prop": "flex",
+      "raw": "1"
+    },
+    {
+      "selector": ".messageReactorListSheet__list",
+      "prop": "min-height",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageReactorListSheet__list",
+      "prop": "max-height",
+      "raw": "calc(var(--asc-drawer-visible-height, 90vh) - 5rem)"
+    },
+    {
+      "selector": ".messageReactorListSheet__list",
+      "prop": "padding-top",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageReactorListSheet__list",
+      "prop": "padding-bottom",
+      "raw": "3rem",
+      "px": 48
+    },
+    {
+      "selector": ".messageReactorListSheet__row",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".messageReactorListSheet__row",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageReactorListSheet__row",
+      "prop": "height",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".messageReactorListSheet__row",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".messageReactorListSheet__row",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".messageReactorListSheet__rowAvatar",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageReactorListSheet__rowAvatar",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".messageReactorListSheet__rowAvatar",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".messageReactorListSheet__rowText",
+      "prop": "flex",
+      "raw": "1"
+    },
+    {
+      "selector": ".messageReactorListSheet__rowText",
+      "prop": "gap",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageReactorListSheet__rowText",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageReactorListSheet__rowReactionIcon",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageReactorListSheet__rowReactionIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageReactorListSheet__rowReactionIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageReactorListSheet__emptyState",
+      "prop": "gap",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageReactorListSheet__emptyState",
+      "prop": "padding",
+      "raw": "3rem 1.5rem 1.5rem",
+      "px": [48, 24, 24]
+    },
+    {
+      "selector": ".messageReactorListSheet__emptyState",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageReactorListSheet__emptyStateIcon",
+      "prop": "width",
+      "raw": "3rem",
+      "px": 48
+    },
+    {
+      "selector": ".messageReactorListSheet__emptyStateIcon",
+      "prop": "height",
+      "raw": "3rem",
+      "px": 48
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageReplyBand/MessageReplyBand.module.css": [
+    {
+      "selector": ".replyBand",
+      "prop": "gap",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".replyBand",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".replyBand",
+      "prop": "height",
+      "raw": "3.875rem",
+      "px": 62
+    },
+    {
+      "selector": ".replyBand",
+      "prop": "padding",
+      "raw": "0.625rem 0.75rem 0.625rem 1rem",
+      "px": [10, 12, 10, 16]
+    },
+    {
+      "selector": ".replyBand__text",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".replyBand__text",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".replyBand__text",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".replyBand__title",
+      "prop": "gap",
+      "raw": "0.125rem",
+      "px": 2
+    },
+    {
+      "selector": ".replyBand__title",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".replyBand__titleName",
+      "prop": "flex-shrink",
+      "raw": "1"
+    },
+    {
+      "selector": ".replyBand__titleName",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".replyBand__body",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".replyBand__thumbWrap",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".replyBand__thumbWrap",
+      "prop": "width",
+      "raw": "2.375rem",
+      "px": 38
+    },
+    {
+      "selector": ".replyBand__thumbWrap",
+      "prop": "height",
+      "raw": "2.375rem",
+      "px": 38
+    },
+    {
+      "selector": ".replyBand__thumbWrap",
+      "prop": "border-radius",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".replyBand__thumb",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".replyBand__thumb",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".replyBand__videoIcon",
+      "prop": "width",
+      "raw": "0.875rem",
+      "px": 14
+    },
+    {
+      "selector": ".replyBand__videoIcon",
+      "prop": "height",
+      "raw": "0.875rem",
+      "px": 14
+    },
+    {
+      "selector": ".replyBand__close",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".replyBand__close",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".replyBand__close",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".replyBand__close",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".replyBand__close",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".replyBand__closeIcon",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".replyBand__closeIcon",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageReplyQuote/MessageReplyQuote.module.css": [
+    {
+      "selector": ".replyQuote",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".replyQuote",
+      "prop": "margin-bottom",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".replyQuote__header",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".replyQuote__headerIcon",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".replyQuote__headerIcon",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".replyQuote__headerIcon",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".replyQuote__headerText",
+      "prop": "max-width",
+      "raw": "18.75rem",
+      "px": 300
+    },
+    {
+      "selector": ".replyQuote__quote",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".replyQuote__overlay",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".replyQuote__textBubble",
+      "prop": "padding",
+      "raw": "0.625rem 1rem",
+      "px": [10, 16]
+    },
+    {
+      "selector": ".replyQuote__textBubble",
+      "prop": "font-size",
+      "raw": "0.9375rem",
+      "px": 15
+    },
+    {
+      "selector": ".replyQuote__textBubble",
+      "prop": "line-height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".replyQuote__textBubble",
+      "prop": "max-width",
+      "raw": "14.25rem",
+      "px": 228
+    },
+    {
+      "selector": ".replyQuote__media",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".replyQuote__mediaBox",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".replyQuote__mediaBoxIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".replyQuote__mediaBoxIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".replyQuote__playChip",
+      "prop": "top",
+      "raw": "50%"
+    },
+    {
+      "selector": ".replyQuote__playChip",
+      "prop": "left",
+      "raw": "50%"
+    },
+    {
+      "selector": ".replyQuote__playChip",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".replyQuote__playChip",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".replyQuote__playChip",
+      "prop": "padding",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".replyQuote__playChip",
+      "prop": "border-radius",
+      "raw": "9999px",
+      "px": 9999
+    },
+    {
+      "selector": ".replyQuote__playIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".replyQuote__playIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".replyQuote__placeholder",
+      "prop": "width",
+      "raw": "14.25rem",
+      "px": 228
+    },
+    {
+      "selector": ".replyQuote__placeholder",
+      "prop": "height",
+      "raw": "3.75rem",
+      "px": 60
+    },
+    {
+      "selector": ".replyQuote__placeholder",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".replyQuote__deletedBubble",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".replyQuote__deletedBubble",
+      "prop": "padding",
+      "raw": "0.25rem 0.5rem",
+      "px": [4, 8]
+    },
+    {
+      "selector": ".replyQuote__deletedBubble",
+      "prop": "border",
+      "raw": "0.0625rem solid var(--asc-color-border-chatbubble-inbound-deleted)"
+    },
+    {
+      "selector": ".replyQuote__deletedBubble",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".replyQuote__deletedIcon",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".replyQuote__deletedIcon",
+      "prop": "height",
+      "raw": "0.875rem",
+      "px": 14
+    }
+  ],
+  "src/v4/chat/features/shared/components/MessageRow/MessageRow.module.css": [
+    {
+      "selector": ".messageRow",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageRow",
+      "prop": "padding",
+      "raw": "0.25rem 0"
+    },
+    {
+      "selector": ".messageRow",
+      "prop": "max-width",
+      "raw": "80%"
+    },
+    {
+      "selector": ".messageRow[data-user='own']",
+      "prop": "margin-left",
+      "raw": "auto"
+    },
+    {
+      "selector": ".messageRow[data-user='own']",
+      "prop": "margin-right",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageRow[data-user='other']",
+      "prop": "margin-right",
+      "raw": "auto"
+    },
+    {
+      "selector": ".messageRow[data-user='other']",
+      "prop": "margin-left",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageRow__avatar",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".messageRow__avatar",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".messageRow__avatar",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageRow__avatar :global(.asc-avatar)",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".messageRow__avatar :global(.asc-avatar)",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".messageRow__content",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".messageRow__content",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageRow__senderName",
+      "prop": "max-width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageRow__bubble",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageRow[data-has-reaction='true']",
+      "prop": "padding-bottom",
+      "raw": "0.875rem",
+      "px": 14
+    },
+    {
+      "selector": ".messageRow__reactionBadge",
+      "prop": "bottom",
+      "raw": "-0.875rem",
+      "px": -14
+    },
+    {
+      "selector": ".messageRow__bubbleRow",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageRow__side",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageRow__side",
+      "prop": "padding-bottom",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageRow__errorButton",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageRow__errorIcon",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageRow__errorIcon",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/features/shared/components/MutedBanner/MutedBanner.module.css": [
+    {
+      "selector": ".mutedBanner",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".mutedBanner",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".mutedBanner__text",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".mutedBanner__text",
+      "prop": "min-width",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/features/shared/components/NewMessageNotification/NewMessageNotification.module.css": [
+    {
+      "selector": ".newMessageNotification",
+      "prop": "left",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".newMessageNotification",
+      "prop": "right",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".newMessageNotification",
+      "prop": "bottom",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".newMessageNotification",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".newMessageNotification",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".newMessageNotification",
+      "prop": "padding",
+      "raw": "0.375rem 0.625rem 0.375rem 0.375rem",
+      "px": [6, 10, 6, 6]
+    },
+    {
+      "selector": ".newMessageNotification",
+      "prop": "border-radius",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".newMessageNotification__left",
+      "prop": "gap",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".newMessageNotification__left",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".newMessageNotification__left",
+      "prop": "flex",
+      "raw": "1 0 0"
+    },
+    {
+      "selector": ".newMessageNotification__avatar",
+      "prop": "width",
+      "raw": "1.75rem",
+      "px": 28
+    },
+    {
+      "selector": ".newMessageNotification__avatar",
+      "prop": "height",
+      "raw": "1.75rem",
+      "px": 28
+    },
+    {
+      "selector": ".newMessageNotification__avatar",
+      "prop": "border-radius",
+      "raw": "50%"
+    },
+    {
+      "selector": ".newMessageNotification__avatar",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".newMessageNotification__preview",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".newMessageNotification__right",
+      "prop": "gap",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".newMessageNotification__right",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".newMessageNotification__thumb",
+      "prop": "width",
+      "raw": "1.75rem",
+      "px": 28
+    },
+    {
+      "selector": ".newMessageNotification__thumb",
+      "prop": "height",
+      "raw": "1.75rem",
+      "px": 28
+    },
+    {
+      "selector": ".newMessageNotification__thumb",
+      "prop": "border-radius",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".newMessageNotification__thumb",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".newMessageNotification__thumbImg",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".newMessageNotification__thumbImg",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".newMessageNotification__thumbFallback",
+      "prop": "width",
+      "raw": "1.125rem",
+      "px": 18
+    },
+    {
+      "selector": ".newMessageNotification__thumbFallback",
+      "prop": "height",
+      "raw": "1.125rem",
+      "px": 18
+    },
+    {
+      "selector": ".newMessageNotification__arrow",
+      "prop": "width",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".newMessageNotification__arrow",
+      "prop": "height",
+      "raw": "0.625rem",
+      "px": 10
+    }
+  ],
+  "src/v4/chat/features/shared/components/ScrollToLatestButton/ScrollToLatestButton.module.css": [
+    {
+      "selector": ".scrollToLatestButton",
+      "prop": "right",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".scrollToLatestButton",
+      "prop": "bottom",
+      "raw": "0.5rem",
+      "px": 8
+    }
+  ],
+  "src/v4/chat/features/shared/components/SelectedMember/SelectedMember.module.css": [
+    {
+      "selector": ".selectedMember",
+      "prop": "flex-shrink",
+      "raw": "0"
+    },
+    {
+      "selector": ".selectedMember",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".selectedMember",
+      "prop": "width",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".selectedMember__avatarWrapper",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".selectedMember__avatarWrapper",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".selectedMember__removeButton",
+      "prop": "top",
+      "raw": "0"
+    },
+    {
+      "selector": ".selectedMember__removeButton",
+      "prop": "right",
+      "raw": "0"
+    },
+    {
+      "selector": ".selectedMember__name",
+      "prop": "max-width",
+      "raw": "4rem",
+      "px": 64
+    }
+  ],
+  "src/v4/chat/features/shared/components/VideoPlayer/VideoPlayer.module.css": [
+    {
+      "selector": ".videoPlayer__video",
+      "prop": "max-width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".videoPlayer__video",
+      "prop": "max-height",
+      "raw": "100%"
+    }
+  ],
+  "src/v4/chat/features/shared/components/YouTile/YouTile.module.css": [
+    {
+      "selector": ".youTile",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".youTile",
+      "prop": "width",
+      "raw": "4rem",
+      "px": 64
+    },
+    {
+      "selector": ".youTile__name",
+      "prop": "max-width",
+      "raw": "4rem",
+      "px": 64
+    }
+  ],
+  "src/v4/chat/internal-components/ChatFeed/ChatFeed.module.css": [
+    {
+      "selector": ".chatFeed__skeleton__container",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".chatFeed__container",
+      "prop": "padding",
+      "raw": "1rem 1rem 0.125rem",
+      "px": [16, 16, 2]
+    },
+    {
+      "selector": ".chatFeed__container",
+      "prop": "flex-grow",
+      "raw": "1"
+    },
+    {
+      "selector": ".chatFeed__messageList__container",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".chatFeed__messageList__inner",
+      "prop": "gap",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".chatFeed__messageList__inner",
+      "prop": "padding-bottom",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".chatFeed__observerTarget",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".chatFeed__observerTarget",
+      "prop": "height",
+      "raw": "1px",
+      "px": 1
+    },
+    {
+      "selector": ".chatFeed__empty__container",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".chatFeed__empty__container__pinned_overlay",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".chatFeed__empty__container__pinned_overlay",
+      "prop": "bottom",
+      "raw": "0"
+    },
+    {
+      "selector": ".chatFeed__empty__icon",
+      "prop": "width",
+      "raw": "3.75rem",
+      "px": 60
+    },
+    {
+      "selector": ".chatFeed__empty__icon",
+      "prop": "height",
+      "raw": "3.75rem",
+      "px": 60
+    },
+    {
+      "selector": ".chatFeed__empty__icon",
+      "prop": "margin-bottom",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".chatFeed__container",
+      "prop": "padding",
+      "raw": "1rem 1rem 0"
+    },
+    {
+      "selector": ".chatFeed__container__overlay",
+      "prop": "left",
+      "raw": "0"
+    },
+    {
+      "selector": ".chatFeed__container__overlay",
+      "prop": "top",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/internal-components/HomeIndicator/styles.module.css": [
+    {
+      "selector": ".homeIndicatorContainer",
+      "prop": "padding-top",
+      "raw": "1.3125rem",
+      "px": 21
+    },
+    {
+      "selector": ".homeIndicatorContainer",
+      "prop": "padding-bottom",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".homeIndicator",
+      "prop": "margin",
+      "raw": "auto"
+    },
+    {
+      "selector": ".homeIndicator",
+      "prop": "width",
+      "raw": "8.375rem",
+      "px": 134
+    },
+    {
+      "selector": ".homeIndicator",
+      "prop": "height",
+      "raw": "0.3125rem",
+      "px": 5
+    },
+    {
+      "selector": ".homeIndicator",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-full)"
+    }
+  ],
+  "src/v4/chat/internal-components/LiveChatMessageContent/MessageAction/styles.module.css": [
+    {
+      "selector": "display: flex; :hover",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-sm)"
+    },
+    {
+      "selector": ".optionIcon",
+      "prop": "width",
+      "raw": "auto"
+    },
+    {
+      "selector": ".optionIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".reactionIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".reactionIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".timestamp",
+      "prop": "font-size",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".timestamp",
+      "prop": "line-height",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".timestamp",
+      "prop": "margin-bottom",
+      "raw": "var(--asc-spacing-s1)",
+      "px": 8
+    },
+    {
+      "selector": ".messageActionButton",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-s2) var(--asc-spacing-m1)",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".binIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".binIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".mentionIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".mentionIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".flagIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".flagIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    }
+  ],
+  "src/v4/chat/internal-components/LiveChatMessageContent/MessageBubble/styles.module.css": [
+    {
+      "selector": ".messageBubble",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-s1) 0.625rem",
+      "px": [8, 10]
+    },
+    {
+      "selector": ".messageBubble",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-lg)"
+    },
+    {
+      "selector": ".messageBubble",
+      "prop": "max-width",
+      "raw": "7.5rem",
+      "px": 120
+    },
+    {
+      "selector": ".messageBubble[data-mentioned='true']",
+      "prop": "border",
+      "raw": "1px solid var(--asc-color-primary-default)"
+    },
+    {
+      "selector": ".messageRepliedBubble",
+      "prop": "width",
+      "raw": "12.5rem",
+      "px": 200
+    },
+    {
+      "selector": ".messageParentContainer",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-s2)",
+      "px": 12
+    },
+    {
+      "selector": ".messageParentContainer",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-lg) var(--asc-border-radius-lg) 0 0"
+    },
+    {
+      "selector": ".messageChildContainer",
+      "prop": "border-radius",
+      "raw": "0 0 var(--asc-border-radius-lg) var(--asc-border-radius-lg)"
+    },
+    {
+      "selector": ".messageChildContainer",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-s1) var(--asc-spacing-s2)",
+      "px": [8, 12]
+    }
+  ],
+  "src/v4/chat/internal-components/LiveChatMessageContent/MessageBubbleContainer/styles.module.css": [
+    {
+      "selector": ".messageItemContainer",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-s1) var(--asc-spacing-m1)",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".messageItemContainer",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-s1)",
+      "px": 8
+    },
+    {
+      "selector": ".userDisplayName",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-xxs2)",
+      "px": 4
+    },
+    {
+      "selector": ".userDisplayName",
+      "prop": "margin-bottom",
+      "raw": "var(--asc-spacing-xxs2)",
+      "px": 4
+    },
+    {
+      "selector": ".avatar",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".avatar",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".moderatorBadge",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".moderatorBadge",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/internal-components/LiveChatMessageContent/MessageReaction/styles.module.css": [
+    {
+      "selector": ".reactionPickerWrap",
+      "prop": "bottom",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".reactionPickerWrap",
+      "prop": "left",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    }
+  ],
+  "src/v4/chat/internal-components/LiveChatMessageContent/styles.module.css": [
+    {
+      "selector": ".messageItemContainer",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-s1) var(--asc-spacing-m1)",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".messageItemContainer",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-s1)",
+      "px": 8
+    },
+    {
+      "selector": ".messageItemContainerInner[data-reactions='true']",
+      "prop": "margin-bottom",
+      "raw": "1.313rem",
+      "px": 21.01
+    },
+    {
+      "selector": ".messageBubbleWrap",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-xxs3)"
+    },
+    {
+      "selector": ".messageReaction",
+      "prop": "bottom",
+      "raw": "-1.313rem",
+      "px": -21.01
+    },
+    {
+      "selector": ".messageDeletedBubble",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-xxs2) var(--asc-spacing-s1)",
+      "px": [4, 8]
+    },
+    {
+      "selector": ".messageDeletedBubble",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-xxs2)",
+      "px": 4
+    },
+    {
+      "selector": ".messageDeletedBubble",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-lg)"
+    },
+    {
+      "selector": ".messageOptionsWrap",
+      "prop": "padding-bottom",
+      "raw": "var(--asc-spacing-xxs2)",
+      "px": 4
+    },
+    {
+      "selector": ".binIcon",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".binIcon",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".optionIcon",
+      "prop": "width",
+      "raw": "auto"
+    },
+    {
+      "selector": ".optionIcon",
+      "prop": "height",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".flagIcon",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".flagIcon",
+      "prop": "width",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".timestamp",
+      "prop": "margin-bottom",
+      "raw": "var(--asc-spacing-s1)",
+      "px": 8
+    },
+    {
+      "selector": ".timestamp",
+      "prop": "font-size",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".timestamp",
+      "prop": "line-height",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": "z-index: 1001 !important; max-height: 85%; top: 15% !important; @media (width >= 768px)",
+      "prop": "width",
+      "raw": "375px !important"
+    },
+    {
+      "selector": ".reactionListContainer",
+      "prop": "height",
+      "raw": "100% !important"
+    }
+  ],
+  "src/v4/chat/internal-components/LiveChatNotification/LiveChatNotification.module.css": [
+    {
+      "selector": ".notifications",
+      "prop": "bottom",
+      "raw": "var(--asc-spacing-m1)",
+      "px": 16
+    },
+    {
+      "selector": ".notificationContainer",
+      "prop": "width",
+      "raw": "calc(100% - var(--asc-spacing-m1) * 4)"
+    },
+    {
+      "selector": ".notificationContainer",
+      "prop": "padding",
+      "raw": "1.125rem var(--asc-spacing-m1)",
+      "px": [18, 16]
+    },
+    {
+      "selector": ".notificationContainer",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-md)"
+    }
+  ],
+  "src/v4/chat/internal-components/MessageBubble/MessageBubble.module.css": [
+    {
+      "selector": ".messageBubble__container",
+      "prop": "padding",
+      "raw": "0.5rem 0.75rem",
+      "px": [8, 12]
+    },
+    {
+      "selector": ".messageBubble__container",
+      "prop": "border-radius",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".messageBubble__topSectionWrap",
+      "prop": "margin-bottom",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".messageBubble__topSectionWrap",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageBubble__displayName__container",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".messageBubble__displayName__container",
+      "prop": "flex",
+      "raw": "1"
+    },
+    {
+      "selector": ".messageBubble__displayName__container",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageBubble__displayName",
+      "prop": "flex",
+      "raw": "1"
+    },
+    {
+      "selector": ".messageBubble__displayName",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageBubble__displayNamePopover",
+      "prop": "flex",
+      "raw": "1"
+    },
+    {
+      "selector": ".messageBubble__displayNamePopover",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageBubble__deletedMessageText__container",
+      "prop": "gap",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".messageBubble__deletedMessageText__icon",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageBubble__deletedMessageText__icon",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageBubble__deletedMessageText__icon",
+      "prop": "padding-bottom",
+      "raw": "0.12rem",
+      "px": 1.92
+    },
+    {
+      "selector": ".messageBubble__optionsMenu__header",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageBubble__optionsMenu__header",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".messageBubble__optionsButton__container",
+      "prop": "max-width",
+      "raw": "20rem",
+      "px": 320
+    },
+    {
+      "selector": ".messageBubble__optionsButton__container",
+      "prop": "padding",
+      "raw": "0.5rem 0"
+    },
+    {
+      "selector": ".messageBubble__optionButton",
+      "prop": "padding",
+      "raw": "0.75rem 0.5rem",
+      "px": [12, 8]
+    },
+    {
+      "selector": ".messageBubble__optionButton__icon",
+      "prop": "margin-right",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".messageBubble__optionButton__icon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageBubble__optionButton__icon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageBubble__optionButton__dangerIcon",
+      "prop": "margin-right",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".messageBubble__optionButton__dangerIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageBubble__optionButton__dangerIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageBubble__exclamationIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageBubble__exclamationIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageBubble__triggerButton",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageBubble__triggerButton",
+      "prop": "max-width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageBubble__button__displayName",
+      "prop": "flex",
+      "raw": "1"
+    },
+    {
+      "selector": ".messageBubble__button__displayName",
+      "prop": "min-width",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageBubble__optionUserInfo",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".messageBubble__optionUserInfo__displayName",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageBubble__optionUserInfo__button",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    },
+    {
+      "selector": ".messageBubble__optionUserInfo__button",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".messageBubble__optionUserInfo__buttonIcon",
+      "prop": "margin-right",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".messageBubble__optionUserInfo__buttonIcon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageBubble__optionUserInfo__buttonIcon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".messageBubble__optionUserInfo__mutedIcon",
+      "prop": "width",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageBubble__optionUserInfo__mutedIcon",
+      "prop": "height",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".messageBubble__optionButton",
+      "prop": "padding",
+      "raw": "0.75rem 1rem",
+      "px": [12, 16]
+    }
+  ],
+  "src/v4/chat/internal-components/MessageBubbleSkeleton/MessageBubbleSkeleton.module.css": [
+    {
+      "selector": ".messageBubbleSkeleton__container",
+      "prop": "padding",
+      "raw": "0.5rem 0.75rem",
+      "px": [8, 12]
+    },
+    {
+      "selector": ".messageBubbleSkeleton__container",
+      "prop": "border-radius",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".messageBubbleSkeleton__firstLine, .messageBubbleSkeleton__secondLine",
+      "prop": "height",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".messageBubbleSkeleton__firstLine, .messageBubbleSkeleton__secondLine",
+      "prop": "border-radius",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageBubbleSkeleton__firstLine",
+      "prop": "width",
+      "raw": "20%"
+    },
+    {
+      "selector": ".messageBubbleSkeleton__firstLine",
+      "prop": "margin-bottom",
+      "raw": "0.34rem",
+      "px": 5.44
+    },
+    {
+      "selector": ".messageBubbleSkeleton__secondLine",
+      "prop": "width",
+      "raw": "75%"
+    }
+  ],
+  "src/v4/chat/internal-components/MessageComposer/MessageComposer.module.css": [
+    {
+      "selector": ".sendButton",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".sendButton",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".sendButton",
+      "prop": "border-radius",
+      "raw": "var(--asc-border-radius-xxl)"
+    },
+    {
+      "selector": ".sendButton",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-xxs2)",
+      "px": 4
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".reactionButton",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".sendButtonContainer",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".sendButtonContainer",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".sendButtonContainer",
+      "prop": "margin-bottom",
+      "raw": "0.25rem",
+      "px": 4
+    },
+    {
+      "selector": ".composeBarContainer",
+      "prop": "min-height",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".composeBarContainer",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".optionContainer",
+      "prop": "top",
+      "raw": "0"
+    },
+    {
+      "selector": ".optionContainer",
+      "prop": "left",
+      "raw": "0"
+    },
+    {
+      "selector": ".optionContainer",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".composeBar",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".composeBar",
+      "prop": "padding",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".composeBar",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-s2)",
+      "px": 12
+    },
+    {
+      "selector": "width: 100%; height: var(--asc-spacing-l1); padding: var(--asc-spacing-s1) var(--asc-spacing-s2); border-radius: var(--asc-border-radius-sm); border: var(--asc-border-radius-none); background-color: var(--asc-color-secondary-default); color: var(--asc-color-base-inverse); display: flex; align-items: center; span",
+      "prop": "padding-left",
+      "raw": "var(--asc-spacing-s1)",
+      "px": 8
+    },
+    {
+      "selector": "width: 100%; height: var(--asc-spacing-l1); padding: var(--asc-spacing-s1) var(--asc-spacing-s2); border-radius: var(--asc-border-radius-sm); border: var(--asc-border-radius-none); background-color: var(--asc-color-secondary-default); color: var(--asc-color-base-inverse); display: flex; align-items: center; span",
+      "prop": "font-weight",
+      "raw": "var(--asc-text-font-weight-light)"
+    },
+    {
+      "selector": ".editorPlaceholder",
+      "prop": "top",
+      "raw": "0.625rem",
+      "px": 10
+    },
+    {
+      "selector": ".editorPlaceholder",
+      "prop": "left",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".editorContainer",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".editorContainer",
+      "prop": "font-size",
+      "raw": "var(--asc-text-font-size-md)"
+    },
+    {
+      "selector": ".editorContainer",
+      "prop": "max-height",
+      "raw": "calc(1.25rem + var(--asc-line-height-md) * 5)"
+    },
+    {
+      "selector": ".editorRoot",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".editorRoot",
+      "prop": "border-radius",
+      "raw": "1.25rem",
+      "px": 20
+    },
+    {
+      "selector": ".editorRoot",
+      "prop": "min-height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".editorRoot",
+      "prop": "max-height",
+      "raw": "calc(1.25rem + var(--asc-line-height-md) * var(--asc-max-lines))"
+    },
+    {
+      "selector": ".editorRoot",
+      "prop": "padding",
+      "raw": "0.625rem 0.75rem",
+      "px": [10, 12]
+    },
+    {
+      "selector": ".editorRoot",
+      "prop": "border",
+      "raw": "0 solid var(--asc-color-background-default)"
+    },
+    {
+      "selector": ".editorRoot:focus",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".editorParagraph",
+      "prop": "margin",
+      "raw": "0"
+    },
+    {
+      "selector": ".editorContainer:focus",
+      "prop": "border",
+      "raw": "none"
+    },
+    {
+      "selector": ".editorContainer__mentionTextInput_item",
+      "prop": "bottom",
+      "raw": "0"
+    },
+    {
+      "selector": ".editorContainer__mentionTextInput_item",
+      "prop": "left",
+      "raw": "0"
+    },
+    {
+      "selector": ".editorContainer__mentionTextInput_item",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".editorContainer__mentionTextInput_item",
+      "prop": "height",
+      "raw": "12.5rem",
+      "px": 200
+    },
+    {
+      "selector": ".userMentionItem__item, .allMentionItem__item",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".userMentionItem__item, .allMentionItem__item",
+      "prop": "padding",
+      "raw": "0.5rem 1rem",
+      "px": [8, 16]
+    },
+    {
+      "selector": ".userMentionItem__avatar",
+      "prop": "width",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".userMentionItem__avatar",
+      "prop": "height",
+      "raw": "2.5rem",
+      "px": 40
+    },
+    {
+      "selector": ".allMentionItem__atSign",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".allMentionItem__atSign",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": ".allMentionItem__atSign",
+      "prop": "border-radius",
+      "raw": "50%"
+    },
+    {
+      "selector": ".allMentionItem__atSign",
+      "prop": "line-height",
+      "raw": "1.2rem",
+      "px": 19.2
+    },
+    {
+      "selector": ".allMentionItem__atSign",
+      "prop": "font-size",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".userMentionItem__displayName, .allMentionItem__displayName",
+      "prop": "margin-left",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".userMentionItem__displayName, .allMentionItem__displayName",
+      "prop": "font-size",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".notification__icon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".notification__icon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".notification__container",
+      "prop": "margin-bottom",
+      "raw": "unset"
+    },
+    {
+      "selector": ".notification__container",
+      "prop": "bottom",
+      "raw": "calc(3.5rem + 0.125rem)"
+    },
+    {
+      "selector": ".notification__container",
+      "prop": "width",
+      "raw": "calc(100% - 2rem)"
+    },
+    {
+      "selector": ".notification__container",
+      "prop": "right",
+      "raw": "50%"
+    },
+    {
+      "selector": ".blocked__messageComposer",
+      "prop": "width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".blocked__messageComposer",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".editorPlaceholder",
+      "prop": "top",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".editorPlaceholder",
+      "prop": "left",
+      "raw": "0.75rem",
+      "px": 12
+    },
+    {
+      "selector": ".editorRoot",
+      "prop": "border",
+      "raw": "1px var(--asc-color-secondary-shade1) solid"
+    },
+    {
+      "selector": ".editorContainer",
+      "prop": "padding",
+      "raw": "0"
+    },
+    {
+      "selector": ".composeBar",
+      "prop": "padding",
+      "raw": "1rem",
+      "px": 16
+    },
+    {
+      "selector": ".notification__container",
+      "prop": "bottom",
+      "raw": "4.5rem",
+      "px": 72
+    }
+  ],
+  "src/v4/chat/internal-components/MessageOptions/MessageOptions.module.css": [
+    {
+      "selector": ".messageOptions",
+      "prop": "min-width",
+      "raw": "180px",
+      "px": 180
+    },
+    {
+      "selector": ".messageOptions",
+      "prop": "border-radius",
+      "raw": "0.5rem",
+      "px": 8
+    },
+    {
+      "selector": ".messageOptions",
+      "prop": "padding",
+      "raw": "0.5rem 0"
+    }
+  ],
+  "src/v4/chat/internal-components/ReactionFloating/ReactionFloating.module.css": [
+    {
+      "selector": ".reactionFloating__reactionItem",
+      "prop": "width",
+      "raw": "2.25rem",
+      "px": 36
+    },
+    {
+      "selector": ".reactionFloating__reactionItem",
+      "prop": "height",
+      "raw": "2.25rem",
+      "px": 36
+    },
+    {
+      "selector": ".reactionFloating__container",
+      "prop": "height",
+      "raw": "0"
+    },
+    {
+      "selector": ".reactionFloating__container",
+      "prop": "width",
+      "raw": "25%"
+    },
+    {
+      "selector": ".reactionFloating__container",
+      "prop": "bottom",
+      "raw": "0"
+    },
+    {
+      "selector": ".reactionFloating__container",
+      "prop": "right",
+      "raw": "0"
+    }
+  ],
+  "src/v4/chat/pages/LiveChat/ChatContainer/styles.module.css": [
+    {
+      "selector": ".composeBarContainer",
+      "prop": "min-height",
+      "raw": "3.5rem",
+      "px": 56
+    },
+    {
+      "selector": ".composeBar",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-s2)",
+      "px": 12
+    },
+    {
+      "selector": ".composeBar",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-s1) var(--asc-spacing-s2)",
+      "px": [8, 12]
+    },
+    {
+      "selector": "width: 100%; border-radius: var(--asc-border-radius-xxl); border: 1px solid var(--asc-color-background-default); background: var(--asc-color-secondary-shade4); textarea",
+      "prop": "padding",
+      "raw": "0.563rem 1rem",
+      "px": [9.01, 16]
+    },
+    {
+      "selector": "width: 100%; height: var(--asc-spacing-l1); padding: var(--asc-spacing-s1) var(--asc-spacing-s2); border-radius: var(--asc-border-radius-sm); border: var(--asc-border-radius-none); background-color: var(--asc-color-secondary-default); color: var(--asc-color-base-inverse); display: flex; align-items: center; span",
+      "prop": "padding-left",
+      "raw": "var(--asc-spacing-s1)",
+      "px": 8
+    },
+    {
+      "selector": "width: 100%; height: var(--asc-spacing-l1); padding: var(--asc-spacing-s1) var(--asc-spacing-s2); border-radius: var(--asc-border-radius-sm); border: var(--asc-border-radius-none); background-color: var(--asc-color-secondary-default); color: var(--asc-color-base-inverse); display: flex; align-items: center; span",
+      "prop": "font-weight",
+      "raw": "var(--asc-text-font-weight-light)"
+    },
+    {
+      "selector": "display: flex; font-family: var(--asc-text-global-font-family); background-color: var(--asc-color-base-shade4); color: var(--asc-color-base-inverse); max-width: 100%; padding: var(--asc-spacing-s2); padding-left: var(--asc-spacing-m1); gap: var(--asc-spacing-s2); justify-content: space-between; align-items: center; .replyAvatar",
+      "prop": "flex",
+      "raw": "0 0 auto"
+    },
+    {
+      "selector": "display: flex; font-family: var(--asc-text-global-font-family); background-color: var(--asc-color-base-shade4); color: var(--asc-color-base-inverse); max-width: 100%; padding: var(--asc-spacing-s2); padding-left: var(--asc-spacing-m1); gap: var(--asc-spacing-s2); justify-content: space-between; align-items: center; .replyAvatar",
+      "prop": "width",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": "display: flex; font-family: var(--asc-text-global-font-family); background-color: var(--asc-color-base-shade4); color: var(--asc-color-base-inverse); max-width: 100%; padding: var(--asc-spacing-s2); padding-left: var(--asc-spacing-m1); gap: var(--asc-spacing-s2); justify-content: space-between; align-items: center; .replyAvatar",
+      "prop": "height",
+      "raw": "2rem",
+      "px": 32
+    },
+    {
+      "selector": "display: flex; flex-direction: column; color: var(--asc-color-base-inverse); font-size: var(--asc-text-font-size-sm); line-height: var(--asc-line-height-sm); flex: 1; overflow: hidden; gap: 0.125rem; .replyProfileName",
+      "prop": "font-weight",
+      "raw": "var(--asc-text-font-weight-bold)"
+    },
+    {
+      "selector": ".replyProfileMessage",
+      "prop": "font-weight",
+      "raw": "var(--asc-text-font-weight-light)"
+    },
+    {
+      "selector": ".replyDismiss",
+      "prop": "flex",
+      "raw": "0 0 auto"
+    },
+    {
+      "selector": ".notificationPosition",
+      "prop": "height",
+      "raw": "0"
+    },
+    {
+      "selector": ".messageListPlaceholder",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".mutedChannelContainer",
+      "prop": "max-width",
+      "raw": "100%"
+    },
+    {
+      "selector": ".mutedChannelContainer",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-s2)",
+      "px": 12
+    },
+    {
+      "selector": ".mutedChannelContainer",
+      "prop": "padding-left",
+      "raw": "var(--asc-spacing-m1)",
+      "px": 16
+    },
+    {
+      "selector": ".mutedChannelContainer",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-s2)",
+      "px": 12
+    },
+    {
+      "selector": ".banStatePanel",
+      "prop": "height",
+      "raw": "100%"
+    },
+    {
+      "selector": ".banStatePanel",
+      "prop": "gap",
+      "raw": "var(--asc-spacing-s2)",
+      "px": 12
+    },
+    {
+      "selector": ".banStatePanel",
+      "prop": "padding",
+      "raw": "var(--asc-spacing-m1)",
+      "px": 16
+    }
+  ],
+  "src/v4/chat/pages/LiveChat/LiveChat.module.css": [
+    {
+      "selector": ".liveChat",
+      "prop": "height",
+      "raw": "100%"
+    }
+  ],
+  "src/v4/chat/providers/LiveChatNotificationProvider.module.css": [
+    {
+      "selector": ".icon",
+      "prop": "width",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".icon",
+      "prop": "height",
+      "raw": "1.5rem",
+      "px": 24
+    },
+    {
+      "selector": ".icon",
+      "prop": "margin-right",
+      "raw": "var(--asc-spacing-s2)",
+      "px": 12
+    }
+  ]
+}
