@@ -77,6 +77,12 @@
       "rn": "src/social/features/chat/components/AmityGroupMemberActionComponent",
       "milestone": 3,
       "kind": "component"
+    },
+    "Typography": {
+      "web": "src/v4/core/components/Typography",
+      "rn": "src/core/design/components/Typography",
+      "milestone": 1,
+      "kind": "component"
     }
   },
   "units": {
@@ -98,12 +104,12 @@
     "design/atoms/Loader": {
       "status": "port",
       "rn": "src/core/design/atoms/Loader",
-      "milestone": 1
+      "milestone": 2
     },
     "design/atoms/Button": {
       "status": "port",
       "rn": "src/core/design/atoms/Button",
-      "milestone": 2
+      "milestone": 1
     },
     "design/atoms/Input": {
       "status": "port",
@@ -118,7 +124,7 @@
     "design/atoms/Tab": {
       "status": "port",
       "rn": "src/core/design/atoms/Tab",
-      "milestone": 3
+      "milestone": 1
     },
     "design/atoms/Toast": {
       "status": "port",
@@ -133,7 +139,6 @@
       "status": "skip",
       "reason": "chat settings use RN Switch; revisit if a spec'd Toggle atom is required"
     },
-
     "design/molecules/SearchInput": {
       "status": "port",
       "rn": "src/core/design/molecules/SearchInput",
@@ -142,10 +147,9 @@
     "design/molecules/Tabs": {
       "status": "port",
       "rn": "src/core/design/molecules/Tabs",
-      "milestone": 3,
+      "milestone": 1,
       "note": "the tab bar chat actually uses (4 files); composes atoms/Tab. Ported as its own file — Social keeps its existing components untouched."
     },
-
     "design/components/Popover": {
       "status": "port",
       "rn": "src/core/design/components/Popover",
@@ -164,7 +168,7 @@
     "design/components/Skeleton": {
       "status": "port",
       "rn": "src/core/design/components/Skeleton",
-      "milestone": 2
+      "milestone": 1
     },
     "design/components/TextEditor": {
       "status": "port",
@@ -199,18 +203,16 @@
       "status": "skip",
       "reason": "not used by chat surfaces"
     },
-
     "design/elements/ModeratorBadge": {
       "status": "port",
       "rn": "src/core/design/elements/ModeratorBadge",
-      "milestone": 3
+      "milestone": 1
     },
     "design/elements/PrivateBadge": {
       "status": "port",
       "rn": "src/core/design/elements/PrivateBadge",
-      "milestone": 3
+      "milestone": 1
     },
-
     "chat/elements/Avatar": {
       "status": "port",
       "rn": "src/social/features/chat/elements/Avatar",
@@ -224,7 +226,7 @@
     "chat/elements/TopBar": {
       "status": "port",
       "rn": "src/social/features/chat/elements/TopBar",
-      "milestone": 1
+      "milestone": 2
     },
     "chat/elements/ArchivedBadge": {
       "status": "port",
@@ -271,7 +273,6 @@
       "rn": "src/social/features/chat/elements/SettingMenu",
       "milestone": 3
     },
-
     "chat/components/ActionMenu": {
       "status": "skip",
       "reason": "legacy LiveChat generation — not imported by the chat v4 tree (verified via import graph)"
@@ -312,7 +313,6 @@
       "status": "skip",
       "reason": "legacy LiveChat gesture helper"
     },
-
     "chat/internal-components/ChatFeed": {
       "status": "skip",
       "reason": "legacy LiveChat internal — not imported by chat v4 tree"
@@ -349,7 +349,6 @@
       "status": "skip",
       "reason": "legacy LiveChat reaction animation"
     },
-
     "chat/pages/ChatHomePage": {
       "status": "port",
       "rn": "src/social/features/chat/pages/AmityChatHomePage",
