@@ -122,6 +122,7 @@ export function AmitySearchChannelResults({
             <AmityChatListItem
               channel={item}
               isArchived={isArchived}
+              searchQuery={trimmed}
               onPress={() => handlePress(item)}
             />
           </SwipeToLeft>

@@ -539,7 +539,9 @@
     "features/group/edit-notification/components/NotificationModeRow": {
       "status": "port",
       "rn": "src/social/features/chat/features/group/edit-notification/components/NotificationModeRow",
-      "milestone": 4
+      "milestone": 4,
+      "wiringOptional": true,
+      "reason": "web builds this component but never imports it (NotificationMode does not use it); faithfully ported + left unwired, matching web"
     },
     "features/group/edit-permission/EditGroupMemberPermissions": {
       "status": "port",

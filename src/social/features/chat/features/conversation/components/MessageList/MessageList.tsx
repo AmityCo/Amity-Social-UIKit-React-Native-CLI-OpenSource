@@ -40,6 +40,7 @@ type MessageListProps = {
   onOpenVideo?: (message: Amity.Message) => void;
   onOpenFailedSheet?: (message: Amity.Message) => void;
   onOpenBubbleMenu?: (message: Amity.Message) => void;
+  onOpenReactorList?: (message: Amity.Message) => void;
   onSeeMore?: (text: string, title?: string) => void;
   bubbleHandlers?: BubbleHandlers;
 };
@@ -61,6 +62,7 @@ export function MessageList({
   onOpenVideo,
   onOpenFailedSheet,
   onOpenBubbleMenu,
+  onOpenReactorList,
   onSeeMore,
   bubbleHandlers,
 }: MessageListProps) {
@@ -128,6 +130,7 @@ export function MessageList({
               onOpenVideo={onOpenVideo}
               onOpenFailedSheet={onOpenFailedSheet}
               onOpenBubbleMenu={onOpenBubbleMenu}
+              onOpenReactorList={onOpenReactorList}
               onSeeMore={onSeeMore}
               bubbleHandlers={bubbleHandlers}
             />

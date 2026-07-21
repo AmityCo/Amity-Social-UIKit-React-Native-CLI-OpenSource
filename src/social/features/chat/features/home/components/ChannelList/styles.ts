@@ -17,6 +17,31 @@ export const useStyles = () => {
     listContent: {
       flexGrow: 1,
     },
+    // Swipe-to-archive visuals (web SwipeToLeft.module.css):
+    // row over the action layer; action bg/icon/label via squarebutton tokens;
+    // action content 5rem→80 wide, gap 0.25rem→4, padding 1rem/0.5rem→16/8.
+    row: {
+      backgroundColor: token(AmityColorToken.SurfacePageBackgroundDefault),
+    },
+    action: {
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+      backgroundColor: token(
+        AmityColorToken.SurfaceSquareButtonDefaultSecondaryDefault
+      ),
+    },
+    actionContent: {
+      width: 80,
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+      paddingVertical: 16,
+      paddingHorizontal: 8,
+    },
+    actionLabel: {
+      color: token(AmityColorToken.TextSquareButtonDefaultSecondaryDefault),
+    },
     // web channelList__empty: column, centered, gap 0.25rem, padding 1rem.
     empty: {
       flexGrow: 1,

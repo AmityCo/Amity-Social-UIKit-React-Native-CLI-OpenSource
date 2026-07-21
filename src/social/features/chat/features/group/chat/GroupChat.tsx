@@ -3,12 +3,14 @@
 // composer, viewers, action menu, see-more), driven by useGroupChat. Adds a group
 // Header (→ settings) and a banned empty-state branch.
 
+import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 
 import { AmityMessageComposer } from '../../../components/AmityMessageComposer';
 import { ImageViewer } from '../../shared/components/ImageViewer';
 import { VideoPlayer } from '../../shared/components/VideoPlayer';
 import { MessageFullTextScreen } from '../../shared/components/MessageFullTextScreen';
+import { MessageReactorListSheet } from '../../shared/components/MessageReactorListSheet';
 import { MutedBanner } from '../../shared/components/MutedBanner';
 import { WaitingForNetwork } from '../../../elements/WaitingForNetwork';
 import { MessageList } from '../../conversation/components/MessageList';
@@ -30,6 +32,7 @@ export function GroupChat({
 }: GroupChatProps) {
   const { styles } = useStyles();
   const c = useGroupChat({ channelId, isJustCreated });
+  const [reactorMessageId, setReactorMessageId] = useState<string | null>(null);
 
   if (c.isBanned) {
     return (
@@ -73,6 +76,7 @@ export function GroupChat({
           onOpenVideo={c.openVideoPlayer}
           onOpenFailedSheet={c.openFailedSheet}
           onOpenBubbleMenu={c.openBubbleMenu}
+          onOpenReactorList={(m) => setReactorMessageId(m.messageId)}
           onSeeMore={c.openSeeMore}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
@@ -104,6 +108,12 @@ export function GroupChat({
           text={c.seeMore.text}
           title={c.seeMore.title}
           onClose={c.closeSeeMore}
+        />
+      ) : null}
+      {reactorMessageId ? (
+        <MessageReactorListSheet
+          messageId={reactorMessageId}
+          onClose={() => setReactorMessageId(null)}
         />
       ) : null}
     </KeyboardAvoidingView>

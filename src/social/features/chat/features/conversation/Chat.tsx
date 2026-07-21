@@ -5,6 +5,7 @@
 // MutedBanner|MessageComposer, ImageViewer, VideoPlayer, MessageFullTextScreen.
 
 // 1. React / RN imports
+import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
 
 // 2. Internal imports
@@ -15,6 +16,7 @@ import { AmityConversationChatUserActionComponent } from '../../components/Amity
 import { ImageViewer } from '../shared/components/ImageViewer';
 import { VideoPlayer } from '../shared/components/VideoPlayer';
 import { MessageFullTextScreen } from '../shared/components/MessageFullTextScreen';
+import { MessageReactorListSheet } from '../shared/components/MessageReactorListSheet';
 import { MutedBanner } from '../shared/components/MutedBanner';
 import { WaitingForNetwork } from '../../elements/WaitingForNetwork';
 import { Header } from './components/Header';
@@ -33,6 +35,9 @@ export type ChatProps = {
 export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   const { styles } = useStyles();
   const c = useConversation(channelId);
+  // Reactor-list sheet — web keeps this in useBubbleMenu at the orchestration
+  // level (one instance). RN holds the target messageId here and renders one sheet.
+  const [reactorMessageId, setReactorMessageId] = useState<string | null>(null);
 
   return (
     <KeyboardAvoidingView
@@ -82,6 +87,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           onOpenVideo={c.openVideoPlayer}
           onOpenFailedSheet={c.openFailedSheet}
           onOpenBubbleMenu={c.openBubbleMenu}
+          onOpenReactorList={(m) => setReactorMessageId(m.messageId)}
           onSeeMore={c.openSeeMore}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
@@ -113,6 +119,12 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           text={c.seeMore.text}
           title={c.seeMore.title}
           onClose={c.closeSeeMore}
+        />
+      ) : null}
+      {reactorMessageId ? (
+        <MessageReactorListSheet
+          messageId={reactorMessageId}
+          onClose={() => setReactorMessageId(null)}
         />
       ) : null}
     </KeyboardAvoidingView>

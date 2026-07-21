@@ -24,6 +24,8 @@ import {
 } from '../../../../../core/design/components/Popover';
 import { type AmityIconName } from '../../../../../core/design/icons';
 import { resolveString } from '../../../../../core/localization';
+import { ReactionPicker } from '../../elements/ReactionPicker';
+import { useMessageReactions } from '../../features/shared/hooks/useMessageReactions';
 import { useStyles } from './styles';
 
 // 3. Types
@@ -161,6 +163,15 @@ export function AmityMessageActionMenu({
   placement = 'bottom right',
 }: AmityMessageActionMenuProps) {
   const { styles } = useStyles();
+  const { selectReaction } = useMessageReactions();
+
+  // Web MessageActionsPopover renders a ReactionPicker above the menu for active
+  // (synced, non-deleted) messages; myReaction = first of message.myReactions.
+  const isActive =
+    message.syncState === ('synced' as Amity.SyncState) &&
+    message.isDeleted !== true;
+  const myReaction =
+    ((message.myReactions?.[0] as string | undefined) ?? null) || null;
 
   const copyText = () => {
     const text = (message as Amity.Message<'text'>).data?.text ?? '';
@@ -193,22 +204,33 @@ export function AmityMessageActionMenu({
   return (
     <Popover trigger={anchor} placement={placement}>
       {({ closePopover }) => (
-        <View style={styles.menuContainer}>
-          <Menu variant="chat" container="popover">
-            {items.map((item) => (
-              <Menu.Item
-                key={item.key}
-                icon={item.icon}
-                label={item.label}
-                destructive={item.destructive}
-                typography="body"
-                onPress={() => {
-                  item.onPress();
-                  closePopover();
-                }}
-              />
-            ))}
-          </Menu>
+        <View>
+          {isActive && (
+            <ReactionPicker
+              myReaction={myReaction}
+              onReactionClick={(reactionName) => {
+                selectReaction({ message, reactionName });
+                closePopover();
+              }}
+            />
+          )}
+          <View style={styles.menuContainer}>
+            <Menu variant="chat" container="popover">
+              {items.map((item) => (
+                <Menu.Item
+                  key={item.key}
+                  icon={item.icon}
+                  label={item.label}
+                  destructive={item.destructive}
+                  typography="body"
+                  onPress={() => {
+                    item.onPress();
+                    closePopover();
+                  }}
+                />
+              ))}
+            </Menu>
+          </View>
         </View>
       )}
     </Popover>

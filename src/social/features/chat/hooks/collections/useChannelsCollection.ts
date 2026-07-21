@@ -17,6 +17,8 @@ export type UseChannelsCollectionParams = {
   sortBy?: 'displayName' | 'firstCreated' | 'lastCreated' | 'lastActivity';
   isDeleted?: boolean;
   limit?: number;
+  /** Drop archived channels from the collection (web home list passes true). */
+  excludeArchives?: boolean;
 };
 
 export type UseChannelsCollectionResult = {
@@ -34,6 +36,7 @@ export function useChannelsCollection({
   sortBy = 'lastActivity',
   isDeleted = false,
   limit = DEFAULT_LIMIT,
+  excludeArchives,
 }: UseChannelsCollectionParams = {}): UseChannelsCollectionResult {
   const [channels, setChannels] = useState<Amity.Channel[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,6 +64,7 @@ export function useChannelsCollection({
       isDeleted,
       limit,
       ...(types ? { types } : {}),
+      ...(excludeArchives ? { excludeArchives: true } : {}),
     };
 
     const unsub = ChannelRepository.getChannels(
@@ -76,7 +80,15 @@ export function useChannelsCollection({
     return () => {
       unsub();
     };
-  }, [isConnected, typesKey, membership, sortBy, isDeleted, limit]);
+  }, [
+    isConnected,
+    typesKey,
+    membership,
+    sortBy,
+    isDeleted,
+    limit,
+    excludeArchives,
+  ]);
 
   function loadMore() {
     onNextPageRef.current?.();

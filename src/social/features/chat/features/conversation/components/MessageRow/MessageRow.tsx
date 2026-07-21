@@ -15,6 +15,7 @@ import { Avatar } from '../../../../elements/Avatar';
 import { AmityMessageBubble } from '../../../../components/AmityMessageBubble';
 import { AmityMessageActionMenu } from '../../../../components/AmityMessageActionMenu';
 import { MessageReplyQuote } from '../../../shared/components/MessageReplyQuote';
+import { MessageReactionBadge } from '../../../shared/components/MessageReactionBadge';
 import { FailedToShow } from '../../../shared/components/FailedToShow';
 import { formatMessageTime } from '../../../../utils/timestamp';
 import { useStyles } from './styles';
@@ -39,6 +40,7 @@ type MessageRowProps = {
   onOpenVideo?: (message: Amity.Message) => void;
   onOpenFailedSheet?: (message: Amity.Message) => void;
   onOpenBubbleMenu?: (message: Amity.Message) => void;
+  onOpenReactorList?: (message: Amity.Message) => void;
   onSeeMore?: (text: string, title?: string) => void;
   bubbleHandlers?: BubbleHandlers;
 };
@@ -54,6 +56,7 @@ export function MessageRow({
   onOpenVideo,
   onOpenFailedSheet,
   onOpenBubbleMenu,
+  onOpenReactorList,
   onSeeMore,
   bubbleHandlers,
 }: MessageRowProps) {
@@ -163,6 +166,15 @@ export function MessageRow({
           )}
           {otherSide}
         </View>
+
+        {!isDeleted ? (
+          <View style={styles.reactionBadge}>
+            <MessageReactionBadge
+              message={message}
+              onTap={() => onOpenReactorList?.(message)}
+            />
+          </View>
+        ) : null}
 
         {isUser && isFailed ? (
           <Pressable onPress={() => onOpenFailedSheet?.(message)}>

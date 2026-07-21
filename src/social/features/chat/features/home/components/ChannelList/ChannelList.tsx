@@ -3,14 +3,20 @@
 //
 // RN adaptations from web:
 //   - Web's IntersectionObserver sentinel → FlatList `onEndReached`.
-//   - Swipe-to-archive and the archive query are dropped (out of scope for M1).
+//   - Web's SwipeToLeft (framer-motion) swipe-to-archive → react-native-gesture-handler
+//     `Swipeable` (renderRightActions + onSwipeableWillOpen → archiveChannel); needs
+//     GestureHandlerRootView at the app root. Web also passes excludeArchives:true so
+//     archived channels drop out of the main list — mirrored here.
 //   - The empty-state illustration (web-only) is replaced by an AmityIcon glyph.
 //   - Navigation is delegated to `onChannelPress(channelId)` from the page.
 
 // 1. React / RN imports
 import { FlatList, View } from 'react-native';
 
-// 2. Internal imports (relative)
+// 2. Third-party imports
+import { Swipeable } from 'react-native-gesture-handler';
+
+// 3. Internal imports (relative)
 import { Typography } from '../../../../../../../core/design/components/Typography';
 import { Button } from '../../../../../../../core/design/atoms/Button';
 import { AmityIcon } from '../../../../../../../core/design/icons';
@@ -18,9 +24,11 @@ import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-c
 import { useString } from '../../../../../../../core/localization';
 import { AmityChatListItem } from '../../../../components/AmityChatListItem';
 import { useChannelsCollection } from '../../../../hooks/collections/useChannelsCollection';
+import { useChannelArchiveQuery } from '../../../../hooks/queries';
 import { useStyles } from './styles';
 
 const SKELETON_ROW_COUNT = 9;
+const ACTION_ICON_SIZE = 28;
 
 // 3. Types
 export type ChannelListProps = {
@@ -44,7 +52,25 @@ export function ChannelList({
   const { styles } = useStyles();
   const { channels, loading, hasNextPage, loadMore } = useChannelsCollection({
     types,
+    excludeArchives: true,
   });
+  const { archiveChannel } = useChannelArchiveQuery();
+  const archiveLabel = useString('amity_chat_archive');
+
+  const renderArchiveAction = () => (
+    <View style={styles.action}>
+      <View style={styles.actionContent}>
+        <AmityIcon
+          name="arhive-r"
+          size={ACTION_ICON_SIZE}
+          tokenColor={AmityColorToken.IconSquareButtonDefaultSecondaryDefault}
+        />
+        <Typography variant="captionBold" style={styles.actionLabel}>
+          {archiveLabel}
+        </Typography>
+      </View>
+    </View>
+  );
 
   const isInitialLoading = loading && channels.length === 0;
 
@@ -69,12 +95,21 @@ export function ChannelList({
       data={channels}
       keyExtractor={(channel) => channel.channelId}
       renderItem={({ item }) => (
-        <AmityChatListItem
-          channel={item}
-          onPress={() =>
-            onChannelPress?.(item.channelId, item.displayName, item.type)
+        <Swipeable
+          renderRightActions={renderArchiveAction}
+          onSwipeableWillOpen={() =>
+            archiveChannel({ channelId: item.channelId })
           }
-        />
+        >
+          <View style={styles.row}>
+            <AmityChatListItem
+              channel={item}
+              onPress={() =>
+                onChannelPress?.(item.channelId, item.displayName, item.type)
+              }
+            />
+          </View>
+        </Swipeable>
       )}
       onEndReachedThreshold={0.7}
       onEndReached={() => {

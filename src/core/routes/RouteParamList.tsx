@@ -25,6 +25,11 @@ export type RootStackParamList = {
   AmityGroupSettingPage: { channelId: string };
   AmityEditGroupProfilePage: { channelId: string };
   AmityEditGroupMemberPermissionsPage: { channelId: string };
+  // --- Chat: M4 (search / archive / group notifications) ---
+  AmitySearchChannelPage: undefined;
+  AmityArchivedChatPage: undefined;
+  AmityGroupNotificationPreferencePage: { channelId: string };
+  AmityEditGroupNotificationPage: { channelId: string };
   AmitySocialHomePage: { postIdCallBack?: string };
   AmitySocialGlobalSearchPage: undefined;
   AmityMyCommunitiesSearchPage: undefined;

@@ -19,6 +19,10 @@ import AmityBannedGroupMemberListPage from '../../social/features/chat/pages/Ami
 import AmityGroupSettingPage from '../../social/features/chat/pages/AmityGroupSettingPage';
 import AmityEditGroupProfilePage from '../../social/features/chat/pages/AmityEditGroupProfilePage';
 import AmityEditGroupMemberPermissionsPage from '../../social/features/chat/pages/AmityEditGroupMemberPermissionsPage';
+import AmitySearchChannelPage from '../../social/features/chat/pages/AmitySearchChannelPage';
+import AmityArchivedChatPage from '../../social/features/chat/pages/AmityArchivedChatPage';
+import AmityGroupNotificationPreferencePage from '../../social/features/chat/pages/AmityGroupNotificationPreferencePage';
+import AmityEditGroupNotificationPage from '../../social/features/chat/pages/AmityEditGroupNotificationPage';
 import AmitySocialHomePage from '../../social/screens/SocialHomePage';
 import PostDetail from '../../social/screens/PostDetail';
 import CreatePost from '../../social/screens/CreatePost';
@@ -171,6 +175,23 @@ export default function AmitySocialUIKitV4Navigator({
           <Stack.Screen
             name="AmityEditGroupMemberPermissionsPage"
             component={AmityEditGroupMemberPermissionsPage}
+          />
+          {/* --- Chat: M4 (search / archive / group notifications) --- */}
+          <Stack.Screen
+            name="AmitySearchChannelPage"
+            component={AmitySearchChannelPage}
+          />
+          <Stack.Screen
+            name="AmityArchivedChatPage"
+            component={AmityArchivedChatPage}
+          />
+          <Stack.Screen
+            name="AmityGroupNotificationPreferencePage"
+            component={AmityGroupNotificationPreferencePage}
+          />
+          <Stack.Screen
+            name="AmityEditGroupNotificationPage"
+            component={AmityEditGroupNotificationPage}
           />
           {/* --- Social Home --- */}
           <Stack.Screen

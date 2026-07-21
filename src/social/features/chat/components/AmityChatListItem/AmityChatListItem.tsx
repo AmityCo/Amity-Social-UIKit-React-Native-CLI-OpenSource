@@ -31,7 +31,15 @@ import { Avatar } from '../../elements/Avatar';
 import { ConversationChatAvatar } from '../../elements/ConversationChatAvatar';
 import { ArchivedBadge } from '../../elements/ArchivedBadge';
 import { formatTimestamp } from '../../utils/timestamp';
+import { highlightMatch } from '../../utils/highlightMatch';
 import { useStyles } from './styles';
+
+// Search-match highlight colours (web channelItem__highlight /
+// channelItem__highlightBold). Both are referenced so either style is available.
+const HIGHLIGHT_TOKEN = {
+  primary: AmityColorToken.TextListHeaderDefaultHighlight,
+  bold: AmityColorToken.TextListTextDescriptionDefaultHighlight,
+} as const;
 
 // 4. Types
 export type AmityChatListItemProps = {
@@ -42,6 +50,10 @@ export type AmityChatListItemProps = {
   currentUserId?: string;
   /** Row press handler — the page wires navigation. */
   onPress?: () => void;
+  /** When set (search results), highlights the matched substring in the name. */
+  searchQuery?: string;
+  /** Which highlight colour to use for the matched substring. */
+  highlightStyle?: keyof typeof HIGHLIGHT_TOKEN;
 };
 
 const MODERATOR_ROLES = [
@@ -71,6 +83,8 @@ export function AmityChatListItem({
   hideUnreadIndicators = false,
   currentUserId: currentUserIdProp,
   onPress,
+  searchQuery,
+  highlightStyle = 'primary',
 }: AmityChatListItemProps) {
   const { styles, token } = useStyles();
 
@@ -126,6 +140,8 @@ export function AmityChatListItem({
               channel={channel}
               otherUser={otherUser}
               isUserDeleted={isUserDeleted}
+              searchQuery={searchQuery}
+              highlightStyle={highlightStyle}
             />
           </View>
           <Typography
@@ -161,13 +177,25 @@ function ChannelName({
   channel,
   otherUser,
   isUserDeleted,
+  searchQuery,
+  highlightStyle = 'primary',
 }: {
   channel: Amity.Channel;
   otherUser: DeletableUser;
   isUserDeleted: boolean;
+  searchQuery?: string;
+  highlightStyle?: keyof typeof HIGHLIGHT_TOKEN;
 }) {
-  const { styles } = useStyles();
+  const { styles, token } = useStyles();
   const deletedUserLabel = useString('amity_chat_deleted_user');
+
+  // Render a name with the matched search substring highlighted (web ChannelItem).
+  const renderName = (name: string) =>
+    searchQuery
+      ? highlightMatch(name, searchQuery, {
+          color: token(HIGHLIGHT_TOKEN[highlightStyle]),
+        })
+      : name;
 
   if (channel.type === 'conversation') {
     if (isUserDeleted) {
@@ -180,7 +208,7 @@ function ChannelName({
     const name = otherUser?.displayName ?? channel.displayName ?? '';
     return (
       <Typography style={styles.name} numberOfLines={1}>
-        {name}
+        {renderName(name)}
       </Typography>
     );
   }
@@ -190,7 +218,7 @@ function ChannelName({
   return (
     <>
       <Typography style={styles.name} numberOfLines={1}>
-        {name}
+        {renderName(name)}
       </Typography>
       {memberCount != null && memberCount > 0 && (
         <Typography style={styles.memberCount} numberOfLines={1}>

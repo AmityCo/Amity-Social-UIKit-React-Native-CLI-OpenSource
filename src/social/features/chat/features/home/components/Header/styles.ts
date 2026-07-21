@@ -23,6 +23,15 @@ export const useStyles = () => {
       minWidth: 0,
       color: token(AmityColorToken.TextListHeaderDefaultDefault),
     },
+    // web header__actions: flex 1 0 0, justify-content flex-end, gap 0.75rem→12
+    actions: {
+      flex: 1,
+      minWidth: 0,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      gap: 12,
+    },
   });
 
   return { styles };

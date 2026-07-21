@@ -84,7 +84,7 @@ const rnExists = (rnRel) => {
   const abs = resolve(REPO_ROOT, rnRel);
   return existsSync(abs) || existsSync(`${abs}.tsx`) || existsSync(`${abs}.ts`);
 };
-const wired = [], unwired = [], missing = [];
+const wired = [], unwired = [], missing = [], webUnused = [];
 const consider = [
   ...Object.entries(manifest.features || {}).map(([k, u]) => [k, u]),
   ...Object.entries(manifest.curated || {}).map(([k, u]) => [`curated/${k}`, u]),
@@ -97,6 +97,9 @@ for (const [key, u] of consider) {
   // Not built yet → parity gate owns this, not wiring. Reporting it as "unwired"
   // (built but unreachable) would falsely imply the file exists.
   if (!rnExists(u.rn)) { missing.push(key); continue; }
+  // web builds it but never imports it → faithfully unwired (e.g. NotificationModeRow).
+  // Forcing a wire would diverge from web. Report separately, don't fail.
+  if (u.wiringOptional) { webUnused.push(key); continue; }
   (isWired(u.rn, u.kind) ? wired : unwired).push(key);
 }
 
@@ -107,6 +110,10 @@ for (const k of unwired.sort()) console.log(`      ${c.red(k)}`);
 if (missing.length) {
   console.log(`  ${c.dim('•')} ${c.dim(`not built ${missing.length} (parity gate owns these — not counted as unwired)`)}`);
   for (const k of missing.sort()) console.log(`      ${c.dim(k)}`);
+}
+if (webUnused.length) {
+  console.log(`  ${c.dim('•')} ${c.dim(`web-unused ${webUnused.length} (built for parity; web never imports it either — not counted as unwired)`)}`);
+  for (const k of webUnused.sort()) console.log(`      ${c.dim(k)}`);
 }
 console.log(`\n  ${unwired.length ? c.red(unwired.length + ' unwired') : c.green('all built units wired')}${missing.length ? c.dim(` · ${missing.length} not built`) : ''}\n`);
 process.exit(unwired.length ? 1 : 0);
