@@ -156,7 +156,11 @@ function TextBubble({
         </Text>
         {truncated && onSeeMore ? (
           <Text
-            style={[styles.text, styles.seeMore]}
+            style={[
+              styles.text,
+              styles.seeMore,
+              isUser ? styles.seeMoreOwn : styles.seeMoreOther,
+            ]}
             onPress={() => onSeeMore(text)}
           >
             {seeMoreLabel}

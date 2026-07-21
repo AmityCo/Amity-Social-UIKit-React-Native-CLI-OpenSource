@@ -60,9 +60,17 @@ export const useStyles = () => {
       fontStyle: 'italic',
     },
     // "See more" affordance for truncated long messages (web textBubble__seeMore).
+    // Web colours the label with a dedicated seemore token (inbound vs outbound); it
+    // needs its own colour or the Text falls back to RN's default black.
     seeMore: {
       paddingTop: 0,
       fontWeight: '700',
+    },
+    seeMoreOwn: {
+      color: token(AmityColorToken.TextChatBubbleOutboundSeeMoreDefault),
+    },
+    seeMoreOther: {
+      color: token(AmityColorToken.TextChatBubbleInboundSeeMoreDefault),
     },
 
     // --- Media (image / video) ---
