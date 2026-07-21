@@ -53,6 +53,11 @@ export const useStyles = () => {
     deletedText: {
       fontStyle: 'italic',
     },
+    // "See more" affordance for truncated long messages (web textBubble__seeMore).
+    seeMore: {
+      paddingTop: 0,
+      fontWeight: '700',
+    },
 
     // --- Media (image / video) ---
     // Web used height 15rem→240 with variable width (inline-block, capped at 20rem/320).

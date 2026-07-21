@@ -18,20 +18,18 @@ export const useStyles = () => {
       paddingHorizontal: 16,
       paddingVertical: 8,
     },
-    row: {
-      flexDirection: 'row',
-      marginVertical: 2,
+    // Scroll affordances float above the composer at the bottom of the list.
+    scrollButtonSlot: {
+      position: 'absolute',
+      right: 12,
+      bottom: 12,
     },
-    rowOwn: {
-      justifyContent: 'flex-end',
-    },
-    rowOther: {
-      justifyContent: 'flex-start',
-    },
-    empty: {
-      flex: 1,
+    newMessageSlot: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 12,
       alignItems: 'center',
-      justifyContent: 'center',
     },
   });
 

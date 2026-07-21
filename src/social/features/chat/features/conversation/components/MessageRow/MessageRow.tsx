@@ -1,12 +1,11 @@
 // MessageRow — ported from AmityUiKitWeb features/shared/components/MessageRow.
-// Wraps a message bubble with the surrounding metadata: the sender avatar (for
-// inbound messages), the sender name (inbound + group chat), and the timestamp
-// (formatMessageTime) — own on the leading side, other on the trailing side.
-// Reactions / reply-quote / failed-retry layer on in later M2 tasks.
+// Wraps a message bubble with its metadata: inbound sender avatar, sender name
+// (inbound + group), reply quote (for replies), timestamp (own leading / other
+// trailing) or sending/failed status, and a failed-retry affordance. Long-press
+// opens the shared bubble action menu.
 
 // 1. React / RN imports
-import { View } from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
+import { Pressable, View } from 'react-native';
 
 // 2. Internal imports
 import useFile from '../../../../../../../core/hooks/useFile';
@@ -15,20 +14,33 @@ import { useString } from '../../../../../../../core/localization';
 import { Avatar } from '../../../../elements/Avatar';
 import { AmityMessageBubble } from '../../../../components/AmityMessageBubble';
 import { AmityMessageActionMenu } from '../../../../components/AmityMessageActionMenu';
+import { MessageReplyQuote } from '../../../shared/components/MessageReplyQuote';
+import { FailedToShow } from '../../../shared/components/FailedToShow';
 import { formatMessageTime } from '../../../../utils/timestamp';
 import { useStyles } from './styles';
 
 // 3. Types
+type BubbleHandlers = {
+  onEdit: () => void;
+  onReply: () => void;
+  onDelete: () => void;
+  onCopy: () => void;
+  onSave: () => void;
+  onReport: (message: Amity.Message) => void;
+};
+
 type MessageRowProps = {
   message: Amity.Message;
   isUser: boolean;
   isGroupChat?: boolean;
   currentUserId?: string | null;
+  parent?: Amity.Message | null;
   onOpenImage?: (url: string, message: Amity.Message) => void;
   onOpenVideo?: (message: Amity.Message) => void;
-  onReplyMessage?: (message: Amity.Message) => void;
-  onEditMessage?: (message: Amity.Message) => void;
-  onDeleteMessage?: (message: Amity.Message) => void;
+  onOpenFailedSheet?: (message: Amity.Message) => void;
+  onOpenBubbleMenu?: (message: Amity.Message) => void;
+  onSeeMore?: (text: string, title?: string) => void;
+  bubbleHandlers?: BubbleHandlers;
 };
 
 // 4. Named function component
@@ -37,11 +49,13 @@ export function MessageRow({
   isUser,
   isGroupChat = false,
   currentUserId,
+  parent,
   onOpenImage,
   onOpenVideo,
-  onReplyMessage,
-  onEditMessage,
-  onDeleteMessage,
+  onOpenFailedSheet,
+  onOpenBubbleMenu,
+  onSeeMore,
+  bubbleHandlers,
 }: MessageRowProps) {
   const { styles } = useStyles();
   const sendingLabel = useString('amity_chat_sending_status');
@@ -52,7 +66,6 @@ export function MessageRow({
 
   const isDeleted = !!message.isDeleted;
   const syncState = message.syncState;
-  // Loaded collection messages may omit syncState — treat that as synced.
   const isSynced =
     syncState === undefined || syncState === ('synced' as Amity.SyncState);
   const isFailed = syncState === ('error' as Amity.SyncState);
@@ -102,6 +115,20 @@ export function MessageRow({
             {displayName}
           </Typography>
         ) : null}
+
+        {message.parentId && !isDeleted ? (
+          <MessageReplyQuote
+            parent={parent}
+            child={message}
+            isUser={isUser}
+            isGroupChat={isGroupChat}
+            currentUserId={currentUserId}
+            onOpenSeeMore={onSeeMore ?? (() => {})}
+            onOpenImage={onOpenImage ?? (() => {})}
+            onOpenVideo={onOpenVideo ?? (() => {})}
+          />
+        ) : null}
+
         <View style={styles.bubbleRow}>
           {ownSide}
           {isDeleted ? (
@@ -111,29 +138,36 @@ export function MessageRow({
               message={message}
               currentUserId={currentUserId}
               handlers={{
-                onEdit: () => onEditMessage?.(message),
-                onReply: () => onReplyMessage?.(message),
-                onDelete: () => onDeleteMessage?.(message),
-                onCopy: () =>
-                  Clipboard.setString(
-                    (message.data as { text?: string })?.text ?? ''
-                  ),
-                onSave: () => {},
-                onReport: () => {},
+                onEdit: bubbleHandlers?.onEdit ?? (() => {}),
+                onReply: bubbleHandlers?.onReply ?? (() => {}),
+                onDelete: bubbleHandlers?.onDelete ?? (() => {}),
+                onCopy: bubbleHandlers?.onCopy ?? (() => {}),
+                onSave: bubbleHandlers?.onSave ?? (() => {}),
+                onReport: bubbleHandlers?.onReport ?? (() => {}),
               }}
               anchor={({ openPopover }) => (
                 <AmityMessageBubble
                   message={message}
                   isUser={isUser}
-                  onLongPress={() => openPopover()}
+                  onLongPress={() => {
+                    onOpenBubbleMenu?.(message);
+                    openPopover();
+                  }}
                   onOpenImage={onOpenImage}
                   onOpenVideo={onOpenVideo}
+                  onSeeMore={onSeeMore}
                 />
               )}
             />
           )}
           {otherSide}
         </View>
+
+        {isUser && isFailed ? (
+          <Pressable onPress={() => onOpenFailedSheet?.(message)}>
+            <FailedToShow />
+          </Pressable>
+        ) : null}
       </View>
     </View>
   );

@@ -1,18 +1,18 @@
-// Chat — the conversation thread container, ported from AmityUiKitWeb
-// features/conversation/chat/Chat. Composes Header + WaitingForNetwork + MessageList
-// + composer, and hosts the overlays the thread opens: the image/video viewers, the
-// reply band, and (via MessageRow) the long-press action menu. Wires everything to
-// the useConversation engine.
+// Chat — the conversation thread container, a faithful port of AmityUiKitWeb
+// v4/chat/features/conversation/chat/Chat. All orchestration lives in useConversation
+// (→ useChatMessage); this component only wires the returned values into the
+// components with the same props web uses: Header, WaitingForNetwork, MessageList,
+// MutedBanner|MessageComposer, ImageViewer, VideoPlayer, MessageFullTextScreen.
 
 // 1. React / RN imports
-import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 
 // 2. Internal imports
 import { AmityMessageComposer } from '../../components/AmityMessageComposer';
 import { ImageViewer } from '../shared/components/ImageViewer';
 import { VideoPlayer } from '../shared/components/VideoPlayer';
-import { MessageReplyBand } from '../shared/components/MessageReplyBand';
+import { MessageFullTextScreen } from '../shared/components/MessageFullTextScreen';
+import { MutedBanner } from '../shared/components/MutedBanner';
 import { WaitingForNetwork } from '../../elements/WaitingForNetwork';
 import { Header } from './components/Header';
 import { MessageList } from './components/MessageList';
@@ -26,53 +26,10 @@ export type ChatProps = {
   onBack: () => void;
 };
 
-type Viewer =
-  | { type: 'image'; src: string; message: Amity.Message }
-  | { type: 'video'; message: Amity.Message }
-  | null;
-
 // 4. Named function component
 export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   const { styles } = useStyles();
-  const {
-    messages,
-    hasNextPage,
-    loadMore,
-    sendText,
-    editText,
-    removeMessage,
-    currentUserId,
-    isGroupChat,
-  } = useConversation(channelId);
-
-  const [viewer, setViewer] = useState<Viewer>(null);
-  const [replyTo, setReplyTo] = useState<Amity.Message | null>(null);
-  const [editing, setEditing] = useState<Amity.Message | null>(null);
-
-  const openImage = (src: string, message: Amity.Message) =>
-    setViewer({ type: 'image', src, message });
-  const openVideo = (message: Amity.Message) =>
-    setViewer({ type: 'video', message });
-
-  const isOwn = (m?: Amity.Message | null) =>
-    !!m && !!currentUserId && m.creatorId === currentUserId;
-
-  const handleSend = async (
-    text: string,
-    extras?: { mentionees?: (Amity.UserMention | Amity.ChannelMention)[] }
-  ) => {
-    await sendText(text, { ...extras, parentId: replyTo?.messageId });
-    setReplyTo(null);
-  };
-
-  const handleSubmitEdit = async (
-    messageId: string,
-    text: string,
-    extras?: { mentionees?: (Amity.UserMention | Amity.ChannelMention)[] }
-  ) => {
-    await editText(messageId, text, extras);
-    setEditing(null);
-  };
+  const c = useConversation(channelId);
 
   return (
     <KeyboardAvoidingView
@@ -83,51 +40,50 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
       <WaitingForNetwork />
       <View style={{ flex: 1 }}>
         <MessageList
-          messages={messages}
-          currentUserId={currentUserId}
-          isGroupChat={isGroupChat}
-          hasNextPage={hasNextPage}
-          onLoadMore={loadMore}
-          onOpenImage={openImage}
-          onOpenVideo={openVideo}
-          onReplyMessage={setReplyTo}
-          onEditMessage={setEditing}
-          onDeleteMessage={(m) => removeMessage(m.messageId)}
+          items={c.items}
+          currentUserId={c.currentUserId}
+          isGroupChat={c.isGroupChat}
+          hasMore={c.hasMore}
+          onLoadMore={c.loadMore}
+          atBottom={c.atBottom}
+          onAtBottomChange={c.setAtBottom}
+          newMessage={c.newMessage}
+          onClearNewMessage={c.clearNewMessage}
+          onOpenImage={c.openImageViewer}
+          onOpenVideo={c.openVideoPlayer}
+          onOpenFailedSheet={c.openFailedSheet}
+          onOpenBubbleMenu={c.openBubbleMenu}
+          onSeeMore={c.openSeeMore}
+          bubbleHandlers={{
+            onEdit: c.handleBubbleEdit,
+            onReply: c.handleBubbleReply,
+            onDelete: c.handleBubbleDelete,
+            onCopy: c.handleBubbleCopy,
+            onSave: c.handleBubbleSave,
+            onReport: c.handleBubbleReport,
+          }}
         />
       </View>
-      <AmityMessageComposer
-        onSend={handleSend}
-        channelId={channelId}
-        includeChannelMention={isGroupChat}
-        editingMessage={editing}
-        onCancelEdit={() => setEditing(null)}
-        onSubmitEdit={handleSubmitEdit}
-        replyBand={
-          replyTo ? (
-            <MessageReplyBand
-              replyTo={replyTo}
-              currentUserId={currentUserId}
-              onCancel={() => setReplyTo(null)}
-              onOpenSeeMore={() => {}}
-              onOpenImage={openImage}
-              onOpenVideo={openVideo}
-            />
-          ) : undefined
-        }
-      />
 
-      {viewer?.type === 'image' ? (
-        <ImageViewer
-          src={viewer.src}
-          isOwn={isOwn(viewer.message)}
-          onClose={() => setViewer(null)}
+      {c.showMutedBanner ? (
+        <MutedBanner variant={c.mutedVariant} />
+      ) : (
+        <AmityMessageComposer
+          composer={c.composer}
+          onOpenSeeMore={c.openSeeMore}
+          onOpenImage={c.openImageViewer}
+          onOpenVideo={c.openVideoPlayer}
         />
-      ) : null}
-      {viewer?.type === 'video' ? (
-        <VideoPlayer
-          message={viewer.message}
-          isOwn={isOwn(viewer.message)}
-          onClose={() => setViewer(null)}
+      )}
+
+      {c.imageViewerProps ? <ImageViewer {...c.imageViewerProps} /> : null}
+      {c.videoPlayerProps ? <VideoPlayer {...c.videoPlayerProps} /> : null}
+      {c.seeMore ? (
+        <MessageFullTextScreen
+          visible
+          text={c.seeMore.text}
+          title={c.seeMore.title}
+          onClose={c.closeSeeMore}
         />
       ) : null}
     </KeyboardAvoidingView>

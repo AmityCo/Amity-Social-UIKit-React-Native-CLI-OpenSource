@@ -697,7 +697,8 @@
     "features/shared/components/AddTile": {
       "status": "port",
       "rn": "src/social/features/chat/features/shared/components/AddTile",
-      "milestone": 2
+      "milestone": 3,
+      "note": "used only by group/create MemberGrid (M3), not the M2 thread"
     },
     "features/shared/components/DateSeparator": {
       "status": "port",
@@ -817,7 +818,8 @@
     "features/shared/components/YouTile": {
       "status": "port",
       "rn": "src/social/features/chat/features/shared/components/YouTile",
-      "milestone": 2
+      "milestone": 3,
+      "note": "used only by group/create MemberGrid (M3), not the M2 thread"
     }
   }
 }

@@ -1,15 +1,27 @@
-// AmityMessageComposer — ported from AmityUiKitWeb features/shared/components/
-// MessageComposer. Web builds on a contentEditable TextEditor; RN uses the
-// controlled multiline TextEditor (src/core/design/components/TextEditor). This
-// enhanced version adds: an "Editing message" panel, a mounted TextEditor with a
-// mention suggestion overlay, and a `replyBand` slot injected by the reply
-// feature (this component never hard-imports the reply band).
+// AmityMessageComposer — RN match of AmityUiKitWeb
+// v4/chat/features/shared/components/MessageComposer/MessageComposer. Takes a
+// `composer` object (= ReturnType<typeof useMessageComposer>) plus the overlay
+// openers, and renders the media section + edit panel + reply band + TextEditor.
+// All orchestration (text/canSend/send/edit/reply/media/mentions) lives in the
+// composer object; this component is pure view + input wiring.
+//
+// RN specifics vs web:
+//  - Web mounts a Lexical contentEditable TextEditor with initialText /
+//    onMentionsChanged and a portal for mention suggestions. RN's TextEditor is
+//    a controlled multiline TextInput; mention segments live inside it and are
+//    synced back into composer.editorMentions on each change (mapping
+//    MentionSegment → web Mentioned), so composer.handleSendText stays faithful.
+//    Web's MediaSection (hidden <input>/FileTrigger) → the RN
+//    AmityMediaAttachmentPicker (react-native-image-picker Asset).
 
 // 1. React / RN imports
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useRef } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
-// 2. Internal imports
+// 2. Third-party imports
+import { Client } from '@amityco/ts-sdk-react-native';
+
+// 3. Internal imports
 import {
   TextEditor,
   type TextEditorHandle,
@@ -19,88 +31,98 @@ import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-t
 import { Typography } from '../../../../../core/design/components/Typography';
 import { useString } from '../../../../../core/localization';
 import { useMention } from '../../hooks/useMention';
+import { MessageReplyBand } from '../../features/shared/components/MessageReplyBand';
+import { AmityMediaAttachmentPicker } from '../AmityMediaAttachmentPicker';
+import type { useMessageComposer } from '../../features/shared/hooks/useMessageComposer';
 import { useStyles } from './styles';
 
-// 3. Types
-type SendExtras = {
-  mentionees?: (Amity.UserMention | Amity.ChannelMention)[];
-};
+// 4. Types
+type MessageComposer = ReturnType<typeof useMessageComposer>;
 
 type AmityMessageComposerProps = {
-  onSend: (text: string, extras?: SendExtras) => void | Promise<void>;
-  onAttach?: () => void;
-  disabled?: boolean;
-  /** Channel to scope mention member search to. */
-  channelId?: string;
-  /** Include the `@all` channel mention option in suggestions. */
-  includeChannelMention?: boolean;
-  /** Slot for a reply preview band, injected by the reply feature. */
-  replyBand?: ReactNode;
-  /** When set, the composer switches to edit mode for this message. */
-  editingMessage?: Amity.Message | null;
-  onCancelEdit?: () => void;
-  onSubmitEdit?: (
-    messageId: string,
-    text: string,
-    extras?: SendExtras
-  ) => void | Promise<void>;
+  composer: MessageComposer;
+  onOpenSeeMore: (text: string, title?: string) => void;
+  onOpenImage: (url: string, message: Amity.Message) => void;
+  onOpenVideo: (message: Amity.Message) => void;
 };
 
-// 4. Named function component
+// 5. Named function component
 export function AmityMessageComposer({
-  onSend,
-  onAttach,
-  disabled = false,
-  channelId,
-  includeChannelMention = false,
-  replyBand,
-  editingMessage,
-  onCancelEdit,
-  onSubmitEdit,
+  composer,
+  onOpenSeeMore,
+  onOpenImage,
+  onOpenVideo,
 }: AmityMessageComposerProps) {
+  const {
+    subChannelId,
+    enableMention,
+    text,
+    setText,
+    canSend,
+    isEditing,
+    editingMessageId,
+    setEditorMentions,
+    cancelEdit,
+    replyTo,
+    cancelReply,
+    showMediaSection,
+    toggleMediaSection,
+    collapseMediaSection,
+    handleSendText,
+    handleSelectMedia,
+  } = composer;
+
   const { styles, placeholderColor } = useStyles();
-  const [text, setText] = useState('');
   const editorRef = useRef<TextEditorHandle>(null);
   const placeholder = useString('amity_chat_composer_placeholder');
   const editingLabel = useString('amity_chat_editing_message');
 
+  const currentUserId = Client.getCurrentUser()?.userId;
+
   const { query, setQuery, suggestions, reset, toMention } = useMention({
-    channelId,
-    includeChannelMention,
+    channelId: subChannelId,
+    includeChannelMention: enableMention,
   });
 
-  const isEditing = !!editingMessage;
+  const showMentions =
+    enableMention && query !== null && suggestions.length > 0;
 
-  // Prefill the editor when entering edit mode; clear it when leaving.
-  useEffect(() => {
-    if (editingMessage) {
-      const existing =
-        (editingMessage as Amity.Message<'text'>).data?.text ?? '';
-      setText(existing);
+  function onToggle() {
+    if (!showMediaSection) {
+      editorRef.current?.blur();
     } else {
-      setText('');
+      editorRef.current?.focus();
+    }
+    toggleMediaSection();
+  }
+
+  async function onSend() {
+    if (!canSend) return;
+    if (!isEditing) {
       editorRef.current?.clear();
     }
     reset();
-  }, [editingMessage?.messageId]);
+    await handleSendText();
+  }
 
-  const canSend = text.trim().length > 0 && !disabled;
-  const showMentions = query !== null && suggestions.length > 0;
-
-  async function handleSend() {
-    if (!canSend) return;
-    const value = text.trim();
-    const mentionees = editorRef.current?.getMentionees();
-    const extras: SendExtras = { mentionees };
-
-    setText('');
-    editorRef.current?.clear();
-    reset();
-
-    if (isEditing && editingMessage && onSubmitEdit) {
-      await onSubmitEdit(editingMessage.messageId, value, extras);
-    } else {
-      await onSend(value, extras);
+  function onTextChanged(value: string) {
+    setText(value);
+    if (value.length > 0 && showMediaSection) {
+      collapseMediaSection();
+    }
+    // Keep composer.editorMentions in sync with the editor's tracked segments so
+    // handleSendText builds the correct mentionees/metadata (web parity).
+    if (enableMention) {
+      const segments = editorRef.current?.getMentioned() ?? [];
+      setEditorMentions(
+        segments.map((s) => ({
+          userId: s.userId,
+          length: s.length,
+          index: s.index,
+          type: s.type,
+          displayName: s.display,
+        }))
+      );
     }
   }
 
@@ -111,8 +133,6 @@ export function AmityMessageComposer({
 
   return (
     <View style={styles.container}>
-      {replyBand}
-
       {isEditing ? (
         <View style={styles.editPanel}>
           <View style={styles.editPanelInfo}>
@@ -127,8 +147,9 @@ export function AmityMessageComposer({
           </View>
           <Pressable
             style={styles.editPanelClose}
-            onPress={onCancelEdit}
+            onPress={cancelEdit}
             accessibilityRole="button"
+            accessibilityLabel="Cancel edit"
           >
             <AmityIcon
               name="cross-r"
@@ -137,6 +158,17 @@ export function AmityMessageComposer({
             />
           </Pressable>
         </View>
+      ) : null}
+
+      {!isEditing && replyTo ? (
+        <MessageReplyBand
+          replyTo={replyTo}
+          currentUserId={currentUserId}
+          onCancel={cancelReply}
+          onOpenSeeMore={onOpenSeeMore}
+          onOpenImage={onOpenImage}
+          onOpenVideo={onOpenVideo}
+        />
       ) : null}
 
       {showMentions ? (
@@ -159,47 +191,58 @@ export function AmityMessageComposer({
       ) : null}
 
       <View style={styles.inputRow}>
-        <Pressable
-          style={styles.iconButton}
-          onPress={onAttach}
-          disabled={disabled}
-          accessibilityRole="button"
-        >
-          <AmityIcon
-            name="plus-r"
-            size={24}
-            tokenColor={AmityColorToken.IconIconButtonFilledSecondaryDefault}
-          />
-        </Pressable>
+        {isEditing ? null : (
+          <Pressable
+            style={styles.iconButton}
+            onPress={onToggle}
+            accessibilityRole="button"
+            accessibilityLabel="Attach media"
+            accessibilityState={{ expanded: showMediaSection }}
+          >
+            <AmityIcon
+              name={showMediaSection ? 'cross-r' : 'plus-r'}
+              size={24}
+              tokenColor={AmityColorToken.IconIconButtonFilledSecondaryDefault}
+            />
+          </Pressable>
+        )}
 
         <TextEditor
+          key={editingMessageId ?? 'create'}
           ref={editorRef}
           value={text}
-          onChangeText={setText}
-          onSend={handleSend}
+          onChangeText={onTextChanged}
+          onSend={onSend}
           placeholder={placeholder}
           placeholderTextColor={placeholderColor}
-          editable={!disabled}
-          onMentionQueryChange={setQuery}
+          autoFocus={isEditing}
+          onMentionQueryChange={enableMention ? setQuery : undefined}
         />
 
-        <Pressable
-          style={[styles.sendButton, canSend && styles.sendButtonEnabled]}
-          onPress={handleSend}
-          disabled={!canSend}
-          accessibilityRole="button"
-        >
-          <AmityIcon
-            name="arrow-up-r"
-            size={24}
-            tokenColor={
-              canSend
-                ? AmityColorToken.IconIconButtonFilledPrimaryDefault
-                : AmityColorToken.IconIconButtonFilledSecondaryDisabled
-            }
-          />
-        </Pressable>
+        {showMediaSection ? null : (
+          <Pressable
+            style={[styles.sendButton, canSend && styles.sendButtonEnabled]}
+            onPress={onSend}
+            disabled={!canSend}
+            accessibilityRole="button"
+            accessibilityLabel="Send message"
+          >
+            <AmityIcon
+              name="arrow-up-r"
+              size={24}
+              tokenColor={
+                canSend
+                  ? AmityColorToken.IconIconButtonFilledPrimaryDefault
+                  : AmityColorToken.IconIconButtonFilledSecondaryDisabled
+              }
+            />
+          </Pressable>
+        )}
       </View>
+
+      {!isEditing && showMediaSection ? (
+        <AmityMediaAttachmentPicker onPickAsset={handleSelectMedia} />
+      ) : null}
     </View>
   );
 }

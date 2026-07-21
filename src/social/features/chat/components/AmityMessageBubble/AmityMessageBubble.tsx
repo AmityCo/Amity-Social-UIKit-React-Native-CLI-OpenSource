@@ -21,8 +21,13 @@ import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../core/localization';
 import { MediaUploadOverlay } from '../../elements/MediaUploadOverlay';
+import { DeletedMessagePill } from '../../features/shared/components/DeletedMessagePill';
+import { MessageLinkPreview } from '../../features/shared/components/MessageLinkPreview';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
 import { useStyles } from './styles';
+
+const TEXT_MAX_LINES = 12;
+const URL_RE = /(https?:\/\/[^\s]+)/i;
 
 // 4. Types
 type AmityMessageBubbleProps = {
@@ -37,6 +42,8 @@ type AmityMessageBubbleProps = {
   localPreviewUrl?: string;
   /** Cancel an in-flight upload (shown on the upload overlay). */
   onCancelUpload?: () => void;
+  /** Open the full-text "see more" screen for long messages. */
+  onSeeMore?: (text: string, title?: string) => void;
 };
 
 function getFileId(message: Amity.Message): string {
@@ -60,9 +67,10 @@ export function AmityMessageBubble({
   onOpenVideo,
   localPreviewUrl,
   onCancelUpload,
+  onSeeMore,
 }: AmityMessageBubbleProps) {
   if (message.isDeleted) {
-    return <TextBubble message={message} isUser={isUser} />;
+    return <DeletedMessagePill isUser={isUser} />;
   }
 
   switch (message.dataType) {
@@ -92,6 +100,7 @@ export function AmityMessageBubble({
           message={message}
           isUser={isUser}
           onLongPress={onLongPress}
+          onSeeMore={onSeeMore}
         />
       );
   }
@@ -102,42 +111,60 @@ type TextBubbleProps = {
   message: Amity.Message;
   isUser: boolean;
   onLongPress?: (message: Amity.Message) => void;
+  onSeeMore?: (text: string, title?: string) => void;
 };
 
-function TextBubble({ message, isUser, onLongPress }: TextBubbleProps) {
+function TextBubble({
+  message,
+  isUser,
+  onLongPress,
+  onSeeMore,
+}: TextBubbleProps) {
   const { styles } = useStyles();
   const [pressed, setPressed] = useState(false);
-  const deletedLabel = useString('amity_chat_message_deleted');
+  const [truncated, setTruncated] = useState(false);
+  const seeMoreLabel = useString('amity_chat_see_more');
 
-  const text = message.isDeleted
-    ? deletedLabel
-    : (message.data as { text?: string })?.text ?? '';
+  const text = (message.data as { text?: string })?.text ?? '';
+  const firstUrl = text.match(URL_RE)?.[1];
 
   const bubbleStyle = [
     styles.bubble,
     isUser ? styles.bubbleOwn : styles.bubbleOther,
     pressed && (isUser ? styles.bubbleOwnPressed : styles.bubbleOtherPressed),
   ];
-  const textStyle = [
-    styles.text,
-    isUser ? styles.textOwn : styles.textOther,
-    message.isDeleted && styles.deletedText,
-  ];
+  const textStyle = [styles.text, isUser ? styles.textOwn : styles.textOther];
 
   return (
     <Pressable
       style={bubbleStyle}
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
-      onLongPress={
-        message.isDeleted || !onLongPress
-          ? undefined
-          : () => onLongPress(message)
-      }
-      disabled={message.isDeleted}
+      onLongPress={onLongPress ? () => onLongPress(message) : undefined}
     >
       <View>
-        <Text style={textStyle}>{text}</Text>
+        <Text
+          style={textStyle}
+          numberOfLines={truncated ? TEXT_MAX_LINES : undefined}
+          onTextLayout={(e) => {
+            if (!truncated && e.nativeEvent.lines.length > TEXT_MAX_LINES) {
+              setTruncated(true);
+            }
+          }}
+        >
+          {text}
+        </Text>
+        {truncated && onSeeMore ? (
+          <Text
+            style={[styles.text, styles.seeMore]}
+            onPress={() => onSeeMore(text)}
+          >
+            {seeMoreLabel}
+          </Text>
+        ) : null}
+        {firstUrl ? (
+          <MessageLinkPreview url={firstUrl} isOwnMessage={isUser} />
+        ) : null}
       </View>
     </Pressable>
   );

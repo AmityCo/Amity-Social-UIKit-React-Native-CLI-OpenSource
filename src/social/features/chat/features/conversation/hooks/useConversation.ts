@@ -1,36 +1,17 @@
-// useConversation — RN engine for the chat thread, distilled from AmityUiKitWeb
-// useChat/useChatMessage. For a conversation channel the message sub-channel id
-// equals the channel id (web uses `subChannelId: channelId ?? ''`), so we load
-// messages with useMessagesCollection({ subChannelId: channelId }) and send with
-// useCreateMessage. Reactions / reply / media / mentions layer on in later tasks.
+// useConversation — RN equivalent of AmityUiKitWeb v4/chat/features/conversation/chat/hooks/useChat.
+// Thin wrapper: fetches the live channel (for group-vs-direct behaviour + the muted
+// banner) and delegates all message orchestration to useChatMessage. Chat.tsx consumes
+// the combined result.
 
-import { useCallback, useEffect, useState } from 'react';
-import { ChannelRepository, Client } from '@amityco/ts-sdk-react-native';
+import { useEffect, useState } from 'react';
+import { ChannelRepository } from '@amityco/ts-sdk-react-native';
 
 import useAuth from '../../../../../../core/hooks/useAuth';
-import {
-  useCreateMessage,
-  useDeleteMessage,
-  useEditMessage,
-  useMessagesCollection,
-} from '../../../hooks';
-
-const MESSAGE_PAGE_SIZE = 20;
-
-type SendExtras = {
-  mentionees?: (Amity.UserMention | Amity.ChannelMention)[];
-  parentId?: string;
-};
+import { useChatMessage } from '../../shared/hooks/useChatMessage';
 
 export function useConversation(channelId?: string) {
-  // Current user id — same source AmityChatListItem uses to tell "me" apart.
-  const currentUserId = Client.getCurrentUser()?.userId;
   const { isConnected } = useAuth();
 
-  const subChannelId = channelId ?? '';
-
-  // Live channel object — drives group-vs-direct behaviour (sender names show only
-  // in group chats) and the header title/avatar.
   const [channel, setChannel] = useState<Amity.Channel | undefined>(undefined);
   useEffect(() => {
     if (!isConnected || !channelId) return undefined;
@@ -44,63 +25,22 @@ export function useConversation(channelId?: string) {
 
   const isGroupChat = channel?.type === 'community';
 
-  const { messages, loading, hasNextPage, loadMore } = useMessagesCollection(
-    { subChannelId, limit: MESSAGE_PAGE_SIZE },
-    !!channelId
-  );
+  const chat = useChatMessage({ channelId, enableMention: isGroupChat });
 
-  const { createMessage } = useCreateMessage();
-  const { editMessage } = useEditMessage();
-  const { deleteMessage } = useDeleteMessage();
-
-  const sendText = useCallback(
-    async (text: string, extras?: SendExtras) => {
-      const trimmed = text.trim();
-      if (!trimmed || !subChannelId) return;
-      const mentionees = extras?.mentionees;
-      await createMessage({
-        subChannelId,
-        data: { text: trimmed },
-        ...(mentionees && mentionees.length ? { mentionees } : {}),
-        ...(extras?.parentId ? { parentId: extras.parentId } : {}),
-      });
-    },
-    [createMessage, subChannelId]
+  // Muted/blocked banner: the RN SDK exposes the viewer's channel membership mute via
+  // channel.isMuted for the current user; block status (web useFollowInfo) has no RN
+  // equivalent wired yet, so the 'blocked' variant is not surfaced here.
+  const isChannelMuted = Boolean(
+    (channel as { isMuted?: boolean } | undefined)?.isMuted
   );
-
-  const editText = useCallback(
-    async (messageId: string, text: string, extras?: SendExtras) => {
-      const trimmed = text.trim();
-      if (!trimmed) return;
-      const mentionees = extras?.mentionees;
-      await editMessage({
-        messageId,
-        patch: {
-          data: { text: trimmed },
-          ...(mentionees && mentionees.length ? { mentionees } : {}),
-        },
-      });
-    },
-    [editMessage]
-  );
-
-  const removeMessage = useCallback(
-    async (messageId: string) => {
-      await deleteMessage(messageId);
-    },
-    [deleteMessage]
-  );
+  const showMutedBanner = isChannelMuted;
+  const mutedVariant: 'user' | 'channel' | 'blocked' = 'channel';
 
   return {
+    ...chat,
     channel,
     isGroupChat,
-    messages,
-    loading,
-    hasNextPage,
-    loadMore,
-    sendText,
-    editText,
-    removeMessage,
-    currentUserId,
+    showMutedBanner,
+    mutedVariant,
   };
 }
