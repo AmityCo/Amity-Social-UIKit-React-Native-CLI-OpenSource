@@ -26,7 +26,7 @@ export const useStyles = () => {
       fontSize: 16,
       lineHeight: 20,
       padding: 0,
-      color: token(AmityColorToken.TextBaseDefault),
+      color: token(AmityColorToken.TextListHeaderDefaultDefault),
     },
   });
 

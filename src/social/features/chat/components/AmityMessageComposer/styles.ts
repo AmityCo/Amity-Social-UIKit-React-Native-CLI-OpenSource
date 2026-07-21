@@ -95,7 +95,7 @@ export const useStyles = () => {
     mentionItemText: {
       fontSize: 14,
       lineHeight: 20,
-      color: token(AmityColorToken.TextBaseDefault),
+      color: token(AmityColorToken.TextListHeaderDefaultDefault),
     },
   });
 

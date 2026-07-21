@@ -14,7 +14,7 @@ import { AmityColorToken } from '../../tokens/amity-color-tokens';
 // (fontSize / lineHeight / fontWeight). Web CSS sets no letter-spacing, so none here.
 export const useStyles = () => {
   const token = useToken();
-  const color = token(AmityColorToken.TextBaseDefault);
+  const color = token(AmityColorToken.TextListHeaderDefaultDefault);
 
   const styles = StyleSheet.create({
     headline: { color, fontSize: 20, lineHeight: 24, fontWeight: '700' },

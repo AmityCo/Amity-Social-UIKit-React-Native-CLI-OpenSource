@@ -14,7 +14,7 @@ export const useStyles = ({ isDanger = false }: UseStylesArgs) => {
   // tokens in the RN model: Text/Base/Default and Text/Base/Alert.
   const colorToken = isDanger
     ? AmityColorToken.TextBaseAlert
-    : AmityColorToken.TextBaseDefault;
+    : AmityColorToken.TextListHeaderDefaultDefault;
 
   const styles = StyleSheet.create({
     menuOptionButton: {
