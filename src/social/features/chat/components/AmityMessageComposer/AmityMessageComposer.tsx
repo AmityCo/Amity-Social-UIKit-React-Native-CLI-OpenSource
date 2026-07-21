@@ -251,6 +251,19 @@ export function AmityMessageComposer({
               </Pressable>
             ))}
           </ScrollView>
+          {/* web MentionMenu close button (top-right); dismisses the menu. */}
+          <Pressable
+            style={styles.mentionCloseButton}
+            onPress={() => setQuery(null)}
+            accessibilityRole="button"
+            accessibilityLabel="Close mentions"
+          >
+            <AmityIcon
+              name="cross-r"
+              size={16}
+              tokenColor={AmityColorToken.IconIconButtonFilledSecondaryDefault}
+            />
+          </Pressable>
         </View>
       ) : null}
 

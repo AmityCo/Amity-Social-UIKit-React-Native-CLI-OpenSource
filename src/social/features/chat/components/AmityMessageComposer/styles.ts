@@ -147,6 +147,22 @@ export const useStyles = () => {
       flexShrink: 0,
       color: token(AmityColorToken.TextListTrailingTextGeneral),
     },
+    // web mentionContainer__closeButton (bottom mode): top 0 / right 0.25rem→4,
+    // 1.5rem→24 circle, padding 0.25rem→4, surface-iconbutton-filled-secondary.
+    mentionCloseButton: {
+      position: 'absolute',
+      top: 4,
+      right: 4,
+      width: 24,
+      height: 24,
+      borderRadius: 9999,
+      padding: 4,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: token(
+        AmityColorToken.SurfaceIconButtonFilledSecondaryEnabled
+      ),
+    },
   });
 
   const placeholderColor = token(
