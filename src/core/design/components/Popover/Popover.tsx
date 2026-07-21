@@ -45,6 +45,10 @@ type Anchor = { x: number; y: number; width: number; height: number };
 
 // Gap between the trigger and the popover content (web `--origin` 0.5rem = 8px).
 const ANCHOR_GAP = 8;
+// Keep the popover this far from the screen edges, and never narrower than the
+// content min-width (styles.popover minWidth 200) when clamping.
+const SCREEN_MARGIN = 8;
+const POPOVER_MIN_WIDTH = 200;
 
 export function Popover({
   trigger,
@@ -86,10 +90,21 @@ export function Popover({
     ? { bottom: screenHeight - anchor.y + ANCHOR_GAP }
     : { top: anchor.y + anchor.height + ANCHOR_GAP };
 
-  // Horizontal alignment: right-align to the anchor's right edge, else left-align.
+  // Horizontal alignment: right-align to the anchor's right edge, else left-align to
+  // the anchor's left edge (the bubble's start). Clamp so the popover (min-width 200)
+  // never runs past either screen edge — the off-screen overflow inbound bubbles hit.
+  const maxInset = Math.max(
+    SCREEN_MARGIN,
+    screenWidth - POPOVER_MIN_WIDTH - SCREEN_MARGIN
+  );
   const horizontalPosition = isRight
-    ? { right: screenWidth - (anchor.x + anchor.width) }
-    : { left: anchor.x };
+    ? {
+        right: Math.min(
+          maxInset,
+          Math.max(SCREEN_MARGIN, screenWidth - (anchor.x + anchor.width))
+        ),
+      }
+    : { left: Math.min(maxInset, Math.max(SCREEN_MARGIN, anchor.x)) };
 
   return (
     <View ref={triggerRef} collapsable={false}>

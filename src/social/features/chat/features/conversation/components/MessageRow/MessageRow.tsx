@@ -137,6 +137,7 @@ export function MessageRow({
             <AmityMessageActionMenu
               message={message}
               currentUserId={currentUserId}
+              placement={isUser ? 'bottom right' : 'bottom left'}
               handlers={{
                 onEdit: bubbleHandlers?.onEdit ?? (() => {}),
                 onReply: bubbleHandlers?.onReply ?? (() => {}),
