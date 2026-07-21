@@ -7,7 +7,7 @@
 // the moderation "failed" caption remain out of scope for this media task.)
 
 // 1. React / RN imports
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 
 // 2. Third-party imports
@@ -26,8 +26,43 @@ import { MessageLinkPreview } from '../../features/shared/components/MessageLink
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
 import { useStyles } from './styles';
 
-const TEXT_MAX_LINES = 12;
+const TEXT_MAX_LINES = 10; // web chat.ts
+const TEXT_MAX_LINES_WITH_LINK = 5; // web chat.ts
 const URL_RE = /(https?:\/\/[^\s]+)/i;
+
+// Render message text with @mention spans highlighted, ported from web
+// renderTextWithMentions: metadata.mentioned = [{ index, length }] marks the runs to
+// style with the mention token. Non-mention runs render as plain text within the
+// parent <Text>. (Web additionally linkifies in-text URLs; the link preview card
+// below covers the first URL — inline linkify is deferred.)
+function renderTextWithMentions(
+  text: string,
+  mentioned: { index: number; length: number }[] | undefined,
+  mentionStyle: object
+): ReactNode {
+  const spans = (mentioned ?? []).slice().sort((a, b) => a.index - b.index);
+  if (spans.length === 0) return text;
+
+  const out: ReactNode[] = [];
+  let cursor = 0;
+  spans.forEach((m, i) => {
+    const startsWithAt = text.charAt(m.index) === '@';
+    const span = startsWithAt ? m.length + 1 : m.length;
+    const start = Math.max(m.index, cursor);
+    const end = Math.min(start + span, text.length);
+    if (start > cursor) out.push(text.slice(cursor, start));
+    if (end > start) {
+      out.push(
+        <Text key={`m-${i}`} style={mentionStyle}>
+          {text.slice(start, end)}
+        </Text>
+      );
+    }
+    cursor = end;
+  });
+  if (cursor < text.length) out.push(text.slice(cursor));
+  return out;
+}
 
 // 4. Types
 type AmityMessageBubbleProps = {
@@ -124,9 +159,19 @@ function TextBubble({
   const [pressed, setPressed] = useState(false);
   const [truncated, setTruncated] = useState(false);
   const seeMoreLabel = useString('amity_chat_see_more');
+  const editedLabel = useString('amity_chat_status_edited');
 
   const text = (message.data as { text?: string })?.text ?? '';
   const firstUrl = text.match(URL_RE)?.[1];
+  const maxLines = firstUrl ? TEXT_MAX_LINES_WITH_LINK : TEXT_MAX_LINES;
+  const isEdited = (message as { editedAt?: unknown }).editedAt != null;
+  const mentioned = (
+    message.metadata as
+      | {
+          mentioned?: { index: number; length: number }[];
+        }
+      | undefined
+  )?.mentioned;
 
   const bubbleStyle = [
     styles.bubble,
@@ -145,14 +190,18 @@ function TextBubble({
       <View>
         <Text
           style={textStyle}
-          numberOfLines={truncated ? TEXT_MAX_LINES : undefined}
+          numberOfLines={truncated ? maxLines : undefined}
           onTextLayout={(e) => {
-            if (!truncated && e.nativeEvent.lines.length > TEXT_MAX_LINES) {
+            if (!truncated && e.nativeEvent.lines.length > maxLines) {
               setTruncated(true);
             }
           }}
         >
-          {text}
+          {renderTextWithMentions(
+            text,
+            mentioned,
+            isUser ? styles.mentionOwn : styles.mentionOther
+          )}
         </Text>
         {truncated && onSeeMore ? (
           <>
@@ -189,7 +238,19 @@ function TextBubble({
           </>
         ) : null}
         {firstUrl ? (
-          <MessageLinkPreview url={firstUrl} isOwnMessage={isUser} />
+          <View style={styles.preview}>
+            <MessageLinkPreview url={firstUrl} isOwnMessage={isUser} />
+          </View>
+        ) : null}
+        {isEdited ? (
+          <Text
+            style={[
+              styles.editedCaption,
+              isUser ? styles.editedOwn : styles.editedOther,
+            ]}
+          >
+            {editedLabel}
+          </Text>
         ) : null}
       </View>
     </Pressable>

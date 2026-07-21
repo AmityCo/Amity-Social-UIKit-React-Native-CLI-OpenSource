@@ -93,6 +93,35 @@ export const useStyles = () => {
     seeMoreOther: {
       color: token(AmityColorToken.TextChatBubbleInboundSeeMoreDefault),
     },
+    // Mention span inside the text (web textBubble__mention, weight 500).
+    mentionOwn: {
+      fontWeight: '500',
+      color: token(AmityColorToken.TextChatBubbleOutboundMentionedDefault),
+    },
+    mentionOther: {
+      fontWeight: '500',
+      color: token(AmityColorToken.TextChatBubbleInboundMentionedDefault),
+    },
+    // "Edited" caption (web textBubble__editedCaption: padding 0 16 10).
+    editedCaption: {
+      paddingHorizontal: 16,
+      paddingBottom: 10,
+      fontSize: 10,
+      lineHeight: 13,
+    },
+    editedOwn: {
+      color: token(AmityColorToken.TextChatBubbleOutboundEditedLabelDefault),
+      textAlign: 'right',
+    },
+    editedOther: {
+      color: token(AmityColorToken.TextChatBubbleInboundEditedLabelDefault),
+      textAlign: 'left',
+    },
+    // Link-preview wrapper padding (web textBubble__preview: 0 10 10).
+    preview: {
+      paddingHorizontal: 10,
+      paddingBottom: 10,
+    },
 
     // --- Media (image / video) ---
     // Web used height 15rem→240 with variable width (inline-block, capped at 20rem/320).
