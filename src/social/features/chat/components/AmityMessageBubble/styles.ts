@@ -59,11 +59,32 @@ export const useStyles = () => {
     deletedText: {
       fontStyle: 'italic',
     },
-    // "See more" affordance for truncated long messages (web textBubble__seeMore).
-    // Web colours the label with a dedicated seemore token (inbound vs outbound); it
-    // needs its own colour or the Text falls back to RN's default black.
-    seeMore: {
-      paddingTop: 0,
+    // "See more" affordance for truncated long messages, faithful to web:
+    // a 1px divider (textBubble__divider) then a space-between row (textBubble__seeMore)
+    // of label + chevron-right icon (textBubble__seeMoreIcon 0.75rem→12).
+    divider: {
+      height: 1,
+    },
+    dividerOwn: {
+      backgroundColor: token(
+        AmityColorToken.LineChatBubbleOutboundDividerDefault
+      ),
+    },
+    dividerOther: {
+      backgroundColor: token(
+        AmityColorToken.LineChatBubbleInboundDividerDefault
+      ),
+    },
+    seeMoreRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: 10,
+      paddingHorizontal: 16,
+    },
+    seeMoreLabel: {
+      fontSize: 14,
+      lineHeight: 18,
       fontWeight: '700',
     },
     seeMoreOwn: {

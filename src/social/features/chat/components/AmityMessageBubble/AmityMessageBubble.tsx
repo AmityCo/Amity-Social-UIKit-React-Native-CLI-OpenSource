@@ -155,16 +155,38 @@ function TextBubble({
           {text}
         </Text>
         {truncated && onSeeMore ? (
-          <Text
-            style={[
-              styles.text,
-              styles.seeMore,
-              isUser ? styles.seeMoreOwn : styles.seeMoreOther,
-            ]}
-            onPress={() => onSeeMore(text)}
-          >
-            {seeMoreLabel}
-          </Text>
+          <>
+            <View
+              style={[
+                styles.divider,
+                isUser ? styles.dividerOwn : styles.dividerOther,
+              ]}
+            />
+            <Pressable
+              style={styles.seeMoreRow}
+              onPress={() => onSeeMore(text)}
+              accessibilityRole="button"
+              accessibilityLabel={seeMoreLabel}
+            >
+              <Text
+                style={[
+                  styles.seeMoreLabel,
+                  isUser ? styles.seeMoreOwn : styles.seeMoreOther,
+                ]}
+              >
+                {seeMoreLabel}
+              </Text>
+              <AmityIcon
+                name="chevron-right"
+                size={12}
+                tokenColor={
+                  isUser
+                    ? AmityColorToken.IconChatBubbleOutboundSeeMoreDefault
+                    : AmityColorToken.IconChatBubbleInboundSeeMoreDefault
+                }
+              />
+            </Pressable>
+          </>
         ) : null}
         {firstUrl ? (
           <MessageLinkPreview url={firstUrl} isOwnMessage={isUser} />
