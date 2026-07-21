@@ -27,6 +27,12 @@ export function useConversation(channelId?: string) {
 
   const chat = useChatMessage({ channelId, enableMention: isGroupChat });
 
+  // The other participant in a 1-1 conversation (for the header user-action menu),
+  // resolved from the channel preview members like AmityChatListItem does.
+  const otherUser = channel?.previewMembers?.find(
+    (m) => m.userId !== chat.currentUserId
+  )?.user as Amity.InternalUser | undefined;
+
   // Muted/blocked banner: the RN SDK exposes the viewer's channel membership mute via
   // channel.isMuted for the current user; block status (web useFollowInfo) has no RN
   // equivalent wired yet, so the 'blocked' variant is not surfaced here.
@@ -39,6 +45,7 @@ export function useConversation(channelId?: string) {
   return {
     ...chat,
     channel,
+    otherUser,
     isGroupChat,
     showMutedBanner,
     mutedVariant,

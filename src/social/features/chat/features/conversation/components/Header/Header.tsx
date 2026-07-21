@@ -4,6 +4,7 @@
 // layer on in later M2 tasks.
 
 // 1. React / RN imports
+import type { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 // 2. Internal imports
@@ -15,10 +16,12 @@ import { useStyles } from './styles';
 type HeaderProps = {
   title: string;
   onBack: () => void;
+  /** Right-aligned slot (e.g. the conversation user-action menu). */
+  trailing?: ReactNode;
 };
 
 // 4. Named function component
-export function Header({ title, onBack }: HeaderProps) {
+export function Header({ title, onBack, trailing }: HeaderProps) {
   const { styles } = useStyles();
 
   return (
@@ -40,6 +43,7 @@ export function Header({ title, onBack }: HeaderProps) {
           {title}
         </Text>
       </View>
+      {trailing}
     </View>
   );
 }

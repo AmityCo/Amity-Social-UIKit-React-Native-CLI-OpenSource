@@ -22,11 +22,13 @@ export default function AmityChatHomePage() {
   return (
     <SafeAreaView style={styles.container}>
       <ChatHome
-        onChannelPress={(channelId, displayName) =>
-          navigation.navigate('AmityChatPage', {
-            channelId,
-            userDisplayName: displayName,
-          })
+        onChannelPress={(channelId, displayName, type) =>
+          type === 'community'
+            ? navigation.navigate('AmityGroupChatPage', { channelId })
+            : navigation.navigate('AmityChatPage', {
+                channelId,
+                userDisplayName: displayName,
+              })
         }
         onCreatePress={() =>
           navigation.navigate('AmityChannelCreateConversationPage')

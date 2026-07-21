@@ -80,12 +80,15 @@ export function CreateChatMenu({
 
   const goToCreateConversation = () =>
     navigation.navigate('AmityChannelCreateConversationPage');
+  // Group creation starts at member selection; callers may override via onNewGroup.
+  const goToNewGroup =
+    onNewGroup ?? (() => navigation.navigate('AmitySelectGroupMemberPage'));
 
   if (!showBoth) {
     return (
       <PlusButton
         accessibilityLabel={createAriaLabel}
-        onPress={hasConversation ? goToCreateConversation : onNewGroup}
+        onPress={hasConversation ? goToCreateConversation : goToNewGroup}
       />
     );
   }
@@ -118,7 +121,7 @@ export function CreateChatMenu({
             typography="body"
             onPress={() => {
               closePopover();
-              onNewGroup?.();
+              goToNewGroup();
             }}
           />
         </Menu>

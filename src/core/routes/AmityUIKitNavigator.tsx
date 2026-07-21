@@ -10,6 +10,15 @@ import useAuth from '../hooks/useAuth';
 import AmityChatHomePage from '../../social/features/chat/pages/AmityChatHomePage';
 import AmityChatPage from '../../social/features/chat/pages/AmityChatPage';
 import AmityChannelCreateConversationPage from '../../social/features/chat/pages/AmityChannelCreateConversationPage';
+import AmityGroupChatPage from '../../social/features/chat/pages/AmityGroupChatPage';
+import AmitySelectGroupMemberPage from '../../social/features/chat/pages/AmitySelectGroupMemberPage';
+import AmityCreateGroupChatPage from '../../social/features/chat/pages/AmityCreateGroupChatPage';
+import AmityAddGroupMemberPage from '../../social/features/chat/pages/AmityAddGroupMemberPage';
+import AmityGroupMemberListPage from '../../social/features/chat/pages/AmityGroupMemberListPage';
+import AmityBannedGroupMemberListPage from '../../social/features/chat/pages/AmityBannedGroupMemberListPage';
+import AmityGroupSettingPage from '../../social/features/chat/pages/AmityGroupSettingPage';
+import AmityEditGroupProfilePage from '../../social/features/chat/pages/AmityEditGroupProfilePage';
+import AmityEditGroupMemberPermissionsPage from '../../social/features/chat/pages/AmityEditGroupMemberPermissionsPage';
 import AmitySocialHomePage from '../../social/screens/SocialHomePage';
 import PostDetail from '../../social/screens/PostDetail';
 import CreatePost from '../../social/screens/CreatePost';
@@ -126,6 +135,42 @@ export default function AmitySocialUIKitV4Navigator({
           <Stack.Screen
             name="AmityChannelCreateConversationPage"
             component={AmityChannelCreateConversationPage}
+          />
+          <Stack.Screen
+            name="AmityGroupChatPage"
+            component={AmityGroupChatPage}
+          />
+          <Stack.Screen
+            name="AmitySelectGroupMemberPage"
+            component={AmitySelectGroupMemberPage}
+          />
+          <Stack.Screen
+            name="AmityCreateGroupChatPage"
+            component={AmityCreateGroupChatPage}
+          />
+          <Stack.Screen
+            name="AmityAddGroupMemberPage"
+            component={AmityAddGroupMemberPage}
+          />
+          <Stack.Screen
+            name="AmityGroupMemberListPage"
+            component={AmityGroupMemberListPage}
+          />
+          <Stack.Screen
+            name="AmityBannedGroupMemberListPage"
+            component={AmityBannedGroupMemberListPage}
+          />
+          <Stack.Screen
+            name="AmityGroupSettingPage"
+            component={AmityGroupSettingPage}
+          />
+          <Stack.Screen
+            name="AmityEditGroupProfilePage"
+            component={AmityEditGroupProfilePage}
+          />
+          <Stack.Screen
+            name="AmityEditGroupMemberPermissionsPage"
+            component={AmityEditGroupMemberPermissionsPage}
           />
           {/* --- Social Home --- */}
           <Stack.Screen

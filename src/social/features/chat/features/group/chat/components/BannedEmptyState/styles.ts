@@ -1,0 +1,27 @@
+import { StyleSheet } from 'react-native';
+import { useToken } from '../../../../../../../../core/design/theme/useToken';
+import { AmityColorToken } from '../../../../../../../../core/design/tokens/amity-color-tokens';
+
+export const useStyles = () => {
+  const token = useToken();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 12,
+      paddingHorizontal: 32,
+      backgroundColor: token(AmityColorToken.SurfacePageBackgroundDefault),
+    },
+    text: { alignItems: 'center', gap: 4 },
+    title: {
+      color: token(AmityColorToken.TextListHeaderDefaultDefault),
+      textAlign: 'center',
+    },
+    subtitle: {
+      color: token(AmityColorToken.TextListTextDescriptionDefaultDefault),
+      textAlign: 'center',
+    },
+  });
+  return { styles, token };
+};

@@ -22,7 +22,7 @@ export function Header() {
       <Typography variant="headline" style={styles.title} numberOfLines={1}>
         {title}
       </Typography>
-      <CreateChatMenu />
+      <CreateChatMenu enabledChannelTypes={['conversation', 'community']} />
     </View>
   );
 }

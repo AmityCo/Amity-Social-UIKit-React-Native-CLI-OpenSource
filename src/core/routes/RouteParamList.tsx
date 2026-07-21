@@ -15,6 +15,16 @@ export type RootStackParamList = {
   AmityChatHomePage: undefined;
   AmityChatPage: { channelId: string; userDisplayName?: string };
   AmityChannelCreateConversationPage: undefined;
+  // --- Chat: group flows (PDT-3713 M3) ---
+  AmityGroupChatPage: { channelId: string; isJustCreated?: boolean };
+  AmitySelectGroupMemberPage: undefined;
+  AmityCreateGroupChatPage: { selectedUsers: Amity.User[] };
+  AmityAddGroupMemberPage: { channelId: string };
+  AmityGroupMemberListPage: { channelId: string };
+  AmityBannedGroupMemberListPage: { channelId: string };
+  AmityGroupSettingPage: { channelId: string };
+  AmityEditGroupProfilePage: { channelId: string };
+  AmityEditGroupMemberPermissionsPage: { channelId: string };
   AmitySocialHomePage: { postIdCallBack?: string };
   AmitySocialGlobalSearchPage: undefined;
   AmityMyCommunitiesSearchPage: undefined;

@@ -25,8 +25,12 @@ const SKELETON_ROW_COUNT = 9;
 // 3. Types
 export type ChannelListProps = {
   types?: Amity.ChannelType[];
-  /** Called with the pressed channel id + display name — the page wires navigation. */
-  onChannelPress?: (channelId: string, displayName?: string) => void;
+  /** Called with the pressed channel id + display name + type — the page wires navigation. */
+  onChannelPress?: (
+    channelId: string,
+    displayName?: string,
+    type?: Amity.ChannelType
+  ) => void;
   /** Called when the empty-state create button is pressed. */
   onCreatePress?: () => void;
 };
@@ -67,7 +71,9 @@ export function ChannelList({
       renderItem={({ item }) => (
         <AmityChatListItem
           channel={item}
-          onPress={() => onChannelPress?.(item.channelId, item.displayName)}
+          onPress={() =>
+            onChannelPress?.(item.channelId, item.displayName, item.type)
+          }
         />
       )}
       onEndReachedThreshold={0.7}

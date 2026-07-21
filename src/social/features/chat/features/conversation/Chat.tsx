@@ -5,10 +5,13 @@
 // MutedBanner|MessageComposer, ImageViewer, VideoPlayer, MessageFullTextScreen.
 
 // 1. React / RN imports
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
 
 // 2. Internal imports
+import { AmityIcon } from '../../../../../core/design/icons';
+import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { AmityMessageComposer } from '../../components/AmityMessageComposer';
+import { AmityConversationChatUserActionComponent } from '../../components/AmityConversationChatUserActionComponent';
 import { ImageViewer } from '../shared/components/ImageViewer';
 import { VideoPlayer } from '../shared/components/VideoPlayer';
 import { MessageFullTextScreen } from '../shared/components/MessageFullTextScreen';
@@ -36,7 +39,33 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <Header title={userDisplayName ?? ''} onBack={onBack} />
+      <Header
+        title={userDisplayName ?? ''}
+        onBack={onBack}
+        trailing={
+          c.otherUser ? (
+            <AmityConversationChatUserActionComponent
+              user={c.otherUser}
+              placement="bottom right"
+              anchor={({ openPopover }) => (
+                <Pressable
+                  onPress={openPopover}
+                  accessibilityRole="button"
+                  accessibilityLabel="Conversation actions"
+                >
+                  <AmityIcon
+                    name="ellipsis-v-r"
+                    size={24}
+                    tokenColor={
+                      AmityColorToken.IconIconButtonGhostSecondaryDefault
+                    }
+                  />
+                </Pressable>
+              )}
+            />
+          ) : undefined
+        }
+      />
       <WaitingForNetwork />
       <View style={{ flex: 1 }}>
         <MessageList
