@@ -3,8 +3,9 @@
 // text / image / video each render their own bubble. Image + video resolve their file via
 // useFile (image) / useVideoFileUrl (raw video url), show an upload overlay while a local
 // preview is pending, and surface tap → open-in-viewer callbacks the parent wires up.
-// Long-press surfaces the message action menu. (See-more / mentions / link-preview and
-// the moderation "failed" caption remain out of scope for this media task.)
+// Long-press surfaces the message action menu. Text path is full parity with web:
+// @mention highlighting, "see more" (divider + chevron), link preview, "edited"
+// caption, and link-aware line clamping.
 
 // 1. React / RN imports
 import { useState, type ReactNode } from 'react';
