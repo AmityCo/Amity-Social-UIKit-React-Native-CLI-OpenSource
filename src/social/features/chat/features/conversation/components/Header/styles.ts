@@ -22,12 +22,6 @@ export const useStyles = () => {
       borderBottomWidth: 1,
       borderBottomColor: token(AmityColorToken.LineDividerPostDefault),
     },
-    backButton: {
-      width: 32,
-      height: 32,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
     identity: {
       flex: 1,
       minWidth: 0,

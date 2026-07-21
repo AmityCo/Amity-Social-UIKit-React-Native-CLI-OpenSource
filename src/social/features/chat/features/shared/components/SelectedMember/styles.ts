@@ -4,8 +4,9 @@ import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-c
 
 // Geometry ported from AmityUiKitWeb SelectedMember.module.css (rem -> px, x16):
 // tile width 4rem=64, column gap 0.25rem=4; avatar wrapper 2.5rem=40; name max
-// width 4rem=64. Remove button pinned top-right; sized to the 16px cross glyph
-// on a transparent-black circle (web Button.Icon transparent/primary).
+// width 4rem=64. Remove button pinned top-right — its 16px container + transparent
+// surface come from the Button.Icon atom (transparent/primary/16); this style is
+// positioning only (web .selectedMember__removeButton: absolute, top 0, right 0).
 export const useStyles = () => {
   const token = useToken();
 
@@ -25,14 +26,6 @@ export const useStyles = () => {
       position: 'absolute',
       top: 0,
       right: 0,
-      width: 20,
-      height: 20,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: 10,
-      backgroundColor: token(
-        AmityColorToken.SurfaceIconButtonTransparentPrimaryEnabled
-      ),
     },
     name: {
       maxWidth: 64,

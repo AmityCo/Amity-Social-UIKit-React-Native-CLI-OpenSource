@@ -1,8 +1,8 @@
 // Styles for AddTile — ported from AddTile.module.css.
-// Geometry: column, center, gap 0.25rem→4, tile width 4rem→64. The web
-// Button.Icon (filled secondary, 40px, circular) has no 1:1 RN atom, so the
-// tile renders a 40px circular Pressable tinted by the filled-secondary
-// iconbutton tokens. Label colour from Text/IconButton/Label/General.
+// Geometry: column, center, gap 0.25rem→4, tile width 4rem→64. The circular
+// filled-secondary icon button is the Button.Icon atom (filled/secondary/40);
+// this style covers only the tile layout + label. Label colour from
+// Text/IconButton/Label/General.
 
 import { StyleSheet } from 'react-native';
 import { useToken } from '../../../../../../../core/design/theme/useToken';
@@ -17,16 +17,6 @@ export const useStyles = () => {
       alignItems: 'center',
       gap: 4,
       width: 64,
-    },
-    button: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: token(
-        AmityColorToken.SurfaceIconButtonFilledSecondaryEnabled
-      ),
     },
     name: {
       maxWidth: 64,

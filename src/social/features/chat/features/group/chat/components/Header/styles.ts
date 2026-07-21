@@ -18,12 +18,6 @@ export const useStyles = () => {
       borderBottomWidth: 1,
       borderBottomColor: token(AmityColorToken.LineDividerPostDefault),
     },
-    backButton: {
-      width: 32,
-      height: 32,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
     identityButton: { flex: 1, minWidth: 0 },
     identity: {
       flex: 1,

@@ -1,16 +1,14 @@
 // AddTile — ported from AmityUiKitWeb features/shared/components/AddTile.
 // A small "add media" tile: a circular filled-secondary icon button above a
-// single-line caption label. Web renders Button.Icon (filled/secondary/40px);
-// RN has no matching icon-button atom, so a themed Pressable carries the plus
-// glyph. `onClick`→`onPress`.
+// single-line caption label. Web renders Button.Icon (filled/secondary/40px) —
+// RN uses the ported Button.Icon atom. `onClick`→`onPress`.
 
 // 1. React / RN imports
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 // 2. Internal imports
+import { Button } from '../../../../../../../core/design/atoms/Button';
 import { Typography } from '../../../../../../../core/design/components/Typography';
-import { AmityIcon } from '../../../../../../../core/design/icons';
-import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-color-tokens';
 import { useStyles } from './styles';
 
 // 3. Types
@@ -26,18 +24,14 @@ export function AddTile({ onPress, label, accessibilityLabel }: AddTileProps) {
 
   return (
     <View style={styles.tile}>
-      <Pressable
-        style={styles.button}
+      <Button.Icon
+        icon="plus-r"
+        styleType="filled"
+        hierarchy="secondary"
+        size={40}
         onPress={onPress}
-        accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
-      >
-        <AmityIcon
-          name="plus-r"
-          size={24}
-          tokenColor={AmityColorToken.IconIconButtonFilledSecondaryDefault}
-        />
-      </Pressable>
+      />
       {label ? (
         <Typography variant="caption" style={styles.name} numberOfLines={1}>
           {label}

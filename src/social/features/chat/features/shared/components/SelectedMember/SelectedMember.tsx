@@ -8,15 +8,14 @@
 //     RN resolves `user.avatarFileId` through `useFile` (small size), mirroring
 //     NewMessageNotification. The core Avatar atom is replaced by the chat
 //     `Avatar.User` element (rounded, initials fallback).
-//   - Web `Button.Icon` (react-aria) remove control → RN `Pressable` + AmityIcon.
+//   - Web `Button.Icon` (react-aria) remove control → RN `Button.Icon` atom.
 
 // 1. React / RN imports
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 // 2. Internal imports
+import { Button } from '../../../../../../../core/design/atoms/Button';
 import { Typography } from '../../../../../../../core/design/components/Typography';
-import { AmityIcon } from '../../../../../../../core/design/icons';
-import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-color-tokens';
 import useFile from '../../../../../../../core/hooks/useFile';
 import { ImageSizeState } from '../../../../../../../core/enums';
 import { Avatar } from '../../../../elements/Avatar';
@@ -47,20 +46,15 @@ export function SelectedMember({ user, onRemove }: SelectedMemberProps) {
           size="md"
         />
         {onRemove ? (
-          <Pressable
+          <Button.Icon
+            icon="cross-s"
+            styleType="transparent"
+            hierarchy="primary"
+            size={16}
             style={styles.removeButton}
             onPress={() => onRemove(user.userId)}
-            accessibilityRole="button"
             accessibilityLabel={`Remove ${displayName}`}
-          >
-            <AmityIcon
-              name="cross-s"
-              size={16}
-              tokenColor={
-                AmityColorToken.IconIconButtonTransparentPrimaryDefault
-              }
-            />
-          </Pressable>
+          />
         ) : null}
       </View>
       <Typography variant="caption" style={styles.name} numberOfLines={1}>

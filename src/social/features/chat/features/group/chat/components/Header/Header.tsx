@@ -7,10 +7,9 @@
 import { Pressable, View } from 'react-native';
 
 import useFile from '../../../../../../../../core/hooks/useFile';
+import { Button } from '../../../../../../../../core/design/atoms/Button';
 import { Typography } from '../../../../../../../../core/design/components/Typography';
 import { Loader } from '../../../../../../../../core/design/atoms/Loader';
-import { AmityIcon } from '../../../../../../../../core/design/icons';
-import { AmityColorToken } from '../../../../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../../../../core/localization';
 import { Avatar } from '../../../../../elements/Avatar';
 import { useNetworkOnline } from '../../../../../hooks';
@@ -68,18 +67,14 @@ export function Header({
 
   return (
     <View style={styles.header}>
-      <Pressable
-        style={styles.backButton}
+      <Button.Icon
+        icon="chevron-left"
+        styleType="ghost"
+        hierarchy="secondary"
+        size={32}
         onPress={onBack}
-        accessibilityRole="button"
         accessibilityLabel="Back"
-      >
-        <AmityIcon
-          name="chevron-left"
-          size={24}
-          tokenColor={AmityColorToken.IconIconButtonGhostSecondaryDefault}
-        />
-      </Pressable>
+      />
       {isBanned ? (
         identity
       ) : (
