@@ -26,7 +26,11 @@ export const useStyles = () => {
       fontSize: 16,
       lineHeight: 20,
       padding: 0,
-      color: token(AmityColorToken.TextListHeaderDefaultDefault),
+      // Web composer editor uses text-input-textinput-placeholder-enabled-filled for
+      // typed text; that token flips (dark-grey in light mode, white in dark). Its RN
+      // path is ".../Placeholder/Enabled-Filled" (Enabled-Filled is ONE hyphenated
+      // segment — guessing "Enabled/Filled" resolves to the missing sentinel).
+      color: token(AmityColorToken.TextInputTextInputPlaceholderEnabledFilled),
     },
   });
 

@@ -181,6 +181,47 @@ try {
   }
 } catch (e) { record('token refs valid', FAIL, e.message); }
 
+// ====== CHECK 4b: referenced tokens must RESOLVE (no #FF00FF missing sentinel) ======
+// A token NAME can exist in the vocab yet have a .path that is absent from the semantic
+// table — e.g. the hyphen trap: the path segment is "Enabled-Filled" (one segment), so
+// guessing "Enabled/Filled" resolves to the #FF00FF missing sentinel and a porter is
+// tempted to substitute a fixed token (which then breaks dark mode). Fail if any token
+// ACTUALLY USED in source resolves to missing in either light or dark.
+try {
+  const need = [RN.resolver, RN.tokensJson, RN.configTemplate, RN.colorTokensTs];
+  if (!need.every(existsSync)) {
+    record('token refs resolve', SKIP, 'resolver/table/config/vocab not vendored');
+  } else {
+    const req = createRequire(import.meta.url);
+    const R = req(RN.resolver);
+    const table = req(RN.tokensJson);
+    const cfg = req(RN.configTemplate);
+    const nameToPath = new Map(parseColorTokens(RN.colorTokensTs).map((t) => [t.name, t.path]));
+    const files = [RN.designDir, RN.chatFeatureDir].flatMap((d) => walk(d, ['.ts', '.tsx']));
+    const REF = /AmityColorToken\.([A-Za-z0-9_]+)/g;
+    const used = new Set();
+    for (const f of files) {
+      const src = readFileSync(f, 'utf8');
+      let m;
+      while ((m = REF.exec(src)) !== null) used.add(m[1]);
+    }
+    const bad = [];
+    for (const name of used) {
+      const p = nameToPath.get(name);
+      if (!p) continue; // unknown name → CHECK 4 owns it
+      for (const mode of ['light', 'dark']) {
+        if (R.resolveToken(cfg, table, '*/*/*', mode, p).source === 'missing') {
+          bad.push(`${name} (${mode})`);
+          break;
+        }
+      }
+    }
+    if (!files.length) record('token refs resolve', SKIP, 'no design/chat source yet');
+    else if (bad.length) record('token refs resolve', FAIL, `${bad.length} used token(s) resolve to missing: ${bad.slice(0, 4).join(', ')}`);
+    else record('token refs resolve', PASS, `all ${used.size} referenced tokens resolve (light+dark)`);
+  }
+} catch (e) { record('token refs resolve', FAIL, e.message); }
+
 // ================= CHECK 5: icon parity =================
 try {
   if (!existsSync(RN.iconRegistry)) {
