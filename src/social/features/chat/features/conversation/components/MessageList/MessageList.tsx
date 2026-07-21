@@ -13,6 +13,7 @@ import { MessageRow } from '../MessageRow';
 import { DateSeparator } from '../../../shared/components/DateSeparator';
 import { ScrollToLatestButton } from '../../../shared/components/ScrollToLatestButton';
 import { NewMessageNotification } from '../../../shared/components/NewMessageNotification';
+import { Loader } from '../../../../../../../core/design/atoms/Loader';
 import type { ChatItem } from '../../../../utils/groupMessagesByDate';
 import { useStyles } from './styles';
 
@@ -32,6 +33,11 @@ type MessageListProps = {
   isGroupChat?: boolean;
   hasMore?: boolean;
   onLoadMore?: () => void;
+  /** True while a page (older messages) is loading — drives the top loader. */
+  isLoading?: boolean;
+  /** True during the very first page load (parent shows a skeleton; the list
+   *  suppresses its own loader then, mirroring web). */
+  isLoadingFirstPage?: boolean;
   atBottom?: boolean;
   onAtBottomChange?: (atBottom: boolean) => void;
   newMessage?: Amity.Message | null;
@@ -54,6 +60,8 @@ export function MessageList({
   isGroupChat,
   hasMore,
   onLoadMore,
+  isLoading = false,
+  isLoadingFirstPage = false,
   atBottom = true,
   onAtBottomChange,
   newMessage,
@@ -102,6 +110,23 @@ export function MessageList({
     [atBottom, onAtBottomChange]
   );
 
+  // Web MessageList shows a top loader (`.messageList__topLoader` + Loader.Spinner)
+  // while paginating older messages, suppressed during the first-page load (which the
+  // parent covers with a skeleton). In an inverted FlatList the visual top — the
+  // older-messages / onEndReached side — is the ListFooterComponent, so the spinner
+  // lives there. Web's second (bottom / loadPrev) loader maps to jump-to-message,
+  // which is out of scope for this port (see useChatMessage), so it is omitted.
+  const showTopLoader = !!isLoading && !isLoadingFirstPage;
+
+  // Match web's mutually-exclusive affordances: the new-message banner shows only
+  // when a genuinely new message arrived while scrolled away (`newMessage` is gated
+  // upstream in useChatMessage); the scroll-to-latest button shows otherwise. This
+  // keeps the banner from co-appearing with the button (web: showScrollButton =
+  // !atBottom && !newMessage && isScrollable — the isScrollable guard is dropped as a
+  // documented deviation: an inverted list not at bottom is by definition scrollable).
+  const showNotification = !atBottom && !!newMessage;
+  const showScrollButton = !atBottom && !newMessage;
+
   return (
     <View style={styles.list}>
       <FlatList
@@ -110,6 +135,13 @@ export function MessageList({
         contentContainerStyle={styles.content}
         data={data}
         inverted
+        ListFooterComponent={
+          showTopLoader ? (
+            <View style={styles.topLoader}>
+              <Loader.Spinner size="sm" />
+            </View>
+          ) : null
+        }
         keyExtractor={(item: ChatItem) => item.id}
         renderItem={({ item }: { item: ChatItem }) => {
           if (item.kind === 'date') return <DateSeparator label={item.label} />;
@@ -142,7 +174,7 @@ export function MessageList({
         onEndReachedThreshold={0.5}
       />
 
-      {!atBottom && newMessage ? (
+      {showNotification && newMessage ? (
         <View style={styles.newMessageSlot}>
           <NewMessageNotification
             message={newMessage}
@@ -150,7 +182,7 @@ export function MessageList({
           />
         </View>
       ) : null}
-      {!atBottom ? (
+      {showScrollButton ? (
         <View style={styles.scrollButtonSlot}>
           <ScrollToLatestButton onPress={scrollToLatest} />
         </View>

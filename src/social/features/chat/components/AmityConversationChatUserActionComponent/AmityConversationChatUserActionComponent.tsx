@@ -2,19 +2,25 @@
 // user action menu that AmityUiKitWeb builds in
 // `conversation/chat/hooks/useConversationActions` (block / report / notification).
 //
-// Mirrors the sibling `AmityMessageActionMenu` (Popover + Menu + `anchor`
-// render-prop): the conversation Header wires its trailing button to
-// `openPopover`. Per the task's curated set this keeps block + report and drops
-// the notification toggle. `isBlockedByMe` is read live from
+// RN MOBILE ADAPTATION: web mounts this menu in a desktop Popover triggered from
+// the conversation Header's trailing button. On RN it is a native BOTTOM SHEET —
+// the component now owns the trailing "⋮" trigger and, on press, pushes the same
+// action list into the repo's global @devvie bottom sheet
+// (`useBottomSheet` → BottomSheetComponent). The menu body reuses the SoT `Menu`
+// in its `drawer` container (mirrors the web mobile drawer). Only the CONTAINER
+// changed Popover → bottom sheet: the items, handlers, labels, tokens and
+// destructive confirmations are unchanged.
+//
+// Per the task's curated set this keeps block + report and drops the notification
+// toggle. `isBlockedByMe` is read live from
 // `UserRepository.Relationship.getFollowInfo` (`status === 'blocked'`) so the
 // block/unblock label is always correct; report is a single flag action. Web's
-// `ConfirmProvider` maps to the native `Alert.alert` and
-// `useNotifications('chat')` to the `useChatNotifications` stub. SDK calls are
-// gated on `useAuth().isConnected`.
+// `ConfirmProvider` maps to the native `Alert.alert` and `useNotifications('chat')`
+// to the `useChatNotifications` stub. SDK calls are gated on `useAuth().isConnected`.
 
 // 1. React / RN imports
-import { useEffect, useState, type ReactNode } from 'react';
-import { Alert, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Alert, Pressable, View } from 'react-native';
 
 // 2. Third-party imports
 import { UserRepository } from '@amityco/ts-sdk-react-native';
@@ -22,29 +28,19 @@ import { UserRepository } from '@amityco/ts-sdk-react-native';
 // 3. Internal imports
 import { Menu } from '../../../../../core/design/components/Menu';
 import {
-  Popover,
-  type PopoverPlacement,
-} from '../../../../../core/design/components/Popover';
-import { type AmityIconName } from '../../../../../core/design/icons';
+  AmityIcon,
+  type AmityIconName,
+} from '../../../../../core/design/icons';
+import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { resolveString } from '../../../../../core/localization';
 import useAuth from '../../../../../core/hooks/useAuth';
+import { useBottomSheet } from '../../../../../core/stores/slices/bottomSheetSlice';
 import { useChatNotifications } from '../../hooks/useChatNotifications';
 import { useStyles } from './styles';
 
 // 4. Types
-type TriggerArgs = {
-  isOpen: boolean;
-  isDesktop: boolean;
-  openPopover: () => void;
-  closePopover: () => void;
-};
-
 type AmityConversationChatUserActionComponentProps = {
-  /** Trigger render-prop (RN equivalent of web's `anchor`); wire the header
-   *  button onPress to `openPopover`. */
-  anchor: (args: TriggerArgs) => ReactNode;
   user: Amity.InternalUser;
-  placement?: PopoverPlacement;
 };
 
 type ActionItem = {
@@ -56,13 +52,13 @@ type ActionItem = {
 
 // 5. Named function component
 export function AmityConversationChatUserActionComponent({
-  anchor,
   user,
-  placement = 'bottom right',
 }: AmityConversationChatUserActionComponentProps) {
   const { styles } = useStyles();
   const { isConnected } = useAuth();
   const { success } = useChatNotifications();
+  const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
+    useBottomSheet();
 
   const userId = user.userId;
   const displayName = user.displayName ?? user.userId;
@@ -145,11 +141,12 @@ export function AmityConversationChatUserActionComponent({
     },
   ];
 
-  return (
-    <Popover trigger={anchor} placement={placement}>
-      {({ closePopover }) => (
-        <View style={styles.menuContainer}>
-          <Menu variant="chat" container="popover">
+  function openActionSheet() {
+    openBottomSheet({
+      height: bottomSheetHeight[items.length as keyof typeof bottomSheetHeight],
+      content: (
+        <View style={styles.sheetContainer}>
+          <Menu variant="chat" container="drawer">
             {items.map((item) => (
               <Menu.Item
                 key={item.key}
@@ -157,14 +154,28 @@ export function AmityConversationChatUserActionComponent({
                 label={item.label}
                 typography="body"
                 onPress={() => {
-                  closePopover();
+                  closeBottomSheet();
                   item.onPress();
                 }}
               />
             ))}
           </Menu>
         </View>
-      )}
-    </Popover>
+      ),
+    });
+  }
+
+  return (
+    <Pressable
+      onPress={openActionSheet}
+      accessibilityRole="button"
+      accessibilityLabel="Conversation actions"
+    >
+      <AmityIcon
+        name="ellipsis-v-r"
+        size={24}
+        tokenColor={AmityColorToken.IconIconButtonGhostSecondaryDefault}
+      />
+    </Pressable>
   );
 }

@@ -23,6 +23,7 @@ import {
   TextInput,
   View,
   type NativeSyntheticEvent,
+  type TextInputContentSizeChangeEventData,
   type TextInputSelectionChangeEventData,
 } from 'react-native';
 
@@ -103,6 +104,28 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
     const [selection, setSelection] = useState<
       { start: number; end: number } | undefined
     >(undefined);
+
+    // Auto-grow: the input height tracks its content height
+    // (onContentSizeChange), clamped so the boxed wrapper grows from a single
+    // line up to `maxHeight`, then the input scrolls internally — matching web's
+    // composer inputWrapper (min-height 2.5rem → max-height 7.5rem). LINE_HEIGHT
+    // and WRAPPER_VERTICAL_PADDING mirror styles.ts (lineHeight 20 / paddingVertical 10).
+    const LINE_HEIGHT = 20;
+    const WRAPPER_VERTICAL_PADDING = 10;
+    const minInputHeight = LINE_HEIGHT;
+    const maxInputHeight = maxHeight - WRAPPER_VERTICAL_PADDING * 2;
+    const [contentHeight, setContentHeight] = useState(minInputHeight);
+    const inputHeight = Math.min(
+      Math.max(contentHeight, minInputHeight),
+      maxInputHeight
+    );
+
+    const handleContentSizeChange = useCallback(
+      (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
+        setContentHeight(e.nativeEvent.contentSize.height);
+      },
+      []
+    );
 
     const emitQuery = useCallback(
       (text: string, caret: number) => {
@@ -211,9 +234,10 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
         {mentionOverlay}
         <TextInput
           ref={inputRef}
-          style={styles.input}
+          style={[styles.input, { height: inputHeight }]}
           value={value}
           onChangeText={handleChangeText}
+          onContentSizeChange={handleContentSizeChange}
           onSelectionChange={handleSelectionChange}
           selection={selection}
           placeholder={placeholder}

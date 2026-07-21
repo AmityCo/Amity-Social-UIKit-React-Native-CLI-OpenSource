@@ -188,6 +188,14 @@ export const useStyles = () => {
       borderRadius: 20,
       backgroundColor: token(AmityColorToken.SurfaceMediaImageBroken),
     },
+    // Spinner overlay shown while a remote image downloads (BUG #5). Sits on the
+    // media-loading surface (same token web uses for the image loading state).
+    mediaLoadingOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
+    },
     mediaPressedScrim: {
       ...StyleSheet.absoluteFillObject,
       // Web used --asc-color-message-overlay (no RN token); substituted with the

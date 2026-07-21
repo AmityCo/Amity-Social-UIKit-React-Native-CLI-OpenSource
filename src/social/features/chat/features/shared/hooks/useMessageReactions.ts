@@ -1,10 +1,18 @@
 // useMessageReactions — RN port of AmityUiKitWeb
 // v4/chat/hooks/queries/useMessageReactionQuery.ts. Add / remove / toggle a
-// reaction on a message via ReactionRepository (reference-type = 'message'),
-// with the same optimistic-then-rollback behaviour web gets from react-query's
-// onError. Web called `message.addReaction()` and only used the repository for
-// the optimistic rollback; the task pins the data layer to ReactionRepository's
-// add/remove API, which is behaviourally identical (same endpoint, same cache).
+// reaction on a message, with the same optimistic-then-rollback behaviour web
+// gets from react-query's onError.
+//
+// The real mutation runs through the message-level `message.addReaction()` /
+// `message.removeReaction()` methods, exactly as web does. These update the
+// message model's Reactable fields (`reactions`, `reactionsCount`,
+// `myReactions`) that MessageReactionBadge reads, so the live collection reflects
+// the change and the badge appears immediately (own side included). A plain
+// `ReactionRepository.addReaction(referenceType, referenceId, name)` call writes
+// the reaction collection but does not propagate to those derived message fields,
+// which is why an earlier port left own reactions invisible. The repository
+// `.optimistically` calls are kept only for the optimistic pre-update and the
+// error rollback — matching web's onError handlers.
 
 import { ReactionRepository } from '@amityco/ts-sdk-react-native';
 
@@ -29,11 +37,9 @@ export function useMessageReactions(): UseMessageReactionsReturn {
   }: MessageReactionPayload): Promise<void> {
     if (!message.messageId) return;
     try {
-      await ReactionRepository.addReaction(
-        REFERENCE_TYPE,
-        message.messageId,
-        reactionName
-      );
+      // Web: `message.addReaction(reactionName)` — updates the message model's
+      // reaction fields so the live badge reflects it.
+      await message.addReaction(reactionName);
     } catch {
       // Roll back the optimistic add (mirrors web's onError).
       ReactionRepository.removeReaction.optimistically(
@@ -50,11 +56,8 @@ export function useMessageReactions(): UseMessageReactionsReturn {
   }: MessageReactionPayload): Promise<void> {
     if (!message.messageId) return;
     try {
-      await ReactionRepository.removeReaction(
-        REFERENCE_TYPE,
-        message.messageId,
-        reactionName
-      );
+      // Web: `message.removeReaction(reactionName)`.
+      await message.removeReaction(reactionName);
     } catch {
       ReactionRepository.addReaction.optimistically(
         REFERENCE_TYPE,

@@ -3,9 +3,9 @@
 // composer, viewers, action menu, see-more), driven by useGroupChat. Adds a group
 // Header (→ settings) and a banned empty-state branch.
 
-import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, Platform, View } from 'react-native';
 
+import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
 import { AmityMessageComposer } from '../../../components/AmityMessageComposer';
 import { ImageViewer } from '../../shared/components/ImageViewer';
 import { VideoPlayer } from '../../shared/components/VideoPlayer';
@@ -32,7 +32,23 @@ export function GroupChat({
 }: GroupChatProps) {
   const { styles } = useStyles();
   const c = useGroupChat({ channelId, isJustCreated });
-  const [reactorMessageId, setReactorMessageId] = useState<string | null>(null);
+  // Reactor-list sheet — RN MOBILE ADAPTATION: push the reactor list into the
+  // repo's global @devvie bottom sheet so it slides up as a sheet with a backdrop
+  // + drag/tap-to-close (BUG #15).
+  const { openBottomSheet, closeBottomSheet } = useBottomSheet();
+
+  function openReactorList(messageId: string) {
+    openBottomSheet({
+      // Tall drawer — web presents this list in a ~90vh drawer.
+      height: Math.round(Dimensions.get('window').height * 0.7),
+      content: (
+        <MessageReactorListSheet
+          messageId={messageId}
+          onClose={closeBottomSheet}
+        />
+      ),
+    });
+  }
 
   if (c.isBanned) {
     return (
@@ -76,7 +92,9 @@ export function GroupChat({
           onOpenVideo={c.openVideoPlayer}
           onOpenFailedSheet={c.openFailedSheet}
           onOpenBubbleMenu={c.openBubbleMenu}
-          onOpenReactorList={(m) => setReactorMessageId(m.messageId)}
+          onOpenReactorList={(m) => openReactorList(m.messageId)}
+          isLoading={c.isLoading}
+          isLoadingFirstPage={c.isLoadingFirstPage}
           onSeeMore={c.openSeeMore}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
@@ -108,12 +126,6 @@ export function GroupChat({
           text={c.seeMore.text}
           title={c.seeMore.title}
           onClose={c.closeSeeMore}
-        />
-      ) : null}
-      {reactorMessageId ? (
-        <MessageReactorListSheet
-          messageId={reactorMessageId}
-          onClose={() => setReactorMessageId(null)}
         />
       ) : null}
     </KeyboardAvoidingView>

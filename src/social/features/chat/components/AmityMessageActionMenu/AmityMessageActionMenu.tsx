@@ -102,7 +102,9 @@ export function buildMessageActionItems(
     },
     {
       key: 'reply',
-      icon: 'share-left-r',
+      // User QA directive: the reply icon must be SOLID. This intentionally
+      // deviates from web develop, which renders <ShareLeft/> = Regular (outline).
+      icon: 'share-left-s',
       label: resolveString('amity_chat_option_reply'),
       onPress: handlers.onReply,
       visible: isActive,
@@ -204,7 +206,7 @@ export function AmityMessageActionMenu({
   return (
     <Popover trigger={anchor} placement={placement}>
       {({ closePopover }) => (
-        <View>
+        <View style={styles.content}>
           {isActive && (
             <ReactionPicker
               myReaction={myReaction}

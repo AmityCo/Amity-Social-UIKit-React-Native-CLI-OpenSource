@@ -1,7 +1,10 @@
 // SelectedUsersBar — ported from AmityUiKitWeb
-// v4/chat/features/group/select-member/components/SelectedUsersBar. A horizontal
-// scroller of chosen-member tiles, reusing the shared RN `SelectedMember`
-// element. Renders nothing when no users are selected (as on web).
+// v4/chat/features/group/select-member/components/SelectedUsersBar (web reuses
+// that same component in the add-member Header). A horizontal scroller of
+// chosen-member tiles, reusing the shared RN `SelectedMember` element, with a
+// full-bleed divider below it (web `selectedUsersBar__divider`, line-divider-post
+// -default) separating the selected row from the member list. Renders nothing
+// when no users are selected (as on web).
 
 // 1. React / RN imports
 import { ScrollView, View } from 'react-native';
@@ -40,6 +43,7 @@ export function SelectedUsersBar({
           />
         ))}
       </ScrollView>
+      <View style={styles.divider} />
     </View>
   );
 }

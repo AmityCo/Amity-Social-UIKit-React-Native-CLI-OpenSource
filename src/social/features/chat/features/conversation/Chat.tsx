@@ -5,12 +5,10 @@
 // MutedBanner|MessageComposer, ImageViewer, VideoPlayer, MessageFullTextScreen.
 
 // 1. React / RN imports
-import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, Platform, View } from 'react-native';
 
 // 2. Internal imports
-import { AmityIcon } from '../../../../../core/design/icons';
-import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
+import { useBottomSheet } from '../../../../../core/stores/slices/bottomSheetSlice';
 import { AmityMessageComposer } from '../../components/AmityMessageComposer';
 import { AmityConversationChatUserActionComponent } from '../../components/AmityConversationChatUserActionComponent';
 import { ImageViewer } from '../shared/components/ImageViewer';
@@ -36,8 +34,23 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   const { styles } = useStyles();
   const c = useConversation(channelId);
   // Reactor-list sheet — web keeps this in useBubbleMenu at the orchestration
-  // level (one instance). RN holds the target messageId here and renders one sheet.
-  const [reactorMessageId, setReactorMessageId] = useState<string | null>(null);
+  // level (one instance). RN MOBILE ADAPTATION: rather than render the reactor
+  // list inline, push it into the repo's global @devvie bottom sheet so it slides
+  // up as a sheet with a backdrop + drag/tap-to-close (BUG #15).
+  const { openBottomSheet, closeBottomSheet } = useBottomSheet();
+
+  function openReactorList(messageId: string) {
+    openBottomSheet({
+      // Tall drawer — web presents this list in a ~90vh drawer.
+      height: Math.round(Dimensions.get('window').height * 0.7),
+      content: (
+        <MessageReactorListSheet
+          messageId={messageId}
+          onClose={closeBottomSheet}
+        />
+      ),
+    });
+  }
 
   return (
     <KeyboardAvoidingView
@@ -49,25 +62,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
         onBack={onBack}
         trailing={
           c.otherUser ? (
-            <AmityConversationChatUserActionComponent
-              user={c.otherUser}
-              placement="bottom right"
-              anchor={({ openPopover }) => (
-                <Pressable
-                  onPress={openPopover}
-                  accessibilityRole="button"
-                  accessibilityLabel="Conversation actions"
-                >
-                  <AmityIcon
-                    name="ellipsis-v-r"
-                    size={24}
-                    tokenColor={
-                      AmityColorToken.IconIconButtonGhostSecondaryDefault
-                    }
-                  />
-                </Pressable>
-              )}
-            />
+            <AmityConversationChatUserActionComponent user={c.otherUser} />
           ) : undefined
         }
       />
@@ -87,7 +82,9 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           onOpenVideo={c.openVideoPlayer}
           onOpenFailedSheet={c.openFailedSheet}
           onOpenBubbleMenu={c.openBubbleMenu}
-          onOpenReactorList={(m) => setReactorMessageId(m.messageId)}
+          onOpenReactorList={(m) => openReactorList(m.messageId)}
+          isLoading={c.isLoading}
+          isLoadingFirstPage={c.isLoadingFirstPage}
           onSeeMore={c.openSeeMore}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
@@ -119,12 +116,6 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           text={c.seeMore.text}
           title={c.seeMore.title}
           onClose={c.closeSeeMore}
-        />
-      ) : null}
-      {reactorMessageId ? (
-        <MessageReactorListSheet
-          messageId={reactorMessageId}
-          onClose={() => setReactorMessageId(null)}
         />
       ) : null}
     </KeyboardAvoidingView>

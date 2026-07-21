@@ -9,12 +9,20 @@
 //     archived channels drop out of the main list — mirrored here.
 //   - The empty-state illustration (web-only) is replaced by an AmityIcon glyph.
 //   - Navigation is delegated to `onChannelPress(channelId)` from the page.
+//   - Mark-as-read on row tap: web's canonical mark-read happens on conversation
+//     OPEN (message-level `Amity.Message#markRead()` via useChatMessage/useMarkAsRead,
+//     already wired for the RN Chat/GroupChat screens). To clear the list's unread
+//     count immediately on tap, we additionally call
+//     `SubChannelRepository.startMessageReceiptSync(defaultSubChannelId)` here — the
+//     SDK marks all messages in the sub-channel read. Fire-and-forget; failures are
+//     non-fatal (the conversation-open path still marks read).
 
 // 1. React / RN imports
 import { FlatList, View } from 'react-native';
 
 // 2. Third-party imports
 import { Swipeable } from 'react-native-gesture-handler';
+import { SubChannelRepository } from '@amityco/ts-sdk-react-native';
 
 // 3. Internal imports (relative)
 import { Typography } from '../../../../../../../core/design/components/Typography';
@@ -72,6 +80,19 @@ export function ChannelList({
     </View>
   );
 
+  // Mark the tapped channel read (clear its unread count) before navigating.
+  // Uses the channel's default sub-channel; the SDK marks all its messages read.
+  const handleRowPress = (channel: Amity.Channel) => {
+    if (channel.defaultSubChannelId) {
+      SubChannelRepository.startMessageReceiptSync(
+        channel.defaultSubChannelId
+      ).catch(() => {
+        // Non-fatal: unread also clears when the conversation is opened.
+      });
+    }
+    onChannelPress?.(channel.channelId, channel.displayName, channel.type);
+  };
+
   const isInitialLoading = loading && channels.length === 0;
 
   if (isInitialLoading) {
@@ -104,9 +125,7 @@ export function ChannelList({
           <View style={styles.row}>
             <AmityChatListItem
               channel={item}
-              onPress={() =>
-                onChannelPress?.(item.channelId, item.displayName, item.type)
-              }
+              onPress={() => handleRowPress(item)}
             />
           </View>
         </Swipeable>

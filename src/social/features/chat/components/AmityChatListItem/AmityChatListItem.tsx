@@ -373,12 +373,16 @@ function UnreadBadge({ count }: { count: number }) {
 
 // --- Skeleton ----------------------------------------------------------------
 
+// Mirrors web ChannelItemSkeleton exactly: a single row (surface-list-skeleton
+// background) holding an avatar circle (2.5rem = 40) + ONE pill line (8.75rem ×
+// 0.625rem = 140 × 10, web `border-radius: 10rem`). Web's skeleton deliberately
+// does not mirror the real two-line row, so there is intentionally no preview line.
 function AmityChatListItemSkeleton() {
   const { styles } = useStyles();
   return (
     <View style={styles.skeletonRow}>
       <Skeleton circle width={40} height={40} />
-      <Skeleton width={140} height={10} />
+      <Skeleton width={140} height={10} borderRadius={5} />
     </View>
   );
 }

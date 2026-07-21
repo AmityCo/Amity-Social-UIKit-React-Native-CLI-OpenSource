@@ -359,6 +359,7 @@ function ImageBubble({
   const largeUrl = useFile({ fileId, imageSize: ImageSizeState.large });
   const [pressed, setPressed] = useState(false);
   const [hasLoadError, setHasLoadError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const isFailed = isErrorState(message);
   const displaySrc = localPreviewUrl ?? mediumUrl;
@@ -406,8 +407,19 @@ function ImageBubble({
         source={{ uri: displaySrc }}
         style={styles.mediaImage}
         resizeMode="cover"
+        onLoadStart={() => setLoaded(false)}
+        onLoad={() => setLoaded(true)}
         onError={() => setHasLoadError(true)}
       />
+      {/* BUG #5 — RN <Image> (unlike web's progressive <img>) renders nothing while a
+          remote source downloads, so overlay a spinner on the media-loading surface
+          until it loads. Skipped for a local preview (that path shows the upload
+          overlay instead). RN-specific adaptation of web's image loading state. */}
+      {!loaded && !localPreviewUrl ? (
+        <View style={styles.mediaLoadingOverlay}>
+          <Loader.Spinner size="lg" />
+        </View>
+      ) : null}
       {showUploadOverlay ? (
         <MediaUploadOverlay onCancel={onCancelUpload} />
       ) : null}

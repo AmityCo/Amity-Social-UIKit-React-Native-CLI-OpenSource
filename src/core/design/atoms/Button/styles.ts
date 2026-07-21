@@ -50,7 +50,16 @@ type ToneSlice = Record<ButtonVisualState, StateTokens>;
 
 // (hierarchy, tone) → token slice, resolving to the web MainButton token model
 // (color × styleType × tokenHierarchy). Every name below is grep-confirmed to exist
-// in amity-color-tokens.ts. RN has no hover, so `pressed` reuses the web Hover slice.
+// in amity-color-tokens.ts. RN has no hover, so `pressed` reuses the web Hover slice
+// for the transparent/ghost styles (outlined/ghost/link) — where the resting surface
+// is transparent and the Hover token is the intended touch affordance.
+//
+// EXCEPTION (filled/primary): web's Main.module.css defines NO `:active`/`[data-pressed]`
+// rule for filled buttons — only `[data-hovered]` (a desktop-mouse hover). On an actual
+// press/tap the filled surface does NOT change. Reusing the Hover slice here made the
+// primary/save button shift to the lighter `primary_shade1` blue on tap, which web never
+// shows. So filled/primary `pressed` mirrors `enabled` (surface/border/text/icon all
+// unchanged on press), matching web's real active-state behaviour.
 const SLICES: Partial<Record<`${ButtonHierarchy}-${ButtonTone}`, ToneSlice>> = {
   // Primary → Filled / Primary
   'primary-default': {
@@ -60,11 +69,12 @@ const SLICES: Partial<Record<`${ButtonHierarchy}-${ButtonTone}`, ToneSlice>> = {
       text: AmityColorToken.TextMainButtonDefaultFilledPrimaryEnabled,
       icon: AmityColorToken.IconMainButtonDefaultFilledPrimaryEnabled,
     },
+    // Filled has no web press state → keep the enabled surface on press.
     pressed: {
-      surface: AmityColorToken.SurfaceMainButtonDefaultFilledPrimaryHover,
-      border: AmityColorToken.BorderMainButtonDefaultFilledPrimaryHover,
-      text: AmityColorToken.TextMainButtonDefaultFilledPrimaryHover,
-      icon: AmityColorToken.IconMainButtonDefaultFilledPrimaryHover,
+      surface: AmityColorToken.SurfaceMainButtonDefaultFilledPrimaryEnabled,
+      border: AmityColorToken.BorderMainButtonDefaultFilledPrimaryEnabled,
+      text: AmityColorToken.TextMainButtonDefaultFilledPrimaryEnabled,
+      icon: AmityColorToken.IconMainButtonDefaultFilledPrimaryEnabled,
     },
     disabled: {
       surface: AmityColorToken.SurfaceMainButtonDefaultFilledPrimaryDisabled,
@@ -80,11 +90,12 @@ const SLICES: Partial<Record<`${ButtonHierarchy}-${ButtonTone}`, ToneSlice>> = {
       text: AmityColorToken.TextMainButtonDestructiveFilledPrimaryEnabled,
       icon: AmityColorToken.IconMainButtonDestructiveFilledPrimaryEnabled,
     },
+    // Filled has no web press state → keep the enabled surface on press.
     pressed: {
-      surface: AmityColorToken.SurfaceMainButtonDestructiveFilledPrimaryHover,
-      border: AmityColorToken.BorderMainButtonDestructiveFilledPrimaryHover,
-      text: AmityColorToken.TextMainButtonDestructiveFilledPrimaryHover,
-      icon: AmityColorToken.IconMainButtonDestructiveFilledPrimaryHover,
+      surface: AmityColorToken.SurfaceMainButtonDestructiveFilledPrimaryEnabled,
+      border: AmityColorToken.BorderMainButtonDestructiveFilledPrimaryEnabled,
+      text: AmityColorToken.TextMainButtonDestructiveFilledPrimaryEnabled,
+      icon: AmityColorToken.IconMainButtonDestructiveFilledPrimaryEnabled,
     },
     disabled: {
       surface:

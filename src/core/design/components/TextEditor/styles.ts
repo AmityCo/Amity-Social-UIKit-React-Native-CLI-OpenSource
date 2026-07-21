@@ -21,11 +21,14 @@ export const useStyles = () => {
       minHeight: 40,
       justifyContent: 'center',
     },
+    // No `flex` here: the input height is driven explicitly from content size
+    // (TextEditor auto-grow) so the boxed wrapper can grow line-by-line up to
+    // maxHeight, then the input scrolls. A vertical flex would fight that height.
     input: {
-      flex: 1,
       fontSize: 16,
       lineHeight: 20,
       padding: 0,
+      textAlignVertical: 'top',
       // Web composer editor uses text-input-textinput-placeholder-enabled-filled for
       // typed text; that token flips (dark-grey in light mode, white in dark). Its RN
       // path is ".../Placeholder/Enabled-Filled" (Enabled-Filled is ONE hyphenated
