@@ -4,16 +4,22 @@
 // bottom 10, font-size 0.875rem→14, line-height 1.3→18. Colours resolve through the
 // design tokens (surface/text chatbubble, inbound vs outbound). No hardcoded hex.
 
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { useToken } from '../../../../../core/design/theme/useToken';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
+
+// Web caps the text bubble at 60vw. In RN a percentage maxWidth resolves against the
+// bubble's parent, and inside the action-menu Popover wrapper that parent has an
+// indefinite width — Yoga then collapses the Text to its minimum intrinsic width
+// (word/char-per-line). Use a concrete pixel cap off the screen width instead.
+const BUBBLE_MAX_WIDTH = Math.round(Dimensions.get('window').width * 0.72);
 
 export const useStyles = () => {
   const token = useToken();
 
   const styles = StyleSheet.create({
     bubble: {
-      maxWidth: '78%',
+      maxWidth: BUBBLE_MAX_WIDTH,
       borderRadius: 20,
       overflow: 'hidden',
     },

@@ -15,7 +15,8 @@ export const useStyles = () => {
       backgroundColor: token(AmityColorToken.SurfacePageBackgroundDefault),
     },
     content: {
-      paddingHorizontal: 16,
+      // Horizontal spacing comes from the MessageRow side margins (16); adding it
+      // here too would double it to 32. Keep only vertical padding.
       paddingVertical: 8,
     },
     // Scroll affordances float above the composer at the bottom of the list.
