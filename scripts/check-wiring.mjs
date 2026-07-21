@@ -79,7 +79,12 @@ function isWired(rnRel, kind) {
 }
 
 const inScope = (u) => milestone == null || u.milestone === milestone;
-const wired = [], unwired = [];
+// Does any file for an RN target exist on disk yet?
+const rnExists = (rnRel) => {
+  const abs = resolve(REPO_ROOT, rnRel);
+  return existsSync(abs) || existsSync(`${abs}.tsx`) || existsSync(`${abs}.ts`);
+};
+const wired = [], unwired = [], missing = [];
 const consider = [
   ...Object.entries(manifest.features || {}).map(([k, u]) => [k, u]),
   ...Object.entries(manifest.curated || {}).map(([k, u]) => [`curated/${k}`, u]),
@@ -89,6 +94,9 @@ for (const [key, u] of consider) {
   if (!u.rn || !inScope(u)) continue;
   // pages themselves are entries; skip
   if (/\/pages\//.test(u.rn)) continue;
+  // Not built yet → parity gate owns this, not wiring. Reporting it as "unwired"
+  // (built but unreachable) would falsely imply the file exists.
+  if (!rnExists(u.rn)) { missing.push(key); continue; }
   (isWired(u.rn, u.kind) ? wired : unwired).push(key);
 }
 
@@ -96,5 +104,9 @@ console.log(c.bold(`\nWiring reachability  ${c.dim(`(${milestone ? 'milestone ' 
 console.log(`  ${c.green('✓')} wired     ${wired.length}`);
 console.log(`  ${unwired.length ? c.red('✗') : c.green('✓')} unwired   ${unwired.length} ${c.dim('(built but not reachable from any page)')}`);
 for (const k of unwired.sort()) console.log(`      ${c.red(k)}`);
-console.log(`\n  ${unwired.length ? c.red(unwired.length + ' unwired') : c.green('all wired')}\n`);
+if (missing.length) {
+  console.log(`  ${c.dim('•')} ${c.dim(`not built ${missing.length} (parity gate owns these — not counted as unwired)`)}`);
+  for (const k of missing.sort()) console.log(`      ${c.dim(k)}`);
+}
+console.log(`\n  ${unwired.length ? c.red(unwired.length + ' unwired') : c.green('all built units wired')}${missing.length ? c.dim(` · ${missing.length} not built`) : ''}\n`);
 process.exit(unwired.length ? 1 : 0);
