@@ -1,0 +1,10 @@
+{
+  "note": "Semantic-token values intentionally set in the vendored RN table AHEAD of the cleverden SoT, to match web develop, pending a SoT sync to develop. check-port CHECK 2 excludes these keys from the SoT deep-equal (reported as documented interim overrides, not failures). check-token-drift.mjs verifies each still matches web develop. Each entry reverts automatically once sync-design-tokens re-vendors a develop-synced SoT — delete it then.",
+  "semantic": {
+    "Line/Divider/Post/Default": {
+      "reason": "web develop fixed the chat-header divider from {Secondary/White} (#FFFFFF, invisible on a white header) to {Secondary/200} (#EBECEF, a visible light grey). The cleverden SoT still ships the old value; interim override until the SoT syncs to develop.",
+      "sot": { "light": "{Secondary/White}", "dark": "{Secondary/700}" },
+      "rn": { "light": "{Secondary/200}", "dark": "{Secondary/700}" }
+    }
+  }
+}

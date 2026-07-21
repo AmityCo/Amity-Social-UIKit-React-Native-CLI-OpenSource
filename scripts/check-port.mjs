@@ -81,12 +81,35 @@ try {
     record('contract parity', SKIP, 'not vendored');
   } else {
     const errs = [];
-    // 2a. vendored design-tokens deep-equals SoT (if SoT reachable)
+    let overrideNote = '';
+    // 2a. vendored design-tokens deep-equals SoT (if SoT reachable), EXCEPT keys
+    // documented in token-drift-overrides.json (values intentionally set ahead of
+    // the SoT to match web develop — reported as interim overrides, not failures).
     if (existsSync(SOT.tokensJson)) {
-      const a = readFileSync(RN.tokensJson, 'utf8');
-      const b = readFileSync(SOT.tokensJson, 'utf8');
-      if (JSON.stringify(JSON.parse(a)) !== JSON.stringify(JSON.parse(b)))
-        errs.push('vendored design-tokens.json differs from SoT (stale — re-run sync)');
+      const rnT = JSON.parse(readFileSync(RN.tokensJson, 'utf8'));
+      const sotT = JSON.parse(readFileSync(SOT.tokensJson, 'utf8'));
+      const ovPath = resolve(RN.portDir, 'token-drift-overrides.json');
+      const overrides = existsSync(ovPath)
+        ? JSON.parse(readFileSync(ovPath, 'utf8'))
+        : { semantic: {}, alias: {} };
+      const diff = [];
+      for (const section of ['alias', 'semantic']) {
+        const r = rnT[section] || {}, s = sotT[section] || {};
+        const ov = overrides[section] || {};
+        for (const k of new Set([...Object.keys(r), ...Object.keys(s)]))
+          if (JSON.stringify(r[k]) !== JSON.stringify(s[k]))
+            diff.push({ section, k, documented: k in ov });
+      }
+      const undoc = diff.filter((d) => !d.documented);
+      const doc = diff.filter((d) => d.documented);
+      if (undoc.length)
+        errs.push(
+          `vendored design-tokens.json differs from SoT on ${undoc.length} unlisted key(s): ${undoc
+            .slice(0, 3)
+            .map((d) => d.k)
+            .join(', ')} (stale — re-run sync, or document in token-drift-overrides.json)`
+        );
+      if (doc.length) overrideNote = ` · ${doc.length} documented interim override(s) vs SoT`;
     }
     // 2b. checksum pin vs semantic count vs AmityColorToken count
     const checks = JSON.parse(readFileSync(RN.checksums, 'utf8'));
@@ -102,7 +125,7 @@ try {
       if (missing.length) errs.push(`${missing.length} semantic paths missing from AmityColorToken`);
     }
     if (errs.length) record('contract parity', FAIL, errs.join(' | '));
-    else record('contract parity', PASS, `pinned schema ${checks.schema_version}/${checks.tokenCount}, matches SoT`);
+    else record('contract parity', PASS, `pinned schema ${checks.schema_version}/${checks.tokenCount}, matches SoT${overrideNote}`);
   }
 } catch (e) { record('contract parity', FAIL, e.message); }
 

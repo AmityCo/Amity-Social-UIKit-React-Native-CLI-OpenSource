@@ -1134,7 +1134,7 @@
       "dark": "{Signal/Alert/500}"
     },
     "Line/Divider/Post/Default": {
-      "light": "{Secondary/White}",
+      "light": "{Secondary/200}",
       "dark": "{Secondary/700}"
     },
     "Line/Divider/Content/Default": {
