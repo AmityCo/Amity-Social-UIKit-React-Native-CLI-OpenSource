@@ -17,6 +17,12 @@ export const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'stretch',
       width: '100%',
+      // Web's card is width:100% and gets its width from the bubble expanding to
+      // fit content (CSS block flow). RN flex does NOT expand the bubble that way,
+      // so without a floor the card collapses to the (short) text width. Pin the
+      // floor to the SoT card width (previewLink.geometry.size = 208x104) so the
+      // card renders at its designed width, matching web's rendered result.
+      minWidth: 208,
       borderRadius: 10,
       overflow: 'hidden',
     },
