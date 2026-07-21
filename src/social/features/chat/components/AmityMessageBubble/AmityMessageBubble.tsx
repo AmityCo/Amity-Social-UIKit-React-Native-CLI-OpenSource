@@ -9,7 +9,15 @@
 
 // 1. React / RN imports
 import { useState, type ReactNode } from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import {
+  Image,
+  Linking,
+  Pressable,
+  Text,
+  View,
+  type StyleProp,
+  type TextStyle,
+} from 'react-native';
 
 // 2. Third-party imports
 import Video from 'react-native-video';
@@ -24,25 +32,66 @@ import { useString } from '../../../../../core/localization';
 import { MediaUploadOverlay } from '../../elements/MediaUploadOverlay';
 import { DeletedMessagePill } from '../../features/shared/components/DeletedMessagePill';
 import { MessageLinkPreview } from '../../features/shared/components/MessageLinkPreview';
+import {
+  isSyntheticPendingMessage,
+  type SyntheticPendingMessage,
+} from '../../features/shared/hooks/useMessageComposer';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
 import { useStyles } from './styles';
 
 const TEXT_MAX_LINES = 10; // web chat.ts
 const TEXT_MAX_LINES_WITH_LINK = 5; // web chat.ts
 const URL_RE = /(https?:\/\/[^\s]+)/i;
+// Global variant used to split a text run into linkable segments (web linkified
+// http(s):// and www. URLs). URL_RE (no /g) stays for the first-URL preview.
+const URL_SPLIT_RE = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
+
+function openLink(raw: string): void {
+  const url = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+  Linking.openURL(url).catch(() => {});
+}
+
+// Split a non-mention text run into plain strings + tappable link spans, ported
+// from web's <Linkify> (navigable: onPress → Linking.openURL). linkStyle carries
+// the underline (+ inbound-link colour when the bubble is inbound).
+function renderLinkedText(
+  text: string,
+  keyPrefix: string,
+  linkStyle: StyleProp<TextStyle>
+): ReactNode[] {
+  const out: ReactNode[] = [];
+  text.split(URL_SPLIT_RE).forEach((part, i) => {
+    if (!part) return;
+    if (/^(?:https?:\/\/|www\.)/i.test(part)) {
+      out.push(
+        <Text
+          key={`${keyPrefix}-l-${i}`}
+          style={linkStyle}
+          onPress={() => openLink(part)}
+        >
+          {part}
+        </Text>
+      );
+    } else {
+      out.push(part);
+    }
+  });
+  return out;
+}
 
 // Render message text with @mention spans highlighted, ported from web
 // renderTextWithMentions: metadata.mentioned = [{ index, length }] marks the runs to
-// style with the mention token. Non-mention runs render as plain text within the
-// parent <Text>. (Web additionally linkifies in-text URLs; the link preview card
-// below covers the first URL — inline linkify is deferred.)
+// style with the mention token. Following web, only the non-mention runs are
+// linkified (lead/tail slices) — mention spans stay plain — and in-text URLs render
+// as tappable link spans (renderLinkedText).
 function renderTextWithMentions(
   text: string,
   mentioned: { index: number; length: number }[] | undefined,
-  mentionStyle: object
+  mentionStyle: object,
+  linkStyle: StyleProp<TextStyle>
 ): ReactNode {
   const spans = (mentioned ?? []).slice().sort((a, b) => a.index - b.index);
-  if (spans.length === 0) return text;
+  if (spans.length === 0) return renderLinkedText(text, 't', linkStyle);
 
   const out: ReactNode[] = [];
   let cursor = 0;
@@ -51,7 +100,11 @@ function renderTextWithMentions(
     const span = startsWithAt ? m.length + 1 : m.length;
     const start = Math.max(m.index, cursor);
     const end = Math.min(start + span, text.length);
-    if (start > cursor) out.push(text.slice(cursor, start));
+    if (start > cursor) {
+      out.push(
+        ...renderLinkedText(text.slice(cursor, start), `t-${cursor}`, linkStyle)
+      );
+    }
     if (end > start) {
       out.push(
         <Text key={`m-${i}`} style={mentionStyle}>
@@ -61,7 +114,9 @@ function renderTextWithMentions(
     }
     cursor = end;
   });
-  if (cursor < text.length) out.push(text.slice(cursor));
+  if (cursor < text.length) {
+    out.push(...renderLinkedText(text.slice(cursor), 't-tail', linkStyle));
+  }
   return out;
 }
 
@@ -92,6 +147,21 @@ function getFileId(message: Amity.Message): string {
 
 function isErrorState(message: Amity.Message): boolean {
   return message.syncState === ('error' as Amity.SyncState);
+}
+
+// Web wrapWithFailedCaption: the "failed to send" helper caption appears under an
+// image/video bubble ONLY when it failed for a moderation violation (a synthetic
+// pending message whose __failureReason === 'moderation'). Generic failures show
+// nothing.
+function isModerationViolation(
+  message: Amity.Message,
+  isFailed: boolean
+): boolean {
+  return (
+    isFailed &&
+    isSyntheticPendingMessage(message) &&
+    (message as SyntheticPendingMessage).__failureReason === 'moderation'
+  );
 }
 
 // 5. Named function component (dispatcher)
@@ -180,6 +250,9 @@ function TextBubble({
     pressed && (isUser ? styles.bubbleOwnPressed : styles.bubbleOtherPressed),
   ];
   const textStyle = [styles.text, isUser ? styles.textOwn : styles.textOther];
+  // Outbound links inherit the outbound message colour (web currentcolor);
+  // inbound links recolour to the inbound-link token.
+  const linkStyle = isUser ? styles.link : [styles.link, styles.linkOther];
 
   return (
     <Pressable
@@ -201,7 +274,8 @@ function TextBubble({
           {renderTextWithMentions(
             text,
             mentioned,
-            isUser ? styles.mentionOwn : styles.mentionOther
+            isUser ? styles.mentionOwn : styles.mentionOther,
+            linkStyle
           )}
         </Text>
         {truncated && onSeeMore ? (
@@ -275,6 +349,7 @@ function ImageBubble({
   onCancelUpload,
 }: ImageBubbleProps) {
   const { styles } = useStyles();
+  const failedLabel = useString('amity_chat_message_failed_to_send');
   const fileId = getFileId(message);
   const mediumUrl = useFile({ fileId, imageSize: ImageSizeState.medium });
   const largeUrl = useFile({ fileId, imageSize: ImageSizeState.large });
@@ -307,8 +382,9 @@ function ImageBubble({
 
   const showUploadOverlay = !!localPreviewUrl && !isFailed;
   const canOpen = !!onOpenImage && !!openUrl && !isFailed && !localPreviewUrl;
+  const isViolation = isModerationViolation(message, isFailed);
 
-  return (
+  const bubble = (
     <Pressable
       style={styles.imageBubble}
       accessibilityRole="button"
@@ -334,6 +410,14 @@ function ImageBubble({
       {pressed ? <View style={styles.mediaPressedScrim} /> : null}
     </Pressable>
   );
+
+  if (!isViolation) return bubble;
+  return (
+    <View style={styles.failedWrapper}>
+      {bubble}
+      <Text style={styles.failedCaption}>{failedLabel}</Text>
+    </View>
+  );
 }
 
 // ---------- Video ----------
@@ -353,6 +437,7 @@ function VideoBubble({
   onCancelUpload,
 }: VideoBubbleProps) {
   const { styles } = useStyles();
+  const failedLabel = useString('amity_chat_message_failed_to_send');
   const fileId = getFileId(message);
   const videoUrl = useVideoFileUrl(fileId);
   const [pressed, setPressed] = useState(false);
@@ -370,8 +455,9 @@ function VideoBubble({
 
   const showUploadOverlay = !!localPreviewUrl && !isFailed;
   const canOpen = !!onOpenVideo && !isFailed && !localPreviewUrl;
+  const isViolation = isModerationViolation(message, isFailed);
 
-  return (
+  const bubble = (
     <Pressable
       style={styles.videoBubble}
       accessibilityRole="button"
@@ -406,5 +492,13 @@ function VideoBubble({
       )}
       {pressed ? <View style={styles.mediaPressedScrim} /> : null}
     </Pressable>
+  );
+
+  if (!isViolation) return bubble;
+  return (
+    <View style={styles.failedWrapper}>
+      {bubble}
+      <Text style={styles.failedCaption}>{failedLabel}</Text>
+    </View>
   );
 }

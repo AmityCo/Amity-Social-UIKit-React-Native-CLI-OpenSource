@@ -122,6 +122,30 @@ export const useStyles = () => {
       paddingHorizontal: 10,
       paddingBottom: 10,
     },
+    // In-text URL spans. Web `.textBubble__text a` is underlined and inherits
+    // currentcolor (= the message text colour) for outbound; the `data-user='other'`
+    // rule overrides inbound links to the inbound-link token. RN nested <Text>
+    // inherits colour, so outbound links only need the underline (link) while
+    // inbound links add linkOther to recolour.
+    link: {
+      textDecorationLine: 'underline',
+    },
+    linkOther: {
+      color: token(AmityColorToken.TextChatBubbleInboundLinkDefault),
+    },
+    // Failed-to-send caption under a moderation-rejected media bubble (web
+    // mediaBubble__failedWrapper + mediaBubble__failedCaption: flex column,
+    // align flex-end, gap 4; caption helper-text token, 10/13).
+    failedWrapper: {
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      gap: 4,
+    },
+    failedCaption: {
+      color: token(AmityColorToken.TextChatBubbleOutboundHelperTextDefault),
+      fontSize: 10,
+      lineHeight: 13,
+    },
 
     // --- Media (image / video) ---
     // Web used height 15rem→240 with variable width (inline-block, capped at 20rem/320).

@@ -36,6 +36,19 @@ const COLOR_ALLOW = new Set([
   'message-overlay', // no RN token; media scrim substituted
   'background-transparent-black', // no RN token; substituted
   'white', // web --asc-color-white; RN uses an equivalent semantic token
+  // web CSS var is a dangling reference: neither web nor RN token catalogs define
+  // "Surface/Sheets/Background/Default" — the only sheets-background token is
+  // ".../General" (which RN uses via SurfaceSheetsBackgroundGeneral). Web's own
+  // injectColorTokenLayers never emits this var, so RN already matches web's real token.
+  'surface-sheets-background-default',
+  // web has these Subdue banner text/icon tokens, but the cleverden SoT (717) — which
+  // RN vendors verbatim (sync-design-tokens) — doesn't ship them yet. RN uses the
+  // color-identical GreyBG variant (byte-identical alias chain → same resolved hex), so
+  // the rendered colour matches web exactly. Adding the tokens to RN would diverge from
+  // the SoT contract and be clobbered on next sync. Retire these when the SoT adds the
+  // Subdue banner tokens (then point the banners at the real Subdue token).
+  'text-banner-subdue-textdescription-general',
+  'icon-banner-subdue-description-general',
 ]);
 
 const tokens = parseColorTokens(RN.colorTokensTs);

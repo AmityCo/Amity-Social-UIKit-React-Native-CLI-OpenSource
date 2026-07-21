@@ -1,7 +1,8 @@
 // Styles for AmityMediaAttachmentPicker — ported from AmityUiKitWeb MediaSection.module.css.
 // Geometry: container padding 0.5rem 0 → vertical 8; row height 5.625rem→90, gap 3.5rem→56;
-// item width 4rem→64, gap 0.25rem→4; chip padding 0.5rem→8, radius 6.1875rem→99. Hover
-// states dropped (no hover on touch). Colours resolve through the design tokens.
+// item width 4rem→64, gap 0.25rem→4; chip padding 0.5rem→8, radius 6.1875rem→99. Web's
+// chip `[data-hovered]` background maps to the RN Pressable pressed state (chipPressed).
+// Colours resolve through the design tokens.
 
 import { StyleSheet } from 'react-native';
 import { useToken } from '../../../../../core/design/theme/useToken';
@@ -38,6 +39,13 @@ export const useStyles = () => {
       borderRadius: 99,
       backgroundColor: token(
         AmityColorToken.SurfaceIconButtonFilledSecondaryEnabled
+      ),
+    },
+    // Web `.mediaSection__item[data-hovered] .chip` swaps the chip background to
+    // the hover token; the RN equivalent is the Pressable pressed state.
+    chipPressed: {
+      backgroundColor: token(
+        AmityColorToken.SurfaceIconButtonFilledSecondaryHover
       ),
     },
     label: {

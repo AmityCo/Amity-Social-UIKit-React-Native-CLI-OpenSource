@@ -71,7 +71,7 @@ export function MemberItem({
           <AmityIcon
             name="volume-slash-r"
             size={20}
-            tokenColor={AmityColorToken.IconListLeadingDefaultDefault}
+            tokenColor={AmityColorToken.TextListTextDescriptionDefaultDefault}
           />
         ) : null}
       </View>

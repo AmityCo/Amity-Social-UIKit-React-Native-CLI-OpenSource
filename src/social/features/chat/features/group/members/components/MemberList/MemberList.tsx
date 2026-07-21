@@ -108,6 +108,7 @@ export function MemberList({
                   user={memberUser}
                   isMemberModerator={isMemberModerator}
                   isViewerModerator={isViewerModerator}
+                  isMuted={!!member.isMuted}
                   // eslint-disable-next-line react/no-unstable-nested-components -- Popover's anchor is a render-prop, not a component definition.
                   anchor={({ openPopover }) => (
                     <Pressable

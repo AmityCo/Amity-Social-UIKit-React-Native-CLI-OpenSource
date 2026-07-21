@@ -33,13 +33,26 @@ export const useStyles = () => {
       gap: 12,
     },
     avatar: { width: 40, height: 40, flexShrink: 0 },
-    name: {
+    title: {
       flex: 1,
+      minWidth: 0,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+    name: {
       fontSize: 17,
       lineHeight: 24,
       fontWeight: '600',
       letterSpacing: -0.4,
       color: token(AmityColorToken.TextListHeaderDefaultDefault),
+    },
+    subtitle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    subtitleText: {
+      color: token(AmityColorToken.TextListTextDescriptionDefaultDefault),
     },
   });
   return { styles, token };

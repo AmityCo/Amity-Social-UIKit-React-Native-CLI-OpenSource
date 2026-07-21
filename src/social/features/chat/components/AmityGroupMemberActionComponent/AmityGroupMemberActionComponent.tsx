@@ -4,15 +4,18 @@
 //
 // Mirrors the sibling `AmityMessageActionMenu` (Popover + Menu + `anchor`
 // render-prop): the owning MemberItem row wires the trailing ellipsis to
-// `openPopover`. Item visibility follows web's `getActions`; per the
-// AmityMessageActionMenu precedent this batch keeps the task's curated set
-// (promote / demote, ban, remove, report) and drops web's mute/unmute and the
-// unreport toggle. Web's `ConfirmProvider` maps to the native `Alert.alert`
-// (the `useFailedMessageSheet` pattern), and `useNotifications('chat')` to the
-// `useChatNotifications` stub. Live SDK calls are gated on `useAuth().isConnected`.
+// `openPopover`. Item visibility follows web's `getActions` exactly: promote,
+// demote, mute, unmute, report, unreport, ban, remove — with the same
+// conditions (mute vs unmute by the member's mute state; report vs unreport by
+// whether the viewer has flagged them). Web's `ConfirmProvider` maps to the
+// native `Alert.alert` (the `useFailedMessageSheet` pattern), and
+// `useNotifications('chat')` to the `useChatNotifications` stub. Live SDK calls
+// are gated on `useAuth().isConnected`. Web resolves `isFlaggedByMe` lazily when
+// the menu opens (`queryIsFlaggedByMe`); RN resolves it once per row via
+// `UserRepository.isUserFlaggedByMe` (the visibility condition is what matters).
 
 // 1. React / RN imports
-import { type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Alert, View } from 'react-native';
 
 // 2. Third-party imports
@@ -50,6 +53,7 @@ type AmityGroupMemberActionComponentProps = {
   user: Amity.InternalUser;
   isMemberModerator: boolean;
   isViewerModerator: boolean;
+  isMuted?: boolean;
   placement?: PopoverPlacement;
 };
 
@@ -69,6 +73,7 @@ export function AmityGroupMemberActionComponent({
   user,
   isMemberModerator,
   isViewerModerator,
+  isMuted = false,
   placement = 'bottom right',
 }: AmityGroupMemberActionComponentProps) {
   const { styles } = useStyles();
@@ -76,6 +81,21 @@ export function AmityGroupMemberActionComponent({
   const { success } = useChatNotifications();
 
   const userId = user.userId;
+
+  const [isFlaggedByMe, setIsFlaggedByMe] = useState(false);
+
+  useEffect(() => {
+    if (!isConnected) return undefined;
+    let active = true;
+    UserRepository.isUserFlaggedByMe(userId)
+      .then((flagged) => {
+        if (active) setIsFlaggedByMe(!!flagged);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [isConnected, userId]);
 
   function confirmAlert(
     title: string,
@@ -132,11 +152,33 @@ export function AmityGroupMemberActionComponent({
     success({ content: resolveString('amity_chat_action_remove_member') });
   }
 
+  async function handleMute() {
+    if (!isConnected) return;
+    await ChannelRepository.Moderation.muteMembers(channelId, [userId]);
+    success({ content: resolveString('amity_chat_action_mute_user') });
+  }
+
+  async function handleUnmute() {
+    if (!isConnected) return;
+    await ChannelRepository.Moderation.unmuteMembers(channelId, [userId]);
+    success({ content: resolveString('amity_chat_action_unmute_user') });
+  }
+
   async function handleReport() {
     if (!isConnected) return;
     await UserRepository.flagUser(userId);
+    setIsFlaggedByMe(true);
     success({
       content: resolveString('amity_chat_action_report_user_success'),
+    });
+  }
+
+  async function handleUnreport() {
+    if (!isConnected) return;
+    await UserRepository.unflagUser(userId);
+    setIsFlaggedByMe(false);
+    success({
+      content: resolveString('amity_chat_action_unreport_user_success'),
     });
   }
 
@@ -170,11 +212,46 @@ export function AmityGroupMemberActionComponent({
         ),
     },
     {
+      key: 'mute',
+      icon: 'volume-slash-r',
+      label: resolveString('amity_chat_group_member_action_mute'),
+      visible: isViewerModerator && !isMuted && !isMemberModerator,
+      onPress: () =>
+        confirmAlert(
+          resolveString('amity_chat_mute_confirm_title'),
+          resolveString('amity_chat_mute_confirm_message'),
+          resolveString('amity_chat_mute_confirm_label'),
+          true,
+          handleMute
+        ),
+    },
+    {
+      key: 'unmute',
+      icon: 'volume-s',
+      label: resolveString('amity_chat_group_member_action_unmute'),
+      visible: isViewerModerator && isMuted && !isMemberModerator,
+      onPress: () =>
+        confirmAlert(
+          resolveString('amity_chat_unmute_confirm_title'),
+          resolveString('amity_chat_unmute_confirm_message'),
+          resolveString('amity_chat_unmute_confirm_label'),
+          false,
+          handleUnmute
+        ),
+    },
+    {
       key: 'report',
       icon: 'flag-r',
       label: resolveString('amity_chat_member_action_report'),
-      visible: true,
+      visible: !isFlaggedByMe,
       onPress: handleReport,
+    },
+    {
+      key: 'unreport',
+      icon: 'flag-r',
+      label: resolveString('amity_chat_member_action_unreport'),
+      visible: isFlaggedByMe,
+      onPress: handleUnreport,
     },
     {
       key: 'ban',

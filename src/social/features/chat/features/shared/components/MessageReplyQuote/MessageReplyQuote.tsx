@@ -6,8 +6,16 @@
 // by the wiring layer. Media dimensions are clamped via getReplyThumbnailSize.
 
 // 1. React / RN imports
-import { useState } from 'react';
-import { Image, Pressable, View, type ImageLoadEventData } from 'react-native';
+import { useState, type ReactNode } from 'react';
+import {
+  Image,
+  Pressable,
+  Text,
+  View,
+  type ImageLoadEventData,
+  type StyleProp,
+  type TextStyle,
+} from 'react-native';
 
 // 2. Internal imports
 import { Typography } from '../../../../../../../core/design/components/Typography';
@@ -38,6 +46,31 @@ type MessageData = {
   fileId?: string;
   thumbnailFileId?: string;
 };
+
+// Ported from web's <Linkify> in TextQuote: URLs are recoloured (inbound-link
+// token) + underlined but NOT separately tappable — the whole quote is the tap
+// target (onOpenSeeMore). Splits the text into plain strings + styled link spans.
+const URL_SPLIT_RE = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
+
+function renderQuoteTextWithLinks(
+  text: string,
+  linkStyle: StyleProp<TextStyle>
+): ReactNode[] {
+  const out: ReactNode[] = [];
+  text.split(URL_SPLIT_RE).forEach((part, i) => {
+    if (!part) return;
+    if (/^(?:https?:\/\/|www\.)/i.test(part)) {
+      out.push(
+        <Text key={`l-${i}`} style={linkStyle}>
+          {part}
+        </Text>
+      );
+    } else {
+      out.push(part);
+    }
+  });
+  return out;
+}
 
 // 4. Named function component
 export function MessageReplyQuote({
@@ -178,7 +211,7 @@ function TextQuote({
     >
       <View style={styles.textBubble}>
         <Typography variant="body" style={styles.text} numberOfLines={2}>
-          {text}
+          {renderQuoteTextWithLinks(text, styles.link)}
         </Typography>
       </View>
       <View style={styles.overlay} pointerEvents="none" />

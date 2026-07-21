@@ -16,7 +16,7 @@
 
 // 1. React / RN imports
 import { useRef } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 
 // 2. Third-party imports
 import { Client } from '@amityco/ts-sdk-react-native';
@@ -35,6 +35,10 @@ import { MessageReplyBand } from '../../features/shared/components/MessageReplyB
 import { AmityMediaAttachmentPicker } from '../AmityMediaAttachmentPicker';
 import type { useMessageComposer } from '../../features/shared/hooks/useMessageComposer';
 import { useStyles } from './styles';
+
+// Web caps user mentions per message at 30 (MessageComposer MAX_MENTIONS); the
+// 31st pick is blocked with an alert instead of being inserted.
+const MAX_MENTIONS = 30;
 
 // 4. Types
 type MessageComposer = ReturnType<typeof useMessageComposer>;
@@ -76,6 +80,10 @@ export function AmityMessageComposer({
   const editorRef = useRef<TextEditorHandle>(null);
   const placeholder = useString('amity_chat_composer_placeholder');
   const editingLabel = useString('amity_chat_editing_message');
+  const mentionLimitTitle = useString('amity_chat_reach_mention_limit_title');
+  const mentionLimitMessage = useString(
+    'amity_chat_reach_mention_limit_message'
+  );
 
   const currentUserId = Client.getCurrentUser()?.userId;
 
@@ -127,6 +135,14 @@ export function AmityMessageComposer({
   }
 
   function handlePickMention(suggestion: (typeof suggestions)[number]) {
+    // Web parity: block the pick once the mention limit is reached (>= 30) and
+    // surface the limit dialog instead of inserting (MentionPlugin countMentions).
+    const currentMentionCount = editorRef.current?.getMentioned().length ?? 0;
+    if (currentMentionCount >= MAX_MENTIONS) {
+      Alert.alert(mentionLimitTitle, mentionLimitMessage);
+      reset();
+      return;
+    }
     editorRef.current?.insertMention(toMention(suggestion));
     reset();
   }

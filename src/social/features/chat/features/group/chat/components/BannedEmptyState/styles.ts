@@ -15,11 +15,11 @@ export const useStyles = () => {
     },
     text: { alignItems: 'center', gap: 4 },
     title: {
-      color: token(AmityColorToken.TextListHeaderDefaultDefault),
+      color: token(AmityColorToken.TextEmptyStateTitleDefault),
       textAlign: 'center',
     },
     subtitle: {
-      color: token(AmityColorToken.TextListTextDescriptionDefaultDefault),
+      color: token(AmityColorToken.TextEmptyStateDescriptionDefault),
       textAlign: 'center',
     },
   });

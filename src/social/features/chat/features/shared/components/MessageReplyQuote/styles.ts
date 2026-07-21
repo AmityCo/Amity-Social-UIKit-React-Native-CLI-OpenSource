@@ -63,6 +63,13 @@ export const useStyles = (isUser: boolean) => {
       lineHeight: 20,
       color: token(AmityColorToken.TextChatBubbleInboundMessagesDefault),
     },
+    // In-quote URL spans (web .replyQuote__link): inbound-link token + underline on
+    // both sides (the web class has no data-user variant). Colour only — the whole
+    // quote is the tap target (onOpenSeeMore), so links are not separately tappable.
+    link: {
+      color: token(AmityColorToken.TextChatBubbleInboundLinkDefault),
+      textDecorationLine: 'underline',
+    },
     media: {
       borderRadius: 20,
     },

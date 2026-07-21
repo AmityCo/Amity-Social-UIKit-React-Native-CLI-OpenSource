@@ -64,16 +64,26 @@ export function AmityMediaAttachmentPicker({
           accessibilityLabel={cameraLabel}
           onPress={handleCamera}
         >
-          <View style={styles.chip}>
-            <AmityIcon
-              name="camera-r"
-              size={24}
-              tokenColor={AmityColorToken.IconIconButtonFilledSecondaryDefault}
-            />
-          </View>
-          <Typography variant="caption" style={styles.label} numberOfLines={1}>
-            {cameraLabel}
-          </Typography>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.chip, pressed && styles.chipPressed]}>
+                <AmityIcon
+                  name="camera-r"
+                  size={24}
+                  tokenColor={
+                    AmityColorToken.IconIconButtonFilledSecondaryDefault
+                  }
+                />
+              </View>
+              <Typography
+                variant="caption"
+                style={styles.label}
+                numberOfLines={1}
+              >
+                {cameraLabel}
+              </Typography>
+            </>
+          )}
         </Pressable>
 
         <Pressable
@@ -82,16 +92,26 @@ export function AmityMediaAttachmentPicker({
           accessibilityLabel={mediaLabel}
           onPress={handleLibrary}
         >
-          <View style={styles.chip}>
-            <AmityIcon
-              name="image-r"
-              size={24}
-              tokenColor={AmityColorToken.IconIconButtonFilledSecondaryDefault}
-            />
-          </View>
-          <Typography variant="caption" style={styles.label} numberOfLines={1}>
-            {mediaLabel}
-          </Typography>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.chip, pressed && styles.chipPressed]}>
+                <AmityIcon
+                  name="image-r"
+                  size={24}
+                  tokenColor={
+                    AmityColorToken.IconIconButtonFilledSecondaryDefault
+                  }
+                />
+              </View>
+              <Typography
+                variant="caption"
+                style={styles.label}
+                numberOfLines={1}
+              >
+                {mediaLabel}
+              </Typography>
+            </>
+          )}
         </Pressable>
       </View>
     </View>

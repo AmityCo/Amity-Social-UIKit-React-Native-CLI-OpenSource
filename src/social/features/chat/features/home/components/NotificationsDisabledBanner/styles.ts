@@ -24,6 +24,9 @@ export const useStyles = () => {
     },
     text: {
       textAlign: 'center',
+      // Web uses text-banner-subdue-textdescription-general; the cleverden SoT (717)
+      // doesn't ship the Subdue text variant, so use the color-identical GreyBG variant
+      // (same alias chain → same hex). Web slug allowlisted in check-fidelity.
       color: token(AmityColorToken.TextBannerGreyBGTextDescriptionGeneral),
     },
   });

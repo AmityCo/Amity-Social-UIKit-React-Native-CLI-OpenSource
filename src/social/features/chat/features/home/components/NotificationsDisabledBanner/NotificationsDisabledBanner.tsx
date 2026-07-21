@@ -23,6 +23,9 @@ export function NotificationsDisabledBanner() {
       <AmityIcon
         name="bell-slash-r"
         size={ICON_SIZE}
+        // Web uses icon-banner-subdue-description-general; SoT (717) lacks the Subdue
+        // icon variant → color-identical GreyBG variant (same alias {Secondary/400}/
+        // {Secondary/500}). Web slug allowlisted in check-fidelity.
         color={token(AmityColorToken.IconBannerGreyBGDescriptionGeneral)}
       />
       <Typography variant="caption" style={styles.text}>

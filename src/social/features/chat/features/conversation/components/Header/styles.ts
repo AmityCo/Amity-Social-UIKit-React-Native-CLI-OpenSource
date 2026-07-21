@@ -35,13 +35,26 @@ export const useStyles = () => {
       alignItems: 'center',
       gap: 12,
     },
-    name: {
+    title: {
       flex: 1,
+      minWidth: 0,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+    name: {
       fontSize: 15,
       lineHeight: 20,
       fontWeight: '700',
       letterSpacing: -0.4,
       color: token(AmityColorToken.TextListHeaderDefaultDefault),
+    },
+    subtitle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    subtitleText: {
+      color: token(AmityColorToken.TextListTrailingSubtextDefault),
     },
   });
 

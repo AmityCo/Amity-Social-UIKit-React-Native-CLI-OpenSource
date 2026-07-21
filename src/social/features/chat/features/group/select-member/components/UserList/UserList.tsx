@@ -10,6 +10,12 @@
 //     individual `Selection.Checkbox`. Toggling merges into / removes from the
 //     existing `selectedUsers` array so selections made under a previous search
 //     query survive when the visible results change.
+//   - Web's `.userList__row[data-hovered]` background becomes the row's PRESSED
+//     background. `Selection.Checkbox` (a core atom) owns a full-width Pressable
+//     whose style can't be extended, so an outer Pressable owns the toggle + the
+//     pressed background and the inner checkbox is rendered visual-only
+//     (`pointerEvents="none"`) — the transparent checkbox row lets the pressed
+//     background show through.
 //   - Web reads the current user via `useSDK().currentUserId`; RN reads
 //     `Client.getCurrentUser()`.
 //   - Search gate matches web exactly: a 1–2 char (partial) query is suppressed
@@ -17,7 +23,7 @@
 
 // 1. React / RN imports
 import { type ReactElement } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Pressable, View } from 'react-native';
 
 // 2. Third-party imports
 import { Client } from '@amityco/ts-sdk-react-native';
@@ -97,15 +103,24 @@ export function UserList({
       style={styles.userList}
       data={visibleUsers}
       keyExtractor={(user) => user.userId}
-      renderItem={({ item }) => (
-        <Selection.Checkbox
-          isSelected={selectedIds.has(item.userId)}
-          onChange={(selected) => handleToggle(item, selected)}
-          accessibilityLabel={item.displayName ?? item.userId}
-        >
-          <UserItem user={item} />
-        </Selection.Checkbox>
-      )}
+      renderItem={({ item }) => {
+        const isSelected = selectedIds.has(item.userId);
+        return (
+          <Pressable
+            onPress={() => handleToggle(item, !isSelected)}
+            style={({ pressed }) => (pressed ? styles.rowPressed : undefined)}
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: isSelected }}
+            accessibilityLabel={item.displayName ?? item.userId}
+          >
+            <View pointerEvents="none">
+              <Selection.Checkbox isSelected={isSelected}>
+                <UserItem user={item} />
+              </Selection.Checkbox>
+            </View>
+          </Pressable>
+        );
+      }}
       onEndReachedThreshold={0.7}
       onEndReached={() => {
         if (hasNextPage && !isLoadingFirstPage && !loading) loadMore();
