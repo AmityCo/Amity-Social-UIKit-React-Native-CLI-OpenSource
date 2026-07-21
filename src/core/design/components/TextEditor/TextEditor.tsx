@@ -19,6 +19,7 @@ import {
   type ReactNode,
 } from 'react';
 import {
+  Text,
   TextInput,
   View,
   type NativeSyntheticEvent,
@@ -179,6 +180,32 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
       [onChangeText, onMentionQueryChange]
     );
 
+    // Render the value with inserted mention tokens coloured (web highlights the
+    // mention node primary). RN TextInput can't colour substrings of a plain
+    // `value`, so pass formatted <Text> children instead — only when mentions
+    // exist, so the common no-mention path stays a plain controlled input.
+    // NOTE: needs on-device QA (iOS + Android) for cursor/selection behaviour.
+    const renderFormattedValue = (): ReactNode => {
+      const segs = [...mentionsRef.current]
+        .filter((m) => m.index >= 0 && m.index + m.length + 1 <= value.length)
+        .sort((a, b) => a.index - b.index);
+      if (segs.length === 0) return undefined; // plain text via `value`
+      const parts: ReactNode[] = [];
+      let cursor = 0;
+      segs.forEach((m, i) => {
+        const end = m.index + m.length + 1; // '@' + display name
+        if (m.index > cursor) parts.push(value.slice(cursor, m.index));
+        parts.push(
+          <Text key={`m-${i}`} style={styles.mention}>
+            {value.slice(m.index, end)}
+          </Text>
+        );
+        cursor = end;
+      });
+      if (cursor < value.length) parts.push(value.slice(cursor));
+      return parts;
+    };
+
     return (
       <View style={[styles.wrapper, { maxHeight }, style]}>
         {mentionOverlay}
@@ -196,7 +223,9 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
           multiline
           onSubmitEditing={onSend}
           blurOnSubmit={false}
-        />
+        >
+          {renderFormattedValue()}
+        </TextInput>
       </View>
     );
   }

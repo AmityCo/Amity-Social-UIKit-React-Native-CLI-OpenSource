@@ -32,6 +32,13 @@ export const useStyles = () => {
       // segment — guessing "Enabled/Filled" resolves to the missing sentinel).
       color: token(AmityColorToken.TextInputTextInputPlaceholderEnabledFilled),
     },
+    // Inserted mention token — web colours it with the editor highlight token
+    // (text-input-textinput-placeholder-enabled-highlight = Primary/500·400).
+    mention: {
+      color: token(
+        AmityColorToken.TextInputTextInputPlaceholderEnabledHighlight
+      ),
+    },
   });
 
   const placeholderColor = token(
