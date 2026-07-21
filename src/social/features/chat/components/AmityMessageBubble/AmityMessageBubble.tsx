@@ -32,6 +32,7 @@ import { useString } from '../../../../../core/localization';
 import { MediaUploadOverlay } from '../../elements/MediaUploadOverlay';
 import { DeletedMessagePill } from '../../features/shared/components/DeletedMessagePill';
 import { MessageLinkPreview } from '../../features/shared/components/MessageLinkPreview';
+import { extractFirstPreviewUrl } from '../../utils/previewLink';
 import {
   isSyntheticPendingMessage,
   type SyntheticPendingMessage,
@@ -41,9 +42,11 @@ import { useStyles } from './styles';
 
 const TEXT_MAX_LINES = 10; // web chat.ts
 const TEXT_MAX_LINES_WITH_LINK = 5; // web chat.ts
-const URL_RE = /(https?:\/\/[^\s]+)/i;
-// Global variant used to split a text run into linkable segments (web linkified
-// http(s):// and www. URLs). URL_RE (no /g) stays for the first-URL preview.
+// Line-clamp trigger — mirrors web MessageBubble `hasLink` (matches http(s):// AND
+// www./bare URLs). The first PREVIEW url is resolved by extractFirstPreviewUrl
+// (linkifyjs), matching web exactly, rather than a naive scheme-only regex.
+const HAS_LINK_RE = /(https?:\/\/\S+|www\.\S+)/i;
+// Global variant used to split a text run into linkable (coloured/tappable) segments.
 const URL_SPLIT_RE = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
 
 function openLink(raw: string): void {
@@ -233,8 +236,9 @@ function TextBubble({
   const editedLabel = useString('amity_chat_status_edited');
 
   const text = (message.data as { text?: string })?.text ?? '';
-  const firstUrl = text.match(URL_RE)?.[1];
-  const maxLines = firstUrl ? TEXT_MAX_LINES_WITH_LINK : TEXT_MAX_LINES;
+  const firstUrl = extractFirstPreviewUrl(text);
+  const hasLink = HAS_LINK_RE.test(text);
+  const maxLines = hasLink ? TEXT_MAX_LINES_WITH_LINK : TEXT_MAX_LINES;
   const isEdited = (message as { editedAt?: unknown }).editedAt != null;
   const mentioned = (
     message.metadata as
