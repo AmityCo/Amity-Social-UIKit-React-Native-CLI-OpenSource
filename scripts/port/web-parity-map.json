@@ -87,8 +87,8 @@
       "milestone": 1
     },
     "design/atoms/Toast": {
-      "status": "port",
-      "rn": "src/core/design/atoms/Toast",
+      "status": "skip",
+      "reason": "RN uses the existing redux toast (core/stores/slices/toastSlice + useToast/showToast); web Toast atom substituted",
       "milestone": 4
     },
     "design/atoms/Progress": {

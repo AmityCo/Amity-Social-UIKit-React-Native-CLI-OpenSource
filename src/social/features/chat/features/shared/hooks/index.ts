@@ -12,3 +12,10 @@ export type {
   ImageViewerRenderProps,
   VideoPlayerRenderProps,
 } from './useMediaViewer';
+export { useMessageReactions } from './useMessageReactions';
+export type {
+  UseMessageReactionsReturn,
+  MessageReactionPayload,
+} from './useMessageReactions';
+export { useReactorsCollection } from './useReactorsCollection';
+export type { UseReactorsCollectionReturn } from './useReactorsCollection';
