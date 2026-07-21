@@ -7,7 +7,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactionRepository } from '@amityco/ts-sdk-react-native';
-import useAuth from '../../../../../../core/hooks/useAuth';
 
 type UseReactorsCollectionParams = {
   referenceId: string;
@@ -36,12 +35,8 @@ export function useReactorsCollection({
   const [hasMore, setHasMore] = useState(false);
   const onNextPageRef = useRef<(() => void) | undefined>(undefined);
 
-  // The SDK's ReactionRepository needs a connected client — calling getReactions
-  // before the session is established can return nothing / throw. Gate on it, as
-  // the other RN chat collections do (the reactor sheet now mounts from the global
-  // bottom sheet, so it can render before the chat screen's connection settles).
-  const { isConnected } = useAuth();
-  const shouldCall = !!referenceId && !!referenceType && isConnected;
+  // Matches web useReactionsCollection: fetch as soon as we have a reference.
+  const shouldCall = !!referenceId && !!referenceType;
 
   useEffect(() => {
     if (!shouldCall) return undefined;

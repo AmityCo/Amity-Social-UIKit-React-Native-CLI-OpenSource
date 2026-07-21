@@ -37,6 +37,13 @@ import { useStyles } from './styles';
 type MessageReactorListSheetProps = {
   messageId: string;
   onClose: () => void;
+  /**
+   * The tapped message, if available. Seeds `currentMessage` so totalCount /
+   * reactionsCount are correct on first render — the sheet mounts from the global
+   * bottom sheet where the getMessage live-object can lag, which would otherwise
+   * show the empty state despite reactions existing. getMessage still keeps it live.
+   */
+  initialMessage?: Amity.Message | null;
 };
 
 const ALL_TAB = 'all' as const;
@@ -45,19 +52,22 @@ const ALL_TAB = 'all' as const;
 export function MessageReactorListSheet({
   messageId,
   onClose,
+  initialMessage = null,
 }: MessageReactorListSheetProps) {
   const { styles } = useStyles();
   const currentUserId = useCurrentUserId();
   const { removeReaction } = useMessageReactions();
   const allTabLabel = useString('amity_chat_tab_all');
 
-  // Live message (web useMessageObject).
+  // Live message (web useMessageObject), seeded from the tapped message.
   const [currentMessage, setCurrentMessage] = useState<Amity.Message | null>(
-    null
+    initialMessage
   );
   useEffect(() => {
     const unsubscribe = MessageRepository.getMessage(messageId, (result) => {
-      setCurrentMessage(result.data ?? null);
+      // Only overwrite once real data arrives — a loading callback with no data
+      // must not wipe the seeded initialMessage (which keeps totalCount correct).
+      if (result.data) setCurrentMessage(result.data);
     });
     return () => unsubscribe();
   }, [messageId]);

@@ -39,13 +39,14 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   // up as a sheet with a backdrop + drag/tap-to-close (BUG #15).
   const { openBottomSheet, closeBottomSheet } = useBottomSheet();
 
-  function openReactorList(messageId: string) {
+  function openReactorList(message: Amity.Message) {
     openBottomSheet({
       // Tall drawer — web presents this list in a ~90vh drawer.
       height: Math.round(Dimensions.get('window').height * 0.7),
       content: (
         <MessageReactorListSheet
-          messageId={messageId}
+          messageId={message.messageId}
+          initialMessage={message}
           onClose={closeBottomSheet}
         />
       ),
@@ -82,7 +83,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           onOpenVideo={c.openVideoPlayer}
           onOpenFailedSheet={c.openFailedSheet}
           onOpenBubbleMenu={c.openBubbleMenu}
-          onOpenReactorList={(m) => openReactorList(m.messageId)}
+          onOpenReactorList={(m) => openReactorList(m)}
           isLoading={c.isLoading}
           isLoadingFirstPage={c.isLoadingFirstPage}
           onSeeMore={c.openSeeMore}
