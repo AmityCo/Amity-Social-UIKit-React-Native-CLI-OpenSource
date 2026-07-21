@@ -30,6 +30,7 @@ import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { Typography } from '../../../../../core/design/components/Typography';
 import { useString } from '../../../../../core/localization';
+import { Avatar } from '../../elements/Avatar';
 import { useMention } from '../../hooks/useMention';
 import { MessageReplyBand } from '../../features/shared/components/MessageReplyBand';
 import { AmityMediaAttachmentPicker } from '../AmityMediaAttachmentPicker';
@@ -84,6 +85,7 @@ export function AmityMessageComposer({
   const mentionLimitMessage = useString(
     'amity_chat_reach_mention_limit_message'
   );
+  const everyoneLabel = useString('amity_chat_mention_everyone');
 
   const currentUserId = Client.getCurrentUser()?.userId;
 
@@ -189,17 +191,63 @@ export function AmityMessageComposer({
 
       {showMentions ? (
         <View style={styles.mentionOverlay}>
-          <ScrollView keyboardShouldPersistTaps="handled">
+          <ScrollView
+            style={styles.mentionList}
+            keyboardShouldPersistTaps="handled"
+          >
             {suggestions.map((suggestion) => (
               <Pressable
                 key={suggestion.userId}
-                style={styles.mentionItem}
+                style={({ pressed }) => [
+                  styles.mentionItem,
+                  pressed && styles.mentionItemPressed,
+                ]}
                 onPress={() => handlePickMention(suggestion)}
                 accessibilityRole="button"
               >
-                <Text style={styles.mentionItemText}>
-                  @{suggestion.display}
-                </Text>
+                {suggestion.type === 'channel' ? (
+                  // web UserMentionItem "all" row: @-glyph featured-icon circle +
+                  // display name + "notify everyone" description.
+                  <>
+                    <View style={styles.mentionAllIconCircle}>
+                      <Text style={styles.mentionAllGlyph}>@</Text>
+                    </View>
+                    <View style={styles.mentionAllRightPane}>
+                      <Typography
+                        variant="captionBold"
+                        style={styles.mentionDisplayName}
+                        numberOfLines={1}
+                      >
+                        {suggestion.display}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        style={styles.mentionAllDescription}
+                        numberOfLines={1}
+                      >
+                        {everyoneLabel}
+                      </Typography>
+                    </View>
+                  </>
+                ) : (
+                  // web UserMentionItem user row: 2rem avatar + display name.
+                  <>
+                    <View style={styles.mentionAvatar}>
+                      <Avatar.User
+                        avatarUrl={suggestion.avatarUrl}
+                        displayName={suggestion.display}
+                        size="sm"
+                      />
+                    </View>
+                    <Typography
+                      variant="captionBold"
+                      style={styles.mentionDisplayName}
+                      numberOfLines={1}
+                    >
+                      {suggestion.display}
+                    </Typography>
+                  </>
+                )}
               </Pressable>
             ))}
           </ScrollView>

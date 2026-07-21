@@ -78,24 +78,74 @@ export const useStyles = () => {
       justifyContent: 'center',
     },
     // --- Mention suggestion overlay -----------------------------------------
+    // Ported from web MentionMenu (data-display-mode='bottom') + UserMentionItem.
+    // Container: surface-popover-background, radius 0.75rem→12, max-height 7rem→112,
+    // elevation shadow (web box-shadow via elevation-08 tokens; RN has no elevation
+    // tokens, approximated with an rgb() shadow). Web uses a shadow, NOT a border.
     mentionOverlay: {
-      marginHorizontal: 16,
+      marginHorizontal: 8,
       marginBottom: 8,
-      maxHeight: 180,
+      maxHeight: 112,
       borderRadius: 12,
       overflow: 'hidden',
-      borderWidth: 1,
-      borderColor: token(AmityColorToken.LineDividerContentDefault),
       backgroundColor: token(AmityColorToken.SurfacePopoverBackgroundDefault),
+      shadowColor: 'rgb(40, 41, 61)',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.16,
+      shadowRadius: 12,
+      elevation: 8,
     },
+    // web bottom-mode .mentionList: padding 0.25rem 0 → 4 vertical.
+    mentionList: {
+      paddingVertical: 4,
+    },
+    // web UserMentionItem__item: grid [2rem avatar | auto], gap 0.75rem→12,
+    // padding 0.75rem→12, bg surface-popover-lists-default.
     mentionItem: {
-      paddingVertical: 12,
-      paddingHorizontal: 16,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      padding: 12,
+      backgroundColor: token(AmityColorToken.SurfacePopoverListsDefault),
     },
-    mentionItemText: {
-      fontSize: 14,
-      lineHeight: 20,
+    mentionItemPressed: {
+      backgroundColor: token(AmityColorToken.SurfacePopoverListsHover),
+    },
+    mentionAvatar: {
+      width: 32,
+      height: 32,
+    },
+    mentionDisplayName: {
+      flexShrink: 1,
       color: token(AmityColorToken.TextListHeaderDefaultDefault),
+    },
+    // web UserMentionItem__allIconCircle: 2rem circle, surface-featuredicon-solid.
+    mentionAllIconCircle: {
+      width: 32,
+      height: 32,
+      borderRadius: 9999,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: token(AmityColorToken.SurfaceFeaturedIconSolid),
+    },
+    mentionAllGlyph: {
+      fontSize: 15,
+      fontWeight: '500',
+      lineHeight: 22,
+      color: token(AmityColorToken.IconFeaturedIconSolid),
+    },
+    // web __allRightPane: flex row, space-between; description → trailing-text token.
+    mentionAllRightPane: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 8,
+      minWidth: 0,
+    },
+    mentionAllDescription: {
+      flexShrink: 0,
+      color: token(AmityColorToken.TextListTrailingTextGeneral),
     },
   });
 
