@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactionRepository } from '@amityco/ts-sdk-react-native';
-import useAuth from '../../../../../core/hooks/useAuth';
+import useAuth from '../../../../../../core/hooks/useAuth';
 
 type UseReactorsCollectionParams = {
   referenceId: string;
