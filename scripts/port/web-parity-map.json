@@ -28,13 +28,15 @@
       "web": "src/v4/chat/features/conversation",
       "rn": "src/social/features/chat/components/AmityConversationChatUserActionComponent",
       "milestone": 3,
-      "kind": "component"
+      "kind": "component",
+      "skipFidelity": true
     },
     "AmityGroupMemberActionComponent": {
       "web": "src/v4/chat/features/group",
       "rn": "src/social/features/chat/components/AmityGroupMemberActionComponent",
       "milestone": 3,
-      "kind": "component"
+      "kind": "component",
+      "skipFidelity": true
     },
     "Typography": {
       "web": "src/v4/core/components/Typography",
