@@ -1,0 +1,1 @@
+export { MemberPermission } from './MemberPermission';
