@@ -204,19 +204,21 @@ export function AmityMessageActionMenu({
   }
 
   return (
-    <Popover trigger={anchor} placement={placement}>
+    <Popover trigger={anchor} placement={placement} surface={false}>
       {({ closePopover }) => (
         <View style={styles.content}>
           {isActive && (
-            <ReactionPicker
-              myReaction={myReaction}
-              onReactionClick={(reactionName) => {
-                selectReaction({ message, reactionName });
-                closePopover();
-              }}
-            />
+            <View style={styles.pickerCard}>
+              <ReactionPicker
+                myReaction={myReaction}
+                onReactionClick={(reactionName) => {
+                  selectReaction({ message, reactionName });
+                  closePopover();
+                }}
+              />
+            </View>
           )}
-          <View style={styles.menuContainer}>
+          <View style={styles.menuCard}>
             <Menu variant="chat" container="popover">
               {items.map((item) => (
                 <Menu.Item

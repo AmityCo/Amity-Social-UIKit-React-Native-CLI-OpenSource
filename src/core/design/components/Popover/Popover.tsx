@@ -39,6 +39,12 @@ export type PopoverProps = {
   placement?: PopoverPlacement;
   onOpen?: () => void;
   onClose?: () => void;
+  /**
+   * When false, the popover renders NO card surface (bg/radius/shadow) — only
+   * positioning — so the caller can supply its own separate floating surfaces.
+   * Defaults to true (the standard single card).
+   */
+  surface?: boolean;
 };
 
 type Anchor = { x: number; y: number; width: number; height: number };
@@ -58,6 +64,7 @@ export function Popover({
   placement = 'bottom right',
   onOpen,
   onClose,
+  surface = true,
 }: PopoverProps) {
   const { styles } = useStyles();
   const [isOpen, setIsOpen] = useState(false);
@@ -124,7 +131,11 @@ export function Popover({
           {/* Inner Pressable absorbs taps so touches inside the content do not
               bubble to the backdrop and close the popover. */}
           <Pressable
-            style={[styles.popover, verticalPosition, horizontalPosition]}
+            style={[
+              surface ? styles.popover : styles.popoverBare,
+              verticalPosition,
+              horizontalPosition,
+            ]}
             onPress={() => {}}
           >
             {typeof children === 'function'

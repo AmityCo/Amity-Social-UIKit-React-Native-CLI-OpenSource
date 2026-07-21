@@ -25,6 +25,13 @@ export const useStyles = () => {
       shadowRadius: 16,
       elevation: 8,
     },
+    // surface={false}: positioning only, no card surface — lets the caller render
+    // its own separate floating surfaces (web MessageActionsPopover: a transparent
+    // Dialog holding a reaction-picker pill above a menu card, two distinct surfaces).
+    popoverBare: {
+      position: 'absolute',
+      minWidth: 200,
+    },
   });
 
   return { styles, token };
