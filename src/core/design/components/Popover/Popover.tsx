@@ -49,6 +49,8 @@ const ANCHOR_GAP = 8;
 // content min-width (styles.popover minWidth 200) when clamping.
 const SCREEN_MARGIN = 8;
 const POPOVER_MIN_WIDTH = 200;
+// Approx tallest menu; if less room than this below the anchor, open upward.
+const ESTIMATED_MENU_HEIGHT = 260;
 
 export function Popover({
   trigger,
@@ -81,11 +83,14 @@ export function Popover({
     onClose?.();
   };
 
-  const isTop = placement.includes('top');
   const isRight = placement.includes('right');
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-  // Vertical: place above (top) or below (bottom) the anchor.
+  // Vertical: honor an explicit 'top', but also flip above the anchor when there
+  // isn't room below (chat bubbles sit near the bottom, so a 'bottom' menu would
+  // otherwise clip off the screen).
+  const spaceBelow = screenHeight - (anchor.y + anchor.height);
+  const isTop = placement.includes('top') || spaceBelow < ESTIMATED_MENU_HEIGHT;
   const verticalPosition = isTop
     ? { bottom: screenHeight - anchor.y + ANCHOR_GAP }
     : { top: anchor.y + anchor.height + ANCHOR_GAP };
