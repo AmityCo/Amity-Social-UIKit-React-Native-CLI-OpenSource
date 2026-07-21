@@ -5,6 +5,7 @@
 
 import { View, Text } from 'react-native';
 import { AmityIcon, type AmityIconName } from '../../icons';
+import { type ColorTokenRef } from '../../theme/useToken';
 import { resolveBadgeTokens, useStyles } from './styles';
 
 export type BadgeShape = 'round' | 'square';
@@ -26,6 +27,10 @@ export type LabelProps = BadgeBaseProps & {
 
 export type IconProps = BadgeBaseProps & {
   icon: AmityIconName;
+  /** Override the preset's icon colour (e.g. force a white lock). */
+  iconColorToken?: ColorTokenRef;
+  /** Override the preset's surface (chip background) colour. */
+  surfaceColorToken?: ColorTokenRef;
 };
 
 export const presetSlug = (preset?: BadgePreset) =>
@@ -65,8 +70,14 @@ function Icon({
   size = 24,
   border = false,
   preset,
+  iconColorToken,
+  surfaceColorToken,
 }: IconProps) {
-  const tokens = resolveBadgeTokens(presetSlug(preset));
+  const tokens = {
+    ...resolveBadgeTokens(presetSlug(preset)),
+    ...(surfaceColorToken ? { surface: surfaceColorToken } : {}),
+    ...(iconColorToken ? { icon: iconColorToken } : {}),
+  };
   const { styles } = useStyles({
     variant: 'icon',
     shape,
