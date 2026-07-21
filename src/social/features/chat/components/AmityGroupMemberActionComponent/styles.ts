@@ -1,6 +1,7 @@
-// Styles for AmityGroupMemberActionComponent — mirrors AmityMessageActionMenu.
-// The surface background, radius and shadow come from the Popover; this only
-// adds the inner padding (web MemberActionsPopover 0.25rem → 4).
+// Styles for AmityGroupMemberActionComponent. Member actions render in the global
+// bottom sheet (RN mobile adaptation; web uses a desktop popover). The drawer Menu
+// rows have 0 horizontal padding, so the sheet wrapper adds the 16px inset + a
+// bottom inset — mirroring the sibling AmityConversationChatUserActionComponent.
 
 import { StyleSheet } from 'react-native';
 import { useToken } from '../../../../../core/design/theme/useToken';
@@ -9,8 +10,9 @@ export const useStyles = () => {
   const token = useToken();
 
   const styles = StyleSheet.create({
-    menuContainer: {
-      padding: 4,
+    sheetContainer: {
+      paddingHorizontal: 16,
+      paddingBottom: 8,
     },
   });
 

@@ -2,9 +2,11 @@
 // that AmityUiKitWeb builds inline in `group/members/components/MemberList`
 // (`getActions`) and renders through its `ActionMenu`.
 //
-// Mirrors the sibling `AmityMessageActionMenu` (Popover + Menu + `anchor`
-// render-prop): the owning MemberItem row wires the trailing ellipsis to
-// `openPopover`. Item visibility follows web's `getActions` exactly: promote,
+// Renders in the global @devvie bottom sheet (RN mobile adaptation; web uses a
+// desktop popover) — mirrors the sibling AmityConversationChatUserActionComponent.
+// The owning MemberItem row still wires the trailing ellipsis via the `anchor`
+// render-prop, whose `openPopover` now opens the sheet. Item visibility follows
+// web's `getActions` exactly: promote,
 // demote, mute, unmute, report, unreport, ban, remove — with the same
 // conditions (mute vs unmute by the member's mute state; report vs unreport by
 // whether the viewer has flagged them). Web's `ConfirmProvider` maps to the
@@ -26,14 +28,11 @@ import {
 
 // 3. Internal imports
 import { Menu } from '../../../../../core/design/components/Menu';
-import {
-  Popover,
-  type PopoverPlacement,
-} from '../../../../../core/design/components/Popover';
 import { type AmityIconName } from '../../../../../core/design/icons';
 import { resolveString } from '../../../../../core/localization';
 import { MemberRoles } from '../../../../../core/constants';
 import useAuth from '../../../../../core/hooks/useAuth';
+import { useBottomSheet } from '../../../../../core/stores/slices/bottomSheetSlice';
 import { useChatNotifications } from '../../hooks/useChatNotifications';
 import { useStyles } from './styles';
 
@@ -54,7 +53,6 @@ type AmityGroupMemberActionComponentProps = {
   isMemberModerator: boolean;
   isViewerModerator: boolean;
   isMuted?: boolean;
-  placement?: PopoverPlacement;
 };
 
 type ActionItem = {
@@ -74,11 +72,12 @@ export function AmityGroupMemberActionComponent({
   isMemberModerator,
   isViewerModerator,
   isMuted = false,
-  placement = 'bottom right',
 }: AmityGroupMemberActionComponentProps) {
   const { styles } = useStyles();
   const { isConnected } = useAuth();
   const { success } = useChatNotifications();
+  const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
+    useBottomSheet();
 
   const userId = user.userId;
 
@@ -299,11 +298,18 @@ export function AmityGroupMemberActionComponent({
     );
   }
 
-  return (
-    <Popover trigger={anchor} placement={placement}>
-      {({ closePopover }) => (
-        <View style={styles.menuContainer}>
-          <Menu variant="chat" container="popover">
+  // Member actions render in the global bottom sheet (RN mobile adaptation —
+  // web uses a desktop popover). The row's ellipsis still triggers via the
+  // `anchor` render-prop; its `openPopover` now opens the sheet.
+  function openActionSheet() {
+    openBottomSheet({
+      height:
+        bottomSheetHeight[
+          visibleItems.length as keyof typeof bottomSheetHeight
+        ],
+      content: (
+        <View style={styles.sheetContainer}>
+          <Menu variant="chat" container="drawer">
             {visibleItems.map((item) => (
               <Menu.Item
                 key={item.key}
@@ -312,14 +318,25 @@ export function AmityGroupMemberActionComponent({
                 destructive={item.destructive}
                 typography="body"
                 onPress={() => {
-                  closePopover();
+                  closeBottomSheet();
                   item.onPress();
                 }}
               />
             ))}
           </Menu>
         </View>
-      )}
-    </Popover>
+      ),
+    });
+  }
+
+  return (
+    <>
+      {anchor({
+        isOpen: false,
+        isDesktop: false,
+        openPopover: openActionSheet,
+        closePopover: closeBottomSheet,
+      })}
+    </>
   );
 }
