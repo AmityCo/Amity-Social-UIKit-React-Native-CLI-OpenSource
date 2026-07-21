@@ -86,7 +86,16 @@ export function useChatMessage({
   // Newest-first date-separated items (inverted list), with optimistic synthetic
   // pending messages prepended (they sit at the bottom of the inverted view).
   const items: ChatItem[] = useMemo(() => {
-    const chronological = [...messages].sort(
+    // The live collection can momentarily hold the same messageId twice (pagination
+    // merges, optimistic→real overlap). Dedupe so the list never renders two items
+    // with the same key.
+    const seen = new Set<string>();
+    const deduped = messages.filter((m) => {
+      if (!m.messageId || seen.has(m.messageId)) return false;
+      seen.add(m.messageId);
+      return true;
+    });
+    const chronological = deduped.sort(
       (a, b) =>
         new Date(a.createdAt as string).getTime() -
         new Date(b.createdAt as string).getTime()

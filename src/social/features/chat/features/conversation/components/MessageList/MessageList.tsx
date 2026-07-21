@@ -67,13 +67,24 @@ export function MessageList({
   const { styles } = useStyles();
   const listRef = useRef<FlatList<ChatItem>>(null);
 
+  // Final guard: never hand the FlatList two items with the same key (React throws
+  // "same key" otherwise). Upstream already dedupes messages, but keep the list robust.
+  const data = useMemo(() => {
+    const seen = new Set<string>();
+    return items.filter((it) => {
+      if (seen.has(it.id)) return false;
+      seen.add(it.id);
+      return true;
+    });
+  }, [items]);
+
   // Resolve reply parents from the loaded items (no separate live lookup for M2).
   const messageById = useMemo(() => {
     const map = new Map<string, Amity.Message>();
-    for (const it of items)
+    for (const it of data)
       if (it.kind === 'message') map.set(it.message.messageId, it.message);
     return map;
-  }, [items]);
+  }, [data]);
 
   const scrollToLatest = useCallback(() => {
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -95,7 +106,7 @@ export function MessageList({
         ref={listRef}
         style={styles.list}
         contentContainerStyle={styles.content}
-        data={items}
+        data={data}
         inverted
         keyExtractor={(item: ChatItem) => item.id}
         renderItem={({ item }: { item: ChatItem }) => {
