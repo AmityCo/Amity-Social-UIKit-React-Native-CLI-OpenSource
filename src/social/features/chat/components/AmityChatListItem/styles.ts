@@ -114,6 +114,11 @@ export const useStyles = () => {
       paddingHorizontal: 16,
       backgroundColor: token(AmityColorToken.SurfaceListSkeletonSkeleton),
     },
+    // Two stacked skeleton lines (name + preview) beside the avatar circle.
+    skeletonLines: {
+      flexDirection: 'column',
+      gap: 6,
+    },
   });
 
   return { styles, token };
