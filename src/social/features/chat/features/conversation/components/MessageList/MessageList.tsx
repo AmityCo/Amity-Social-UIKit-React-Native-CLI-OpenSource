@@ -9,6 +9,11 @@ import { FlatList } from 'react-native';
 
 // 2. Internal imports
 import { MessageRow } from '../MessageRow';
+import { DateSeparator } from '../../../shared/components/DateSeparator';
+import {
+  groupMessagesByDate,
+  type ChatItem,
+} from '../../../../utils/groupMessagesByDate';
 import { useStyles } from './styles';
 
 // 3. Types
@@ -40,14 +45,16 @@ export function MessageList({
 }: MessageListProps) {
   const { styles } = useStyles();
 
-  // Inverted list wants newest-first. Sort ascending by createdAt, then reverse.
+  // Group chronologically (oldest → newest) with a date separator before each day,
+  // then reverse so the inverted FlatList shows newest at the bottom with each date
+  // divider sitting above its day's messages.
   const data = useMemo(() => {
     const sorted = [...messages].sort(
       (a, b) =>
         new Date(a.createdAt as string).getTime() -
         new Date(b.createdAt as string).getTime()
     );
-    return sorted.reverse();
+    return groupMessagesByDate(sorted).reverse();
   }, [messages]);
 
   return (
@@ -56,12 +63,14 @@ export function MessageList({
       contentContainerStyle={styles.content}
       data={data}
       inverted
-      keyExtractor={(item) => item.messageId}
-      renderItem={({ item }) => {
-        const isUser = !!currentUserId && item.creatorId === currentUserId;
+      keyExtractor={(item: ChatItem) => item.id}
+      renderItem={({ item }: { item: ChatItem }) => {
+        if (item.kind === 'date') return <DateSeparator label={item.label} />;
+        const { message } = item;
+        const isUser = !!currentUserId && message.creatorId === currentUserId;
         return (
           <MessageRow
-            message={item}
+            message={message}
             isUser={isUser}
             isGroupChat={isGroupChat}
             currentUserId={currentUserId}
