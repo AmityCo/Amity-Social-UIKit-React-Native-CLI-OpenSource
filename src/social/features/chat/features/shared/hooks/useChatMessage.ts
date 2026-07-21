@@ -113,8 +113,20 @@ export function useChatMessage({
     return [...synthetic, ...base];
   }, [messages, composer.syntheticMessages]);
 
-  const latestMessage =
-    messages.length > 0 ? messages[messages.length - 1] : null;
+  // The newest message BY createdAt — NOT messages[length-1]. The SDK collection
+  // is newest-first and paginating older pages appends to the end, so [length-1]
+  // is the oldest loaded message and changes on scroll-up; using it made the
+  // new-message banner fire on plain scroll (QA #0/#11). Max-by-createdAt is
+  // order-independent, so it only changes when a genuinely newer message arrives.
+  const latestMessage = useMemo(() => {
+    if (messages.length === 0) return null;
+    return messages.reduce((a, b) =>
+      new Date(b.createdAt as string).getTime() >
+      new Date(a.createdAt as string).getTime()
+        ? b
+        : a
+    );
+  }, [messages]);
 
   const {
     bubbleMenu,

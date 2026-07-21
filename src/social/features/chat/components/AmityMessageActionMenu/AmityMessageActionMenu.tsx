@@ -102,9 +102,8 @@ export function buildMessageActionItems(
     },
     {
       key: 'reply',
-      // User QA directive: the reply icon must be SOLID. This intentionally
-      // deviates from web develop, which renders <ShareLeft/> = Regular (outline).
-      icon: 'share-left-s',
+      // Regular (outline), matching web develop's <ShareLeft/> in the action menu.
+      icon: 'share-left-r',
       label: resolveString('amity_chat_option_reply'),
       onPress: handlers.onReply,
       visible: isActive,

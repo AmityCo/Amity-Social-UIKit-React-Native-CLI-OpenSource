@@ -106,7 +106,10 @@ export function MessageReplyQuote({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <AmityIcon name="share-left-r" size={16} tokenColor={headerIconColor} />
+        {/* QA directive: the "replied to" quote icon in the bubble is SOLID
+            (deviates from web develop's Regular <ShareLeft/> — the action-menu
+            reply option stays Regular). */}
+        <AmityIcon name="share-left-s" size={16} tokenColor={headerIconColor} />
         <Typography
           variant="caption"
           style={styles.headerText}

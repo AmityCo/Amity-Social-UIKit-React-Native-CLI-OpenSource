@@ -34,14 +34,13 @@ export function Header({
       onLeading={onBack}
       trailing={
         isViewerModerator ? (
-          // Borderless icon-only add button — same transparent style as the
-          // SelectedMember close (cross) control, per QA (#9). Was a filled
-          // secondary Button (blue surface + border).
+          // web members Header: Button.Icon ghost/secondary/32 with <Plus/>
+          // (Regular). Was a filled secondary Button (blue surface + border).
           <Button.Icon
             icon="plus-r"
-            styleType="transparent"
-            hierarchy="primary"
-            size={24}
+            styleType="ghost"
+            hierarchy="secondary"
+            size={32}
             onPress={onAddMember}
             accessibilityLabel={title}
           />
