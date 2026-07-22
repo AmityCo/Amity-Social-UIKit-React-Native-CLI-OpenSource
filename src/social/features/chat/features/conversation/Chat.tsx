@@ -63,7 +63,10 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
         onBack={onBack}
         trailing={
           c.otherUser ? (
-            <AmityConversationChatUserActionComponent user={c.otherUser} />
+            <AmityConversationChatUserActionComponent
+              user={c.otherUser}
+              channelId={channelId ?? ''}
+            />
           ) : undefined
         }
       />

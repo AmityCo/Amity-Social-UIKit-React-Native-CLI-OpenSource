@@ -11,19 +11,25 @@
 // changed Popover → bottom sheet: the items, handlers, labels, tokens and
 // destructive confirmations are unchanged.
 //
-// Per the task's curated set this keeps block + report and drops the notification
-// toggle. `isBlockedByMe` is read live from
-// `UserRepository.Relationship.getFollowInfo` (`status === 'blocked'`) so the
+// This mirrors web `useConversationActions` (and iOS
+// `AmityConversationChatUserActionComponent`): three actions — notification
+// (mute/unmute), report, block. The notification row toggles the channel push
+// setting via `Client.notifications().channel(id)` (enable → unmuted, disable →
+// muted), the exact surface the group notification-preference port uses; its
+// state is read once from `getSettings().isEnabled`. Icon/label are action-facing:
+// enabled → `bell-slash-r` + "Turn off notification"; disabled → `bell-s` +
+// "Turn on notification" (iOS `bellSlashR`/`bellS`). `isBlockedByMe` is read live
+// from `UserRepository.Relationship.getFollowInfo` (`status === 'blocked'`) so the
 // block/unblock label is always correct; report is a single flag action. Web's
-// `ConfirmProvider` maps to the native `Alert.alert` and `useNotifications('chat')`
-// to the `useChatNotifications` stub. SDK calls are gated on `useAuth().isConnected`.
+// `ConfirmProvider` maps to the native `Alert.alert`. SDK calls are gated on
+// `useAuth().isConnected`.
 
 // 1. React / RN imports
 import { useEffect, useState } from 'react';
 import { Alert, Pressable, View } from 'react-native';
 
 // 2. Third-party imports
-import { UserRepository } from '@amityco/ts-sdk-react-native';
+import { Client, UserRepository } from '@amityco/ts-sdk-react-native';
 
 // 3. Internal imports
 import { Menu } from '../../../../../core/design/components/Menu';
@@ -35,12 +41,14 @@ import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-t
 import { resolveString } from '../../../../../core/localization';
 import useAuth from '../../../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../../../core/stores/slices/bottomSheetSlice';
+import { useToast } from '../../../../../core/stores/slices/toastSlice';
 import { useChatNotifications } from '../../hooks/useChatNotifications';
 import { useStyles } from './styles';
 
 // 4. Types
 type AmityConversationChatUserActionComponentProps = {
   user: Amity.InternalUser;
+  channelId: string;
 };
 
 type ActionItem = {
@@ -53,10 +61,12 @@ type ActionItem = {
 // 5. Named function component
 export function AmityConversationChatUserActionComponent({
   user,
+  channelId,
 }: AmityConversationChatUserActionComponentProps) {
   const { styles } = useStyles();
   const { isConnected } = useAuth();
   const { success } = useChatNotifications();
+  const { showToast } = useToast();
   const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
     useBottomSheet();
 
@@ -64,6 +74,9 @@ export function AmityConversationChatUserActionComponent({
   const displayName = user.displayName ?? user.userId;
 
   const [isBlockedByMe, setIsBlockedByMe] = useState(false);
+  // Channel push-notification state (web `useChannelPushNotificationQuery`):
+  // read once from `getSettings().isEnabled`; the row toggles it live.
+  const [isNotificationEnabled, setIsNotificationEnabled] = useState(true);
 
   useEffect(() => {
     if (!isConnected || !userId) return undefined;
@@ -77,6 +90,50 @@ export function AmityConversationChatUserActionComponent({
       unsub();
     };
   }, [isConnected, userId]);
+
+  useEffect(() => {
+    if (!isConnected || !channelId) return undefined;
+    let active = true;
+    Client.notifications()
+      .channel(channelId)
+      .getSettings()
+      .then((settings) => {
+        if (active) setIsNotificationEnabled(settings.isEnabled);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [isConnected, channelId]);
+
+  async function handleToggleNotification() {
+    if (!isConnected || !channelId) return;
+    const next = !isNotificationEnabled;
+    try {
+      const manager = Client.notifications().channel(channelId);
+      if (next) {
+        await manager.enable();
+      } else {
+        await manager.disable();
+      }
+      setIsNotificationEnabled(next);
+      showToast({
+        message: resolveString(
+          next ? 'amity_chat_action_unmute' : 'amity_chat_action_mute'
+        ),
+        type: 'success',
+      });
+    } catch {
+      showToast({
+        message: resolveString(
+          next
+            ? 'amity_chat_action_unmute_failed'
+            : 'amity_chat_action_mute_failed'
+        ),
+        type: 'failed',
+      });
+    }
+  }
 
   async function handleReport() {
     if (!isConnected) return;
@@ -123,6 +180,16 @@ export function AmityConversationChatUserActionComponent({
   }
 
   const items: ActionItem[] = [
+    {
+      key: 'notification',
+      icon: isNotificationEnabled ? 'bell-slash-r' : 'bell-s',
+      label: resolveString(
+        isNotificationEnabled
+          ? 'amity_chat_action_turn_off_notification'
+          : 'amity_chat_action_turn_on_notification'
+      ),
+      onPress: handleToggleNotification,
+    },
     {
       key: 'report',
       icon: 'flag-r',

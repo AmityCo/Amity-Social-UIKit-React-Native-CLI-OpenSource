@@ -13,20 +13,26 @@
 //     not-yet-registered route names typecheck.
 //   - Web `useConfirmContext().confirm` (in-app dialog) → RN `Alert.alert`.
 //   - Web `useNotifications('chat').success/error` → the redux toast (`useToast`).
-//   - The two notification rows are `visible: false` on web (they never render);
-//     porting their trailing labels would require `Client.notifications()` (no
-//     verified RN equivalent), so their handlers are navigation-only and their
-//     trailing text is dropped. `visiblePreferenceItems` is therefore always empty.
+//   - The two notification rows are now live (iOS-aligned): the "Group notifications"
+//     row (moderator-only) opens the mode page and shows the current mode label
+//     (Default/Silent/Subscribe) from `channel.notificationMode`; the "Notifications"
+//     preference row (all members) opens the per-user toggle page and shows On/Off
+//     from `Client.notifications().channel(id).getSettings().isEnabled` — the exact
+//     surface the notification-preference port already uses.
 //   - `SettingMenu` takes `iconName` (SoT icon name) rather than web's `icon`
 //     element, and `accessibilityLabel` rather than web's `ariaLabel`.
 
 // 1. React / RN imports
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 
 // 2. Third-party imports
-import { ChannelRepository } from '@amityco/ts-sdk-react-native';
-import { useNavigation } from '@react-navigation/native';
+import {
+  AmityChannelNotificationModeEnum,
+  ChannelRepository,
+  Client,
+} from '@amityco/ts-sdk-react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 // 3. Internal imports (relative)
@@ -67,6 +73,8 @@ export function useGroupSetting({ channelId }: GroupSettingProps) {
 
   const [channel, setChannel] = useState<Amity.Channel | undefined>(undefined);
   const [roles, setRoles] = useState<string[] | undefined>(undefined);
+  // Per-user channel push setting — drives the "Notifications" row's On/Off label.
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
 
   // Live channel object (web `useChannelObject`).
   useEffect(() => {
@@ -89,6 +97,27 @@ export function useGroupSetting({ channelId }: GroupSettingProps) {
       unsub();
     };
   }, [channel]);
+
+  // Channel push setting (web `useChannelPushNotificationQuery`) — drives the
+  // trailing On/Off label. Reloaded on every screen focus (iOS
+  // `loadNotificationStatus` on appear) so the label refreshes after the user
+  // returns from AmityGroupNotificationPreferencePage having toggled it.
+  useFocusEffect(
+    useCallback(() => {
+      if (!isConnected || !channelId) return undefined;
+      let active = true;
+      Client.notifications()
+        .channel(channelId)
+        .getSettings()
+        .then((settings) => {
+          if (active) setIsNotificationsEnabled(settings.isEnabled);
+        })
+        .catch(() => {});
+      return () => {
+        active = false;
+      };
+    }, [isConnected, channelId])
+  );
 
   const isModerator = hasModeratorRole(roles);
   const avatarUrl = useFile({ fileId: channel?.avatarFileId ?? '' });
@@ -117,6 +146,29 @@ export function useGroupSetting({ channelId }: GroupSettingProps) {
   const allMembersLabel = useString('amity_chat_group_members_label');
   const bannedUsersLabel = useString('amity_chat_group_banned_members');
   const notificationsLabel = useString('amity_chat_notifications_title');
+
+  // Trailing labels (iOS `notificationModeLabel()` + On/Off).
+  const modeDefaultLabel = useString(
+    'amity_chat_group_notification_default_label'
+  );
+  const modeSilentLabel = useString(
+    'amity_chat_group_notification_silent_label'
+  );
+  const modeSubscribeLabel = useString(
+    'amity_chat_group_notification_subscribe_label'
+  );
+  const notificationsOnLabel = useString('amity_chat_notifications_on');
+  const notificationsOffLabel = useString('amity_chat_notifications_off');
+
+  const notificationModeLabel =
+    channel?.notificationMode === AmityChannelNotificationModeEnum.Silent
+      ? modeSilentLabel
+      : channel?.notificationMode === AmityChannelNotificationModeEnum.Subscribe
+      ? modeSubscribeLabel
+      : modeDefaultLabel;
+  const notificationsTrailing = isNotificationsEnabled
+    ? notificationsOnLabel
+    : notificationsOffLabel;
 
   function handleClose() {
     navigation.goBack();
@@ -204,9 +256,10 @@ export function useGroupSetting({ channelId }: GroupSettingProps) {
       key: 'group-notifications',
       iconName: 'bell-s',
       label: groupNotificationsLabel,
+      trailingText: notificationModeLabel,
       onPress: handleOpenGroupNotification,
       accessibilityLabel: groupNotificationsLabel,
-      visible: false,
+      visible: isModerator,
     },
     {
       key: 'member-permissions',
@@ -239,9 +292,10 @@ export function useGroupSetting({ channelId }: GroupSettingProps) {
       key: 'notifications',
       iconName: 'bell-s',
       label: notificationsLabel,
+      trailingText: notificationsTrailing,
       onPress: handleOpenGroupNotificationPreference,
       accessibilityLabel: notificationsLabel,
-      visible: false,
+      visible: true,
     },
   ];
 

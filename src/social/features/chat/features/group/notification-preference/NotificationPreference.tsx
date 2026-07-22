@@ -8,8 +8,11 @@
 //   - The web `Toggle` atom is skipped in RN (the parity map maps it to the native
 //     `Switch`), so `AllowNotifications` renders an RN `Switch`; the Controller
 //     wiring is preserved 1:1.
-//   - `showDisabledByModeratorBanner` is kept as the web's hard-coded `false` (the
-//     banner never renders today) so the guard matches web exactly.
+//   - iOS-ALIGNED DEVIATION FROM WEB: web hard-codes `showDisabledByModeratorBanner
+//     = false` (the banner never renders on web), but iOS shows a moderator banner
+//     whenever the channel is silenced (`notificationMode === silent`), and cleverden
+//     REQ-004 mandates it. Since this feature is ported from iOS, the banner renders
+//     on `isSilent` (the toggle is already read-only in that state).
 
 // 1. React / RN imports
 import { View } from 'react-native';
@@ -36,14 +39,11 @@ export function NotificationPreference({
   const { control, handleClose, handleSave, isSilent, persistedIsEnabled } =
     useNotificationPreference({ channelId });
   const pageTitle = useString('amity_chat_group_notif_pref_navbar_title');
-  const showDisabledByModeratorBanner = false;
 
   return (
     <View style={styles.container}>
       <TopBar title={pageTitle} leadingType="back" onLeading={handleClose} />
-      {showDisabledByModeratorBanner && isSilent && (
-        <DisabledByModeratorBanner />
-      )}
+      {isSilent && <DisabledByModeratorBanner />}
       {isSilent ? (
         <AllowNotifications isSelected={persistedIsEnabled} isDisabled />
       ) : (

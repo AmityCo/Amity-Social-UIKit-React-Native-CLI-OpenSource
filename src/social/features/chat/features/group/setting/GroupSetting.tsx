@@ -7,8 +7,9 @@
 //   - Web resolved the avatar from the SDK File; RN's Avatar.GroupChat takes a
 //     resolved `avatarUrl` + `isPublic` (the hook resolves the url via useFile).
 //   - Section titles use Typography `titleBold`; the inter-section divider only
-//     renders when both sections have visible rows (the preference section is
-//     empty in this port, so in practice only the group section shows).
+//     renders when both sections have visible rows. The "Your preferences" section
+//     holds the per-user "Notifications" row (visible to all members); the group
+//     section's moderator-only "Group notifications" mode row shows for moderators.
 
 // 1. React / RN imports
 import { ScrollView, View } from 'react-native';
