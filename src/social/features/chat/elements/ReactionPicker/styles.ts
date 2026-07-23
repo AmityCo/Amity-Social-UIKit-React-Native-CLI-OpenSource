@@ -9,10 +9,12 @@
 
 import { StyleSheet } from 'react-native';
 import { useToken } from '../../../../../core/design/theme/useToken';
+import { useAmityTheme } from '../../../../../core/design/theme/AmityThemeProvider';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 
 export const useStyles = () => {
   const token = useToken();
+  const { mode } = useAmityTheme();
 
   const styles = StyleSheet.create({
     // .messageActionsPopover__reactionPicker (the filled pill)
@@ -25,12 +27,15 @@ export const useStyles = () => {
       backgroundColor: token(
         AmityColorToken.SurfaceReactionsReactionPopoverFilledDefault
       ),
-      // web box-shadow: 0 0.25rem 1rem rgb(0 0 0 / 12%)
-      shadowColor: 'rgb(0,0,0)',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.12,
-      shadowRadius: 16,
-      elevation: 8,
+      // PDT-3934: match web reaction-bar elevation-08 (3 stacked layers:
+      // 0 4px 24px 4px / 0 32px 64px -12px / 0 6px 6px -4px). RN can't stack
+      // shadows, so approximate with a single heavier, softer shadow; colour is
+      // theme-aware (light rgba(41,43,50), dark rgba(0,0,0)) per the token defs.
+      shadowColor: mode === 'dark' ? 'rgb(0, 0, 0)' : 'rgb(41, 43, 50)',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.18,
+      shadowRadius: 24,
+      elevation: 12,
     },
     // .reactionPickerContainer
     row: {
