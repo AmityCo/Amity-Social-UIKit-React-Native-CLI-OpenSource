@@ -188,6 +188,21 @@ function isLinkNotAllowedError(error: unknown): boolean {
   );
 }
 
+function isBannedWordError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    (error.message.includes(ERROR_CODE.BLOCKED_WORD) ||
+      error.message.includes(ERROR_RESPONSE.CONTAIN_BLOCKED_WORD))
+  );
+}
+
+// Web `isTextModerationRejection`: a link-not-allowed OR banned-word rejection
+// should leave a persistent failed bubble in the thread (retry/discard), not just
+// a toast (PDT-4033).
+function isTextModerationRejection(error: unknown): boolean {
+  return isLinkNotAllowedError(error) || isBannedWordError(error);
+}
+
 function isModerationError(error: unknown): boolean {
   return (
     error instanceof Error && error.message.includes(ERROR_CODE.IMAGE_NUDITY)
@@ -420,6 +435,24 @@ export function useMessageComposer({
         },
         onError: (err) => {
           handleTextMessageError(err, { errorToast, info });
+          // PDT-4033: a server-side text moderation rejection (blocked link /
+          // banned word) must leave a persistent failed bubble in the thread —
+          // mirroring web `useMessageComposer`. RN already had this for the
+          // offline branch; extend it to the rejection path.
+          if (isTextModerationRejection(err)) {
+            const pending: PendingText = {
+              clientId: createClientId(),
+              text: trimmed,
+              ...(parentId ? { parentId } : {}),
+              ...(metadata ? { metadata } : {}),
+              ...(mentionees ? { mentionees } : {}),
+              status: 'failed',
+              failureReason: 'generic',
+              createdAt: new Date().toISOString(),
+            };
+            setPendingTexts((prev) => [...prev, pending]);
+            onMessageCreated?.();
+          }
         },
       }
     );
