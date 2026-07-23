@@ -13,10 +13,14 @@
 //     through the useChatNotifications stub.
 //   - Save has no RN infra yet (web's `useSaveMediaMessageQuery`) — `handleBubbleSave`
 //     is a documented stub.
-//   - Report + reactor-list sheet have no RN components yet (web opened a
-//     Drawer/Popup with ContentReportReason / MessageReactorListSheet) —
-//     `handleBubbleReport` and `handleOpenReactorListSheet` are documented stubs
-//     that keep web's signatures.
+//   - Report: web opened a Drawer (mobile) / Popup (desktop) with ContentReportReason.
+//     RN keeps the report target in local state (`reportMessage`) and the orchestrator
+//     (useChatMessage) surfaces it so Chat/GroupChat render the full-screen
+//     ContentReportReason Modal — the same overlay pattern as see-more (BUG: PDT-4007,
+//     the report UI previously appeared as a partial bottom sheet / no-op).
+//   - Reactor-list sheet has no RN component wired here (web opened a Drawer/Popup with
+//     MessageReactorListSheet) — `handleOpenReactorListSheet` is a documented stub;
+//     Chat/GroupChat open the reactor list via the global bottom sheet instead.
 
 import { useState } from 'react';
 
@@ -48,6 +52,9 @@ export type UseBubbleMenuReturn = {
   handleBubbleSave: () => void;
   handleBubbleReport: (message: Amity.Message) => void;
   handleOpenReactorListSheet: (message: Amity.Message) => void;
+  // The message pending report (drives the ContentReportReason Modal), and its closer.
+  reportMessage: Amity.Message | null;
+  closeReport: () => void;
   viewerIsMutedInChannel: boolean;
 };
 
@@ -74,6 +81,9 @@ export function useBubbleMenu({
   const { success } = useChatNotifications();
   const copiedToast = useString('amity_chat_toast_copied');
   const [bubbleMenu, setBubbleMenu] = useState<BubbleMenuState | null>(null);
+  const [reportMessage, setReportMessage] = useState<Amity.Message | null>(
+    null
+  );
 
   function closeBubbleMenu() {
     setBubbleMenu(null);
@@ -126,8 +136,13 @@ export function useBubbleMenu({
     // TODO: no RN media-save infra yet (web's useSaveMediaMessageQuery). Stubbed.
   }
 
-  function handleBubbleReport(_message: Amity.Message) {
-    // TODO: no RN ContentReportReason sheet yet (web opened a Drawer/Popup). Stubbed.
+  function handleBubbleReport(message: Amity.Message) {
+    // Open the full-screen ContentReportReason Modal (rendered by Chat/GroupChat).
+    setReportMessage(message);
+  }
+
+  function closeReport() {
+    setReportMessage(null);
   }
 
   function handleOpenReactorListSheet(_message: Amity.Message) {
@@ -146,6 +161,8 @@ export function useBubbleMenu({
     handleBubbleSave,
     handleBubbleReport,
     handleOpenReactorListSheet,
+    reportMessage,
+    closeReport,
     viewerIsMutedInChannel,
   };
 }

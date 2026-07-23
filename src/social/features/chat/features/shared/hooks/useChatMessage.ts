@@ -139,6 +139,8 @@ export function useChatMessage({
     handleBubbleSave,
     handleBubbleReport,
     handleOpenReactorListSheet,
+    reportMessage,
+    closeReport,
   } = useBubbleMenu({
     onEditMessage: setEditingMessage,
     onReplyMessage: composer.startReply,
@@ -219,6 +221,8 @@ export function useChatMessage({
     handleBubbleSave,
     handleBubbleReport,
     handleOpenReactorListSheet,
+    reportMessage,
+    closeReport,
     editingMessage,
     closeEditMessage,
     openFailedSheet,

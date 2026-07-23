@@ -10,6 +10,7 @@ import { AmityMessageComposer } from '../../../components/AmityMessageComposer';
 import { ImageViewer } from '../../shared/components/ImageViewer';
 import { VideoPlayer } from '../../shared/components/VideoPlayer';
 import { MessageFullTextScreen } from '../../shared/components/MessageFullTextScreen';
+import { ContentReportReason } from '../../shared/components/ContentReportReason';
 import { MessageReactorListSheet } from '../../shared/components/MessageReactorListSheet';
 import { MutedBanner } from '../../shared/components/MutedBanner';
 import { WaitingForNetwork } from '../../../elements/WaitingForNetwork';
@@ -127,6 +128,13 @@ export function GroupChat({
           text={c.seeMore.text}
           title={c.seeMore.title}
           onClose={c.closeSeeMore}
+        />
+      ) : null}
+      {c.reportMessage ? (
+        <ContentReportReason
+          visible
+          message={c.reportMessage}
+          onClose={c.closeReport}
         />
       ) : null}
     </KeyboardAvoidingView>

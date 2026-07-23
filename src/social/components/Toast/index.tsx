@@ -6,10 +6,15 @@ import { memo, useEffect, useRef } from 'react';
 import { Typography } from '../../../core/components/Typography/Typography';
 import { informative, failed, success } from '../../../core/assets/icons';
 import { CircularProgressIndicator } from '../CircularProgressIndicator';
+import { AmityIcon } from '../../../core/design/icons';
 
 const Toast = () => {
   const { hideToast, toast } = useToast();
-  const { styles, theme } = useStyles(toast.bottomPosition);
+  const { styles, theme, iconColor } = useStyles(
+    toast.bottomPosition,
+    toast.variant
+  );
+  const isCustom = toast.variant === 'custom';
   const timeoutRef = useRef<number | null>(null);
   const fadeIn = useRef(new Animated.Value(0)).current;
 
@@ -49,15 +54,18 @@ const Toast = () => {
           backgroundColor={theme.colors.background}
         />
       )}
-      {toast.type === 'success' && (
-        <SvgXml
-          xml={success()}
-          width="24"
-          height="24"
-          color={theme.colors.background}
-        />
-      )}
-      {toast.type === 'failed' && (
+      {toast.type === 'success' &&
+        (isCustom ? (
+          <AmityIcon name="check-circle-s" size={24} color={iconColor} />
+        ) : (
+          <SvgXml
+            xml={success()}
+            width="24"
+            height="24"
+            color={theme.colors.background}
+          />
+        ))}
+      {!isCustom && toast.type === 'failed' && (
         <SvgXml
           width="24"
           height="24"
@@ -65,7 +73,7 @@ const Toast = () => {
           color={theme.colors.background}
         />
       )}
-      {toast.type === 'informative' && (
+      {!isCustom && toast.type === 'informative' && (
         <SvgXml
           width="24"
           height="24"
