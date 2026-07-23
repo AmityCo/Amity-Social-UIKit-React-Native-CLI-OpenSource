@@ -16,7 +16,8 @@ import { AmityMessageBubble } from '../../../../components/AmityMessageBubble';
 import { AmityMessageActionMenu } from '../../../../components/AmityMessageActionMenu';
 import { MessageReplyQuote } from '../../../shared/components/MessageReplyQuote';
 import { MessageReactionBadge } from '../../../shared/components/MessageReactionBadge';
-import { FailedToShow } from '../../../shared/components/FailedToShow';
+import { AmityIcon } from '../../../../../../../core/design/icons';
+import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-color-tokens';
 import { formatMessageTime } from '../../../../utils/timestamp';
 import { useStyles } from './styles';
 
@@ -134,6 +135,23 @@ export function MessageRow({
 
         <View style={styles.bubbleRow}>
           {ownSide}
+          {isUser && isFailed ? (
+            // Web renders a failed message as the bubble + a small failed/retry
+            // icon (Exclamation/Redo) that opens the failed sheet (Resend/Delete),
+            // placed before the outbound bubble — NOT a full-size placeholder.
+            <Pressable
+              onPress={() => onOpenFailedSheet?.(message)}
+              accessibilityRole="button"
+              accessibilityLabel="Message failed to send"
+              hitSlop={8}
+            >
+              <AmityIcon
+                name="exclamation-circle-r"
+                size={24}
+                tokenColor={AmityColorToken.IconListLeadingDestructiveDefault}
+              />
+            </Pressable>
+          ) : null}
           {isDeleted ? (
             <AmityMessageBubble message={message} isUser={isUser} />
           ) : isFailed ? (
@@ -186,12 +204,6 @@ export function MessageRow({
               onTap={() => onOpenReactorList?.(message)}
             />
           </View>
-        ) : null}
-
-        {isUser && isFailed ? (
-          <Pressable onPress={() => onOpenFailedSheet?.(message)}>
-            <FailedToShow />
-          </Pressable>
         ) : null}
       </View>
     </View>
