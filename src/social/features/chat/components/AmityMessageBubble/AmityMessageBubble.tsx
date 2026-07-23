@@ -237,6 +237,10 @@ function TextBubble({
 
   const text = (message.data as { text?: string })?.text ?? '';
   const firstUrl = extractFirstPreviewUrl(text);
+  // A failed message (synthetic, messageId === '') must NOT generate a link
+  // preview — web suppresses it, and fetching metadata for the blocked link on a
+  // synthetic crashes the list (PDT-4033 QA).
+  const isFailed = message.syncState === ('error' as Amity.SyncState);
   const hasLink = HAS_LINK_RE.test(text);
   const maxLines = hasLink ? TEXT_MAX_LINES_WITH_LINK : TEXT_MAX_LINES;
   const isEdited = (message as { editedAt?: unknown }).editedAt != null;
@@ -316,7 +320,7 @@ function TextBubble({
             </Pressable>
           </>
         ) : null}
-        {firstUrl ? (
+        {firstUrl && !isFailed ? (
           <View style={styles.preview}>
             <MessageLinkPreview url={firstUrl} isOwnMessage={isUser} />
           </View>
