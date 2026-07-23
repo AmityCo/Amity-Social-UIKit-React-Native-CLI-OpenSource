@@ -136,6 +136,18 @@ export function MessageRow({
           {ownSide}
           {isDeleted ? (
             <AmityMessageBubble message={message} isUser={isUser} />
+          ) : isFailed ? (
+            // A failed/synthetic message (never persisted, messageId === '') is
+            // not interactive — no action menu / reaction picker (which would
+            // subscribe on the empty messageId and crash). Web MessageRow renders
+            // a failed message as the bubble + a retry affordance only.
+            <AmityMessageBubble
+              message={message}
+              isUser={isUser}
+              onOpenImage={onOpenImage}
+              onOpenVideo={onOpenVideo}
+              onSeeMore={onSeeMore}
+            />
           ) : (
             <AmityMessageActionMenu
               message={message}
@@ -167,7 +179,7 @@ export function MessageRow({
           {otherSide}
         </View>
 
-        {!isDeleted ? (
+        {!isDeleted && !isFailed ? (
           <View style={styles.reactionBadge}>
             <MessageReactionBadge
               message={message}

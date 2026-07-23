@@ -420,42 +420,48 @@ export function useMessageComposer({
       return;
     }
 
-    await createMessageMutation(
-      {
-        subChannelId,
-        dataType: 'text',
-        data: { text: trimmed },
-        metadata,
-        mentionees,
-        ...(parentId ? { parentId } : {}),
-      },
-      {
-        onSuccess: () => {
-          onMessageCreated?.();
+    try {
+      await createMessageMutation(
+        {
+          subChannelId,
+          dataType: 'text',
+          data: { text: trimmed },
+          metadata,
+          mentionees,
+          ...(parentId ? { parentId } : {}),
         },
-        onError: (err) => {
-          handleTextMessageError(err, { errorToast, info });
-          // PDT-4033: a server-side text moderation rejection (blocked link /
-          // banned word) must leave a persistent failed bubble in the thread —
-          // mirroring web `useMessageComposer`. RN already had this for the
-          // offline branch; extend it to the rejection path.
-          if (isTextModerationRejection(err)) {
-            const pending: PendingText = {
-              clientId: createClientId(),
-              text: trimmed,
-              ...(parentId ? { parentId } : {}),
-              ...(metadata ? { metadata } : {}),
-              ...(mentionees ? { mentionees } : {}),
-              status: 'failed',
-              failureReason: 'generic',
-              createdAt: new Date().toISOString(),
-            };
-            setPendingTexts((prev) => [...prev, pending]);
+        {
+          onSuccess: () => {
             onMessageCreated?.();
-          }
-        },
-      }
-    );
+          },
+          onError: (err) => {
+            handleTextMessageError(err, { errorToast, info });
+            // PDT-4033: a server-side text moderation rejection (blocked link /
+            // banned word) must leave a persistent failed bubble in the thread —
+            // mirroring web `useMessageComposer`. RN already had this for the
+            // offline branch; extend it to the rejection path.
+            if (isTextModerationRejection(err)) {
+              const pending: PendingText = {
+                clientId: createClientId(),
+                text: trimmed,
+                ...(parentId ? { parentId } : {}),
+                ...(metadata ? { metadata } : {}),
+                ...(mentionees ? { mentionees } : {}),
+                status: 'failed',
+                failureReason: 'generic',
+                createdAt: new Date().toISOString(),
+              };
+              setPendingTexts((prev) => [...prev, pending]);
+              onMessageCreated?.();
+            }
+          },
+        }
+      );
+    } catch {
+      // mutateAsync rejects in addition to invoking onError above; the failure is
+      // already handled there (toast + the failed bubble), so swallow the
+      // rejection to avoid an unhandled-promise error.
+    }
   }, [
     text,
     enableMention,
