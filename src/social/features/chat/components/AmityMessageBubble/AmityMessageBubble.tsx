@@ -286,6 +286,24 @@ function TextBubble({
             linkStyle
           )}
         </Text>
+        {/* Web render order: text → link preview → edited caption → see-more.
+            The "See more" row is LAST (below the preview), not between the text
+            and the preview (PDT-4047). */}
+        {firstUrl && !isFailed ? (
+          <View style={styles.preview}>
+            <MessageLinkPreview url={firstUrl} isOwnMessage={isUser} />
+          </View>
+        ) : null}
+        {isEdited ? (
+          <Text
+            style={[
+              styles.editedCaption,
+              isUser ? styles.editedOwn : styles.editedOther,
+            ]}
+          >
+            {editedLabel}
+          </Text>
+        ) : null}
         {truncated && onSeeMore ? (
           <>
             <View
@@ -319,21 +337,6 @@ function TextBubble({
               />
             </Pressable>
           </>
-        ) : null}
-        {firstUrl && !isFailed ? (
-          <View style={styles.preview}>
-            <MessageLinkPreview url={firstUrl} isOwnMessage={isUser} />
-          </View>
-        ) : null}
-        {isEdited ? (
-          <Text
-            style={[
-              styles.editedCaption,
-              isUser ? styles.editedOwn : styles.editedOther,
-            ]}
-          >
-            {editedLabel}
-          </Text>
         ) : null}
       </View>
     </Pressable>
