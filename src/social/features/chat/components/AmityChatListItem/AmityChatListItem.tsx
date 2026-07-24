@@ -280,7 +280,7 @@ function MessagePreview({
     return (
       <View style={styles.previewWithIcon}>
         <AmityIcon name="trash-s" size={PREVIEW_ICON_SIZE} color={iconColor} />
-        <Typography style={styles.preview} numberOfLines={1}>
+        <Typography style={styles.preview} numberOfLines={2}>
           {previewDeletedLabel}
         </Typography>
       </View>
@@ -294,7 +294,7 @@ function MessagePreview({
     return (
       <View style={styles.previewWithIcon}>
         <AmityIcon name={iconName} size={PREVIEW_ICON_SIZE} color={iconColor} />
-        <Typography style={styles.preview} numberOfLines={1}>
+        <Typography style={styles.preview} numberOfLines={2}>
           {text}
         </Typography>
       </View>
@@ -303,7 +303,7 @@ function MessagePreview({
 
   if (preview?.dataType !== 'text' || text.length === 0) {
     return (
-      <Typography style={styles.preview} numberOfLines={1}>
+      <Typography style={styles.preview} numberOfLines={2}>
         {text}
       </Typography>
     );
@@ -333,7 +333,7 @@ function MessagePreview({
 
   if (parts.length === 0) {
     return (
-      <Typography style={styles.preview} numberOfLines={1}>
+      <Typography style={styles.preview} numberOfLines={2}>
         {text}
       </Typography>
     );
@@ -344,7 +344,7 @@ function MessagePreview({
   }
 
   return (
-    <Typography style={styles.preview} numberOfLines={1}>
+    <Typography style={styles.preview} numberOfLines={2}>
       {parts}
     </Typography>
   );
