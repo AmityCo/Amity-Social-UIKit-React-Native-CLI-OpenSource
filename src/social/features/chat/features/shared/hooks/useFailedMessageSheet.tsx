@@ -12,7 +12,7 @@
 //     `useCreateMessage` mutations instead of web's query hooks (resend = recreate
 //     the message, then delete the original — same as web's useResendMessageQuery).
 
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Menu } from '../../../../../../core/design/components/Menu';
 import { useString } from '../../../../../../core/localization';
@@ -84,7 +84,7 @@ export function useFailedMessageSheet({
     openBottomSheet({
       height: bottomSheetHeight[2 as keyof typeof bottomSheetHeight],
       content: (
-        <View>
+        <View style={styles.sheetContainer}>
           <Menu variant="chat" container="drawer">
             {/* Web Menu.Item default typography is BodyBold — no `typography`
                 override (the earlier `body` override was the wrong button style). */}
@@ -111,3 +111,14 @@ export function useFailedMessageSheet({
 
   return { openFailedSheet };
 }
+
+const styles = StyleSheet.create({
+  // Web's drawer container supplies the horizontal padding (its menuItem in a
+  // drawer is `0.875rem 0`, i.e. no side padding). Match the RN chat-sheet
+  // convention (AmityConversationChatUserActionComponent) so the Resend/Delete
+  // rows aren't flush to the screen edges.
+  sheetContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+});
