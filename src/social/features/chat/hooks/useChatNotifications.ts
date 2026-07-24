@@ -28,7 +28,7 @@ export type ChatNotificationOptions = {
 };
 
 export type UseChatNotificationsReturn = {
-  remove: (id: ChatNotificationOptions['id']) => void;
+  remove: (id?: ChatNotificationOptions['id']) => void;
   success: (data: ChatNotificationOptions) => void;
   info: (data: ChatNotificationOptions) => void;
   error: (data: ChatNotificationOptions) => void;

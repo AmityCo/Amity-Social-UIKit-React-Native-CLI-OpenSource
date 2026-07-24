@@ -20,15 +20,24 @@ const Toast = () => {
 
   useEffect(() => {
     if (toast.visible) {
+      // For the custom (chat) loading toast, `duration` is an upper bound (web uses
+      // 60s) that the caller cancels early via `hideToast` on load-complete — so the
+      // fade must stay prompt (500ms) rather than track `duration`, otherwise a 60s
+      // fade renders the spinner invisible. The default-variant loading toast (poll)
+      // keeps its original duration-tracked fade.
+      const fadeDuration =
+        toast.type === 'loading' && toast.variant !== 'custom'
+          ? toast.duration
+          : 500;
       Animated.timing(fadeIn, {
         toValue: 1,
-        duration: toast.type === 'loading' ? toast.duration : 500,
+        duration: fadeDuration,
         useNativeDriver: false,
       }).start(() => {
         timeoutRef.current = setTimeout(() => {
           Animated.timing(fadeIn, {
             toValue: 0,
-            duration: toast.type === 'loading' ? toast.duration : 500,
+            duration: fadeDuration,
             useNativeDriver: false,
           }).start(hideToast);
         }, toast.duration);
