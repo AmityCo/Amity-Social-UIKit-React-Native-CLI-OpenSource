@@ -53,6 +53,7 @@ export function Header({
         tone="default"
         size="sm"
         label={cancelLabel}
+        style={styles.cancel}
         onPress={onCancel}
       />
     </View>
