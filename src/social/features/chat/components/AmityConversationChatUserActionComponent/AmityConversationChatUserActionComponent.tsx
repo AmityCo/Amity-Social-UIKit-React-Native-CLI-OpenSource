@@ -43,7 +43,6 @@ import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-t
 import { resolveString } from '../../../../../core/localization';
 import useAuth from '../../../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../../../core/stores/slices/bottomSheetSlice';
-import { useToast } from '../../../../../core/stores/slices/toastSlice';
 import { useChatNotifications } from '../../hooks/useChatNotifications';
 import { useStyles } from './styles';
 
@@ -67,8 +66,7 @@ export function AmityConversationChatUserActionComponent({
 }: AmityConversationChatUserActionComponentProps) {
   const { styles } = useStyles();
   const { isConnected } = useAuth();
-  const { success } = useChatNotifications();
-  const { showToast } = useToast();
+  const { success, error } = useChatNotifications();
   const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
     useBottomSheet();
 
@@ -135,20 +133,18 @@ export function AmityConversationChatUserActionComponent({
         await manager.disable();
       }
       setIsNotificationEnabled(next);
-      showToast({
-        message: resolveString(
+      success({
+        content: resolveString(
           next ? 'amity_chat_action_unmute' : 'amity_chat_action_mute'
         ),
-        type: 'success',
       });
     } catch {
-      showToast({
-        message: resolveString(
+      error({
+        content: resolveString(
           next
             ? 'amity_chat_action_unmute_failed'
             : 'amity_chat_action_mute_failed'
         ),
-        type: 'failed',
       });
     }
   }
@@ -171,13 +167,12 @@ export function AmityConversationChatUserActionComponent({
         ),
       });
     } catch {
-      showToast({
-        message: resolveString(
+      error({
+        content: resolveString(
           next
             ? 'amity_chat_action_report_user_failed'
             : 'amity_chat_action_unreport_user_failed'
         ),
-        type: 'failed',
       });
     }
   }
