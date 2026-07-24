@@ -20,7 +20,9 @@
 // enabled → `bell-slash-r` + "Turn off notification"; disabled → `bell-s` +
 // "Turn on notification" (iOS `bellSlashR`/`bellS`). `isBlockedByMe` is read live
 // from `UserRepository.Relationship.getFollowInfo` (`status === 'blocked'`) so the
-// block/unblock label is always correct; report is a single flag action. Web's
+// block/unblock label is always correct; report toggles flag/unflag off its own
+// live `UserRepository.isUserFlaggedByMe` state (label flips Report ↔ Unreport
+// user), mirroring the block/unblock row. Web's
 // `ConfirmProvider` maps to the native `Alert.alert`. SDK calls are gated on
 // `useAuth().isConnected`.
 
@@ -74,6 +76,9 @@ export function AmityConversationChatUserActionComponent({
   const displayName = user.displayName ?? user.userId;
 
   const [isBlockedByMe, setIsBlockedByMe] = useState(false);
+  // Report state: read once from `UserRepository.isUserFlaggedByMe`; the report
+  // row toggles flag/unflag live so the label flips Report ↔ Unreport user.
+  const [isFlaggedByMe, setIsFlaggedByMe] = useState(false);
   // Channel push-notification state (web `useChannelPushNotificationQuery`):
   // read once from `getSettings().isEnabled`; the row toggles it live.
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(true);
@@ -88,6 +93,19 @@ export function AmityConversationChatUserActionComponent({
     );
     return () => {
       unsub();
+    };
+  }, [isConnected, userId]);
+
+  useEffect(() => {
+    if (!isConnected || !userId) return undefined;
+    let active = true;
+    UserRepository.isUserFlaggedByMe(userId)
+      .then((flagged) => {
+        if (active) setIsFlaggedByMe(flagged);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
     };
   }, [isConnected, userId]);
 
@@ -137,10 +155,31 @@ export function AmityConversationChatUserActionComponent({
 
   async function handleReport() {
     if (!isConnected) return;
-    await UserRepository.flagUser(userId);
-    success({
-      content: resolveString('amity_chat_action_report_user_success'),
-    });
+    const next = !isFlaggedByMe;
+    try {
+      if (next) {
+        await UserRepository.flagUser(userId);
+      } else {
+        await UserRepository.unflagUser(userId);
+      }
+      setIsFlaggedByMe(next);
+      success({
+        content: resolveString(
+          next
+            ? 'amity_chat_action_report_user_success'
+            : 'amity_chat_action_unreport_user_success'
+        ),
+      });
+    } catch {
+      showToast({
+        message: resolveString(
+          next
+            ? 'amity_chat_action_report_user_failed'
+            : 'amity_chat_action_unreport_user_failed'
+        ),
+        type: 'failed',
+      });
+    }
   }
 
   function handleToggleBlock() {
@@ -193,7 +232,11 @@ export function AmityConversationChatUserActionComponent({
     {
       key: 'report',
       icon: 'flag-r',
-      label: resolveString('amity_chat_action_report_user'),
+      label: resolveString(
+        isFlaggedByMe
+          ? 'amity_chat_action_unreport_user'
+          : 'amity_chat_action_report_user'
+      ),
       onPress: handleReport,
     },
     {
