@@ -71,6 +71,12 @@ export const useStyles = () => {
       textAlign: 'center',
       color: token(AmityColorToken.TextEmptyStateDescriptionDefault),
     },
+    // Web's Button.Main here is auto-width (inline-flex), centered by the
+    // emptyContent's align-items:center — NOT full-width. RN's Button defaults to
+    // alignSelf:flex-start, so centre it explicitly (compact, not full-screen).
+    createButton: {
+      alignSelf: 'center',
+    },
   });
 
   return { styles, token };

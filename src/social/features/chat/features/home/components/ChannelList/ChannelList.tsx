@@ -166,7 +166,7 @@ function EmptyChannelList({ onCreatePress }: { onCreatePress?: () => void }) {
         <Button
           label={createNewChatLabel}
           icon="plus-r"
-          fullWidth
+          style={styles.createButton}
           onPress={onCreatePress}
         />
       </View>

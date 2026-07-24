@@ -6,7 +6,13 @@
 
 // 1. React / RN imports
 import React from 'react';
-import { Pressable, Text, type GestureResponderEvent } from 'react-native';
+import {
+  Pressable,
+  Text,
+  type GestureResponderEvent,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
 // 3. Internal imports
 import { AmityIcon, type AmityIconName } from '../../icons';
@@ -35,6 +41,8 @@ export type ButtonProps = {
   iconOnly?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
+  /** Layout-only override applied after the container style (e.g. alignSelf). */
+  style?: StyleProp<ViewStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 };
 
@@ -49,6 +57,7 @@ export function Button({
   iconOnly = false,
   disabled = false,
   fullWidth = false,
+  style,
   onPress,
 }: ButtonProps) {
   const content = label ?? children;
@@ -75,6 +84,7 @@ export function Button({
         return [
           styles.container,
           { backgroundColor: s.backgroundColor, borderColor: s.borderColor },
+          style,
         ];
       }}
     >
