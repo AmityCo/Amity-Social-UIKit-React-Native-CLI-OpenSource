@@ -189,6 +189,7 @@ export function MessageReactorListSheet({
         <EmptyState />
       ) : (
         <FlatList
+          style={styles.flatList}
           data={rows}
           keyExtractor={(item, index) =>
             `${item.reactor.userId ?? 'unknown'}-${index}`

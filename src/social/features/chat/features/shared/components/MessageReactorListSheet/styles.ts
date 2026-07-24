@@ -19,6 +19,12 @@ export const useStyles = () => {
       flex: 1,
       backgroundColor: token(AmityColorToken.SurfacePageBackgroundDefault),
     },
+    // The reactor list must fill the remaining sheet height below the tab bar.
+    // Without flex:1 the FlatList collapses to 0 height inside the bottom-sheet's
+    // flex column, so its (loaded) rows never show.
+    flatList: {
+      flex: 1,
+    },
     // .messageReactorListSheet__tabList (underlined: row, gap 20, padding 0 per web sheet)
     tabList: {
       flexDirection: 'row',
