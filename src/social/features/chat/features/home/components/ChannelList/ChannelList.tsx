@@ -22,6 +22,7 @@ import { FlatList, View } from 'react-native';
 
 // 2. Third-party imports
 import { Swipeable } from 'react-native-gesture-handler';
+import { SvgXml } from 'react-native-svg';
 import { SubChannelRepository } from '@amityco/ts-sdk-react-native';
 
 // 3. Internal imports (relative)
@@ -29,6 +30,8 @@ import { Typography } from '../../../../../../../core/design/components/Typograp
 import { Button } from '../../../../../../../core/design/atoms/Button';
 import { AmityIcon } from '../../../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-color-tokens';
+import { useAmityTheme } from '../../../../../../../core/design/theme/AmityThemeProvider';
+import { emptyCommunity2 } from '../../../../../../../core/assets/icons/emptyCommunity2';
 import { useString } from '../../../../../../../core/localization';
 import { AmityChatListItem } from '../../../../components/AmityChatListItem';
 import { useChannelsCollection } from '../../../../hooks/collections/useChannelsCollection';
@@ -140,18 +143,17 @@ export function ChannelList({
 }
 
 function EmptyChannelList({ onCreatePress }: { onCreatePress?: () => void }) {
-  const { styles, token } = useStyles();
+  const { styles } = useStyles();
+  const { mode } = useAmityTheme();
   const emptyTitle = useString('amity_chat_home_empty_title');
   const emptyDescription = useString('amity_chat_home_empty_description');
   const createNewChatLabel = useString('amity_chat_create_new_chat');
 
   return (
     <View style={styles.empty}>
-      <AmityIcon
-        name="comments-alt-r"
-        size={48}
-        color={token(AmityColorToken.IconEmptyStateIconDefault)}
-      />
+      {/* Web renders the EmptyCommunity2 160×160 illustration here, not a flat
+          glyph — theme-aware (Light/Dark). */}
+      <SvgXml xml={emptyCommunity2(mode === 'dark')} width={160} height={160} />
       <View style={styles.emptyContent}>
         <View style={styles.emptyText}>
           <Typography variant="titleBold" style={styles.emptyTitle}>
