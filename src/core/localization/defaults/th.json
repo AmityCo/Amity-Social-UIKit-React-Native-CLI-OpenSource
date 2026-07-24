@@ -1164,5 +1164,5 @@
   "amity_chat_notifications_title": "การแจ้งเตือน",
   "amity_chat_notifications_off": "ปิด",
   "amity_chat_notifications_on": "เปิด",
-  "amity_chat_notifications_disabled": "คุณได้ปิดการแจ้งเตือนสำหรับแชท"
+  "amity_chat_notifications_disabled": "การแจ้งเตือนแบบพุชถูกปิดโดยผู้ดูแลระบบ"
 }

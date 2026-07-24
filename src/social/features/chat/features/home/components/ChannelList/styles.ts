@@ -10,6 +10,25 @@ export const useStyles = () => {
   const token = useToken();
 
   const styles = StyleSheet.create({
+    // Wraps the push-disabled banner + the list/empty content (banner pinned on top).
+    root: {
+      flex: 1,
+    },
+    // iOS pushNotificationsBanner: HStack (icon + caption), full width, padding
+    // 12/16, subdue-banner surface. iOS spacing 2 → 4 (RN AmityIcon has no image
+    // insets, so a slightly larger gap matches the iOS look).
+    pushBanner: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      backgroundColor: token(AmityColorToken.SurfaceBannerSubdueGeneral),
+    },
+    pushBannerText: {
+      color: token(AmityColorToken.TextBannerGreyBGTextDescriptionGeneral),
+    },
     list: {
       flex: 1,
       backgroundColor: token(AmityColorToken.SurfaceListDefaultDefault),

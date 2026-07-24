@@ -44,6 +44,11 @@ const ACTION_ICON_SIZE = 28;
 // 3. Types
 export type ChannelListProps = {
   types?: Amity.ChannelType[];
+  /**
+   * When false, the "Push notifications have been disabled by admin" banner is
+   * shown above the list (ported from AmityUIKitIOS). Defaults to true (hidden).
+   */
+  isPushNotificationEnabled?: boolean;
   /** Called with the pressed channel id + display name + type — the page wires navigation. */
   onChannelPress?: (
     channelId: string,
@@ -57,6 +62,7 @@ export type ChannelListProps = {
 // 4. Named function component
 export function ChannelList({
   types,
+  isPushNotificationEnabled = true,
   onChannelPress,
   onCreatePress,
 }: ChannelListProps) {
@@ -108,37 +114,65 @@ export function ChannelList({
     );
   }
 
-  if (channels.length === 0) {
-    return <EmptyChannelList onCreatePress={onCreatePress} />;
-  }
-
+  // iOS AmityChatListComponent renders the push-disabled banner above BOTH the
+  // empty state and the populated list (but not the loading skeleton).
   return (
-    <FlatList
-      style={styles.list}
-      contentContainerStyle={styles.listContent}
-      data={channels}
-      keyExtractor={(channel) => channel.channelId}
-      renderItem={({ item }) => (
-        <Swipeable
-          renderRightActions={renderArchiveAction}
-          onSwipeableWillOpen={() =>
-            archiveChannel({ channelId: item.channelId })
+    <View style={styles.root}>
+      {!isPushNotificationEnabled ? <PushDisabledBanner /> : null}
+      {channels.length === 0 ? (
+        <EmptyChannelList onCreatePress={onCreatePress} />
+      ) : (
+        <FlatList
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
+          data={channels}
+          keyExtractor={(channel) => channel.channelId}
+          renderItem={({ item }) => (
+            <Swipeable
+              renderRightActions={renderArchiveAction}
+              onSwipeableWillOpen={() =>
+                archiveChannel({ channelId: item.channelId })
+              }
+            >
+              <View style={styles.row}>
+                <AmityChatListItem
+                  channel={item}
+                  onPress={() => handleRowPress(item)}
+                />
+              </View>
+            </Swipeable>
+          )}
+          onEndReachedThreshold={0.7}
+          onEndReached={() => {
+            if (hasNextPage) loadMore();
+          }}
+          ListFooterComponent={
+            hasNextPage ? <AmityChatListItem.Skeleton /> : null
           }
-        >
-          <View style={styles.row}>
-            <AmityChatListItem
-              channel={item}
-              onPress={() => handleRowPress(item)}
-            />
-          </View>
-        </Swipeable>
+        />
       )}
-      onEndReachedThreshold={0.7}
-      onEndReached={() => {
-        if (hasNextPage) loadMore();
-      }}
-      ListFooterComponent={hasNextPage ? <AmityChatListItem.Skeleton /> : null}
-    />
+    </View>
+  );
+}
+
+// Push-notifications-disabled banner — ported from AmityUIKitIOS
+// AmityChatListComponent.pushNotificationsBanner: a bell-slash glyph + caption on
+// the subdue-banner surface, shown when push is disabled at the network/admin
+// or chat-module level.
+function PushDisabledBanner() {
+  const { styles } = useStyles();
+  const label = useString('amity_chat_notifications_disabled');
+  return (
+    <View style={styles.pushBanner}>
+      <AmityIcon
+        name="bell-slash-r"
+        size={18}
+        tokenColor={AmityColorToken.IconBannerGreyBGDescriptionGeneral}
+      />
+      <Typography variant="caption" style={styles.pushBannerText}>
+        {label}
+      </Typography>
+    </View>
   );
 }
 

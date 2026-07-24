@@ -272,7 +272,7 @@
   "amity_chat_notifications_title": "Notifications",
   "amity_chat_notifications_off": "Off",
   "amity_chat_notifications_on": "On",
-  "amity_chat_notifications_disabled": "You have disabled notifications for chat",
+  "amity_chat_notifications_disabled": "Push notifications have been disabled by admin",
   "amity_common_ad_ad_about_advertiser": "About this advertiser",
   "amity_common_ad_ad_about_title": "About this advertisement",
   "amity_common_ad_ad_why_description": "You\\'re seeing this advertisement because it was displayed to all users in the system.",
