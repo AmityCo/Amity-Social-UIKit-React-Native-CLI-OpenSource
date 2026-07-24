@@ -5,7 +5,7 @@
 // opens the shared bubble action menu.
 
 // 1. React / RN imports
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 // 2. Internal imports
 import useFile from '../../../../../../../core/hooks/useFile';
@@ -16,8 +16,7 @@ import { AmityMessageBubble } from '../../../../components/AmityMessageBubble';
 import { AmityMessageActionMenu } from '../../../../components/AmityMessageActionMenu';
 import { MessageReplyQuote } from '../../../shared/components/MessageReplyQuote';
 import { MessageReactionBadge } from '../../../shared/components/MessageReactionBadge';
-import { AmityIcon } from '../../../../../../../core/design/icons';
-import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-color-tokens';
+import { Button } from '../../../../../../../core/design/atoms/Button';
 import { formatMessageTime } from '../../../../utils/timestamp';
 import { useStyles } from './styles';
 
@@ -136,21 +135,19 @@ export function MessageRow({
         <View style={styles.bubbleRow}>
           {ownSide}
           {isUser && isFailed ? (
-            // Web renders a failed message as the bubble + a small failed/retry
-            // icon (Exclamation/Redo) that opens the failed sheet (Resend/Delete),
-            // placed before the outbound bubble — NOT a full-size placeholder.
-            <Pressable
+            // Web renders a failed message as the bubble + a small Button.Icon
+            // (Exclamation) that opens the failed sheet (Resend/Delete), placed
+            // before the outbound bubble — NOT a full-size placeholder. Web's
+            // violation affordance is transparent/primary; RN has no Redo glyph so
+            // the exclamation is used for the failed indicator.
+            <Button.Icon
+              icon="exclamation-circle-r"
+              styleType="transparent"
+              hierarchy="primary"
+              size={24}
               onPress={() => onOpenFailedSheet?.(message)}
-              accessibilityRole="button"
               accessibilityLabel="Message failed to send"
-              hitSlop={8}
-            >
-              <AmityIcon
-                name="exclamation-circle-r"
-                size={24}
-                tokenColor={AmityColorToken.IconListLeadingDestructiveDefault}
-              />
-            </Pressable>
+            />
           ) : null}
           {isDeleted ? (
             <AmityMessageBubble message={message} isUser={isUser} />

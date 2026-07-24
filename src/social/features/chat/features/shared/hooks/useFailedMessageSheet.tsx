@@ -3,17 +3,20 @@
 // the retry/discard callbacks. The return shape (UseFailedMessageSheetReturn) is
 // preserved verbatim from web so useChatMessage consumes it unchanged.
 //
-// RN adaptations from web:
-//   - Web opened a bottom Drawer holding a Menu (Resend / Delete). RN has no
-//     DrawerProvider, so the sheet is presented with the native `Alert.alert`
-//     action buttons — same two choices, no new provider.
+// RN adaptation from web:
+//   - Web opened a bottom Drawer holding a `Menu` (Resend / Delete). RN presents
+//     the same Menu in the repo's global @devvie bottom sheet (`useBottomSheet` →
+//     BottomSheetComponent) with `container="drawer"` — the identical pattern the
+//     conversation user-action menu uses. NOT an Alert dialog.
 //   - Non-synthetic delete/resend use the existing RN `useDeleteMessage` /
 //     `useCreateMessage` mutations instead of web's query hooks (resend = recreate
 //     the message, then delete the original — same as web's useResendMessageQuery).
 
-import { Alert } from 'react-native';
+import { View } from 'react-native';
 
+import { Menu } from '../../../../../../core/design/components/Menu';
 import { useString } from '../../../../../../core/localization';
+import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
 import { useDeleteMessage } from '../../../hooks/useDeleteMessage';
 import { useCreateMessage } from '../../../hooks/useCreateMessage';
 import { isSyntheticPendingMessage } from './useMessageComposer';
@@ -35,11 +38,12 @@ export function useFailedMessageSheet({
   onRetryText,
   onDiscardText,
 }: UseFailedMessageSheetParams): UseFailedMessageSheetReturn {
+  const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
+    useBottomSheet();
   const { deleteMessage } = useDeleteMessage();
   const { createMessage } = useCreateMessage();
   const resendLabel = useString('amity_chat_message_resend');
   const deleteLabel = useString('amity_chat_option_delete');
-  const cancelLabel = useString('amity_chat_cancel');
 
   async function handleResend(message: Amity.Message) {
     if (isSyntheticPendingMessage(message)) {
@@ -77,15 +81,32 @@ export function useFailedMessageSheet({
   }
 
   function openFailedSheet(message: Amity.Message) {
-    Alert.alert(undefined, undefined, [
-      { text: resendLabel, onPress: () => handleResend(message) },
-      {
-        text: deleteLabel,
-        style: 'destructive',
-        onPress: () => handleDelete(message),
-      },
-      { text: cancelLabel, style: 'cancel' },
-    ]);
+    openBottomSheet({
+      height: bottomSheetHeight[2 as keyof typeof bottomSheetHeight],
+      content: (
+        <View>
+          <Menu variant="chat" container="drawer">
+            <Menu.Item
+              label={resendLabel}
+              typography="body"
+              onPress={() => {
+                closeBottomSheet();
+                handleResend(message);
+              }}
+            />
+            <Menu.Item
+              label={deleteLabel}
+              destructive
+              typography="body"
+              onPress={() => {
+                closeBottomSheet();
+                handleDelete(message);
+              }}
+            />
+          </Menu>
+        </View>
+      ),
+    });
   }
 
   return { openFailedSheet };
