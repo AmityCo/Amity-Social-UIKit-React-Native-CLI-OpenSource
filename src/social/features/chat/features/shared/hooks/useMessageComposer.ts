@@ -516,13 +516,19 @@ export function useMessageComposer({
           return;
         }
         const failureReason = classifyMediaError(err);
+        // Capture the caught value into a normal block const BEFORE the setState
+        // updater. Hermes doesn't reliably resolve a `catch` binding referenced
+        // inside a nested closure (this updater runs during render), which threw
+        // "Property 'err' doesn't exist"; a block const is captured correctly
+        // (note failureReason above works for exactly that reason).
+        const uploadError = err instanceof Error ? err : new Error(String(err));
         setPendingUploads((prev) =>
           prev.map((p) =>
             p.clientId === pending.clientId
               ? {
                   ...p,
                   status: 'failed',
-                  error: err instanceof Error ? err : new Error(String(err)),
+                  error: uploadError,
                   failureReason,
                 }
               : p
