@@ -5,7 +5,7 @@
 // the caller via onPickAsset.
 
 // 1. React / RN imports
-import { Pressable, View } from 'react-native';
+import { PermissionsAndroid, Platform, Pressable, View } from 'react-native';
 
 // 2. Third-party imports
 import {
@@ -38,6 +38,15 @@ export function AmityMediaAttachmentPicker({
   const mediaLabel = useString('amity_chat_media');
 
   async function handleCamera() {
+    // CAMERA is declared in AndroidManifest, so react-native-image-picker
+    // requires the runtime permission to be granted before launchCamera — and it
+    // does NOT request it itself, so without this the camera silently never opens.
+    if (Platform.OS === 'android') {
+      const status = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA
+      );
+      if (status !== PermissionsAndroid.RESULTS.GRANTED) return;
+    }
     const result = await launchCamera({
       mediaType: MEDIA_TYPE,
       saveToPhotos: false,
