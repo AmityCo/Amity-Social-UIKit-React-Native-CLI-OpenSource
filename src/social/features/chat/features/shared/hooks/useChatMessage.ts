@@ -10,6 +10,11 @@
 // scope for M2 and stubbed; loading/error toasts go through the useChatNotifications stub.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  SubChannelRepository,
+  getSubChannelTopic,
+  subscribeTopic,
+} from '@amityco/ts-sdk-react-native';
 
 import { useMessagesCollection } from '../../../hooks/collections/useMessagesCollection';
 import {
@@ -178,6 +183,29 @@ export function useChatMessage({
   useEffect(() => {
     if (loadError) errorToast({ content: loadErrorToast });
   }, [loadError, errorToast, loadErrorToast]);
+
+  // Cross-device real-time messages. The `getMessages` live collection only
+  // reflects the LOCAL SDK cache (own sends, edits) — other users' messages do
+  // not arrive live unless we subscribe to the subchannel topic while the thread
+  // is open (SDK realtime docs: "Subscribe when the thread screen becomes active").
+  // Web's ts-sdk auto-subscribes inside getMessages; the RN ts-sdk-react-native
+  // does NOT (verified on-device: only the read-marker topic subscribes otherwise),
+  // so we subscribe explicitly here and unsubscribe on unmount / channel change.
+  useEffect(() => {
+    if (!channelId) return undefined;
+    let unsubscribeTopic: (() => void) | undefined;
+    const unsubscribeObject = SubChannelRepository.getSubChannel(
+      channelId,
+      ({ data: subChannel, loading: subLoading }) => {
+        if (subLoading || !subChannel || unsubscribeTopic) return;
+        unsubscribeTopic = subscribeTopic(getSubChannelTopic(subChannel));
+      }
+    );
+    return () => {
+      unsubscribeTopic?.();
+      unsubscribeObject();
+    };
+  }, [channelId]);
 
   // Web useChatMessage shows a loading toast ("Loading chat...") while the first
   // page loads and removes it once loaded (duration 60s = upper bound). RN's toast
