@@ -60,7 +60,11 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <Header
-        title={userDisplayName ?? ''}
+        // A 1-1 conversation's title is the OTHER participant's display name, not
+        // the channel's displayName (which is often empty for conversations).
+        // Resolve it from the channel's preview members (same as AmityChatListItem);
+        // fall back to the navigation-passed name only while that loads.
+        title={c.otherUser?.displayName || userDisplayName || ''}
         onBack={onBack}
         trailing={
           c.otherUser ? (
