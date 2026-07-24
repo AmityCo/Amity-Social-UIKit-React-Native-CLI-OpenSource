@@ -18,7 +18,7 @@ export function BannedEmptyState() {
     <View style={styles.container}>
       <AmityIcon
         name="comment-exclamation-l"
-        size={48}
+        size={64}
         color={token(AmityColorToken.IconEmptyStateIconDefault)}
       />
       <View style={styles.text}>
