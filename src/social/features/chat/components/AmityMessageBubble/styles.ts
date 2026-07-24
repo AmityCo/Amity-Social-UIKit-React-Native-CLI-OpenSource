@@ -94,11 +94,18 @@ export const useStyles = () => {
       color: token(AmityColorToken.TextChatBubbleInboundSeeMoreDefault),
     },
     // Mention span inside the text (web textBubble__mention, weight 500).
+    // Repeat the surrounding text's fontSize/lineHeight (14/18): the 500-weight
+    // mention <Text> otherwise renders taller than the 18px line box sized from
+    // the 14px body text and its bottom gets clipped (Android).
     mentionOwn: {
+      fontSize: 14,
+      lineHeight: 18,
       fontWeight: '500',
       color: token(AmityColorToken.TextChatBubbleOutboundMentionedDefault),
     },
     mentionOther: {
+      fontSize: 14,
+      lineHeight: 18,
       fontWeight: '500',
       color: token(AmityColorToken.TextChatBubbleInboundMentionedDefault),
     },
