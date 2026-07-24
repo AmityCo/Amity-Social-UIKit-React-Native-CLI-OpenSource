@@ -136,12 +136,11 @@ export function MessageRow({
           {ownSide}
           {isUser && isFailed ? (
             // Web renders a failed message as the bubble + a small Button.Icon
-            // (Exclamation) that opens the failed sheet (Resend/Delete), placed
-            // before the outbound bubble — NOT a full-size placeholder. Web's
-            // violation affordance is transparent/primary; RN has no Redo glyph so
-            // the exclamation is used for the failed indicator.
+            // that opens the failed sheet (Resend/Delete), before the outbound
+            // bubble. Web's `Exclamation` glyph is a BARE solid exclamation (not
+            // circled) in a transparent/primary icon button — RN `exclamation-s`.
             <Button.Icon
-              icon="exclamation-circle-r"
+              icon="exclamation-s"
               styleType="transparent"
               hierarchy="primary"
               size={24}

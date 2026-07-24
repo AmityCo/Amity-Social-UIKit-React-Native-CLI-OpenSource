@@ -86,9 +86,10 @@ export function useFailedMessageSheet({
       content: (
         <View>
           <Menu variant="chat" container="drawer">
+            {/* Web Menu.Item default typography is BodyBold — no `typography`
+                override (the earlier `body` override was the wrong button style). */}
             <Menu.Item
               label={resendLabel}
-              typography="body"
               onPress={() => {
                 closeBottomSheet();
                 handleResend(message);
@@ -97,7 +98,6 @@ export function useFailedMessageSheet({
             <Menu.Item
               label={deleteLabel}
               destructive
-              typography="body"
               onPress={() => {
                 closeBottomSheet();
                 handleDelete(message);
