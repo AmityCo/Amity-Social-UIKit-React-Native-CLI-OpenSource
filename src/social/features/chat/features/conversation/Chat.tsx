@@ -36,16 +36,12 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   const { styles } = useStyles();
   const c = useConversation(channelId);
 
-  // Receiver avatar for the header (1-1 conversation). Web uses
-  // `user.avatar.fileUrl`; previewMembers don't always carry the populated
-  // `avatar`, so prefer it and fall back to resolving `avatarFileId` through
-  // useFile (same source AmityChatListItem uses for the list row).
-  const resolvedOtherAvatar = useFile({
+  // Receiver avatar for the header (1-1 conversation), resolved from the other
+  // participant's avatarFileId — the same source AmityChatListItem uses for the
+  // list row (kept consistent so both show the same image).
+  const otherUserAvatarUrl = useFile({
     fileId: c.otherUser?.avatarFileId ?? '',
   });
-  const otherUserAvatarUrl =
-    (c.otherUser as { avatar?: { fileUrl?: string } | null } | undefined)
-      ?.avatar?.fileUrl || resolvedOtherAvatar;
   // Reactor-list sheet — web keeps this in useBubbleMenu at the orchestration
   // level (one instance). RN MOBILE ADAPTATION: rather than render the reactor
   // list inline, push it into the repo's global @devvie bottom sheet so it slides
