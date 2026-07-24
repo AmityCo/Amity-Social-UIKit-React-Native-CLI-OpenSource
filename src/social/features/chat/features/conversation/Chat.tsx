@@ -8,6 +8,7 @@
 import { Dimensions, KeyboardAvoidingView, Platform, View } from 'react-native';
 
 // 2. Internal imports
+import useFile from '../../../../../core/hooks/useFile';
 import { useBottomSheet } from '../../../../../core/stores/slices/bottomSheetSlice';
 import { AmityMessageComposer } from '../../components/AmityMessageComposer';
 import { AmityConversationChatUserActionComponent } from '../../components/AmityConversationChatUserActionComponent';
@@ -34,6 +35,17 @@ export type ChatProps = {
 export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   const { styles } = useStyles();
   const c = useConversation(channelId);
+
+  // Receiver avatar for the header (1-1 conversation). Web uses
+  // `user.avatar.fileUrl`; previewMembers don't always carry the populated
+  // `avatar`, so prefer it and fall back to resolving `avatarFileId` through
+  // useFile (same source AmityChatListItem uses for the list row).
+  const resolvedOtherAvatar = useFile({
+    fileId: c.otherUser?.avatarFileId ?? '',
+  });
+  const otherUserAvatarUrl =
+    (c.otherUser as { avatar?: { fileUrl?: string } | null } | undefined)
+      ?.avatar?.fileUrl || resolvedOtherAvatar;
   // Reactor-list sheet — web keeps this in useBubbleMenu at the orchestration
   // level (one instance). RN MOBILE ADAPTATION: rather than render the reactor
   // list inline, push it into the repo's global @devvie bottom sheet so it slides
@@ -65,6 +77,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
         // Resolve it from the channel's preview members (same as AmityChatListItem);
         // fall back to the navigation-passed name only while that loads.
         title={c.otherUser?.displayName || userDisplayName || ''}
+        avatarUrl={otherUserAvatarUrl}
         onBack={onBack}
         trailing={
           c.otherUser ? (
