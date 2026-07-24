@@ -498,6 +498,11 @@ function VideoBubble({
         paused
         muted
         controls={false}
+        // The native <Video> view absorbs touches, which swallowed the bubble's
+        // onPress so the player never opened (images work because <Image> passes
+        // touches through). Make the thumbnail transparent to touch so the tap
+        // reaches the wrapping Pressable → onOpenVideo.
+        pointerEvents="none"
       />
       {showUploadOverlay ? (
         <MediaUploadOverlay onCancel={onCancelUpload} />
