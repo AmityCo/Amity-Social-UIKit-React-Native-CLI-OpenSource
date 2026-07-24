@@ -101,12 +101,20 @@ export function AmityChatListItem({
   const isUserDeleted = Boolean(otherUser?.isDeleted);
   const isModerator = hasModeratorRole(otherMember?.roles);
 
-  // Resolve the leading avatar image from whichever fileId applies. Called once,
-  // unconditionally, to keep hook order stable across channel types.
+  // Resolve the leading avatar image. For a conversation it's the OTHER
+  // participant's avatar: prefer their populated `user.avatar.fileUrl` (web's
+  // source) and fall back to resolving `avatarFileId` — previewMembers don't
+  // always carry the fileId. useFile is called unconditionally to keep hook order
+  // stable across channel types.
   const avatarFileId = isConversation
     ? otherUser?.avatarFileId
     : channel.avatarFileId;
-  const avatarUrl = useFile({ fileId: avatarFileId ?? '' });
+  const resolvedAvatarUrl = useFile({ fileId: avatarFileId ?? '' });
+  const avatarUrl =
+    (isConversation
+      ? (otherUser as { avatar?: { fileUrl?: string } | null } | undefined)
+          ?.avatar?.fileUrl
+      : undefined) || resolvedAvatarUrl;
 
   const timestampSource = channel.lastActivity;
   const timestamp = timestampSource ? formatTimestamp(timestampSource) : '';
