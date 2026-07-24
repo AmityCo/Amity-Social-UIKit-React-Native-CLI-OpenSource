@@ -1,19 +1,15 @@
 // Header — create-conversation header, ported from AmityUiKitWeb
 // v4/chat/features/conversation/create/components/Header. Composes the shared
-// TopBar (close variant) over a search field.
-//
-// RN adaptations from web:
-//   - Web's `SearchInput` molecule → the `Boxed` input atom (pill) with a
-//     leading search glyph tinted via the Icon/Input/TextInput token.
+// TopBar (close variant) over the SearchInput molecule — the same search field
+// web uses here, and the one every other chat search header uses in RN (leading
+// search glyph + clear button), so the style matches across the UIKit.
 
 // 1. React / RN imports
 import { View } from 'react-native';
 
 // 2. Internal imports (relative)
 import { TopBar } from '../../../../../elements/TopBar';
-import { Boxed } from '../../../../../../../../core/design/atoms/Input';
-import { AmityIcon } from '../../../../../../../../core/design/icons';
-import { AmityColorToken } from '../../../../../../../../core/design/tokens/amity-color-tokens';
+import { SearchInput } from '../../../../../../../../core/design/molecules/SearchInput';
 import { useString } from '../../../../../../../../core/localization';
 import { useStyles } from './styles';
 
@@ -34,18 +30,11 @@ export function Header({ onClose, searchValue, onSearchChange }: HeaderProps) {
     <View style={styles.header}>
       <TopBar title={title} leadingType="close" onLeading={onClose} />
       <View style={styles.searchBar}>
-        <Boxed
+        <SearchInput
           value={searchValue}
           onChange={onSearchChange}
           placeholder={searchPlaceholder}
           accessibilityLabel={searchPlaceholder}
-          leadingIcon={
-            <AmityIcon
-              name="search-l"
-              size={20}
-              tokenColor={AmityColorToken.IconInputTextInputDefault}
-            />
-          }
         />
       </View>
     </View>
