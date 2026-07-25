@@ -25,6 +25,7 @@ import {
   ContentFlagReasonEnum,
   MessageRepository,
 } from '@amityco/ts-sdk-react-native';
+import { useQueryClient } from '@tanstack/react-query';
 
 // 3. Internal imports
 import { Typography } from '../../../../../../../core/design/components/Typography';
@@ -38,6 +39,7 @@ import {
   useString,
 } from '../../../../../../../core/localization';
 import { useChatNotifications } from '../../../../hooks/useChatNotifications';
+import { flagMessageQueryKey } from '../../../../hooks/queries';
 import { useNetworkOnline } from '../../../../hooks/useNetworkOnline';
 import Toast from '../../../../../../components/Toast';
 import { useStyles } from './styles';
@@ -96,6 +98,7 @@ export function ContentReportReason({
 }: ContentReportReasonProps) {
   const { styles } = useStyles();
   const { success, error } = useChatNotifications();
+  const queryClient = useQueryClient();
   const { online } = useNetworkOnline();
 
   const [isShowOthersOption, setIsShowOthersOption] = useState(false);
@@ -150,6 +153,11 @@ export function ContentReportReason({
     setIsSubmitting(true);
     try {
       await MessageRepository.flagMessage(message.messageId, reason);
+      // Refresh the bubble menu's flag state so Report flips to Unreport
+      // (reinforces the menu's own refetch-on-open; see useFlagMessageQuery).
+      queryClient.invalidateQueries({
+        queryKey: flagMessageQueryKey(message.messageId),
+      });
       success({ content: reportSuccessToast });
       onClose();
     } catch {

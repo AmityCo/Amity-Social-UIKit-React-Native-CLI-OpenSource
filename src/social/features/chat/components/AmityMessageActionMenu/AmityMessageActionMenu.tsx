@@ -5,14 +5,19 @@
 // Web's popover is externally controlled via `anchor: HTMLElement`; the RN
 // Wave-A Popover is self-controlled through a `trigger` render-prop, so this
 // menu takes that render-prop as `anchor` and the owning MessageRow wires
-// `onLongPress → openPopover`. Web's ReactionPicker and flag-query loading
-// skeleton are dropped (reaction row deferred to M4; RN has no flag-loading infra).
-// The report/unreport toggle IS ported: `isFlaggedByMe` (prop-driven — RN has no
-// flag query yet, so the wiring layer supplies it) swaps `report` for `unreport`,
-// matching web `buildBubbleMenuItems`. Item visibility otherwise follows web.
+// `onLongPress → openPopover`.
+//
+// The report/unreport toggle is query-driven, matching web MessageActionsPopover:
+// this menu calls useFlagMessageQuery (isMessageFlaggedByMe) — gated on the menu
+// being open so it doesn't fire for every message in the list — and swaps `report`
+// for `unreport` once the answer is known. Both items stay hidden while the flag
+// state is loading (web gates on `!flagState.isLoading`) so a reported message
+// never briefly shows "Report". Unreport calls the query's `unreport` then
+// refetches; the report screen (ContentReportReason) invalidates the same query
+// key so reopening the menu reflects the new state. Item visibility follows web.
 
 // 1. React / RN imports
-import { type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 
@@ -26,6 +31,7 @@ import { type AmityIconName } from '../../../../../core/design/icons';
 import { resolveString } from '../../../../../core/localization';
 import { ReactionPicker } from '../../elements/ReactionPicker';
 import { useMessageReactions } from '../../features/shared/hooks/useMessageReactions';
+import { useFlagMessageQuery } from '../../hooks/queries';
 import { useStyles } from './styles';
 
 // 3. Types
@@ -53,8 +59,6 @@ type AmityMessageActionMenuProps = {
   message: Amity.Message;
   currentUserId?: string | null;
   handlers: MessageActionHandlers;
-  /** Whether the viewer has already reported this message (swaps report→unreport). */
-  isFlaggedByMe?: boolean;
   viewerIsMutedInChannel?: boolean;
   placement?: PopoverPlacement;
 };
@@ -81,7 +85,11 @@ export function buildMessageActionItems(
   handlers: MessageActionHandlers,
   onCopyText: () => void,
   viewerIsMutedInChannel = false,
-  isFlaggedByMe = false
+  isFlaggedByMe = false,
+  // While the flag state is still being fetched neither Report nor Unreport is
+  // shown (web gates both on `!flagState.isLoading`) — otherwise the menu would
+  // flash "Report" on a message that turns out to be already reported.
+  isFlagLoading = false
 ): Omit<ActionItem, 'visible'>[] {
   const isOwn = !!currentUserId && message.creatorId === currentUserId;
   const isText = message.dataType === 'text';
@@ -127,14 +135,16 @@ export function buildMessageActionItems(
       icon: 'flag-r',
       label: resolveString('amity_chat_option_unreport'),
       onPress: () => handlers.onUnreport?.(),
-      visible: !isOwn && isActive && isFlaggedByMe,
+      // Web: `!isOwn && !flagState.isLoading && isFlaggedByMe` (no isActive gate).
+      visible: !isOwn && !isFlagLoading && isFlaggedByMe,
     },
     {
       key: 'report',
       icon: 'flag-r',
       label: resolveString('amity_chat_option_report'),
       onPress: () => handlers.onReport(message),
-      visible: !isOwn && isActive && !isFlaggedByMe,
+      // Web: `!isOwn && !flagState.isLoading && !isFlaggedByMe`.
+      visible: !isOwn && !isFlagLoading && !isFlaggedByMe,
     },
     {
       key: 'delete',
@@ -159,12 +169,28 @@ export function AmityMessageActionMenu({
   message,
   currentUserId,
   handlers,
-  isFlaggedByMe = false,
   viewerIsMutedInChannel = false,
   placement = 'bottom right',
 }: AmityMessageActionMenuProps) {
   const { styles } = useStyles();
   const { selectReaction } = useMessageReactions();
+
+  const isOwn = !!currentUserId && message.creatorId === currentUserId;
+
+  // Web MessageActionsPopover queries "have I reported this?" to swap
+  // Report ↔ Unreport. Gate the query on the menu being open (like web's
+  // on-open popover) so we don't fire isMessageFlaggedByMe for every message in
+  // the list; only the viewer's own messages are never reportable.
+  const [menuOpen, setMenuOpen] = useState(false);
+  const {
+    isFlaggedByMe,
+    isLoading: isFlagLoading,
+    unreport,
+    refetch: refetchFlag,
+  } = useFlagMessageQuery({
+    messageId: message.messageId,
+    enabled: menuOpen && !isOwn,
+  });
 
   // Web MessageActionsPopover renders a ReactionPicker above the menu for active
   // (synced, non-deleted) messages; myReaction = first of message.myReactions.
@@ -180,13 +206,21 @@ export function AmityMessageActionMenu({
     handlers.onCopy();
   };
 
+  // Inject the unreport handler (web wires it from the same flag query); refetch
+  // afterwards so the menu returns to Report.
+  const menuHandlers: MessageActionHandlers = {
+    ...handlers,
+    onUnreport: () => unreport({ onSuccess: refetchFlag }),
+  };
+
   const items = buildMessageActionItems(
     message,
     currentUserId,
-    handlers,
+    menuHandlers,
     copyText,
     viewerIsMutedInChannel,
-    isFlaggedByMe
+    isFlaggedByMe,
+    isFlagLoading
   );
 
   if (items.length === 0) {
@@ -203,7 +237,13 @@ export function AmityMessageActionMenu({
   }
 
   return (
-    <Popover trigger={anchor} placement={placement} surface={false}>
+    <Popover
+      trigger={anchor}
+      placement={placement}
+      surface={false}
+      onOpen={() => setMenuOpen(true)}
+      onClose={() => setMenuOpen(false)}
+    >
       {({ closePopover }) => (
         <View style={styles.content}>
           {isActive && (
