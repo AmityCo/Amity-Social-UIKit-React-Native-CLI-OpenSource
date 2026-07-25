@@ -216,7 +216,12 @@ export function useChatMessage({
     if (isLoadingFirstPage) {
       if (loadingToastShownRef.current) return;
       loadingToastShownRef.current = true;
-      showLoadingToast({ content: loadingLabel, duration: 60_000 });
+      // Web shows this above the composer (useChatMessage: alignment 'with-composer').
+      showLoadingToast({
+        content: loadingLabel,
+        duration: 60_000,
+        alignment: 'with-composer',
+      });
     } else if (loadingToastShownRef.current) {
       loadingToastShownRef.current = false;
       removeToast();

@@ -46,45 +46,38 @@ function toMessage(content: ChatNotificationOptions['content']): string {
     : String(content);
 }
 
+// Mirrors the toast slice's `type` union (not exported from there).
+type ToastType = 'failed' | 'success' | 'informative' | 'loading';
+
+// Bottom offset for `alignment: 'with-composer'`: web's
+// `.chatToast[data-alignment='with-composer'] { bottom: calc(3.5rem + 1rem) }`
+// = 56px composer + 16px gap. Added on top of the safe-area inset by the Toast.
+const WITH_COMPOSER_BOTTOM = 72;
+
 export function useChatNotifications(): UseChatNotificationsReturn {
   const { showToast, hideToast } = useToast();
 
+  // Web raises the chat toast above the composer for `alignment: 'with-composer'`
+  // (CSS `.chatToast[data-alignment='with-composer'] { bottom: calc(3.5rem + 1rem) }`
+  // — 56px composer + 16px gap). Map only that alignment to a raised bottom offset;
+  // every other value (fullscreen | withSidebar | live-chat) is a web desktop/sidebar
+  // layout concern with no RN analog and keeps the toast's default bottom position.
+  const emit = (type: ToastType, data: ChatNotificationOptions) =>
+    showToast({
+      message: toMessage(data.content),
+      type,
+      duration: data.duration,
+      variant: 'custom',
+      bottomPosition:
+        data.alignment === 'with-composer' ? WITH_COMPOSER_BOTTOM : undefined,
+    });
+
   return {
     remove: () => hideToast(),
-    success: ({ content, duration }) =>
-      showToast({
-        message: toMessage(content),
-        type: 'success',
-        duration,
-        variant: 'custom',
-      }),
-    info: ({ content, duration }) =>
-      showToast({
-        message: toMessage(content),
-        type: 'informative',
-        duration,
-        variant: 'custom',
-      }),
-    error: ({ content, duration }) =>
-      showToast({
-        message: toMessage(content),
-        type: 'failed',
-        duration,
-        variant: 'custom',
-      }),
-    show: ({ content, duration }) =>
-      showToast({
-        message: toMessage(content),
-        type: 'informative',
-        duration,
-        variant: 'custom',
-      }),
-    loading: ({ content, duration }) =>
-      showToast({
-        message: toMessage(content),
-        type: 'loading',
-        duration,
-        variant: 'custom',
-      }),
+    success: (data) => emit('success', data),
+    info: (data) => emit('informative', data),
+    error: (data) => emit('failed', data),
+    show: (data) => emit('informative', data),
+    loading: (data) => emit('loading', data),
   };
 }
