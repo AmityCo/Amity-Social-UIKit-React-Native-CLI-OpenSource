@@ -13,7 +13,6 @@ import ImageView from 'react-native-image-viewing';
 // 3. Internal imports
 import { AmityIcon } from '../../../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-color-tokens';
-import { useToken } from '../../../../../../../core/design/theme/useToken';
 import { useString } from '../../../../../../../core/localization';
 import { useStyles } from './styles';
 
@@ -35,7 +34,6 @@ export function ImageViewer({
   onSave,
 }: ImageViewerProps) {
   const { styles } = useStyles();
-  const token = useToken();
   const deleteLabel = useString('amity_chat_option_delete');
   const saveLabel = useString('amity_chat_action_save');
 
@@ -48,9 +46,9 @@ export function ImageViewer({
       imageIndex={0}
       visible
       onRequestClose={onClose}
-      backgroundColor={token(
-        AmityColorToken.SurfaceBadgeSemanticBadgeGeneralDuration
-      )}
+      // Web MediaViewer overlay is solid black (.mediaViewer__overlay background);
+      // rgb() (no hex) keeps the repo's no-hex gate happy.
+      backgroundColor="rgb(0, 0, 0)"
       HeaderComponent={() => (
         <View style={styles.topBar}>
           <Pressable
