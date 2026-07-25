@@ -33,6 +33,7 @@
     "test": "jest --passWithNoTests",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "check:chat-toasts": "node scripts/check-chat-toasts.mjs",
     "prepack": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",

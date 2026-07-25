@@ -74,22 +74,33 @@ const Toast = () => {
             color={theme.colors.background}
           />
         ))}
-      {!isCustom && toast.type === 'failed' && (
-        <SvgXml
-          width="24"
-          height="24"
-          xml={failed()}
-          color={theme.colors.background}
-        />
-      )}
-      {!isCustom && toast.type === 'informative' && (
-        <SvgXml
-          width="24"
-          height="24"
-          xml={informative()}
-          color={theme.colors.background}
-        />
-      )}
+      {toast.type === 'failed' &&
+        (isCustom ? (
+          // Web chat toast (Toast atom, variant 'error'): ExclamationCircle tinted
+          // with --asc-color-icon-customtoast-default. Custom variant must show it —
+          // previously custom failed toasts had NO icon (web/RN parity gap).
+          <AmityIcon name="exclamation-circle-r" size={24} color={iconColor} />
+        ) : (
+          <SvgXml
+            width="24"
+            height="24"
+            xml={failed()}
+            color={theme.colors.background}
+          />
+        ))}
+      {toast.type === 'informative' &&
+        (isCustom ? (
+          // Web chat toast (Toast atom, variant 'informative'): InfoCircle tinted
+          // with --asc-color-icon-customtoast-default.
+          <AmityIcon name="info-circle-r" size={24} color={iconColor} />
+        ) : (
+          <SvgXml
+            width="24"
+            height="24"
+            xml={informative()}
+            color={theme.colors.background}
+          />
+        ))}
       <Typography.Body style={styles.message}>{toast.message}</Typography.Body>
     </Animated.View>
   );

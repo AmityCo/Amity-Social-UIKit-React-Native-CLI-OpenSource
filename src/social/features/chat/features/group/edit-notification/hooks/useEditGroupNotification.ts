@@ -85,7 +85,7 @@ export function useEditGroupNotification({
     mutationFn: ({ channelId: id, notificationMode }) =>
       ChannelRepository.updateChannel(id, { notificationMode }),
     onError: () => {
-      showToast({ message: errorToast, type: 'failed' });
+      showToast({ message: errorToast, type: 'failed', variant: 'custom' });
     },
   });
 
@@ -113,7 +113,7 @@ export function useEditGroupNotification({
       channelId,
       notificationMode: values.notificationMode,
     });
-    showToast({ message: successToast, type: 'success' });
+    showToast({ message: successToast, type: 'success', variant: 'custom' });
     navigation.goBack();
   });
 

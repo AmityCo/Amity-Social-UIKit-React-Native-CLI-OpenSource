@@ -118,12 +118,14 @@ export function useNotificationPreference({
       showToast({
         message: variables.isEnabled ? unmuteSuccess : muteSuccess,
         type: 'success',
+        variant: 'custom',
       });
     },
     onError: (_, variables) => {
       showToast({
         message: variables.isEnabled ? unmuteError : muteError,
         type: 'failed',
+        variant: 'custom',
       });
     },
   });

@@ -120,10 +120,18 @@ export function useEditGroupProfile({ channelId }: EditGroupProfileProps) {
         displayName: trimmedName,
         avatarFileId,
       });
-      showToast({ message: updateSuccessToast, type: 'success' });
+      showToast({
+        message: updateSuccessToast,
+        type: 'success',
+        variant: 'custom',
+      });
       navigation.goBack();
     } catch {
-      showToast({ message: updateFailedToast, type: 'failed' });
+      showToast({
+        message: updateFailedToast,
+        type: 'failed',
+        variant: 'custom',
+      });
     } finally {
       setIsSubmitting(false);
     }

@@ -234,9 +234,17 @@ export function useGroupSetting({ channelId }: GroupSettingProps) {
           try {
             await ChannelRepository.leaveChannel(channelId);
             popToList();
-            showToast({ message: leaveSuccessToast, type: 'success' });
+            showToast({
+              message: leaveSuccessToast,
+              type: 'success',
+              variant: 'custom',
+            });
           } catch {
-            showToast({ message: leaveFailedToast, type: 'failed' });
+            showToast({
+              message: leaveFailedToast,
+              type: 'failed',
+              variant: 'custom',
+            });
           }
         },
       },

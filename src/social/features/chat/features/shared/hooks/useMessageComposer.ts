@@ -213,9 +213,11 @@ export function useMessageComposer({
   const linkNotAllowedToast = useString('amity_chat_toast_link_not_allow');
 
   // RN toast/dialog bound to the web Notify shape used by handleTextMessageError.
+  // Web routes composer errors through useNotifications('chat') — the custom dark
+  // pill — so use variant 'custom' to match (e.g. the invalid-link error toast).
   const errorToast = useCallback(
     ({ content }: { content: string }) =>
-      showToast({ message: content, type: 'failed' }),
+      showToast({ message: content, type: 'failed', variant: 'custom' }),
     [showToast]
   );
   const info = useCallback(

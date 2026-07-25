@@ -36,7 +36,11 @@ export function useChannelArchiveQuery() {
   const archiveMutation = useMutation<Response, Error, ChannelArchivePayload>({
     mutationFn: ({ channelId }) => ChannelRepository.archiveChannel(channelId),
     onSuccess: () => {
-      showToast({ message: archivedSuccessToast, type: 'success' });
+      showToast({
+        message: archivedSuccessToast,
+        type: 'success',
+        variant: 'custom',
+      });
     },
     onError: (err) => {
       if (err.message?.includes('Archive limit exceeded')) {
@@ -45,7 +49,11 @@ export function useChannelArchiveQuery() {
         ]);
         return;
       }
-      showToast({ message: archiveErrorToast, type: 'failed' });
+      showToast({
+        message: archiveErrorToast,
+        type: 'failed',
+        variant: 'custom',
+      });
     },
   });
 
@@ -54,10 +62,18 @@ export function useChannelArchiveQuery() {
       mutationFn: ({ channelId }) =>
         ChannelRepository.unarchiveChannel(channelId),
       onSuccess: () => {
-        showToast({ message: unarchiveSuccessToast, type: 'success' });
+        showToast({
+          message: unarchiveSuccessToast,
+          type: 'success',
+          variant: 'custom',
+        });
       },
       onError: () => {
-        showToast({ message: unarchiveErrorToast, type: 'failed' });
+        showToast({
+          message: unarchiveErrorToast,
+          type: 'failed',
+          variant: 'custom',
+        });
       },
     }
   );
