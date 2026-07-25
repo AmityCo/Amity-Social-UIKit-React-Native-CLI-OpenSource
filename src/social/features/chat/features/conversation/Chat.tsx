@@ -49,14 +49,20 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   const { openBottomSheet, closeBottomSheet } = useBottomSheet();
 
   function openReactorList(message: Amity.Message) {
+    // Tall drawer — web presents this list in a ~90vh drawer. The sheet content
+    // needs an explicit height (see MessageReactorListSheet: @devvie's inner
+    // wrapper is auto-height, so a flex child collapses), so pass it down too.
+    const reactorSheetHeight = Math.round(
+      Dimensions.get('window').height * 0.7
+    );
     openBottomSheet({
-      // Tall drawer — web presents this list in a ~90vh drawer.
-      height: Math.round(Dimensions.get('window').height * 0.7),
+      height: reactorSheetHeight,
       content: (
         <MessageReactorListSheet
           messageId={message.messageId}
           initialMessage={message}
           onClose={closeBottomSheet}
+          sheetHeight={reactorSheetHeight}
         />
       ),
     });
