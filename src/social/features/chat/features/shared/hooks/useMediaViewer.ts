@@ -9,8 +9,9 @@
 //   - Delete goes through the existing RN `useDeleteMessage` mutation rather than
 //     web's `useDeleteMessageQuery`. There is no ConfirmProvider in RN, so delete
 //     is issued directly (web showed a confirm dialog first) — documented deviation.
-//   - Save has no RN infra yet (web's `useSaveMediaMessageQuery` downloads via the
-//     browser). `onSave` is a documented stub; real media-save lands later.
+//   - Save goes through `useSaveMediaMessageQuery` (RN port), which downloads the
+//     file and writes it to the device gallery via CameraRoll (web downloaded via
+//     the browser). Same URL-resolution + success/error toasts.
 // The return shape (UseMediaViewerReturn, ImageViewerRenderProps, VideoPlayerRenderProps)
 // is preserved verbatim from web so useChatMessage can consume it unchanged.
 
@@ -18,6 +19,7 @@ import { useState } from 'react';
 
 import { useDeleteMessage } from '../../../hooks/useDeleteMessage';
 import { useCurrentUserId } from '../../../hooks/useCurrentUserId';
+import { useSaveMediaMessageQuery } from '../../../hooks/queries';
 
 type ImageView = {
   url: string;
@@ -49,6 +51,7 @@ export type UseMediaViewerReturn = {
 
 export function useMediaViewer(): UseMediaViewerReturn {
   const currentUserId = useCurrentUserId();
+  const { requestSave } = useSaveMediaMessageQuery();
   const [imageView, setImageView] = useState<ImageView | null>(null);
   const [videoMessage, setVideoMessage] = useState<Amity.Message | null>(null);
 
@@ -73,10 +76,6 @@ export function useMediaViewer(): UseMediaViewerReturn {
 
   function openVideoPlayer(message: Amity.Message) {
     setVideoMessage(message);
-  }
-
-  function requestSave(_message: Amity.Message) {
-    // TODO: no RN media-save infra yet (web downloaded via the browser). Stubbed.
   }
 
   const imageViewerProps: ImageViewerRenderProps | null = imageView

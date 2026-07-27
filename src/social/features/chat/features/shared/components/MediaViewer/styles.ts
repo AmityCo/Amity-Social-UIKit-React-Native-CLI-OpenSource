@@ -52,6 +52,16 @@ export const useStyles = () => {
       ),
       zIndex: 3,
     },
+    // Host for the chat toast mounted inside this Modal (the global <Toast /> is
+    // outside it and would render beneath the native Modal layer). Sits above the
+    // bottom bar (40 icon + 16*2 padding = 72) so save success/failure stays readable.
+    toastLayer: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 72,
+      zIndex: 4,
+    },
     closeButton: {
       width: 32,
       height: 32,
