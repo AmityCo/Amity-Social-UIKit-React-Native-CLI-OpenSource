@@ -10,6 +10,7 @@ import {
   EXPLORE_PINNED_TAG,
 } from '../hooks';
 import { onVisitorAutoJoinCompleted } from '../../core/stores/pendingVisitorJoin';
+import useAuth from '../../core/hooks/useAuth';
 
 interface ExploreContextType {
   refresh: () => void;
@@ -33,6 +34,11 @@ const ExploreContext = createContext<ExploreContextType | undefined>(undefined);
 export const ExploreProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  // Visitor/bot sessions are read-only and cannot join communities, so the
+  // auto-join below must not run for them (every call would fail with a
+  // permission error). Signed-in users only.
+  const { isVisitorOrBot } = useAuth();
+
   const {
     onJoinCommunity: onJoinRecommendedCommunity,
     refresh: refreshRecommendedCommunities,
@@ -87,6 +93,9 @@ export const ExploreProvider: React.FC<{ children: ReactNode }> = ({
   // not re-query/re-render after success (joined visuals update on next natural
   // refresh). Already-joined communities are skipped with no API call.
   useEffect(() => {
+    // Skip entirely for visitors/bots — their read-only session can't join, so
+    // every call would fail. Signed-in users only.
+    if (isVisitorOrBot) return;
     if (!pinnedCommunities?.length) return;
     pinnedCommunities.forEach(async (community) => {
       if (community.isJoined) return;
@@ -100,7 +109,7 @@ export const ExploreProvider: React.FC<{ children: ReactNode }> = ({
         );
       }
     });
-  }, [pinnedCommunities]);
+  }, [pinnedCommunities, isVisitorOrBot]);
 
   // The visitor auto-join (after sign-in) may complete AFTER Explore has
   // already loaded, leaving the just-joined community in the list. Re-fetch
