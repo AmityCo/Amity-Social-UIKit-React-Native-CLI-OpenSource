@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import config from '../uikit.config.json';
 // ⚠️ TEST ONLY — remove with example/src/testAuth.ts before shipping.
-import { makeTestGetAuthToken, makeTestGenerateUserId } from './testAuth';
+import { makeTestGetAuthToken, makeTestEnrollProfile } from './testAuth';
 
 type VisitorScreenProps = {
   apiKey: string;
@@ -154,10 +154,11 @@ export default function VisitorScreen({
   fcmToken,
 }: VisitorScreenProps) {
   // ⚠️ TEST ONLY — remove with example/src/testAuth.ts before shipping.
-  // Mock the host's "mint a userId" API, and the secure-mode auth-token
-  // provider. The CreateProfile page chains them on Save: generateUserId()
-  // resolves the userId first, then getAuthToken(userId) mints the token for it.
-  const generateUserId = makeTestGenerateUserId();
+  // enrollProfile mocks the host's `POST /community/enrollment`: on Save it
+  // creates the user server-side and returns the communityId (used as userId).
+  // getAuthToken then mints the secure-mode token for that communityId — the
+  // page chains them: enrollProfile -> getAuthToken(communityId) -> Client.login.
+  const enrollProfile = makeTestEnrollProfile();
   const getAuthToken = makeTestGetAuthToken(apiRegion);
 
   const [view, setView] = useState<ViewName>('social');
@@ -176,11 +177,14 @@ export default function VisitorScreen({
       apiKey={apiKey}
       apiRegion={apiRegion}
       apiEndpoint={apiEndpoint}
-      userId={authUserId}
       displayName={authDisplayName}
       // Cast: node_modules has two copies of the config type, so the JSON's
       // inferred type and the provider's expected type are nominally distinct.
       configs={config as any}
+      // Secure mode: once `authUserId` is set, the provider re-logs-in as that
+      // signed-in user and mints its token via getAuthToken(userId). (No effect
+      // while in visitor mode — loginAsVisitor takes no token.)
+      getAuthToken={getAuthToken}
       fcmToken={fcmToken}
       behaviour={{
         AmityGlobalBehavior: {
@@ -198,13 +202,12 @@ export default function VisitorScreen({
           // (AmityUiKitSocial below has its own navigator, so it isn't wrapped.)
           <AmityPageRenderer>
             <AmityCreateProfilePage
-              // ⚠️ TEST ONLY: instead of a static userId, mint it on Save via
-              // the mocked host API. The page awaits this, then calls
-              // getAuthToken with the resulting userId for secure-mode login.
-              generateUserId={generateUserId}
-              // ⚠️ TEST ONLY: secure-mode auth-token provider. Called with the
-              // userId returned by generateUserId above. (Could also be set once
-              // on AmityUiKitProvider; passing here to test the page-level prop.)
+              // Server-to-server enrollment: on Save the page calls enrollProfile
+              // (host backend) to create the user and get its communityId, then
+              // getAuthToken(communityId) to mint the secure-mode token, then
+              // Client.login. getAuthToken is inherited from the provider, but we
+              // pass it here too to keep this page self-contained.
+              enrollProfile={enrollProfile}
               getAuthToken={getAuthToken}
               onCreated={({ userId, displayName, about, imageUrl }) => {
                 // Save succeeded. The page already ran Client.login internally;
@@ -216,6 +219,7 @@ export default function VisitorScreen({
                 setAuthUserId(userId);
                 setAuthDisplayName(displayName);
                 setView('social');
+              
               }}
        
               onCancel={() => {

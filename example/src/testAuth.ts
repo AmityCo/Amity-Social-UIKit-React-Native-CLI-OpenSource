@@ -1,7 +1,7 @@
 // ⚠️ TEST ONLY — REMOVE BEFORE SHIPPING. ⚠️
 //
 // Shared secure-mode test helpers used by SignedInScreen and VisitorScreen to
-// exercise the `getAuthToken` (and `generateUserId`) flow end-to-end.
+// exercise the `getAuthToken` (and `enrollProfile`) flow end-to-end.
 //
 // A real integration would call YOUR backend to mint the auth token so the
 // Server Key never lives in the app. Here we call the social.plus auth-token
@@ -9,7 +9,7 @@
 // Response is text/plain (the raw token, wrapped in double quotes).
 
 const TEST_SERVER_KEY =
-  'SERVER_KEY';
+  '';
 
 /**
  * Returns a `getAuthToken(userId)` for the given region. Mints a short-lived
@@ -42,19 +42,26 @@ export const makeTestGetAuthToken =
   };
 
 /**
- * Mock `generateUserId` that mimics a real host API: it takes the entered
- * profile data, waits like a network round-trip, and returns a userId derived
- * from the displayName (deterministic so re-saving hits the same account).
+ * Mock `enrollProfile` that mimics the real `POST /community/enrollment`
+ * contract: it takes the entered `displayName`, waits like a server-to-server
+ * round-trip (backend creates the Amity user + session), and returns the
+ * `communityId` the UIKit signs in as. Deterministic here (derived from the
+ * displayName) so re-saving hits the same account; a real backend returns a
+ * generated UUID.
  *
- * This mirrors the real contract: the userId does NOT exist until Save, which
- * is exactly why `getAuthToken` must be a callback — the token can only be
- * minted after `generateUserId` resolves the id. `useCreateProfile` chains them
- * for us: it awaits generateUserId, then calls getAuthToken(resolvedUserId).
+ * This mirrors the real contract: the userId (communityId) does NOT exist until
+ * Save, which is exactly why `getAuthToken` must be a callback — the token can
+ * only be minted after `enrollProfile` resolves the id. `useCreateProfile`
+ * chains them: it awaits enrollProfile, then calls getAuthToken(communityId).
+ * On a real backend error (banned / already-enrolled / retryable) this would
+ * throw, and the UIKit shows a failure toast.
  */
-export const makeTestGenerateUserId =
+export const makeTestEnrollProfile =
   () =>
-  async (input?: { displayName?: string; about?: string }): Promise<string> => {
-    // Simulate a backend round-trip (account creation / id minting).
+  async (input?: { displayName?: string }): Promise<string> => {
+    // Simulate the backend enrollment round-trip (user + session creation).
+    // The backend owns fields like deviceId (any id, e.g. a random UUID); the
+    // client does not send them.
     await new Promise((resolve) => setTimeout(resolve, 600));
     const slug =
       (input?.displayName || 'user')
@@ -62,7 +69,7 @@ export const makeTestGenerateUserId =
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '')
         .slice(0, 24) || 'user';
-    const userId = `test-${slug}`;
-    console.log('[generateUserId] input:', input, '-> userId:', userId);
-    return userId;
+    const communityId = `test-${slug}`;
+    console.log('[enrollProfile] input:', input, '-> communityId:', communityId);
+    return communityId;
   };
