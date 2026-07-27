@@ -42,29 +42,34 @@ export type CreatedUser = {
   imageUrl?: string;
 };
 
-/** The profile data passed to `generateUserId`, in case the host wants to
- * create an account record matching what the user entered. All fields are
- * optional — the host can ignore the argument entirely if its API needs no
- * input to mint a userId. */
-export type GenerateUserIdInput = { displayName?: string; about?: string };
+/** The profile data passed to `enrollProfile`. Only `displayName` is forwarded
+ * — the enrollment API doesn't require anything else from the client, and the
+ * backend owns fields like `deviceId` (which can be any id, e.g. a randomly
+ * generated UUID). The host may ignore the argument entirely if its enrollment
+ * endpoint needs no input. */
+export type EnrollProfileInput = { displayName?: string };
 
 type UseCreateProfileParams = {
   /**
-   * Static userId to create / sign in as. Provide this OR `generateUserId`.
+   * Static userId to create / sign in as. Provide this OR `enrollProfile`.
    */
   userId?: string;
   /**
-   * Called on Save (before login) to obtain the userId — use when the host
-   * generates the userId from its own API at create time rather than knowing
-   * it up front. Receives the entered profile data. Whatever it resolves is
-   * used for the signed-in login and profile update. Provide this OR `userId`.
+   * Called on Save (before login) to enroll the user via the host's backend and
+   * obtain the userId. Use when the host creates the user server-to-server (e.g.
+   * `POST /community/enrollment`, which calls Amity `/api/v4/sessions` and
+   * returns a `communityId`). Receives the entered `displayName`; resolve the
+   * `communityId` (used as the userId for the signed-in login and profile
+   * update). Throw to fail the flow — the host maps backend error codes (e.g.
+   * banned / already-enrolled / retryable) and the UIKit shows a failure toast.
+   * Provide this OR `userId`.
    */
-  generateUserId?: (input?: GenerateUserIdInput) => Promise<string> | string;
+  enrollProfile?: (input?: EnrollProfileInput) => Promise<string> | string;
   authToken?: string;
   /**
    * Secure-mode auth-token provider. Usually set once on AmityUiKitProvider and
    * inherited from there automatically — only pass it here to override that.
-   * Called after the userId is resolved (static or via `generateUserId`) with
+   * Called after the userId is resolved (static or via `enrollProfile`) with
    * that userId; return a short-lived auth token minted by your backend with
    * your Server Key. The token is passed to `Client.login`. Omit for unsecure
    * mode. Takes precedence over the static `authToken` when both are provided.
@@ -114,7 +119,7 @@ const extractUploadedFile = (body: any): UploadedFile | undefined => {
 // then settles the session by passing the returned userId to the provider.
 export const useCreateProfile = ({
   userId,
-  generateUserId,
+  enrollProfile,
   authToken,
   getAuthToken: getAuthTokenProp,
   defaultAvatarImageUrl,
@@ -182,19 +187,19 @@ export const useCreateProfile = ({
       showToast({ message: 'Creating profile...', type: 'loading' });
     },
     mutationFn: async (data) => {
-      // Resolve the userId. The host either passes a static `userId`, or a
-      // `generateUserId` function (e.g. their own API that mints the id) which
-      // runs here — on Save, before login — so a failure surfaces through the
-      // same loading/error toast as the rest of the flow.
+      // Resolve the userId. The host either passes a static `userId`, or an
+      // `enrollProfile` function (its backend enrollment call that creates the
+      // user and returns the id) which runs here — on Save, before login — so a
+      // failure surfaces through the same loading/error toast as the rest of the
+      // flow.
       const resolvedUserId =
         userId ??
-        (await generateUserId?.({
+        (await enrollProfile?.({
           displayName: data.displayName,
-          about: data.description || undefined,
         }));
       if (!resolvedUserId) {
         throw new Error(
-          'CreateProfile: no userId. Pass `userId` or a `generateUserId` that returns one.'
+          'CreateProfile: no userId. Pass `userId` or an `enrollProfile` that returns one.'
         );
       }
 
@@ -203,7 +208,7 @@ export const useCreateProfile = ({
         displayName: data.displayName || undefined,
       };
       // Secure mode: mint the auth token for the just-resolved userId. This is
-      // why a callback (not a static token) is needed here — with generateUserId
+      // why a callback (not a static token) is needed here — with enrollProfile
       // the userId doesn't exist until now, so the token can only be requested
       // after it's known. getAuthToken takes precedence over the static token.
       const resolvedAuthToken = getAuthToken

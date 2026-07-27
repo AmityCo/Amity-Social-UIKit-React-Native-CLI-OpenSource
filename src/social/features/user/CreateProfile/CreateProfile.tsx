@@ -5,7 +5,7 @@ import { TopBar, ImageUpload } from './components';
 import {
   useCreateProfile,
   type CreatedUser,
-  type GenerateUserIdInput,
+  type EnrollProfileInput,
 } from './hooks';
 import FormInput from '../../../components/FormInput';
 import { CHARACTER_LIMIT } from '../../../../core/constants';
@@ -15,15 +15,21 @@ import ActionButton from '../../../elements/ActionButton';
 export type CreateProfileProps = {
   /**
    * The userId to create / sign in as. The profile is created on the network
-   * the first time this user logs in. Provide this OR `generateUserId`.
+   * the first time this user logs in. Provide this OR `enrollProfile`.
    */
   userId?: string;
   /**
-   * Called on Save (before login) to obtain the userId — use when the host
-   * generates the userId from its own API at create time. Receives the entered
-   * profile data ({ displayName, about }). Provide this OR `userId`.
+   * Called on Save (before login) to enroll the user via the host's backend and
+   * obtain the userId. Use for server-to-server enrollment (e.g.
+   * `POST /community/enrollment`, which creates the Amity user and returns a
+   * `communityId`). Receives the entered `displayName`; resolve the id the UIKit
+   * signs in as. Throw to fail the flow — the host maps backend error codes
+   * (banned / already-enrolled / retryable) and the UIKit shows a failure toast.
+   * Note: fields the backend owns (e.g. `deviceId`, which can be any id such as
+   * a randomly generated UUID) are not passed from the client. Provide this OR
+   * `userId`.
    */
-  generateUserId?: (input?: GenerateUserIdInput) => Promise<string> | string;
+  enrollProfile?: (input?: EnrollProfileInput) => Promise<string> | string;
   /**
    * Optional auth token for the signed-in login when the network uses secure
    * mode. Mirrors `authToken` on AmityUiKitProvider.
@@ -33,7 +39,7 @@ export type CreateProfileProps = {
    * Secure-mode auth-token provider. Normally you set this ONCE on
    * AmityUiKitProvider and this page inherits it automatically — you only need
    * to pass it here to override the provider's. Called with the resolved userId
-   * (after `generateUserId` runs) to mint a short-lived auth token from your
+   * (after `enrollProfile` runs) to mint a short-lived auth token from your
    * backend. Omit for unsecure mode.
    */
   getAuthToken?: (userId: string) => Promise<string> | string;
@@ -66,7 +72,7 @@ export type CreateProfileProps = {
 
 export function CreateProfile({
   userId,
-  generateUserId,
+  enrollProfile,
   authToken,
   getAuthToken,
   defaultAvatarImageUrl,
@@ -85,7 +91,7 @@ export function CreateProfile({
     accessibilityId,
   } = useCreateProfile({
     userId,
-    generateUserId,
+    enrollProfile,
     authToken,
     getAuthToken,
     defaultAvatarImageUrl,
