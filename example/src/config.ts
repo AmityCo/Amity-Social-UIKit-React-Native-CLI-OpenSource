@@ -37,7 +37,12 @@ type ApiRegion = 'staging' | 'sg' | 'eu' | 'us';
 export interface RegionPreset {
   /** Human-readable region label shown in the build info footer */
   sdkRegion: string;
-  /** Valid SDK region enum value — must be 'sg' | 'eu' | 'us' */
+  /** Region slug the SDK interpolates into its endpoint templates
+   * (https://apix.{region}.amity.co, wss://sse.{region}.amity.co:443/mqtt, …).
+   * It is NOT restricted to the API_REGIONS enum — 'staging' is a valid slug.
+   * Setting this to 'sg' for Staging points MQTT at the production SG broker
+   * while HTTP uses the apiEndpoint override, which breaks real-time entirely
+   * (broker answers CONNACK rc=5 Not authorized). Keep it matching the env. */
   apiRegion: ApiRegion;
   defaultApiKey: string;
   uploadUrl: string;
