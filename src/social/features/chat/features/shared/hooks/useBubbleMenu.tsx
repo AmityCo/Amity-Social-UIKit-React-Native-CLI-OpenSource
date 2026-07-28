@@ -5,9 +5,8 @@
 //
 // RN adaptations from web (return shape UseBubbleMenuReturn preserved verbatim so
 // useChatMessage consumes it unchanged):
-//   - Delete goes through the existing RN `useDeleteMessage` mutation instead of
-//     web's `useDeleteMessageQuery`. RN has no ConfirmProvider, so delete is issued
-//     directly (web showed a confirm dialog first) — documented deviation.
+//   - Delete goes through the RN `useDeleteMessageQuery` port, which confirms via
+//     the platform `Alert` before deleting (web used ConfirmProvider's modal).
 //   - Copy uses `@react-native-clipboard/clipboard` (`Clipboard.setString`, sync)
 //     instead of `navigator.clipboard.writeText`; the copied-success toast fires
 //     through the useChatNotifications stub.
@@ -27,7 +26,7 @@ import { useState } from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 
 import { useString } from '../../../../../../core/localization';
-import { useDeleteMessage } from '../../../hooks/useDeleteMessage';
+import { useDeleteMessageQuery } from '../../../hooks/queries';
 import { useChatNotifications } from '../../../hooks/useChatNotifications';
 
 type BubbleMenuState = {
@@ -89,7 +88,7 @@ export function useBubbleMenu({
     setBubbleMenu(null);
   }
 
-  const { deleteMessage } = useDeleteMessage();
+  const { requestDelete } = useDeleteMessageQuery();
 
   function openBubbleMenu(message: Amity.Message, anchor?: unknown) {
     setBubbleMenu({ message, anchor });
@@ -99,9 +98,7 @@ export function useBubbleMenu({
     if (!bubbleMenu) return;
     const message = bubbleMenu.message;
     closeBubbleMenu();
-    if (message.messageId) {
-      deleteMessage(message.messageId);
-    }
+    requestDelete(message);
   }
 
   function handleBubbleEdit() {
