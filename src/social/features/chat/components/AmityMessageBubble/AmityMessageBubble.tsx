@@ -494,19 +494,28 @@ function VideoBubble({
           : () => onLongPress(message)
       }
     >
-      <Video
-        source={{ uri: thumbnailUri }}
-        style={styles.mediaImage}
-        resizeMode="cover"
-        paused
-        muted
-        controls={false}
-        // The native <Video> view absorbs touches, which swallowed the bubble's
-        // onPress so the player never opened (images work because <Image> passes
-        // touches through). Make the thumbnail transparent to touch so the tap
-        // reaches the wrapping Pressable → onOpenVideo.
-        pointerEvents="none"
-      />
+      {/*
+        The native <Video> view absorbs touches, which swallowed the bubble's
+        onPress so the player never opened (images work because <Image> passes
+        touches through). `pointerEvents` on the <Video> itself is NOT enough:
+        on Android, TouchTargetHelper only reads pointerEvents off views that
+        implement ReactPointerEventsView, and ReactViewGroup is the only one
+        that does — so the prop is silently ignored on a native video view (both
+        architectures). Wrapping it in a plain <View pointerEvents="none">
+        excludes the whole subtree from touch targeting, so the tap reaches the
+        Pressable → onOpenVideo. The wrapper carries mediaImage because the
+        Video sizes at 100% and would collapse against a zero-size parent.
+      */}
+      <View style={styles.mediaImage} pointerEvents="none">
+        <Video
+          source={{ uri: thumbnailUri }}
+          style={styles.mediaImage}
+          resizeMode="cover"
+          paused
+          muted
+          controls={false}
+        />
+      </View>
       {showUploadOverlay ? (
         <MediaUploadOverlay onCancel={onCancelUpload} />
       ) : (
