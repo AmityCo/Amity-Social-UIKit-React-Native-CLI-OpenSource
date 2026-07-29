@@ -29,6 +29,12 @@ type VideoPlayerProps = {
   onClose: () => void;
   isOwn?: boolean;
   onDelete?: () => void;
+  /**
+   * TEMPORARILY NOT FORWARDED — the save/download button is hidden for video.
+   * Still accepted (and still supplied by useMediaViewer) so re-enabling is a
+   * one-line change: pass `onSave={onSave}` to MediaViewer below. Images keep
+   * their save button; only the video viewer hides it. Web shows it for both.
+   */
   onSave?: () => void;
 };
 
@@ -38,7 +44,6 @@ export function VideoPlayer({
   onClose,
   isOwn = false,
   onDelete,
-  onSave,
 }: VideoPlayerProps) {
   const { styles } = useStyles();
   const fileId = (message.data as { fileId?: string } | undefined)?.fileId;
@@ -154,7 +159,8 @@ export function VideoPlayer({
       onClose={onClose}
       isOwn={isOwn}
       onDelete={onDelete}
-      onSave={onSave}
+      // onSave deliberately omitted — hides the download button (MediaViewer
+      // renders a spacer in its place, so delete keeps its position).
     >
       {src ? (
         <View style={styles.stage}>
