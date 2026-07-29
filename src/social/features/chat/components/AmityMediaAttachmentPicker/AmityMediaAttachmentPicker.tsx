@@ -9,7 +9,14 @@
 // single-tap flow — its native camera already exposes the toggle. See MEDIA_TYPE.
 
 // 1. React / RN imports
-import { PermissionsAndroid, Platform, Pressable, View } from 'react-native';
+import {
+  Alert,
+  Linking,
+  PermissionsAndroid,
+  Platform,
+  Pressable,
+  View,
+} from 'react-native';
 
 // 2. Third-party imports
 import {
@@ -54,6 +61,31 @@ export function AmityMediaAttachmentPicker({
   const mediaLabel = useString('amity_chat_media');
   const photoLabel = useString('amity_chat_media_photo');
   const videoLabel = useString('amity_chat_media_video');
+  // Denied-permission copy ported from iOS UIKit's ComposerCamera string set —
+  // it already ships en + th for these four, so no new copy is invented here.
+  const cameraDeniedTitle = useString('amity_chat_permission_camera_title');
+  const cameraDeniedDetail = useString('amity_chat_permission_camera_detail');
+  const micDeniedTitle = useString('amity_chat_permission_microphone_title');
+  const micDeniedDetail = useString('amity_chat_permission_microphone_detail');
+  const openSettingsLabel = useString(
+    'amity_chat_composer_camera_denied_open_settings'
+  );
+  const cancelLabel = useString('amity_chat_cancel');
+
+  // Mirrors iOS UIKit's .cameraDenied alert (AmityChatMessageComposeBar): title,
+  // detail, and an Open Settings action, because a denial can only be undone in
+  // the OS settings. Without this the whole flow was silent — you recorded a
+  // video and nothing happened.
+  function alertPermissionDenied(kind: 'camera' | 'microphone') {
+    Alert.alert(
+      kind === 'camera' ? cameraDeniedTitle : micDeniedTitle,
+      kind === 'camera' ? cameraDeniedDetail : micDeniedDetail,
+      [
+        { text: cancelLabel, style: 'cancel' },
+        { text: openSettingsLabel, onPress: () => Linking.openSettings() },
+      ]
+    );
+  }
 
   async function capture(mediaType: MediaType) {
     // CAMERA is declared in AndroidManifest, so react-native-image-picker
@@ -72,11 +104,22 @@ export function AmityMediaAttachmentPicker({
         required.push(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO);
       }
       const statuses = await PermissionsAndroid.requestMultiple(required);
-      const allGranted = required.every(
-        (permission) =>
-          statuses[permission] === PermissionsAndroid.RESULTS.GRANTED
-      );
-      if (!allGranted) return;
+      const granted = (permission: string) =>
+        statuses[permission] === PermissionsAndroid.RESULTS.GRANTED;
+
+      // Camera first: it blocks both modes, so it's the more useful thing to name
+      // when the user denied both.
+      if (!granted(PermissionsAndroid.PERMISSIONS.CAMERA)) {
+        alertPermissionDenied('camera');
+        return;
+      }
+      if (
+        mediaType === 'video' &&
+        !granted(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO)
+      ) {
+        alertPermissionDenied('microphone');
+        return;
+      }
     }
     // videoQuality matches iOS UIKit's MessageCameraPickerView (`videoQuality =
     // .typeHigh`); without it react-native-image-picker falls back to medium.
