@@ -59,11 +59,24 @@ export function AmityMediaAttachmentPicker({
     // CAMERA is declared in AndroidManifest, so react-native-image-picker
     // requires the runtime permission to be granted before launchCamera — and it
     // does NOT request it itself, so without this the camera silently never opens.
+    //
+    // Video additionally needs RECORD_AUDIO. launchCamera fires
+    // MediaStore.ACTION_VIDEO_CAPTURE, and the camera app records on the
+    // caller's behalf: because the app *declares* RECORD_AUDIO, an ungranted mic
+    // makes that recording fail and the intent come back cancelled — no assets,
+    // no errorCode — so the recorded video silently never reached the chat.
+    // Same pairing as livestream/Create, which requests both up front.
     if (Platform.OS === 'android') {
-      const status = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA
+      const required = [PermissionsAndroid.PERMISSIONS.CAMERA];
+      if (mediaType === 'video') {
+        required.push(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO);
+      }
+      const statuses = await PermissionsAndroid.requestMultiple(required);
+      const allGranted = required.every(
+        (permission) =>
+          statuses[permission] === PermissionsAndroid.RESULTS.GRANTED
       );
-      if (status !== PermissionsAndroid.RESULTS.GRANTED) return;
+      if (!allGranted) return;
     }
     // videoQuality matches iOS UIKit's MessageCameraPickerView (`videoQuality =
     // .typeHigh`); without it react-native-image-picker falls back to medium.
