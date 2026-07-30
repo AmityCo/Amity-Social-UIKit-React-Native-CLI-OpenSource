@@ -216,7 +216,12 @@ export function AmityConversationChatUserActionComponent({
   const items: ActionItem[] = [
     {
       key: 'notification',
-      icon: isNotificationEnabled ? 'bell-slash-r' : 'bell-s',
+      // Both states use the REGULAR (outline) bell: web's useConversationActions
+      // resolves `isNotificationEnabled ? BellSlash : Bell`, and its bare `Bell` /
+      // `BellSlash` exports are the Regular variant (Solid is opt-in via
+      // `Bell.Solid`). The group-setting rows are the ones that legitimately use
+      // the solid bell — web asks for `Bell.Solid` there.
+      icon: isNotificationEnabled ? 'bell-slash-r' : 'bell-r',
       label: resolveString(
         isNotificationEnabled
           ? 'amity_chat_action_turn_off_notification'
