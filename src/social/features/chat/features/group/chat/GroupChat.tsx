@@ -13,7 +13,6 @@ import { MessageFullTextScreen } from '../../shared/components/MessageFullTextSc
 import { ContentReportReason } from '../../shared/components/ContentReportReason';
 import { MessageReactorListSheet } from '../../shared/components/MessageReactorListSheet';
 import { MutedBanner } from '../../shared/components/MutedBanner';
-import { WaitingForNetwork } from '../../../elements/WaitingForNetwork';
 import { MessageList } from '../../conversation/components/MessageList';
 import { Header } from './components/Header';
 import { BannedEmptyState } from './components/BannedEmptyState';
@@ -84,7 +83,6 @@ export function GroupChat({
         onBack={onBack}
         onOpenSettings={c.handleOpenSettings}
       />
-      <WaitingForNetwork />
       <View style={{ flex: 1 }}>
         <MessageList
           items={c.items}

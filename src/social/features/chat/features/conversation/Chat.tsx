@@ -1,7 +1,7 @@
 // Chat — the conversation thread container, a faithful port of AmityUiKitWeb
 // v4/chat/features/conversation/chat/Chat. All orchestration lives in useConversation
 // (→ useChatMessage); this component only wires the returned values into the
-// components with the same props web uses: Header, WaitingForNetwork, MessageList,
+// components with the same props web uses: Header, MessageList,
 // MutedBanner|MessageComposer, ImageViewer, VideoPlayer, MessageFullTextScreen.
 
 // 1. React / RN imports
@@ -18,7 +18,6 @@ import { MessageFullTextScreen } from '../shared/components/MessageFullTextScree
 import { ContentReportReason } from '../shared/components/ContentReportReason';
 import { MessageReactorListSheet } from '../shared/components/MessageReactorListSheet';
 import { MutedBanner } from '../shared/components/MutedBanner';
-import { WaitingForNetwork } from '../../elements/WaitingForNetwork';
 import { Header } from './components/Header';
 import { MessageList } from './components/MessageList';
 import { useConversation } from './hooks/useConversation';
@@ -90,7 +89,6 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           ) : undefined
         }
       />
-      <WaitingForNetwork />
       <View style={{ flex: 1 }}>
         <MessageList
           items={c.items}
