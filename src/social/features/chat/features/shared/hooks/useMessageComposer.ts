@@ -478,6 +478,25 @@ export function useMessageComposer({
 
   const runMediaUpload = useCallback(
     async (pending: PendingUpload) => {
+      // PDT-4128: an oversize file has to surface as an inline failed bubble in
+      // the thread, not a toast. The check lives here rather than in
+      // handleSelectMedia so the pending bubble is already in the list and can
+      // simply be flipped to 'failed' — same move as web e08c3ed32. fileSize is
+      // optional on Asset, so only judge it when the picker reported one.
+      if (
+        typeof pending.file.fileSize === 'number' &&
+        pending.file.fileSize > COMPOSER_MAX_FILE_SIZE
+      ) {
+        setPendingUploads((prev) =>
+          prev.map((p) =>
+            p.clientId === pending.clientId
+              ? { ...p, status: 'failed', failureReason: 'generic' }
+              : p
+          )
+        );
+        return;
+      }
+
       try {
         const formData = toFormData(pending.file);
         const uploaded =
@@ -551,16 +570,6 @@ export function useMessageComposer({
       const isVideo = mime.startsWith('video/');
       if (!isImage && !isVideo) return;
 
-      if (
-        typeof asset.fileSize === 'number' &&
-        asset.fileSize > COMPOSER_MAX_FILE_SIZE
-      ) {
-        errorToast({
-          content: resolveString('amity_social_label_file_exceeds_max_upload'),
-        });
-        return;
-      }
-
       const previewUrl = asset.uri;
       const parentId = replyTo?.messageId;
       const pending: PendingUpload = {
@@ -580,7 +589,7 @@ export function useMessageComposer({
 
       await runMediaUpload(pending);
     },
-    [errorToast, runMediaUpload, onMessageCreated, replyTo]
+    [runMediaUpload, onMessageCreated, replyTo]
   );
 
   const handleRetryUpload = useCallback(
