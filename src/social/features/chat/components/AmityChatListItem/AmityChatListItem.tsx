@@ -384,8 +384,8 @@ function AmityChatListItemSkeleton() {
     <View style={styles.skeletonRow}>
       <Skeleton circle width={40} height={40} />
       <View style={styles.skeletonLines}>
-        <Skeleton width={140} height={10} borderRadius={5} />
-        <Skeleton width={100} height={10} borderRadius={5} />
+        <Skeleton width={140} height={10} borderRadius={12} />
+        <Skeleton width={100} height={10} borderRadius={12} />
       </View>
     </View>
   );

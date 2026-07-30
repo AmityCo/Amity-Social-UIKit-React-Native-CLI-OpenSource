@@ -67,8 +67,11 @@ const USER_DELETED_ICON: Record<
 
 // GroupChat placeholder glyph size — web: sm 1rem = 16, lg 3rem = 48
 // (both are SoT geometry.avatarIcon.icon.sizes).
-const GROUP_ICON: Record<NonNullable<AvatarGroupChatProps['size']>, 16 | 48> = {
-  sm: 16,
+// PDT-3912 (web b5df56286): the group-chat placeholder glyph went 1rem→1.75rem.
+// Web sizes it with a single rule for both avatar sizes; only `sm` appears in the
+// chat list, so `lg` keeps its own larger glyph.
+const GROUP_ICON: Record<NonNullable<AvatarGroupChatProps['size']>, 28 | 48> = {
+  sm: 28,
   lg: 48,
 };
 
