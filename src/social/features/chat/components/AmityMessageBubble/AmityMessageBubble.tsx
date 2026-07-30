@@ -40,13 +40,12 @@ import {
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
 import { useStyles } from './styles';
 
+// PDT-4109: one flat limit for every text bubble. There used to be a second
+// TEXT_MAX_LINES_WITH_LINK = 5 applied when the text contained a URL, which
+// clamped link-bearing messages far earlier than plain ones. Web deleted that
+// constant (and the hasLink regex that drove it) in dba25aa77.
 const TEXT_MAX_LINES = 10; // web chat.ts
-const TEXT_MAX_LINES_WITH_LINK = 5; // web chat.ts
-// Line-clamp trigger — mirrors web MessageBubble `hasLink` (matches http(s):// AND
-// www./bare URLs). The first PREVIEW url is resolved by extractFirstPreviewUrl
-// (linkifyjs), matching web exactly, rather than a naive scheme-only regex.
-const HAS_LINK_RE = /(https?:\/\/\S+|www\.\S+)/i;
-// Global variant used to split a text run into linkable (coloured/tappable) segments.
+// Splits a text run into linkable (coloured/tappable) segments.
 const URL_SPLIT_RE = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
 
 function openLink(raw: string): void {
@@ -241,8 +240,7 @@ function TextBubble({
   // preview — web suppresses it, and fetching metadata for the blocked link on a
   // synthetic crashes the list (PDT-4033 QA).
   const isFailed = message.syncState === ('error' as Amity.SyncState);
-  const hasLink = HAS_LINK_RE.test(text);
-  const maxLines = hasLink ? TEXT_MAX_LINES_WITH_LINK : TEXT_MAX_LINES;
+  const maxLines = TEXT_MAX_LINES;
   const isEdited = (message as { editedAt?: unknown }).editedAt != null;
   const mentioned = (
     message.metadata as
