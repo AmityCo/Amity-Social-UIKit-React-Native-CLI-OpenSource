@@ -5,7 +5,7 @@
 // preview is pending, and surface tap → open-in-viewer callbacks the parent wires up.
 // Long-press surfaces the message action menu. Text path is full parity with web:
 // @mention highlighting, "see more" (divider + chevron), link preview, "edited"
-// caption, and link-aware line clamping.
+// caption, and a flat 10-line clamp.
 
 // 1. React / RN imports
 import { useState, type ReactNode } from 'react';
@@ -13,6 +13,7 @@ import {
   Image,
   Linking,
   Pressable,
+  StyleSheet,
   Text,
   View,
   type StyleProp,
@@ -230,7 +231,9 @@ function TextBubble({
 }: TextBubbleProps) {
   const { styles } = useStyles();
   const [pressed, setPressed] = useState(false);
-  const [truncated, setTruncated] = useState(false);
+  // null = not measured yet. The visible Text is clamped from the very first
+  // frame either way, so this only decides whether "See more" is offered.
+  const [overflowing, setOverflowing] = useState<boolean | null>(null);
   const seeMoreLabel = useString('amity_chat_see_more');
   const editedLabel = useString('amity_chat_status_edited');
 
@@ -268,15 +271,12 @@ function TextBubble({
       onLongPress={onLongPress ? () => onLongPress(message) : undefined}
     >
       <View>
-        <Text
-          style={textStyle}
-          numberOfLines={truncated ? maxLines : undefined}
-          onTextLayout={(e) => {
-            if (!truncated && e.nativeEvent.lines.length > maxLines) {
-              setTruncated(true);
-            }
-          }}
-        >
+        {/* Clamped on every render, including the first. Previously this was
+            unclamped until onTextLayout reported an overflow, so a long message
+            flashed at full height for one frame before collapsing. Web never had
+            that: it sets WebkitLineClamp unconditionally and probes overflow
+            separately (scrollHeight > clientHeight). */}
+        <Text style={textStyle} numberOfLines={maxLines}>
           {renderTextWithMentions(
             text,
             mentioned,
@@ -284,6 +284,34 @@ function TextBubble({
             linkStyle
           )}
         </Text>
+        {/* RN's stand-in for that probe: an unclamped copy laid out once, off
+            screen, purely to count lines. It must be wrapped in a View to be
+            made touch-transparent — pointerEvents on a Text is ignored on
+            Android (TouchTargetHelper only honours it on a ReactViewGroup), and
+            an absolutely-filling Text would otherwise swallow the bubble's
+            long-press. Unmounted as soon as it has answered. */}
+        {overflowing === null ? (
+          <View
+            style={StyleSheet.absoluteFill}
+            pointerEvents="none"
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          >
+            <Text
+              style={textStyle}
+              onTextLayout={(e) =>
+                setOverflowing(e.nativeEvent.lines.length > maxLines)
+              }
+            >
+              {renderTextWithMentions(
+                text,
+                mentioned,
+                isUser ? styles.mentionOwn : styles.mentionOther,
+                linkStyle
+              )}
+            </Text>
+          </View>
+        ) : null}
         {/* Web render order: text → link preview → edited caption → see-more.
             The "See more" row is LAST (below the preview), not between the text
             and the preview (PDT-4047). */}
@@ -302,7 +330,7 @@ function TextBubble({
             {editedLabel}
           </Text>
         ) : null}
-        {truncated && onSeeMore ? (
+        {overflowing && onSeeMore ? (
           <>
             <View
               style={[
