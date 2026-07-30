@@ -226,7 +226,9 @@ export function AmityConversationChatUserActionComponent({
     },
     {
       key: 'report',
-      icon: 'flag-r',
+      // PDT-4143 (web PR 1822): the icon flips with the state, not just the
+      // label — `isReported ? FlagSlash : Flag`.
+      icon: isFlaggedByMe ? 'flag-slash-r' : 'flag-r',
       label: resolveString(
         isFlaggedByMe
           ? 'amity_chat_action_unreport_user'

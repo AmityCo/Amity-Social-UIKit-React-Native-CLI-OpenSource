@@ -60,6 +60,8 @@ type AmityMessageActionMenuProps = {
   currentUserId?: string | null;
   handlers: MessageActionHandlers;
   viewerIsMutedInChannel?: boolean;
+  /** Viewer moderates this channel — unlocks Delete on other people's messages. */
+  viewerIsModerator?: boolean;
   placement?: PopoverPlacement;
 };
 
@@ -85,6 +87,7 @@ export function buildMessageActionItems(
   handlers: MessageActionHandlers,
   onCopyText: () => void,
   viewerIsMutedInChannel = false,
+  viewerIsModerator = false,
   isFlaggedByMe = false,
   // While the flag state is still being fetched neither Report nor Unreport is
   // shown (web gates both on `!flagState.isLoading`) — otherwise the menu would
@@ -134,7 +137,9 @@ export function buildMessageActionItems(
     },
     {
       key: 'unreport',
-      icon: 'flag-r',
+      // PDT-4143 (web PR 1822): unreport uses the slashed flag; only `report`
+      // keeps the plain one.
+      icon: 'flag-slash-r',
       label: resolveString('amity_chat_option_unreport'),
       onPress: () => handlers.onUnreport?.(),
       // Web: `!isOwn && !flagState.isLoading && isFlaggedByMe` (no isActive gate).
@@ -154,7 +159,11 @@ export function buildMessageActionItems(
       label: resolveString('amity_chat_option_delete'),
       destructive: true,
       onPress: handlers.onDelete,
-      visible: isOwn && isActive,
+      // PDT-4155 (web PR 1818): a channel moderator can delete anyone's message,
+      // not just their own — web's `visible: isOwn || viewerIsModerator`. RN keeps
+      // its extra isActive gate so the option stays hidden on a failed/deleted
+      // message, where the messageId is empty and delete would throw.
+      visible: (isOwn || viewerIsModerator) && isActive,
     },
   ];
 
@@ -172,6 +181,7 @@ export function AmityMessageActionMenu({
   currentUserId,
   handlers,
   viewerIsMutedInChannel = false,
+  viewerIsModerator = false,
   placement = 'bottom right',
 }: AmityMessageActionMenuProps) {
   const { styles } = useStyles();
@@ -221,6 +231,7 @@ export function AmityMessageActionMenu({
     menuHandlers,
     copyText,
     viewerIsMutedInChannel,
+    viewerIsModerator,
     isFlaggedByMe,
     isFlagLoading
   );
