@@ -104,6 +104,9 @@ export function GroupChat({
           isLoading={c.isLoading}
           isLoadingFirstPage={c.isLoadingFirstPage}
           onSeeMore={c.openSeeMore}
+          // PDT-4155 (web PR 1818): only group channels have moderators, so web
+          // threads isModerator from useGroupChat and the 1:1 Chat does not.
+          viewerIsModerator={c.isModerator}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
             onReply: c.handleBubbleReply,

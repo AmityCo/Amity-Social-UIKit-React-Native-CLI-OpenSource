@@ -49,6 +49,8 @@ type MessageListProps = {
   onOpenReactorList?: (message: Amity.Message) => void;
   onSeeMore?: (text: string, title?: string) => void;
   bubbleHandlers?: BubbleHandlers;
+  /** Viewer moderates this channel — unlocks Delete on other people's messages. */
+  viewerIsModerator?: boolean;
 };
 
 const AT_BOTTOM_THRESHOLD = 48;
@@ -73,6 +75,7 @@ export function MessageList({
   onOpenReactorList,
   onSeeMore,
   bubbleHandlers,
+  viewerIsModerator = false,
 }: MessageListProps) {
   const { styles } = useStyles();
   const listRef = useRef<FlatList<ChatItem>>(null);
@@ -165,6 +168,7 @@ export function MessageList({
               onOpenReactorList={onOpenReactorList}
               onSeeMore={onSeeMore}
               bubbleHandlers={bubbleHandlers}
+              viewerIsModerator={viewerIsModerator}
             />
           );
         }}

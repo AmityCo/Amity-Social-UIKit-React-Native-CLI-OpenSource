@@ -43,6 +43,8 @@ type MessageRowProps = {
   onOpenReactorList?: (message: Amity.Message) => void;
   onSeeMore?: (text: string, title?: string) => void;
   bubbleHandlers?: BubbleHandlers;
+  /** Viewer moderates this channel — unlocks Delete on other people's messages. */
+  viewerIsModerator?: boolean;
 };
 
 // 4. Named function component
@@ -59,6 +61,7 @@ export function MessageRow({
   onOpenReactorList,
   onSeeMore,
   bubbleHandlers,
+  viewerIsModerator = false,
 }: MessageRowProps) {
   const { styles } = useStyles();
   const sendingLabel = useString('amity_chat_sending_status');
@@ -175,6 +178,7 @@ export function MessageRow({
             <AmityMessageActionMenu
               message={message}
               currentUserId={currentUserId}
+              viewerIsModerator={viewerIsModerator}
               placement={isUser ? 'bottom right' : 'bottom left'}
               handlers={{
                 onEdit: bubbleHandlers?.onEdit ?? (() => {}),
