@@ -62,9 +62,12 @@ export function useFailedMessageSheet({
       }
       return;
     }
-    // Non-synthetic resend: recreate then delete the original (web's requestResend).
-    // The original is only removed once the new message is actually created —
-    // deleting it on failure would drop the text the user is trying to send.
+    // Non-synthetic resend: recreate, then remove the original (web's
+    // requestResend). The original is deleted whether or not the new message
+    // succeeds — the SDK inserts the retry into the live collection optimistically
+    // and keeps it on failure, so leaving the original behind is what produced two
+    // identical failed bubbles on a second failure. Deliberately more than web
+    // does (web only deletes in onSuccess and shows the duplicate).
     try {
       await createMessage({
         subChannelId: message.subChannelId,
@@ -73,13 +76,12 @@ export function useFailedMessageSheet({
         parentId: message.parentId,
       } as Parameters<typeof createMessage>[0]);
     } catch {
-      // useCreateMessage's onError already raised the toast. Swallow the
-      // rejection so it isn't an unhandled promise, and leave the original
-      // failed bubble in place.
-      return;
-    }
-    if (message.messageId) {
-      await deleteMessage(message.messageId);
+      // useCreateMessage's onError already raised the toast; swallow the
+      // rejection so it isn't an unhandled promise.
+    } finally {
+      if (message.messageId) {
+        await deleteMessage(message.messageId);
+      }
     }
   }
 
