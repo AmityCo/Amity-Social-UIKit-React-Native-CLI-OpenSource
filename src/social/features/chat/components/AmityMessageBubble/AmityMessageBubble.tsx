@@ -34,10 +34,6 @@ import { MediaUploadOverlay } from '../../elements/MediaUploadOverlay';
 import { DeletedMessagePill } from '../../features/shared/components/DeletedMessagePill';
 import { MessageLinkPreview } from '../../features/shared/components/MessageLinkPreview';
 import { extractFirstPreviewUrl } from '../../utils/previewLink';
-import {
-  isSyntheticPendingMessage,
-  type SyntheticPendingMessage,
-} from '../../features/shared/hooks/useMessageComposer';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
 import { useStyles } from './styles';
 
@@ -166,19 +162,17 @@ function isErrorState(message: Amity.Message): boolean {
   return message.syncState === ('error' as Amity.SyncState);
 }
 
-// Web wrapWithFailedCaption: the "failed to send" helper caption appears under an
-// image/video bubble ONLY when it failed for a moderation violation (a synthetic
-// pending message whose __failureReason === 'moderation'). Generic failures show
-// nothing.
-function isModerationViolation(
-  message: Amity.Message,
-  isFailed: boolean
-): boolean {
-  return (
-    isFailed &&
-    isSyntheticPendingMessage(message) &&
-    (message as SyntheticPendingMessage).__failureReason === 'moderation'
-  );
+// Web wrapWithFailedCaption: EVERY failed image/video bubble carries the
+// "failed to send" caption — the only exception is an upload the user cancelled
+// (web's __failureReason === 'cancelled'). It used to be moderation-only, which
+// left a generic failure with no explanation at all; PDT-4128's oversize upload
+// marks 'generic', so the inline error the ticket asks for depends on this.
+//
+// RN has no 'cancelled' reason: cancelling drops the pending upload via
+// cancelledClientIdsRef instead of marking it failed, so there is nothing to
+// exclude here and the gate is simply "did it fail".
+function showsFailedCaption(isFailed: boolean): boolean {
+  return isFailed;
 }
 
 // 5. Named function component (dispatcher)
@@ -474,7 +468,7 @@ function ImageBubble({
 
   const showUploadOverlay = !!localPreviewUrl && !isFailed;
   const canOpen = !!onOpenImage && !!openUrl && !isFailed && !localPreviewUrl;
-  const isViolation = isModerationViolation(message, isFailed);
+  const showFailedCaption = showsFailedCaption(isFailed);
 
   const bubble = (
     <Pressable
@@ -518,7 +512,7 @@ function ImageBubble({
     </Pressable>
   );
 
-  if (!isViolation) return bubble;
+  if (!showFailedCaption) return bubble;
   return (
     <View style={styles.failedWrapper}>
       {bubble}
@@ -564,7 +558,7 @@ function VideoBubble({
 
   const showUploadOverlay = !!localPreviewUrl && !isFailed;
   const canOpen = !!onOpenVideo && !isFailed && !localPreviewUrl;
-  const isViolation = isModerationViolation(message, isFailed);
+  const showFailedCaption = showsFailedCaption(isFailed);
 
   const bubble = (
     <Pressable
@@ -621,7 +615,7 @@ function VideoBubble({
     </Pressable>
   );
 
-  if (!isViolation) return bubble;
+  if (!showFailedCaption) return bubble;
   return (
     <View style={styles.failedWrapper}>
       {bubble}
