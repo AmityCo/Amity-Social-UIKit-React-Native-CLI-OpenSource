@@ -42,9 +42,10 @@ export const useCreateMessage = ({
     },
     onError: (err) => {
       const { message } = err;
-      // LEADS WEB (PDT-4160): web still ships the V1 wording for every string
-      // in this table; RN follows the V2 Designer column (19 Nov 2025) because
-      // the copy spec outranks the port for wording.
+      // LEADS WEB (PDT-4160): web's PR 1823 took the V2 copy for the blocked-word
+      // and blocked-link toasts but left this generic create-failure string on V1
+      // ("Your message wasn't sent."). RN follows the V2 Designer column
+      // (19 Nov 2025) here too, since the copy spec outranks the port for wording.
       // Copy spec V2: the create-message failure reads "Failed to send message.
       // Please try again." — amity_chat_message_failed_to_send.
       // The old default was the shared amity_common_label_message_not_sent
