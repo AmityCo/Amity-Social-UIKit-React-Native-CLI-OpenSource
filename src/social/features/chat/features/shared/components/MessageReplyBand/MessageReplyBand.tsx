@@ -162,7 +162,7 @@ function ReplyBandThumb({ replyTo }: { replyTo: Amity.Message }) {
           <View style={styles.playChipInner}>
             <AmityIcon
               name="circle-play-s"
-              size={14}
+              size={16}
               tokenColor={
                 AmityColorToken.IconIconButtonTransparentPrimaryDefault
               }
