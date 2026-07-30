@@ -237,6 +237,11 @@ export function ContentReportReason({
                 placeholder={reportTextPlaceholder}
                 value={otherReasonText}
                 onChange={setOtherReasonText}
+                // PDT-4142: without this the field stays single-line, so a reason
+                // typed up to MAX_LENGTH_DESCRIBE scrolls sideways on one line
+                // instead of wrapping. multiLine also switches the row to
+                // top-aligned so the label sits level with the first line.
+                multiLine
               />
             </View>
           ) : (
