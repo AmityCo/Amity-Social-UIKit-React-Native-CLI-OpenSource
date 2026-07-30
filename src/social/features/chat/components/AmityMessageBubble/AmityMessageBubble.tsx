@@ -145,6 +145,13 @@ type AmityMessageBubbleProps = {
   onCancelUpload?: () => void;
   /** Open the full-text "see more" screen for long messages. */
   onSeeMore?: (text: string, title?: string) => void;
+  /**
+   * Hold the pressed appearance while the action menu / reaction bar is open.
+   * Web's data-active, driven off `activeMessageId === message.messageId`; the
+   * CSS pairs it with `:active` so the colour never drops between the long-press
+   * ending and the menu appearing.
+   */
+  isActive?: boolean;
 };
 
 function getFileId(message: Amity.Message): string {
@@ -184,6 +191,7 @@ export function AmityMessageBubble({
   localPreviewUrl,
   onCancelUpload,
   onSeeMore,
+  isActive = false,
 }: AmityMessageBubbleProps) {
   if (message.isDeleted) {
     return <DeletedMessagePill isUser={isUser} />;
@@ -194,6 +202,7 @@ export function AmityMessageBubble({
       return (
         <ImageBubble
           message={message}
+          isActive={isActive}
           onOpenImage={onOpenImage}
           onLongPress={onLongPress}
           localPreviewUrl={localPreviewUrl}
@@ -204,6 +213,7 @@ export function AmityMessageBubble({
       return (
         <VideoBubble
           message={message}
+          isActive={isActive}
           onOpenVideo={onOpenVideo}
           onLongPress={onLongPress}
           localPreviewUrl={localPreviewUrl}
@@ -215,6 +225,7 @@ export function AmityMessageBubble({
         <TextBubble
           message={message}
           isUser={isUser}
+          isActive={isActive}
           onLongPress={onLongPress}
           onSeeMore={onSeeMore}
         />
@@ -226,6 +237,7 @@ export function AmityMessageBubble({
 type TextBubbleProps = {
   message: Amity.Message;
   isUser: boolean;
+  isActive?: boolean;
   onLongPress?: (message: Amity.Message) => void;
   onSeeMore?: (text: string, title?: string) => void;
 };
@@ -233,6 +245,7 @@ type TextBubbleProps = {
 function TextBubble({
   message,
   isUser,
+  isActive = false,
   onLongPress,
   onSeeMore,
 }: TextBubbleProps) {
@@ -271,7 +284,11 @@ function TextBubble({
   const bubbleStyle = [
     styles.bubble,
     isUser ? styles.bubbleOwn : styles.bubbleOther,
-    pressed && (isUser ? styles.bubbleOwnPressed : styles.bubbleOtherPressed),
+    // Web: `.textBubble:active, .textBubble[data-active='true']` — the press AND
+    // the open menu share one background, so releasing the long-press does not
+    // flash the bubble back to its resting colour before the menu appears.
+    (pressed || isActive) &&
+      (isUser ? styles.bubbleOwnPressed : styles.bubbleOtherPressed),
   ];
   const textStyle = [styles.text, isUser ? styles.textOwn : styles.textOther];
   // Outbound links inherit the outbound message colour (web currentcolor);
@@ -401,6 +418,7 @@ function TextBubble({
 // ---------- Image ----------
 type ImageBubbleProps = {
   message: Amity.Message;
+  isActive?: boolean;
   onOpenImage?: (url: string, message: Amity.Message) => void;
   onLongPress?: (message: Amity.Message) => void;
   localPreviewUrl?: string;
@@ -409,6 +427,7 @@ type ImageBubbleProps = {
 
 function ImageBubble({
   message,
+  isActive = false,
   onOpenImage,
   onLongPress,
   localPreviewUrl,
@@ -485,7 +504,11 @@ function ImageBubble({
       {showUploadOverlay ? (
         <MediaUploadOverlay onCancel={onCancelUpload} />
       ) : null}
-      {pressed ? <View style={styles.mediaPressedScrim} /> : null}
+      {/* Web: `.imageBubble:active::after, .imageBubble[data-active='true']::after`
+          (same for videoBubble) — one overlay for both press and open menu. */}
+      {pressed || isActive ? (
+        <View style={styles.mediaPressedScrim} pointerEvents="none" />
+      ) : null}
     </Pressable>
   );
 
@@ -501,6 +524,7 @@ function ImageBubble({
 // ---------- Video ----------
 type VideoBubbleProps = {
   message: Amity.Message;
+  isActive?: boolean;
   onOpenVideo?: (message: Amity.Message) => void;
   onLongPress?: (message: Amity.Message) => void;
   localPreviewUrl?: string;
@@ -509,6 +533,7 @@ type VideoBubbleProps = {
 
 function VideoBubble({
   message,
+  isActive = false,
   onOpenVideo,
   onLongPress,
   localPreviewUrl,
@@ -582,7 +607,11 @@ function VideoBubble({
           />
         </View>
       )}
-      {pressed ? <View style={styles.mediaPressedScrim} /> : null}
+      {/* Web: `.imageBubble:active::after, .imageBubble[data-active='true']::after`
+          (same for videoBubble) — one overlay for both press and open menu. */}
+      {pressed || isActive ? (
+        <View style={styles.mediaPressedScrim} pointerEvents="none" />
+      ) : null}
     </Pressable>
   );
 

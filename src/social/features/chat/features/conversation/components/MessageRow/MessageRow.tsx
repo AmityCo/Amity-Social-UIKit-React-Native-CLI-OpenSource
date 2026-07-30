@@ -184,10 +184,16 @@ export function MessageRow({
                 onSave: bubbleHandlers?.onSave ?? (() => {}),
                 onReport: bubbleHandlers?.onReport ?? (() => {}),
               }}
-              anchor={({ openPopover }) => (
+              anchor={({ isOpen, openPopover }) => (
                 <AmityMessageBubble
                   message={message}
                   isUser={isUser}
+                  // Web keeps the bubble in its pressed colour for as long as the
+                  // menu is open (Chat.tsx activeMessageId → isActive →
+                  // data-active). The Popover already tracks that state; without
+                  // passing it, onPressOut fires the moment the long-press is
+                  // recognised and the bubble snaps back while the menu is up.
+                  isActive={isOpen}
                   onLongPress={() => {
                     onOpenBubbleMenu?.(message);
                     openPopover();
