@@ -47,8 +47,8 @@ import { useStyles } from './styles';
 // constant (and the hasLink regex that drove it) in dba25aa77.
 const TEXT_MAX_LINES = 10; // web chat.ts
 // Below this length a message cannot reach TEXT_MAX_LINES, so it skips the
-// measuring pass (and its loader) entirely. Well under the real threshold: the
-// 240px bubble fits ~30 characters a line, i.e. ~300 for ten lines.
+// measuring pass — and the reserved See-more space — entirely. Well under the
+// real threshold: the 240px bubble fits ~30 characters a line, ~300 for ten.
 const MIN_CHARS_TO_OVERFLOW = 120;
 // Splits a text run into linkable (coloured/tappable) segments.
 const URL_SPLIT_RE = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
@@ -275,6 +275,41 @@ function TextBubble({
   // inbound links recolour to the inbound-link token.
   const linkStyle = isUser ? styles.link : [styles.link, styles.linkOther];
 
+  const seeMoreRow = onSeeMore ? (
+    <>
+      <View
+        style={[
+          styles.divider,
+          isUser ? styles.dividerOwn : styles.dividerOther,
+        ]}
+      />
+      <Pressable
+        style={styles.seeMoreRow}
+        onPress={() => onSeeMore(text)}
+        accessibilityRole="button"
+        accessibilityLabel={seeMoreLabel}
+      >
+        <Text
+          style={[
+            styles.seeMoreLabel,
+            isUser ? styles.seeMoreOwn : styles.seeMoreOther,
+          ]}
+        >
+          {seeMoreLabel}
+        </Text>
+        <AmityIcon
+          name="chevron-right"
+          size={12}
+          tokenColor={
+            isUser
+              ? AmityColorToken.IconChatBubbleOutboundSeeMoreDefault
+              : AmityColorToken.IconChatBubbleInboundSeeMoreDefault
+          }
+        />
+      </Pressable>
+    </>
+  ) : null;
+
   return (
     <Pressable
       style={bubbleStyle}
@@ -283,27 +318,18 @@ function TextBubble({
       onLongPress={onLongPress ? () => onLongPress(message) : undefined}
     >
       <View>
-        {/* While measuring, show a loader instead of the text. Clamping alone
-            wasn't smooth: the first frame rendered ten lines with no "See more"
-            row, which then appeared underneath and shifted the bubble. Long
-            messages now stay a loader until the line count is known, so the
-            bubble arrives in its final shape. Short messages skip this entirely
-            (see MIN_CHARS_TO_OVERFLOW), so the loader only appears where a
-            layout shift was actually possible. */}
-        {measuring ? (
-          <View style={styles.textMeasuring}>
-            <Loader.Spinner size="sm" />
-          </View>
-        ) : (
-          <Text style={textStyle} numberOfLines={maxLines}>
-            {renderTextWithMentions(
-              text,
-              mentioned,
-              isUser ? styles.mentionOwn : styles.mentionOther,
-              linkStyle
-            )}
-          </Text>
-        )}
+        {/* Clamped and final from the first frame. Deciding whether the text
+            overflows needs a layout pass, so the "See more" row can never be in
+            that frame — the fix is to reserve its height up front (see the
+            placeholder below) rather than to withhold the text. */}
+        <Text style={textStyle} numberOfLines={maxLines}>
+          {renderTextWithMentions(
+            text,
+            mentioned,
+            isUser ? styles.mentionOwn : styles.mentionOther,
+            linkStyle
+          )}
+        </Text>
         {/* The probe itself: an unclamped copy laid out once, off screen, purely
             to count lines — RN's stand-in for web's scrollHeight/clientHeight
             check. It must be wrapped in a View to be made touch-transparent:
@@ -350,39 +376,20 @@ function TextBubble({
             {editedLabel}
           </Text>
         ) : null}
-        {overflowing && onSeeMore ? (
-          <>
-            <View
-              style={[
-                styles.divider,
-                isUser ? styles.dividerOwn : styles.dividerOther,
-              ]}
-            />
-            <Pressable
-              style={styles.seeMoreRow}
-              onPress={() => onSeeMore(text)}
-              accessibilityRole="button"
-              accessibilityLabel={seeMoreLabel}
-            >
-              <Text
-                style={[
-                  styles.seeMoreLabel,
-                  isUser ? styles.seeMoreOwn : styles.seeMoreOther,
-                ]}
-              >
-                {seeMoreLabel}
-              </Text>
-              <AmityIcon
-                name="chevron-right"
-                size={12}
-                tokenColor={
-                  isUser
-                    ? AmityColorToken.IconChatBubbleOutboundSeeMoreDefault
-                    : AmityColorToken.IconChatBubbleInboundSeeMoreDefault
-                }
-              />
-            </Pressable>
-          </>
+        {overflowing ? seeMoreRow : null}
+        {/* Same row, invisible, held in place while the line count is unknown.
+            Without it the bubble is one row shorter on the first frame and grows
+            when the real row arrives — which is the jolt QA kept seeing, first as
+            a full-height flash, then as a short bubble that jumped taller. */}
+        {measuring ? (
+          <View
+            style={styles.seeMoreReserved}
+            pointerEvents="none"
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          >
+            {seeMoreRow}
+          </View>
         ) : null}
       </View>
     </Pressable>
