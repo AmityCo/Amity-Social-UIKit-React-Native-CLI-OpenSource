@@ -27,6 +27,7 @@ import Video from 'react-native-video';
 import useFile from '../../../../../core/hooks/useFile';
 import { ImageSizeState } from '../../../../../core/enums';
 import { Loader } from '../../../../../core/design/atoms/Loader';
+import { Skeleton } from '../../../../../core/design/components/Skeleton';
 import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../core/localization';
@@ -50,6 +51,9 @@ const TEXT_MAX_LINES = 10; // web chat.ts
 // measuring pass — and the reserved See-more space — entirely. Well under the
 // real threshold: the 240px bubble fits ~30 characters a line, ~300 for ten.
 const MIN_CHARS_TO_OVERFLOW = 120;
+// Skeleton bar height while a long message is measured — a shade under the 18px
+// line height so two bars plus their gap read as two lines of text.
+const SKELETON_LINE_HEIGHT = 14;
 // Splits a text run into linkable (coloured/tappable) segments.
 const URL_SPLIT_RE = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
 
@@ -318,18 +322,28 @@ function TextBubble({
       onLongPress={onLongPress ? () => onLongPress(message) : undefined}
     >
       <View>
-        {/* Clamped and final from the first frame. Deciding whether the text
-            overflows needs a layout pass, so the "See more" row can never be in
-            that frame — the fix is to reserve its height up front (see the
-            placeholder below) rather than to withhold the text. */}
-        <Text style={textStyle} numberOfLines={maxLines}>
-          {renderTextWithMentions(
-            text,
-            mentioned,
-            isUser ? styles.mentionOwn : styles.mentionOther,
-            linkStyle
-          )}
-        </Text>
+        {/* A two-line skeleton stands in for a long message until its line count
+            is known, so the bubble never renders in a shape it then changes out
+            of. Reads as loading, unlike a spinner in a text-sized box. Short
+            messages skip this entirely (MIN_CHARS_TO_OVERFLOW) and render at once.
+            The fixed width matters beyond looks: the probe below measures against
+            this container, so collapsing it to the placeholder's natural width
+            would count lines for the wrong width. */}
+        {measuring ? (
+          <View style={styles.textSkeleton}>
+            <Skeleton height={SKELETON_LINE_HEIGHT} />
+            <Skeleton height={SKELETON_LINE_HEIGHT} width="60%" />
+          </View>
+        ) : (
+          <Text style={textStyle} numberOfLines={maxLines}>
+            {renderTextWithMentions(
+              text,
+              mentioned,
+              isUser ? styles.mentionOwn : styles.mentionOther,
+              linkStyle
+            )}
+          </Text>
+        )}
         {/* The probe itself: an unclamped copy laid out once, off screen, purely
             to count lines — RN's stand-in for web's scrollHeight/clientHeight
             check. It must be wrapped in a View to be made touch-transparent:
@@ -377,20 +391,6 @@ function TextBubble({
           </Text>
         ) : null}
         {overflowing ? seeMoreRow : null}
-        {/* Same row, invisible, held in place while the line count is unknown.
-            Without it the bubble is one row shorter on the first frame and grows
-            when the real row arrives — which is the jolt QA kept seeing, first as
-            a full-height flash, then as a short bubble that jumped taller. */}
-        {measuring ? (
-          <View
-            style={styles.seeMoreReserved}
-            pointerEvents="none"
-            accessibilityElementsHidden
-            importantForAccessibility="no-hide-descendants"
-          >
-            {seeMoreRow}
-          </View>
-        ) : null}
       </View>
     </Pressable>
   );

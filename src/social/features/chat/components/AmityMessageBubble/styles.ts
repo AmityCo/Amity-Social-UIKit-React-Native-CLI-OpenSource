@@ -50,11 +50,17 @@ export const useStyles = () => {
       fontSize: 14,
       lineHeight: 18,
     },
-    // Holds the See-more row's height while the line count is unknown, so the
-    // bubble does not grow when the real row appears. Invisible rather than
-    // absolute: it has to occupy layout space, which is the whole point.
-    seeMoreReserved: {
-      opacity: 0,
+    // Two-line skeleton shown while a long message's line count is measured.
+    // Carries the text bubble's padding, and a fixed width of 240 (bubble max)
+    // minus its 16 side padding — the measuring probe fills this container, so a
+    // width that collapsed to the bars' intrinsic size would make it count lines
+    // for the wrong width.
+    textSkeleton: {
+      paddingTop: 10,
+      paddingHorizontal: 16,
+      paddingBottom: 10,
+      width: 240 - 32,
+      gap: 8,
     },
     textOwn: {
       color: token(AmityColorToken.TextChatBubbleOutboundMessagesDefault),
