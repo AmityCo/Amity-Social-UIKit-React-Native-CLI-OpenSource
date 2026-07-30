@@ -91,7 +91,7 @@ export function ArchivedChannelList() {
     <View style={styles.action}>
       <View style={styles.actionContent}>
         <AmityIcon
-          name="unarhive-r"
+          name="unarchive-r"
           size={ACTION_ICON_SIZE}
           tokenColor={AmityColorToken.IconSquareButtonDefaultSecondaryDefault}
         />

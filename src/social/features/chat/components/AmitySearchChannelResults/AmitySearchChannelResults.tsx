@@ -9,7 +9,7 @@
 //     → the shared `AmityChatListItem`. AmityChatListItem exposes no `searchQuery`
 //     prop, so the matched-text highlight is not rendered (documented deviation);
 //     row navigation is wired here via React Navigation, mirroring AmityChatHomePage.
-//   - Web `Archive`/`Unarchive` SVG icons → the registry `arhive-r`/`unarhive-r`
+//   - Web `Archive`/`Unarchive` SVG icons → the registry `archive-r`/`unarchive-r`
 //     glyphs (same regular variant ArchivedBadge uses).
 
 // 1. React / RN imports
@@ -112,7 +112,7 @@ export function AmitySearchChannelResults({
         return (
           <SwipeToLeft
             actionLabel={isArchived ? unarchiveLabel : archiveLabel}
-            actionIcon={isArchived ? 'unarhive-r' : 'arhive-r'}
+            actionIcon={isArchived ? 'unarchive-r' : 'archive-r'}
             onAction={() =>
               isArchived
                 ? unarchiveChannel({ channelId: item.channelId })

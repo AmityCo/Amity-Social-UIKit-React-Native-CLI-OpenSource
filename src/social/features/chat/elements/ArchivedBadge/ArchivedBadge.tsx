@@ -15,7 +15,7 @@ export function ArchivedBadge() {
   return (
     <View style={styles.container}>
       <AmityIcon
-        name="arhive-r"
+        name="archive-r"
         size={12}
         tokenColor={AmityColorToken.IconBadgeSemanticBadgeChatArchivedDefault}
       />

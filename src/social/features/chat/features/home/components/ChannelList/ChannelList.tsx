@@ -78,7 +78,7 @@ export function ChannelList({
     <View style={styles.action}>
       <View style={styles.actionContent}>
         <AmityIcon
-          name="arhive-r"
+          name="archive-r"
           size={ACTION_ICON_SIZE}
           tokenColor={AmityColorToken.IconSquareButtonDefaultSecondaryDefault}
         />
