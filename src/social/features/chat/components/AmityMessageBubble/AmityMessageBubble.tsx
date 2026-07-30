@@ -305,7 +305,13 @@ function TextBubble({
       />
       <Pressable
         style={styles.seeMoreRow}
-        onPress={() => onSeeMore(text)}
+        // PDT-4150 (web PR 1824): the full-text page takes the sender's display
+        // name as its centred header title; without it the header was blank. The
+        // whole chain already carried the optional title — openSeeMore stores it
+        // and MessageFullTextScreen renders it — only this call omitted it.
+        onPress={() =>
+          onSeeMore(text, message.creator?.displayName || undefined)
+        }
         accessibilityRole="button"
         accessibilityLabel={seeMoreLabel}
       >
