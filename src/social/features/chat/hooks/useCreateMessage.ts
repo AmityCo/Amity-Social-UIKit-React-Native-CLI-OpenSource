@@ -42,8 +42,13 @@ export const useCreateMessage = ({
     },
     onError: (err) => {
       const { message } = err;
+      // PDT-4160 / copy spec V2: the create-message failure reads "Failed to
+      // send message. Please try again." — amity_chat_message_failed_to_send.
+      // The old default was the shared amity_common_label_message_not_sent
+      // ("Your message wasn't sent."), still V1 wording and used by other
+      // modules, so it is left alone rather than reworded from a chat ticket.
       let notificationMessage = resolveString(
-        'amity_common_label_message_not_sent'
+        'amity_chat_message_failed_to_send'
       );
 
       // PDT-4160: use the chat keys, not the social twins. The social strings

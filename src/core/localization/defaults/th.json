@@ -1101,7 +1101,7 @@
   "amity_chat_char_limit_alert_title": "ไม่สามารถส่งข้อความได้",
   "amity_chat_char_limit_alert_message": "ข้อความของคุณยาวเกินไป โปรดย่อข้อความและลองอีกครั้ง",
   "amity_chat_message_deleted": "ข้อความนี้ถูกลบแล้ว",
-  "amity_chat_message_failed_to_send": "ส่งข้อความไม่สำเร็จ",
+  "amity_chat_message_failed_to_send": "ส่งข้อความไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
   "amity_chat_message_no_preview": "ไม่รองรับการแสดงตัวอย่างสำหรับข้อความประเภทนี้",
   "amity_chat_message_replied_message": "ตอบกลับข้อความ",
   "amity_chat_message_replying_yourself": "ตัวเอง",

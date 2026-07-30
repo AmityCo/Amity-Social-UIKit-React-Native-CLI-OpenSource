@@ -204,7 +204,7 @@
   "amity_chat_char_limit_alert_title": "Unable to send message",
   "amity_chat_char_limit_alert_message": "Your message is too long. Please shorten your message and try again.",
   "amity_chat_message_deleted": "This message was deleted",
-  "amity_chat_message_failed_to_send": "Failed to send message.",
+  "amity_chat_message_failed_to_send": "Failed to send message. Please try again.",
   "amity_chat_message_no_preview": "No preview supported for this message type",
   "amity_chat_message_replied_message": "Replied message",
   "amity_chat_message_replying_yourself": "yourself",
