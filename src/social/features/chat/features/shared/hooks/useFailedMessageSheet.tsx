@@ -17,6 +17,7 @@ import { StyleSheet, View } from 'react-native';
 import { Menu } from '../../../../../../core/design/components/Menu';
 import { useString } from '../../../../../../core/localization';
 import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
+import { useChatNotifications } from '../../../hooks/useChatNotifications';
 import { useDeleteMessage } from '../../../hooks/useDeleteMessage';
 import { useCreateMessage } from '../../../hooks/useCreateMessage';
 import { isSyntheticPendingMessage } from './useMessageComposer';
@@ -40,8 +41,15 @@ export function useFailedMessageSheet({
 }: UseFailedMessageSheetParams): UseFailedMessageSheetReturn {
   const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
     useBottomSheet();
+  const { error: errorToast } = useChatNotifications();
   const { deleteMessage } = useDeleteMessage();
-  const { createMessage } = useCreateMessage();
+  // useCreateMessage maps the SDK error to localized copy but only through its
+  // onError callback. Nothing passed one, so a resend that failed again was
+  // completely silent — and mutateAsync's rejection went unhandled on top.
+  // Web doesn't toast here either; this leads web rather than porting it.
+  const { createMessage } = useCreateMessage({
+    onError: (errorMsg) => errorToast({ content: errorMsg }),
+  });
   const resendLabel = useString('amity_chat_message_resend');
   const deleteLabel = useString('amity_chat_option_delete');
 
@@ -55,12 +63,21 @@ export function useFailedMessageSheet({
       return;
     }
     // Non-synthetic resend: recreate then delete the original (web's requestResend).
-    await createMessage({
-      subChannelId: message.subChannelId,
-      dataType: message.dataType,
-      data: message.data,
-      parentId: message.parentId,
-    } as Parameters<typeof createMessage>[0]);
+    // The original is only removed once the new message is actually created —
+    // deleting it on failure would drop the text the user is trying to send.
+    try {
+      await createMessage({
+        subChannelId: message.subChannelId,
+        dataType: message.dataType,
+        data: message.data,
+        parentId: message.parentId,
+      } as Parameters<typeof createMessage>[0]);
+    } catch {
+      // useCreateMessage's onError already raised the toast. Swallow the
+      // rejection so it isn't an unhandled promise, and leave the original
+      // failed bubble in place.
+      return;
+    }
     if (message.messageId) {
       await deleteMessage(message.messageId);
     }
