@@ -46,6 +46,10 @@ import { useStyles } from './styles';
 // clamped link-bearing messages far earlier than plain ones. Web deleted that
 // constant (and the hasLink regex that drove it) in dba25aa77.
 const TEXT_MAX_LINES = 10; // web chat.ts
+// Below this length a message cannot reach TEXT_MAX_LINES, so it skips the
+// measuring pass (and its loader) entirely. Well under the real threshold: the
+// 240px bubble fits ~30 characters a line, i.e. ~300 for ten lines.
+const MIN_CHARS_TO_OVERFLOW = 120;
 // Splits a text run into linkable (coloured/tappable) segments.
 const URL_SPLIT_RE = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
 
@@ -244,6 +248,14 @@ function TextBubble({
   // synthetic crashes the list (PDT-4033 QA).
   const isFailed = message.syncState === ('error' as Amity.SyncState);
   const maxLines = TEXT_MAX_LINES;
+  // Only long text can possibly exceed maxLines, so only long text has to wait
+  // for the measurement — everything else renders immediately and never sees a
+  // loader. MIN_CHARS_TO_OVERFLOW is deliberately far below the real threshold
+  // (a 240px bubble fits roughly 30 characters per line, so ~300 for 10 lines);
+  // explicit newlines are counted too, since a short text can still be tall.
+  const mightOverflow =
+    text.length > MIN_CHARS_TO_OVERFLOW || text.split('\n').length > maxLines;
+  const measuring = mightOverflow && overflowing === null;
   const isEdited = (message as { editedAt?: unknown }).editedAt != null;
   const mentioned = (
     message.metadata as
@@ -271,26 +283,34 @@ function TextBubble({
       onLongPress={onLongPress ? () => onLongPress(message) : undefined}
     >
       <View>
-        {/* Clamped on every render, including the first. Previously this was
-            unclamped until onTextLayout reported an overflow, so a long message
-            flashed at full height for one frame before collapsing. Web never had
-            that: it sets WebkitLineClamp unconditionally and probes overflow
-            separately (scrollHeight > clientHeight). */}
-        <Text style={textStyle} numberOfLines={maxLines}>
-          {renderTextWithMentions(
-            text,
-            mentioned,
-            isUser ? styles.mentionOwn : styles.mentionOther,
-            linkStyle
-          )}
-        </Text>
-        {/* RN's stand-in for that probe: an unclamped copy laid out once, off
-            screen, purely to count lines. It must be wrapped in a View to be
-            made touch-transparent — pointerEvents on a Text is ignored on
-            Android (TouchTargetHelper only honours it on a ReactViewGroup), and
-            an absolutely-filling Text would otherwise swallow the bubble's
-            long-press. Unmounted as soon as it has answered. */}
-        {overflowing === null ? (
+        {/* While measuring, show a loader instead of the text. Clamping alone
+            wasn't smooth: the first frame rendered ten lines with no "See more"
+            row, which then appeared underneath and shifted the bubble. Long
+            messages now stay a loader until the line count is known, so the
+            bubble arrives in its final shape. Short messages skip this entirely
+            (see MIN_CHARS_TO_OVERFLOW), so the loader only appears where a
+            layout shift was actually possible. */}
+        {measuring ? (
+          <View style={styles.textMeasuring}>
+            <Loader.Spinner size="sm" />
+          </View>
+        ) : (
+          <Text style={textStyle} numberOfLines={maxLines}>
+            {renderTextWithMentions(
+              text,
+              mentioned,
+              isUser ? styles.mentionOwn : styles.mentionOther,
+              linkStyle
+            )}
+          </Text>
+        )}
+        {/* The probe itself: an unclamped copy laid out once, off screen, purely
+            to count lines — RN's stand-in for web's scrollHeight/clientHeight
+            check. It must be wrapped in a View to be made touch-transparent:
+            pointerEvents on a Text is ignored on Android (TouchTargetHelper only
+            honours it on a ReactViewGroup), and an absolutely-filling Text would
+            otherwise swallow the bubble's long-press. Unmounted once answered. */}
+        {mightOverflow && overflowing === null ? (
           <View
             style={StyleSheet.absoluteFill}
             pointerEvents="none"
