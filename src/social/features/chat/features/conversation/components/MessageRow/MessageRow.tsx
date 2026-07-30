@@ -45,6 +45,8 @@ type MessageRowProps = {
   bubbleHandlers?: BubbleHandlers;
   /** Viewer moderates this channel — unlocks Delete on other people's messages. */
   viewerIsModerator?: boolean;
+  /** Local preview for an in-flight or failed upload (see MessageList). */
+  localPreviewUrl?: string;
 };
 
 // 4. Named function component
@@ -62,6 +64,7 @@ export function MessageRow({
   onSeeMore,
   bubbleHandlers,
   viewerIsModerator = false,
+  localPreviewUrl,
 }: MessageRowProps) {
   const { styles } = useStyles();
   const sendingLabel = useString('amity_chat_sending_status');
@@ -170,6 +173,10 @@ export function MessageRow({
             <AmityMessageBubble
               message={message}
               isUser={isUser}
+              // Without the preview a failed upload has no media source, and the
+              // bubble returns its loading placeholder before reaching the failed
+              // caption — the missing inline error in PDT-4128.
+              localPreviewUrl={localPreviewUrl}
               onOpenImage={onOpenImage}
               onOpenVideo={onOpenVideo}
               onSeeMore={onSeeMore}
@@ -198,6 +205,7 @@ export function MessageRow({
                   // passing it, onPressOut fires the moment the long-press is
                   // recognised and the bubble snaps back while the menu is up.
                   isActive={isOpen}
+                  localPreviewUrl={localPreviewUrl}
                   onLongPress={() => {
                     onOpenBubbleMenu?.(message);
                     openPopover();
