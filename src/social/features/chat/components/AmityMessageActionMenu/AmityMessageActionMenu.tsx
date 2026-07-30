@@ -95,7 +95,6 @@ export function buildMessageActionItems(
   const isText = message.dataType === 'text';
   const isCustom = message.dataType === 'custom';
   const isImage = message.dataType === 'image';
-  const isVideo = message.dataType === 'video';
   const isSynced = message.syncState === ('synced' as Amity.SyncState);
   const isDeleted = message.isDeleted === true;
   const isActive = isSynced && !isDeleted;
@@ -128,7 +127,10 @@ export function buildMessageActionItems(
       icon: 'arrow-down-to-bracket-r',
       label: resolveString('amity_chat_action_save'),
       onPress: handlers.onSave,
-      visible: (isImage || isVideo) && isActive,
+      // PDT-4127: Save is hidden for video for this release (saving is affected by
+      // play/pause, and the livestream side needs a backend fix). Image save stays.
+      // Matches web dba25aa77, which narrowed this from `isImage || isVideo`.
+      visible: isImage && isActive,
     },
     {
       key: 'unreport',
