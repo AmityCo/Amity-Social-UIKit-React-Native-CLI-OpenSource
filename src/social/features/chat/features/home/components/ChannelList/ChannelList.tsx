@@ -167,7 +167,7 @@ function PushDisabledBanner() {
       <AmityIcon
         name="bell-slash-r"
         size={18}
-        tokenColor={AmityColorToken.IconBannerGreyBGDescriptionGeneral}
+        tokenColor={AmityColorToken.IconBannerSubdueDescriptionGeneral}
       />
       <Typography variant="caption" style={styles.pushBannerText}>
         {label}

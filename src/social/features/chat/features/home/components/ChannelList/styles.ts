@@ -27,7 +27,7 @@ export const useStyles = () => {
       backgroundColor: token(AmityColorToken.SurfaceBannerSubdueGeneral),
     },
     pushBannerText: {
-      color: token(AmityColorToken.TextBannerGreyBGTextDescriptionGeneral),
+      color: token(AmityColorToken.TextBannerSubdueTextDescriptionGeneral),
     },
     list: {
       flex: 1,

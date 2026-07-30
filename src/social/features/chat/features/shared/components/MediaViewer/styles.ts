@@ -14,9 +14,9 @@ export const useStyles = () => {
   const styles = StyleSheet.create({
     overlay: {
       flex: 1,
-      // Web .mediaViewer__overlay: background #000 — solid, so no chat content
-      // shows through. Was SurfaceBadgeSemanticBadgeGeneralDuration (#00000099,
-      // 60% black), an unrelated badge token that left the backdrop translucent.
+      // Web .mediaViewer__overlay is solid black, so no chat content shows
+      // through. This used to be SurfaceBadgeSemanticBadgeGeneralDuration, an
+      // unrelated badge token at 60% black that left the backdrop translucent.
       backgroundColor: 'rgb(0, 0, 0)',
     },
     stage: {
@@ -35,8 +35,8 @@ export const useStyles = () => {
       justifyContent: 'flex-start',
       padding: 16,
       // Web .mediaViewer__topBar/__bottomBar: rgb(0 0 0 / 50%). The previous
-      // badge token (#00000080) resolved to the same 50%, but expressing it as a
-      // literal matches ImageViewer (3b2e546c) and drops the unrelated token.
+      // badge token resolved to the same 50%, but expressing it as a literal
+      // matches ImageViewer (3b2e546c) and drops the unrelated token.
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       zIndex: 3,
     },
@@ -50,8 +50,8 @@ export const useStyles = () => {
       justifyContent: 'space-between',
       padding: 16,
       // Web .mediaViewer__topBar/__bottomBar: rgb(0 0 0 / 50%). The previous
-      // badge token (#00000080) resolved to the same 50%, but expressing it as a
-      // literal matches ImageViewer (3b2e546c) and drops the unrelated token.
+      // badge token resolved to the same 50%, but expressing it as a literal
+      // matches ImageViewer (3b2e546c) and drops the unrelated token.
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       zIndex: 3,
     },

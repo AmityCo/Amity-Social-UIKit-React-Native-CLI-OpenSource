@@ -13,8 +13,8 @@ export const useStyles = (size: SpinnerSize) => {
 
   return {
     // Web arc uses --asc-color-surface-loaders-spinner-icon; the RN token set
-    // exposes SurfaceLoadersSpinnerLoader (no ...Icon), which is the same slot.
-    color: token(AmityColorToken.SurfaceLoadersSpinnerLoader),
+    // exposes SurfaceLoadersSpinnerPrimaryIcon (no ...Icon), which is the same slot.
+    color: token(AmityColorToken.SurfaceLoadersSpinnerPrimaryIcon),
     dimension: DIMENSION[size],
     token,
   };
