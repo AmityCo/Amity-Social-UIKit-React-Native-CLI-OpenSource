@@ -55,6 +55,13 @@ export const useStyles = () => {
     // minus its 16 side padding — the measuring probe fills this container, so a
     // width that collapsed to the bars' intrinsic size would make it count lines
     // for the wrong width.
+    // The off-screen line-count probe. Absolutely filled so it inherits the
+    // container's width (the measurement depends on width, not height), and fully
+    // transparent — opacity does not affect layout, so onTextLayout still fires.
+    textProbe: {
+      ...StyleSheet.absoluteFillObject,
+      opacity: 0,
+    },
     textSkeleton: {
       paddingTop: 10,
       paddingHorizontal: 16,

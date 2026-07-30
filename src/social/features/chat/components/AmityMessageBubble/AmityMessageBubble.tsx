@@ -13,7 +13,6 @@ import {
   Image,
   Linking,
   Pressable,
-  StyleSheet,
   Text,
   View,
   type StyleProp,
@@ -344,15 +343,18 @@ function TextBubble({
             )}
           </Text>
         )}
-        {/* The probe itself: an unclamped copy laid out once, off screen, purely
-            to count lines — RN's stand-in for web's scrollHeight/clientHeight
-            check. It must be wrapped in a View to be made touch-transparent:
-            pointerEvents on a Text is ignored on Android (TouchTargetHelper only
-            honours it on a ReactViewGroup), and an absolutely-filling Text would
-            otherwise swallow the bubble's long-press. Unmounted once answered. */}
+        {/* The probe: an unclamped copy laid out once purely to count lines —
+            RN's stand-in for web's scrollHeight/clientHeight check. It must be
+            invisible (opacity 0, which does not affect layout so onTextLayout
+            still fires) or it draws over whatever is showing; it only went
+            unnoticed before because it overlapped identical text. The wrapping
+            View is what carries pointerEvents: on a Text that prop is ignored on
+            Android (TouchTargetHelper honours it only on a ReactViewGroup), so an
+            absolutely-filling Text would swallow the bubble's long-press.
+            Unmounted once answered. */}
         {mightOverflow && overflowing === null ? (
           <View
-            style={StyleSheet.absoluteFill}
+            style={styles.textProbe}
             pointerEvents="none"
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
