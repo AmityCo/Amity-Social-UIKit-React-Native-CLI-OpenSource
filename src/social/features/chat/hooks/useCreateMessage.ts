@@ -42,12 +42,16 @@ export const useCreateMessage = ({
     },
     onError: (err) => {
       const { message } = err;
-      // LEADS WEB (PDT-4160): web's PR 1823 took the V2 copy for the blocked-word
-      // and blocked-link toasts but left this generic create-failure string on V1
-      // ("Your message wasn't sent."). RN follows the V2 Designer column
-      // (19 Nov 2025) here too, since the copy spec outranks the port for wording.
-      // Copy spec V2: the create-message failure reads "Failed to send message.
-      // Please try again." — amity_chat_message_failed_to_send.
+      // Uses the chat string, not the shared amity_common_label_message_not_sent
+      // ("Your message wasn't sent." — the V1 wording, and shared with other
+      // modules so not rewordable from a chat ticket).
+      //
+      // NOTE: copy spec V2 lists `failed / create / message` as "Failed to send
+      // message. Please try again.", but that sentence does NOT belong on this
+      // key: amity_chat_message_failed_to_send is the message-bubble caption, and
+      // both web and the Figma node for that caption read exactly "Failed to send
+      // message." So V2's second sentence targets some other surface — needs
+      // design/QA to say which before it is applied anywhere.
       // The old default was the shared amity_common_label_message_not_sent
       // ("Your message wasn't sent."), still V1 wording and used by other
       // modules, so it is left alone rather than reworded from a chat ticket.
