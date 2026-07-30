@@ -40,7 +40,7 @@ export function WaitingForNetwork() {
   return (
     <View style={styles.waitingForNetwork}>
       <Loader.Spinner size="sm" />
-      <Typography variant="caption" style={styles.text}>
+      <Typography variant="caption" style={styles.text} numberOfLines={1}>
         {label}
       </Typography>
     </View>

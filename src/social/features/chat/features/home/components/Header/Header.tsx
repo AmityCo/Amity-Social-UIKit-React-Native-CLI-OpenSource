@@ -25,7 +25,9 @@ export function Header() {
       <Typography variant="headline" style={styles.title} numberOfLines={1}>
         {title}
       </Typography>
-      <WaitingForNetwork />
+      <View style={styles.networkSlot}>
+        <WaitingForNetwork />
+      </View>
       <View style={styles.actions}>
         <SearchButton />
         <CreateChatMenu enabledChannelTypes={['conversation', 'community']} />
