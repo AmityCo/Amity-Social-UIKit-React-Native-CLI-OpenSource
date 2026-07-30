@@ -37,6 +37,12 @@ export type IconButtonProps = {
   accessibilityLabel?: string;
   /** Layout-only override (e.g. absolute positioning at the call site). */
   style?: StyleProp<ViewStyle>;
+  /**
+   * Glyph size override, for the cases where web sizes the icon independently of
+   * the button via `iconClassName` (e.g. MessageRow's error button: a 16px glyph
+   * inside a 24px button). Omit to keep the size-derived default.
+   */
+  iconSize?: number;
 };
 
 // 5. Named function component
@@ -49,6 +55,7 @@ export function Icon({
   onPress,
   accessibilityLabel,
   style,
+  iconSize,
 }: IconButtonProps) {
   const { styles, palette, glyph } = useStyles(styleType, hierarchy, size);
 
@@ -71,7 +78,7 @@ export function Icon({
       {({ pressed }) => (
         <AmityIcon
           name={icon}
-          size={glyph}
+          size={iconSize ?? glyph}
           color={stateFor(pressed).iconColor}
         />
       )}

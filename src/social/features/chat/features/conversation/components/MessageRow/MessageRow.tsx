@@ -144,6 +144,15 @@ export function MessageRow({
               styleType="transparent"
               hierarchy="primary"
               size={24}
+              // Web sizes this glyph independently of the button:
+              // .messageRow__errorIcon is 1rem inside a 24px button. RN's
+              // size-derived glyph for 24 is 24 (padding 0), so it rendered 50%
+              // too large without this override.
+              iconSize={16}
+              // Web .messageRow__errorButton overrides the row's flex-end with
+              // align-self: center, so the button sits level with the middle of
+              // the bubble rather than its bottom edge.
+              style={styles.failedButton}
               onPress={() => onOpenFailedSheet?.(message)}
               accessibilityLabel="Message failed to send"
             />
