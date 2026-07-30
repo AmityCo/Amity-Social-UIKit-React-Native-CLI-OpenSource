@@ -43,10 +43,12 @@ export function useFailedMessageSheet({
     useBottomSheet();
   const { error: errorToast } = useChatNotifications();
   const { deleteMessage } = useDeleteMessage();
+  // LEADS WEB (deaad473): web's requestResend has no onError, so a resend that
+  // fails again is silent there. RN surfaces it.
   // useCreateMessage maps the SDK error to localized copy but only through its
   // onError callback. Nothing passed one, so a resend that failed again was
-  // completely silent — and mutateAsync's rejection went unhandled on top.
-  // Web doesn't toast here either; this leads web rather than porting it.
+  // completely silent here too — and mutateAsync's rejection went unhandled on
+  // top. Revisit if web adds its own handling, so the two don't diverge further.
   const { createMessage } = useCreateMessage({
     onError: (errorMsg) => errorToast({ content: errorMsg }),
   });

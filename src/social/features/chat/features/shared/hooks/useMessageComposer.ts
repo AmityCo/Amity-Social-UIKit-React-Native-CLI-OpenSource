@@ -133,6 +133,12 @@ type Notify = {
 };
 
 // Inlined RN equivalent of web `handleTextMessageError`.
+// LEADS WEB (PDT-4160): the two strings resolved below — amity_chat_toast_banned_word
+// and amity_chat_toast_link_not_allow — carry the V2 Designer copy ("…contains an
+// inappropriate word." / "…contains a link that's not allowed."). Web is still on the
+// V1 "…contained a blocked word." wording. The values live in
+// core/localization/defaults/{en,th}.json, which cannot hold a comment, so the
+// divergence is recorded here at the call site.
 function handleTextMessageError(error: unknown, notify: Notify): void {
   const message = error instanceof Error ? error.message : String(error);
   if (
