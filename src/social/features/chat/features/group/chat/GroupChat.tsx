@@ -103,6 +103,7 @@ export function GroupChat({
           isLoadingFirstPage={c.isLoadingFirstPage}
           onSeeMore={c.openSeeMore}
           pendingUploads={c.composer.pendingUploads}
+          onMediaLoaded={c.composer.handleMediaLoaded}
           // PDT-4155 (web PR 1818): only group channels have moderators, so web
           // threads isModerator from useGroupChat and the 1:1 Chat does not.
           viewerIsModerator={c.isModerator}

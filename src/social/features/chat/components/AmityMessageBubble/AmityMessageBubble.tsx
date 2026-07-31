@@ -8,7 +8,7 @@
 // caption, and a flat 10-line clamp.
 
 // 1. React / RN imports
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import {
   Image,
   Linking,
@@ -137,6 +137,23 @@ type AmityMessageBubbleProps = {
   onOpenVideo?: (message: Amity.Message) => void;
   /** Local file uri shown optimistically while the media uploads. */
   localPreviewUrl?: string;
+  /**
+   * The media is still in flight. Derived from syncState by MessageRow — NOT
+   * from `localPreviewUrl`, which outlives the upload: the preview is kept as
+   * the display source after the message syncs so the bubble doesn't flash back
+   * to a spinner while the remote url warms. Gating the overlay/tap/long-press
+   * on the preview alone left the sender's own image stuck under a spinner and
+   * permanently uninteractive once it had synced.
+   */
+  isUploading?: boolean;
+  /**
+   * The remote media finished loading, so the local preview can be dropped.
+   * Web renders a hidden `<img>`/`<video>` of the remote url whose load event
+   * fires this; RN uses `Image.prefetch` for images and a hidden `<Video>` for
+   * videos (see the preloaders below) — same purpose: warm the remote source
+   * BEFORE swapping, so the bubble never flashes an empty/loading frame.
+   */
+  onMediaLoaded?: (fileId: string) => void;
   /** Cancel an in-flight upload (shown on the upload overlay). */
   onCancelUpload?: () => void;
   /** Open the full-text "see more" screen for long messages. */
@@ -183,6 +200,8 @@ export function AmityMessageBubble({
   onOpenImage,
   onOpenVideo,
   localPreviewUrl,
+  isUploading = false,
+  onMediaLoaded,
   onCancelUpload,
   onSeeMore,
   isActive = false,
@@ -200,6 +219,8 @@ export function AmityMessageBubble({
           onOpenImage={onOpenImage}
           onLongPress={onLongPress}
           localPreviewUrl={localPreviewUrl}
+          isUploading={isUploading}
+          onMediaLoaded={onMediaLoaded}
           onCancelUpload={onCancelUpload}
         />
       );
@@ -211,6 +232,8 @@ export function AmityMessageBubble({
           onOpenVideo={onOpenVideo}
           onLongPress={onLongPress}
           localPreviewUrl={localPreviewUrl}
+          isUploading={isUploading}
+          onMediaLoaded={onMediaLoaded}
           onCancelUpload={onCancelUpload}
         />
       );
@@ -422,6 +445,8 @@ type ImageBubbleProps = {
   onOpenImage?: (url: string, message: Amity.Message) => void;
   onLongPress?: (message: Amity.Message) => void;
   localPreviewUrl?: string;
+  isUploading?: boolean;
+  onMediaLoaded?: (fileId: string) => void;
   onCancelUpload?: () => void;
 };
 
@@ -431,6 +456,8 @@ function ImageBubble({
   onOpenImage,
   onLongPress,
   localPreviewUrl,
+  isUploading = false,
+  onMediaLoaded,
   onCancelUpload,
 }: ImageBubbleProps) {
   const { styles } = useStyles();
@@ -441,10 +468,36 @@ function ImageBubble({
   const [pressed, setPressed] = useState(false);
   const [hasLoadError, setHasLoadError] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [preloaded, setPreloaded] = useState(false);
 
   const isFailed = isErrorState(message);
   const displaySrc = localPreviewUrl ?? mediumUrl;
   const openUrl = largeUrl ?? mediumUrl;
+
+  // Web renders a hidden <img src={mediumUrl} onLoad={onMediaLoaded}> next to the
+  // preview: it warms the remote image, and only once it has decoded does the
+  // pending upload (and with it the preview) get dropped, so the swap from local
+  // file → CDN url is invisible. RN's equivalent is Image.prefetch, which fills
+  // the same image cache the <Image> below reads from — no extra view needed.
+  // `preloaded` then suppresses the remote-download spinner for the swap, since
+  // changing `source` resets `loaded` even when the bitmap is already cached.
+  useEffect(() => {
+    if (!localPreviewUrl || !mediumUrl || !fileId || !onMediaLoaded)
+      return undefined;
+    let cancelled = false;
+    Image.prefetch(mediumUrl)
+      .then(() => {
+        if (cancelled) return;
+        setPreloaded(true);
+        onMediaLoaded(fileId);
+      })
+      // A prefetch failure must not strand the preview: the <Image> retries the
+      // same url on its own, so just leave the pending upload in place.
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [localPreviewUrl, mediumUrl, fileId, onMediaLoaded]);
 
   if (!displaySrc) {
     return (
@@ -466,8 +519,8 @@ function ImageBubble({
     );
   }
 
-  const showUploadOverlay = !!localPreviewUrl && !isFailed;
-  const canOpen = !!onOpenImage && !!openUrl && !isFailed && !localPreviewUrl;
+  const showUploadOverlay = isUploading && !isFailed;
+  const canOpen = !!onOpenImage && !!openUrl && !isFailed && !isUploading;
   const showFailedCaption = showsFailedCaption(isFailed);
 
   const bubble = (
@@ -479,7 +532,7 @@ function ImageBubble({
       onPressOut={() => setPressed(false)}
       onPress={canOpen ? () => onOpenImage!(openUrl!, message) : undefined}
       onLongPress={
-        isFailed || !!localPreviewUrl || !onLongPress
+        isFailed || isUploading || !onLongPress
           ? undefined
           : () => onLongPress(message)
       }
@@ -496,7 +549,7 @@ function ImageBubble({
           remote source downloads, so overlay a spinner on the media-loading surface
           until it loads. Skipped for a local preview (that path shows the upload
           overlay instead). RN-specific adaptation of web's image loading state. */}
-      {!loaded && !localPreviewUrl ? (
+      {!loaded && !localPreviewUrl && !preloaded ? (
         <View style={styles.mediaLoadingOverlay}>
           <Loader.Spinner size="lg" />
         </View>
@@ -528,6 +581,8 @@ type VideoBubbleProps = {
   onOpenVideo?: (message: Amity.Message) => void;
   onLongPress?: (message: Amity.Message) => void;
   localPreviewUrl?: string;
+  isUploading?: boolean;
+  onMediaLoaded?: (fileId: string) => void;
   onCancelUpload?: () => void;
 };
 
@@ -537,6 +592,8 @@ function VideoBubble({
   onOpenVideo,
   onLongPress,
   localPreviewUrl,
+  isUploading = false,
+  onMediaLoaded,
   onCancelUpload,
 }: VideoBubbleProps) {
   const { styles } = useStyles();
@@ -556,8 +613,8 @@ function VideoBubble({
     );
   }
 
-  const showUploadOverlay = !!localPreviewUrl && !isFailed;
-  const canOpen = !!onOpenVideo && !isFailed && !localPreviewUrl;
+  const showUploadOverlay = isUploading && !isFailed;
+  const canOpen = !!onOpenVideo && !isFailed && !isUploading;
   const showFailedCaption = showsFailedCaption(isFailed);
 
   const bubble = (
@@ -569,7 +626,7 @@ function VideoBubble({
       onPressOut={() => setPressed(false)}
       onPress={canOpen ? () => onOpenVideo!(message) : undefined}
       onLongPress={
-        isFailed || !!localPreviewUrl || !onLongPress
+        isFailed || isUploading || !onLongPress
           ? undefined
           : () => onLongPress(message)
       }
@@ -596,6 +653,24 @@ function VideoBubble({
           controls={false}
         />
       </View>
+      {/* Web's hidden preload <video src={videoUrl} onLoadedMetadata={...}>: warm
+          the remote video so the pending upload (and its preview) is only dropped
+          once the CDN source can render, otherwise the swap shows a black frame
+          while the remote stream opens. RN's <Video onLoad> is the onLoadedMetadata
+          equivalent. Mounted only in the narrow preview+remote window, and wrapped
+          in a pointerEvents="none" View for the same touch reason as above. */}
+      {localPreviewUrl && videoUrl && fileId && onMediaLoaded ? (
+        <View style={styles.mediaPreload} pointerEvents="none">
+          <Video
+            source={{ uri: videoUrl }}
+            style={styles.mediaPreload}
+            paused
+            muted
+            controls={false}
+            onLoad={() => onMediaLoaded(fileId)}
+          />
+        </View>
+      ) : null}
       {showUploadOverlay ? (
         <MediaUploadOverlay onCancel={onCancelUpload} />
       ) : (

@@ -62,6 +62,14 @@ type MessageListProps = {
    * bubble short-circuits to the loading placeholder, hiding its failed caption.
    */
   pendingUploads?: PendingUpload[];
+  /**
+   * The remote media for a just-uploaded file has finished loading, so its local
+   * preview can be dropped (web GroupChat → MessageList → MessageBubble
+   * `onMediaLoaded`). Without it a successful upload stays in `pendingUploads`
+   * for as long as the thread is open and the bubble keeps rendering the local
+   * file uri instead of the CDN url.
+   */
+  onMediaLoaded?: (fileId: string) => void;
 };
 
 const AT_BOTTOM_THRESHOLD = 48;
@@ -102,6 +110,7 @@ export function MessageList({
   bubbleHandlers,
   viewerIsModerator = false,
   pendingUploads,
+  onMediaLoaded,
 }: MessageListProps) {
   const { styles } = useStyles();
   const previews = useMemo(
@@ -192,6 +201,7 @@ export function MessageList({
             <MessageRow
               message={message}
               localPreviewUrl={localPreviewUrl}
+              onMediaLoaded={onMediaLoaded}
               isUser={isUser}
               isGroupChat={isGroupChat}
               currentUserId={currentUserId}
