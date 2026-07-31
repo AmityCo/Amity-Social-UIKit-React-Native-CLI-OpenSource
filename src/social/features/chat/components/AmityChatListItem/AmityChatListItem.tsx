@@ -101,8 +101,9 @@ export function AmityChatListItem({
   const isUserDeleted = Boolean(otherUser?.isDeleted);
   const isModerator = hasModeratorRole(otherMember?.roles);
 
-  // Resolve the leading avatar image from whichever fileId applies. Called once,
-  // unconditionally, to keep hook order stable across channel types.
+  // Resolve the leading avatar image. For a conversation it's the OTHER
+  // participant's avatar (their avatarFileId), else the channel avatar. Called
+  // once, unconditionally, to keep hook order stable across channel types.
   const avatarFileId = isConversation
     ? otherUser?.avatarFileId
     : channel.avatarFileId;
@@ -280,7 +281,7 @@ function MessagePreview({
     return (
       <View style={styles.previewWithIcon}>
         <AmityIcon name="trash-s" size={PREVIEW_ICON_SIZE} color={iconColor} />
-        <Typography style={styles.preview} numberOfLines={1}>
+        <Typography style={styles.preview} numberOfLines={2}>
           {previewDeletedLabel}
         </Typography>
       </View>
@@ -294,7 +295,7 @@ function MessagePreview({
     return (
       <View style={styles.previewWithIcon}>
         <AmityIcon name={iconName} size={PREVIEW_ICON_SIZE} color={iconColor} />
-        <Typography style={styles.preview} numberOfLines={1}>
+        <Typography style={styles.preview} numberOfLines={2}>
           {text}
         </Typography>
       </View>
@@ -303,7 +304,7 @@ function MessagePreview({
 
   if (preview?.dataType !== 'text' || text.length === 0) {
     return (
-      <Typography style={styles.preview} numberOfLines={1}>
+      <Typography style={styles.preview} numberOfLines={2}>
         {text}
       </Typography>
     );
@@ -333,7 +334,7 @@ function MessagePreview({
 
   if (parts.length === 0) {
     return (
-      <Typography style={styles.preview} numberOfLines={1}>
+      <Typography style={styles.preview} numberOfLines={2}>
         {text}
       </Typography>
     );
@@ -344,7 +345,7 @@ function MessagePreview({
   }
 
   return (
-    <Typography style={styles.preview} numberOfLines={1}>
+    <Typography style={styles.preview} numberOfLines={2}>
       {parts}
     </Typography>
   );
@@ -383,8 +384,8 @@ function AmityChatListItemSkeleton() {
     <View style={styles.skeletonRow}>
       <Skeleton circle width={40} height={40} />
       <View style={styles.skeletonLines}>
-        <Skeleton width={140} height={10} borderRadius={5} />
-        <Skeleton width={100} height={10} borderRadius={5} />
+        <Skeleton width={140} height={10} borderRadius={12} />
+        <Skeleton width={100} height={10} borderRadius={12} />
       </View>
     </View>
   );

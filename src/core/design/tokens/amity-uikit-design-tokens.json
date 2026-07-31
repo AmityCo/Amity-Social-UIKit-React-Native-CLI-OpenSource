@@ -31,8 +31,8 @@
     "Primary/400": "{theme.primary_shade1_color}",
     "Primary/500": "{theme.primary_color}",
     "Primary/600": "{theme.primary_color}",
-    "Primary/700": "{theme.primary_color}",
-    "Primary/800": "{theme.primary_color}",
+    "Primary/700": "{theme.primary_shade4_color}",
+    "Primary/800": "{theme.primary_shade4_color}",
     "Primary/White": "{theme.white_color}",
     "Secondary/200": "{theme.neutral_grey_shade1_color}",
     "Secondary/250": "{theme.neutral_grey_shade1_color}",
@@ -993,6 +993,10 @@
       "light": "{Secondary/White}",
       "dark": "{Secondary/White}"
     },
+    "Icon/Loaders/Refresher/General": {
+      "light": "{Secondary/800}",
+      "dark": "{Secondary/200}"
+    },
     "Icon/Selection/RadioAtomic/Default": {
       "light": "{Information/White}",
       "dark": "{Primary/White}"
@@ -1077,27 +1081,27 @@
       "light": "{Secondary/200}",
       "dark": "{Secondary/300}"
     },
-    "Icon/Banner/WhiteBG/Leading/Icon/General": {
+    "Icon/Banner/Default/Leading/Icon/General": {
       "light": "{Information/800}",
       "dark": "{Secondary/White}"
     },
-    "Icon/Banner/WhiteBG/Description/General": {
+    "Icon/Banner/Default/Description/General": {
       "light": "{Secondary/700}",
       "dark": "{Secondary/500}"
     },
-    "Icon/Banner/WhiteBG/Trailing/Icon/General": {
+    "Icon/Banner/Default/Trailing/Icon/General": {
       "light": "{Information/800}",
       "dark": "{Secondary/White}"
     },
-    "Icon/Banner/GreyBG/Leading/Icon/General": {
+    "Icon/Banner/Subdue/Leading/Icon/General": {
       "light": "{Information/800}",
       "dark": "{Secondary/White}"
     },
-    "Icon/Banner/GreyBG/Description/General": {
+    "Icon/Banner/Subdue/Description/General": {
       "light": "{Secondary/400}",
       "dark": "{Secondary/500}"
     },
-    "Icon/Banner/GreyBG/Trailing/Icon/General": {
+    "Icon/Banner/Subdue/Trailing/Icon/General": {
       "light": "{Information/800}",
       "dark": "{Secondary/White}"
     },
@@ -1286,8 +1290,8 @@
       "dark": "{Secondary/800}"
     },
     "Surface/ChatBubble/Message/Inbound/Pressed": {
-      "light": "{Secondary/300}",
-      "dark": "{Secondary/700}"
+      "light": "{Secondary/400}",
+      "dark": "{Secondary/750}"
     },
     "Surface/ChatBubble/Message/Inbound/Deleted": {
       "light": "{Secondary/200}",
@@ -1653,21 +1657,33 @@
       "light": "{Secondary/750}",
       "dark": "{Secondary/750}"
     },
-    "Surface/Loaders/Spinner/Loader": {
+    "Surface/Loaders/Spinner/Primary/Icon": {
       "light": "{Primary/600}",
       "dark": "{Primary/500}"
     },
-    "Surface/Loaders/Spinner/Background": {
+    "Surface/Loaders/Spinner/Primary/Background": {
       "light": "{Primary/White}",
-      "dark": "{Primary/White}"
+      "dark": "{Secondary/White}"
+    },
+    "Surface/Loaders/Spinner/Secondary/Icon": {
+      "light": "{Secondary/White}",
+      "dark": "{Secondary/White}"
+    },
+    "Surface/Loaders/Spinner/Secondary/Background": {
+      "light": "{Background/Transparent/White/800}",
+      "dark": "{Background/Transparent/White/800}"
     },
     "Surface/Loaders/UploadController/Loader": {
       "light": "{Secondary/White}",
-      "dark": "{Primary/White}"
+      "dark": "{Secondary/White}"
     },
     "Surface/Loaders/UploadController/Background": {
       "light": "{Background/Transparent/White/800}",
-      "dark": "{Primary/White}"
+      "dark": "{Background/Transparent/White/800}"
+    },
+    "Surface/Loaders/Refresher/General": {
+      "light": "{Secondary/White}",
+      "dark": "{Secondary/800}"
     },
     "Surface/Selection/RadioAtomic/Inactive/Default": {
       "light": "{Secondary/White}",
@@ -1833,6 +1849,14 @@
       "light": "#F5F5F5",
       "dark": "{Secondary/750}"
     },
+    "Surface/Media/Overlay/TransparentBlack": {
+      "light": "{Background/Transparent/Black/500}",
+      "dark": "{Background/Transparent/Black/500}"
+    },
+    "Surface/Media/Overlay/TransparentWhite": {
+      "light": "{Background/Transparent/White/600}",
+      "dark": "{Background/Transparent/White/600}"
+    },
     "Surface/Progress/Bar/Filled": {
       "light": "{Secondary/White}",
       "dark": "{Secondary/White}"
@@ -1927,7 +1951,7 @@
     },
     "Surface/SkeletonEffect/Default": {
       "light": "{Secondary/200}",
-      "dark": "{Secondary/700}"
+      "dark": "{Secondary/500}"
     },
     "Text/Avatar/Atomic/General": {
       "light": "{Information/White}",
@@ -1961,51 +1985,51 @@
       "light": "{Primary/500}",
       "dark": "{Primary/500}"
     },
-    "Text/Banner/WhiteBG/Header/General": {
+    "Text/Banner/Default/Header/General": {
       "light": "{Information/800}",
       "dark": "{Information/White}"
     },
-    "Text/Banner/WhiteBG/Subhead/General": {
+    "Text/Banner/Default/Subhead/General": {
       "light": "{Information/500}",
       "dark": "{Information/White}"
     },
-    "Text/Banner/WhiteBG/TextDescription/General": {
+    "Text/Banner/Default/TextDescription/General": {
       "light": "{Information/700}",
       "dark": "{Information/300}"
     },
-    "Text/Banner/WhiteBG/Overline/General": {
+    "Text/Banner/Default/Overline/General": {
       "light": "{Information/800}",
       "dark": "{Information/White}"
     },
-    "Text/Banner/WhiteBG/Trailing/Subtext/General": {
+    "Text/Banner/Default/Trailing/Subtext/General": {
       "light": "{Information/500}",
       "dark": "{Information/300}"
     },
-    "Text/Banner/WhiteBG/Trailing/Text/General": {
+    "Text/Banner/Default/Trailing/Text/General": {
       "light": "{Information/500}",
       "dark": "{Information/300}"
     },
-    "Text/Banner/GreyBG/Header/General": {
+    "Text/Banner/Subdue/Header/General": {
       "light": "{Information/800}",
       "dark": "{Information/White}"
     },
-    "Text/Banner/GreyBG/Subhead/General": {
+    "Text/Banner/Subdue/Subhead/General": {
       "light": "{Information/500}",
       "dark": "{Information/White}"
     },
-    "Text/Banner/GreyBG/TextDescription/General": {
+    "Text/Banner/Subdue/TextDescription/General": {
       "light": "{Information/700}",
       "dark": "{Information/300}"
     },
-    "Text/Banner/GreyBG/Overline/General": {
+    "Text/Banner/Subdue/Overline/General": {
       "light": "{Information/800}",
       "dark": "{Information/White}"
     },
-    "Text/Banner/GreyBG/Trailing/Subtext/General": {
+    "Text/Banner/Subdue/Trailing/Subtext/General": {
       "light": "{Information/500}",
       "dark": "{Information/300}"
     },
-    "Text/Banner/GreyBG/Trailing/Text/General": {
+    "Text/Banner/Subdue/Trailing/Text/General": {
       "light": "{Information/500}",
       "dark": "{Information/300}"
     },

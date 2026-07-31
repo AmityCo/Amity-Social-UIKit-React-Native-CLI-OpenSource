@@ -15,6 +15,10 @@ import { ScrollToLatestButton } from '../../../shared/components/ScrollToLatestB
 import { NewMessageNotification } from '../../../shared/components/NewMessageNotification';
 import { Loader } from '../../../../../../../core/design/atoms/Loader';
 import type { ChatItem } from '../../../../utils/groupMessagesByDate';
+import {
+  isSyntheticPendingMessage,
+  type PendingUpload,
+} from '../../../shared/hooks/useMessageComposer';
 import { useStyles } from './styles';
 
 // 3. Types
@@ -49,9 +53,32 @@ type MessageListProps = {
   onOpenReactorList?: (message: Amity.Message) => void;
   onSeeMore?: (text: string, title?: string) => void;
   bubbleHandlers?: BubbleHandlers;
+  /** Viewer moderates this channel — unlocks Delete on other people's messages. */
+  viewerIsModerator?: boolean;
+  /**
+   * In-flight/failed uploads, used to give each media bubble its local preview.
+   * Web derives the same thing in its MessageList (pendingPreviewByClientId /
+   * ByFileId) — without it a failed upload has no image source at all and the
+   * bubble short-circuits to the loading placeholder, hiding its failed caption.
+   */
+  pendingUploads?: PendingUpload[];
 };
 
 const AT_BOTTOM_THRESHOLD = 48;
+
+/** Web MessageList: pendingPreviewByClientId + pendingPreviewByFileId. A synthetic
+ *  message is matched by its client id; once the upload has a fileId the real
+ *  message takes over and is matched by that instead. */
+function buildPreviewMaps(pendingUploads: PendingUpload[] | undefined) {
+  const byClientId = new Map<string, string>();
+  const byFileId = new Map<string, string>();
+  for (const p of pendingUploads ?? []) {
+    if (!p.previewUrl) continue;
+    byClientId.set(p.clientId, p.previewUrl);
+    if (p.fileId) byFileId.set(p.fileId, p.previewUrl);
+  }
+  return { byClientId, byFileId };
+}
 
 // 4. Named function component
 export function MessageList({
@@ -73,8 +100,14 @@ export function MessageList({
   onOpenReactorList,
   onSeeMore,
   bubbleHandlers,
+  viewerIsModerator = false,
+  pendingUploads,
 }: MessageListProps) {
   const { styles } = useStyles();
+  const previews = useMemo(
+    () => buildPreviewMaps(pendingUploads),
+    [pendingUploads]
+  );
   const listRef = useRef<FlatList<ChatItem>>(null);
 
   // Final guard: never hand the FlatList two items with the same key (React throws
@@ -147,9 +180,18 @@ export function MessageList({
           if (item.kind === 'date') return <DateSeparator label={item.label} />;
           const { message } = item;
           const isUser = !!currentUserId && message.creatorId === currentUserId;
+          const messageFileId =
+            (message.data as { fileId?: string } | undefined)?.fileId ??
+            (message as unknown as { fileId?: string }).fileId;
+          const localPreviewUrl = isSyntheticPendingMessage(message)
+            ? previews.byClientId.get(message.__syntheticClientId)
+            : messageFileId
+            ? previews.byFileId.get(messageFileId)
+            : undefined;
           return (
             <MessageRow
               message={message}
+              localPreviewUrl={localPreviewUrl}
               isUser={isUser}
               isGroupChat={isGroupChat}
               currentUserId={currentUserId}
@@ -165,6 +207,7 @@ export function MessageList({
               onOpenReactorList={onOpenReactorList}
               onSeeMore={onSeeMore}
               bubbleHandlers={bubbleHandlers}
+              viewerIsModerator={viewerIsModerator}
             />
           );
         }}

@@ -13,8 +13,8 @@ import ImageView from 'react-native-image-viewing';
 // 3. Internal imports
 import { AmityIcon } from '../../../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-color-tokens';
-import { useToken } from '../../../../../../../core/design/theme/useToken';
 import { useString } from '../../../../../../../core/localization';
+import Toast from '../../../../../../components/Toast';
 import { useStyles } from './styles';
 
 // 4. Types
@@ -35,7 +35,6 @@ export function ImageViewer({
   onSave,
 }: ImageViewerProps) {
   const { styles } = useStyles();
-  const token = useToken();
   const deleteLabel = useString('amity_chat_option_delete');
   const saveLabel = useString('amity_chat_action_save');
 
@@ -48,9 +47,9 @@ export function ImageViewer({
       imageIndex={0}
       visible
       onRequestClose={onClose}
-      backgroundColor={token(
-        AmityColorToken.SurfaceBadgeSemanticBadgeGeneralDuration
-      )}
+      // Web MediaViewer overlay is solid black (.mediaViewer__overlay background);
+      // rgb() (no hex) keeps the repo's no-hex gate happy.
+      backgroundColor="rgb(0, 0, 0)"
       HeaderComponent={() => (
         <View style={styles.topBar}>
           <Pressable
@@ -69,51 +68,63 @@ export function ImageViewer({
           </Pressable>
         </View>
       )}
-      FooterComponent={
-        canDelete || canSave
-          ? () => (
-              <View style={styles.bottomBar}>
-                {canDelete ? (
-                  <Pressable
-                    style={styles.bottomIconButton}
-                    onPress={onDelete}
-                    accessibilityRole="button"
-                    accessibilityLabel={deleteLabel}
-                  >
-                    <AmityIcon
-                      name="trash-r"
-                      size={24}
-                      tokenColor={
-                        AmityColorToken.IconIconButtonTransparentPrimaryDefault
-                      }
-                    />
-                  </Pressable>
-                ) : (
-                  <View />
-                )}
+      // Always rendered: besides the action bar it hosts the chat toast. Save
+      // success/failure toasts fire while this Modal is open, and the global
+      // <Toast /> is mounted outside it (RN renders it beneath the native Modal
+      // layer), so a second instance lives here — it reads the same redux toast
+      // state, so only one pill is ever visible. It sits in the library's footer
+      // container, which slides away with the bars on tap-to-toggle; that is
+      // intended (bars hidden = "show me the image unobstructed"). Not a sibling
+      // <Modal>: stacked RN modals are unreliable on iOS.
+      FooterComponent={() => (
+        <>
+          <View pointerEvents="box-none" style={styles.toastLayer}>
+            <Toast />
+          </View>
 
-                {canSave ? (
-                  <Pressable
-                    style={styles.bottomIconButton}
-                    onPress={onSave}
-                    accessibilityRole="button"
-                    accessibilityLabel={saveLabel}
-                  >
-                    <AmityIcon
-                      name="arrow-down-to-bracket-r"
-                      size={24}
-                      tokenColor={
-                        AmityColorToken.IconIconButtonTransparentPrimaryDefault
-                      }
-                    />
-                  </Pressable>
-                ) : (
-                  <View />
-                )}
-              </View>
-            )
-          : undefined
-      }
+          {canDelete || canSave ? (
+            <View style={styles.bottomBar}>
+              {canDelete ? (
+                <Pressable
+                  style={styles.bottomIconButton}
+                  onPress={onDelete}
+                  accessibilityRole="button"
+                  accessibilityLabel={deleteLabel}
+                >
+                  <AmityIcon
+                    name="trash-r"
+                    size={24}
+                    tokenColor={
+                      AmityColorToken.IconIconButtonTransparentPrimaryDefault
+                    }
+                  />
+                </Pressable>
+              ) : (
+                <View />
+              )}
+
+              {canSave ? (
+                <Pressable
+                  style={styles.bottomIconButton}
+                  onPress={onSave}
+                  accessibilityRole="button"
+                  accessibilityLabel={saveLabel}
+                >
+                  <AmityIcon
+                    name="arrow-down-to-bracket-r"
+                    size={24}
+                    tokenColor={
+                      AmityColorToken.IconIconButtonTransparentPrimaryDefault
+                    }
+                  />
+                </Pressable>
+              ) : (
+                <View />
+              )}
+            </View>
+          ) : null}
+        </>
+      )}
     />
   );
 }

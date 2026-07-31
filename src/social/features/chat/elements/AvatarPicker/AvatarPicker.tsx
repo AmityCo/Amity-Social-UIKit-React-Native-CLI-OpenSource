@@ -63,7 +63,7 @@ export function AvatarPicker({
         ) : (
           <AmityIcon
             name="camera-r"
-            size={64}
+            size={48}
             tokenColor={AmityColorToken.IconAvatarDefault}
           />
         )}

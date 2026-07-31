@@ -33,6 +33,7 @@
     "test": "jest --passWithNoTests",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "check:chat-toasts": "node scripts/check-chat-toasts.mjs",
     "prepack": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
@@ -57,17 +58,18 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@amityco/ts-sdk-react-native": "^7.23.0",
+    "@amityco/ts-sdk-react-native": "7.24.1-a63fc29a.0",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.2.2",
     "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",
     "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-camera-roll/camera-roll": "^7.10.2",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/datetimepicker": "^8.4.4",
     "@react-native-community/eslint-config": "^3.0.2",
-    "@react-native-community/netinfo": "^11.4.1",
+    "@react-native-community/netinfo": "^11.5.2",
     "@react-native-firebase/app": "^20.1.0",
     "@react-native-firebase/messaging": "^20.1.0",
     "@react-native/babel-preset": "0.82.1",
@@ -116,15 +118,18 @@
     "*.{json,md}": "prettier --write"
   },
   "resolutions": {
-    "@types/react": "^19.1.0"
+    "@types/react": "^19.1.0",
+    "@react-native-community/netinfo": "11.5.2",
+    "@react-native-async-storage/async-storage": "2.2.0"
   },
   "peerDependencies": {
-    "@amityco/ts-sdk-react-native": "^7.23.0",
+    "@amityco/ts-sdk-react-native": "7.24.1-a63fc29a.0",
     "@livekit/react-native": "^2.9.6",
     "@livekit/react-native-webrtc": "^137.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
+    "@react-native-camera-roll/camera-roll": "^7.10.2",
     "@react-native-clipboard/clipboard": "^1.16.3",
-    "@react-native-community/netinfo": "^11.3.1",
+    "@react-native-community/netinfo": ">=11.5.0",
     "@react-native-firebase/app": "^20.1.0",
     "@react-native-firebase/messaging": "^20.1.0",
     "@react-navigation/native": "^7.1.8",
@@ -140,7 +145,6 @@
     "react-native-haptic-feedback": "^2.3.3",
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
-    "react-native-netinfo": "^1.1.0",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.18.0",
     "react-native-svg": "^15.15.1",

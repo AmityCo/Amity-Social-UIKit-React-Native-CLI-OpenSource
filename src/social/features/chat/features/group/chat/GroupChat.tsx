@@ -10,9 +10,9 @@ import { AmityMessageComposer } from '../../../components/AmityMessageComposer';
 import { ImageViewer } from '../../shared/components/ImageViewer';
 import { VideoPlayer } from '../../shared/components/VideoPlayer';
 import { MessageFullTextScreen } from '../../shared/components/MessageFullTextScreen';
+import { ContentReportReason } from '../../shared/components/ContentReportReason';
 import { MessageReactorListSheet } from '../../shared/components/MessageReactorListSheet';
 import { MutedBanner } from '../../shared/components/MutedBanner';
-import { WaitingForNetwork } from '../../../elements/WaitingForNetwork';
 import { MessageList } from '../../conversation/components/MessageList';
 import { Header } from './components/Header';
 import { BannedEmptyState } from './components/BannedEmptyState';
@@ -38,14 +38,20 @@ export function GroupChat({
   const { openBottomSheet, closeBottomSheet } = useBottomSheet();
 
   function openReactorList(message: Amity.Message) {
+    // Tall drawer — web presents this list in a ~90vh drawer. The sheet content
+    // needs an explicit height (see MessageReactorListSheet: @devvie's inner
+    // wrapper is auto-height, so a flex child collapses), so pass it down too.
+    const reactorSheetHeight = Math.round(
+      Dimensions.get('window').height * 0.7
+    );
     openBottomSheet({
-      // Tall drawer — web presents this list in a ~90vh drawer.
-      height: Math.round(Dimensions.get('window').height * 0.7),
+      height: reactorSheetHeight,
       content: (
         <MessageReactorListSheet
           messageId={message.messageId}
           initialMessage={message}
           onClose={closeBottomSheet}
+          sheetHeight={reactorSheetHeight}
         />
       ),
     });
@@ -77,7 +83,6 @@ export function GroupChat({
         onBack={onBack}
         onOpenSettings={c.handleOpenSettings}
       />
-      <WaitingForNetwork />
       <View style={{ flex: 1 }}>
         <MessageList
           items={c.items}
@@ -97,6 +102,10 @@ export function GroupChat({
           isLoading={c.isLoading}
           isLoadingFirstPage={c.isLoadingFirstPage}
           onSeeMore={c.openSeeMore}
+          pendingUploads={c.composer.pendingUploads}
+          // PDT-4155 (web PR 1818): only group channels have moderators, so web
+          // threads isModerator from useGroupChat and the 1:1 Chat does not.
+          viewerIsModerator={c.isModerator}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
             onReply: c.handleBubbleReply,
@@ -127,6 +136,13 @@ export function GroupChat({
           text={c.seeMore.text}
           title={c.seeMore.title}
           onClose={c.closeSeeMore}
+        />
+      ) : null}
+      {c.reportMessage ? (
+        <ContentReportReason
+          visible
+          message={c.reportMessage}
+          onClose={c.closeReport}
         />
       ) : null}
     </KeyboardAvoidingView>

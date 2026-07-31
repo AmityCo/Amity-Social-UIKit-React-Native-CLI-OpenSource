@@ -133,6 +133,10 @@ type Notify = {
 };
 
 // Inlined RN equivalent of web `handleTextMessageError`.
+// The two strings resolved below — amity_chat_toast_banned_word and
+// amity_chat_toast_link_not_allow — carry the V2 Designer copy. RN got there first;
+// web has since shipped the identical en + th values in PR 1823, so this is no
+// longer a divergence and the LEADS WEB marker that was here has been removed.
 function handleTextMessageError(error: unknown, notify: Notify): void {
   const message = error instanceof Error ? error.message : String(error);
   if (
@@ -213,9 +217,11 @@ export function useMessageComposer({
   const linkNotAllowedToast = useString('amity_chat_toast_link_not_allow');
 
   // RN toast/dialog bound to the web Notify shape used by handleTextMessageError.
+  // Web routes composer errors through useNotifications('chat') — the custom dark
+  // pill — so use variant 'custom' to match (e.g. the invalid-link error toast).
   const errorToast = useCallback(
     ({ content }: { content: string }) =>
-      showToast({ message: content, type: 'failed' }),
+      showToast({ message: content, type: 'failed', variant: 'custom' }),
     [showToast]
   );
   const info = useCallback(
@@ -405,24 +411,35 @@ export function useMessageComposer({
       return;
     }
 
-    await createMessageMutation(
-      {
-        subChannelId,
-        dataType: 'text',
-        data: { text: trimmed },
-        metadata,
-        mentionees,
-        ...(parentId ? { parentId } : {}),
-      },
-      {
-        onSuccess: () => {
-          onMessageCreated?.();
+    try {
+      await createMessageMutation(
+        {
+          subChannelId,
+          dataType: 'text',
+          data: { text: trimmed },
+          metadata,
+          mentionees,
+          ...(parentId ? { parentId } : {}),
         },
-        onError: (err) => {
-          handleTextMessageError(err, { errorToast, info });
-        },
-      }
-    );
+        {
+          onSuccess: () => {
+            onMessageCreated?.();
+          },
+          onError: (err) => {
+            // PDT-4033: the SDK createMessage optimistically inserts the message
+            // into the getMessages collection and keeps it with syncState 'error'
+            // on rejection, so the failed bubble is ALREADY shown by the live
+            // collection. We must NOT also append our own synthetic PendingText —
+            // that produced a DUPLICATE failed bubble. Just surface the toast.
+            handleTextMessageError(err, { errorToast, info });
+          },
+        }
+      );
+    } catch {
+      // mutateAsync rejects in addition to invoking onError above; the failure is
+      // already handled there (toast + the failed bubble), so swallow the
+      // rejection to avoid an unhandled-promise error.
+    }
   }, [
     text,
     enableMention,
@@ -465,6 +482,25 @@ export function useMessageComposer({
 
   const runMediaUpload = useCallback(
     async (pending: PendingUpload) => {
+      // PDT-4128: an oversize file has to surface as an inline failed bubble in
+      // the thread, not a toast. The check lives here rather than in
+      // handleSelectMedia so the pending bubble is already in the list and can
+      // simply be flipped to 'failed' — same move as web e08c3ed32. fileSize is
+      // optional on Asset, so only judge it when the picker reported one.
+      if (
+        typeof pending.file.fileSize === 'number' &&
+        pending.file.fileSize > COMPOSER_MAX_FILE_SIZE
+      ) {
+        setPendingUploads((prev) =>
+          prev.map((p) =>
+            p.clientId === pending.clientId
+              ? { ...p, status: 'failed', failureReason: 'generic' }
+              : p
+          )
+        );
+        return;
+      }
+
       try {
         const formData = toFormData(pending.file);
         const uploaded =
@@ -505,13 +541,19 @@ export function useMessageComposer({
           return;
         }
         const failureReason = classifyMediaError(err);
+        // Capture the caught value into a normal block const BEFORE the setState
+        // updater. Hermes doesn't reliably resolve a `catch` binding referenced
+        // inside a nested closure (this updater runs during render), which threw
+        // "Property 'err' doesn't exist"; a block const is captured correctly
+        // (note failureReason above works for exactly that reason).
+        const uploadError = err instanceof Error ? err : new Error(String(err));
         setPendingUploads((prev) =>
           prev.map((p) =>
             p.clientId === pending.clientId
               ? {
                   ...p,
                   status: 'failed',
-                  error: err instanceof Error ? err : new Error(String(err)),
+                  error: uploadError,
                   failureReason,
                 }
               : p
@@ -532,16 +574,6 @@ export function useMessageComposer({
       const isVideo = mime.startsWith('video/');
       if (!isImage && !isVideo) return;
 
-      if (
-        typeof asset.fileSize === 'number' &&
-        asset.fileSize > COMPOSER_MAX_FILE_SIZE
-      ) {
-        errorToast({
-          content: resolveString('amity_social_label_file_exceeds_max_upload'),
-        });
-        return;
-      }
-
       const previewUrl = asset.uri;
       const parentId = replyTo?.messageId;
       const pending: PendingUpload = {
@@ -561,7 +593,7 @@ export function useMessageComposer({
 
       await runMediaUpload(pending);
     },
-    [errorToast, runMediaUpload, onMessageCreated, replyTo]
+    [runMediaUpload, onMessageCreated, replyTo]
   );
 
   const handleRetryUpload = useCallback(

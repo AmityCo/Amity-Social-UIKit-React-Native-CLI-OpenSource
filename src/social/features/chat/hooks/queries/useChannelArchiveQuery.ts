@@ -35,8 +35,17 @@ export function useChannelArchiveQuery() {
 
   const archiveMutation = useMutation<Response, Error, ChannelArchivePayload>({
     mutationFn: ({ channelId }) => ChannelRepository.archiveChannel(channelId),
+    // PDT-4038: react-query PAUSES a mutation while offline instead of running it,
+    // so archiving with no connection silently queued and neither toast fired —
+    // then the queued call succeeded on reconnect and showed "Chat archived",
+    // which is the opposite of what QA expects. 'always' makes it run and fail now.
+    networkMode: 'always',
     onSuccess: () => {
-      showToast({ message: archivedSuccessToast, type: 'success' });
+      showToast({
+        message: archivedSuccessToast,
+        type: 'success',
+        variant: 'custom',
+      });
     },
     onError: (err) => {
       if (err.message?.includes('Archive limit exceeded')) {
@@ -45,7 +54,11 @@ export function useChannelArchiveQuery() {
         ]);
         return;
       }
-      showToast({ message: archiveErrorToast, type: 'failed' });
+      showToast({
+        message: archiveErrorToast,
+        type: 'failed',
+        variant: 'custom',
+      });
     },
   });
 
@@ -53,11 +66,21 @@ export function useChannelArchiveQuery() {
     {
       mutationFn: ({ channelId }) =>
         ChannelRepository.unarchiveChannel(channelId),
+      // PDT-4038: see the archive mutation above.
+      networkMode: 'always',
       onSuccess: () => {
-        showToast({ message: unarchiveSuccessToast, type: 'success' });
+        showToast({
+          message: unarchiveSuccessToast,
+          type: 'success',
+          variant: 'custom',
+        });
       },
       onError: () => {
-        showToast({ message: unarchiveErrorToast, type: 'failed' });
+        showToast({
+          message: unarchiveErrorToast,
+          type: 'failed',
+          variant: 'custom',
+        });
       },
     }
   );

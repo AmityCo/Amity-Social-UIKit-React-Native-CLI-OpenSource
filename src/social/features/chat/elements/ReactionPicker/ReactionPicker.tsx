@@ -80,9 +80,11 @@ export function ReactionPicker({
                       </Typography>
                     </View>
                   ) : null}
-                  {active || pressed ? (
-                    <View style={styles.activeBackground} />
-                  ) : null}
+                  {/* PDT-4143 (web PR 1822) narrowed this to the active state
+                      only — it used to light up on hover / touch-hover too, which
+                      made a reaction look already-selected while being pressed.
+                      The floating label above still follows the press. */}
+                  {active ? <View style={styles.activeBackground} /> : null}
                   <ReactionGlyph name={name} size={32} />
                 </View>
               )}

@@ -5,7 +5,7 @@
 // opens the shared bubble action menu.
 
 // 1. React / RN imports
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 // 2. Internal imports
 import useFile from '../../../../../../../core/hooks/useFile';
@@ -16,7 +16,7 @@ import { AmityMessageBubble } from '../../../../components/AmityMessageBubble';
 import { AmityMessageActionMenu } from '../../../../components/AmityMessageActionMenu';
 import { MessageReplyQuote } from '../../../shared/components/MessageReplyQuote';
 import { MessageReactionBadge } from '../../../shared/components/MessageReactionBadge';
-import { FailedToShow } from '../../../shared/components/FailedToShow';
+import { Button } from '../../../../../../../core/design/atoms/Button';
 import { formatMessageTime } from '../../../../utils/timestamp';
 import { useStyles } from './styles';
 
@@ -43,6 +43,10 @@ type MessageRowProps = {
   onOpenReactorList?: (message: Amity.Message) => void;
   onSeeMore?: (text: string, title?: string) => void;
   bubbleHandlers?: BubbleHandlers;
+  /** Viewer moderates this channel — unlocks Delete on other people's messages. */
+  viewerIsModerator?: boolean;
+  /** Local preview for an in-flight or failed upload (see MessageList). */
+  localPreviewUrl?: string;
 };
 
 // 4. Named function component
@@ -59,6 +63,8 @@ export function MessageRow({
   onOpenReactorList,
   onSeeMore,
   bubbleHandlers,
+  viewerIsModerator = false,
+  localPreviewUrl,
 }: MessageRowProps) {
   const { styles } = useStyles();
   const sendingLabel = useString('amity_chat_sending_status');
@@ -134,12 +140,52 @@ export function MessageRow({
 
         <View style={styles.bubbleRow}>
           {ownSide}
+          {isUser && isFailed ? (
+            // Web renders a failed message as the bubble + a small Button.Icon
+            // that opens the failed sheet (Resend/Delete), before the outbound
+            // bubble. Web's `Exclamation` glyph is a BARE solid exclamation (not
+            // circled) in a transparent/primary icon button — RN `exclamation-s`.
+            <Button.Icon
+              icon="exclamation-s"
+              styleType="transparent"
+              hierarchy="primary"
+              size={24}
+              // Web sizes this glyph independently of the button:
+              // .messageRow__errorIcon is 1rem inside a 24px button. RN's
+              // size-derived glyph for 24 is 24 (padding 0), so it rendered 50%
+              // too large without this override.
+              iconSize={16}
+              // Web .messageRow__errorButton overrides the row's flex-end with
+              // align-self: center, so the button sits level with the middle of
+              // the bubble rather than its bottom edge.
+              style={styles.failedButton}
+              onPress={() => onOpenFailedSheet?.(message)}
+              accessibilityLabel="Message failed to send"
+            />
+          ) : null}
           {isDeleted ? (
             <AmityMessageBubble message={message} isUser={isUser} />
+          ) : isFailed ? (
+            // A failed/synthetic message (never persisted, messageId === '') is
+            // not interactive — no action menu / reaction picker (which would
+            // subscribe on the empty messageId and crash). Web MessageRow renders
+            // a failed message as the bubble + a retry affordance only.
+            <AmityMessageBubble
+              message={message}
+              isUser={isUser}
+              // Without the preview a failed upload has no media source, and the
+              // bubble returns its loading placeholder before reaching the failed
+              // caption — the missing inline error in PDT-4128.
+              localPreviewUrl={localPreviewUrl}
+              onOpenImage={onOpenImage}
+              onOpenVideo={onOpenVideo}
+              onSeeMore={onSeeMore}
+            />
           ) : (
             <AmityMessageActionMenu
               message={message}
               currentUserId={currentUserId}
+              viewerIsModerator={viewerIsModerator}
               placement={isUser ? 'bottom right' : 'bottom left'}
               handlers={{
                 onEdit: bubbleHandlers?.onEdit ?? (() => {}),
@@ -149,10 +195,17 @@ export function MessageRow({
                 onSave: bubbleHandlers?.onSave ?? (() => {}),
                 onReport: bubbleHandlers?.onReport ?? (() => {}),
               }}
-              anchor={({ openPopover }) => (
+              anchor={({ isOpen, openPopover }) => (
                 <AmityMessageBubble
                   message={message}
                   isUser={isUser}
+                  // Web keeps the bubble in its pressed colour for as long as the
+                  // menu is open (Chat.tsx activeMessageId → isActive →
+                  // data-active). The Popover already tracks that state; without
+                  // passing it, onPressOut fires the moment the long-press is
+                  // recognised and the bubble snaps back while the menu is up.
+                  isActive={isOpen}
+                  localPreviewUrl={localPreviewUrl}
                   onLongPress={() => {
                     onOpenBubbleMenu?.(message);
                     openPopover();
@@ -167,19 +220,13 @@ export function MessageRow({
           {otherSide}
         </View>
 
-        {!isDeleted ? (
+        {!isDeleted && !isFailed ? (
           <View style={styles.reactionBadge}>
             <MessageReactionBadge
               message={message}
               onTap={() => onOpenReactorList?.(message)}
             />
           </View>
-        ) : null}
-
-        {isUser && isFailed ? (
-          <Pressable onPress={() => onOpenFailedSheet?.(message)}>
-            <FailedToShow />
-          </Pressable>
         ) : null}
       </View>
     </View>

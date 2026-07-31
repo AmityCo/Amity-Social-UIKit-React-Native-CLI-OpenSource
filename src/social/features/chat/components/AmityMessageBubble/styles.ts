@@ -50,6 +50,25 @@ export const useStyles = () => {
       fontSize: 14,
       lineHeight: 18,
     },
+    // Two-line skeleton shown while a long message's line count is measured.
+    // Carries the text bubble's padding, and a fixed width of 240 (bubble max)
+    // minus its 16 side padding — the measuring probe fills this container, so a
+    // width that collapsed to the bars' intrinsic size would make it count lines
+    // for the wrong width.
+    // The off-screen line-count probe. Absolutely filled so it inherits the
+    // container's width (the measurement depends on width, not height), and fully
+    // transparent — opacity does not affect layout, so onTextLayout still fires.
+    textProbe: {
+      ...StyleSheet.absoluteFillObject,
+      opacity: 0,
+    },
+    textSkeleton: {
+      paddingTop: 10,
+      paddingHorizontal: 16,
+      paddingBottom: 10,
+      width: 240 - 32,
+      gap: 8,
+    },
     textOwn: {
       color: token(AmityColorToken.TextChatBubbleOutboundMessagesDefault),
     },
@@ -94,11 +113,18 @@ export const useStyles = () => {
       color: token(AmityColorToken.TextChatBubbleInboundSeeMoreDefault),
     },
     // Mention span inside the text (web textBubble__mention, weight 500).
+    // Repeat the surrounding text's fontSize/lineHeight (14/18): the 500-weight
+    // mention <Text> otherwise renders taller than the 18px line box sized from
+    // the 14px body text and its bottom gets clipped (Android).
     mentionOwn: {
+      fontSize: 14,
+      lineHeight: 18,
       fontWeight: '500',
       color: token(AmityColorToken.TextChatBubbleOutboundMentionedDefault),
     },
     mentionOther: {
+      fontSize: 14,
+      lineHeight: 18,
       fontWeight: '500',
       color: token(AmityColorToken.TextChatBubbleInboundMentionedDefault),
     },

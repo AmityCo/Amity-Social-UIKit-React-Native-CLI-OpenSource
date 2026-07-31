@@ -96,10 +96,10 @@ export function useEditGroupMemberPermissions({
       } else {
         await ChannelRepository.unmuteChannel(channelId);
       }
-      showToast({ message: successToast, type: 'success' });
+      showToast({ message: successToast, type: 'success', variant: 'custom' });
       navigation.goBack();
     } catch {
-      showToast({ message: failedToast, type: 'failed' });
+      showToast({ message: failedToast, type: 'failed', variant: 'custom' });
     } finally {
       setIsSubmitting(false);
     }

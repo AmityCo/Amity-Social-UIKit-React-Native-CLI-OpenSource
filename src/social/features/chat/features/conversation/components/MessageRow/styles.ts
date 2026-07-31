@@ -54,6 +54,13 @@ export const useStyles = () => {
       alignItems: 'flex-end',
       gap: 8,
     },
+    // web .messageRow__errorButton: flex-shrink 0 + align-self center — the
+    // failed-message button opts out of the row's flex-end so it sits level with
+    // the middle of the bubble.
+    failedButton: {
+      flexShrink: 0,
+      alignSelf: 'center',
+    },
     // web messageRow__reactionBadge sits absolute at bottom:-0.875rem, overlapping
     // the bubble's bottom edge. RN approximates with a small negative margin (in-flow);
     // side alignment is inherited from content column (own → end, other → start).

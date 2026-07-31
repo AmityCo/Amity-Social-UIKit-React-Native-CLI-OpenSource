@@ -26,7 +26,7 @@ export function NotificationsDisabledBanner() {
         // Web uses icon-banner-subdue-description-general; SoT (717) lacks the Subdue
         // icon variant → color-identical GreyBG variant (same alias {Secondary/400}/
         // {Secondary/500}). Web slug allowlisted in check-fidelity.
-        color={token(AmityColorToken.IconBannerGreyBGDescriptionGeneral)}
+        color={token(AmityColorToken.IconBannerSubdueDescriptionGeneral)}
       />
       <Typography variant="caption" style={styles.text}>
         {text}

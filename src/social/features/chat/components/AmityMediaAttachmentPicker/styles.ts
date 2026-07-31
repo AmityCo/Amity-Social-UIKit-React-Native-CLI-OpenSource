@@ -53,6 +53,13 @@ export const useStyles = () => {
       textAlign: 'center',
       color: token(AmityColorToken.TextIconButtonLabelGeneral),
     },
+    // Android-only Photo/Video capture sheet. Matches the chat-sheet convention
+    // used by useFailedMessageSheet / AmityConversationChatUserActionComponent —
+    // the drawer Menu supplies no side padding of its own.
+    cameraSheet: {
+      paddingHorizontal: 16,
+      paddingBottom: 16,
+    },
   });
 
   return { styles, token };

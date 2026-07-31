@@ -1115,8 +1115,8 @@
   "amity_chat_bubble_link_preview_no_data": "ไม่มีข้อมูลที่จะแสดง",
   "amity_chat_see_more": "ดูเพิ่มเติม",
   "amity_chat_user_is_muted": "คุณถูกปิดเสียงแล้ว คุณจะไม่สามารถส่งข้อความได้",
-  "amity_chat_toast_banned_word": "ข้อความของคุณไม่ถูกส่ง เนื่องจากมีคำที่ถูกบล็อก",
-  "amity_chat_toast_link_not_allow": "ข้อความของคุณไม่ถูกส่ง เนื่องจากมีลิงก์ที่ไม่อนุญาต",
+  "amity_chat_toast_banned_word": "ข้อความของคุณไม่ถูกส่งเนื่องจากมีคำที่ไม่เหมาะสม",
+  "amity_chat_toast_link_not_allow": "ข้อความของคุณไม่ถูกส่งเนื่องจากมีลิงก์ที่ไม่ได้รับอนุญาต",
   "amity_chat_toast_reply_parent_deleted": "ข้อความนี้ไม่สามารถใช้งานได้อีกต่อไป",
   "amity_chat_reach_mention_limit_title": "กล่าวถึงผู้ใช้มากเกินไป",
   "amity_chat_reach_mention_limit_message": "คุณสามารถกล่าวถึงได้สูงสุด 30 ครั้งต่อข้อความ",
@@ -1154,6 +1154,12 @@
   "amity_chat_reply_video_label": "วิดีโอ",
   "amity_chat_media_camera": "กล้อง",
   "amity_chat_media_photo": "รูปภาพ",
+  "amity_chat_media_video": "วิดีโอ",
+  "amity_chat_permission_camera_title": "ต้องการสิทธิ์เข้าถึงกล้อง",
+  "amity_chat_permission_camera_detail": "กรุณาอนุญาตการเข้าถึงกล้องในการตั้งค่า",
+  "amity_chat_permission_microphone_title": "ต้องการสิทธิ์เข้าถึงไมโครโฟน",
+  "amity_chat_permission_microphone_detail": "กรุณาอนุญาตการเข้าถึงไมโครโฟนในการตั้งค่า",
+  "amity_chat_composer_camera_denied_open_settings": "เปิดการตั้งค่า",
   "amity_chat_media": "สื่อ",
   "amity_chat_member_you": "คุณ",
   "amity_chat_member_you_suffix": "(คุณ)",
@@ -1164,5 +1170,5 @@
   "amity_chat_notifications_title": "การแจ้งเตือน",
   "amity_chat_notifications_off": "ปิด",
   "amity_chat_notifications_on": "เปิด",
-  "amity_chat_notifications_disabled": "คุณได้ปิดการแจ้งเตือนสำหรับแชท"
+  "amity_chat_notifications_disabled": "การแจ้งเตือนแบบพุชถูกปิดโดยผู้ดูแลระบบ"
 }

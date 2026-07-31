@@ -42,18 +42,32 @@ export const useCreateMessage = ({
     },
     onError: (err) => {
       const { message } = err;
+      // Uses the chat string, not the shared amity_common_label_message_not_sent
+      // ("Your message wasn't sent." — the V1 wording, and shared with other
+      // modules so not rewordable from a chat ticket).
+      //
+      // NOTE: copy spec V2 lists `failed / create / message` as "Failed to send
+      // message. Please try again.", but that sentence does NOT belong on this
+      // key: amity_chat_message_failed_to_send is the message-bubble caption, and
+      // both web and the Figma node for that caption read exactly "Failed to send
+      // message." So V2's second sentence targets some other surface — needs
+      // design/QA to say which before it is applied anywhere.
+      // The old default was the shared amity_common_label_message_not_sent
+      // ("Your message wasn't sent."), still V1 wording and used by other
+      // modules, so it is left alone rather than reworded from a chat ticket.
       let notificationMessage = resolveString(
-        'amity_common_label_message_not_sent'
+        'amity_chat_message_failed_to_send'
       );
 
+      // PDT-4160: use the chat keys, not the social twins. The social strings
+      // carry the old "…contained a blocked word" wording and are shared with
+      // the social module, so they can't be reworded from a chat ticket — and
+      // this hook is chat-only (useFailedMessageSheet's resend path), so a
+      // resend failure would otherwise show different copy than the composer.
       if (message.includes(ERROR_RESPONSE.CONTAIN_BLOCKED_WORD)) {
-        notificationMessage = resolveString(
-          'amity_social_label_msg_blocked_word'
-        );
+        notificationMessage = resolveString('amity_chat_toast_banned_word');
       } else if (message.includes(ERROR_RESPONSE.NOT_INCLUDE_WHITELIST_LINK)) {
-        notificationMessage = resolveString(
-          'amity_social_label_msg_link_not_allowed'
-        );
+        notificationMessage = resolveString('amity_chat_toast_link_not_allow');
       } else if (message.includes(ERROR_RESPONSE.USER_MUTED)) {
         notificationMessage = resolveString('amity_social_button_user_muted');
       }

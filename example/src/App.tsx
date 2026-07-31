@@ -110,7 +110,9 @@ export default function App() {
       ...config,
       userId: resolvedUserId,
       displayName: config.displayName.trim(), // '' when blank → omitted below
-      apiRegion: preset.apiRegion, // valid SDK enum: 'sg' | 'eu' | 'us'
+      // Region slug used for every endpoint the SDK derives (mqtt + upload),
+      // so it must match the environment — 'staging' for Staging. See config.ts.
+      apiRegion: preset.apiRegion,
       apiEndpoint: preset.apiEndpoint, // undefined for production, custom URL for staging/dev
     });
     setActiveModule(undefined);

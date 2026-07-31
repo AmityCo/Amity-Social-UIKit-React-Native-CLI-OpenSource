@@ -229,13 +229,19 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
       return parts;
     };
 
+    // RN throws "Cannot specify both value and children in InternalTextInput" if
+    // `value` is set while the TextInput also has children. When mentions exist we
+    // render coloured <Text> children (which then act as the displayed value), so
+    // `value` must be passed ONLY in the plain-text (no-children) path.
+    const formatted = renderFormattedValue();
+
     return (
       <View style={[styles.wrapper, { maxHeight }, style]}>
         {mentionOverlay}
         <TextInput
           ref={inputRef}
           style={[styles.input, { height: inputHeight }]}
-          value={value}
+          {...(formatted === undefined ? { value } : null)}
           onChangeText={handleChangeText}
           onContentSizeChange={handleContentSizeChange}
           onSelectionChange={handleSelectionChange}
@@ -248,7 +254,7 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
           onSubmitEditing={onSend}
           blurOnSubmit={false}
         >
-          {renderFormattedValue()}
+          {formatted}
         </TextInput>
       </View>
     );

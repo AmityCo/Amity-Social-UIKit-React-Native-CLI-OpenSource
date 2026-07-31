@@ -24,7 +24,7 @@ export const useStyles = () => {
       // doesn't ship the Subdue text variant, so use the color-identical GreyBG variant
       // (same alias chain {Information/700}/{Information/300} → same hex). Web slug is
       // allowlisted in check-fidelity until the SoT adds the Subdue banner token.
-      color: token(AmityColorToken.TextBannerGreyBGTextDescriptionGeneral),
+      color: token(AmityColorToken.TextBannerSubdueTextDescriptionGeneral),
     },
   });
 

@@ -10,6 +10,11 @@
 // scope for M2 and stubbed; loading/error toasts go through the useChatNotifications stub.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  SubChannelRepository,
+  getSubChannelTopic,
+  subscribeTopic,
+} from '@amityco/ts-sdk-react-native';
 
 import { useMessagesCollection } from '../../../hooks/collections/useMessagesCollection';
 import {
@@ -47,10 +52,18 @@ export function useChatMessage({
 }: UseChatMessageParams) {
   const { pop } = useChatNavigation();
   const { online: isOnline } = useNetworkOnline();
-  const { error: errorToast } = useChatNotifications();
+  const {
+    error: errorToast,
+    loading: showLoadingToast,
+    remove: removeToast,
+  } = useChatNotifications();
   const currentUserId = useCurrentUserId();
   const loadErrorToast = useString('amity_chat_load_error');
+  const loadingLabel = useString('amity_chat_loading_label');
   const prevLatestIdRef = useRef<string | null>(null);
+  // Guards show-once/remove-once for the loading toast (mirrors web's
+  // `loadingToastIdRef`); RN's toast is a singleton with no ids.
+  const loadingToastShownRef = useRef(false);
   const [atBottom, setAtBottom] = useState(true);
   const [seeMore, setSeeMore] = useState<{
     text: string;
@@ -139,6 +152,8 @@ export function useChatMessage({
     handleBubbleSave,
     handleBubbleReport,
     handleOpenReactorListSheet,
+    reportMessage,
+    closeReport,
   } = useBubbleMenu({
     onEditMessage: setEditingMessage,
     onReplyMessage: composer.startReply,
@@ -168,6 +183,60 @@ export function useChatMessage({
   useEffect(() => {
     if (loadError) errorToast({ content: loadErrorToast });
   }, [loadError, errorToast, loadErrorToast]);
+
+  // Cross-device real-time messages. The `getMessages` live collection only
+  // reflects the LOCAL SDK cache (own sends, edits) — other users' messages do
+  // not arrive live unless we subscribe to the subchannel topic while the thread
+  // is open (SDK realtime docs: "Subscribe when the thread screen becomes active").
+  // Web's ts-sdk auto-subscribes inside getMessages; the RN ts-sdk-react-native
+  // does NOT (verified on-device: only the read-marker topic subscribes otherwise),
+  // so we subscribe explicitly here and unsubscribe on unmount / channel change.
+  useEffect(() => {
+    if (!channelId) return undefined;
+    let unsubscribeTopic: (() => void) | undefined;
+    const unsubscribeObject = SubChannelRepository.getSubChannel(
+      channelId,
+      ({ data: subChannel, loading: subLoading }) => {
+        if (subLoading || !subChannel || unsubscribeTopic) return;
+        unsubscribeTopic = subscribeTopic(getSubChannelTopic(subChannel));
+      }
+    );
+    return () => {
+      unsubscribeTopic?.();
+      unsubscribeObject();
+    };
+  }, [channelId]);
+
+  // Web useChatMessage shows a loading toast ("Loading chat...") while the first
+  // page loads and removes it once loaded (duration 60s = upper bound). RN's toast
+  // is a singleton (no ids), so the ref guards show-once/remove-once — correct
+  // regardless of the fresh notification-fn identities returned each render, which
+  // is why `showLoadingToast`/`removeToast` are intentionally out of the deps.
+  useEffect(() => {
+    if (isLoadingFirstPage) {
+      if (loadingToastShownRef.current) return;
+      loadingToastShownRef.current = true;
+      // Web shows this above the composer (useChatMessage: alignment 'with-composer').
+      showLoadingToast({
+        content: loadingLabel,
+        duration: 60_000,
+        alignment: 'with-composer',
+      });
+    } else if (loadingToastShownRef.current) {
+      loadingToastShownRef.current = false;
+      removeToast();
+    }
+  }, [isLoadingFirstPage, channelId]);
+
+  // Clear a lingering loading toast if the screen unmounts mid-load (singleton toast).
+  useEffect(() => {
+    return () => {
+      if (loadingToastShownRef.current) {
+        loadingToastShownRef.current = false;
+        removeToast();
+      }
+    };
+  }, []);
 
   // Surface a "new message" pill when a message arrives while scrolled up.
   useEffect(() => {
@@ -219,6 +288,8 @@ export function useChatMessage({
     handleBubbleSave,
     handleBubbleReport,
     handleOpenReactorListSheet,
+    reportMessage,
+    closeReport,
     editingMessage,
     closeEditMessage,
     openFailedSheet,

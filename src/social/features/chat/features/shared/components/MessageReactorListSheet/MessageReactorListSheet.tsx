@@ -16,6 +16,7 @@
 // 1. React / RN imports
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { FlatList, Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   FileRepository,
   MessageRepository,
@@ -44,17 +45,36 @@ type MessageReactorListSheetProps = {
    * show the empty state despite reactions existing. getMessage still keeps it live.
    */
   initialMessage?: Amity.Message | null;
+  /**
+   * The height (px) the global bottom sheet was opened with. The @devvie sheet
+   * wraps our content in an AUTO-height inner View (only the outer Animated.View
+   * carries the sheet height), so a `flex:1` child collapses to 0 and the
+   * FlatList never shows. We give the content an EXPLICIT height instead —
+   * sheetHeight minus the drag-handle and bottom safe-area the sheet reserves —
+   * so the FlatList has a bounded parent to fill and scroll within.
+   */
+  sheetHeight?: number;
 };
 
 const ALL_TAB = 'all' as const;
+
+// @devvie reserves this above the content for its drag handle
+// (DEFAULT_HANDLE_BAR_DEFAULT_HEIGHT: paddingTop 10 + height 5 + paddingBottom 10).
+const DRAG_HANDLE_HEIGHT = 25;
 
 // 4. Named function component
 export function MessageReactorListSheet({
   messageId,
   onClose,
   initialMessage = null,
+  sheetHeight,
 }: MessageReactorListSheetProps) {
   const { styles } = useStyles();
+  const insets = useSafeAreaInsets();
+  // The content area the @devvie sheet actually gives our children.
+  const contentHeight = sheetHeight
+    ? sheetHeight - DRAG_HANDLE_HEIGHT - insets.bottom
+    : undefined;
   const currentUserId = useCurrentUserId();
   const { removeReaction } = useMessageReactions();
   const allTabLabel = useString('amity_chat_tab_all');
@@ -149,7 +169,12 @@ export function MessageReactorListSheet({
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        contentHeight ? { height: contentHeight } : styles.containerFill,
+      ]}
+    >
       <View style={styles.tabList}>
         {tabItems.map((t) => {
           const active = activeTab === t.value;
@@ -189,6 +214,7 @@ export function MessageReactorListSheet({
         <EmptyState />
       ) : (
         <FlatList
+          style={styles.flatList}
           data={rows}
           keyExtractor={(item, index) =>
             `${item.reactor.userId ?? 'unknown'}-${index}`

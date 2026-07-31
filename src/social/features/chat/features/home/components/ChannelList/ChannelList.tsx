@@ -22,6 +22,7 @@ import { FlatList, View } from 'react-native';
 
 // 2. Third-party imports
 import { Swipeable } from 'react-native-gesture-handler';
+import { SvgXml } from 'react-native-svg';
 import { SubChannelRepository } from '@amityco/ts-sdk-react-native';
 
 // 3. Internal imports (relative)
@@ -29,6 +30,8 @@ import { Typography } from '../../../../../../../core/design/components/Typograp
 import { Button } from '../../../../../../../core/design/atoms/Button';
 import { AmityIcon } from '../../../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-color-tokens';
+import { useAmityTheme } from '../../../../../../../core/design/theme/AmityThemeProvider';
+import { emptyCommunity2 } from '../../../../../../../core/assets/icons/emptyCommunity2';
 import { useString } from '../../../../../../../core/localization';
 import { AmityChatListItem } from '../../../../components/AmityChatListItem';
 import { useChannelsCollection } from '../../../../hooks/collections/useChannelsCollection';
@@ -41,6 +44,11 @@ const ACTION_ICON_SIZE = 28;
 // 3. Types
 export type ChannelListProps = {
   types?: Amity.ChannelType[];
+  /**
+   * When false, the "Push notifications have been disabled by admin" banner is
+   * shown above the list (ported from AmityUIKitIOS). Defaults to true (hidden).
+   */
+  isPushNotificationEnabled?: boolean;
   /** Called with the pressed channel id + display name + type — the page wires navigation. */
   onChannelPress?: (
     channelId: string,
@@ -54,6 +62,7 @@ export type ChannelListProps = {
 // 4. Named function component
 export function ChannelList({
   types,
+  isPushNotificationEnabled = true,
   onChannelPress,
   onCreatePress,
 }: ChannelListProps) {
@@ -69,7 +78,7 @@ export function ChannelList({
     <View style={styles.action}>
       <View style={styles.actionContent}>
         <AmityIcon
-          name="arhive-r"
+          name="archive-r"
           size={ACTION_ICON_SIZE}
           tokenColor={AmityColorToken.IconSquareButtonDefaultSecondaryDefault}
         />
@@ -105,53 +114,80 @@ export function ChannelList({
     );
   }
 
-  if (channels.length === 0) {
-    return <EmptyChannelList onCreatePress={onCreatePress} />;
-  }
-
+  // iOS AmityChatListComponent renders the push-disabled banner above BOTH the
+  // empty state and the populated list (but not the loading skeleton).
   return (
-    <FlatList
-      style={styles.list}
-      contentContainerStyle={styles.listContent}
-      data={channels}
-      keyExtractor={(channel) => channel.channelId}
-      renderItem={({ item }) => (
-        <Swipeable
-          renderRightActions={renderArchiveAction}
-          onSwipeableWillOpen={() =>
-            archiveChannel({ channelId: item.channelId })
+    <View style={styles.root}>
+      {!isPushNotificationEnabled ? <PushDisabledBanner /> : null}
+      {channels.length === 0 ? (
+        <EmptyChannelList onCreatePress={onCreatePress} />
+      ) : (
+        <FlatList
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
+          data={channels}
+          keyExtractor={(channel) => channel.channelId}
+          renderItem={({ item }) => (
+            <Swipeable
+              renderRightActions={renderArchiveAction}
+              onSwipeableWillOpen={() =>
+                archiveChannel({ channelId: item.channelId })
+              }
+            >
+              <View style={styles.row}>
+                <AmityChatListItem
+                  channel={item}
+                  onPress={() => handleRowPress(item)}
+                />
+              </View>
+            </Swipeable>
+          )}
+          onEndReachedThreshold={0.7}
+          onEndReached={() => {
+            if (hasNextPage) loadMore();
+          }}
+          ListFooterComponent={
+            hasNextPage ? <AmityChatListItem.Skeleton /> : null
           }
-        >
-          <View style={styles.row}>
-            <AmityChatListItem
-              channel={item}
-              onPress={() => handleRowPress(item)}
-            />
-          </View>
-        </Swipeable>
+        />
       )}
-      onEndReachedThreshold={0.7}
-      onEndReached={() => {
-        if (hasNextPage) loadMore();
-      }}
-      ListFooterComponent={hasNextPage ? <AmityChatListItem.Skeleton /> : null}
-    />
+    </View>
+  );
+}
+
+// Push-notifications-disabled banner — ported from AmityUIKitIOS
+// AmityChatListComponent.pushNotificationsBanner: a bell-slash glyph + caption on
+// the subdue-banner surface, shown when push is disabled at the network/admin
+// or chat-module level.
+function PushDisabledBanner() {
+  const { styles } = useStyles();
+  const label = useString('amity_chat_notifications_disabled');
+  return (
+    <View style={styles.pushBanner}>
+      <AmityIcon
+        name="bell-slash-r"
+        size={18}
+        tokenColor={AmityColorToken.IconBannerSubdueDescriptionGeneral}
+      />
+      <Typography variant="caption" style={styles.pushBannerText}>
+        {label}
+      </Typography>
+    </View>
   );
 }
 
 function EmptyChannelList({ onCreatePress }: { onCreatePress?: () => void }) {
-  const { styles, token } = useStyles();
+  const { styles } = useStyles();
+  const { mode } = useAmityTheme();
   const emptyTitle = useString('amity_chat_home_empty_title');
   const emptyDescription = useString('amity_chat_home_empty_description');
   const createNewChatLabel = useString('amity_chat_create_new_chat');
 
   return (
     <View style={styles.empty}>
-      <AmityIcon
-        name="comments-alt-r"
-        size={48}
-        color={token(AmityColorToken.IconEmptyStateIconDefault)}
-      />
+      {/* Web renders the EmptyCommunity2 160×160 illustration here, not a flat
+          glyph — theme-aware (Light/Dark). */}
+      <SvgXml xml={emptyCommunity2(mode === 'dark')} width={160} height={160} />
       <View style={styles.emptyContent}>
         <View style={styles.emptyText}>
           <Typography variant="titleBold" style={styles.emptyTitle}>
@@ -164,6 +200,7 @@ function EmptyChannelList({ onCreatePress }: { onCreatePress?: () => void }) {
         <Button
           label={createNewChatLabel}
           icon="plus-r"
+          style={styles.createButton}
           onPress={onCreatePress}
         />
       </View>

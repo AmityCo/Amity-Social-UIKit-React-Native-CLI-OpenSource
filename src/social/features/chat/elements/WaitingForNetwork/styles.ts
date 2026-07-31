@@ -14,9 +14,14 @@ export const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 4,
-      flexShrink: 0,
+      // Web pins this to flex-shrink: 0 — safe on a desktop header, but on a phone
+      // the chat-list header has barely enough room and the label overflowed on top
+      // of the action buttons. Allow it to shrink; the label ellipsizes instead.
+      flexShrink: 1,
+      minWidth: 0,
     },
     text: {
+      flexShrink: 1,
       color: token(AmityColorToken.TextListTextDescriptionDefaultDefault),
     },
   });

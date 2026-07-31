@@ -15,9 +15,22 @@ export const useStyles = () => {
 
   const styles = StyleSheet.create({
     // .messageReactorListSheet
+    // NOTE: no `flex: 1` here. The @devvie sheet wraps our content in an
+    // AUTO-height inner View, so there is no free space for a flex child to grow
+    // into — and in RN `flex: 1` means `flexBasis: 0`, which would then collapse
+    // the container to height 0 (tabs overflow-paint, list vanishes). The
+    // component instead sets an EXPLICIT `height` (contentHeight) from the sheet
+    // height; `containerFill` is only a fallback when that height is unknown.
     container: {
-      flex: 1,
       backgroundColor: token(AmityColorToken.SurfacePageBackgroundDefault),
+    },
+    containerFill: {
+      flex: 1,
+    },
+    // Once the container has a definite height, the FlatList CAN flex to fill the
+    // space below the fixed-height tab bar (there is now free space to grow into).
+    flatList: {
+      flex: 1,
     },
     // .messageReactorListSheet__tabList (underlined: row, gap 20, padding 0 per web sheet)
     tabList: {

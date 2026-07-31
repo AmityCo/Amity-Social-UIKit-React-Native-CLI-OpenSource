@@ -3,17 +3,21 @@
 // the retry/discard callbacks. The return shape (UseFailedMessageSheetReturn) is
 // preserved verbatim from web so useChatMessage consumes it unchanged.
 //
-// RN adaptations from web:
-//   - Web opened a bottom Drawer holding a Menu (Resend / Delete). RN has no
-//     DrawerProvider, so the sheet is presented with the native `Alert.alert`
-//     action buttons — same two choices, no new provider.
+// RN adaptation from web:
+//   - Web opened a bottom Drawer holding a `Menu` (Resend / Delete). RN presents
+//     the same Menu in the repo's global @devvie bottom sheet (`useBottomSheet` →
+//     BottomSheetComponent) with `container="drawer"` — the identical pattern the
+//     conversation user-action menu uses. NOT an Alert dialog.
 //   - Non-synthetic delete/resend use the existing RN `useDeleteMessage` /
 //     `useCreateMessage` mutations instead of web's query hooks (resend = recreate
 //     the message, then delete the original — same as web's useResendMessageQuery).
 
-import { Alert } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
+import { Menu } from '../../../../../../core/design/components/Menu';
 import { useString } from '../../../../../../core/localization';
+import { useBottomSheet } from '../../../../../../core/stores/slices/bottomSheetSlice';
+import { useChatNotifications } from '../../../hooks/useChatNotifications';
 import { useDeleteMessage } from '../../../hooks/useDeleteMessage';
 import { useCreateMessage } from '../../../hooks/useCreateMessage';
 import { isSyntheticPendingMessage } from './useMessageComposer';
@@ -35,11 +39,21 @@ export function useFailedMessageSheet({
   onRetryText,
   onDiscardText,
 }: UseFailedMessageSheetParams): UseFailedMessageSheetReturn {
+  const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
+    useBottomSheet();
+  const { error: errorToast } = useChatNotifications();
   const { deleteMessage } = useDeleteMessage();
-  const { createMessage } = useCreateMessage();
+  // LEADS WEB (deaad473): web's requestResend has no onError, so a resend that
+  // fails again is silent there. RN surfaces it.
+  // useCreateMessage maps the SDK error to localized copy but only through its
+  // onError callback. Nothing passed one, so a resend that failed again was
+  // completely silent here too — and mutateAsync's rejection went unhandled on
+  // top. Revisit if web adds its own handling, so the two don't diverge further.
+  const { createMessage } = useCreateMessage({
+    onError: (errorMsg) => errorToast({ content: errorMsg }),
+  });
   const resendLabel = useString('amity_chat_message_resend');
   const deleteLabel = useString('amity_chat_option_delete');
-  const cancelLabel = useString('amity_chat_cancel');
 
   async function handleResend(message: Amity.Message) {
     if (isSyntheticPendingMessage(message)) {
@@ -51,12 +65,21 @@ export function useFailedMessageSheet({
       return;
     }
     // Non-synthetic resend: recreate then delete the original (web's requestResend).
-    await createMessage({
-      subChannelId: message.subChannelId,
-      dataType: message.dataType,
-      data: message.data,
-      parentId: message.parentId,
-    } as Parameters<typeof createMessage>[0]);
+    // The original is only removed once the new message is actually created —
+    // deleting it on failure would drop the text the user is trying to send.
+    try {
+      await createMessage({
+        subChannelId: message.subChannelId,
+        dataType: message.dataType,
+        data: message.data,
+        parentId: message.parentId,
+      } as Parameters<typeof createMessage>[0]);
+    } catch {
+      // useCreateMessage's onError already raised the toast. Swallow the
+      // rejection so it isn't an unhandled promise, and leave the original
+      // failed bubble in place.
+      return;
+    }
     if (message.messageId) {
       await deleteMessage(message.messageId);
     }
@@ -77,16 +100,44 @@ export function useFailedMessageSheet({
   }
 
   function openFailedSheet(message: Amity.Message) {
-    Alert.alert(undefined, undefined, [
-      { text: resendLabel, onPress: () => handleResend(message) },
-      {
-        text: deleteLabel,
-        style: 'destructive',
-        onPress: () => handleDelete(message),
-      },
-      { text: cancelLabel, style: 'cancel' },
-    ]);
+    openBottomSheet({
+      height: bottomSheetHeight[2 as keyof typeof bottomSheetHeight],
+      content: (
+        <View style={styles.sheetContainer}>
+          <Menu variant="chat" container="drawer">
+            {/* Web Menu.Item default typography is BodyBold — no `typography`
+                override (the earlier `body` override was the wrong button style). */}
+            <Menu.Item
+              label={resendLabel}
+              onPress={() => {
+                closeBottomSheet();
+                handleResend(message);
+              }}
+            />
+            <Menu.Item
+              label={deleteLabel}
+              destructive
+              onPress={() => {
+                closeBottomSheet();
+                handleDelete(message);
+              }}
+            />
+          </Menu>
+        </View>
+      ),
+    });
   }
 
   return { openFailedSheet };
 }
+
+const styles = StyleSheet.create({
+  // Web's drawer container supplies the horizontal padding (its menuItem in a
+  // drawer is `0.875rem 0`, i.e. no side padding). Match the RN chat-sheet
+  // convention (AmityConversationChatUserActionComponent) so the Resend/Delete
+  // rows aren't flush to the screen edges.
+  sheetContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+});

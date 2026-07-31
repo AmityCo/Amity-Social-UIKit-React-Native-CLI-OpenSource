@@ -21,6 +21,12 @@ export const useStyles = () => {
       flex: 1,
       minWidth: 0,
     },
+    // The Button atom defaults to alignSelf:'flex-start', which overrides the
+    // row's alignItems:center and pins Cancel to the top — re-center it against
+    // the taller search input.
+    cancel: {
+      alignSelf: 'center',
+    },
   });
 
   return { styles, token };

@@ -74,7 +74,7 @@ export function ChatHomeMenu() {
       {({ closePopover }) => (
         <Menu container="popover">
           <Menu.Item
-            icon="arhive-r"
+            icon="archive-r"
             label={archivedLabel}
             typography="body"
             onPress={() => {

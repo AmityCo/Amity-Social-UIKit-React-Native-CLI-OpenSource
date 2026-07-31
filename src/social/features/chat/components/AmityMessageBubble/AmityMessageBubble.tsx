@@ -5,7 +5,7 @@
 // preview is pending, and surface tap → open-in-viewer callbacks the parent wires up.
 // Long-press surfaces the message action menu. Text path is full parity with web:
 // @mention highlighting, "see more" (divider + chevron), link preview, "edited"
-// caption, and link-aware line clamping.
+// caption, and a flat 10-line clamp.
 
 // 1. React / RN imports
 import { useState, type ReactNode } from 'react';
@@ -26,6 +26,7 @@ import Video from 'react-native-video';
 import useFile from '../../../../../core/hooks/useFile';
 import { ImageSizeState } from '../../../../../core/enums';
 import { Loader } from '../../../../../core/design/atoms/Loader';
+import { Skeleton } from '../../../../../core/design/components/Skeleton';
 import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../core/localization';
@@ -33,20 +34,22 @@ import { MediaUploadOverlay } from '../../elements/MediaUploadOverlay';
 import { DeletedMessagePill } from '../../features/shared/components/DeletedMessagePill';
 import { MessageLinkPreview } from '../../features/shared/components/MessageLinkPreview';
 import { extractFirstPreviewUrl } from '../../utils/previewLink';
-import {
-  isSyntheticPendingMessage,
-  type SyntheticPendingMessage,
-} from '../../features/shared/hooks/useMessageComposer';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
 import { useStyles } from './styles';
 
+// PDT-4109: one flat limit for every text bubble. There used to be a second
+// TEXT_MAX_LINES_WITH_LINK = 5 applied when the text contained a URL, which
+// clamped link-bearing messages far earlier than plain ones. Web deleted that
+// constant (and the hasLink regex that drove it) in dba25aa77.
 const TEXT_MAX_LINES = 10; // web chat.ts
-const TEXT_MAX_LINES_WITH_LINK = 5; // web chat.ts
-// Line-clamp trigger — mirrors web MessageBubble `hasLink` (matches http(s):// AND
-// www./bare URLs). The first PREVIEW url is resolved by extractFirstPreviewUrl
-// (linkifyjs), matching web exactly, rather than a naive scheme-only regex.
-const HAS_LINK_RE = /(https?:\/\/\S+|www\.\S+)/i;
-// Global variant used to split a text run into linkable (coloured/tappable) segments.
+// Below this length a message cannot reach TEXT_MAX_LINES, so it skips the
+// measuring pass — and the reserved See-more space — entirely. Well under the
+// real threshold: the 240px bubble fits ~30 characters a line, ~300 for ten.
+const MIN_CHARS_TO_OVERFLOW = 120;
+// Skeleton bar height while a long message is measured — a shade under the 18px
+// line height so two bars plus their gap read as two lines of text.
+const SKELETON_LINE_HEIGHT = 14;
+// Splits a text run into linkable (coloured/tappable) segments.
 const URL_SPLIT_RE = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
 
 function openLink(raw: string): void {
@@ -138,6 +141,13 @@ type AmityMessageBubbleProps = {
   onCancelUpload?: () => void;
   /** Open the full-text "see more" screen for long messages. */
   onSeeMore?: (text: string, title?: string) => void;
+  /**
+   * Hold the pressed appearance while the action menu / reaction bar is open.
+   * Web's data-active, driven off `activeMessageId === message.messageId`; the
+   * CSS pairs it with `:active` so the colour never drops between the long-press
+   * ending and the menu appearing.
+   */
+  isActive?: boolean;
 };
 
 function getFileId(message: Amity.Message): string {
@@ -152,19 +162,17 @@ function isErrorState(message: Amity.Message): boolean {
   return message.syncState === ('error' as Amity.SyncState);
 }
 
-// Web wrapWithFailedCaption: the "failed to send" helper caption appears under an
-// image/video bubble ONLY when it failed for a moderation violation (a synthetic
-// pending message whose __failureReason === 'moderation'). Generic failures show
-// nothing.
-function isModerationViolation(
-  message: Amity.Message,
-  isFailed: boolean
-): boolean {
-  return (
-    isFailed &&
-    isSyntheticPendingMessage(message) &&
-    (message as SyntheticPendingMessage).__failureReason === 'moderation'
-  );
+// Web wrapWithFailedCaption: EVERY failed image/video bubble carries the
+// "failed to send" caption — the only exception is an upload the user cancelled
+// (web's __failureReason === 'cancelled'). It used to be moderation-only, which
+// left a generic failure with no explanation at all; PDT-4128's oversize upload
+// marks 'generic', so the inline error the ticket asks for depends on this.
+//
+// RN has no 'cancelled' reason: cancelling drops the pending upload via
+// cancelledClientIdsRef instead of marking it failed, so there is nothing to
+// exclude here and the gate is simply "did it fail".
+function showsFailedCaption(isFailed: boolean): boolean {
+  return isFailed;
 }
 
 // 5. Named function component (dispatcher)
@@ -177,6 +185,7 @@ export function AmityMessageBubble({
   localPreviewUrl,
   onCancelUpload,
   onSeeMore,
+  isActive = false,
 }: AmityMessageBubbleProps) {
   if (message.isDeleted) {
     return <DeletedMessagePill isUser={isUser} />;
@@ -187,6 +196,7 @@ export function AmityMessageBubble({
       return (
         <ImageBubble
           message={message}
+          isActive={isActive}
           onOpenImage={onOpenImage}
           onLongPress={onLongPress}
           localPreviewUrl={localPreviewUrl}
@@ -197,6 +207,7 @@ export function AmityMessageBubble({
       return (
         <VideoBubble
           message={message}
+          isActive={isActive}
           onOpenVideo={onOpenVideo}
           onLongPress={onLongPress}
           localPreviewUrl={localPreviewUrl}
@@ -208,6 +219,7 @@ export function AmityMessageBubble({
         <TextBubble
           message={message}
           isUser={isUser}
+          isActive={isActive}
           onLongPress={onLongPress}
           onSeeMore={onSeeMore}
         />
@@ -219,6 +231,7 @@ export function AmityMessageBubble({
 type TextBubbleProps = {
   message: Amity.Message;
   isUser: boolean;
+  isActive?: boolean;
   onLongPress?: (message: Amity.Message) => void;
   onSeeMore?: (text: string, title?: string) => void;
 };
@@ -226,19 +239,33 @@ type TextBubbleProps = {
 function TextBubble({
   message,
   isUser,
+  isActive = false,
   onLongPress,
   onSeeMore,
 }: TextBubbleProps) {
   const { styles } = useStyles();
   const [pressed, setPressed] = useState(false);
-  const [truncated, setTruncated] = useState(false);
+  // null = not measured yet. The visible Text is clamped from the very first
+  // frame either way, so this only decides whether "See more" is offered.
+  const [overflowing, setOverflowing] = useState<boolean | null>(null);
   const seeMoreLabel = useString('amity_chat_see_more');
   const editedLabel = useString('amity_chat_status_edited');
 
   const text = (message.data as { text?: string })?.text ?? '';
   const firstUrl = extractFirstPreviewUrl(text);
-  const hasLink = HAS_LINK_RE.test(text);
-  const maxLines = hasLink ? TEXT_MAX_LINES_WITH_LINK : TEXT_MAX_LINES;
+  // A failed message (synthetic, messageId === '') must NOT generate a link
+  // preview — web suppresses it, and fetching metadata for the blocked link on a
+  // synthetic crashes the list (PDT-4033 QA).
+  const isFailed = message.syncState === ('error' as Amity.SyncState);
+  const maxLines = TEXT_MAX_LINES;
+  // Only long text can possibly exceed maxLines, so only long text has to wait
+  // for the measurement — everything else renders immediately and never sees a
+  // loader. MIN_CHARS_TO_OVERFLOW is deliberately far below the real threshold
+  // (a 240px bubble fits roughly 30 characters per line, so ~300 for 10 lines);
+  // explicit newlines are counted too, since a short text can still be tall.
+  const mightOverflow =
+    text.length > MIN_CHARS_TO_OVERFLOW || text.split('\n').length > maxLines;
+  const measuring = mightOverflow && overflowing === null;
   const isEdited = (message as { editedAt?: unknown }).editedAt != null;
   const mentioned = (
     message.metadata as
@@ -251,12 +278,57 @@ function TextBubble({
   const bubbleStyle = [
     styles.bubble,
     isUser ? styles.bubbleOwn : styles.bubbleOther,
-    pressed && (isUser ? styles.bubbleOwnPressed : styles.bubbleOtherPressed),
+    // Web: `.textBubble:active, .textBubble[data-active='true']` — the press AND
+    // the open menu share one background, so releasing the long-press does not
+    // flash the bubble back to its resting colour before the menu appears.
+    (pressed || isActive) &&
+      (isUser ? styles.bubbleOwnPressed : styles.bubbleOtherPressed),
   ];
   const textStyle = [styles.text, isUser ? styles.textOwn : styles.textOther];
   // Outbound links inherit the outbound message colour (web currentcolor);
   // inbound links recolour to the inbound-link token.
   const linkStyle = isUser ? styles.link : [styles.link, styles.linkOther];
+
+  const seeMoreRow = onSeeMore ? (
+    <>
+      <View
+        style={[
+          styles.divider,
+          isUser ? styles.dividerOwn : styles.dividerOther,
+        ]}
+      />
+      <Pressable
+        style={styles.seeMoreRow}
+        // PDT-4150 (web PR 1824): the full-text page takes the sender's display
+        // name as its centred header title; without it the header was blank. The
+        // whole chain already carried the optional title — openSeeMore stores it
+        // and MessageFullTextScreen renders it — only this call omitted it.
+        onPress={() =>
+          onSeeMore(text, message.creator?.displayName || undefined)
+        }
+        accessibilityRole="button"
+        accessibilityLabel={seeMoreLabel}
+      >
+        <Text
+          style={[
+            styles.seeMoreLabel,
+            isUser ? styles.seeMoreOwn : styles.seeMoreOther,
+          ]}
+        >
+          {seeMoreLabel}
+        </Text>
+        <AmityIcon
+          name="chevron-right"
+          size={12}
+          tokenColor={
+            isUser
+              ? AmityColorToken.IconChatBubbleOutboundSeeMoreDefault
+              : AmityColorToken.IconChatBubbleInboundSeeMoreDefault
+          }
+        />
+      </Pressable>
+    </>
+  ) : null;
 
   return (
     <Pressable
@@ -266,57 +338,63 @@ function TextBubble({
       onLongPress={onLongPress ? () => onLongPress(message) : undefined}
     >
       <View>
-        <Text
-          style={textStyle}
-          numberOfLines={truncated ? maxLines : undefined}
-          onTextLayout={(e) => {
-            if (!truncated && e.nativeEvent.lines.length > maxLines) {
-              setTruncated(true);
-            }
-          }}
-        >
-          {renderTextWithMentions(
-            text,
-            mentioned,
-            isUser ? styles.mentionOwn : styles.mentionOther,
-            linkStyle
-          )}
-        </Text>
-        {truncated && onSeeMore ? (
-          <>
-            <View
-              style={[
-                styles.divider,
-                isUser ? styles.dividerOwn : styles.dividerOther,
-              ]}
-            />
-            <Pressable
-              style={styles.seeMoreRow}
-              onPress={() => onSeeMore(text)}
-              accessibilityRole="button"
-              accessibilityLabel={seeMoreLabel}
+        {/* A two-line skeleton stands in for a long message until its line count
+            is known, so the bubble never renders in a shape it then changes out
+            of. Reads as loading, unlike a spinner in a text-sized box. Short
+            messages skip this entirely (MIN_CHARS_TO_OVERFLOW) and render at once.
+            The fixed width matters beyond looks: the probe below measures against
+            this container, so collapsing it to the placeholder's natural width
+            would count lines for the wrong width. */}
+        {measuring ? (
+          <View style={styles.textSkeleton}>
+            <Skeleton height={SKELETON_LINE_HEIGHT} />
+            <Skeleton height={SKELETON_LINE_HEIGHT} width="60%" />
+          </View>
+        ) : (
+          <Text style={textStyle} numberOfLines={maxLines}>
+            {renderTextWithMentions(
+              text,
+              mentioned,
+              isUser ? styles.mentionOwn : styles.mentionOther,
+              linkStyle
+            )}
+          </Text>
+        )}
+        {/* The probe: an unclamped copy laid out once purely to count lines —
+            RN's stand-in for web's scrollHeight/clientHeight check. It must be
+            invisible (opacity 0, which does not affect layout so onTextLayout
+            still fires) or it draws over whatever is showing; it only went
+            unnoticed before because it overlapped identical text. The wrapping
+            View is what carries pointerEvents: on a Text that prop is ignored on
+            Android (TouchTargetHelper honours it only on a ReactViewGroup), so an
+            absolutely-filling Text would swallow the bubble's long-press.
+            Unmounted once answered. */}
+        {mightOverflow && overflowing === null ? (
+          <View
+            style={styles.textProbe}
+            pointerEvents="none"
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          >
+            <Text
+              style={textStyle}
+              onTextLayout={(e) =>
+                setOverflowing(e.nativeEvent.lines.length > maxLines)
+              }
             >
-              <Text
-                style={[
-                  styles.seeMoreLabel,
-                  isUser ? styles.seeMoreOwn : styles.seeMoreOther,
-                ]}
-              >
-                {seeMoreLabel}
-              </Text>
-              <AmityIcon
-                name="chevron-right"
-                size={12}
-                tokenColor={
-                  isUser
-                    ? AmityColorToken.IconChatBubbleOutboundSeeMoreDefault
-                    : AmityColorToken.IconChatBubbleInboundSeeMoreDefault
-                }
-              />
-            </Pressable>
-          </>
+              {renderTextWithMentions(
+                text,
+                mentioned,
+                isUser ? styles.mentionOwn : styles.mentionOther,
+                linkStyle
+              )}
+            </Text>
+          </View>
         ) : null}
-        {firstUrl ? (
+        {/* Web render order: text → link preview → edited caption → see-more.
+            The "See more" row is LAST (below the preview), not between the text
+            and the preview (PDT-4047). */}
+        {firstUrl && !isFailed ? (
           <View style={styles.preview}>
             <MessageLinkPreview url={firstUrl} isOwnMessage={isUser} />
           </View>
@@ -331,6 +409,7 @@ function TextBubble({
             {editedLabel}
           </Text>
         ) : null}
+        {overflowing ? seeMoreRow : null}
       </View>
     </Pressable>
   );
@@ -339,6 +418,7 @@ function TextBubble({
 // ---------- Image ----------
 type ImageBubbleProps = {
   message: Amity.Message;
+  isActive?: boolean;
   onOpenImage?: (url: string, message: Amity.Message) => void;
   onLongPress?: (message: Amity.Message) => void;
   localPreviewUrl?: string;
@@ -347,6 +427,7 @@ type ImageBubbleProps = {
 
 function ImageBubble({
   message,
+  isActive = false,
   onOpenImage,
   onLongPress,
   localPreviewUrl,
@@ -387,7 +468,7 @@ function ImageBubble({
 
   const showUploadOverlay = !!localPreviewUrl && !isFailed;
   const canOpen = !!onOpenImage && !!openUrl && !isFailed && !localPreviewUrl;
-  const isViolation = isModerationViolation(message, isFailed);
+  const showFailedCaption = showsFailedCaption(isFailed);
 
   const bubble = (
     <Pressable
@@ -423,11 +504,15 @@ function ImageBubble({
       {showUploadOverlay ? (
         <MediaUploadOverlay onCancel={onCancelUpload} />
       ) : null}
-      {pressed ? <View style={styles.mediaPressedScrim} /> : null}
+      {/* Web: `.imageBubble:active::after, .imageBubble[data-active='true']::after`
+          (same for videoBubble) — one overlay for both press and open menu. */}
+      {pressed || isActive ? (
+        <View style={styles.mediaPressedScrim} pointerEvents="none" />
+      ) : null}
     </Pressable>
   );
 
-  if (!isViolation) return bubble;
+  if (!showFailedCaption) return bubble;
   return (
     <View style={styles.failedWrapper}>
       {bubble}
@@ -439,6 +524,7 @@ function ImageBubble({
 // ---------- Video ----------
 type VideoBubbleProps = {
   message: Amity.Message;
+  isActive?: boolean;
   onOpenVideo?: (message: Amity.Message) => void;
   onLongPress?: (message: Amity.Message) => void;
   localPreviewUrl?: string;
@@ -447,6 +533,7 @@ type VideoBubbleProps = {
 
 function VideoBubble({
   message,
+  isActive = false,
   onOpenVideo,
   onLongPress,
   localPreviewUrl,
@@ -471,7 +558,7 @@ function VideoBubble({
 
   const showUploadOverlay = !!localPreviewUrl && !isFailed;
   const canOpen = !!onOpenVideo && !isFailed && !localPreviewUrl;
-  const isViolation = isModerationViolation(message, isFailed);
+  const showFailedCaption = showsFailedCaption(isFailed);
 
   const bubble = (
     <Pressable
@@ -487,14 +574,28 @@ function VideoBubble({
           : () => onLongPress(message)
       }
     >
-      <Video
-        source={{ uri: thumbnailUri }}
-        style={styles.mediaImage}
-        resizeMode="cover"
-        paused
-        muted
-        controls={false}
-      />
+      {/*
+        The native <Video> view absorbs touches, which swallowed the bubble's
+        onPress so the player never opened (images work because <Image> passes
+        touches through). `pointerEvents` on the <Video> itself is NOT enough:
+        on Android, TouchTargetHelper only reads pointerEvents off views that
+        implement ReactPointerEventsView, and ReactViewGroup is the only one
+        that does — so the prop is silently ignored on a native video view (both
+        architectures). Wrapping it in a plain <View pointerEvents="none">
+        excludes the whole subtree from touch targeting, so the tap reaches the
+        Pressable → onOpenVideo. The wrapper carries mediaImage because the
+        Video sizes at 100% and would collapse against a zero-size parent.
+      */}
+      <View style={styles.mediaImage} pointerEvents="none">
+        <Video
+          source={{ uri: thumbnailUri }}
+          style={styles.mediaImage}
+          resizeMode="cover"
+          paused
+          muted
+          controls={false}
+        />
+      </View>
       {showUploadOverlay ? (
         <MediaUploadOverlay onCancel={onCancelUpload} />
       ) : (
@@ -506,11 +607,15 @@ function VideoBubble({
           />
         </View>
       )}
-      {pressed ? <View style={styles.mediaPressedScrim} /> : null}
+      {/* Web: `.imageBubble:active::after, .imageBubble[data-active='true']::after`
+          (same for videoBubble) — one overlay for both press and open menu. */}
+      {pressed || isActive ? (
+        <View style={styles.mediaPressedScrim} pointerEvents="none" />
+      ) : null}
     </Pressable>
   );
 
-  if (!isViolation) return bubble;
+  if (!showFailedCaption) return bubble;
   return (
     <View style={styles.failedWrapper}>
       {bubble}

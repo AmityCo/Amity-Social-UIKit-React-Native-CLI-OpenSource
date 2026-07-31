@@ -18,9 +18,8 @@ export const useStyles = () => {
       paddingHorizontal: 16,
       paddingTop: 44,
       paddingBottom: 16,
-      backgroundColor: token(
-        AmityColorToken.SurfaceBadgeSemanticBadgePostStatusTotalMedia
-      ),
+      // Web MediaViewer bars: rgb(0 0 0 / 50%) (.mediaViewer__topBar/__bottomBar).
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     bottomBar: {
       flexDirection: 'row',
@@ -29,9 +28,18 @@ export const useStyles = () => {
       paddingHorizontal: 16,
       paddingTop: 16,
       paddingBottom: 32,
-      backgroundColor: token(
-        AmityColorToken.SurfaceBadgeSemanticBadgePostStatusTotalMedia
-      ),
+      // Web MediaViewer bars: rgb(0 0 0 / 50%) (.mediaViewer__topBar/__bottomBar).
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    // Host for the chat toast mounted inside react-native-image-viewing's Modal
+    // (the global <Toast /> is outside it and renders beneath the native Modal
+    // layer). Anchored above the bottom bar (40 icon + 16 top + 32 bottom = 88).
+    toastLayer: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 88,
+      zIndex: 4,
     },
     closeButton: {
       width: 32,

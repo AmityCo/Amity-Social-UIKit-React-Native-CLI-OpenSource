@@ -24,7 +24,7 @@ export const useStyles = () => {
     },
     // .disabledByModeratorBanner__text — centered caption.
     text: {
-      color: token(AmityColorToken.TextBannerGreyBGTextDescriptionGeneral),
+      color: token(AmityColorToken.TextBannerSubdueTextDescriptionGeneral),
       textAlign: 'center',
     },
   });

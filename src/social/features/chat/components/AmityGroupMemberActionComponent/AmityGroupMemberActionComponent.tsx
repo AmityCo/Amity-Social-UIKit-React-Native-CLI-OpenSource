@@ -247,7 +247,12 @@ export function AmityGroupMemberActionComponent({
     },
     {
       key: 'unreport',
-      icon: 'flag-r',
+      // LEADS WEB (PDT-4143): web PR 1822 gave the slashed flag to the message
+      // menu and the 1:1 conversation menu but missed this third site — its
+      // MemberList still renders `icon: Flag` for both report and unreport.
+      // Same intent applies here, so RN uses flag-slash-r; drop this marker once
+      // web's member list catches up.
+      icon: 'flag-slash-r',
       label: resolveString('amity_chat_member_action_unreport'),
       visible: isFlaggedByMe,
       onPress: handleUnreport,

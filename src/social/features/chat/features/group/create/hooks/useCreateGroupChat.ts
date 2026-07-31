@@ -204,12 +204,20 @@ export function useCreateGroupChat({
         onSuccess: (result) => {
           const channelId = result?.data?.channelId;
           if (channelId) {
-            showToast({ message: createSuccessToast, type: 'success' });
+            showToast({
+              message: createSuccessToast,
+              type: 'success',
+              variant: 'custom',
+            });
             replaceLater(GROUP_CHAT_ROUTE, { channelId });
           }
         },
         onError: () => {
-          showToast({ message: createErrorToast, type: 'failed' });
+          showToast({
+            message: createErrorToast,
+            type: 'failed',
+            variant: 'custom',
+          });
         },
       }
     );

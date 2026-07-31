@@ -12,6 +12,7 @@ import { Modal, Pressable, View } from 'react-native';
 import { AmityIcon } from '../../../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../../../core/localization';
+import Toast from '../../../../../../components/Toast';
 import { useStyles } from './styles';
 
 // 3. Types
@@ -114,6 +115,14 @@ export function MediaViewer({
           ) : (
             <View />
           )}
+        </View>
+
+        {/* Save success/failure toasts fire while this Modal is open. The global
+            <Toast /> is mounted outside it, so RN would render it beneath the
+            native Modal layer; mount one inside too — it reads the same redux
+            toast state, so only one pill is ever visible. */}
+        <View pointerEvents="box-none" style={styles.toastLayer}>
+          <Toast />
         </View>
       </View>
     </Modal>
