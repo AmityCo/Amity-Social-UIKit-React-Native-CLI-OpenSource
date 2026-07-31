@@ -47,6 +47,8 @@ type MessageRowProps = {
   viewerIsModerator?: boolean;
   /** Local preview for an in-flight or failed upload (see MessageList). */
   localPreviewUrl?: string;
+  /** The remote media has loaded — the local preview can be dropped. */
+  onMediaLoaded?: (fileId: string) => void;
 };
 
 // 4. Named function component
@@ -65,6 +67,7 @@ export function MessageRow({
   bubbleHandlers,
   viewerIsModerator = false,
   localPreviewUrl,
+  onMediaLoaded,
 }: MessageRowProps) {
   const { styles } = useStyles();
   const sendingLabel = useString('amity_chat_sending_status');
@@ -78,6 +81,12 @@ export function MessageRow({
   const isSynced =
     syncState === undefined || syncState === ('synced' as Amity.SyncState);
   const isFailed = syncState === ('error' as Amity.SyncState);
+
+  // The preview outlives the upload — MessageList keeps mapping it onto the real
+  // message by fileId so the bubble doesn't flash back to a spinner while the
+  // remote url warms. So "still uploading" has to come from syncState (the same
+  // signal the Sending caption below uses), not from the preview's presence.
+  const isUploading = !!localPreviewUrl && !isSynced && !isFailed;
 
   const showSenderName = !isUser && isGroupChat && !message.parentId;
   const timeText = message.createdAt
@@ -206,6 +215,8 @@ export function MessageRow({
                   // recognised and the bubble snaps back while the menu is up.
                   isActive={isOpen}
                   localPreviewUrl={localPreviewUrl}
+                  isUploading={isUploading}
+                  onMediaLoaded={onMediaLoaded}
                   onLongPress={() => {
                     onOpenBubbleMenu?.(message);
                     openPopover();

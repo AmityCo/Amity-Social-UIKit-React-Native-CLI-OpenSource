@@ -222,6 +222,15 @@ export const useStyles = () => {
       justifyContent: 'center',
       backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
     },
+    // Web `.mediaBubble__preload` — the off-screen element that warms the remote
+    // media before the local preview is dropped. Never meant to be seen: 1×1 and
+    // fully transparent, but still mounted so the native view actually loads.
+    mediaPreload: {
+      position: 'absolute',
+      width: 1,
+      height: 1,
+      opacity: 0,
+    },
     mediaPressedScrim: {
       ...StyleSheet.absoluteFillObject,
       // Web used --asc-color-message-overlay (no RN token); substituted with the

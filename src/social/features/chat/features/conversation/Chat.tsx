@@ -109,6 +109,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           isLoadingFirstPage={c.isLoadingFirstPage}
           onSeeMore={c.openSeeMore}
           pendingUploads={c.composer.pendingUploads}
+          onMediaLoaded={c.composer.handleMediaLoaded}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
             onReply: c.handleBubbleReply,
