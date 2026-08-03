@@ -14,3 +14,10 @@
 import bundle from './en.json';
 
 export const defaultLocaleBundle: Record<string, string> = bundle;
+
+// Also expose it as the default export. Metro's `sourceExts` places `json` ahead
+// of `ts`, so `from './defaults/en'` resolves to en.json in React Native while
+// bundlers on web (and tsc/jest) resolve to this file. A default export is the
+// one shape both files share — en.json's default IS the string map — so import
+// sites that use a default import work under either resolution.
+export default bundle;

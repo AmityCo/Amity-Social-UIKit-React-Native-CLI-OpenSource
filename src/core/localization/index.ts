@@ -36,6 +36,8 @@ export type { LocaleContextValue, LocaleProviderProps } from './LocaleProvider';
 
 export { useString } from './useString';
 
-export { defaultLocaleBundle } from './defaults/en';
-export { thLocaleBundle } from './defaults/th';
+// Default imports, then re-export under the public names — keeps the public API
+// identical while surviving either resolution of './defaults/en' | './defaults/th'.
+export { default as defaultLocaleBundle } from './defaults/en';
+export { default as thLocaleBundle } from './defaults/th';
 export { defaultLocaleMap } from './defaultLocaleMap';

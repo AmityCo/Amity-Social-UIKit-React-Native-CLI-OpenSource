@@ -15,7 +15,7 @@
  * Add more bundles here as additional locale files are created.
  */
 
-import { thLocaleBundle } from './defaults/th';
+import thLocaleBundle from './defaults/th';
 import type { LocaleBundle } from './resolveString';
 
 export const defaultLocaleMap: Record<string, LocaleBundle> = {

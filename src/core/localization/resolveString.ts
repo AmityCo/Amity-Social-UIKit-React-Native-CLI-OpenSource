@@ -15,7 +15,7 @@
  *   const text = resolveString('amity_social_items_count', 42);  // format arg
  */
 
-import { defaultLocaleBundle } from './defaults/en';
+import defaultLocaleBundle from './defaults/en';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -111,8 +111,12 @@ export function resolveString(key: string, ...formatArgs: FormatArg[]): string {
     return applyFormat(_localeBundle[key], formatArgs);
   }
 
-  // Level 4
-  if (Object.prototype.hasOwnProperty.call(defaultLocaleBundle, key)) {
+  // Level 4 — guard the bundle like Level 3 guards _localeBundle. Without it, a
+  // bundle that failed to resolve makes hasOwnProperty.call(undefined, key) throw
+  // ("Cannot convert undefined value to object"), and since useString() runs during
+  // render that throw reaches ErrorBoundary and blanks the whole page. Falling
+  // through to Level 5 degrades to raw keys instead — visible and diagnosable.
+  if (defaultLocaleBundle && Object.prototype.hasOwnProperty.call(defaultLocaleBundle, key)) {
     return applyFormat(defaultLocaleBundle[key], formatArgs);
   }
 

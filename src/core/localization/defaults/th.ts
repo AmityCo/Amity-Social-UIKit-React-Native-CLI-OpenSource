@@ -16,3 +16,7 @@
 import bundle from './th.json';
 
 export const thLocaleBundle: Record<string, string> = bundle;
+
+// See en.ts — default export keeps import sites working whether Metro resolves
+// this file or th.json.
+export default bundle;
