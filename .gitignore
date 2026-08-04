@@ -87,8 +87,5 @@ lib/
 # Claude
 .claude/plans
 
-# Port tooling (local dev only)
-scripts/
-
 # Example app env (keys) — commit .env.example instead
 example/.env
