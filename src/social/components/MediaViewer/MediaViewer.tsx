@@ -1,21 +1,34 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   FlatList,
+  GestureResponderEvent,
   Image,
   ImageStyle,
+  LayoutChangeEvent,
   Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  PanResponder,
+  Pressable,
   StyleProp,
+  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
-import Video from 'react-native-video';
+import Video, {
+  type OnLoadData,
+  type OnProgressData,
+  type VideoRef,
+} from 'react-native-video';
 import { SvgXml } from 'react-native-svg';
 import {
+  backward10Icon,
   clearIcon,
+  forward10Icon,
+  pauseControlIcon,
+  playControlIcon,
   soundOnIcon,
   soundOffIcon,
 } from '../../../core/assets/icons/xml';
@@ -37,6 +50,16 @@ type MediaViewerProps = {
   onClose: (lastIndex: number) => void;
 };
 
+const CONTROLS_AUTO_HIDE_MS = 3000;
+
+function formatTime(seconds: number): string {
+  if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
+  const total = Math.floor(seconds);
+  const mins = Math.floor(total / 60);
+  const secs = total % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
 export function MediaViewer({
   visible,
   items,
@@ -46,6 +69,7 @@ export function MediaViewer({
   const { styles } = useStyles();
   const { width } = useWindowDimensions();
   const listRef = useRef<FlatList<MediaViewerItem>>(null);
+  const videoRef = useRef<VideoRef | null>(null);
   const [current, setCurrent] = useState(initialIndex);
   // Mute-carry (PDT-4309 / PDT-4312): the first video plays unmuted; each swipe
   // defaults the next video to muted — until the user unmutes, after which
@@ -53,12 +77,53 @@ export function MediaViewer({
   const [muted, setMuted] = useState(false);
   const keepUnmutedRef = useRef(false);
 
+  // --- playback controls (ported from web VideoPlayerControls) ---
+  const [userPaused, setUserPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [scrubbing, setScrubbing] = useState(false);
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const [trackWidth, setTrackWidth] = useState(0);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearHideTimer = useCallback(() => {
+    if (hideTimer.current) {
+      clearTimeout(hideTimer.current);
+      hideTimer.current = null;
+    }
+  }, []);
+
+  const scheduleHide = useCallback(() => {
+    clearHideTimer();
+    hideTimer.current = setTimeout(
+      () => setControlsVisible(false),
+      CONTROLS_AUTO_HIDE_MS
+    );
+  }, [clearHideTimer]);
+
+  const revealControls = useCallback(() => {
+    setControlsVisible(true);
+    scheduleHide();
+  }, [scheduleHide]);
+
+  const resetPlayback = useCallback(() => {
+    setUserPaused(false);
+    setProgress(0);
+    setDuration(0);
+    setScrubbing(false);
+  }, []);
+
   useEffect(() => {
-    if (!visible) return;
+    if (!visible) {
+      clearHideTimer();
+      return;
+    }
     setCurrent(initialIndex);
     setMuted(false);
     keepUnmutedRef.current = false;
-  }, [visible, initialIndex]);
+    resetPlayback();
+    revealControls();
+  }, [visible, initialIndex, resetPlayback, revealControls, clearHideTimer]);
 
   const onMomentumScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -67,9 +132,11 @@ export function MediaViewer({
       if (idx !== current) {
         setCurrent(idx);
         setMuted(!keepUnmutedRef.current);
+        resetPlayback();
+        revealControls();
       }
     },
-    [width, current]
+    [width, current, resetPlayback, revealControls]
   );
 
   const toggleMute = useCallback(() => {
@@ -78,30 +145,197 @@ export function MediaViewer({
       keepUnmutedRef.current = !next; // user unmuted -> keep unmuted afterwards
       return next;
     });
+    revealControls();
+  }, [revealControls]);
+
+  const togglePlay = useCallback(() => {
+    setUserPaused((p) => !p);
+    revealControls();
+  }, [revealControls]);
+
+  const seekBy = useCallback(
+    (delta: number) => {
+      const next = Math.max(0, Math.min(duration || 0, progress + delta));
+      videoRef.current?.seek(next);
+      setProgress(next);
+      revealControls();
+    },
+    [duration, progress, revealControls]
+  );
+
+  const onLoad = useCallback((data: OnLoadData) => {
+    setDuration(data.duration ?? 0);
   }, []);
+
+  const onProgress = useCallback(
+    (data: OnProgressData) => {
+      if (!scrubbing) setProgress(data.currentTime);
+    },
+    [scrubbing]
+  );
+
+  const seekToX = useCallback(
+    (locationX: number) => {
+      if (trackWidth <= 0 || duration <= 0) return;
+      const ratio = Math.max(0, Math.min(1, locationX / trackWidth));
+      setProgress(ratio * duration);
+    },
+    [trackWidth, duration]
+  );
+
+  // Scrubber: a horizontal drag inside a horizontal pager. We claim the gesture
+  // and disable FlatList scroll while scrubbing so the two don't fight.
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderGrant: (e: GestureResponderEvent) => {
+          setScrubbing(true);
+          clearHideTimer();
+          setControlsVisible(true);
+          seekToX(e.nativeEvent.locationX);
+        },
+        onPanResponderMove: (e: GestureResponderEvent) => {
+          seekToX(e.nativeEvent.locationX);
+        },
+        onPanResponderRelease: (e: GestureResponderEvent) => {
+          const ratio =
+            trackWidth > 0
+              ? Math.max(0, Math.min(1, e.nativeEvent.locationX / trackWidth))
+              : 0;
+          const target = ratio * (duration || 0);
+          videoRef.current?.seek(target);
+          setProgress(target);
+          setScrubbing(false);
+          scheduleHide();
+        },
+        onPanResponderTerminate: () => {
+          setScrubbing(false);
+          scheduleHide();
+        },
+      }),
+    [seekToX, clearHideTimer, scheduleHide, trackWidth, duration]
+  );
+
+  const onTrackLayout = useCallback((e: LayoutChangeEvent) => {
+    setTrackWidth(e.nativeEvent.layout.width);
+  }, []);
+
+  // The control overlay must live INSIDE the page (a descendant of the pager),
+  // so horizontal drags on the tap-target are reclaimed by the FlatList's
+  // native scroll — a container-level sibling overlay would swallow swipes.
+  const renderControls = useCallback(() => {
+    const progressPct =
+      duration > 0 ? Math.max(0, Math.min(1, progress / duration)) : 0;
+    return (
+      <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+        {/* full-surface tap target: taps toggle controls; horizontal moves
+            fall through to the pager (Pressable cancels on move). */}
+        <Pressable
+          style={StyleSheet.absoluteFill}
+          onPress={() =>
+            controlsVisible ? setControlsVisible(false) : revealControls()
+          }
+        />
+        {controlsVisible && (
+          <>
+            {/* Centered skip / play-pause / skip row */}
+            <View style={styles.centerControls} pointerEvents="box-none">
+              <TouchableOpacity
+                style={styles.centerBtn}
+                onPress={() => seekBy(-10)}
+              >
+                <SvgXml
+                  xml={backward10Icon('#FFFFFF')}
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.centerBtn} onPress={togglePlay}>
+                <SvgXml
+                  xml={
+                    userPaused
+                      ? playControlIcon('#FFFFFF')
+                      : pauseControlIcon('#FFFFFF')
+                  }
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.centerBtn}
+                onPress={() => seekBy(10)}
+              >
+                <SvgXml xml={forward10Icon('#FFFFFF')} width={24} height={24} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Bottom bar: time + scrubbable progress */}
+            <View style={styles.controlBar} pointerEvents="box-none">
+              <Text style={styles.controlTime}>
+                {formatTime(progress)} / {formatTime(duration)}
+              </Text>
+              <View
+                style={styles.progressTrack}
+                onLayout={onTrackLayout}
+                {...panResponder.panHandlers}
+              >
+                <View style={styles.progressBg} />
+                <View
+                  style={[
+                    styles.progressFill,
+                    { width: `${progressPct * 100}%` },
+                  ]}
+                />
+              </View>
+            </View>
+          </>
+        )}
+      </View>
+    );
+  }, [
+    styles,
+    controlsVisible,
+    setControlsVisible,
+    revealControls,
+    seekBy,
+    togglePlay,
+    userPaused,
+    progress,
+    duration,
+    onTrackLayout,
+    panResponder,
+  ]);
 
   const renderItem = useCallback(
     ({ item, index }: { item: MediaViewerItem; index: number }) => (
       <View style={[styles.page, { width }]}>
         {item.type === 'video' ? (
-          // pointerEvents none so horizontal swipes reach the pager instead of
-          // being captured by the native video view.
-          <View style={styles.media} pointerEvents="none">
-            <Video
-              source={
-                item.videoType
-                  ? { uri: item.uri, type: item.videoType }
-                  : { uri: item.uri }
-              }
-              style={styles.media}
-              resizeMode="contain"
-              paused={index !== current || !visible}
-              muted={muted && index === current}
-              repeat
-              playInBackground={false}
-              playWhenInactive={false}
-            />
-          </View>
+          <>
+            {/* pointerEvents none so horizontal swipes reach the pager instead
+                of being captured by the native video view. */}
+            <View style={styles.media} pointerEvents="none">
+              <Video
+                ref={index === current ? videoRef : undefined}
+                source={
+                  item.videoType
+                    ? { uri: item.uri, type: item.videoType }
+                    : { uri: item.uri }
+                }
+                style={styles.media}
+                resizeMode="contain"
+                paused={index !== current || !visible || userPaused}
+                muted={muted && index === current}
+                repeat
+                playInBackground={false}
+                playWhenInactive={false}
+                onLoad={index === current ? onLoad : undefined}
+                onProgress={index === current ? onProgress : undefined}
+              />
+            </View>
+            {index === current && renderControls()}
+          </>
         ) : (
           <Image
             source={{ uri: item.uri }}
@@ -111,7 +345,17 @@ export function MediaViewer({
         )}
       </View>
     ),
-    [styles, width, current, muted, visible]
+    [
+      styles,
+      width,
+      current,
+      muted,
+      visible,
+      userPaused,
+      onLoad,
+      onProgress,
+      renderControls,
+    ]
   );
 
   const currentIsVideo = items[current]?.type === 'video';
@@ -151,6 +395,7 @@ export function MediaViewer({
           data={items}
           horizontal
           pagingEnabled
+          scrollEnabled={!scrubbing}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(it, i) => `${it.uri}-${i}`}
           renderItem={renderItem}

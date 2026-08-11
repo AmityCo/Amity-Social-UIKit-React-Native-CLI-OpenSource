@@ -106,6 +106,36 @@ export const clearIcon = (
 ): string => `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M8.82715 17.3906C13.4238 17.3906 17.2119 13.5938 17.2119 9.00586C17.2119 4.40918 13.415 0.612305 8.82715 0.612305C4.23047 0.612305 0.442383 4.40918 0.442383 9.00586C0.442383 13.5938 4.23926 17.3906 8.82715 17.3906ZM5.88281 12.5479C5.54883 12.5479 5.28516 12.2842 5.28516 11.9502C5.28516 11.792 5.34668 11.6514 5.46973 11.5283L7.9834 9.01465L5.46973 6.49219C5.34668 6.37793 5.28516 6.22852 5.28516 6.07031C5.28516 5.74512 5.54883 5.49023 5.88281 5.49023C6.0498 5.49023 6.19043 5.54297 6.2959 5.66602L8.82715 8.17969L11.3584 5.65723C11.4902 5.52539 11.6221 5.47266 11.7803 5.47266C12.1055 5.47266 12.3691 5.73633 12.3691 6.06152C12.3691 6.22852 12.3164 6.36035 12.1934 6.4834L9.6709 9.01465L12.1846 11.5283C12.3076 11.6514 12.3691 11.7832 12.3691 11.9502C12.3691 12.2842 12.1055 12.5479 11.7627 12.5479C11.5957 12.5479 11.4551 12.4863 11.332 12.3721L8.82715 9.84961L6.32227 12.3721C6.19922 12.4863 6.0498 12.5479 5.88281 12.5479Z" fill="${color}"/>
 </svg>`;
+// Ported from web UIKit icons/Play — solid triangle, used in the full-screen
+// video player control bar (play/pause toggle).
+export const playControlIcon = (
+  color: string = '#FFFFFF'
+): string => `<svg width="24" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M19.531 10.809a1.71 1.71 0 010 2.918L7.156 21.039c-1.125.668-2.531-.14-2.531-1.477V4.938c0-1.44 1.512-2.039 2.531-1.44l12.375 7.312z" fill="${color}"/>
+</svg>`;
+// Ported from web UIKit icons/Pause — two bars, used in the full-screen video
+// player control bar.
+export const pauseControlIcon = (
+  color: string = '#FFFFFF'
+): string => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M9.1875 20.0898H5.8125C4.86328 20.0898 4.125 19.3516 4.125 18.4023V6.02734C4.125 5.11328 4.86328 4.33984 5.8125 4.33984H9.1875C10.1016 4.33984 10.875 5.11328 10.875 6.02734V18.4023C10.875 19.3516 10.1016 20.0898 9.1875 20.0898ZM19.875 18.4023C19.875 19.3516 19.1016 20.0898 18.1875 20.0898H14.8125C13.8633 20.0898 13.125 19.3516 13.125 18.4023V6.02734C13.125 5.11328 13.8633 4.33984 14.8125 4.33984H18.1875C19.1016 4.33984 19.875 5.11328 19.875 6.02734V18.4023Z" fill="${color}"/>
+</svg>`;
+// Ported from web UIKit icons/Backward10 — skip back 10 seconds.
+export const backward10Icon = (
+  color: string = '#FFFFFF'
+): string => `<svg width="24" height="24" viewBox="0 0 26 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11 19V12L9 13.3125" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="15.5" cy="15.5" rx="1.75" ry="3.5" stroke="${color}" stroke-width="1.5" fill="none"/>
+<path d="M4.81605 6.80412C-0.0309168 11.1977 -0.296082 18.579 4.22379 23.2905C8.74366 28.0021 16.337 28.2599 21.1839 23.8663C26.0309 19.4726 26.2961 12.0914 21.7762 7.37984C19.2053 4.69988 15.64 3.46089 12.1514 3.69923M13.8571 1L10.8008 3.83294L13.8571 6.87098" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+// Ported from web UIKit icons/Forward10 — skip forward 10 seconds.
+export const forward10Icon = (
+  color: string = '#FFFFFF'
+): string => `<svg width="24" height="24" viewBox="0 0 26 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11 19V12L9 13.3125" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="15.5" cy="15.5" rx="1.75" ry="3.5" stroke="${color}" stroke-width="1.5" fill="none"/>
+<path d="M21.1839 6.80412C26.0309 11.1977 26.2961 18.579 21.7762 23.2905C17.2563 28.0021 9.66302 28.2599 4.81605 23.8663C-0.0309169 19.4726 -0.296081 12.0914 4.22379 7.37984C6.7947 4.69988 10.36 3.46089 13.8486 3.69923M12.1429 1L15.1992 3.83294L12.1429 6.87098" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
 export const cameraIcon: string = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M19.5 19.5H4.5C4.10218 19.5 3.72064 19.342 3.43934 19.0607C3.15804 18.7794 3 18.3978 3 18V7.5C3 7.10218 3.15804 6.72064 3.43934 6.43934C3.72064 6.15804 4.10218 6 4.5 6H7.49945L8.99945 3.75H14.9995L16.4995 6H19.5C19.8978 6 20.2794 6.15804 20.5607 6.43934C20.842 6.72064 21 7.10218 21 7.5V18C21 18.3978 20.842 18.7794 20.5607 19.0607C20.2794 19.342 19.8978 19.5 19.5 19.5Z" stroke="#292B32" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M12 15.75C13.864 15.75 15.375 14.239 15.375 12.375C15.375 10.511 13.864 9 12 9C10.136 9 8.625 10.511 8.625 12.375C8.625 14.239 10.136 15.75 12 15.75Z" stroke="#292B32" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
