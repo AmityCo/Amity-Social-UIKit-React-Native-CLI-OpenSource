@@ -37,11 +37,8 @@ import uiSlice from '../../../../core/stores/slices/uiSlice';
 import { amityPostsFormatter } from '../../../../core/utils/post';
 import useAuth from '../../../../core/hooks/useAuth';
 import globalfeedSlice from '../../../../core/stores/slices/globalfeedSlice';
-import {
-  createPostToFeed,
-  editPost,
-  getPostById,
-} from '../../../../core/legacy/feed';
+import { createPostToFeed, editPost } from '../../../../core/legacy/feed';
+import { usePostByIds } from '../../../../core/hooks/usePostByIds';
 import TextKeyElement from '../../../elements/TextKeyElement/TextKeyElement';
 import AmityMediaAttachmentComponent from '../components/MediaAttachment';
 import AmityDetailedMediaAttachmentComponent from '../components/DetailedMediaAttachment';
@@ -198,22 +195,19 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     []
   );
 
-  const getPostInfo = useCallback(
-    async (postArray: string[]) => {
-      try {
-        const response = await Promise.all(
-          postArray.map(async (id: string) => {
-            const { data } = await getPostById(id);
-            return data;
-          })
-        );
+  // Load the edited post's child media the same way the web UIKit does
+  // (usePostByIds → batch getPostByIds), instead of the racy per-id fetch.
+  const childrenPosts = usePostByIds(post?.children ?? []);
 
+  const getPostInfo = useCallback(
+    async (response: Amity.Post[]) => {
+      try {
         const images: IDisplayImage[] = [];
         const videos: IDisplayImage[] = [];
 
         for (const item of response) {
           if (item?.dataType === 'image') {
-            const fileId = item?.data?.fileId;
+            const fileId = (item as Amity.Post<'image'>)?.data?.fileId;
             const url = await getImage({
               fileId: fileId,
               imageSize: ImageSizeState.full,
@@ -226,8 +220,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
               postId: item.postId,
             });
           } else if (item?.dataType === 'video') {
-            const fileId = item?.data?.videoFileId?.original;
-            const thumbnailFileId = item?.data?.thumbnailFileId;
+            const videoData = (item as Amity.Post<'video'>)?.data;
+            const fileId = videoData?.videoFileId?.original;
+            const thumbnailFileId = videoData?.thumbnailFileId;
             const fileUrls = await Promise.allSettled(
               [fileId, thumbnailFileId].map(async (id) => {
                 return await getImage({
@@ -268,8 +263,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   }, []);
 
   useEffect(() => {
-    post?.children && getPostInfo(post?.children);
-  }, [getPostInfo, post?.children]);
+    if (childrenPosts.length > 0) getPostInfo(childrenPosts);
+  }, [getPostInfo, childrenPosts]);
 
   const getMentionPositions = useCallback(
     (text: string, mentioneeIds: string[]) => {
