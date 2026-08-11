@@ -46,9 +46,9 @@ import { useKeyboardStatus } from '../../../hooks';
 import ImagePicker, {
   type Asset,
   launchCamera,
-  launchImageLibrary,
 } from 'react-native-image-picker';
 import { SelectedMediaComponent } from '../../../components/SelectedMediaComponent';
+import { MediaSelector } from '../../../components/MediaSelector';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import {
@@ -112,6 +112,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const [isSwipeup, setIsSwipeup] = useState(true);
   const [deletedPostIds, setDeletedPostIds] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [mediaSelectorType, setMediaSelectorType] = useState<
+    'photo' | 'video' | null
+  >(null);
   const [hasChangedAttachment, setHasChangedAttachment] = useState(false);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [videoErrors, setVideoErrors] = useState<Set<string>>(new Set());
@@ -576,31 +579,34 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     ]);
   }, [displayImages.length, displayVideos.length, pickCamera]);
 
-  // Open the native OS camera roll (matches the web UIKit's native file
-  // picker). Appends the picked media, de-duplicating by uri and capping at 10.
-  const pickFromLibrary = useCallback(
-    async (mediaType: 'photo' | 'video') => {
-      const isPhoto = mediaType === 'photo';
-      const current = isPhoto ? displayImages.length : displayVideos.length;
-      if (current >= 10)
-        return Alert.alert(
-          'Maximum upload limit reached',
-          `You've reached the upload limit of 10 ${
-            isPhoto ? 'images' : 'videos'
-          }. Any additional ${isPhoto ? 'images' : 'videos'} will not be saved.`
-        );
-      const result: ImagePicker.ImagePickerResponse = await launchImageLibrary({
-        mediaType,
-        quality: 1,
-        selectionLimit: 10 - current,
-      });
-      if (result.didCancel || !result.assets?.length) return;
-      const uris = result.assets
-        .map((a: Asset) => a.uri)
-        .filter(Boolean) as string[];
+  const onPressImage = useCallback(async () => {
+    if (displayImages.length >= 10)
+      return Alert.alert(
+        'Maximum upload limit reached',
+        "You've reached the upload limit of 10 images. Any additional images will not be saved."
+      );
+    setMediaSelectorType('photo');
+  }, [displayImages.length]);
+
+  const onPressVideo = useCallback(async () => {
+    if (displayVideos.length >= 10)
+      return Alert.alert(
+        'Maximum upload limit reached',
+        "You've reached the upload limit of 10 videos. Any additional videos will not be saved."
+      );
+    setMediaSelectorType('video');
+  }, [displayVideos.length]);
+
+  // Receives new URIs from the custom media selector. Silently drops duplicates
+  // (already-selected files) and caps the total at 10, per PDT-4314.
+  const handleSelectedMedia = useCallback(
+    (uris: string[]) => {
+      const type = mediaSelectorType;
+      setMediaSelectorType(null);
+      if (!type || uris.length === 0) return;
       const mediaOj = processMedia(uris);
       if (!mediaOj) return;
-      const setter = isPhoto ? setDisplayImages : setDisplayVideos;
+      const setter = type === 'photo' ? setDisplayImages : setDisplayVideos;
       setter((prev) => {
         const existingUrls = new Set(prev.map((m) => m.url));
         const additions = mediaOj.filter((m) => !existingUrls.has(m.url));
@@ -608,17 +614,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         return updated.length > 10 ? updated.slice(0, 10) : updated;
       });
     },
-    [displayImages.length, displayVideos.length, processMedia]
-  );
-
-  const onPressImage = useCallback(
-    () => pickFromLibrary('photo'),
-    [pickFromLibrary]
-  );
-
-  const onPressVideo = useCallback(
-    () => pickFromLibrary('video'),
-    [pickFromLibrary]
+    [mediaSelectorType, processMedia]
   );
 
   const handleImageUploadError = useCallback(
@@ -859,6 +855,22 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         </View>
       </KeyboardAvoidingView>
       <StatusBar backgroundColor={themeStyles.colors.background} />
+      <MediaSelector
+        visible={mediaSelectorType !== null}
+        mediaType={mediaSelectorType ?? 'photo'}
+        existing={(mediaSelectorType === 'video'
+          ? displayVideos
+          : displayImages
+        ).map((m) => m.url)}
+        remaining={
+          10 -
+          (mediaSelectorType === 'video'
+            ? displayVideos.length
+            : displayImages.length)
+        }
+        onClose={() => setMediaSelectorType(null)}
+        onConfirm={handleSelectedMedia}
+      />
     </SafeAreaView>
   );
 };
