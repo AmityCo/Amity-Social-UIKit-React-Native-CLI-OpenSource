@@ -24,9 +24,7 @@ import Video, {
 } from 'react-native-video';
 import { SvgXml } from 'react-native-svg';
 import {
-  backward10Icon,
   clearIcon,
-  forward10Icon,
   pauseControlIcon,
   playControlIcon,
   soundOnIcon,
@@ -153,16 +151,6 @@ export function MediaViewer({
     revealControls();
   }, [revealControls]);
 
-  const seekBy = useCallback(
-    (delta: number) => {
-      const next = Math.max(0, Math.min(duration || 0, progress + delta));
-      videoRef.current?.seek(next);
-      setProgress(next);
-      revealControls();
-    },
-    [duration, progress, revealControls]
-  );
-
   const onLoad = useCallback((data: OnLoadData) => {
     setDuration(data.duration ?? 0);
   }, []);
@@ -240,18 +228,8 @@ export function MediaViewer({
         />
         {controlsVisible && (
           <>
-            {/* Centered skip / play-pause / skip row */}
+            {/* Centered play/pause */}
             <View style={styles.centerControls} pointerEvents="box-none">
-              <TouchableOpacity
-                style={styles.centerBtn}
-                onPress={() => seekBy(-10)}
-              >
-                <SvgXml
-                  xml={backward10Icon('#FFFFFF')}
-                  width={24}
-                  height={24}
-                />
-              </TouchableOpacity>
               <TouchableOpacity style={styles.centerBtn} onPress={togglePlay}>
                 <SvgXml
                   xml={
@@ -262,12 +240,6 @@ export function MediaViewer({
                   width={24}
                   height={24}
                 />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.centerBtn}
-                onPress={() => seekBy(10)}
-              >
-                <SvgXml xml={forward10Icon('#FFFFFF')} width={24} height={24} />
               </TouchableOpacity>
             </View>
 
@@ -299,7 +271,6 @@ export function MediaViewer({
     controlsVisible,
     setControlsVisible,
     revealControls,
-    seekBy,
     togglePlay,
     userPaused,
     progress,
