@@ -24,6 +24,7 @@ interface OverlayImageProps {
   fileCount?: number;
   postId?: string;
   setIsUploading?: (arg: boolean) => void;
+  carousel?: boolean;
 }
 const LoadingImage = ({
   source,
@@ -37,6 +38,7 @@ const LoadingImage = ({
   fileCount,
   postId,
   setIsUploading,
+  carousel = false,
 }: OverlayImageProps) => {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -120,10 +122,18 @@ const LoadingImage = ({
     uploadFileToAmity();
   };
   return (
-    <View style={fileCount >= 3 ? styles.image3XContainer : styles.container}>
+    <View
+      style={
+        carousel
+          ? styles.carouselContainer
+          : fileCount >= 3
+          ? styles.image3XContainer
+          : styles.container
+      }
+    >
       <Image
         source={{ uri: source }}
-        resizeMode="contain"
+        resizeMode={carousel ? 'cover' : 'contain'}
         style={[
           styles.image,
           loading ? styles.loadingImage : styles.loadedImage,

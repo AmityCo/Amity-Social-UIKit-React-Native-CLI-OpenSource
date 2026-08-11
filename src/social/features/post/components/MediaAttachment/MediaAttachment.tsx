@@ -17,6 +17,9 @@ type AmityMediaAttachmentComponentType = {
   onPressVideo: () => void;
   chosenMediaType?: mediaAttachment;
   onHeightChange?: (height: number) => void;
+  /** When the 10-attachment cap is reached, the camera + gallery icons are
+   * disabled and untappable (PDT-4310 / PDT-4312). */
+  disabled?: boolean;
 };
 
 const AmityMediaAttachmentComponent: FC<AmityMediaAttachmentComponentType> = ({
@@ -25,6 +28,7 @@ const AmityMediaAttachmentComponent: FC<AmityMediaAttachmentComponentType> = ({
   onPressVideo,
   chosenMediaType,
   onHeightChange,
+  disabled = false,
 }) => {
   const pageId = PageID.post_composer_page;
   const componentId = ComponentID.media_attachment;
@@ -89,8 +93,9 @@ const AmityMediaAttachmentComponent: FC<AmityMediaAttachmentComponentType> = ({
             testID={cameraElement.accessibilityId}
             accessibilityLabel={cameraElement.accessibilityId}
             onPress={onPressCamera}
+            disabled={disabled}
           >
-            <View style={styles.iconContainer}>
+            <View style={[styles.iconContainer, disabled && { opacity: 0.4 }]}>
               <SvgXml
                 xml={camera()}
                 width={24}
@@ -107,8 +112,11 @@ const AmityMediaAttachmentComponent: FC<AmityMediaAttachmentComponentType> = ({
               testID={imageElement.accessibilityId}
               accessibilityLabel={imageElement.accessibilityId}
               onPress={onPressImage}
+              disabled={disabled}
             >
-              <View style={styles.iconContainer}>
+              <View
+                style={[styles.iconContainer, disabled && { opacity: 0.4 }]}
+              >
                 <SvgXml
                   xml={photo()}
                   width={24}
@@ -124,8 +132,11 @@ const AmityMediaAttachmentComponent: FC<AmityMediaAttachmentComponentType> = ({
               testID={videoElement.accessibilityId}
               accessibilityLabel={videoElement.accessibilityId}
               onPress={onPressVideo}
+              disabled={disabled}
             >
-              <View style={styles.iconContainer}>
+              <View
+                style={[styles.iconContainer, disabled && { opacity: 0.4 }]}
+              >
                 <SvgXml
                   xml={video()}
                   width={24}

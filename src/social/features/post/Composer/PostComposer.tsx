@@ -1,6 +1,5 @@
 import {
   Alert,
-  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -48,12 +47,11 @@ import AmityMediaAttachmentComponent from '../components/MediaAttachment';
 import AmityDetailedMediaAttachmentComponent from '../components/DetailedMediaAttachment';
 import { useKeyboardStatus } from '../../../hooks';
 import ImagePicker, {
-  launchImageLibrary,
   type Asset,
   launchCamera,
 } from 'react-native-image-picker';
-import LoadingImage from '../../../components/LoadingImage';
-import LoadingVideo from '../../../components/LoadingVideo';
+import { SelectedMediaComponent } from '../../../components/SelectedMediaComponent';
+import { MediaSelector } from '../../../components/MediaSelector';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import {
@@ -117,6 +115,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const [isSwipeup, setIsSwipeup] = useState(true);
   const [deletedPostIds, setDeletedPostIds] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [mediaSelectorType, setMediaSelectorType] = useState<
+    'photo' | 'video' | null
+  >(null);
   const [hasChangedAttachment, setHasChangedAttachment] = useState(false);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [videoErrors, setVideoErrors] = useState<Set<string>>(new Set());
@@ -584,64 +585,42 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   }, [displayImages.length, displayVideos.length, pickCamera]);
 
   const onPressImage = useCallback(async () => {
-    if (displayImages.length === 10)
+    if (displayImages.length >= 10)
       return Alert.alert(
         'Maximum upload limit reached',
         "You've reached the upload limit of 10 images. Any additional images will not be saved."
       );
-    const result: ImagePicker.ImagePickerResponse = await launchImageLibrary({
-      mediaType: 'photo',
-      quality: 1,
-      selectionLimit: 10 - displayImages.length,
-    });
-    if (!result.didCancel && result.assets && result.assets.length > 0) {
-      const imageUriArr: string[] = result.assets.map(
-        (item: Asset) => item.uri
-      ) as string[];
-      const mediaOj = processMedia(imageUriArr);
-      setDisplayImages((prev) => {
-        const updatedArray = [...prev, ...mediaOj];
-        if (updatedArray.length > 10) {
-          Alert.alert(
-            'Maximum number of images exceeded',
-            'Maximum number of images that can be uploaded is 10. The rest images will be discarded'
-          );
-          return updatedArray.slice(0, 10);
-        }
-        return updatedArray;
-      });
-    }
-  }, [displayImages.length, processMedia]);
+    setMediaSelectorType('photo');
+  }, [displayImages.length]);
 
   const onPressVideo = useCallback(async () => {
-    if (displayVideos.length === 10)
+    if (displayVideos.length >= 10)
       return Alert.alert(
         'Maximum upload limit reached',
         "You've reached the upload limit of 10 videos. Any additional videos will not be saved."
       );
-    const result: ImagePicker.ImagePickerResponse = await launchImageLibrary({
-      mediaType: 'video',
-      quality: 1,
-      selectionLimit: 10 - displayVideos.length,
-    });
-    if (!result.didCancel && result.assets && result.assets.length > 0) {
-      const videoUriArr: string[] = result.assets.map(
-        (item: Asset) => item.uri
-      ) as string[];
-      const mediaOj = processMedia(videoUriArr);
-      setDisplayVideos((prev) => {
-        const updatedArray = [...prev, ...mediaOj];
-        if (updatedArray.length > 10) {
-          Alert.alert(
-            'Maximum number of videos exceeded',
-            'Maximum number of videos that can be uploaded is 10. The rest videos will be discarded'
-          );
-          return updatedArray.slice(0, 10);
-        }
-        return updatedArray;
+    setMediaSelectorType('video');
+  }, [displayVideos.length]);
+
+  // Receives new URIs from the custom media selector. Silently drops duplicates
+  // (already-selected files) and caps the total at 10, per PDT-4314.
+  const handleSelectedMedia = useCallback(
+    (uris: string[]) => {
+      const type = mediaSelectorType;
+      setMediaSelectorType(null);
+      if (!type || uris.length === 0) return;
+      const mediaOj = processMedia(uris);
+      if (!mediaOj) return;
+      const setter = type === 'photo' ? setDisplayImages : setDisplayVideos;
+      setter((prev) => {
+        const existingUrls = new Set(prev.map((m) => m.url));
+        const additions = mediaOj.filter((m) => !existingUrls.has(m.url));
+        const updated = [...prev, ...additions];
+        return updated.length > 10 ? updated.slice(0, 10) : updated;
       });
-    }
-  }, [displayVideos.length, processMedia]);
+    },
+    [mediaSelectorType, processMedia]
+  );
 
   const handleImageUploadError = useCallback(
     (hasError: boolean, source: string) => {
@@ -752,6 +731,11 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     []
   );
 
+  // PDT-4310 / PDT-4312: at the 10-attachment cap the camera + gallery icons
+  // are disabled until the user removes a frame.
+  const isMediaCapReached =
+    displayImages.length >= 10 || displayVideos.length >= 10;
+
   const renderDetailedAttachment = useCallback(() => {
     if (isEditMode) return null;
     if (shouldShowDetailAttachment) {
@@ -762,6 +746,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           onPressVideo={onPressVideo}
           chosenMediaType={chosenMediaType}
           onHeightChange={setAttachmentBarHeight}
+          disabled={isMediaCapReached}
         />
       );
     }
@@ -772,11 +757,13 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         onPressVideo={onPressVideo}
         chosenMediaType={chosenMediaType}
         onHeightChange={setAttachmentBarHeight}
+        disabled={isMediaCapReached}
       />
     );
   }, [
     chosenMediaType,
     isEditMode,
+    isMediaCapReached,
     onPressCamera,
     onPressImage,
     onPressVideo,
@@ -835,54 +822,25 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           })}
           <View style={styles.imageContainer}>
             {displayImages.length > 0 && (
-              <FlatList
-                nestedScrollEnabled={true}
-                scrollEnabled={false}
-                data={displayImages}
-                renderItem={({ item, index }) => {
-                  if (!item) return null;
-                  return (
-                    <LoadingImage
-                      source={item.url}
-                      onClose={handleOnCloseImage}
-                      index={index} //TODO: Fix this without index
-                      onLoadFinish={handleOnFinishImage}
-                      onUploadError={handleImageUploadError}
-                      isUploaded={item.isUploaded}
-                      fileId={item.fileId}
-                      fileCount={displayImages.length}
-                      isEditMode={isEditMode}
-                      postId={item.postId}
-                      setIsUploading={setIsUploading}
-                    />
-                  );
-                }}
-                numColumns={3}
+              <SelectedMediaComponent
+                mediaType="image"
+                media={displayImages}
+                onClose={handleOnCloseImage}
+                onLoadFinish={handleOnFinishImage}
+                onUploadError={handleImageUploadError}
+                isEditMode={isEditMode}
+                setIsUploading={setIsUploading}
               />
             )}
             {displayVideos.length > 0 && (
-              <FlatList
-                data={displayVideos}
-                renderItem={({ item, index }) => {
-                  if (!item) return null;
-                  return (
-                    <LoadingVideo
-                      source={item.url}
-                      onClose={handleOnCloseVideo}
-                      index={index} //TODO: Fix this without index
-                      onLoadFinish={handleOnFinishVideo}
-                      onUploadError={handleVideoUploadError}
-                      isUploaded={item.isUploaded}
-                      fileId={item.fileId}
-                      thumbNail={item.thumbNail as string}
-                      fileCount={displayVideos.length}
-                      isEditMode={isEditMode}
-                      postId={item.postId}
-                      setIsUploading={setIsUploading}
-                    />
-                  );
-                }}
-                numColumns={3}
+              <SelectedMediaComponent
+                mediaType="video"
+                media={displayVideos}
+                onClose={handleOnCloseVideo}
+                onLoadFinish={handleOnFinishVideo}
+                onUploadError={handleVideoUploadError}
+                isEditMode={isEditMode}
+                setIsUploading={setIsUploading}
               />
             )}
           </View>
@@ -902,6 +860,22 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         </View>
       </KeyboardAvoidingView>
       <StatusBar backgroundColor={themeStyles.colors.background} />
+      <MediaSelector
+        visible={mediaSelectorType !== null}
+        mediaType={mediaSelectorType ?? 'photo'}
+        existing={(mediaSelectorType === 'video'
+          ? displayVideos
+          : displayImages
+        ).map((m) => m.url)}
+        remaining={
+          10 -
+          (mediaSelectorType === 'video'
+            ? displayVideos.length
+            : displayImages.length)
+        }
+        onClose={() => setMediaSelectorType(null)}
+        onConfirm={handleSelectedMedia}
+      />
     </SafeAreaView>
   );
 };
