@@ -595,20 +595,33 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         selectionLimit: 10 - current,
       });
       if (result.didCancel || !result.assets?.length) return;
-      const uris = result.assets
-        .map((a: Asset) => a.uri)
-        .filter(Boolean) as string[];
-      const mediaOj = processMedia(uris);
-      if (!mediaOj) return;
+
       const setter = isPhoto ? setDisplayImages : setDisplayVideos;
       setter((prev) => {
-        const existingUrls = new Set(prev.map((m) => m.url));
-        const additions = mediaOj.filter((m) => !existingUrls.has(m.url));
+        // Silently drop duplicates, matching the web UIKit (which dedups by
+        // file name). The picker copies each pick to a fresh temp uri, so uri
+        // is not stable across picks — the original `fileName` is.
+        const seen = new Set(prev.map((m) => m.fileName));
+        const additions: IDisplayImage[] = [];
+        for (const asset of result.assets ?? []) {
+          if (!asset.uri) continue;
+          const fileName =
+            asset.fileName ??
+            asset.uri.substring(asset.uri.lastIndexOf('/') + 1);
+          if (seen.has(fileName)) continue; // duplicate → silently drop
+          seen.add(fileName);
+          additions.push({
+            url: asset.uri,
+            fileName,
+            fileId: '',
+            isUploaded: false,
+          });
+        }
         const updated = [...prev, ...additions];
         return updated.length > 10 ? updated.slice(0, 10) : updated;
       });
     },
-    [displayImages.length, displayVideos.length, processMedia]
+    [displayImages.length, displayVideos.length]
   );
 
   const onPressImage = useCallback(
