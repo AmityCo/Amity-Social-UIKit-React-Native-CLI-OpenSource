@@ -209,12 +209,16 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
               fileId: fileId,
               imageSize: ImageSizeState.full,
             });
+            // Dimensions for composer frame-ratio classification (REQ-003d).
+            const imageInfo = (item as any)?.getImageInfo?.();
             images.push({
               url,
               fileId,
               fileName: fileId,
               isUploaded: true,
               postId: item.postId,
+              width: imageInfo?.getWidth?.(),
+              height: imageInfo?.getHeight?.(),
             });
           } else if (item?.dataType === 'video') {
             const videoData = (item as Amity.Post<'video'>)?.data;
@@ -228,6 +232,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
                 });
               })
             );
+            // STORED dims + rotation; rotation is applied at classify time
+            // (SelectedMediaComponent REQ-003d1 / AmityVideo REQ-SDK-002).
+            const videoInfo = (item as any)?.getVideoInfo?.();
             videos.push({
               //@ts-ignore
               url: fileUrls[0]?.value,
@@ -237,6 +244,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
               //@ts-ignore
               thumbNail: fileUrls[1]?.value,
               postId: item.postId,
+              width: videoInfo?.getWidth?.(),
+              height: videoInfo?.getHeight?.(),
+              rotation: videoInfo?.getRotation?.(),
             });
           }
         }
@@ -615,6 +625,10 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
             fileName,
             fileId: '',
             isUploaded: false,
+            // Locally-picked dimensions are already display-oriented (the
+            // picker's extractor applied any rotation) — no rotation to carry.
+            width: asset.width,
+            height: asset.height,
           });
         }
         const updated = [...prev, ...additions];

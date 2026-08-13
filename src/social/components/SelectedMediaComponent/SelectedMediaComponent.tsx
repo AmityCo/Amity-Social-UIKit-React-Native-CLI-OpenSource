@@ -12,6 +12,7 @@ import { MediaViewer, type MediaViewerItem } from '../MediaViewer';
 import { IDisplayImage } from '../../../core/types';
 import {
   getFrameRatio,
+  getVideoDisplayDims,
   FRAME_RATIO_VALUE,
   DEFAULT_FRAME_RATIO,
   type FrameRatio,
@@ -61,12 +62,42 @@ export function SelectedMediaComponent({
   const aspectRatio = FRAME_RATIO_VALUE[ratio];
   const slideWidth = trackWidth > 0 ? trackWidth - PEEK_INSET : 0;
 
-  // Frames follow the aspect ratio of the first media item; recalculated when
-  // the first item changes (e.g. it was removed).
-  const firstUrl = media[0]?.url;
+  // Frames follow the aspect ratio classified from the item currently in first
+  // position (REQ-003d/003e); recalculated when the first item changes.
+  const first = media[0];
+  const firstUrl = first?.url;
+  const firstWidth = first?.width;
+  const firstHeight = first?.height;
+  const firstRotation = first?.rotation;
   useEffect(() => {
-    if (mediaType !== 'image' || !firstUrl) {
+    if (!firstUrl) {
       setRatio(DEFAULT_FRAME_RATIO);
+      return undefined;
+    }
+    // Video: classify from the record/extractor dims, applying rotation
+    // (REQ-003d1 — MUST NOT silently fall back to 1:1 for video). Shares the
+    // one rotation derivation with the published carousel (REQ-SDK-002b).
+    if (mediaType === 'video') {
+      if (firstWidth && firstHeight) {
+        const { width, height } = getVideoDisplayDims({
+          width: firstWidth,
+          height: firstHeight,
+          rotation: firstRotation,
+        });
+        setRatio(getFrameRatio(width, height));
+      } else {
+        // Log the fallback so a square frame is never silently ambiguous
+        // (REQ-003d2).
+        console.log(
+          '[SelectedMediaComponent] video has no dimensions; defaulting ratio'
+        );
+        setRatio(DEFAULT_FRAME_RATIO);
+      }
+      return undefined;
+    }
+    // Image: prefer carried dims, else measure the source.
+    if (firstWidth && firstHeight) {
+      setRatio(getFrameRatio(firstWidth, firstHeight));
       return undefined;
     }
     let active = true;
@@ -82,7 +113,7 @@ export function SelectedMediaComponent({
     return () => {
       active = false;
     };
-  }, [firstUrl, mediaType]);
+  }, [firstUrl, firstWidth, firstHeight, firstRotation, mediaType]);
 
   const onLayout = (event: LayoutChangeEvent) => {
     const width = event.nativeEvent.layout.width;
@@ -171,6 +202,7 @@ export function SelectedMediaComponent({
                 decelerationRate="fast"
                 snapToInterval={slideWidth + SPACE_BETWEEN}
                 snapToAlignment="start"
+                contentContainerStyle={styles.selectedMedia__scrollContent}
               >
                 {media.map((item, index) => (
                   <View

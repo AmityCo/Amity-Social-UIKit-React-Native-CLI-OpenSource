@@ -1,5 +1,12 @@
-import { useMemo, useRef, useState, type MutableRefObject } from 'react';
 import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type MutableRefObject,
+} from 'react';
+import {
+  Animated,
   Image,
   ImageStyle,
   LayoutChangeEvent,
@@ -197,20 +204,57 @@ function PaginationIndicator({ current, total }: PaginationIndicatorProps) {
 
   return (
     <View style={styles.postMedia__indicator}>
-      {dots.map((dot) => (
-        <View key={dot.key} style={styles.postMedia__dotSlot}>
-          <View
-            style={[
-              styles.postMedia__dot,
-              dot.state === 'active'
-                ? styles.postMedia__dotActive
-                : dot.state === 'edge'
-                ? styles.postMedia__dotEdge
-                : styles.postMedia__dotInactive,
-            ]}
-          />
-        </View>
-      ))}
+      {dots.map((dot) =>
+        dot.state === 'edge' ? (
+          <EdgeDot key={dot.key} side={dot.side} />
+        ) : (
+          <View key={dot.key} style={styles.postMedia__dotSlot}>
+            <View
+              style={[
+                styles.postMedia__dot,
+                dot.state === 'active'
+                  ? styles.postMedia__dotActive
+                  : styles.postMedia__dotInactive,
+              ]}
+            />
+          </View>
+        )
+      )}
+    </View>
+  );
+}
+
+// The strip keeps a constant width (fixed-width slots, always 6 elements), so
+// an edge dot only needs to slide in from its own side over 300ms when it
+// first appears (REQ-013b).
+function EdgeDot({ side }: { side?: 'left' | 'right' }) {
+  const styles = useStyles();
+  const anim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const animation = Animated.timing(anim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    });
+    animation.start();
+    return () => animation.stop();
+  }, [anim]);
+
+  const translateX = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [side === 'left' ? -6 : 6, 0],
+  });
+
+  return (
+    <View style={styles.postMedia__dotSlot}>
+      <Animated.View
+        style={[
+          styles.postMedia__dot,
+          styles.postMedia__dotEdge,
+          { opacity: anim, transform: [{ translateX }] },
+        ]}
+      />
     </View>
   );
 }
