@@ -19,9 +19,12 @@ import {
 } from '../../utils/getFrameRatio';
 import { useStyles } from './styles';
 
-// Web PR #1830: slide width = calc(100% - 3.4375rem) so the next slide peeks;
-// slides are separated by spaceBetween 8. No counter, no dots.
-const PEEK_INSET = 55; // 3.4375rem
+// Peek scroll: next slide peeks by (PEEK_INSET − SPACE_BETWEEN). The composer
+// body (PostComposer `inputWrapper`) already insets everything 12px
+// horizontally, so this component adds NO side padding of its own — it only
+// sizes the slide so the peek lands at the spec's 31px (SelectedMediaComponent
+// REQ-003a). slideWidth = trackWidth − PEEK_INSET; peek = PEEK_INSET − 8 = 31.
+const PEEK_INSET = 39;
 const SPACE_BETWEEN = 8;
 
 export type SelectedMediaComponentProps = {
@@ -202,7 +205,6 @@ export function SelectedMediaComponent({
                 decelerationRate="fast"
                 snapToInterval={slideWidth + SPACE_BETWEEN}
                 snapToAlignment="start"
-                contentContainerStyle={styles.selectedMedia__scrollContent}
               >
                 {media.map((item, index) => (
                   <View

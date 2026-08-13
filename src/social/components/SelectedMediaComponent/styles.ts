@@ -17,11 +17,6 @@ export const useStyles = () => {
       position: 'relative',
       width: '100%',
     },
-    // Carousel content inset: 16 sides (Design Contract). With slideWidth =
-    // trackWidth − 55 this yields the specified 31px next-frame peek at 375.
-    selectedMedia__scrollContent: {
-      paddingHorizontal: 16,
-    },
     selectedMedia__slide: {
       // width + marginRight (spaceBetween 8) set inline from measured track width
     },
