@@ -9,7 +9,12 @@ import {
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
 import { deleteAmityFile, uploadVideoFile } from '../../../core/legacy/file';
-import { closeIcon, playBtn, toastIcon } from '../../../core/assets/icons/xml';
+import {
+  closeIcon,
+  playBtn,
+  toastIcon,
+  videoControlIcon,
+} from '../../../core/assets/icons/xml';
 import { useStyles } from './styles';
 import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';
@@ -39,6 +44,7 @@ interface OverlayImageProps {
   fileCount?: number;
   postId?: string;
   setIsUploading?: (arg: boolean) => void;
+  carousel?: boolean;
 }
 const LoadingVideo = ({
   source,
@@ -54,6 +60,7 @@ const LoadingVideo = ({
   fileCount,
   postId,
   setIsUploading,
+  carousel = false,
 }: OverlayImageProps) => {
   const dispatch = useUIKitDispatch();
   const { showToastMessage } = uiSlice.actions;
@@ -157,8 +164,13 @@ const LoadingVideo = ({
 
   const handleOnPlay = () => {
     setIsPause(!isPause);
+    // In carousel mode the parent (onPlay) opens the full-screen media viewer,
+    // so skip the default single-video route navigation.
+    if (onPlay) {
+      onPlay(source);
+      return;
+    }
     playVideoFullScreen(source);
-    onPlay && onPlay(source);
   };
 
   const onRetryUpload = () => {
@@ -166,10 +178,22 @@ const LoadingVideo = ({
   };
 
   return (
-    <View style={fileCount >= 3 ? styles.image3XContainer : styles.container}>
+    <View
+      style={
+        carousel
+          ? styles.carouselContainer
+          : fileCount >= 3
+          ? styles.image3XContainer
+          : styles.container
+      }
+    >
       {!loading && !isUploadError && isPause && (
         <TouchableOpacity style={styles.playButton} onPress={handleOnPlay}>
-          <SvgXml xml={playBtn} width="50" height="50" />
+          <SvgXml
+            xml={carousel ? videoControlIcon : playBtn}
+            width={carousel ? 40 : 50}
+            height={carousel ? 40 : 50}
+          />
         </TouchableOpacity>
       )}
       {playingUri && !isPause ? (

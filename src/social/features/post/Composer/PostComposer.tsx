@@ -1,6 +1,5 @@
 import {
   Alert,
-  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -38,22 +37,18 @@ import uiSlice from '../../../../core/stores/slices/uiSlice';
 import { amityPostsFormatter } from '../../../../core/utils/post';
 import useAuth from '../../../../core/hooks/useAuth';
 import globalfeedSlice from '../../../../core/stores/slices/globalfeedSlice';
-import {
-  createPostToFeed,
-  editPost,
-  getPostById,
-} from '../../../../core/legacy/feed';
+import { createPostToFeed, editPost } from '../../../../core/legacy/feed';
+import { usePostByIds } from '../../../../core/hooks/usePostByIds';
 import TextKeyElement from '../../../elements/TextKeyElement/TextKeyElement';
 import AmityMediaAttachmentComponent from '../components/MediaAttachment';
 import AmityDetailedMediaAttachmentComponent from '../components/DetailedMediaAttachment';
 import { useKeyboardStatus } from '../../../hooks';
 import ImagePicker, {
-  launchImageLibrary,
   type Asset,
   launchCamera,
+  launchImageLibrary,
 } from 'react-native-image-picker';
-import LoadingImage from '../../../components/LoadingImage';
-import LoadingVideo from '../../../components/LoadingVideo';
+import { SelectedMediaComponent } from '../../../components/SelectedMediaComponent';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import {
@@ -197,36 +192,38 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     []
   );
 
-  const getPostInfo = useCallback(
-    async (postArray: string[]) => {
-      try {
-        const response = await Promise.all(
-          postArray.map(async (id: string) => {
-            const { data } = await getPostById(id);
-            return data;
-          })
-        );
+  // Load the edited post's child media the same way the web UIKit does
+  // (usePostByIds → batch getPostByIds), instead of the racy per-id fetch.
+  const childrenPosts = usePostByIds(post?.children ?? []);
 
+  const getPostInfo = useCallback(
+    async (response: Amity.Post[]) => {
+      try {
         const images: IDisplayImage[] = [];
         const videos: IDisplayImage[] = [];
 
         for (const item of response) {
           if (item?.dataType === 'image') {
-            const fileId = item?.data?.fileId;
+            const fileId = (item as Amity.Post<'image'>)?.data?.fileId;
             const url = await getImage({
               fileId: fileId,
               imageSize: ImageSizeState.full,
             });
+            // Dimensions for composer frame-ratio classification (REQ-003d).
+            const imageInfo = (item as any)?.getImageInfo?.();
             images.push({
               url,
               fileId,
               fileName: fileId,
               isUploaded: true,
               postId: item.postId,
+              width: imageInfo?.getWidth?.(),
+              height: imageInfo?.getHeight?.(),
             });
           } else if (item?.dataType === 'video') {
-            const fileId = item?.data?.videoFileId?.original;
-            const thumbnailFileId = item?.data?.thumbnailFileId;
+            const videoData = (item as Amity.Post<'video'>)?.data;
+            const fileId = videoData?.videoFileId?.original;
+            const thumbnailFileId = videoData?.thumbnailFileId;
             const fileUrls = await Promise.allSettled(
               [fileId, thumbnailFileId].map(async (id) => {
                 return await getImage({
@@ -235,6 +232,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
                 });
               })
             );
+            // STORED dims + rotation; rotation is applied at classify time
+            // (SelectedMediaComponent REQ-003d1 / AmityVideo REQ-SDK-002).
+            const videoInfo = (item as any)?.getVideoInfo?.();
             videos.push({
               //@ts-ignore
               url: fileUrls[0]?.value,
@@ -244,6 +244,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
               //@ts-ignore
               thumbNail: fileUrls[1]?.value,
               postId: item.postId,
+              width: videoInfo?.getWidth?.(),
+              height: videoInfo?.getHeight?.(),
+              rotation: videoInfo?.getRotation?.(),
             });
           }
         }
@@ -267,8 +270,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   }, []);
 
   useEffect(() => {
-    post?.children && getPostInfo(post?.children);
-  }, [getPostInfo, post?.children]);
+    if (childrenPosts.length > 0) getPostInfo(childrenPosts);
+  }, [getPostInfo, childrenPosts]);
 
   const getMentionPositions = useCallback(
     (text: string, mentioneeIds: string[]) => {
@@ -583,65 +586,67 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     ]);
   }, [displayImages.length, displayVideos.length, pickCamera]);
 
-  const onPressImage = useCallback(async () => {
-    if (displayImages.length === 10)
-      return Alert.alert(
-        'Maximum upload limit reached',
-        "You've reached the upload limit of 10 images. Any additional images will not be saved."
-      );
-    const result: ImagePicker.ImagePickerResponse = await launchImageLibrary({
-      mediaType: 'photo',
-      quality: 1,
-      selectionLimit: 10 - displayImages.length,
-    });
-    if (!result.didCancel && result.assets && result.assets.length > 0) {
-      const imageUriArr: string[] = result.assets.map(
-        (item: Asset) => item.uri
-      ) as string[];
-      const mediaOj = processMedia(imageUriArr);
-      setDisplayImages((prev) => {
-        const updatedArray = [...prev, ...mediaOj];
-        if (updatedArray.length > 10) {
-          Alert.alert(
-            'Maximum number of images exceeded',
-            'Maximum number of images that can be uploaded is 10. The rest images will be discarded'
-          );
-          return updatedArray.slice(0, 10);
-        }
-        return updatedArray;
+  // Open the native OS camera roll (matches the web UIKit's native file
+  // picker). Appends the picked media, de-duplicating by uri and capping at 10.
+  const pickFromLibrary = useCallback(
+    async (mediaType: 'photo' | 'video') => {
+      const isPhoto = mediaType === 'photo';
+      const current = isPhoto ? displayImages.length : displayVideos.length;
+      if (current >= 10)
+        return Alert.alert(
+          'Maximum upload limit reached',
+          `You've reached the upload limit of 10 ${
+            isPhoto ? 'images' : 'videos'
+          }. Any additional ${isPhoto ? 'images' : 'videos'} will not be saved.`
+        );
+      const result: ImagePicker.ImagePickerResponse = await launchImageLibrary({
+        mediaType,
+        quality: 1,
+        selectionLimit: 10 - current,
       });
-    }
-  }, [displayImages.length, processMedia]);
+      if (result.didCancel || !result.assets?.length) return;
 
-  const onPressVideo = useCallback(async () => {
-    if (displayVideos.length === 10)
-      return Alert.alert(
-        'Maximum upload limit reached',
-        "You've reached the upload limit of 10 videos. Any additional videos will not be saved."
-      );
-    const result: ImagePicker.ImagePickerResponse = await launchImageLibrary({
-      mediaType: 'video',
-      quality: 1,
-      selectionLimit: 10 - displayVideos.length,
-    });
-    if (!result.didCancel && result.assets && result.assets.length > 0) {
-      const videoUriArr: string[] = result.assets.map(
-        (item: Asset) => item.uri
-      ) as string[];
-      const mediaOj = processMedia(videoUriArr);
-      setDisplayVideos((prev) => {
-        const updatedArray = [...prev, ...mediaOj];
-        if (updatedArray.length > 10) {
-          Alert.alert(
-            'Maximum number of videos exceeded',
-            'Maximum number of videos that can be uploaded is 10. The rest videos will be discarded'
-          );
-          return updatedArray.slice(0, 10);
+      const setter = isPhoto ? setDisplayImages : setDisplayVideos;
+      setter((prev) => {
+        // Silently drop duplicates, matching the web UIKit (which dedups by
+        // file name). The picker copies each pick to a fresh temp uri, so uri
+        // is not stable across picks — the original `fileName` is.
+        const seen = new Set(prev.map((m) => m.fileName));
+        const additions: IDisplayImage[] = [];
+        for (const asset of result.assets ?? []) {
+          if (!asset.uri) continue;
+          const fileName =
+            asset.fileName ??
+            asset.uri.substring(asset.uri.lastIndexOf('/') + 1);
+          if (seen.has(fileName)) continue; // duplicate → silently drop
+          seen.add(fileName);
+          additions.push({
+            url: asset.uri,
+            fileName,
+            fileId: '',
+            isUploaded: false,
+            // Locally-picked dimensions are already display-oriented (the
+            // picker's extractor applied any rotation) — no rotation to carry.
+            width: asset.width,
+            height: asset.height,
+          });
         }
-        return updatedArray;
+        const updated = [...prev, ...additions];
+        return updated.length > 10 ? updated.slice(0, 10) : updated;
       });
-    }
-  }, [displayVideos.length, processMedia]);
+    },
+    [displayImages.length, displayVideos.length]
+  );
+
+  const onPressImage = useCallback(
+    () => pickFromLibrary('photo'),
+    [pickFromLibrary]
+  );
+
+  const onPressVideo = useCallback(
+    () => pickFromLibrary('video'),
+    [pickFromLibrary]
+  );
 
   const handleImageUploadError = useCallback(
     (hasError: boolean, source: string) => {
@@ -752,6 +757,11 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     []
   );
 
+  // PDT-4310 / PDT-4312: at the 10-attachment cap the camera + gallery icons
+  // are disabled until the user removes a frame.
+  const isMediaCapReached =
+    displayImages.length >= 10 || displayVideos.length >= 10;
+
   const renderDetailedAttachment = useCallback(() => {
     if (isEditMode) return null;
     if (shouldShowDetailAttachment) {
@@ -762,6 +772,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           onPressVideo={onPressVideo}
           chosenMediaType={chosenMediaType}
           onHeightChange={setAttachmentBarHeight}
+          disabled={isMediaCapReached}
         />
       );
     }
@@ -772,11 +783,13 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         onPressVideo={onPressVideo}
         chosenMediaType={chosenMediaType}
         onHeightChange={setAttachmentBarHeight}
+        disabled={isMediaCapReached}
       />
     );
   }, [
     chosenMediaType,
     isEditMode,
+    isMediaCapReached,
     onPressCamera,
     onPressImage,
     onPressVideo,
@@ -835,54 +848,25 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           })}
           <View style={styles.imageContainer}>
             {displayImages.length > 0 && (
-              <FlatList
-                nestedScrollEnabled={true}
-                scrollEnabled={false}
-                data={displayImages}
-                renderItem={({ item, index }) => {
-                  if (!item) return null;
-                  return (
-                    <LoadingImage
-                      source={item.url}
-                      onClose={handleOnCloseImage}
-                      index={index} //TODO: Fix this without index
-                      onLoadFinish={handleOnFinishImage}
-                      onUploadError={handleImageUploadError}
-                      isUploaded={item.isUploaded}
-                      fileId={item.fileId}
-                      fileCount={displayImages.length}
-                      isEditMode={isEditMode}
-                      postId={item.postId}
-                      setIsUploading={setIsUploading}
-                    />
-                  );
-                }}
-                numColumns={3}
+              <SelectedMediaComponent
+                mediaType="image"
+                media={displayImages}
+                onClose={handleOnCloseImage}
+                onLoadFinish={handleOnFinishImage}
+                onUploadError={handleImageUploadError}
+                isEditMode={isEditMode}
+                setIsUploading={setIsUploading}
               />
             )}
             {displayVideos.length > 0 && (
-              <FlatList
-                data={displayVideos}
-                renderItem={({ item, index }) => {
-                  if (!item) return null;
-                  return (
-                    <LoadingVideo
-                      source={item.url}
-                      onClose={handleOnCloseVideo}
-                      index={index} //TODO: Fix this without index
-                      onLoadFinish={handleOnFinishVideo}
-                      onUploadError={handleVideoUploadError}
-                      isUploaded={item.isUploaded}
-                      fileId={item.fileId}
-                      thumbNail={item.thumbNail as string}
-                      fileCount={displayVideos.length}
-                      isEditMode={isEditMode}
-                      postId={item.postId}
-                      setIsUploading={setIsUploading}
-                    />
-                  );
-                }}
-                numColumns={3}
+              <SelectedMediaComponent
+                mediaType="video"
+                media={displayVideos}
+                onClose={handleOnCloseVideo}
+                onLoadFinish={handleOnFinishVideo}
+                onUploadError={handleVideoUploadError}
+                isEditMode={isEditMode}
+                setIsUploading={setIsUploading}
               />
             )}
           </View>

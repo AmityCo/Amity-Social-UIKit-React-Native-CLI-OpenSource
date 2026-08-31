@@ -1,25 +1,30 @@
-import { Fragment, memo, useCallback, useEffect, useState } from 'react';
 import {
-  Image,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import { SvgXml } from 'react-native-svg';
+  Fragment,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import useAuth from '../../../core/hooks/useAuth';
 import { IVideoPost, MediaUri } from '../legacy/Social/PostList';
 import { getPostById } from '../../../core/legacy/feed';
 import ImageView from '../legacy/react-native-image-viewing/dist';
+import { SvgXml } from 'react-native-svg';
+import { clearIcon } from '../../../core/assets/icons/xml';
 import { RootState, useUIKitSelector } from '../../../core/stores/store';
-import { playBtn } from '../../../core/assets/icons/xml';
+import {
+  PostMediaElement,
+  type PostMediaControls,
+} from '../../elements/PostMediaElement';
 import LivestreamContent from '../LivestreamContent';
 import { LinkPreview } from '../PreviewLink';
 import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMention';
 import { IMentionPosition } from '../../../core/types';
 import PollContent from '../PollContent';
+import { MediaViewer, type MediaViewerItem } from '../MediaViewer';
 
 interface IPostContent {
   post: Amity.Post;
@@ -49,10 +54,16 @@ const PostContent: React.FC<IPostContent> = ({
   const [videoPostsFullSize, setVideoPostsFullSize] = useState<MediaUri[]>([]);
   const [visibleFullImage, setIsVisibleFullImage] = useState<boolean>(false);
   const [imageIndex, setImageIndex] = useState<number>(0);
+  const [videoViewerIndex, setVideoViewerIndex] = useState<number | null>(null);
+  const [mediaLoading, setMediaLoading] = useState<boolean>(
+    (childrenPosts?.length ?? 0) > 0
+  );
+  const [mediaChildPosts, setMediaChildPosts] = useState<Amity.Post[]>([]);
+
+  const mediaControlsRef = useRef<PostMediaControls | null>(null);
+  const viewerIndexRef = useRef<number>(0);
 
   const styles = useStyles();
-  let imageStyle: any = styles.imageLargePost;
-  let colStyle: any = styles.col2;
   const { currentPostdetail } = useUIKitSelector(
     (state: RootState) => state.postDetail
   );
@@ -83,11 +94,16 @@ const PostContent: React.FC<IPostContent> = ({
   }, [imagePosts, videoPosts, apiRegion]);
 
   const getPostInfo = useCallback(async () => {
+    setMediaLoading((childrenPosts?.length ?? 0) > 0);
     try {
       const response = await Promise.all(
         childrenPosts.map(async (id) => {
           const { data: childrenPost } = await getPostById(id);
-          return { dataType: childrenPost?.dataType, data: childrenPost?.data };
+          return {
+            post: childrenPost,
+            dataType: childrenPost?.dataType,
+            data: childrenPost?.data,
+          };
         })
       );
 
@@ -95,12 +111,14 @@ const PostContent: React.FC<IPostContent> = ({
       const videos: IVideoPost[] = [];
       const polls: { pollId: string }[] = [];
       const livestreams: Amity.Room['roomId'][] = [];
+      const media: Amity.Post[] = [];
 
       response.forEach((item) => {
         if (item?.dataType === 'image' && item?.data?.fileId) {
           const url: string = `https://api.${apiRegion}.amity.co/api/v3/files/${item?.data.fileId}/download?size=medium`;
           if (!images.includes(url)) {
             images.push(url);
+            if (item.post) media.push(item.post);
           }
         } else if (
           item?.dataType === 'video' &&
@@ -112,6 +130,7 @@ const PostContent: React.FC<IPostContent> = ({
           );
           if (!isExisted) {
             videos.push(item.data);
+            if (item.post) media.push(item.post);
           }
         } else if (item?.dataType === 'poll') {
           if (!polls.some((poll) => poll.pollId === item.data.pollId)) {
@@ -124,12 +143,11 @@ const PostContent: React.FC<IPostContent> = ({
         }
       });
 
-      if (images.length > 0) {
-        setImagePosts(images);
-      }
-      if (videos.length > 0) {
-        setVideoPosts(videos);
-      }
+      // Set unconditionally so navigating to a post without media clears the
+      // previous media (see the effect below which no longer eagerly resets).
+      setMediaChildPosts(media);
+      setImagePosts(images);
+      setVideoPosts(videos);
       if (polls.length > 0) {
         setPollIds(polls);
       }
@@ -138,158 +156,52 @@ const PostContent: React.FC<IPostContent> = ({
       }
     } catch (error) {
       console.log('error: ', error);
+    } finally {
+      setMediaLoading(false);
     }
   }, [apiRegion, childrenPosts]);
 
   useEffect(() => {
-    setVideoPosts([]);
-    setImagePosts([]);
+    // Don't clear media here: getPostInfo resolves images/videos/media to their
+    // fresh values, so the existing media stays on screen until the new data
+    // arrives. Eagerly resetting caused a blank flash whenever the feed
+    // re-rendered (e.g. realtime updates), then the content popped back in.
     getPostInfo();
   }, [childrenPosts, currentPostdetail, postList, postListGlobal, getPostInfo]);
 
   function onClickImage(index: number): void {
+    viewerIndexRef.current = index;
     setIsVisibleFullImage(true);
     setImageIndex(index);
   }
 
-  function renderMediaPosts() {
-    const thumbnailFileIds: string[] =
-      videoPosts.length > 0
-        ? videoPosts.map((item) => {
-            return `https://api.${apiRegion}.amity.co/api/v3/files/${item?.thumbnailFileId}/download?size=medium`;
-          })
-        : [];
-    const mediaPosts =
-      [...imagePosts].length > 0 ? [...imagePosts] : [...thumbnailFileIds];
-    const imageElement = mediaPosts.map((item: string, index: number) => {
-      if (mediaPosts.length === 1) {
-        imageStyle = styles.imageLargePost;
-        colStyle = styles.col6;
-      } else if (mediaPosts.length === 2) {
-        colStyle = styles.col3;
-        if (index === 0) {
-          imageStyle = [styles.imageLargePost, styles.imageMarginRight];
-        } else {
-          imageStyle = [styles.imageLargePost, styles.imageMarginLeft];
-        }
-      } else if (mediaPosts.length === 3) {
-        switch (index) {
-          case 0:
-            colStyle = styles.col6;
-            imageStyle = [styles.imageMediumPost, styles.imageMarginBottom];
-            break;
-          case 1:
-            colStyle = styles.col3;
-            imageStyle = [
-              styles.imageMediumPost,
-              styles.imageMarginTop,
-              styles.imageMarginRight,
-            ];
-            break;
-          case 2:
-            colStyle = styles.col3;
-            imageStyle = [
-              styles.imageMediumPost,
-              styles.imageMarginTop,
-              styles.imageMarginLeft,
-            ];
-            break;
-
-          default:
-            break;
-        }
-      } else {
-        switch (index) {
-          case 0:
-            colStyle = styles.col6;
-            imageStyle = [
-              styles.imageMediumLargePost,
-              styles.imageMarginBottom,
-            ];
-            break;
-          case 1:
-            colStyle = styles.col2;
-            imageStyle = [
-              styles.imageSmallPost,
-              styles.imageMarginTop,
-              styles.imageMarginRight,
-            ];
-            break;
-          case 2:
-            colStyle = styles.col2;
-            imageStyle = [
-              styles.imageSmallPost,
-              styles.imageMarginTop,
-              styles.imageMarginLeft,
-              styles.imageMarginRight,
-            ];
-            break;
-          case 3:
-            colStyle = styles.col2;
-            imageStyle = [
-              styles.imageSmallPost,
-              styles.imageMarginTop,
-              styles.imageMarginLeft,
-            ];
-            break;
-          default:
-            break;
-        }
-      }
-
-      return (
-        <View style={colStyle} key={item}>
-          <TouchableWithoutFeedback onPress={() => onClickImage(index)}>
-            <View>
-              {videoPosts.length > 0 && renderPlayButton()}
-              <Image
-                style={imageStyle}
-                source={{
-                  uri: item,
-                }}
-              />
-              {index === 3 && imagePosts.length > 4 && (
-                <View style={styles.overlay}>
-                  <Text style={styles.overlayText}>{`+ ${
-                    imagePosts.length - 3
-                  }`}</Text>
-                </View>
-              )}
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      );
-    });
-    if (imageElement.length < 3) {
-      return (
-        <View style={styles.imagesWrap}>
-          <View style={styles.row}>{imageElement}</View>
-        </View>
-      );
-    } else if (imageElement.length === 3) {
-      return (
-        <View style={[styles.imagesWrap]}>
-          <View style={styles.row}>{imageElement.slice(0, 1)}</View>
-          <View style={styles.row}>{imageElement.slice(1, 3)}</View>
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.imagesWrap}>
-          <View style={styles.row}>{imageElement.slice(0, 1)}</View>
-          <View style={styles.row}>{imageElement.slice(1, 4)}</View>
-        </View>
-      );
-    }
+  function closeFullScreen(): void {
+    setIsVisibleFullImage(false);
+    mediaControlsRef.current?.slideTo(viewerIndexRef.current);
   }
 
-  function renderPlayButton() {
-    return (
-      <View style={styles.playButton}>
-        <SvgXml xml={playBtn} width="50" height="50" />
-      </View>
-    );
+  // UC2 (PDT-4309): video carousel opens the swipeable full-screen player
+  // (autoplay + mute-carry) instead of the single-video route.
+  function openVideoViewer(index: number): void {
+    viewerIndexRef.current = index;
+    setVideoViewerIndex(index);
   }
+
+  function closeVideoViewer(lastIndex: number): void {
+    setVideoViewerIndex(null);
+    // Published post: return to the last-viewed frame.
+    mediaControlsRef.current?.slideTo(lastIndex);
+  }
+
+  const videoViewerItems: MediaViewerItem[] = videoPosts.map(
+    (item: IVideoPost) => ({
+      type: 'video',
+      // The /files/{original}/download endpoint returns the original video
+      // file (mp4), not an HLS playlist — no m3u8 type hint (let the player
+      // detect the container).
+      uri: `https://api.${apiRegion}.amity.co/api/v3/files/${item?.videoFileId?.original}/download`,
+    })
+  );
 
   function renderImageHeader({ imageIndex: imgIndex }) {
     return (
@@ -297,9 +209,9 @@ const PostContent: React.FC<IPostContent> = ({
         <View style={styles.flexWidth}>
           <TouchableOpacity
             style={styles.closebtnIcon}
-            onPress={() => setIsVisibleFullImage(false)}
+            onPress={closeFullScreen}
           >
-            <Text style={styles.closeBtn}>X</Text>
+            <SvgXml xml={clearIcon('white')} width={28} height={28} />
           </TouchableOpacity>
         </View>
         <View style={styles.flexWidth}>
@@ -345,7 +257,13 @@ const PostContent: React.FC<IPostContent> = ({
           roomId={livestreamId[0]}
         />
       ) : (
-        renderMediaPosts()
+        <PostMediaElement
+          posts={mediaChildPosts}
+          onImageClick={onClickImage}
+          onVideoClick={openVideoViewer}
+          controlsRef={mediaControlsRef}
+          loading={mediaLoading}
+        />
       )}
       <ImageView
         images={
@@ -355,10 +273,19 @@ const PostContent: React.FC<IPostContent> = ({
         }
         imageIndex={imageIndex}
         visible={visibleFullImage}
-        onRequestClose={() => setIsVisibleFullImage(false)}
+        onRequestClose={closeFullScreen}
+        onImageIndexChange={(idx: number) => {
+          viewerIndexRef.current = idx;
+        }}
         isVideoButton={videoPosts.length > 0 ? true : false}
         videoPosts={videoPosts}
         HeaderComponent={renderImageHeader}
+      />
+      <MediaViewer
+        visible={videoViewerIndex !== null}
+        items={videoViewerItems}
+        initialIndex={videoViewerIndex ?? 0}
+        onClose={closeVideoViewer}
       />
     </Fragment>
   );
