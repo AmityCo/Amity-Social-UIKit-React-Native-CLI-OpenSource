@@ -5,10 +5,12 @@ export const useCommunities = ({
   categoryId,
   membership = 'member',
   limit = 20,
+  sortBy = 'displayName',
 }: {
   membership?: 'all' | 'member' | 'notMember';
   categoryId?: string;
   limit?: number;
+  sortBy?: Amity.CommunitySortBy;
 } = {}) => {
   const [communities, setCommunities] = useState<Amity.Community[]>();
   const [loading, setLoading] = useState(true);
@@ -16,7 +18,7 @@ export const useCommunities = ({
     useState<() => void | null>(null);
   useEffect(() => {
     const unsubscribe = CommunityRepository.getCommunities(
-      { membership, limit, categoryId },
+      { membership, limit, categoryId, sortBy },
       ({ error, loading, data, hasNextPage, onNextPage }) => {
         if (error) return;
         if (!loading) {
@@ -31,6 +33,6 @@ export const useCommunities = ({
       }
     );
     return unsubscribe;
-  }, [categoryId, membership, limit]);
+  }, [categoryId, membership, limit, sortBy]);
   return { communities, onNextCommunityPage, loading };
 };
