@@ -1,0 +1,2673 @@
+{
+  "typography": {
+    "node": "6:2",
+    "note": "Type scale per platform. Same 9 named styles; iOS uses larger body sizes (17/15/13) than Android/Web (16/14/12). Weights: Display/Headline = Bold 700; *Bold = SemiBold 600; rest Regular 400.",
+    "platforms": {
+      "iOS": "SF Pro",
+      "Android": "Roboto",
+      "Web": "Inter"
+    },
+    "styles": [
+      {
+        "name": "Display",
+        "iOS": {
+          "size": 32,
+          "lh": 48,
+          "weight": 700,
+          "ls": -0.4
+        },
+        "Android": {
+          "size": 32,
+          "lh": 48,
+          "weight": 700,
+          "ls": -0.4
+        },
+        "Web": {
+          "size": 32,
+          "lh": 48,
+          "weight": 700,
+          "ls": -0.4
+        }
+      },
+      {
+        "name": "Headline",
+        "iOS": {
+          "size": 20,
+          "lh": 24,
+          "weight": 700,
+          "ls": -0.4
+        },
+        "Android": {
+          "size": 20,
+          "lh": 24,
+          "weight": 700,
+          "ls": -0.4
+        },
+        "Web": {
+          "size": 20,
+          "lh": 24,
+          "weight": 700,
+          "ls": -0.4
+        }
+      },
+      {
+        "name": "Title Bold",
+        "iOS": {
+          "size": 17,
+          "lh": 24,
+          "weight": 600,
+          "ls": -0.41
+        },
+        "Android": {
+          "size": 16,
+          "lh": 24,
+          "weight": 600,
+          "ls": -0.41
+        },
+        "Web": {
+          "size": 16,
+          "lh": 24,
+          "weight": 600,
+          "ls": -0.41
+        }
+      },
+      {
+        "name": "Title",
+        "iOS": {
+          "size": 17,
+          "lh": 24,
+          "weight": 400,
+          "ls": 0
+        },
+        "Android": {
+          "size": 16,
+          "lh": 24,
+          "weight": 400,
+          "ls": 0
+        },
+        "Web": {
+          "size": 16,
+          "lh": 24,
+          "weight": 400,
+          "ls": 0
+        }
+      },
+      {
+        "name": "Body Bold",
+        "iOS": {
+          "size": 15,
+          "lh": 20,
+          "weight": 600,
+          "ls": -0.24
+        },
+        "Android": {
+          "size": 14,
+          "lh": 20,
+          "weight": 600,
+          "ls": -0.24
+        },
+        "Web": {
+          "size": 14,
+          "lh": 20,
+          "weight": 600,
+          "ls": -0.24
+        }
+      },
+      {
+        "name": "Body",
+        "iOS": {
+          "size": 15,
+          "lh": 20,
+          "weight": 400,
+          "ls": -0.24
+        },
+        "Android": {
+          "size": 14,
+          "lh": 20,
+          "weight": 400,
+          "ls": -0.24
+        },
+        "Web": {
+          "size": 14,
+          "lh": 20,
+          "weight": 400,
+          "ls": -0.24
+        }
+      },
+      {
+        "name": "Caption Bold",
+        "iOS": {
+          "size": 13,
+          "lh": 18,
+          "weight": 600,
+          "ls": -0.08
+        },
+        "Android": {
+          "size": 12,
+          "lh": 16,
+          "weight": 600,
+          "ls": -0.08
+        },
+        "Web": {
+          "size": 12,
+          "lh": 16,
+          "weight": 600,
+          "ls": -0.08
+        }
+      },
+      {
+        "name": "Caption",
+        "iOS": {
+          "size": 13,
+          "lh": 18,
+          "weight": 400,
+          "ls": -0.1
+        },
+        "Android": {
+          "size": 12,
+          "lh": 16,
+          "weight": 400,
+          "ls": -0.1
+        },
+        "Web": {
+          "size": 12,
+          "lh": 16,
+          "weight": 400,
+          "ls": -0.1
+        }
+      },
+      {
+        "name": "Caption Small",
+        "iOS": {
+          "size": 10,
+          "lh": 13,
+          "weight": 400,
+          "ls": 0
+        },
+        "Android": {
+          "size": 10,
+          "lh": 12,
+          "weight": 400,
+          "ls": 0
+        },
+        "Web": {
+          "size": 12,
+          "lh": 12,
+          "weight": 400,
+          "ls": 0
+        }
+      }
+    ],
+    "refiningNote": "Refining Typography page 3076:2 (⏳) is the iOS SF Pro HIG scale (below). The 'styles' array is the PRODUCT scale (live UIKit baseline) the chat/feed inspector matches against — kept intact.",
+    "iosHIGScale": {
+      "node": "3076:2",
+      "status": "in-progress (iOS populated; Android/Web stubbed)",
+      "font": "SF Pro",
+      "styles": [
+        {
+          "name": "Large Title",
+          "size": 34,
+          "lh": 41,
+          "ls": 0.4,
+          "weights": [400, 700]
+        },
+        {
+          "name": "Title 1",
+          "size": 28,
+          "lh": 34,
+          "ls": 0.38,
+          "weights": [400, 700]
+        },
+        {
+          "name": "Title 2",
+          "size": 22,
+          "lh": 28,
+          "ls": -0.26,
+          "weights": [400, 700]
+        },
+        {
+          "name": "Title 3",
+          "size": 20,
+          "lh": 25,
+          "ls": -0.45,
+          "weights": [400, 590]
+        },
+        {
+          "name": "Body",
+          "size": 17,
+          "lh": 22,
+          "ls": -0.43,
+          "weights": [400, 590]
+        },
+        {
+          "name": "Callout",
+          "size": 16,
+          "lh": 21,
+          "ls": -0.31,
+          "weights": [400, 590]
+        },
+        {
+          "name": "Subheadline",
+          "size": 15,
+          "lh": 20,
+          "ls": -0.23,
+          "weights": [400, 590]
+        },
+        {
+          "name": "Footnote",
+          "size": 13,
+          "lh": 18,
+          "ls": -0.08,
+          "weights": [400, 590]
+        },
+        {
+          "name": "Caption 1",
+          "size": 12,
+          "lh": 16,
+          "ls": 0,
+          "weights": [400, 510]
+        },
+        {
+          "name": "Caption 2",
+          "size": 11,
+          "lh": 13,
+          "ls": 0.06,
+          "weights": [400, 590]
+        }
+      ],
+      "labelColors": {
+        "Label": "--c-base",
+        "Secondary": "--c-base-1",
+        "Tertiary": "--c-base-2",
+        "Quaternary": "--c-base-3"
+      }
+    }
+  },
+  "layout": {
+    "node": "53:566",
+    "grid": {
+      "base": 8,
+      "note": "2x grid based on an 8-pixel square; elements follow the 8px grid",
+      "columns": 16,
+      "gutter": 16,
+      "columnWidth": 56,
+      "alignment": "center"
+    },
+    "spacing": [
+      {
+        "name": "XXS-1",
+        "px": 2
+      },
+      {
+        "name": "XXS-2",
+        "px": 4
+      },
+      {
+        "name": "S-1",
+        "px": 8
+      },
+      {
+        "name": "S-2",
+        "px": 12
+      },
+      {
+        "name": "M-1",
+        "px": 16
+      },
+      {
+        "name": "M-2",
+        "px": 20
+      },
+      {
+        "name": "M-3",
+        "px": 24
+      },
+      {
+        "name": "L-1",
+        "px": 32
+      },
+      {
+        "name": "L-2",
+        "px": 40
+      },
+      {
+        "name": "L-3",
+        "px": 48
+      },
+      {
+        "name": "L-4",
+        "px": 56
+      },
+      {
+        "name": "XL-1",
+        "px": 64
+      },
+      {
+        "name": "XL-2",
+        "px": 72
+      },
+      {
+        "name": "XL-3",
+        "px": 96
+      }
+    ],
+    "cornerRadius": [
+      {
+        "name": "Extra Small",
+        "px": 4
+      },
+      {
+        "name": "Small",
+        "px": 8
+      },
+      {
+        "name": "Medium",
+        "px": 12
+      },
+      {
+        "name": "Large",
+        "px": 16
+      },
+      {
+        "name": "Extra Large",
+        "px": 24
+      }
+    ]
+  },
+  "elevation": {
+    "node": "181:10686",
+    "note": "8 shadow levels. 01 & 02 share the same value in the file. 01-07 use a grey-blue shadow (96,97,112)/(40,41,61); 08 uses pure black (3-layer).",
+    "levels": [
+      {
+        "name": "Elevation 01",
+        "boxShadow": "0px 1px 2px 0px rgba(96,97,112,0.16), 0px 0px 1px 0px rgba(40,41,61,0.08)",
+        "use": null
+      },
+      {
+        "name": "Elevation 02",
+        "boxShadow": "0px 1px 2px 0px rgba(96,97,112,0.16), 0px 0px 1px 0px rgba(40,41,61,0.08)",
+        "use": "Toast"
+      },
+      {
+        "name": "Elevation 03",
+        "boxShadow": "0px 2px 4px 0px rgba(96,97,112,0.16), 0px 0px 1px 0px rgba(40,41,61,0.04)",
+        "use": null
+      },
+      {
+        "name": "Elevation 04",
+        "boxShadow": "0px 4px 8px 0px rgba(96,97,112,0.2), 0px 0px 2px 0px rgba(40,41,61,0.1)",
+        "use": "Popover, FAB button"
+      },
+      {
+        "name": "Elevation 05",
+        "boxShadow": "0px 8px 16px 0px rgba(96,97,112,0.16), 0px 2px 4px 0px rgba(40,41,61,0.04)",
+        "use": null
+      },
+      {
+        "name": "Elevation 06",
+        "boxShadow": "0px 16px 24px 0px rgba(96,97,112,0.16), 0px 2px 8px 0px rgba(40,41,61,0.04)",
+        "use": null
+      },
+      {
+        "name": "Elevation 07",
+        "boxShadow": "0px 20px 32px 0px rgba(96,97,112,0.24), 0px 2px 8px 0px rgba(40,41,61,0.08)",
+        "use": null
+      },
+      {
+        "name": "Elevation 08",
+        "boxShadow": "0px 3px 5px 0px rgba(0,0,0,0.2), 0px 1px 18px 0px rgba(0,0,0,0.12), 0px 6px 10px 0px rgba(0,0,0,0.14)",
+        "use": "Post creation menu"
+      }
+    ]
+  },
+  "avatarIcon": {
+    "node": "82:9779",
+    "icon": {
+      "sizes": [12, 16, 20, 24, 28, 32, 48, 56, 64]
+    },
+    "avatar": {
+      "sizes": [16, 24, 28, 32, 40, 56, 64, 120],
+      "border": ["1px", "2px", "3px", "4px"],
+      "backgroundPlaceholder": ["Primary", "Secondary", "Tertiary"],
+      "alphabetCases": [
+        "emoji",
+        "numbers",
+        "other languages",
+        "starts with space",
+        "special characters"
+      ]
+    },
+    "skipped": ["Reactions (reaction icon set)", "Files (file-type icons)"]
+  },
+  "breakpoint": {
+    "node": "9614:20215",
+    "description": "Responsive breakpoints for UIKit 4.0 — three tiers; layout switches from mobile bottom-nav to desktop side-nav at 769px.",
+    "tiers": [
+      {
+        "name": "Mobile",
+        "min": 0,
+        "max": 480,
+        "range": "0–480px",
+        "navigation": "Bottom navigation",
+        "layout": "single-column mobile",
+        "sampleWidths": [375, 480]
+      },
+      {
+        "name": "Tablet",
+        "min": 481,
+        "max": 768,
+        "range": "481–768px",
+        "navigation": "Bottom navigation",
+        "layout": "same structure as Mobile, widened",
+        "sampleWidths": [481, 768]
+      },
+      {
+        "name": "Desktop",
+        "min": 769,
+        "max": null,
+        "range": "769px+",
+        "navigation": "Side navigation",
+        "sideNavWidth": 288,
+        "layout": "288px side navigation + content area",
+        "sampleWidths": [769, 1280]
+      }
+    ],
+    "contentColumn": {
+      "minWidth": 433,
+      "maxWidth": 546,
+      "unit": "px",
+      "note": "content column scales fluidly between these clamps"
+    },
+    "grid": "none defined on this page — see layout tokens for the 16-column grid"
+  },
+  "badges": {
+    "node": "525:9162",
+    "sets": {
+      "statusIcon": "381:418",
+      "labelTag": "15922:96188"
+    },
+    "types": [
+      "Notification",
+      "Dot notification",
+      "Mention",
+      "Live Icon",
+      "Live label",
+      "Badge Mod Icon - Live",
+      "Badge Mod - Live",
+      "Co-Host Name Badge",
+      "Co-Host Badge",
+      "Viewer Count",
+      "Online status",
+      "Badge Mod",
+      "Badge Mod Icon",
+      "Private",
+      "Brand Account",
+      "Featured",
+      "Duration",
+      "Sponsored icon",
+      "Sponsored badge",
+      "Verified Community",
+      "Archived chat",
+      "Mute",
+      "Ban",
+      "Host Badges",
+      "Event Host",
+      "Event Host (Icon)",
+      "On LIVE"
+    ],
+    "sizesStatusIcon": [14, 16, 20, 22, 24, 28, 32],
+    "sizesLabel": [14, 16, 20, 24, 28, 32],
+    "labelAxes": {
+      "type": ["Icon + Text", "Icon"],
+      "style": ["Square", "Round"],
+      "border": [false, true]
+    },
+    "geometry": {
+      "notificationCount": {
+        "height": 22,
+        "radius": 20,
+        "paddingX": 6,
+        "paddingY": 1,
+        "itemSpacing": 10,
+        "fill": "#fa4d30",
+        "text": {
+          "size": 15,
+          "weight": 400,
+          "lineHeight": 20,
+          "color": "#ffffff",
+          "overflow": "+99"
+        }
+      },
+      "dot": {
+        "size": 12,
+        "shape": "ellipse",
+        "fill": "#fa4d30",
+        "stroke": "#ffffff",
+        "strokeWeight": 2
+      },
+      "mention": {
+        "size": 20,
+        "radius": "full",
+        "bg": "#d9e5fc",
+        "glyph": "#1054de"
+      },
+      "label": {
+        "fill": "#1054de",
+        "square": {
+          "cornerRadius": 4,
+          "paddingX": 2
+        },
+        "round": {
+          "cornerRadius": 20,
+          "paddingX": 8
+        },
+        "itemSpacing": 2,
+        "text": {
+          "size": 13,
+          "weight": 400,
+          "lineHeight": 18,
+          "color": "#ffffff"
+        }
+      }
+    }
+  },
+  "alertDialog": {
+    "node": "16489:9278",
+    "variantSource": "Web / Confirmation 1125:10301",
+    "scrim": "rgba(0,0,0,0.5)",
+    "modal": {
+      "width": 400,
+      "cornerRadius": 12,
+      "bg": "#ffffff",
+      "layout": "vertical",
+      "sectionGap": 0
+    },
+    "header": {
+      "layout": "horizontal",
+      "padding": {
+        "top": 20,
+        "right": 20,
+        "bottom": 16,
+        "left": 24
+      },
+      "itemSpacing": 12,
+      "divider": {
+        "thickness": 1,
+        "color": "#ebecef",
+        "position": "bottom"
+      },
+      "closeIcon": {
+        "size": 24,
+        "glyph": "times",
+        "color": "#a5a9b5"
+      }
+    },
+    "body": {
+      "layout": "horizontal",
+      "padding": {
+        "top": 8,
+        "right": 24,
+        "bottom": 8,
+        "left": 24
+      },
+      "itemSpacing": 12
+    },
+    "footer": {
+      "layout": "horizontal",
+      "align": "right",
+      "padding": {
+        "top": 16,
+        "right": 24,
+        "bottom": 24,
+        "left": 24
+      },
+      "itemSpacing": 12,
+      "buttons": {
+        "layout": "side-by-side",
+        "order": ["secondary", "primary"],
+        "sizing": "each layoutGrow:1 (equal widths)",
+        "height": 40,
+        "cornerRadius": 8,
+        "padding": {
+          "v": 10,
+          "h": 16
+        },
+        "secondary": {
+          "bg": "#ffffff",
+          "stroke": "#a5a9b5",
+          "strokeWidth": 1,
+          "text": "#292b32",
+          "optional": true
+        },
+        "primary": {
+          "bg": "#1054de",
+          "text": "#ffffff"
+        }
+      },
+      "rule": "Confirmation = Primary + Secondary; Acknowledgement = Primary only"
+    },
+    "textStyles": {
+      "title": {
+        "font": "SF Pro",
+        "weight": 700,
+        "size": 20,
+        "lineHeight": 24,
+        "letterSpacing": -0.4,
+        "color": "#292b32"
+      },
+      "headerDescription": {
+        "size": 13,
+        "lineHeight": 18,
+        "color": "#898e9e"
+      },
+      "body": {
+        "size": 15,
+        "lineHeight": 20,
+        "color": "#636878"
+      },
+      "buttonLabel": {
+        "weight": 590,
+        "size": 15,
+        "lineHeight": 20
+      }
+    },
+    "note": "iOS & Android variants exist on the same page with stacked/single-action footers; not documented here"
+  },
+  "emptyState": {
+    "node": "6750:5061",
+    "componentSet": "6750:6189",
+    "types": [
+      "No result",
+      "Global - Newsfeed",
+      "Clips - Newsfeed",
+      "Chat - No conversation",
+      "No posts",
+      "Private acc",
+      "Blocked",
+      "Error state",
+      "Empty list",
+      "No pinned post",
+      "No community",
+      "No Commu No Category",
+      "Failed load",
+      "Banned",
+      "Have Cat No Commu",
+      "No photos",
+      "No videos",
+      "No requests",
+      "No pending posts",
+      "No chat found",
+      "Search Users",
+      "No internet connection",
+      "No Noti",
+      "No archive chat",
+      "No reactions - Chat",
+      "No reactions - Post",
+      "No reactions - Comment",
+      "No reactions - Reply",
+      "Chat banned",
+      "Private community",
+      "No clips",
+      "Live stream chat",
+      "Event",
+      "No viewers in live",
+      "No community joined",
+      "Reach daily limit"
+    ],
+    "booleans": {
+      "Button": "primary CTA button",
+      "Supporting Text": "body line under title",
+      "CTA": "secondary text link"
+    },
+    "anatomy": {
+      "layout": {
+        "direction": "vertical",
+        "align": "center",
+        "maxWidth": 343,
+        "padding": 24,
+        "gaps": {
+          "artworkToContent": 4,
+          "textToActions": 16,
+          "titleToSupporting": 0,
+          "ctaToSecondaryLink": 16
+        }
+      },
+      "patterns": {
+        "full": {
+          "artwork": "160x160 radius16 fill #ebecef",
+          "hasSupporting": true,
+          "hasCTA": true
+        },
+        "compact": {
+          "icon": "64x64 (also 28/20 in some variants)",
+          "outerGap": 8,
+          "padding": 24,
+          "titleOnly": true
+        }
+      },
+      "title": {
+        "size": 17,
+        "weight": 590,
+        "lineHeight": 24,
+        "color": "#292b32"
+      },
+      "supportingText": {
+        "size": 13,
+        "weight": 400,
+        "lineHeight": 18,
+        "color": "#636878"
+      },
+      "ctaPrimary": {
+        "fill": "#1054de",
+        "radius": 8,
+        "paddingTRBL": [10, 16, 10, 12],
+        "iconLabelGap": 8,
+        "label": {
+          "size": 15,
+          "weight": 590,
+          "color": "#ffffff"
+        }
+      },
+      "secondaryAction": {
+        "type": "text link",
+        "color": "#1054de",
+        "size": 15,
+        "weight": 590
+      }
+    }
+  },
+  "button": {
+    "node": "525:9042",
+    "main": {
+      "componentSet": "13292:2261",
+      "label": {
+        "font": "SF Pro",
+        "weight": 590,
+        "sizes": {
+          "lg": {
+            "fontSize": 15,
+            "lineHeight": 20
+          },
+          "sm": {
+            "fontSize": 13,
+            "lineHeight": 18
+          }
+        }
+      },
+      "iconGlyph": 16,
+      "properties": {
+        "Hierarchy": ["Primary", "Secondary", "Tertiary"],
+        "Tone": ["Default", "Destructive", "Brand", "Inverse", "Subtle"],
+        "Size": ["lg", "sm"],
+        "State": ["Default", "Focused", "Disabled"],
+        "IconOnly": ["True", "False"]
+      },
+      "geometry": {
+        "lg": {
+          "height": 40,
+          "paddingV": 10,
+          "paddingH": 12,
+          "paddingH_tertiary": 4,
+          "radius": 8
+        },
+        "sm": {
+          "height": 28,
+          "paddingV": 4,
+          "paddingH": 8,
+          "paddingH_tertiary": 4,
+          "radius": 6
+        }
+      },
+      "colors_defaultState": {
+        "Primary": {
+          "Default": {
+            "bg": "#3b41ec",
+            "text": "#ffffff",
+            "border": "#3b41ec"
+          },
+          "Destructive": {
+            "bg": "#e50b1b",
+            "text": "#ffffff",
+            "border": "#e50b1b"
+          }
+        },
+        "Secondary": {
+          "Default": {
+            "bg": "transparent",
+            "text": "#595959",
+            "border": "#787878"
+          },
+          "Destructive": {
+            "bg": "transparent",
+            "text": "#e50b1b",
+            "border": "#e50b1b"
+          },
+          "Inverse": {
+            "bg": "transparent",
+            "text": "#ffffff",
+            "border": "#f5f5f5"
+          }
+        },
+        "Tertiary": {
+          "Default": {
+            "bg": "transparent",
+            "text": "#080808",
+            "border": null
+          },
+          "Brand": {
+            "bg": "transparent",
+            "text": "#3b41ec",
+            "border": null
+          },
+          "Inverse": {
+            "bg": "transparent",
+            "text": "#ffffff",
+            "border": null
+          },
+          "Subtle": {
+            "bg": "transparent",
+            "text": "#595959",
+            "border": null
+          }
+        }
+      },
+      "note": "Matrix is sparse — only the listed Hierarchy×Tone combinations exist. Note: this Button set uses Primary #3b41ec / Destructive #e50b1b, which differs from the Colors page Primary #1054de — confirm with the designer."
+    },
+    "iconButton": {
+      "componentSet": "16556:44606",
+      "shape": "circular",
+      "properties": {
+        "Style": [
+          "Primary",
+          "Tertiary - Primary",
+          "Secondary",
+          "Tertiary - Secondary",
+          "Transparent"
+        ],
+        "Size": ["20px", "24px", "32px", "40px", "48px", "64px"],
+        "State": ["Enabled", "Hovered", "Disabled"]
+      },
+      "sizes": {
+        "20": {
+          "box": 20,
+          "glyph": 12,
+          "padding": 0
+        },
+        "24": {
+          "box": 24,
+          "glyph": 16,
+          "padding": 0
+        },
+        "32": {
+          "box": 32,
+          "glyph": 18,
+          "padding": 4
+        },
+        "40": {
+          "box": 40,
+          "glyph": 24,
+          "padding": 4
+        },
+        "48": {
+          "box": 48,
+          "glyph": 24,
+          "padding": 8
+        },
+        "64": {
+          "box": 64,
+          "glyph": 24,
+          "padding": 16
+        }
+      },
+      "styles_enabled": {
+        "Primary": {
+          "bg": "#1054de",
+          "glyph": "#ffffff"
+        },
+        "Secondary": {
+          "bg": "#ebecef",
+          "glyph": "#000000"
+        },
+        "Tertiary - Primary": {
+          "bg": "transparent",
+          "glyph": "#1054de"
+        },
+        "Tertiary - Secondary": {
+          "bg": "transparent",
+          "glyph": "#292b32"
+        },
+        "Transparent": {
+          "bg": "rgba(0,0,0,0.5)",
+          "glyph": "#ffffff"
+        }
+      }
+    },
+    "specialized": [
+      "Bottom Sheet",
+      "Camera Flash",
+      "Sound",
+      "Gallery",
+      "Custom Camera / Video Record Button",
+      "Media action",
+      "Video Controls",
+      "Alt text",
+      "Tag product / badge",
+      "Product tag action in post",
+      "Product tag livestream",
+      "Record button",
+      "Capture button",
+      "Split button"
+    ]
+  },
+  "chips": {
+    "node": "917:8095",
+    "sets": {
+      "chips": "920:8486",
+      "chipItem": "918:8954",
+      "categoryChip": "8405:1695",
+      "badgeChip": "14742:75214"
+    },
+    "families": ["User Chips", "Selection Chips", "Input Chips"],
+    "platforms": ["iOS", "Android", "Web"],
+    "chipItem": {
+      "height": 36,
+      "padding": [4, 8, 4, 4],
+      "gap": 8,
+      "radius": 24,
+      "bg": "#ffffff",
+      "border": "#ebecef",
+      "text": "#292b32",
+      "disabledText": "#a5a9b5",
+      "thumbnail": 28,
+      "states": ["Default", "Hover", "Pressed", "Disable"],
+      "parts": ["thumbnail", "label", "remove icon"]
+    },
+    "badgeChip": {
+      "md": {
+        "height": 36,
+        "padding": [4, 12, 4, 4],
+        "gap": 8,
+        "radius": 24
+      },
+      "sm": {
+        "height": 28,
+        "padding": [4, 8, 4, 3],
+        "gap": 6,
+        "radius": 24
+      },
+      "selected": [false, true]
+    },
+    "categoryChip": {
+      "styles": ["No Avatar", "Default", "See more"]
+    },
+    "note": "Full-pill chips. Hover/Pressed add a subtle fill — exact tints not captured."
+  },
+  "divider": {
+    "node": "881:8055",
+    "set": "881:8564",
+    "color": "#ebecef",
+    "types": [
+      {
+        "name": "Content divider",
+        "thickness": 1,
+        "note": "hairline with side inset"
+      },
+      {
+        "name": "Full width divider",
+        "thickness": 1,
+        "note": "hairline edge-to-edge"
+      },
+      {
+        "name": "Post divider",
+        "thickness": 8,
+        "note": "thick block between feed posts"
+      },
+      {
+        "name": "Alphabet Divider",
+        "height": 30,
+        "note": "labeled section row (sticky letter header)"
+      }
+    ]
+  },
+  "input": {
+    "node": "525:8970",
+    "sets": {
+      "boxed": "87:7297",
+      "underlined": "7916:4428"
+    },
+    "styles": ["Rounded", "Square", "Underlined"],
+    "sizes": ["Medium", "Small"],
+    "note": "Underlined exists only at Medium. Font sizes identical across Medium/Small — only height/padding/radius differ.",
+    "geometry": {
+      "Rounded": {
+        "Medium": {
+          "height": 48,
+          "padding": [14, 12, 14, 12],
+          "radius": 24,
+          "border": "all",
+          "iconGap": 8,
+          "icon": 20,
+          "radiusNote": "pill = half height"
+        },
+        "Small": {
+          "height": 40,
+          "padding": [10, 12, 10, 12],
+          "radius": 20,
+          "border": "all",
+          "iconGap": 8,
+          "icon": 20
+        }
+      },
+      "Square": {
+        "Medium": {
+          "height": 48,
+          "padding": [14, 12, 14, 12],
+          "radius": 8,
+          "border": "all",
+          "iconGap": 8,
+          "icon": 20
+        },
+        "Small": {
+          "height": 40,
+          "padding": [10, 12, 10, 12],
+          "radius": 8,
+          "border": "all",
+          "iconGap": 8,
+          "icon": 20
+        }
+      },
+      "Underlined": {
+        "Medium": {
+          "height": 52,
+          "padding": [16, 0, 16, 0],
+          "radius": 0,
+          "border": "bottom",
+          "iconGap": 16,
+          "icon": 20
+        }
+      }
+    },
+    "states": {
+      "Enabled": {
+        "border": "#ebecef",
+        "fieldBg": "#ffffff",
+        "helper": "#636878",
+        "signal": "none"
+      },
+      "Focused": {
+        "border": "#ebecef",
+        "fieldBg": "#ffffff",
+        "helper": "#636878",
+        "signal": "Primary #1054de text cursor (border unchanged)"
+      },
+      "Error": {
+        "border": "#fa4d30",
+        "fieldBg": "#ffffff",
+        "helper": "#fa4d30",
+        "signal": "border + helper recolour to error red"
+      },
+      "Disabled": {
+        "border": "#ebecef",
+        "fieldBg": "#f4f4f5",
+        "helper": "#636878",
+        "signal": "field box filled grey"
+      }
+    },
+    "type": {
+      "label": {
+        "size": 17,
+        "lineHeight": 24,
+        "weight": 590,
+        "color": "#292b32"
+      },
+      "placeholder": {
+        "size": 15,
+        "lineHeight": 20,
+        "weight": 400,
+        "color": "#898e9e"
+      },
+      "description": {
+        "size": 13,
+        "lineHeight": 18,
+        "weight": 400,
+        "color": "#636878"
+      },
+      "helper": {
+        "size": 13,
+        "lineHeight": 18,
+        "color": "#636878"
+      },
+      "icon": {
+        "box": 20,
+        "color": "#a5a9b5"
+      }
+    },
+    "rhythm": {
+      "labelToDescription": 4,
+      "blockToField": 4,
+      "fieldToHelper": 4,
+      "labelToOptional": 4
+    },
+    "properties": {
+      "variants": {
+        "Size": ["Medium", "Small"],
+        "Style": ["Rounded", "Square", "Underlined"],
+        "State": ["Enabled", "Focused", "Disabled", "Error"],
+        "Filled": [true, false]
+      },
+      "booleans": [
+        "Icon Leading",
+        "Icon Trailing",
+        "Clear Text",
+        "Description",
+        "Helper text",
+        "Char count",
+        "Heading (Label)",
+        "Optional"
+      ]
+    },
+    "note2": "Boxed border is #ebecef on Enabled/Focused/Disabled; only Error recolours to #fa4d30. Focus = Primary text cursor, not a border change."
+  },
+  "keyboard": {
+    "node": "937:9350",
+    "set": "937:9364",
+    "platforms": ["iOS", "Android"],
+    "heights": {
+      "iOS": 293,
+      "android": 338,
+      "homeIndicatorFrame": 32,
+      "referenceWidth": 375,
+      "unit": "px"
+    },
+    "homeIndicator": {
+      "frame": 32,
+      "instance": 26,
+      "handle": 5
+    },
+    "variants": {
+      "Platform": ["iOS", "Android", "Home Indicator"],
+      "ShowKeyboard": ["True", "False"]
+    },
+    "actionButton": ["Return", "Done", "Search"],
+    "note": "System keyboard reference — use the OS keyboard, reserve this height in layouts; heights are 375px-reference baselines and vary by device/language/suggestion strip."
+  },
+  "loadingProgress": {
+    "node": "525:8927",
+    "spinner": {
+      "sizes": {
+        "medium": "40x40",
+        "large": "72x72",
+        "stroke": "2px"
+      },
+      "colour": "arc #1054de (Primary) on #ebecef track",
+      "types": ["Loading", "Loading + Cancel"],
+      "cancelIcon": "times ✕ — 24px (M) / 32px (L), #636878",
+      "countdown": "boolean → arc becomes determinate, fills clockwise for upload progress"
+    },
+    "nativeSpinner": {
+      "platforms": ["iOS", "Android"],
+      "note": "pull-to-refresh; OS-rendered, do not restyle"
+    },
+    "skeleton": "skeleton/shimmer is a loading state inside components (bubble Skeleton case, Media loading), not a standalone component"
+  },
+  "lists": {
+    "node": "525:8317",
+    "listItem": {
+      "set": "16619:7427",
+      "layout": "horizontal, center-aligned",
+      "minHeight": 58,
+      "skeletonHeight": 56,
+      "padding": [8, 16, 8, 16],
+      "gap": 8,
+      "fill": "#ffffff",
+      "divider": "#ebecef",
+      "leadingElement": {
+        "size": 40,
+        "avatarRadius": "50%",
+        "iconRadius": 8
+      },
+      "title": {
+        "size": 15,
+        "weight": 590,
+        "lineHeight": 20,
+        "color": "#292b32"
+      },
+      "description": {
+        "size": 13,
+        "weight": 400,
+        "lineHeight": 18,
+        "color": "#636878"
+      },
+      "nameBadges": {
+        "size": 20,
+        "gapFromName": 2
+      },
+      "booleans": [
+        "Description",
+        "Leading element",
+        "Trailing element",
+        "Leading badges",
+        "Trailing Badges",
+        "Bottom element"
+      ],
+      "states": {
+        "variant": ["Skeleton", "Enabled", "Highlighted", "Hover"],
+        "Enabled": "#ffffff",
+        "Hover": "#f6f7f8",
+        "Highlighted": "#d9e5fc"
+      }
+    },
+    "subComponents": [
+      "Event Card (14680:73145, md/lg, Default/Skeleton)",
+      "Community List/Button (12589:20042, Join/Joined/Pending)",
+      "Hashtag (12813:193829)",
+      "Dropdown menus (17205:131389, Mobile/Desktop, Expanded/Collapsed)"
+    ]
+  },
+  "selections": {
+    "$source": {
+      "checkboxRadio": "UIKit Library (Refining) ⤷ Selections 3077:23 (SelectionAtomic, light + dark-mode-test sets)",
+      "toggle": "UIKit 4.0 · Selections page 525:9115 · set 139:8187",
+      "semanticTokens": "colors-v2/figma-tokens/Semantic/{Light,Dark}.tokens.json",
+      "referencePage": "uikit/selections.html (interactive spec + spacing overlay match these numbers)"
+    },
+    "checkbox": {
+      "component": "CheckboxAtomic",
+      "geometry": {
+        "frame": [24, 24],
+        "circle": 20,
+        "radius": "circular (r=100)",
+        "stroke": {
+          "width": 2,
+          "align": "inside"
+        },
+        "padding": {
+          "top": 2,
+          "right": 2,
+          "bottom": 2,
+          "left": 2,
+          "note": "circle inset in the 24×24 frame"
+        },
+        "check": {
+          "box": [16, 16],
+          "insetInCircle": 2,
+          "vector": "verbatim Figma export (24-frame coords, viewBox 4 4 16 16) — do not redraw"
+        }
+      },
+      "states": {
+        "inactive": {
+          "surface": {
+            "token": "Surface/Selection/CheckboxAtomic/Inactive/Default",
+            "light": "#ffffff",
+            "dark": "#111111"
+          },
+          "border": {
+            "token": "Border/Selection/CheckboxAtomic/Inactive/Default",
+            "light": "#a8a8a8",
+            "dark": "#ffffff"
+          }
+        },
+        "active": {
+          "surface": {
+            "token": "Surface/Selection/CheckboxAtomic/Active/Default",
+            "light": "#3b41ec",
+            "dark": "#3b41ec"
+          },
+          "icon": {
+            "token": "Icon/Selection/CheckboxAtomic/Default",
+            "light": "#ffffff",
+            "dark": "#ffffff"
+          },
+          "note": "stroke = surface (solid disc)"
+        },
+        "disabledInactive": {
+          "surface": {
+            "token": "Surface/Selection/CheckboxAtomic/Inactive/Disabled",
+            "light": "#ffffff",
+            "dark": "#2e2e2e"
+          },
+          "border": {
+            "token": "Border/Selection/CheckboxAtomic/Inactive/Disabled",
+            "light": "#ebebeb",
+            "dark": "#595959"
+          }
+        },
+        "disabledActive": {
+          "surface": {
+            "token": "Surface/Selection/CheckboxAtomic/Active/Disabled",
+            "light": "#dddef8",
+            "dark": "#0f114d"
+          },
+          "icon": {
+            "token": "Icon/Selection/CheckboxAtomic/Disabled",
+            "light": "#ffffff",
+            "dark": "#171b9c"
+          }
+        }
+      },
+      "legacyOldPalette": {
+        "ring": "#a5a9b5 (c-base-3)",
+        "fill": "#1054de (c-primary)",
+        "disabledFill": "#a9c4f9 (c-primary-2)",
+        "disabledRing": "#ebecef (c-base-4)",
+        "surface": "#ffffff (c-bg)"
+      }
+    },
+    "radio": {
+      "component": "RadioAtomic",
+      "geometry": {
+        "frame": [24, 24],
+        "circle": 20,
+        "radius": "circular (r=100)",
+        "stroke": {
+          "width": 2,
+          "align": "inside"
+        },
+        "padding": {
+          "top": 2,
+          "right": 2,
+          "bottom": 2,
+          "left": 2,
+          "note": "circle inset in the 24×24 frame"
+        },
+        "dot": {
+          "size": 8,
+          "insetInCircle": 6,
+          "note": "present at opacity 0 when inactive"
+        }
+      },
+      "states": {
+        "inactive": {
+          "surface": {
+            "token": "Surface/Selection/RadioAtomic/Inactive/Default",
+            "light": "#ffffff",
+            "dark": "#111111"
+          },
+          "border": {
+            "token": "Border/Selection/RadioAtomic/Inactive/Default",
+            "light": "#a8a8a8",
+            "dark": "#ffffff"
+          }
+        },
+        "active": {
+          "surface": {
+            "token": "Surface/Selection/RadioAtomic/Active/Default",
+            "light": "#3b41ec",
+            "dark": "#3b41ec"
+          },
+          "icon": {
+            "token": "Icon/Selection/RadioAtomic/Default",
+            "light": "#ffffff",
+            "dark": "#ffffff"
+          },
+          "note": "stroke = surface (solid disc)"
+        },
+        "disabledInactive": {
+          "surface": {
+            "token": "Surface/Selection/RadioAtomic/Inactive/Disabled",
+            "light": "#ffffff",
+            "dark": "#2e2e2e"
+          },
+          "border": {
+            "token": "Border/Selection/RadioAtomic/Inactive/Disabled",
+            "light": "#ebebeb",
+            "dark": "#595959"
+          }
+        },
+        "disabledActive": {
+          "surface": {
+            "token": "Surface/Selection/RadioAtomic/Active/Disabled",
+            "light": "#dddef8",
+            "dark": "#0f114d"
+          },
+          "icon": {
+            "token": "Icon/Selection/RadioAtomic/Disabled",
+            "light": "#ffffff",
+            "dark": "#171b9c"
+          }
+        }
+      },
+      "legacyOldPalette": {
+        "ring": "#a5a9b5 (c-base-3)",
+        "fill": "#1054de (c-primary)",
+        "disabledFill": "#d9e5fc (c-primary-3)",
+        "disabledRing": "#ebecef (c-base-4)",
+        "surface": "#ffffff (c-bg)"
+      }
+    },
+    "toggle": {
+      "set": "139:8187",
+      "$note": "no colors-v2 semantic tokens yet — colours bind to the UIKit --c-* layer; hexes below are the NEW palette (light); dark variants follow the --c-* dark layer",
+      "iOS": {
+        "track": [48, 28],
+        "radius": 14,
+        "knob": 24,
+        "knobInset": {
+          "top": 2,
+          "right": 2,
+          "bottom": 2,
+          "left": 2,
+          "travel": "left 2 (off) → 22 (on)"
+        },
+        "on": {
+          "track": "#3b41ec (c-primary)",
+          "knob": "#ffffff (c-white)"
+        },
+        "off": {
+          "track": "#c7c7c7 (c-base-3)",
+          "knob": "#ffffff (c-white)"
+        },
+        "disabledOn": {
+          "track": "#dddef8 (c-primary-3)",
+          "knob": "#ffffff (c-white)"
+        },
+        "disabledOff": {
+          "track": "#ebebeb (c-base-4)",
+          "knob": "#ffffff (c-white)"
+        }
+      },
+      "Android": {
+        "frame": [36, 20],
+        "track": [34, 14],
+        "trackRadius": 7,
+        "thumb": 20,
+        "trackInset": {
+          "vertical": 3,
+          "horizontal": 1,
+          "note": "track inset in the 36×20 frame"
+        },
+        "thumbOverhang": {
+          "vertical": 3,
+          "note": "20px thumb overhangs the 14px track above/below"
+        },
+        "thumbTravel": "left 0 (off) → 16 (on)",
+        "on": {
+          "track": "#6469ec (c-primary-1)",
+          "thumb": "#3b41ec (c-primary)"
+        },
+        "off": {
+          "track": "#c7c7c7 (c-base-3)",
+          "thumb": "#ffffff (c-white)"
+        },
+        "disabledOn": {
+          "track": "#dddef8 (c-primary-3)",
+          "thumb": "#ffffff (c-white)"
+        },
+        "disabledOff": {
+          "track": "#ebebeb (c-base-4)",
+          "thumb": "#ffffff (c-white)"
+        }
+      }
+    }
+  },
+  "tabs": {
+    "node": "525:9359",
+    "sets": {
+      "Tabs": "400:11",
+      "TabPill": "7918:14398",
+      "TabItem": "93:6110"
+    },
+    "underline": {
+      "indicator": {
+        "thickness": 2,
+        "color": "#1054de",
+        "note": "under active label only"
+      },
+      "ios": {
+        "fontSize": 17,
+        "lineHeight": 24,
+        "weightActive": 590,
+        "weightInactive": 400,
+        "barPadding": [16, 16, 1, 16],
+        "itemGap": 20
+      },
+      "web": {
+        "fontSize": 15,
+        "weight": 600,
+        "barHeight": 48,
+        "hairline": "#ebecef"
+      },
+      "iconSizes": {
+        "regular": 24,
+        "small": 16
+      }
+    },
+    "pill": {
+      "height": 40,
+      "radius": 24,
+      "padding": [8, 12, 8, 12],
+      "gap": 8,
+      "fontSize": 17,
+      "states": {
+        "Enabled": {
+          "fill": "#ffffff",
+          "border": "#ebecef",
+          "text": "#636878"
+        },
+        "Active": {
+          "fill": "#1054de",
+          "border": "#1054de",
+          "text": "#ffffff",
+          "weight": 590
+        },
+        "Disabled": {
+          "text": "#bfbfbf"
+        }
+      },
+      "dotNotification": {
+        "size": 12,
+        "color": "#fa4d30"
+      }
+    },
+    "colors": {
+      "active": "#1054de",
+      "underlineInactiveText": "#898e9e",
+      "pillInactiveText": "#636878",
+      "divider": "#ebecef"
+    },
+    "types": [
+      "Primary (pill)",
+      "Secondary (underline text)",
+      "Icon (underline 24px + dot)",
+      "Icon small (underline 16px)"
+    ]
+  },
+  "toast": {
+    "node": "525:9329",
+    "set": "538:6015",
+    "width": 328,
+    "height": "48 (single-line) / 68 (two-line + action)",
+    "padding": [14, 16, 14, 16],
+    "radius": 4,
+    "bg": "#292b32",
+    "text": {
+      "color": "#ffffff",
+      "font": "15/20"
+    },
+    "action": {
+      "color": "#ffffff",
+      "note": "UPPERCASE trailing label — white, NOT primary blue"
+    },
+    "elevation": "02 — 0 3 5 rgba(0,0,0,.2) / 0 1 18 rgba(0,0,0,.12) / 0 6 10 rgba(0,0,0,.14)",
+    "platforms": ["iOS", "Android"],
+    "note": "Only the Android variants are fully built; the iOS variant is an unfinished placeholder (black rgba(0,0,0,.7), centered check icon + label, no auto-layout)."
+  },
+  "post": {
+    "$figma": "525:8709 (Posts page) · component 16998:25396",
+    "width": 375,
+    "card": {
+      "bg": "#ffffff"
+    },
+    "stack": {
+      "featuredHeader": {
+        "pad": "8 16 4 16",
+        "gap": 8,
+        "badge": {
+          "bg": "#ebecef",
+          "text": "#292b32",
+          "font": "13/18·590"
+        }
+      },
+      "authorHeader": {
+        "pad": "12 16 0 16",
+        "gap": 8,
+        "avatar": 32,
+        "ellipsis": "24·r8",
+        "name": "15/20·590 #292b32",
+        "community": "15/20·590 #292b32",
+        "moderatorBadge": {
+          "bg": "#d9e5fc",
+          "text": "#1054de",
+          "radius": 20,
+          "font": "10/13·400"
+        },
+        "timestamp": "13/18·400 #898e9e"
+      },
+      "text": {
+        "pad": "8 16 8 16",
+        "gap": 16,
+        "title": "17/24·590 #292b32",
+        "body": "15/20·400 #292b32"
+      },
+      "mediaSlot": "dynamic (image · link preview · poll · file)",
+      "engagementBar": {
+        "pad": "0 16 0 16",
+        "statRow": {
+          "pad": "8 0 8 0",
+          "gap": 12,
+          "stat": "13/18·400 #898e9e"
+        },
+        "actionRow": {
+          "pad": "12 0 12 0",
+          "gap": 12,
+          "topBorder": "1px #ebecef",
+          "label": "15/20·590 #898e9e",
+          "icons": "thumbs-up 16 · comment 16 · share 17 (#898e9e)"
+        }
+      },
+      "inlineComment": {
+        "pad": "12 16 12 16",
+        "gap": 10,
+        "bubbleFill": "#f0f1f4 (approx)",
+        "meta": "13/18·590 #636878"
+      },
+      "postSeparator": "8px #ebecef"
+    },
+    "colors": {
+      "ink": "#292b32",
+      "muted": "#898e9e",
+      "brand": "#1054de",
+      "line": "#ebecef"
+    },
+    "alsoOnPage": [
+      "Post Title",
+      "Featured Post",
+      "Post Engagement Bar (full)",
+      "Desktop Compose Bar",
+      "Post Creation",
+      "Poll",
+      "Photo enhancement",
+      "Error handling cases",
+      "Right to left"
+    ],
+    "note": "Current UIKit. Comment-bubble fill approximated."
+  },
+  "postMedia": {
+    "name": "Post Media",
+    "figma": {
+      "file": "QWcsEFNTatj86HsD2SXrcs",
+      "photoSection": "13469:24147",
+      "sets": {
+        "1": "11755:38706",
+        "2": "11900:51842",
+        "3": "11971:44085",
+        "4": "11971:44262",
+        "5": "12081:8626",
+        "4+": "12016:18792"
+      }
+    },
+    "frameWidth": {
+      "sets1_2": 375,
+      "sets3_4_4plus": 377
+    },
+    "contentWidth": {
+      "sets1_2": 343,
+      "sets3_4_4plus": 345
+    },
+    "outerPadding": {
+      "t": 8,
+      "r": 16,
+      "b": 8,
+      "l": 16
+    },
+    "tileGap": 4,
+    "radius": 8,
+    "radiusNote": "applied to outer corners of the container only",
+    "placeholderFill": "#ebecef",
+    "cardBg": "#ffffff",
+    "counts": {
+      "1": {
+        "layout": "single",
+        "tiles": [
+          {
+            "w": 343,
+            "h": 193,
+            "ratio": "16:9"
+          }
+        ]
+      },
+      "2": {
+        "layout": "side-by-side",
+        "tiles": [
+          {
+            "w": 170,
+            "h": 170
+          },
+          {
+            "w": 170,
+            "h": 170
+          }
+        ]
+      },
+      "3": {
+        "layout": "top + two-up",
+        "tiles": [
+          {
+            "w": 345,
+            "h": 345,
+            "role": "top"
+          },
+          {
+            "w": 171,
+            "h": 171
+          },
+          {
+            "w": 171,
+            "h": 171
+          }
+        ]
+      },
+      "4": {
+        "layout": "2x2",
+        "tiles": [
+          {
+            "w": 171,
+            "h": 171,
+            "count": 4
+          }
+        ]
+      },
+      "4+": {
+        "layout": "2x2 + overflow",
+        "tiles": [
+          {
+            "w": 171,
+            "h": 171,
+            "count": 4
+          }
+        ],
+        "overflow": {
+          "appliesTo": "last tile",
+          "overlayFill": "#000000",
+          "overlayOpacity": 0.5,
+          "label": {
+            "font": "20/24·700",
+            "color": "#ffffff",
+            "example": "+7"
+          }
+        }
+      }
+    },
+    "singleRatios": {
+      "16:9": {
+        "w": 343,
+        "h": 193
+      },
+      "1:1": {
+        "w": 343,
+        "h": 343,
+        "note": "inferred from content-width square (345)"
+      },
+      "9:16": {
+        "w": 343,
+        "h": 610
+      }
+    },
+    "otherRatios": ["21:9", "4:3", "5:4", "3:2"],
+    "keepRatio": "on/off toggle (crop vs fit)",
+    "firstMediaVariants": ["Square", "Vertical", "Landscape"],
+    "videoControl": {
+      "box": 40,
+      "shape": "circle",
+      "scrim": "#000000",
+      "scrimOpacity": 0.5,
+      "glyph": 24,
+      "glyphColor": "#ffffff"
+    }
+  },
+  "engagementBar": {
+    "node": "8482:7275",
+    "molecule": "13642:27941",
+    "postedSet": "13642:28128",
+    "width": 375,
+    "contentWidth": 343,
+    "bg": "#ffffff",
+    "bar": {
+      "padding": "0 16 0 16",
+      "direction": "vertical"
+    },
+    "statRow": {
+      "padding": "8 0 8 0",
+      "gap": 12,
+      "justify": "space-between",
+      "height": 36,
+      "reactionCount": {
+        "gap": 4,
+        "stat": {
+          "size": 13,
+          "lineHeight": 18,
+          "weight": 400,
+          "color": "#898e9e"
+        }
+      },
+      "reactionCluster": {
+        "gap": -8,
+        "icon": 20,
+        "maxIcons": 5,
+        "border": "1.5px #ffffff"
+      },
+      "commentCount": {
+        "gap": 4,
+        "size": 13,
+        "lineHeight": 18,
+        "weight": 400,
+        "color": "#898e9e"
+      }
+    },
+    "actionRow": {
+      "padding": "12 0 12 0",
+      "gap": 12,
+      "height": 44,
+      "topBorder": "1px #ebecef",
+      "button": {
+        "gap": 4,
+        "iconBox": 20,
+        "label": {
+          "size": 15,
+          "lineHeight": 20,
+          "weight": 590,
+          "color": "#898e9e"
+        }
+      },
+      "glyphs": {
+        "thumbsUp": 16,
+        "comment": 16,
+        "share": 17,
+        "color": "#898e9e"
+      },
+      "reactStates": {
+        "default": "#898e9e",
+        "focused": "#636878",
+        "active": "#292b32"
+      }
+    },
+    "joinCta": {
+      "padding": "12 0 12 0",
+      "topBorder": "1px #ebecef",
+      "text": "Join community to interact with all posts",
+      "size": 15,
+      "lineHeight": 20,
+      "weight": 400,
+      "color": "#898e9e"
+    },
+    "variants": {
+      "axes": ["Is member", "Have reactions", "Have comments"],
+      "heights": {
+        "noStats": 44,
+        "withStats": 80
+      }
+    },
+    "font": "SF Pro",
+    "note": "Current UIKit — verify against the codebase. Reaction-emoji fills approximated (Figma uses gradient/emoji art)."
+  },
+  "poll": {
+    "$figma": "13559:25940 (Poll section) · Voting 13472:15524 · Results 13472:15813",
+    "width": 375,
+    "card": {
+      "bg": "#ffffff"
+    },
+    "states": ["Voting", "Results"],
+    "voting": {
+      "option": {
+        "size": "343 × 48",
+        "pad": "12 12 12 12",
+        "gap": 12,
+        "radius": 8,
+        "bg": "#ffffff",
+        "border": {
+          "default": "1px #ebecef",
+          "selected": "2px #1054de"
+        },
+        "label": "15/20·590 #292b32",
+        "labelDisabled": "#a5a9b5"
+      },
+      "radio": {
+        "box": 24,
+        "ring": "20 · 2px #a5a9b5 (off)",
+        "on": "20 fill #1054de + 8 white dot"
+      }
+    },
+    "results": {
+      "option": {
+        "size": "343 × 80 (winner 344)",
+        "pad": "12 12 12 12",
+        "gap": 8,
+        "radius": 8,
+        "bg": "#ffffff",
+        "border": {
+          "default": "1px #ebecef",
+          "winner": "2px #1054de"
+        }
+      },
+      "details": {
+        "gap": 2,
+        "optionRow": {
+          "gap": 4,
+          "option": "15/20·590 #292b32",
+          "percentage": {
+            "winner": "#1054de",
+            "other": "#636878",
+            "font": "15/20·590"
+          }
+        },
+        "voterCount": "13/18·400 #898e9e",
+        "noVotes": "13/18·400 #898e9e"
+      }
+    },
+    "progressBar": {
+      "height": 8,
+      "radius": 99,
+      "base": {
+        "track": "#ebecef",
+        "fill": "#636878"
+      },
+      "primary": {
+        "track": "#d9e5fc",
+        "fill": "#1054de"
+      },
+      "steps": "0–100% in 10%"
+    },
+    "footer": {
+      "voteCount": {
+        "font": "13/18·590",
+        "color": "#898e9e",
+        "forms": ["0 votes", "1 vote", "8,931 votes"]
+      },
+      "time": {
+        "font": "13/18·590",
+        "color": "#898e9e",
+        "active": ["34m left", "4h left", "30d left"],
+        "inactive": [
+          "Set for 3d",
+          "Ends on 24 Sep at 9:41 AM",
+          "Ends on 24 Sep 2025 at 9:41 AM"
+        ],
+        "ended": "Ended"
+      },
+      "action": {
+        "font": "13/18·590",
+        "color": "#1054de",
+        "options": ["See results", "Back to poll", "Unvote"]
+      }
+    },
+    "font": "SF Pro (590 ≈ SemiBold)",
+    "note": "Current UIKit — verify against codebase. Footer meta row (votes · time · action) assembled inline for the demo; option widths 343/344 are layout-column widths and stretch to fill in a real card. Image-option, Poll-creation, and full Progress-bar/Time/Vote-count/Action sets are on the section but not reconstructed here."
+  },
+  "postCreation": {
+    "node": "14003:51845",
+    "canvas": "14000:85978",
+    "screenFrame": "14000:84746",
+    "atomicSpecs": "14003:52026",
+    "width": 375,
+    "height": 812,
+    "bg": "#ffffff",
+    "topNav": {
+      "height": 102,
+      "statusBar": 44,
+      "appBar": {
+        "height": 58,
+        "pad": "16 16 16 12",
+        "gap": 8,
+        "counterAlign": "center",
+        "backIconBtn": {
+          "size": 24,
+          "radius": 9999
+        },
+        "title": {
+          "font": "17/24",
+          "weight": 590,
+          "color": "#292b32",
+          "text": "Makeup is Magic"
+        },
+        "pageDescription": {
+          "font": "13/18",
+          "weight": 400,
+          "color": "#898e9e",
+          "hiddenInInstance": true
+        },
+        "postButton": {
+          "size": "35x28",
+          "pad": "6 2 6 2",
+          "radius": 6,
+          "label": {
+            "font": "15/20",
+            "weight": 400,
+            "color": "#1054de",
+            "text": "Post"
+          }
+        }
+      },
+      "divider": {
+        "size": "375x1",
+        "color": "#ebecef"
+      }
+    },
+    "titleBody": {
+      "size": "375x92",
+      "pad": "16 16 8 16",
+      "gap": 24,
+      "titlePlaceholder": {
+        "font": "17/24",
+        "weight": 590,
+        "color": "#a5a9b5",
+        "text": "Title (optional)"
+      },
+      "bodyPlaceholder": {
+        "font": "15/20",
+        "weight": 400,
+        "color": "#a5a9b5",
+        "text": "Share the details or context of your post here…"
+      }
+    },
+    "media": {
+      "size": "375x367",
+      "pad": "12 16 12 16",
+      "gap": 8,
+      "frame": {
+        "size": 343,
+        "radius": 4
+      },
+      "overlayButton": {
+        "size": 20,
+        "radius": 100,
+        "fill": "#000000",
+        "opacity": 0.5
+      },
+      "altBadge": {
+        "size": "40x24",
+        "pad": "4 8 4 8",
+        "radius": 9999,
+        "fill": "#000000",
+        "opacity": 0.5,
+        "label": {
+          "font": "13/18",
+          "weight": 590,
+          "color": "#ffffff",
+          "text": "ALT"
+        }
+      }
+    },
+    "tagFab": {
+      "size": 40,
+      "radius": 99,
+      "fill": "#ebecef",
+      "glyphColor": "#292b32",
+      "badge": {
+        "size": 22,
+        "radius": 20,
+        "fill": "#292b32",
+        "pad": "1 6 1 6",
+        "label": {
+          "font": "13/18",
+          "weight": 400,
+          "color": "#ffffff",
+          "text": "1"
+        }
+      }
+    },
+    "actionSheet": {
+      "size": "375x140",
+      "handle": {
+        "height": 36,
+        "topRadius": 20,
+        "bar": {
+          "size": "36x4",
+          "radius": 12,
+          "color": "#a5a9b5"
+        }
+      },
+      "attachments": {
+        "height": 72,
+        "pad": "8 16 40 16",
+        "gap": 40,
+        "align": "space-between",
+        "sheetIcon": {
+          "size": 32,
+          "radius": 100,
+          "fill": "#f6f7f8",
+          "glyphColor": "#292b32",
+          "glyph": 24
+        },
+        "icons": ["camera", "image", "play-circle", "paperclip"]
+      },
+      "homeIndicator": {
+        "height": 32,
+        "bar": "134x5"
+      }
+    },
+    "font": "SF Pro",
+    "note": "Current UIKit — verify against the codebase. Cactus illustration & pink media gradient stand in for the uploaded photo; status-bar and sheet/attachment glyphs are inline-SVG redraws; FAB bottom offset is visual, not an auto-layout token."
+  },
+  "postTitle": {
+    "component": "Post / Header",
+    "figmaPage": "8438:17142",
+    "figmaSet": "145:1532",
+    "width": 375,
+    "height": 52,
+    "row": {
+      "layout": "horizontal",
+      "padding": [12, 16, 0, 16],
+      "gap": 8
+    },
+    "avatar": {
+      "size": 32,
+      "shape": "circle"
+    },
+    "content": {
+      "layout": "vertical",
+      "gap": 2,
+      "align": "center",
+      "title": {
+        "layout": "horizontal",
+        "gap": 4,
+        "items": "displayName + verified16 + toArrow16 + communityName"
+      },
+      "subtitle": {
+        "layout": "horizontal",
+        "gap": 2,
+        "items": "moderatorBadge + dot + timestamp(+edited)"
+      }
+    },
+    "trailing": {
+      "ellipsis": 24,
+      "pin": 24,
+      "listAction": 24,
+      "sponsoredInfo": 16,
+      "iconColor": "#898e9e"
+    },
+    "type": {
+      "displayName": {
+        "size": 15,
+        "lineHeight": 20,
+        "weight": 590,
+        "color": "#292b32",
+        "font": "SF Pro"
+      },
+      "communityName": {
+        "size": 15,
+        "lineHeight": 20,
+        "weight": 590,
+        "color": "#292b32"
+      },
+      "timestamp": {
+        "size": 13,
+        "lineHeight": 18,
+        "weight": 400,
+        "color": "#898e9e"
+      },
+      "dot": {
+        "size": 13,
+        "lineHeight": 18,
+        "color": "#898e9e"
+      },
+      "badgeLabel": {
+        "size": 10,
+        "lineHeight": 13,
+        "weight": 400
+      }
+    },
+    "badges": {
+      "moderator": {
+        "bg": "#d9e5fc",
+        "text": "#1054de",
+        "radius": 20
+      },
+      "sponsored": {
+        "bg": "#636878",
+        "text": "#ffffff",
+        "radius": 20
+      }
+    },
+    "skeleton": {
+      "page": "All",
+      "avatar": {
+        "size": 32,
+        "radius": 40,
+        "fill": "#ebecef"
+      },
+      "contentGap": 8,
+      "bars": [
+        {
+          "w": 180,
+          "h": 8,
+          "r": 12
+        },
+        {
+          "w": 64,
+          "h": 8,
+          "r": 12
+        }
+      ],
+      "fill": "#ebecef"
+    },
+    "matrix": {
+      "pages": ["Main Feeds", "Post Details"],
+      "cases": ["Skeleton", "Default", "Pinned Post", "Sponsored Content"],
+      "sparse": "Skeleton shared as Page=All; Sponsored Content is Main Feeds only"
+    },
+    "note": "Current UIKit — verify against codebase. Avatar art & verified/arrow/ellipsis/pin/info glyphs are reconstructed inline SVG; badge inner-label font follows post.html convention."
+  },
+  "featuredPost": {
+    "node": "8470:7823",
+    "frame": "8470:7832",
+    "component": "8482:13330",
+    "width": 375,
+    "header": {
+      "size": [375, 38],
+      "padding": [8, 0, 4, 0],
+      "gap": 8,
+      "layout": "VERTICAL",
+      "align": "flex-start",
+      "fill": "#ffffff"
+    },
+    "badge": {
+      "name": "Badges",
+      "variant": {
+        "Type": "Featured",
+        "Size": "20px"
+      },
+      "size": [73, 26],
+      "padding": [4, 8, 4, 8],
+      "gap": 10,
+      "layout": "HORIZONTAL",
+      "fill": "#ebecef",
+      "radius": [0, 4, 4, 0],
+      "radiusOrder": "TL TR BR BL"
+    },
+    "label": {
+      "text": "Featured",
+      "font": "SF Pro",
+      "weight": 590,
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": -0.08,
+      "color": "#292b32"
+    }
+  },
+  "composeBar": {
+    "node": "8875:6209",
+    "variants": {
+      "wide": {
+        "node": "14782:26502",
+        "frame": [546, 130],
+        "layout": "HORIZONTAL"
+      },
+      "narrow": {
+        "node": "14782:26423",
+        "frame": [373, 170],
+        "layout": "VERTICAL"
+      }
+    },
+    "container": {
+      "pad": [12, 12, 12, 12],
+      "gap": 8,
+      "radius": 8,
+      "fill": "#ffffff",
+      "stroke": {
+        "color": "#ebecef",
+        "weight": 1
+      }
+    },
+    "avatar": {
+      "size": 40,
+      "shape": "circle",
+      "imageFill": "#dbcabd",
+      "editOverlayHidden": true,
+      "borderHidden": true
+    },
+    "boxedInput": {
+      "sizing": "fill",
+      "gap": 4,
+      "label": {
+        "text": "Label",
+        "font": [16, 24, 600],
+        "family": "Inter",
+        "color": "#292b32"
+      },
+      "optional": {
+        "text": "(Optional)",
+        "font": [12, 16, 400],
+        "color": "#a5a9b5"
+      },
+      "counter": {
+        "text": "0/180",
+        "font": [12, 16, 400],
+        "color": "#636878"
+      },
+      "description": {
+        "text": "Description",
+        "font": [12, 16, 400],
+        "color": "#636878"
+      },
+      "inputPill": {
+        "height": 40,
+        "pad": [10, 12, 10, 12],
+        "gap": 8,
+        "radius": 20,
+        "fill": "#ebecef",
+        "placeholder": {
+          "text": "What’s going on?",
+          "font": [14, 20, 400],
+          "color": "#898e9e"
+        },
+        "leftIconHidden": "search",
+        "rightIconHidden": "expand-alt"
+      },
+      "helperText": {
+        "text": "Helper Text",
+        "font": [12, 16, 400],
+        "color": "#636878"
+      }
+    },
+    "actionChip": {
+      "count": 7,
+      "size": 32,
+      "shape": "circle",
+      "fill": "#f6f7f8",
+      "glyphSize": 24,
+      "glyphStroke": {
+        "color": "#292b32",
+        "weight": 1.3
+      },
+      "icons": [
+        "Photo",
+        "Video",
+        "File",
+        "Livestream",
+        "Poll",
+        "Event",
+        "Story"
+      ],
+      "glyphFamily": "Font Awesome"
+    },
+    "actionRow": {
+      "narrow": {
+        "pad": [0, 48, 0, 48],
+        "gap": 8,
+        "align": "center"
+      },
+      "wide": "inline"
+    },
+    "hidden": [
+      "Avatar/Edit",
+      "Avatar/Border",
+      "Input left icon (search)",
+      "Input right icon (expand-alt)",
+      "standalone plus icon + batch dot",
+      "Boxed-input second Helper text"
+    ],
+    "render": "section cover 8875:6209 (not the component); reconstruction driven by the live variants",
+    "notes": "Figma fonts Inter / Font Awesome reconstructed with system UI stack; avatar approximated as CSS gradient"
+  },
+  "chatbubble": {
+    "node": "3982:72853",
+    "page": "⤷ Bubble (Refining)",
+    "note": "experiment section skipped",
+    "perspective": ["Inbound (received/left)", "Outbound (sent/right)"],
+    "state": ["Default", "Pressed", "Deleted", "Failed"],
+    "content": ["Message", "Image", "Link", "Video"],
+    "size": {
+      "Sm": "15px",
+      "Md": "14px"
+    },
+    "header": ["User name", "You replied", "Replied to you"],
+    "timestamp": ["Sent", "Sending"],
+    "replyBubble": true,
+    "geometry": {
+      "paddingVH": "10/16",
+      "radius": 18,
+      "tailRadius": 6,
+      "avatar": 32,
+      "maxWidth": 240,
+      "font": "SF Pro"
+    },
+    "tokens": {
+      "outboundBg": "--c-bubble-r",
+      "outboundText": "--c-white",
+      "inboundBg": "--c-bubble-l",
+      "inboundText": "--c-base",
+      "pressed": ["--c-bubble-r-press", "--c-bubble-l-press"],
+      "divider": "--c-bubble-divider"
+    }
+  },
+  "dateandtime": {
+    "node": "3076:15",
+    "page": "⤷ Date & Time 🎨 (Refining)",
+    "note": "chat Date separator + Timestamp plus the OS date/time pickers; Figma drawn in the old palette so Old swatches are exact and New+dark remap via the token layer",
+    "sections": {
+      "dateSeparator": {
+        "node": "4105:26503",
+        "platform": "Chat",
+        "variants": ["This year (89x26)", "Last year (124x26)"],
+        "geometry": {
+          "radius": 20,
+          "height": 26,
+          "font": "13px/400"
+        },
+        "tokens": {
+          "fill": "--c-bg",
+          "text": "--c-base-1"
+        }
+      },
+      "timestamp": {
+        "node": "3704:7157",
+        "platform": "Chat",
+        "relative": [
+          "Just now",
+          "45m",
+          "10h",
+          "1d",
+          "5d",
+          "5 May",
+          "12 Jan",
+          "10 Feb 2024"
+        ],
+        "absolute": "11:00",
+        "edited": "(edited)",
+        "geometry": {
+          "font": "13px/400"
+        },
+        "tokens": {
+          "text": "--c-base-2"
+        }
+      },
+      "iosPickers": {
+        "node": "3194:1535",
+        "platform": "iOS / iPadOS",
+        "components": [
+          "Collapsed (Default/Selected)",
+          "Modal Inline",
+          "Modal Compact (calendar)",
+          "Day-cell states (Current+Selected/Selected/Current/Default/Null)",
+          "_Week"
+        ]
+      },
+      "androidPickers": {
+        "node": "3194:1644",
+        "platform": "Android",
+        "system": "Material 3",
+        "components": [
+          "Dial (clock) picker",
+          "Keyboard picker",
+          "Modal (Day/Year/Full-screen range)",
+          "Calendar cell states",
+          "Clock face",
+          "Period selector",
+          "Year cell"
+        ]
+      },
+      "desktopPickers": {
+        "node": "3194:2573",
+        "platform": "Desktop",
+        "components": [
+          "inputTimeField",
+          "timeSegment",
+          "DayCell states",
+          "CalendarHeader",
+          "CalendarGrid",
+          "Modal",
+          "dateTimePicker_Header",
+          "Time format"
+        ]
+      }
+    },
+    "tokens": {
+      "surface": "--c-bg",
+      "surfaceBehind": "--c-bg-1",
+      "text": ["--c-base", "--c-base-1", "--c-base-2", "--c-base-3"],
+      "fill": "--c-base-4",
+      "line": "--c-line",
+      "accent": "--c-primary",
+      "selectionBg": "--c-primary-3",
+      "onAccent": "--c-white"
+    }
+  },
+  "reactions": {
+    "node": "3916:21184",
+    "page": "⤷ Reactions🎨 (Refining)",
+    "types": [
+      "Like (thumbs-up)",
+      "Love (heart)",
+      "Fire",
+      "Sad",
+      "Happy",
+      "Unknown (fallback)"
+    ],
+    "sizes": [16, 20, 24, 32, 40],
+    "assets": "assets/reactions/{like,love,fire,sad,happy,unknown}.svg (fixed colour illustrations; do not recolour)",
+    "components": {
+      "reactionGroup": {
+        "node": "3917:21574",
+        "note": "overlapping stacked emoji, 12px step; ring = --c-bg"
+      },
+      "reactionCount": {
+        "node": "Semantic set",
+        "states": [
+          "Default (count --c-base)",
+          "Active (fill --c-primary, count --c-white)"
+        ],
+        "geometry": {
+          "height": 28,
+          "radius": 24,
+          "font": "13px/590"
+        }
+      },
+      "postReaction": {
+        "note": "count --c-base-1, 13px/400, h28 r24"
+      },
+      "reactionPopover": {
+        "node": "ReactionPopover 248:171",
+        "variants": ["Chat", "Live stream chat"],
+        "geometry": {
+          "height": 48,
+          "radius": 9999
+        },
+        "note": "5 reactions + More button (--c-base-4)"
+      },
+      "popoverState": {
+        "node": "3916 reaction state 284:265",
+        "states": [
+          "Default",
+          "Active (--c-base-4)",
+          "Pressed (32→40px + name tooltip --c-toast)",
+          "More"
+        ]
+      }
+    },
+    "tokens": {
+      "ring": "--c-bg",
+      "chipSurface": "--c-bg",
+      "chipActive": "--c-primary",
+      "countText": ["--c-base", "--c-base-1"],
+      "countOnActive": "--c-white",
+      "moreButton": "--c-base-4",
+      "activeHighlight": "--c-base-4",
+      "nameTooltip": "--c-toast"
+    }
+  },
+  "previewLink": {
+    "node": "4064:21075",
+    "page": "⤷ Card (move to feature lv.) (Refining)",
+    "note": "feature-level URL-unfurl card; the generic Card was moved to feature level (no atomic/semantic Card component)",
+    "set": "4064:21076",
+    "cases": ["Default", "No image", "Skeleton", "Unavailable"],
+    "side": ["Left"],
+    "geometry": {
+      "size": "208x104",
+      "radius": 10,
+      "media": "104x104",
+      "title": "13px/590",
+      "url": "10px/400"
+    },
+    "tokens": {
+      "panel": {
+        "var": "--c-prev-bg",
+        "role": "Surface/Card/PreviewLink/Default",
+        "quad": {
+          "newLight": "#ffffff",
+          "newDark": "#595959",
+          "oldLight": "#ffffff",
+          "oldDark": "#636878"
+        }
+      },
+      "title": {
+        "var": "--c-prev-title",
+        "role": "Text/Card/PreviewLink/Title/Default",
+        "quad": {
+          "newLight": "#2e2e2e",
+          "newDark": "#ffffff",
+          "oldLight": "#292b32",
+          "oldDark": "#ffffff"
+        }
+      },
+      "domain": {
+        "var": "--c-prev-domain",
+        "role": "Text/Card/PreviewLink/Domain/Default",
+        "quad": {
+          "newLight": "#949494",
+          "newDark": "#ebebeb",
+          "oldLight": "#898e9e",
+          "oldDark": "#ebecef"
+        }
+      },
+      "mediaPlaceholder": "--c-base-4"
+    }
+  },
+  "banners": {
+    "node": "4096:20261",
+    "page": "⤷ Banners (Refining)",
+    "note": "a Lists row in a banner surface — inline notice",
+    "set": "4096:25709",
+    "color": ["White (--c-bg)", "Grey (--c-base-4)"],
+    "state": ["Default (94h)", "Skeleton (64h)"],
+    "geometry": {
+      "width": 375,
+      "padding": "16/12",
+      "itemSpacing": "12 (row) / 16 (content)"
+    },
+    "slots": {
+      "leading": {
+        "node": "4096:25236",
+        "options": [
+          "Icon (--c-base)",
+          "Icon Button (--c-primary)",
+          "Avatar 32",
+          "Media 160x90 r8"
+        ]
+      },
+      "trailing": {
+        "node": "4096:25255",
+        "options": [
+          "Icon",
+          "Close icon-button (--c-base-2)",
+          "Badge",
+          "Image 48x48 r4",
+          "Video 48x48 r4"
+        ]
+      },
+      "leadingController": {
+        "node": "4096:25268",
+        "options": ["Checkbox", "Radio", "Icon Button (plus)"],
+        "color": "--c-primary"
+      },
+      "bottom": "optional action buttons (--c-primary)"
+    },
+    "tokens": {
+      "white": "--c-bg",
+      "grey": "--c-base-4",
+      "title": "--c-base (15px/590)",
+      "description": "--c-base-2 (13px/400)",
+      "action": "--c-primary"
+    }
+  }
+}
