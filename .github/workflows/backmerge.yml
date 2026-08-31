@@ -1,0 +1,26 @@
+name: Back-merge production to develop
+
+on:
+  push:
+    branches: [production]
+
+jobs:
+  backmerge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Open back-merge PR
+        run: |
+          gh pr create --base develop --head production \
+            --title "chore: back-merge production into develop" \
+            --body "Automated back-merge to keep develop in sync after a production release.
+
+          Note: PRs opened with the default GITHUB_TOKEN do not auto-trigger the lint/test workflows. If the required checks show as 'Expected — waiting for status', close and reopen this PR to trigger them (or replace GITHUB_TOKEN with a PAT secret in backmerge.yml)." \
+          || echo "PR already exists or production has no commits ahead of develop"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
