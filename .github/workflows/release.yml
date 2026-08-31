@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       release_as:
-        description: 'Version bump (ignored if exact_version is set)'
+        description: 'Version bump'
         type: choice
         options: [none, patch, minor, major, stable]
         default: none
@@ -14,10 +14,6 @@ on:
         type: choice
         options: [none, RC, alpha, beta]
         default: none
-      exact_version:
-        description: 'Exact version to release (overrides the options above), e.g. 4.2.0'
-        required: false
-        type: string
   # Phase 2 (automatic): after the bump PR merges, publish + tag
   push:
     branches: [production]
@@ -53,9 +49,7 @@ jobs:
       - name: Compute version bump (standard-version)
         run: |
           ARGS="--skip.tag"
-          if [ -n "${{ inputs.exact_version }}" ]; then
-            ARGS="$ARGS --release-as ${{ inputs.exact_version }}"
-          elif [ "${{ inputs.release_as }}" = "stable" ]; then
+          if [ "${{ inputs.release_as }}" = "stable" ]; then
             # promote current pre-release (e.g. 4.2.0-rc.3) to stable (4.2.0)
             STABLE=$(node -p "require('./package.json').version.split('-')[0]")
             ARGS="$ARGS --release-as $STABLE"
