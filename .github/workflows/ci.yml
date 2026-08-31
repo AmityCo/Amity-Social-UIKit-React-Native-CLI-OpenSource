@@ -105,6 +105,36 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Create mock google-services.json for CI
+        run: |
+          cat > example/android/app/google-services.json <<'JSON'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "ci-mock-project",
+              "storage_bucket": "ci-mock-project.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+                  "android_client_info": {
+                    "package_name": "com.amityreactnativesocialuikitexample"
+                  }
+                },
+                "oauth_client": [],
+                "api_key": [
+                  { "current_key": "AIzaSyA0000000000000000000000000000000000" }
+                ],
+                "services": {
+                  "appinvite_service": { "other_platform_oauth_client": [] }
+                }
+              }
+            ],
+            "configuration_version": "1"
+          }
+          JSON
+
       - name: Build example for Android
         run: |
           yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
