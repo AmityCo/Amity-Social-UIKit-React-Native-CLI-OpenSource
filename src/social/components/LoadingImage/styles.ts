@@ -13,6 +13,10 @@ export const useStyles = () => {
       height: width / 3 - 16,
       margin: 3,
     },
+    carouselContainer: {
+      width: '100%',
+      height: '100%',
+    },
     image: {
       width: '100%',
       height: '100%',

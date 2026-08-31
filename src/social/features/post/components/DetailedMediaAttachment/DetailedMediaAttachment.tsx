@@ -18,6 +18,9 @@ type AmityDetailedMediaAttachmentComponentType = {
   onPressVideo: () => void;
   chosenMediaType?: mediaAttachment;
   onHeightChange?: (height: number) => void;
+  /** When the 10-attachment cap is reached, the camera + gallery icons are
+   * disabled and untappable (PDT-4310 / PDT-4312). */
+  disabled?: boolean;
 };
 
 const AmityDetailedMediaAttachmentComponent: FC<
@@ -28,6 +31,7 @@ const AmityDetailedMediaAttachmentComponent: FC<
   onPressVideo,
   chosenMediaType,
   onHeightChange,
+  disabled = false,
 }) => {
   const pageId = PageID.post_composer_page;
   const componentId = ComponentID.detailed_media_attachment;
@@ -91,8 +95,9 @@ const AmityDetailedMediaAttachmentComponent: FC<
           <Pressable
             testID={cameraElement.accessibilityId}
             accessibilityLabel={cameraElement.accessibilityId}
-            style={styles.mediaAttachmentBtn}
+            style={[styles.mediaAttachmentBtn, disabled && { opacity: 0.4 }]}
             onPress={onPressCamera}
+            disabled={disabled}
           >
             <View style={styles.iconContainer}>
               <SvgXml
@@ -115,8 +120,9 @@ const AmityDetailedMediaAttachmentComponent: FC<
             <Pressable
               testID={imageElement.accessibilityId}
               accessibilityLabel={imageElement.accessibilityId}
-              style={styles.mediaAttachmentBtn}
+              style={[styles.mediaAttachmentBtn, disabled && { opacity: 0.4 }]}
               onPress={onPressImage}
+              disabled={disabled}
             >
               <View style={styles.iconContainer}>
                 <SvgXml
@@ -139,8 +145,9 @@ const AmityDetailedMediaAttachmentComponent: FC<
             <Pressable
               testID={videoElement.accessibilityId}
               accessibilityLabel={videoElement.accessibilityId}
-              style={styles.mediaAttachmentBtn}
+              style={[styles.mediaAttachmentBtn, disabled && { opacity: 0.4 }]}
               onPress={onPressVideo}
+              disabled={disabled}
             >
               <View style={styles.iconContainer}>
                 <SvgXml
