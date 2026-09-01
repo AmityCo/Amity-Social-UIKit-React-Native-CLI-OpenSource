@@ -591,6 +591,11 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const pickFromLibrary = useCallback(
     async (mediaType: 'photo' | 'video') => {
       const isPhoto = mediaType === 'photo';
+      // A post holds one media type. The attachment bar hides the mismatched
+      // button once `chosenMediaType` is set, but in edit mode that only
+      // happens after the post's children have loaded — guard the gap so a
+      // fast tap can't replace the existing attachments with the other type.
+      if (isPhoto ? displayVideos.length > 0 : displayImages.length > 0) return;
       const current = isPhoto ? displayImages.length : displayVideos.length;
       if (current >= 10)
         return Alert.alert(
@@ -681,7 +686,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const handleOnCloseImage = useCallback(
     (originalPath: string, _, postId: string) => {
       setHasChangedAttachment(true);
-      setDeletedPostIds((prev) => [...prev, postId]);
+      if (postId) setDeletedPostIds((prev) => [...prev, postId]);
       setImageErrors((prev) => {
         const newSet = new Set(prev);
         newSet.delete(originalPath);
@@ -699,7 +704,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const handleOnCloseVideo = useCallback(
     (originalPath: string, _, postId: string) => {
       setHasChangedAttachment(true);
-      setDeletedPostIds((prev) => [...prev, postId]);
+      if (postId) setDeletedPostIds((prev) => [...prev, postId]);
       setVideoErrors((prev) => {
         const newSet = new Set(prev);
         newSet.delete(originalPath);
@@ -763,7 +768,6 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     displayImages.length >= 10 || displayVideos.length >= 10;
 
   const renderDetailedAttachment = useCallback(() => {
-    if (isEditMode) return null;
     if (shouldShowDetailAttachment) {
       return (
         <AmityDetailedMediaAttachmentComponent
@@ -788,7 +792,6 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     );
   }, [
     chosenMediaType,
-    isEditMode,
     isMediaCapReached,
     onPressCamera,
     onPressImage,
