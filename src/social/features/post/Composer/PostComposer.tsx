@@ -10,7 +10,7 @@ import {
   StatusBar,
   Linking,
 } from 'react-native';
-import { FC, memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ComponentID,
   ElementID,
@@ -113,6 +113,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const [deletedPostIds, setDeletedPostIds] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [hasChangedAttachment, setHasChangedAttachment] = useState(false);
+  // Safety valve for the attachment-bar gate below: set if the edited post's
+  // children never arrive, so the bar can't stay hidden forever.
+  const [editMediaTimedOut, setEditMediaTimedOut] = useState(false);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [videoErrors, setVideoErrors] = useState<Set<string>>(new Set());
 
@@ -272,6 +275,26 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   useEffect(() => {
     if (childrenPosts.length > 0) getPostInfo(childrenPosts);
   }, [getPostInfo, childrenPosts]);
+
+  // Safety net: if the children never resolve (offline, SDK error) don't leave
+  // the attachment bar hidden forever — fall back to showing it.
+  useEffect(() => {
+    if (!isEditMode || editMediaTimedOut) return undefined;
+    const timer = setTimeout(() => setEditMediaTimedOut(true), 3000);
+    return () => clearTimeout(timer);
+  }, [isEditMode, editMediaTimedOut]);
+
+  // Media type of the post being edited, read straight off the children's
+  // dataType — the same signal the web UIKit feeds into
+  // useMediaAttachmentVisible. Available as soon as getPostByIds resolves,
+  // without waiting on getImage() for every file URL.
+  const editMediaType = useMemo(() => {
+    if (childrenPosts.some((item) => item?.dataType === 'image'))
+      return mediaAttachment.image;
+    if (childrenPosts.some((item) => item?.dataType === 'video'))
+      return mediaAttachment.video;
+    return null;
+  }, [childrenPosts]);
 
   const getMentionPositions = useCallback(
     (text: string, mentioneeIds: string[]) => {
@@ -767,14 +790,31 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const isMediaCapReached =
     displayImages.length >= 10 || displayVideos.length >= 10;
 
+  // Hold the bar back until the edited post's media type is known, so it
+  // appears once with the right buttons (a video post opens straight to
+  // camera + video) instead of briefly offering the mismatched one.
+  const isEditMediaPending =
+    isEditMode &&
+    (post?.children?.length ?? 0) > 0 &&
+    childrenPosts.length === 0 &&
+    !editMediaTimedOut;
+
+  // Until the picked media lands in displayImages/displayVideos, fall back to
+  // the type derived from the children. Once the user has changed the
+  // attachments, `chosenMediaType` alone is authoritative — otherwise clearing
+  // every attachment would still be locked to the original post's type.
+  const attachmentMediaType =
+    chosenMediaType ?? (hasChangedAttachment ? null : editMediaType);
+
   const renderDetailedAttachment = useCallback(() => {
+    if (isEditMediaPending) return null;
     if (shouldShowDetailAttachment) {
       return (
         <AmityDetailedMediaAttachmentComponent
           onPressCamera={onPressCamera}
           onPressImage={onPressImage}
           onPressVideo={onPressVideo}
-          chosenMediaType={chosenMediaType}
+          chosenMediaType={attachmentMediaType}
           onHeightChange={setAttachmentBarHeight}
           disabled={isMediaCapReached}
         />
@@ -785,13 +825,14 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         onPressCamera={onPressCamera}
         onPressImage={onPressImage}
         onPressVideo={onPressVideo}
-        chosenMediaType={chosenMediaType}
+        chosenMediaType={attachmentMediaType}
         onHeightChange={setAttachmentBarHeight}
         disabled={isMediaCapReached}
       />
     );
   }, [
-    chosenMediaType,
+    attachmentMediaType,
+    isEditMediaPending,
     isMediaCapReached,
     onPressCamera,
     onPressImage,
