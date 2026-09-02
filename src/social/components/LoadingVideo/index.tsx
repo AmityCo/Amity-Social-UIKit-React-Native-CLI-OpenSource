@@ -163,13 +163,16 @@ const LoadingVideo = ({
   }, [fileId, isUploaded, source]);
 
   const handleOnPlay = () => {
-    setIsPause(!isPause);
-    // In carousel mode the parent (onPlay) opens the full-screen media viewer,
-    // so skip the default single-video route navigation.
+    // In carousel mode the parent (onPlay) owns the full-screen media viewer,
+    // so this component never mounts the inline <Video> and never receives a
+    // dismiss callback to unpause with. Leaving `isPause` alone keeps the play
+    // icon rendered, which is what the frame shows once the viewer closes
+    // (PDT-4904); toggling it here hid the icon for the rest of the session.
     if (onPlay) {
       onPlay(source);
       return;
     }
+    setIsPause(!isPause);
     playVideoFullScreen(source);
   };
 
