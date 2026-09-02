@@ -48,6 +48,13 @@ export const useStyles = () => {
       justifyContent: 'center',
       backgroundColor: theme.colors.baseShade4,
     },
+    // A video whose thumbnail the server has not produced yet: same plain
+    // container as the broken frame, but it carries the play button instead of
+    // the broken-image glyph.
+    postMedia__pending: {
+      flex: 1,
+      backgroundColor: theme.colors.baseShade4,
+    },
     postMedia__counter: {
       position: 'absolute',
       top: 8, // web: 0.5rem

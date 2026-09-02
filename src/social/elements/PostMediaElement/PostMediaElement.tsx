@@ -19,6 +19,7 @@ import {
   View,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import { FileRepository } from '@amityco/ts-sdk-react-native';
 import { Typography } from '../../../core/components/Typography/Typography';
 import useAuth from '../../../core/hooks/useAuth';
 import {
@@ -33,6 +34,9 @@ import {
   type FrameRatio,
 } from '../../utils/getFrameRatio';
 import { getIndicatorConfig } from '../../utils/getIndicatorConfig';
+import { ImageSizeState } from '../../enums/imageSizeState';
+import { useUIKitSelector } from '../../../core/stores/store';
+import type { RootState } from '../../../core/stores/store';
 import { useStyles } from './styles';
 
 type MediaPost = Amity.Post<'image'> | Amity.Post<'video'>;
@@ -304,20 +308,22 @@ type ImageMediaProps = { post: Amity.Post<'image'> };
 function ImageMedia({ post }: ImageMediaProps) {
   const styles = useStyles();
   const { apiRegion } = useAuth();
-  const [isBroken, setIsBroken] = useState(false);
   const fileId = post.getImageInfo()?.fileId;
   const url = fileId
     ? `https://api.${apiRegion}.amity.co/api/v3/files/${fileId}/download?size=large`
     : undefined;
+  // Keyed to the url rather than a bare boolean, so replacing the image retries
+  // the load instead of staying broken for the session (see VideoMedia).
+  const [brokenUrl, setBrokenUrl] = useState<string>();
 
-  if (!url || isBroken) return <BrokenFrame />;
+  if (!url || brokenUrl === url) return <BrokenFrame />;
 
   return (
     <Image
       style={styles.postMedia__media as StyleProp<ImageStyle>}
       source={{ uri: url }}
       resizeMode="cover"
-      onError={() => setIsBroken(true)}
+      onError={() => setBrokenUrl(url)}
     />
   );
 }
@@ -326,16 +332,50 @@ type VideoMediaProps = { post: Amity.Post<'video'> };
 
 function VideoMedia({ post }: VideoMediaProps) {
   const styles = useStyles();
-  const { apiRegion } = useAuth();
-  const [isBroken, setIsBroken] = useState(false);
 
-  const data = post.data as Amity.ContentDataVideo | undefined;
-  const thumbnailFileId = data?.thumbnailFileId;
-  const url = thumbnailFileId
-    ? `https://api.${apiRegion}.amity.co/api/v3/files/${thumbnailFileId}/download?size=large`
+  // Resolve the thumbnail through the SDK's linked file object rather than
+  // building a download url from `data.thumbnailFileId`. The file behind that
+  // id does not exist until the server finishes transcoding, so a url built
+  // from the id alone is well-formed and still 404s — which is what rendered a
+  // broken-image icon on every just-created video post. The file object is the
+  // honest signal: it is absent until the thumbnail actually exists. Mirrors
+  // web's useImage/useFile.
+  const thumbnail = post.getVideoThumbnailInfo?.();
+  const serverUrl = thumbnail?.fileUrl
+    ? FileRepository.fileUrlWithSize(thumbnail.fileUrl, ImageSizeState.large)
     : undefined;
 
-  if (!url || isBroken) return <BrokenFrame />;
+  // While the server has none, borrow the frame the composer decoded when this
+  // video was picked, matched on the original video's fileId (web parity:
+  // VideoContent falls back to LayoutProvider's videoThumbnail the same way).
+  const localThumbnails = useUIKitSelector(
+    (state: RootState) => state.localVideoThumbnail.videos
+  );
+  const originalFileId = (post.data as Amity.ContentDataVideo | undefined)
+    ?.videoFileId?.original;
+  const localUrl = serverUrl
+    ? undefined
+    : localThumbnails.find(({ fileId }) => fileId === originalFileId)
+        ?.thumbnailUrl;
+
+  const url = serverUrl ?? localUrl;
+
+  // Keyed to the url, not a bare boolean: the url changes when the real
+  // thumbnail lands, and a latched flag would keep the frame broken for the
+  // rest of the session.
+  const [brokenUrl, setBrokenUrl] = useState<string>();
+
+  const playButton = (
+    <View style={styles.postMedia__playButton}>
+      <SvgXml xml={videoControlIcon} width="40" height="40" />
+    </View>
+  );
+
+  // Nothing to show yet, from either source: still a normal state for a new
+  // post, so keep the play affordance rather than flagging it broken.
+  if (!url) return <View style={styles.postMedia__pending}>{playButton}</View>;
+
+  if (brokenUrl === url) return <BrokenFrame />;
 
   return (
     <>
@@ -343,11 +383,9 @@ function VideoMedia({ post }: VideoMediaProps) {
         style={styles.postMedia__media as StyleProp<ImageStyle>}
         source={{ uri: url }}
         resizeMode="cover"
-        onError={() => setIsBroken(true)}
+        onError={() => setBrokenUrl(url)}
       />
-      <View style={styles.postMedia__playButton}>
-        <SvgXml xml={videoControlIcon} width="40" height="40" />
-      </View>
+      {playButton}
     </>
   );
 }

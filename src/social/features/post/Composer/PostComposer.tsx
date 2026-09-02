@@ -34,6 +34,7 @@ import { IDisplayImage, IMentionPosition } from '../../../../core/types';
 import CloseButtonIconElement from '../../../elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
+import localVideoThumbnailSlice from '../../../../core/stores/slices/localVideoThumbnailSlice';
 import { amityPostsFormatter } from '../../../../core/utils/post';
 import useAuth from '../../../../core/hooks/useAuth';
 import globalfeedSlice from '../../../../core/stores/slices/globalfeedSlice';
@@ -99,6 +100,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const currentUser = useUser((client as Amity.Client)?.userId || '');
   const isCommunityModerator = isModerator(currentUser?.roles);
   const { showToastMessage, hideToastMessage } = uiSlice.actions;
+  const { setLocalVideoThumbnails } = localVideoThumbnailSlice.actions;
   const [inputMessage, setInputMessage] = useState<string>(
     (post?.data as Amity.ContentDataText)?.text ?? ''
   );
@@ -491,6 +493,22 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         return;
       }
       dispatch(hideToastMessage());
+      // The server has no thumbnail for these videos until it finishes
+      // transcoding, so hand the feed the frames the composer already decoded
+      // to bridge that window (PDT-4904, web parity: LayoutProvider
+      // videoThumbnail). Keyed by the uploaded original video's fileId, which
+      // is what the created post exposes as `data.videoFileId.original`.
+      if (type === 'video' && displayVideos.length > 0) {
+        dispatch(
+          setLocalVideoThumbnails({
+            postId: response.postId,
+            videos: displayVideos.map((item) => ({
+              fileId: item.fileId ?? '',
+              thumbnailUrl: item.thumbNail ?? '',
+            })),
+          })
+        );
+      }
       if (
         targetType === 'community' &&
         (effectiveCommunity?.postSetting === 'ADMIN_REVIEW_POST_REQUIRED' ||
@@ -544,6 +562,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     mentionUsers,
     mentionsPosition,
     onPressClose,
+    setLocalVideoThumbnails,
     post,
     showToastMessage,
     targetId,
@@ -686,6 +705,15 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         // is not stable across picks — the original `fileName` is.
         const seen = new Set(prev.map((m) => m.fileName));
         const additions: IDisplayImage[] = [];
+        // iOS video is the one pick whose dims cannot be trusted: the picker
+        // reports the track's stored `naturalSize` with no rotation alongside
+        // it, so a portrait iPhone clip arrives as 1920×1080 and would
+        // classify the frame 16:9 (PDT-4904). Images on both platforms, and
+        // Android video (its extractor swaps w/h on 90°/270°), are already
+        // display-oriented and unaffected. With no rotation to correct the iOS
+        // value by, carry nothing and let SelectedMediaComponent measure the
+        // generated thumbnail, which is a rendered frame.
+        const isIosVideoDimsUnusable = !isPhoto && Platform.OS === 'ios';
         for (const asset of result.assets ?? []) {
           if (!asset.uri) continue;
           const fileName =
@@ -698,10 +726,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
             fileName,
             fileId: '',
             isUploaded: false,
-            // Locally-picked dimensions are already display-oriented (the
-            // picker's extractor applied any rotation) — no rotation to carry.
-            width: asset.width,
-            height: asset.height,
+            width: isIosVideoDimsUnusable ? undefined : asset.width,
+            height: isIosVideoDimsUnusable ? undefined : asset.height,
           });
         }
         const updated = [...prev, ...additions];

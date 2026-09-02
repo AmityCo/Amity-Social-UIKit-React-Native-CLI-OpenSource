@@ -6,6 +6,7 @@ import {
   ScrollView,
   View,
 } from 'react-native';
+import { createVideoThumbnail } from 'react-native-compressor';
 import LoadingImage from '../LoadingImage';
 import LoadingVideo from '../LoadingVideo';
 import { MediaViewer, type MediaViewerItem } from '../MediaViewer';
@@ -88,15 +89,33 @@ export function SelectedMediaComponent({
           rotation: firstRotation,
         });
         setRatio(getFrameRatio(width, height));
-      } else {
-        // Log the fallback so a square frame is never silently ambiguous
-        // (REQ-003d2).
-        console.log(
-          '[SelectedMediaComponent] video has no dimensions; defaulting ratio'
-        );
-        setRatio(DEFAULT_FRAME_RATIO);
+        return undefined;
       }
-      return undefined;
+      // No usable dims — a locally-picked video can arrive with none (the
+      // Android extractor reports 0×0 when MediaMetadataRetriever fails, and
+      // iOS picks carry none by design, see PostComposer). Measure the
+      // generated thumbnail instead of defaulting to a square frame
+      // (REQ-003d2, PDT-4904): it is a rendered frame, so its dimensions are
+      // already display-oriented and need no rotation applied.
+      //
+      // LoadingVideo decodes a thumbnail for this same url too, so frame 0
+      // decodes twice. Kept deliberately: reporting dims back up through
+      // LoadingVideo would widen the composer's callback surface, and the
+      // decode is a cached native call on a url the child already proves
+      // works.
+      let active = true;
+      createVideoThumbnail(firstUrl)
+        .then(({ width, height }) => {
+          if (active) setRatio(getFrameRatio(width, height));
+        })
+        .catch(() => {
+          // Thumbnail decode failed too — nothing left to classify from, so
+          // fall back to the square frame (REQ-003d2).
+          if (active) setRatio(DEFAULT_FRAME_RATIO);
+        });
+      return () => {
+        active = false;
+      };
     }
     // Image: prefer carried dims, else measure the source.
     if (firstWidth && firstHeight) {

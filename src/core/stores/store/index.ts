@@ -5,6 +5,7 @@ import postDetailSlice from '../slices/postDetailSlice';
 import uiSlice from '../slices/uiSlice';
 import bottomSheetSlice from '../slices/bottomSheetSlice';
 import toastSlice from '../slices/toastSlice';
+import localVideoThumbnailSlice from '../slices/localVideoThumbnailSlice';
 import { createContext } from 'react';
 import {
   createStoreHook,
@@ -34,6 +35,7 @@ export const store: Store = configureStore({
     ui: uiSlice.reducer,
     bottomSheet: bottomSheetSlice.reducer,
     toast: toastSlice.reducer,
+    localVideoThumbnail: localVideoThumbnailSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

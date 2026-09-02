@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -69,6 +69,10 @@ const LoadingVideo = ({
   const [isProcess, setIsProcess] = useState<boolean>(false);
   const [isUploadError, setIsUploadError] = useState(false);
   const [thumbNailImage, setThumbNailImage] = useState(thumbNail ?? '');
+  // `uploadFileToAmity` is memoised on [source] only, so reading the state
+  // there would capture the empty first-render value. Mirror it into a ref so
+  // the upload callback always sees the frame that was actually decoded.
+  const thumbNailImageRef = useRef(thumbNail ?? '');
   const styles = useStyles();
   const [playingUri, setPlayingUri] = useState<string>('');
   const [isPause, setIsPause] = useState<boolean>(true);
@@ -94,6 +98,7 @@ const LoadingVideo = ({
 
   const processThumbNail = async () => {
     const generatedThumbNail = await createVideoThumbnail(source);
+    thumbNailImageRef.current = generatedThumbNail.path;
     setThumbNailImage(generatedThumbNail.path);
   };
   useEffect(() => {
@@ -126,7 +131,12 @@ const LoadingVideo = ({
             file[0]?.attributes.name as string,
             index as number,
             source,
-            thumbNail
+            // Hand back the frame this component decoded, not the incoming
+            // prop — for a newly picked video that prop is empty, so the
+            // generated thumbnail used to be dropped on the floor. The
+            // composer stores it so the feed can show it while the server is
+            // still transcoding (PDT-4904).
+            thumbNailImageRef.current || thumbNail
           );
       } else {
         handleLoadEnd();
@@ -163,13 +173,16 @@ const LoadingVideo = ({
   }, [fileId, isUploaded, source]);
 
   const handleOnPlay = () => {
-    setIsPause(!isPause);
-    // In carousel mode the parent (onPlay) opens the full-screen media viewer,
-    // so skip the default single-video route navigation.
+    // In carousel mode the parent (onPlay) owns the full-screen media viewer,
+    // so this component never mounts the inline <Video> and never receives a
+    // dismiss callback to unpause with. Leaving `isPause` alone keeps the play
+    // icon rendered, which is what the frame shows once the viewer closes
+    // (PDT-4904); toggling it here hid the icon for the rest of the session.
     if (onPlay) {
       onPlay(source);
       return;
     }
+    setIsPause(!isPause);
     playVideoFullScreen(source);
   };
 
