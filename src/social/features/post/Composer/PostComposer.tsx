@@ -10,7 +10,7 @@ import {
   StatusBar,
   Linking,
 } from 'react-native';
-import { FC, memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ComponentID,
   ElementID,
@@ -53,6 +53,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import {
   CommunityRepository,
+  FileRepository,
   PostRepository,
   UserRepository,
 } from '@amityco/ts-sdk-react-native';
@@ -171,6 +172,19 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   });
 
   const checkIsEditValid = () => {
+    // `type` in onPressPost is derived from displayImages/displayVideos, which
+    // only fill once the children's file urls resolve. Saving before then
+    // submits type 'text' with `attachments: []` and strips the post's media,
+    // so hold Save back while the post has children but no loaded attachments
+    // — unless the user removed them itself, which sets hasChangedAttachment.
+    if (
+      isEditMode &&
+      (post?.children?.length ?? 0) > 0 &&
+      !hasChangedAttachment &&
+      displayImages.length === 0 &&
+      displayVideos.length === 0
+    )
+      return false;
     return (
       isInputValid &&
       (inputMessage !== (post?.data as Amity.ContentDataText)?.text ||
@@ -194,7 +208,23 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
 
   // Load the edited post's child media the same way the web UIKit does
   // (usePostByIds → batch getPostByIds), instead of the racy per-id fetch.
-  const childrenPosts = usePostByIds(post?.children ?? []);
+  const { posts: childrenPosts, settled: childrenSettled } = usePostByIds(
+    post?.children ?? []
+  );
+
+  // A child post's file is usually already in the SDK cache, where the linked
+  // object exposes it synchronously (getImageInfo / getVideoInfo /
+  // getVideoThumbnailInfo are `pullFromCache(['file','get', …])` over the very
+  // ids we'd otherwise refetch). Use the cached `fileUrl` when it's there and
+  // fall back to the round trip on a cache miss. `fileUrlWithSize` is just
+  // `?size=`, so both branches produce the same url.
+  const resolveFileUrl = useCallback(
+    async (fileUrl: string | undefined, fileId: string | undefined) =>
+      fileUrl
+        ? FileRepository.fileUrlWithSize(fileUrl, ImageSizeState.full)
+        : getImage({ fileId, imageSize: ImageSizeState.full }),
+    [getImage]
+  );
 
   const getPostInfo = useCallback(
     async (response: Amity.Post[]) => {
@@ -205,12 +235,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         for (const item of response) {
           if (item?.dataType === 'image') {
             const fileId = (item as Amity.Post<'image'>)?.data?.fileId;
-            const url = await getImage({
-              fileId: fileId,
-              imageSize: ImageSizeState.full,
-            });
             // Dimensions for composer frame-ratio classification (REQ-003d).
-            const imageInfo = (item as any)?.getImageInfo?.();
+            const imageInfo = item?.getImageInfo?.();
+            const url = await resolveFileUrl(imageInfo?.fileUrl, fileId);
             images.push({
               url,
               fileId,
@@ -224,25 +251,20 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
             const videoData = (item as Amity.Post<'video'>)?.data;
             const fileId = videoData?.videoFileId?.original;
             const thumbnailFileId = videoData?.thumbnailFileId;
-            const fileUrls = await Promise.allSettled(
-              [fileId, thumbnailFileId].map(async (id) => {
-                return await getImage({
-                  fileId: id,
-                  imageSize: ImageSizeState.full,
-                });
-              })
-            );
             // STORED dims + rotation; rotation is applied at classify time
             // (SelectedMediaComponent REQ-003d1 / AmityVideo REQ-SDK-002).
-            const videoInfo = (item as any)?.getVideoInfo?.();
+            const videoInfo = item?.getVideoInfo?.();
+            const thumbnailInfo = item?.getVideoThumbnailInfo?.();
+            const [url, thumbNail] = await Promise.all([
+              resolveFileUrl(videoInfo?.fileUrl, fileId),
+              resolveFileUrl(thumbnailInfo?.fileUrl, thumbnailFileId),
+            ]);
             videos.push({
-              //@ts-ignore
-              url: fileUrls[0]?.value,
+              url,
               fileId: fileId,
               fileName: fileId,
               isUploaded: true,
-              //@ts-ignore
-              thumbNail: fileUrls[1]?.value,
+              thumbNail,
               postId: item.postId,
               width: videoInfo?.getWidth?.(),
               height: videoInfo?.getHeight?.(),
@@ -261,7 +283,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         console.log('error: ', error);
       }
     },
-    [getImage]
+    [resolveFileUrl]
   );
 
   useEffect(() => {
@@ -269,9 +291,44 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     return () => setDeletedPostIds([]);
   }, []);
 
+  // Source for hydrating the existing attachments. Prefer the fetched children;
+  // otherwise use the post's own `childrenPosts` — but only when it holds every
+  // child, since that field silently drops cache misses and a partial set would
+  // render only some of the frames.
+  const editChildren = useMemo(() => {
+    if (childrenPosts.length > 0) return childrenPosts;
+    const cached = post?.childrenPosts ?? [];
+    return cached.length === (post?.children?.length ?? 0) ? cached : [];
+  }, [childrenPosts, post?.children?.length, post?.childrenPosts]);
+
+  // getPostInfo replaces displayImages/displayVideos wholesale, so re-running it
+  // (cache-derived set first, fetched set after) must not wipe what the user
+  // added in between — but the fetched set does need to be able to correct a
+  // cache-derived one, so gate on the user's own edits rather than latching
+  // after the first pass.
   useEffect(() => {
-    if (childrenPosts.length > 0) getPostInfo(childrenPosts);
-  }, [getPostInfo, childrenPosts]);
+    if (editChildren.length === 0 || hasChangedAttachment) return;
+    getPostInfo(editChildren);
+  }, [getPostInfo, editChildren, hasChangedAttachment]);
+
+  // Media type of the post being edited, read straight off the children's
+  // dataType — the same signal the web UIKit feeds into
+  // useMediaAttachmentVisible.
+  //
+  // The linked post already carries its hydrated `childrenPosts`, so on the
+  // usual path (Edit opened from a post whose media just rendered) the type is
+  // known on the first frame with no fetch. That field is a snapshot of
+  // `pullFromCache` with the misses filtered out, though — on a cache miss it
+  // is `[]` while `children` is not — so fall back to the fetched children.
+  const editMediaType = useMemo(() => {
+    const cached = post?.childrenPosts ?? [];
+    const source = childrenPosts.length > 0 ? childrenPosts : cached;
+    if (source.some((item) => item?.dataType === 'image'))
+      return mediaAttachment.image;
+    if (source.some((item) => item?.dataType === 'video'))
+      return mediaAttachment.video;
+    return null;
+  }, [childrenPosts, post?.childrenPosts]);
 
   const getMentionPositions = useCallback(
     (text: string, mentioneeIds: string[]) => {
@@ -591,6 +648,11 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const pickFromLibrary = useCallback(
     async (mediaType: 'photo' | 'video') => {
       const isPhoto = mediaType === 'photo';
+      // A post holds one media type. The attachment bar hides the mismatched
+      // button once `chosenMediaType` is set, but in edit mode that only
+      // happens after the post's children have loaded — guard the gap so a
+      // fast tap can't replace the existing attachments with the other type.
+      if (isPhoto ? displayVideos.length > 0 : displayImages.length > 0) return;
       const current = isPhoto ? displayImages.length : displayVideos.length;
       if (current >= 10)
         return Alert.alert(
@@ -681,7 +743,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const handleOnCloseImage = useCallback(
     (originalPath: string, _, postId: string) => {
       setHasChangedAttachment(true);
-      setDeletedPostIds((prev) => [...prev, postId]);
+      if (postId) setDeletedPostIds((prev) => [...prev, postId]);
       setImageErrors((prev) => {
         const newSet = new Set(prev);
         newSet.delete(originalPath);
@@ -699,7 +761,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const handleOnCloseVideo = useCallback(
     (originalPath: string, _, postId: string) => {
       setHasChangedAttachment(true);
-      setDeletedPostIds((prev) => [...prev, postId]);
+      if (postId) setDeletedPostIds((prev) => [...prev, postId]);
       setVideoErrors((prev) => {
         const newSet = new Set(prev);
         newSet.delete(originalPath);
@@ -762,15 +824,31 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const isMediaCapReached =
     displayImages.length >= 10 || displayVideos.length >= 10;
 
+  // Hold the bar back until the edited post's media type is known, so it
+  // appears once with the right buttons (a video post opens straight to
+  // camera + video) instead of briefly offering the mismatched one.
+  const isEditMediaPending =
+    isEditMode &&
+    (post?.children?.length ?? 0) > 0 &&
+    editMediaType === null &&
+    !childrenSettled;
+
+  // Until the picked media lands in displayImages/displayVideos, fall back to
+  // the type derived from the children. Once the user has changed the
+  // attachments, `chosenMediaType` alone is authoritative — otherwise clearing
+  // every attachment would still be locked to the original post's type.
+  const attachmentMediaType =
+    chosenMediaType ?? (hasChangedAttachment ? null : editMediaType);
+
   const renderDetailedAttachment = useCallback(() => {
-    if (isEditMode) return null;
+    if (isEditMediaPending) return null;
     if (shouldShowDetailAttachment) {
       return (
         <AmityDetailedMediaAttachmentComponent
           onPressCamera={onPressCamera}
           onPressImage={onPressImage}
           onPressVideo={onPressVideo}
-          chosenMediaType={chosenMediaType}
+          chosenMediaType={attachmentMediaType}
           onHeightChange={setAttachmentBarHeight}
           disabled={isMediaCapReached}
         />
@@ -781,14 +859,14 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         onPressCamera={onPressCamera}
         onPressImage={onPressImage}
         onPressVideo={onPressVideo}
-        chosenMediaType={chosenMediaType}
+        chosenMediaType={attachmentMediaType}
         onHeightChange={setAttachmentBarHeight}
         disabled={isMediaCapReached}
       />
     );
   }, [
-    chosenMediaType,
-    isEditMode,
+    attachmentMediaType,
+    isEditMediaPending,
     isMediaCapReached,
     onPressCamera,
     onPressImage,

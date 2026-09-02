@@ -47,7 +47,7 @@ function handleNotificationNavigation(remoteMessage: {
 LogBox.ignoreAllLogs(true);
 
 export default function App() {
-  const [fcmToken, setFcmToken] = useState(null);
+  const [fcmToken, setFcmToken] = useState<string | undefined>(undefined);
   const logger = false;
   const [permissionGranted, setPermissionGranted] = useState(false);
 
@@ -103,7 +103,7 @@ export default function App() {
           })
         )
         .then(async (token) => {
-          setFcmToken(token);
+          setFcmToken(token ?? undefined);
         })
         .catch((error) => {
           console.log(error);
@@ -128,7 +128,9 @@ export default function App() {
     return () => unsubscribe?.();
   }, [permissionGranted]);
 
-  if (!fcmToken) return null;
+  // Push is optional: the UIKit only calls registerPushNotification when a
+  // token is present, so render the app whether or not FCM hands one over.
+  // (Gating on it here left a silent black screen wherever FCM is unavailable.)
   return (
     <AmityUiKitProvider
       configs={config} //put your config json object
@@ -137,7 +139,7 @@ export default function App() {
       userId="USER_ID" // Put your UserId
       displayName="DISPLAYNAME" // Put your displayName
       apiEndpoint="API_ENDPOINT" //"https://api.{apiRegion}.amity.co"
-      fcmToken={fcmToken} // android:fcm iOS:APN
+      fcmToken={fcmToken} // android:fcm iOS:APN (optional)
     >
       <AmityUiKitSocial />
       {logger && <NetworkLogger />}
