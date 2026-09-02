@@ -34,6 +34,7 @@ import { IDisplayImage, IMentionPosition } from '../../../../core/types';
 import CloseButtonIconElement from '../../../elements/CloseButtonIconElement/CloseButtonIconElement';
 import { useNavigation } from '@react-navigation/native';
 import uiSlice from '../../../../core/stores/slices/uiSlice';
+import localVideoThumbnailSlice from '../../../../core/stores/slices/localVideoThumbnailSlice';
 import { amityPostsFormatter } from '../../../../core/utils/post';
 import useAuth from '../../../../core/hooks/useAuth';
 import globalfeedSlice from '../../../../core/stores/slices/globalfeedSlice';
@@ -100,6 +101,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const currentUser = useUser((client as Amity.Client)?.userId || '');
   const isCommunityModerator = isModerator(currentUser?.roles);
   const { showToastMessage, hideToastMessage } = uiSlice.actions;
+  const { setLocalVideoThumbnails } = localVideoThumbnailSlice.actions;
   const [inputMessage, setInputMessage] = useState<string>(
     (post?.data as Amity.ContentDataText)?.text ?? ''
   );
@@ -487,6 +489,22 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         return;
       }
       dispatch(hideToastMessage());
+      // The server has no thumbnail for these videos until it finishes
+      // transcoding, so hand the feed the frames the composer already decoded
+      // to bridge that window (PDT-4904, web parity: LayoutProvider
+      // videoThumbnail). Keyed by the uploaded original video's fileId, which
+      // is what the created post exposes as `data.videoFileId.original`.
+      if (type === 'video' && displayVideos.length > 0) {
+        dispatch(
+          setLocalVideoThumbnails({
+            postId: response.postId,
+            videos: displayVideos.map((item) => ({
+              fileId: item.fileId ?? '',
+              thumbnailUrl: item.thumbNail ?? '',
+            })),
+          })
+        );
+      }
       if (
         targetType === 'community' &&
         (effectiveCommunity?.postSetting === 'ADMIN_REVIEW_POST_REQUIRED' ||
@@ -540,6 +558,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     mentionUsers,
     mentionsPosition,
     onPressClose,
+    setLocalVideoThumbnails,
     post,
     showToastMessage,
     targetId,

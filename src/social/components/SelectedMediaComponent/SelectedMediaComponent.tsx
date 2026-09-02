@@ -109,10 +109,8 @@ export function SelectedMediaComponent({
           if (active) setRatio(getFrameRatio(width, height));
         })
         .catch(() => {
-          // Log the fallback so a square frame is never silently ambiguous.
-          console.log(
-            '[SelectedMediaComponent] video has no dimensions; defaulting ratio'
-          );
+          // Thumbnail decode failed too — nothing left to classify from, so
+          // fall back to the square frame (REQ-003d2).
           if (active) setRatio(DEFAULT_FRAME_RATIO);
         });
       return () => {
