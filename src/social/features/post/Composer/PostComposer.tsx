@@ -675,14 +675,15 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         // is not stable across picks — the original `fileName` is.
         const seen = new Set(prev.map((m) => m.fileName));
         const additions: IDisplayImage[] = [];
-        // The picker's dims are display-oriented for images on both platforms
-        // and for Android video (its extractor swaps w/h on 90°/270°), but an
-        // iOS video reports the track's stored `naturalSize` with no rotation
-        // alongside it — a portrait iPhone clip arrives as 1920×1080 and would
-        // classify the frame 16:9 (PDT-4904). With no rotation to correct it
-        // by, carry nothing and let SelectedMediaComponent measure the
-        // generated thumbnail, which is already display-oriented.
-        const carryDims = isPhoto || Platform.OS !== 'ios';
+        // iOS video is the one pick whose dims cannot be trusted: the picker
+        // reports the track's stored `naturalSize` with no rotation alongside
+        // it, so a portrait iPhone clip arrives as 1920×1080 and would
+        // classify the frame 16:9 (PDT-4904). Images on both platforms, and
+        // Android video (its extractor swaps w/h on 90°/270°), are already
+        // display-oriented and unaffected. With no rotation to correct the iOS
+        // value by, carry nothing and let SelectedMediaComponent measure the
+        // generated thumbnail, which is a rendered frame.
+        const isIosVideoDimsUnusable = !isPhoto && Platform.OS === 'ios';
         for (const asset of result.assets ?? []) {
           if (!asset.uri) continue;
           const fileName =
@@ -695,8 +696,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
             fileName,
             fileId: '',
             isUploaded: false,
-            width: carryDims ? asset.width : undefined,
-            height: carryDims ? asset.height : undefined,
+            width: isIosVideoDimsUnusable ? undefined : asset.width,
+            height: isIosVideoDimsUnusable ? undefined : asset.height,
           });
         }
         const updated = [...prev, ...additions];

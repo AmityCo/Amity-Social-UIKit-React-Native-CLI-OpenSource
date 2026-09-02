@@ -97,6 +97,12 @@ export function SelectedMediaComponent({
       // generated thumbnail instead of defaulting to a square frame
       // (REQ-003d2, PDT-4904): it is a rendered frame, so its dimensions are
       // already display-oriented and need no rotation applied.
+      //
+      // LoadingVideo decodes a thumbnail for this same url too, so frame 0
+      // decodes twice. Kept deliberately: reporting dims back up through
+      // LoadingVideo would widen the composer's callback surface, and the
+      // decode is a cached native call on a url the child already proves
+      // works.
       let active = true;
       createVideoThumbnail(firstUrl)
         .then(({ width, height }) => {
