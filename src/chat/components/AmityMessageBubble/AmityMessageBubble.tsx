@@ -8,7 +8,7 @@
 // caption, and a flat 10-line clamp.
 
 // 1. React / RN imports
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   Image,
   Linking,
@@ -20,7 +20,7 @@ import {
 } from 'react-native';
 
 // 2. Third-party imports
-import Video from 'react-native-video';
+import Video, { type VideoRef } from 'react-native-video';
 
 // 3. Internal imports
 import useFile from '../../../core/hooks/useFile';
@@ -35,6 +35,11 @@ import { DeletedMessagePill } from '../../features/shared/components/DeletedMess
 import { MessageLinkPreview } from '../../features/shared/components/MessageLinkPreview';
 import { extractFirstPreviewUrl } from '../../utils/previewLink';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
+import {
+  MEDIA_BUBBLE_MAX_WIDTH_IMAGE,
+  MEDIA_BUBBLE_MAX_WIDTH_VIDEO,
+  getMediaBubbleSize,
+} from '../../constants';
 import { useStyles } from './styles';
 
 // PDT-4109: one flat limit for every text bubble. There used to be a second
@@ -340,9 +345,13 @@ function TextBubble({
         >
           {seeMoreLabel}
         </Text>
+        {/* SoT + current web CSS: 20px chevron, inset 16 (aligned with the
+            text). The port's 12 came from scripts/port/geometry.json, whose
+            .textBubble__seeMoreIcon entry is stale at 0.75rem — the live
+            stylesheet is 1.25rem. */}
         <AmityIcon
           name="chevron-right"
-          size={12}
+          size={20}
           tokenColor={
             isUser
               ? AmityColorToken.IconChatBubbleOutboundSeeMoreDefault
@@ -469,6 +478,14 @@ function ImageBubble({
   const [hasLoadError, setHasLoadError] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [preloaded, setPreloaded] = useState(false);
+  // PDT-4916: the bubble follows the image's own ratio. RN gives us the
+  // intrinsic size on the <Image onLoad> event, which is the same mechanism the
+  // reply quote already uses (MessageReplyQuote → getReplyThumbnailSize).
+  // Until it arrives the styled square stands in.
+  const [mediaSize, setMediaSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
 
   const isFailed = isErrorState(message);
   const displaySrc = localPreviewUrl ?? mediumUrl;
@@ -525,7 +542,7 @@ function ImageBubble({
 
   const bubble = (
     <Pressable
-      style={styles.imageBubble}
+      style={[styles.imageBubble, mediaSize]}
       accessibilityRole="button"
       accessibilityLabel="Open image"
       onPressIn={() => setPressed(true)}
@@ -542,7 +559,14 @@ function ImageBubble({
         style={styles.mediaImage}
         resizeMode="cover"
         onLoadStart={() => setLoaded(false)}
-        onLoad={() => setLoaded(true)}
+        onLoad={(e) => {
+          setLoaded(true);
+          // nativeEvent.source carries the decoded bitmap's intrinsic size.
+          const { width, height } = e.nativeEvent.source;
+          setMediaSize(
+            getMediaBubbleSize(width, height, MEDIA_BUBBLE_MAX_WIDTH_IMAGE)
+          );
+        }}
         onError={() => setHasLoadError(true)}
       />
       {/* BUG #5 — RN <Image> (unlike web's progressive <img>) renders nothing while a
@@ -601,6 +625,20 @@ function VideoBubble({
   const fileId = getFileId(message);
   const videoUrl = useVideoFileUrl(fileId);
   const [pressed, setPressed] = useState(false);
+  // PDT-4916: same ratio treatment as the image bubble, measured from
+  // react-native-video's onLoad payload instead of <Image onLoad>.
+  const [mediaSize, setMediaSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+  // PDT-4923: the poster <Video> is mounted `paused`, and react-native-video 6
+  // paints no first frame until playback or a seek — so a failed/pending video
+  // showed only the bubble's grey loading surface plus the play chip. Web forces
+  // a decoded frame with preload="metadata" and the media fragment `#t=0.1`;
+  // seeking to 0.1s on load is the RN equivalent. Guarded by a ref+flag so the
+  // seek runs once and does not fight the paused state on every re-render.
+  const posterRef = useRef<VideoRef | null>(null);
+  const seededPoster = useRef(false);
 
   const isFailed = isErrorState(message);
   const thumbnailUri = localPreviewUrl ?? videoUrl;
@@ -619,7 +657,7 @@ function VideoBubble({
 
   const bubble = (
     <Pressable
-      style={styles.videoBubble}
+      style={[styles.videoBubble, mediaSize]}
       accessibilityRole="button"
       accessibilityLabel="Play video"
       onPressIn={() => setPressed(true)}
@@ -645,12 +683,29 @@ function VideoBubble({
       */}
       <View style={styles.mediaImage} pointerEvents="none">
         <Video
+          ref={posterRef}
           source={{ uri: thumbnailUri }}
           style={styles.mediaImage}
           resizeMode="cover"
           paused
           muted
           controls={false}
+          onLoad={(data) => {
+            // naturalSize gives the video's intrinsic dimensions (PDT-4916).
+            setMediaSize(
+              getMediaBubbleSize(
+                data.naturalSize?.width,
+                data.naturalSize?.height,
+                MEDIA_BUBBLE_MAX_WIDTH_VIDEO
+              )
+            );
+            // Nudge off frame 0 so a decoded frame is actually painted while
+            // paused — web's `#t=0.1` (PDT-4923).
+            if (!seededPoster.current) {
+              seededPoster.current = true;
+              posterRef.current?.seek(0.1);
+            }
+          }}
         />
       </View>
       {/* Web's hidden preload <video src={videoUrl} onLoadedMetadata={...}>: warm

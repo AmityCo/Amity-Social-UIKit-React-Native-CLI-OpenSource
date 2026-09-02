@@ -1,14 +1,20 @@
 // Styles for MessageReplyQuote — ported from MessageReplyQuote.module.css.
 // Geometry: gap 0.25rem→4; header gap 0.25rem→4; header icon 1rem→16; header
 // max-width 18.75rem→300; quote radius 1.25rem→20; text bubble padding
-// 0.625/1rem→10/16, max-width 14.25rem→228, text 15/20 (raw CSS); media radius
-// 20; broken icon 1.5rem→24; play chip 2.5rem→40; play icon 1.5rem→24; deleted
-// bubble padding 4/8, border 1; placeholder 228x60. Header/overlay colours differ
-// per side (own = Outbound tokens, other = Inbound).
+// 0.625/1rem→10/16, text 15/20 (raw CSS); media radius 20; broken icon
+// 1.5rem→24; play chip 2.5rem→40; play icon 1.5rem→24; deleted bubble padding
+// 4/8, border 1; placeholder height 60. Header/overlay colours differ per side
+// (own = Outbound tokens, other = Inbound).
+//
+// The quote's width (web's 14.25rem→228, and the placeholder's 228) is NOT a
+// fixed value — 228 is the 60%-of-viewport rule on Figma's 375px artboard. It
+// is derived from that rule here so the quote tracks the reply bubble at every
+// screen size (PDT-4926). See src/chat/constants/bubble.
 
 import { StyleSheet } from 'react-native';
 import { useToken } from '../../../../../core/design/theme/useToken';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
+import { getBubbleMaxWidth } from '../../../../constants';
 
 export const useStyles = (isUser: boolean) => {
   const token = useToken();
@@ -50,10 +56,17 @@ export const useStyles = (isUser: boolean) => {
         AmityColorToken.SurfaceChatBubbleReplyOverlayDefault
       ),
     },
+    // PDT-4926: this was a flat 228, which is the 60%-of-viewport rule's value
+    // on Figma's 375px artboard — not the contract (see
+    // src/chat/constants/bubble). Held fixed, the quote fell progressively
+    // narrower than the reply bubble as the screen got wider: on an iPhone XR
+    // the reply was 298 and the quote 228, a 70px gap where web's is ~20.
+    // Deriving both from the same rule keeps them equal at every screen size,
+    // which is what the ticket asks for.
     textBubble: {
       paddingVertical: 10,
       paddingHorizontal: 16,
-      maxWidth: 228,
+      maxWidth: getBubbleMaxWidth(),
       backgroundColor: token(
         AmityColorToken.SurfaceChatBubbleReplyMessageDefault
       ),
@@ -99,10 +112,12 @@ export const useStyles = (isUser: boolean) => {
         AmityColorToken.SurfaceIconButtonTransparentPrimaryEnabled
       ),
     },
+    // Loading placeholder: same derived width as the quote itself, so the quote
+    // does not visibly jump width when the parent resolves.
     placeholder: {
       alignItems: 'center',
       justifyContent: 'center',
-      width: 228,
+      width: getBubbleMaxWidth(),
       height: 60,
       borderRadius: 20,
       backgroundColor: token(
