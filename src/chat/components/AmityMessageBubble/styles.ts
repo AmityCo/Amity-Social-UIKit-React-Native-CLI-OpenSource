@@ -1,9 +1,8 @@
 // Styles for AmityMessageBubble — ported from AmityUiKitWeb MessageBubble.module.css
 // (.textBubble / .textBubble__text). Geometry: border-radius 1.25rem→20, text
-// padding 0.625rem 1rem 0 + margin-bottom 0.625rem → paddingTop 10 / horizontal 16 /
-// bottom 10. Body type is SF Pro Regular 15/20 per the design SoT
-// (AmityMessageBubble/v2.md "Peer/Own message text · SF Pro Regular · 15/20"),
-// which the reply quote already matched. Colours resolve through the design
+// padding 0.625rem 1rem 0 + margin-bottom 0.625rem → 10 vertical / 16 horizontal,
+// though the vertical padding is redistributed to compensate for RN's leading
+// model — see TEXT_LEADING_EXCESS below. Colours resolve through the design
 // tokens (surface/text chatbubble, inbound vs outbound). No hardcoded hex.
 
 import { StyleSheet } from 'react-native';
@@ -18,9 +17,42 @@ import {
 
 // Body text metrics, shared with the mention spans and the measuring probe so
 // every one of them wraps and clamps identically. See src/chat/constants/bubble.
-const TEXT_FONT_SIZE = 15;
+//
+// SoT tokens/geometry.json → typography.styles "Body" is iOS 15 / Android 14 /
+// Web 14, all at lineHeight 20. This repo's Typography atom deliberately takes
+// the Web column throughout (Typography/styles.ts: body = 14 / 20 / 400), so the
+// bubble matches it rather than picking the iOS size on both platforms.
+const TEXT_FONT_SIZE = 14;
 const TEXT_LINE_HEIGHT = 20;
 const TEXT_PADDING_H = 16;
+
+// PDT-4870 — leading compensation.
+//
+// The spec's box is padding 10/16/10/16 around a 20px line. On the web that
+// renders centred because CSS distributes the difference between the line
+// height and the font's natural line box as HALF-LEADING: half above the
+// glyphs, half below. RN does not do this. iOS maps lineHeight onto
+// NSParagraphStyle min/maxLineHeight and TextKit grows the line upward from the
+// baseline; Android's CustomLineHeightSpan sets ascent = -(height - descent)
+// and leaves the descent alone. Both put 100% of the extra space ABOVE the ink.
+//
+// At 14px both SF Pro and Roboto have a natural line box of ~16.4px, so a 20px
+// line carries ~3.6px of extra leading — all of it on top. Inside symmetric
+// 10/10 padding the visible gap is then ~13.6 above the text and 10 below,
+// which is what QA reported as the text sitting near the bottom of the bubble.
+// (Note this gets WORSE, not better, as lineHeight rises: the old 14/18 had
+// only ~1.6px of it.)
+//
+// Shift the text up by half the excess and keep the box height identical:
+// 8 + 20 + 12 === 10 + 20 + 10 === 40. Applied to the padding rather than to
+// lineHeight so the 20px leading — which is what the spec actually specifies,
+// and what governs multi-line spacing — is preserved. It also self-corrects for
+// multi-line text: the excess appears above every line, but only the first
+// line's shows as a gap at the top of the block.
+const TEXT_LEADING_EXCESS =
+  TEXT_LINE_HEIGHT - Math.round(TEXT_FONT_SIZE * 1.17);
+const TEXT_PADDING_TOP = 10 - Math.round(TEXT_LEADING_EXCESS / 2);
+const TEXT_PADDING_BOTTOM = 10 + Math.round(TEXT_LEADING_EXCESS / 2);
 
 export const useStyles = () => {
   const token = useToken();
@@ -55,18 +87,14 @@ export const useStyles = () => {
         AmityColorToken.SurfaceChatBubbleMessageInboundPressed
       ),
     },
-    // PDT-4870: the text read as bottom-aligned inside a symmetric padding box.
-    // Two causes, both fixed here. (1) The type was 14/18 where the SoT spec
-    // says 15/20. (2) RN does not implement CSS half-leading — iOS grows the
-    // line box upward from the baseline (lineHeight sets min/maxLineHeight) and
-    // Android's CustomLineHeightSpan trims only the line's top — so ALL the
-    // extra leading lands above the glyphs and the ink sits low in the box.
-    // includeFontPadding: false drops Android's extra top/bottom font padding,
-    // which stacks on the same bias.
+    // PDT-4870: the leading was 18 where the SoT says 20, and the padding is
+    // asymmetric to compensate for RN's lack of CSS half-leading — see
+    // TEXT_LEADING_EXCESS above. includeFontPadding: false removes Android's
+    // additional font padding, which otherwise stacks on the same bias.
     text: {
-      paddingTop: 10,
+      paddingTop: TEXT_PADDING_TOP,
       paddingHorizontal: TEXT_PADDING_H,
-      paddingBottom: 10,
+      paddingBottom: TEXT_PADDING_BOTTOM,
       fontSize: TEXT_FONT_SIZE,
       lineHeight: TEXT_LINE_HEIGHT,
       includeFontPadding: false,
@@ -108,8 +136,9 @@ export const useStyles = () => {
       fontStyle: 'italic',
     },
     // "See more" affordance for truncated long messages, faithful to web:
-    // a 1px divider (textBubble__divider) then a space-between row (textBubble__seeMore)
-    // of label + chevron-right icon (textBubble__seeMoreIcon 0.75rem→12).
+    // a 1px divider (textBubble__divider) then a space-between row
+    // (textBubble__seeMore) of label + chevron-right icon
+    // (textBubble__seeMoreIcon 1.25rem→20, set at the call site).
     divider: {
       height: 1,
     },
