@@ -227,7 +227,17 @@ export function SelectedMediaComponent({
               >
                 {media.map((item, index) => (
                   <View
-                    key={`${item.url}-${index}`}
+                    // Key on the item's stable local identity, not on its url
+                    // (PDT-5003). `url` is rewritten from the local pick path
+                    // to the remote `?size=medium` one the instant that frame's
+                    // upload finishes, so a url-based key tore down and
+                    // remounted the slide — and with it the child's mount
+                    // effect, which is what re-runs uploads and re-orders the
+                    // in-flight completion callbacks against their siblings.
+                    // The identity survives the swap, so a finishing upload
+                    // now only re-renders its own frame. Falls back to the old
+                    // key for entries built without one (legacy EditPostModal).
+                    key={item.localId ?? `${item.url}-${index}`}
                     style={[
                       styles.selectedMedia__slide,
                       {
