@@ -120,8 +120,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const [mentionUsers, setMentionUsers] = useState<TSearchItem[]>([]);
   const [isSwipeup, setIsSwipeup] = useState(true);
   const [deletedPostIds, setDeletedPostIds] = useState<string[]>([]);
-  // PDT-5020: upload progress is tracked per media item, keyed by the item's
-  // `source` url — the same shape as `imageErrors`/`videoErrors` below. A
+  // Upload progress is tracked per media item, keyed by the item's `source`
+  // url — the same shape as `imageErrors`/`videoErrors` below. A
   // single shared boolean was flipped back to false by whichever upload
   // finished first, so Post/Save unlocked while the remaining frames were
   // still in flight. Sources are unique across images and videos, so one set
@@ -264,7 +264,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
               // is the file it already is. Unique per child, stable for the
               // whole session, and never equal to a picker file name — so a
               // later pick is de-duplicated against the other staged picks
-              // only, which is the most the picker can tell us (PDT-5040).
+              // only, which is the most the picker can tell us.
               localId: fileId ?? item.postId,
               isUploaded: true,
               postId: item.postId,
@@ -622,10 +622,10 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         fileName: fileName,
         // Camera captures land on a freshly generated temp path, so the path
         // itself is the identity: unique per shot, and stable once the upload
-        // rewrites `url` to the remote one (PDT-5003). Deliberately no
+        // rewrites `url` to the remote one. Deliberately no
         // `localFileName` — two shots of the same scene are two distinct
         // attachments and must never de-duplicate against each other, nor
-        // against a library pick that happens to share a basename (PDT-5040).
+        // against a library pick that happens to share a basename.
         localId: url,
         fileId: '',
         isUploaded: false,
@@ -757,7 +757,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
             // the picker copying the pick to a new temp uri every time. It is
             // not populated by every picker configuration, so fall back to the
             // file name and keep the name as a second key either way — that is
-            // what catches a re-pick when no id came back (PDT-5040).
+            // what catches a re-pick when no id came back.
             localId: asset.id ?? fileName,
             localFileName: fileName,
             fileId: '',
@@ -789,7 +789,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   // Children report their own upload start/end keyed by `source`, and a child
   // that unmounts mid-upload (frame removed while still uploading) clears its
   // own entry from its cleanup — otherwise the set would never empty and Post
-  // would stay disabled forever (PDT-5020).
+  // would stay disabled forever.
   const handleUploadingChange = useCallback(
     (uploading: boolean, source: string) => {
       setUploadingSources((prev) =>

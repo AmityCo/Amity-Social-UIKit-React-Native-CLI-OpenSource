@@ -17,7 +17,7 @@ const PATH = 'file:///tmp/clip.mp4';
 /**
  * Settle the call against a timer and report which won.
  *
- * This is the whole point of the PDT-5019 suite: the bug was not a wrong error
+ * This is the whole point of this suite: the bug was not a wrong error
  * message, it was a promise that NEVER SETTLED. `expect(...).rejects` would sit
  * there until Jest's own timeout and report a generic failure, so race the call
  * against a timer and assert on the winner — 'hung' is the regression.

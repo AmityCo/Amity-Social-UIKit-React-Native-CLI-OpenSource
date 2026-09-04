@@ -9,7 +9,7 @@ import { appendFileToFormData } from '../utils/fileUpload';
  * `LoadingImage` / `LoadingVideo` currently ignore the thrown value and show a
  * generic toast, so the contract is deliberately loose — but keeping one shape
  * means a caller that *does* want to branch (e.g. the `INVALID_IMAGE`
- * moderation case from PDT-4997) can read `code` instead of sniffing strings.
+ * moderation case) can read `code` instead of sniffing strings.
  */
 export type UploadError = {
   message: string;
@@ -32,7 +32,7 @@ const NO_FILE_DATA_ERROR: UploadError = {
  * Normalise whatever the SDK / networking layer threw into an `UploadError`.
  *
  * A dropped connection surfaces here as a plain `Error` ("Network request
- * failed") carrying no Amity error code — which is exactly the PDT-5019 repro:
+ * failed") carrying no Amity error code — which is exactly the reported repro:
  * the user toggles the network off mid-upload and the request rejects.
  */
 function toUploadError(error: any): UploadError {
@@ -45,7 +45,7 @@ function toUploadError(error: any): UploadError {
 }
 
 /**
- * PDT-5019 — every uploader below is a plain `async` function with try/catch,
+ * Every uploader below is a plain `async` function with try/catch,
  * NOT `new Promise(async (resolve, reject) => …)`.
  *
  * The old wrapper was actively harmful, not merely redundant. An `async`
@@ -59,7 +59,7 @@ function toUploadError(error: any): UploadError {
  *
  * Throwing from an `async` function has no such hole: a `throw` anywhere in the
  * body — including from code the function `await`ed — settles the promise it
- * returned. `uploadImageFile` already had the try/catch (PDT-4997), which is
+ * returned. `uploadImageFile` already had the try/catch, which is
  * why the image path showed a failed state while the video path hung.
  */
 export async function uploadFile(
@@ -109,7 +109,7 @@ export async function uploadImageFile(
       perCentCallback && perCentCallback(percent);
     }));
   } catch (error: any) {
-    // Moderation rejects the image server-side; PDT-4997 wants that spelled out
+    // Moderation rejects the image server-side; that is spelled out here
     // rather than folded into the generic "please try again" copy.
     if (
       error?.message?.includes('INVALID_IMAGE') ||

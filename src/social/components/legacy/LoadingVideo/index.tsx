@@ -89,7 +89,7 @@ const LoadingVideo = ({
   }, [progress]);
 
   const uploadFileToAmity = useCallback(async () => {
-    // PDT-5019: `uploadVideoFile` now rejects on a failed upload instead of
+    // `uploadVideoFile` now rejects on a failed upload instead of
     // hanging on an unsettled promise, so this call needs a catch. This legacy
     // component has no error UI to show (unlike its v4 counterpart, which
     // renders a tappable retry overlay) — the least-bad end state is to stop

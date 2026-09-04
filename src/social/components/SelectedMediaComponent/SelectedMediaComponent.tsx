@@ -44,7 +44,7 @@ export type SelectedMediaComponentProps = {
   isEditMode?: boolean;
   // Per-frame upload state, keyed by the item's `source` url — the parent
   // aggregates it instead of holding one boolean that the first upload to
-  // finish would clear on behalf of every other frame (PDT-5020).
+  // finish would clear on behalf of every other frame.
   onUploadingChange?: (isUploading: boolean, source: string) => void;
 };
 
@@ -230,8 +230,8 @@ export function SelectedMediaComponent({
               >
                 {media.map((item, index) => (
                   <View
-                    // Key on the item's stable local identity, not on its url
-                    // (PDT-5003). `url` is rewritten from the local pick path
+                    // Key on the item's stable local identity, not on its
+                    // url. `url` is rewritten from the local pick path
                     // to the remote `?size=medium` one the instant that frame's
                     // upload finishes, so a url-based key tore down and
                     // remounted the slide — and with it the child's mount

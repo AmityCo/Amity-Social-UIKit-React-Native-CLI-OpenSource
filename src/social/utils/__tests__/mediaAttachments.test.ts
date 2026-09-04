@@ -24,7 +24,7 @@ const picked = (
 /**
  * The same attachment after its upload finished: the composer rewrites `url`
  * to the remote one and `fileName` to the SERVER's name. Only the local
- * identity survives — which is the whole point of PDT-5040 / PDT-5003.
+ * identity survives — which is the whole point of these two fixes.
  */
 const uploaded = (name: string, serverName: string): IDisplayImage => ({
   ...picked(name),

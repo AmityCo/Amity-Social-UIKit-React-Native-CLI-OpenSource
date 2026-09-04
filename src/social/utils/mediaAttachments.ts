@@ -1,8 +1,7 @@
 import type { IDisplayImage } from '../../core/types';
 
 /**
- * The composer caps a post at 10 attachments of a single media type
- * (PDT-4310 / PDT-4312).
+ * The composer caps a post at 10 attachments of a single media type.
  */
 export const MAX_MEDIA_ATTACHMENTS = 10;
 
@@ -16,7 +15,7 @@ export type MediaPickCandidate = IDisplayImage & {
 
 /**
  * Drop the candidates that are already staged, and any repeated inside the
- * batch itself, preserving the order of the ones that survive (PDT-5040).
+ * batch itself, preserving the order of the ones that survive.
  *
  * De-duplication runs against the LOCAL identity, never `fileName`: the moment
  * an item finishes uploading the composer rewrites its `fileName` to the
@@ -72,7 +71,7 @@ export function appendWithinCap(
 
 /**
  * Route a finished upload back to the entry it actually belongs to, matched by
- * the local path the child was mounted with (PDT-5003).
+ * the local path the child was mounted with.
  *
  * The child reports both a positional `index` and the `originalPath`. The index
  * is the array position the frame was RENDERED at when the upload started —
@@ -87,7 +86,7 @@ export function appendWithinCap(
  * handed, and pick de-duplication guarantees those are unique across the array.
  *
  * The patch is MERGED rather than replacing the entry: `localId` /
- * `localFileName` are what the next pick de-duplicates against (PDT-5040) and
+ * `localFileName` are what the next pick de-duplicates against, and
  * what the carousel keys its frames by, and the picker's width/height still
  * classify the frame ratio — a wholesale replacement dropped all of them.
  *
@@ -107,8 +106,7 @@ export function applyFinishedUpload(
 }
 
 /**
- * Add or remove a media item's `source` from the set of in-flight uploads
- * (PDT-5020).
+ * Add or remove a media item's `source` from the set of in-flight uploads.
  *
  * The composer gates Post/Save on this set being empty. It replaced a single
  * shared boolean that whichever upload finished FIRST flipped back to false on
