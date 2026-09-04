@@ -252,6 +252,12 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
               url,
               fileId,
               fileName: fileId,
+              // A hydrated child has no local pick behind it, so its identity
+              // is the file it already is. Unique per child, stable for the
+              // whole session, and never equal to a picker file name — so a
+              // later pick is de-duplicated against the other staged picks
+              // only, which is the most the picker can tell us (PDT-5040).
+              localId: fileId ?? item.postId,
               isUploaded: true,
               postId: item.postId,
               width: imageInfo?.getWidth?.(),
@@ -283,6 +289,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
               url,
               fileId: fileId,
               fileName: fileId,
+              localId: fileId ?? item.postId,
               isUploaded: true,
               thumbNail,
               postId: item.postId,
@@ -605,6 +612,13 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       return {
         url: url,
         fileName: fileName,
+        // Camera captures land on a freshly generated temp path, so the path
+        // itself is the identity: unique per shot, and stable once the upload
+        // rewrites `url` to the remote one (PDT-5003). Deliberately no
+        // `localFileName` — two shots of the same scene are two distinct
+        // attachments and must never de-duplicate against each other, nor
+        // against a library pick that happens to share a basename (PDT-5040).
+        localId: url,
         fileId: '',
         isUploaded: false,
       };
@@ -710,9 +724,24 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       const setter = isPhoto ? setDisplayImages : setDisplayVideos;
       setter((prev) => {
         // Silently drop duplicates, matching the web UIKit (which dedups by
-        // file name). The picker copies each pick to a fresh temp uri, so uri
-        // is not stable across picks — the original `fileName` is.
-        const seen = new Set(prev.map((m) => m.fileName));
+        // file name) — no toast, no alert, and the already-staged copy is left
+        // exactly where it is, so the remaining picks keep their order
+        // (PDT-5040).
+        //
+        // Compare against the LOCAL identity, never against `fileName`: the
+        // moment an item finishes uploading, handleOnFinishImage rewrites its
+        // fileName to the server's `file[0].attributes.name` (and getPostInfo
+        // hydrates edit-mode entries with the fileId), so a set built from
+        // fileName holds server-side names while the incoming assets carry
+        // picker names. Nothing ever matched and every re-pick slipped through
+        // as a duplicate frame. `localId`/`localFileName` are assigned at pick
+        // time and preserved across the upload, so they still line up here.
+        const seenIds = new Set(
+          prev.map((m) => m.localId).filter(Boolean) as string[]
+        );
+        const seenNames = new Set(
+          prev.map((m) => m.localFileName).filter(Boolean) as string[]
+        );
         const additions: IDisplayImage[] = [];
         // iOS video is the one pick whose dims cannot be trusted: the picker
         // reports the track's stored `naturalSize` with no rotation alongside
@@ -728,11 +757,21 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
           const fileName =
             asset.fileName ??
             asset.uri.substring(asset.uri.lastIndexOf('/') + 1);
-          if (seen.has(fileName)) continue; // duplicate → silently drop
-          seen.add(fileName);
+          // `asset.id` is the library's own identifier for the asset (PHAsset
+          // localIdentifier / MediaStore id) and is the one key that survives
+          // the picker copying the pick to a new temp uri on every pick. It is
+          // not populated by every picker configuration, so fall back to the
+          // file name and keep the name as a second key either way — that is
+          // what catches a re-pick when no id came back.
+          const localId = asset.id ?? fileName;
+          if (seenIds.has(localId) || seenNames.has(fileName)) continue; // duplicate → silently drop
+          seenIds.add(localId);
+          seenNames.add(fileName);
           additions.push({
             url: asset.uri,
             fileName,
+            localId,
+            localFileName: fileName,
             fileId: '',
             isUploaded: false,
             width: isIosVideoDimsUnusable ? undefined : asset.width,
@@ -842,47 +881,86 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     },
     []
   );
-  const handleOnFinishImage = useCallback(
-    (fileId: string, fileUrl: string, fileName: string, index: number) => {
-      setHasChangedAttachment(true);
-      const imageObject: IDisplayImage = {
-        url: fileUrl,
-        fileId: fileId,
-        fileName: fileName,
-        isUploaded: true,
-      };
-      setDisplayImages((prevData) => {
-        const newData = [...prevData];
-        newData[index] = imageObject;
-        return newData;
-      });
+  // Route a finished upload back to the entry it actually belongs to, by the
+  // local path the child was mounted with (PDT-5003).
+  //
+  // The child hands us both a positional `index` and `originalPath`. The index
+  // is the array position the frame was RENDERED at when the upload started —
+  // LoadingVideo goes further and memoises its uploader on `[source]` alone, so
+  // it freezes the index of the render where the source last changed. Writing
+  // `newData[index]` therefore lands on whatever now sits at that position: a
+  // frame removed, an upload retried after the array grew, or a slow upload
+  // finishing after its neighbours moved all put one file's remote url on
+  // another file's entry — which is what QA saw as an already-loaded image
+  // repainting with a different picture once the network came back. Matching on
+  // `originalPath` is exact: a not-yet-uploaded entry's `url` IS the local path
+  // its child was handed, and the picker de-duplication guarantees those are
+  // unique across the array.
+  //
+  // No match means the entry is gone (closed mid-upload) or already finished —
+  // leave the array alone rather than resurrecting or double-writing it.
+  const applyFinishedUpload = useCallback(
+    (
+      prevData: IDisplayImage[],
+      originalPath: string,
+      patch: Partial<IDisplayImage>
+    ) => {
+      const targetIndex = prevData.findIndex(
+        (item) => item.url === originalPath
+      );
+      if (targetIndex === -1) return prevData;
+      const newData = [...prevData];
+      // Merge rather than replace: `localId`/`localFileName` are what the next
+      // pick de-duplicates against (PDT-5040) and what the carousel keys its
+      // frames by, and the picker's width/height still classify the frame
+      // ratio — a wholesale replacement dropped all of them.
+      newData[targetIndex] = { ...newData[targetIndex], ...patch };
+      return newData;
     },
     []
+  );
+
+  const handleOnFinishImage = useCallback(
+    (
+      fileId: string,
+      fileUrl: string,
+      fileName: string,
+      _index: number,
+      originalPath: string
+    ) => {
+      setHasChangedAttachment(true);
+      setDisplayImages((prevData) =>
+        applyFinishedUpload(prevData, originalPath, {
+          url: fileUrl,
+          fileId: fileId,
+          fileName: fileName,
+          isUploaded: true,
+        })
+      );
+    },
+    [applyFinishedUpload]
   );
   const handleOnFinishVideo = useCallback(
     (
       fileId: string,
       fileUrl: string,
       fileName: string,
-      index: number,
-      _,
+      _index: number,
+      originalPath: string,
       thumbnail: string
     ) => {
       setHasChangedAttachment(true);
-      const imageObject: IDisplayImage = {
-        url: fileUrl,
-        fileId: fileId,
-        fileName: fileName,
-        isUploaded: true,
-        thumbNail: thumbnail,
-      };
-      setDisplayVideos((prevData) => {
-        const newData = [...prevData];
-        newData[index] = imageObject;
-        return newData;
-      });
+      setDisplayVideos((prevData) =>
+        applyFinishedUpload(prevData, originalPath, {
+          url: fileUrl,
+          fileId: fileId,
+          fileName: fileName,
+          isUploaded: true,
+          thumbNail: thumbnail,
+        })
+      );
     },
-    []
+    [applyFinishedUpload]
   );
 
   // PDT-4310 / PDT-4312: at the 10-attachment cap the camera + gallery icons
