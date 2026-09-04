@@ -23,7 +23,11 @@ interface OverlayImageProps {
   isEditMode?: boolean;
   fileCount?: number;
   postId?: string;
-  setIsUploading?: (arg: boolean) => void;
+  // Reports this frame's upload state keyed by its own `source`, so the
+  // composer can gate Post on every frame at once. The old shared
+  // `setIsUploading` boolean was flipped back to false by whichever upload
+  // finished first, unlocking Post while the other frames were still in flight.
+  onUploadingChange?: (isUploading: boolean, source: string) => void;
   carousel?: boolean;
 }
 const LoadingImage = ({
@@ -37,7 +41,7 @@ const LoadingImage = ({
   isEditMode = false,
   fileCount,
   postId,
-  setIsUploading,
+  onUploadingChange,
   carousel = false,
 }: OverlayImageProps) => {
   const [loading, setLoading] = useState(true);
@@ -47,8 +51,8 @@ const LoadingImage = ({
   const styles = useStyles();
   const handleLoadEnd = useCallback(() => {
     setLoading(false);
-    setIsUploading(false);
-  }, [setIsUploading]);
+    onUploadingChange?.(false, source);
+  }, [onUploadingChange, source]);
 
   useEffect(() => {
     if (progress === 100) {
@@ -57,8 +61,14 @@ const LoadingImage = ({
   }, [progress]);
 
   const uploadFileToAmity = useCallback(async () => {
-    setIsUploading(true);
+    onUploadingChange?.(true, source);
     setIsUploadError(false);
+    // Clearing the local flag alone left this source inside the parent's
+    // `imageErrors` set, and that set is otherwise only cleared by the
+    // mount effect below — which does not re-run on a retry, since neither
+    // `isUploaded` nor `source` changed. Post stayed disabled even after the
+    // retry uploaded fine, so tell the parent the error is gone up front.
+    onUploadError?.(false, source);
     try {
       const file: Amity.File<any>[] = await uploadImageFile(
         source,
@@ -78,7 +88,8 @@ const LoadingImage = ({
             source
           );
       } else {
-        setIsUploading(false);
+        // `handleLoadEnd` already reports the upload as finished — the extra
+        // setter call it used to be paired with was redundant.
         handleLoadEnd();
         setIsProcess(false);
         setIsUploadError(true);
@@ -87,7 +98,6 @@ const LoadingImage = ({
     } catch (error) {
       handleLoadEnd();
       setIsProcess(false);
-      setIsUploading(false);
       setIsUploadError(true);
       onUploadError?.(true, source);
     }
@@ -96,7 +106,7 @@ const LoadingImage = ({
     index,
     onLoadFinish,
     onUploadError,
-    setIsUploading,
+    onUploadingChange,
     source,
   ]);
 
@@ -117,6 +127,17 @@ const LoadingImage = ({
       uploadFileToAmity();
     }
   }, [isUploaded, source]);
+
+  // A frame can be removed (or its source swapped) while its upload is still
+  // in flight, in which case `handleLoadEnd` never runs and the composer would
+  // keep waiting on an entry no mounted child owns any more — leaving Post
+  // disabled forever. Clearing it from this cleanup keeps the
+  // bookkeeping in the same component that added it.
+  useEffect(() => {
+    return () => {
+      onUploadingChange?.(false, source);
+    };
+  }, [onUploadingChange, source]);
 
   const onRetryUpload = () => {
     uploadFileToAmity();

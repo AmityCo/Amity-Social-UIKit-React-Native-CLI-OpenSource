@@ -61,6 +61,13 @@ import { useFile } from '../../../hooks';
 import useMention from '../../../hooks/useMention';
 import { getPostErrorMessage } from '../../../utils/errors';
 import {
+  MAX_MEDIA_ATTACHMENTS,
+  appendWithinCap,
+  applyFinishedUpload,
+  dedupeMediaPicks,
+  toggleUploadingSource,
+} from '../../../utils/mediaAttachments';
+import {
   ALERT,
   MAX_MENTION_USERS,
   MAXIMUM_POST_CHARACTERS,
@@ -113,7 +120,16 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const [mentionUsers, setMentionUsers] = useState<TSearchItem[]>([]);
   const [isSwipeup, setIsSwipeup] = useState(true);
   const [deletedPostIds, setDeletedPostIds] = useState<string[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
+  // Upload progress is tracked per media item, keyed by the item's `source`
+  // url — the same shape as `imageErrors`/`videoErrors` below. A
+  // single shared boolean was flipped back to false by whichever upload
+  // finished first, so Post/Save unlocked while the remaining frames were
+  // still in flight. Sources are unique across images and videos, so one set
+  // covers both attachment types.
+  const [uploadingSources, setUploadingSources] = useState<Set<string>>(
+    new Set()
+  );
+  const isUploading = uploadingSources.size > 0;
   const [hasChangedAttachment, setHasChangedAttachment] = useState(false);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [videoErrors, setVideoErrors] = useState<Set<string>>(new Set());
@@ -150,7 +166,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     (inputMessage.trim().length > 0 ||
       displayImages.length > 0 ||
       displayVideos.length > 0) &&
-    (displayImages.length <= 10 || displayVideos.length <= 10);
+    (displayImages.length <= MAX_MEDIA_ATTACHMENTS ||
+      displayVideos.length <= MAX_MEDIA_ATTACHMENTS);
 
   const { renderInput, renderSuggestions } = useMention({
     value: inputMessage,
@@ -243,6 +260,12 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
               url,
               fileId,
               fileName: fileId,
+              // A hydrated child has no local pick behind it, so its identity
+              // is the file it already is. Unique per child, stable for the
+              // whole session, and never equal to a picker file name — so a
+              // later pick is de-duplicated against the other staged picks
+              // only, which is the most the picker can tell us.
+              localId: fileId ?? item.postId,
               isUploaded: true,
               postId: item.postId,
               width: imageInfo?.getWidth?.(),
@@ -274,6 +297,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
               url,
               fileId: fileId,
               fileName: fileId,
+              localId: fileId ?? item.postId,
               isUploaded: true,
               thumbNail,
               postId: item.postId,
@@ -596,6 +620,13 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       return {
         url: url,
         fileName: fileName,
+        // Camera captures land on a freshly generated temp path, so the path
+        // itself is the identity: unique per shot, and stable once the upload
+        // rewrites `url` to the remote one. Deliberately no
+        // `localFileName` — two shots of the same scene are two distinct
+        // attachments and must never de-duplicate against each other, nor
+        // against a library pick that happens to share a basename.
+        localId: url,
         fileId: '',
         isUploaded: false,
       };
@@ -611,12 +642,18 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
 
   const pickCamera = useCallback(
     async (mediaType: 'mixed' | 'photo' | 'video') => {
-      if (mediaType === 'photo' && displayImages.length === 10)
+      if (
+        mediaType === 'photo' &&
+        displayImages.length >= MAX_MEDIA_ATTACHMENTS
+      )
         return Alert.alert(
           'Maximum upload limit reached',
           "You've reached the upload limit of 10 images. Any additional images will not be saved."
         );
-      if (mediaType === 'video' && displayVideos.length === 10)
+      if (
+        mediaType === 'video' &&
+        displayVideos.length >= MAX_MEDIA_ATTACHMENTS
+      )
         return Alert.alert(
           'Maximum upload limit reached',
           "You've reached the upload limit of 10 videos. Any additional videos will not be saved."
@@ -684,7 +721,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         : mediaAttachment.video;
       if (activeMediaType && activeMediaType !== pickedType) return;
       const current = isPhoto ? displayImages.length : displayVideos.length;
-      if (current >= 10)
+      if (current >= MAX_MEDIA_ATTACHMENTS)
         return Alert.alert(
           'Maximum upload limit reached',
           `You've reached the upload limit of 10 ${
@@ -694,45 +731,47 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       const result: ImagePicker.ImagePickerResponse = await launchImageLibrary({
         mediaType,
         quality: 1,
-        selectionLimit: 10 - current,
+        selectionLimit: MAX_MEDIA_ATTACHMENTS - current,
       });
       if (result.didCancel || !result.assets?.length) return;
 
-      const setter = isPhoto ? setDisplayImages : setDisplayVideos;
-      setter((prev) => {
-        // Silently drop duplicates, matching the web UIKit (which dedups by
-        // file name). The picker copies each pick to a fresh temp uri, so uri
-        // is not stable across picks — the original `fileName` is.
-        const seen = new Set(prev.map((m) => m.fileName));
-        const additions: IDisplayImage[] = [];
-        // iOS video is the one pick whose dims cannot be trusted: the picker
-        // reports the track's stored `naturalSize` with no rotation alongside
-        // it, so a portrait iPhone clip arrives as 1920×1080 and would
-        // classify the frame 16:9 (PDT-4904). Images on both platforms, and
-        // Android video (its extractor swaps w/h on 90°/270°), are already
-        // display-oriented and unaffected. With no rotation to correct the iOS
-        // value by, carry nothing and let SelectedMediaComponent measure the
-        // generated thumbnail, which is a rendered frame.
-        const isIosVideoDimsUnusable = !isPhoto && Platform.OS === 'ios';
-        for (const asset of result.assets ?? []) {
-          if (!asset.uri) continue;
-          const fileName =
-            asset.fileName ??
-            asset.uri.substring(asset.uri.lastIndexOf('/') + 1);
-          if (seen.has(fileName)) continue; // duplicate → silently drop
-          seen.add(fileName);
-          additions.push({
+      // iOS video is the one pick whose dims cannot be trusted: the picker
+      // reports the track's stored `naturalSize` with no rotation alongside
+      // it, so a portrait iPhone clip arrives as 1920×1080 and would
+      // classify the frame 16:9 (PDT-4904). Images on both platforms, and
+      // Android video (its extractor swaps w/h on 90°/270°), are already
+      // display-oriented and unaffected. With no rotation to correct the iOS
+      // value by, carry nothing and let SelectedMediaComponent measure the
+      // generated thumbnail, which is a rendered frame.
+      const isIosVideoDimsUnusable = !isPhoto && Platform.OS === 'ios';
+      const candidates = (result.assets ?? []).flatMap((asset) => {
+        if (!asset.uri) return [];
+        const fileName =
+          asset.fileName ?? asset.uri.substring(asset.uri.lastIndexOf('/') + 1);
+        return [
+          {
             url: asset.uri,
             fileName,
+            // `asset.id` is the library's own identifier for the asset (PHAsset
+            // localIdentifier / MediaStore id) and is the one key that survives
+            // the picker copying the pick to a new temp uri every time. It is
+            // not populated by every picker configuration, so fall back to the
+            // file name and keep the name as a second key either way — that is
+            // what catches a re-pick when no id came back.
+            localId: asset.id ?? fileName,
+            localFileName: fileName,
             fileId: '',
             isUploaded: false,
             width: isIosVideoDimsUnusable ? undefined : asset.width,
             height: isIosVideoDimsUnusable ? undefined : asset.height,
-          });
-        }
-        const updated = [...prev, ...additions];
-        return updated.length > 10 ? updated.slice(0, 10) : updated;
+          },
+        ];
       });
+
+      const setter = isPhoto ? setDisplayImages : setDisplayVideos;
+      setter((prev) =>
+        appendWithinCap(prev, dedupeMediaPicks(prev, candidates))
+      );
     },
     [activeMediaType, displayImages.length, displayVideos.length]
   );
@@ -745,6 +784,19 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const onPressVideo = useCallback(
     () => pickFromLibrary('video'),
     [pickFromLibrary]
+  );
+
+  // Children report their own upload start/end keyed by `source`, and a child
+  // that unmounts mid-upload (frame removed while still uploading) clears its
+  // own entry from its cleanup — otherwise the set would never empty and Post
+  // would stay disabled forever.
+  const handleUploadingChange = useCallback(
+    (uploading: boolean, source: string) => {
+      setUploadingSources((prev) =>
+        toggleUploadingSource(prev, source, uploading)
+      );
+    },
+    []
   );
 
   const handleImageUploadError = useCallback(
@@ -814,19 +866,22 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     []
   );
   const handleOnFinishImage = useCallback(
-    (fileId: string, fileUrl: string, fileName: string, index: number) => {
+    (
+      fileId: string,
+      fileUrl: string,
+      fileName: string,
+      _index: number,
+      originalPath: string
+    ) => {
       setHasChangedAttachment(true);
-      const imageObject: IDisplayImage = {
-        url: fileUrl,
-        fileId: fileId,
-        fileName: fileName,
-        isUploaded: true,
-      };
-      setDisplayImages((prevData) => {
-        const newData = [...prevData];
-        newData[index] = imageObject;
-        return newData;
-      });
+      setDisplayImages((prevData) =>
+        applyFinishedUpload(prevData, originalPath, {
+          url: fileUrl,
+          fileId: fileId,
+          fileName: fileName,
+          isUploaded: true,
+        })
+      );
     },
     []
   );
@@ -835,23 +890,20 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       fileId: string,
       fileUrl: string,
       fileName: string,
-      index: number,
-      _,
+      _index: number,
+      originalPath: string,
       thumbnail: string
     ) => {
       setHasChangedAttachment(true);
-      const imageObject: IDisplayImage = {
-        url: fileUrl,
-        fileId: fileId,
-        fileName: fileName,
-        isUploaded: true,
-        thumbNail: thumbnail,
-      };
-      setDisplayVideos((prevData) => {
-        const newData = [...prevData];
-        newData[index] = imageObject;
-        return newData;
-      });
+      setDisplayVideos((prevData) =>
+        applyFinishedUpload(prevData, originalPath, {
+          url: fileUrl,
+          fileId: fileId,
+          fileName: fileName,
+          isUploaded: true,
+          thumbNail: thumbnail,
+        })
+      );
     },
     []
   );
@@ -859,7 +911,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   // PDT-4310 / PDT-4312: at the 10-attachment cap the camera + gallery icons
   // are disabled until the user removes a frame.
   const isMediaCapReached =
-    displayImages.length >= 10 || displayVideos.length >= 10;
+    displayImages.length >= MAX_MEDIA_ATTACHMENTS ||
+    displayVideos.length >= MAX_MEDIA_ATTACHMENTS;
 
   const renderDetailedAttachment = useCallback(() => {
     if (editChildrenIncomplete) return null;
@@ -954,7 +1007,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
                 onLoadFinish={handleOnFinishImage}
                 onUploadError={handleImageUploadError}
                 isEditMode={isEditMode}
-                setIsUploading={setIsUploading}
+                onUploadingChange={handleUploadingChange}
               />
             )}
             {displayVideos.length > 0 && (
@@ -965,7 +1018,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
                 onLoadFinish={handleOnFinishVideo}
                 onUploadError={handleVideoUploadError}
                 isEditMode={isEditMode}
-                setIsUploading={setIsUploading}
+                onUploadingChange={handleUploadingChange}
               />
             )}
           </View>

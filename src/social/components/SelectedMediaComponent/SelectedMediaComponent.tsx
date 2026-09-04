@@ -42,7 +42,10 @@ export type SelectedMediaComponentProps = {
   ) => void;
   onUploadError?: (hasError: boolean, source: string) => void;
   isEditMode?: boolean;
-  setIsUploading?: (arg: boolean) => void;
+  // Per-frame upload state, keyed by the item's `source` url — the parent
+  // aggregates it instead of holding one boolean that the first upload to
+  // finish would clear on behalf of every other frame.
+  onUploadingChange?: (isUploading: boolean, source: string) => void;
 };
 
 export function SelectedMediaComponent({
@@ -52,7 +55,7 @@ export function SelectedMediaComponent({
   onLoadFinish,
   onUploadError,
   isEditMode = false,
-  setIsUploading,
+  onUploadingChange,
 }: SelectedMediaComponentProps) {
   const styles = useStyles();
   const scrollRef = useRef<ScrollView>(null);
@@ -176,7 +179,7 @@ export function SelectedMediaComponent({
           fileCount={total}
           isEditMode={isEditMode}
           postId={item.postId}
-          setIsUploading={setIsUploading}
+          onUploadingChange={onUploadingChange}
           onPlay={() => setViewerIndex(index)}
         />
       ) : (
@@ -196,7 +199,7 @@ export function SelectedMediaComponent({
             fileCount={total}
             isEditMode={isEditMode}
             postId={item.postId}
-            setIsUploading={setIsUploading}
+            onUploadingChange={onUploadingChange}
           />
         </Pressable>
       )}
@@ -227,7 +230,17 @@ export function SelectedMediaComponent({
               >
                 {media.map((item, index) => (
                   <View
-                    key={`${item.url}-${index}`}
+                    // Key on the item's stable local identity, not on its
+                    // url. `url` is rewritten from the local pick path
+                    // to the remote `?size=medium` one the instant that frame's
+                    // upload finishes, so a url-based key tore down and
+                    // remounted the slide — and with it the child's mount
+                    // effect, which is what re-runs uploads and re-orders the
+                    // in-flight completion callbacks against their siblings.
+                    // The identity survives the swap, so a finishing upload
+                    // now only re-renders its own frame. Falls back to the old
+                    // key for entries built without one (legacy EditPostModal).
+                    key={item.localId ?? `${item.url}-${index}`}
                     style={[
                       styles.selectedMedia__slide,
                       {
