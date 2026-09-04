@@ -61,6 +61,13 @@ import { useFile } from '../../../hooks';
 import useMention from '../../../hooks/useMention';
 import { getPostErrorMessage } from '../../../utils/errors';
 import {
+  MAX_MEDIA_ATTACHMENTS,
+  appendWithinCap,
+  applyFinishedUpload,
+  dedupeMediaPicks,
+  toggleUploadingSource,
+} from '../../../utils/mediaAttachments';
+import {
   ALERT,
   MAX_MENTION_USERS,
   MAXIMUM_POST_CHARACTERS,
@@ -159,7 +166,8 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     (inputMessage.trim().length > 0 ||
       displayImages.length > 0 ||
       displayVideos.length > 0) &&
-    (displayImages.length <= 10 || displayVideos.length <= 10);
+    (displayImages.length <= MAX_MEDIA_ATTACHMENTS ||
+      displayVideos.length <= MAX_MEDIA_ATTACHMENTS);
 
   const { renderInput, renderSuggestions } = useMention({
     value: inputMessage,
@@ -634,12 +642,18 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
 
   const pickCamera = useCallback(
     async (mediaType: 'mixed' | 'photo' | 'video') => {
-      if (mediaType === 'photo' && displayImages.length === 10)
+      if (
+        mediaType === 'photo' &&
+        displayImages.length >= MAX_MEDIA_ATTACHMENTS
+      )
         return Alert.alert(
           'Maximum upload limit reached',
           "You've reached the upload limit of 10 images. Any additional images will not be saved."
         );
-      if (mediaType === 'video' && displayVideos.length === 10)
+      if (
+        mediaType === 'video' &&
+        displayVideos.length >= MAX_MEDIA_ATTACHMENTS
+      )
         return Alert.alert(
           'Maximum upload limit reached',
           "You've reached the upload limit of 10 videos. Any additional videos will not be saved."
@@ -707,7 +721,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         : mediaAttachment.video;
       if (activeMediaType && activeMediaType !== pickedType) return;
       const current = isPhoto ? displayImages.length : displayVideos.length;
-      if (current >= 10)
+      if (current >= MAX_MEDIA_ATTACHMENTS)
         return Alert.alert(
           'Maximum upload limit reached',
           `You've reached the upload limit of 10 ${
@@ -717,70 +731,47 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       const result: ImagePicker.ImagePickerResponse = await launchImageLibrary({
         mediaType,
         quality: 1,
-        selectionLimit: 10 - current,
+        selectionLimit: MAX_MEDIA_ATTACHMENTS - current,
       });
       if (result.didCancel || !result.assets?.length) return;
 
-      const setter = isPhoto ? setDisplayImages : setDisplayVideos;
-      setter((prev) => {
-        // Silently drop duplicates, matching the web UIKit (which dedups by
-        // file name) — no toast, no alert, and the already-staged copy is left
-        // exactly where it is, so the remaining picks keep their order
-        // (PDT-5040).
-        //
-        // Compare against the LOCAL identity, never against `fileName`: the
-        // moment an item finishes uploading, handleOnFinishImage rewrites its
-        // fileName to the server's `file[0].attributes.name` (and getPostInfo
-        // hydrates edit-mode entries with the fileId), so a set built from
-        // fileName holds server-side names while the incoming assets carry
-        // picker names. Nothing ever matched and every re-pick slipped through
-        // as a duplicate frame. `localId`/`localFileName` are assigned at pick
-        // time and preserved across the upload, so they still line up here.
-        const seenIds = new Set(
-          prev.map((m) => m.localId).filter(Boolean) as string[]
-        );
-        const seenNames = new Set(
-          prev.map((m) => m.localFileName).filter(Boolean) as string[]
-        );
-        const additions: IDisplayImage[] = [];
-        // iOS video is the one pick whose dims cannot be trusted: the picker
-        // reports the track's stored `naturalSize` with no rotation alongside
-        // it, so a portrait iPhone clip arrives as 1920×1080 and would
-        // classify the frame 16:9 (PDT-4904). Images on both platforms, and
-        // Android video (its extractor swaps w/h on 90°/270°), are already
-        // display-oriented and unaffected. With no rotation to correct the iOS
-        // value by, carry nothing and let SelectedMediaComponent measure the
-        // generated thumbnail, which is a rendered frame.
-        const isIosVideoDimsUnusable = !isPhoto && Platform.OS === 'ios';
-        for (const asset of result.assets ?? []) {
-          if (!asset.uri) continue;
-          const fileName =
-            asset.fileName ??
-            asset.uri.substring(asset.uri.lastIndexOf('/') + 1);
-          // `asset.id` is the library's own identifier for the asset (PHAsset
-          // localIdentifier / MediaStore id) and is the one key that survives
-          // the picker copying the pick to a new temp uri on every pick. It is
-          // not populated by every picker configuration, so fall back to the
-          // file name and keep the name as a second key either way — that is
-          // what catches a re-pick when no id came back.
-          const localId = asset.id ?? fileName;
-          if (seenIds.has(localId) || seenNames.has(fileName)) continue; // duplicate → silently drop
-          seenIds.add(localId);
-          seenNames.add(fileName);
-          additions.push({
+      // iOS video is the one pick whose dims cannot be trusted: the picker
+      // reports the track's stored `naturalSize` with no rotation alongside
+      // it, so a portrait iPhone clip arrives as 1920×1080 and would
+      // classify the frame 16:9 (PDT-4904). Images on both platforms, and
+      // Android video (its extractor swaps w/h on 90°/270°), are already
+      // display-oriented and unaffected. With no rotation to correct the iOS
+      // value by, carry nothing and let SelectedMediaComponent measure the
+      // generated thumbnail, which is a rendered frame.
+      const isIosVideoDimsUnusable = !isPhoto && Platform.OS === 'ios';
+      const candidates = (result.assets ?? []).flatMap((asset) => {
+        if (!asset.uri) return [];
+        const fileName =
+          asset.fileName ?? asset.uri.substring(asset.uri.lastIndexOf('/') + 1);
+        return [
+          {
             url: asset.uri,
             fileName,
-            localId,
+            // `asset.id` is the library's own identifier for the asset (PHAsset
+            // localIdentifier / MediaStore id) and is the one key that survives
+            // the picker copying the pick to a new temp uri every time. It is
+            // not populated by every picker configuration, so fall back to the
+            // file name and keep the name as a second key either way — that is
+            // what catches a re-pick when no id came back (PDT-5040).
+            localId: asset.id ?? fileName,
             localFileName: fileName,
             fileId: '',
             isUploaded: false,
             width: isIosVideoDimsUnusable ? undefined : asset.width,
             height: isIosVideoDimsUnusable ? undefined : asset.height,
-          });
-        }
-        const updated = [...prev, ...additions];
-        return updated.length > 10 ? updated.slice(0, 10) : updated;
+          },
+        ];
       });
+
+      const setter = isPhoto ? setDisplayImages : setDisplayVideos;
+      setter((prev) =>
+        appendWithinCap(prev, dedupeMediaPicks(prev, candidates))
+      );
     },
     [activeMediaType, displayImages.length, displayVideos.length]
   );
@@ -801,16 +792,9 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   // would stay disabled forever (PDT-5020).
   const handleUploadingChange = useCallback(
     (uploading: boolean, source: string) => {
-      setUploadingSources((prev) => {
-        if (uploading === prev.has(source)) return prev;
-        const newSet = new Set(prev);
-        if (uploading) {
-          newSet.add(source);
-        } else {
-          newSet.delete(source);
-        }
-        return newSet;
-      });
+      setUploadingSources((prev) =>
+        toggleUploadingSource(prev, source, uploading)
+      );
     },
     []
   );
@@ -881,45 +865,6 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     },
     []
   );
-  // Route a finished upload back to the entry it actually belongs to, by the
-  // local path the child was mounted with (PDT-5003).
-  //
-  // The child hands us both a positional `index` and `originalPath`. The index
-  // is the array position the frame was RENDERED at when the upload started —
-  // LoadingVideo goes further and memoises its uploader on `[source]` alone, so
-  // it freezes the index of the render where the source last changed. Writing
-  // `newData[index]` therefore lands on whatever now sits at that position: a
-  // frame removed, an upload retried after the array grew, or a slow upload
-  // finishing after its neighbours moved all put one file's remote url on
-  // another file's entry — which is what QA saw as an already-loaded image
-  // repainting with a different picture once the network came back. Matching on
-  // `originalPath` is exact: a not-yet-uploaded entry's `url` IS the local path
-  // its child was handed, and the picker de-duplication guarantees those are
-  // unique across the array.
-  //
-  // No match means the entry is gone (closed mid-upload) or already finished —
-  // leave the array alone rather than resurrecting or double-writing it.
-  const applyFinishedUpload = useCallback(
-    (
-      prevData: IDisplayImage[],
-      originalPath: string,
-      patch: Partial<IDisplayImage>
-    ) => {
-      const targetIndex = prevData.findIndex(
-        (item) => item.url === originalPath
-      );
-      if (targetIndex === -1) return prevData;
-      const newData = [...prevData];
-      // Merge rather than replace: `localId`/`localFileName` are what the next
-      // pick de-duplicates against (PDT-5040) and what the carousel keys its
-      // frames by, and the picker's width/height still classify the frame
-      // ratio — a wholesale replacement dropped all of them.
-      newData[targetIndex] = { ...newData[targetIndex], ...patch };
-      return newData;
-    },
-    []
-  );
-
   const handleOnFinishImage = useCallback(
     (
       fileId: string,
@@ -938,7 +883,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         })
       );
     },
-    [applyFinishedUpload]
+    []
   );
   const handleOnFinishVideo = useCallback(
     (
@@ -960,13 +905,14 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         })
       );
     },
-    [applyFinishedUpload]
+    []
   );
 
   // PDT-4310 / PDT-4312: at the 10-attachment cap the camera + gallery icons
   // are disabled until the user removes a frame.
   const isMediaCapReached =
-    displayImages.length >= 10 || displayVideos.length >= 10;
+    displayImages.length >= MAX_MEDIA_ATTACHMENTS ||
+    displayVideos.length >= MAX_MEDIA_ATTACHMENTS;
 
   const renderDetailedAttachment = useCallback(() => {
     if (editChildrenIncomplete) return null;
