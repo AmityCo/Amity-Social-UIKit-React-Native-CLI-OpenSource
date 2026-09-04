@@ -113,7 +113,16 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const [mentionUsers, setMentionUsers] = useState<TSearchItem[]>([]);
   const [isSwipeup, setIsSwipeup] = useState(true);
   const [deletedPostIds, setDeletedPostIds] = useState<string[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
+  // PDT-5020: upload progress is tracked per media item, keyed by the item's
+  // `source` url — the same shape as `imageErrors`/`videoErrors` below. A
+  // single shared boolean was flipped back to false by whichever upload
+  // finished first, so Post/Save unlocked while the remaining frames were
+  // still in flight. Sources are unique across images and videos, so one set
+  // covers both attachment types.
+  const [uploadingSources, setUploadingSources] = useState<Set<string>>(
+    new Set()
+  );
+  const isUploading = uploadingSources.size > 0;
   const [hasChangedAttachment, setHasChangedAttachment] = useState(false);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [videoErrors, setVideoErrors] = useState<Set<string>>(new Set());
@@ -747,6 +756,26 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     [pickFromLibrary]
   );
 
+  // Children report their own upload start/end keyed by `source`, and a child
+  // that unmounts mid-upload (frame removed while still uploading) clears its
+  // own entry from its cleanup — otherwise the set would never empty and Post
+  // would stay disabled forever (PDT-5020).
+  const handleUploadingChange = useCallback(
+    (uploading: boolean, source: string) => {
+      setUploadingSources((prev) => {
+        if (uploading === prev.has(source)) return prev;
+        const newSet = new Set(prev);
+        if (uploading) {
+          newSet.add(source);
+        } else {
+          newSet.delete(source);
+        }
+        return newSet;
+      });
+    },
+    []
+  );
+
   const handleImageUploadError = useCallback(
     (hasError: boolean, source: string) => {
       setImageErrors((prev) => {
@@ -954,7 +983,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
                 onLoadFinish={handleOnFinishImage}
                 onUploadError={handleImageUploadError}
                 isEditMode={isEditMode}
-                setIsUploading={setIsUploading}
+                onUploadingChange={handleUploadingChange}
               />
             )}
             {displayVideos.length > 0 && (
@@ -965,7 +994,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
                 onLoadFinish={handleOnFinishVideo}
                 onUploadError={handleVideoUploadError}
                 isEditMode={isEditMode}
-                setIsUploading={setIsUploading}
+                onUploadingChange={handleUploadingChange}
               />
             )}
           </View>

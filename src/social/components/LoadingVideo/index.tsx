@@ -43,7 +43,11 @@ interface OverlayImageProps {
   isEditMode?: boolean;
   fileCount?: number;
   postId?: string;
-  setIsUploading?: (arg: boolean) => void;
+  // PDT-5020: reports this frame's upload state keyed by its own `source`, so
+  // the composer can gate Post on every frame at once. The old shared
+  // `setIsUploading` boolean was flipped back to false by whichever upload
+  // finished first, unlocking Post while the other frames were still in flight.
+  onUploadingChange?: (isUploading: boolean, source: string) => void;
   carousel?: boolean;
 }
 const LoadingVideo = ({
@@ -59,7 +63,7 @@ const LoadingVideo = ({
   isEditMode = false,
   fileCount,
   postId,
-  setIsUploading,
+  onUploadingChange,
   carousel = false,
 }: OverlayImageProps) => {
   const dispatch = useUIKitDispatch();
@@ -93,7 +97,7 @@ const LoadingVideo = ({
 
   const handleLoadEnd = () => {
     setLoading(false);
-    setIsUploading(false);
+    onUploadingChange?.(false, source);
   };
 
   const processThumbNail = async () => {
@@ -112,8 +116,14 @@ const LoadingVideo = ({
   }, [progress]);
 
   const uploadFileToAmity = useCallback(async () => {
-    setIsUploading(true);
+    onUploadingChange?.(true, source);
     setIsUploadError(false);
+    // PDT-4997: clearing the local flag alone left this source inside the
+    // parent's `videoErrors` set, and that set is otherwise only cleared by the
+    // mount effect below — which does not re-run on a retry, since none of
+    // `fileId`/`isUploaded`/`source` changed. Post stayed disabled even after
+    // the retry uploaded fine, so tell the parent the error is gone up front.
+    onUploadError?.(false, source);
     try {
       const file: Amity.File<any>[] = await uploadVideoFile(
         source,
@@ -185,6 +195,17 @@ const LoadingVideo = ({
     setIsPause(!isPause);
     playVideoFullScreen(source);
   };
+
+  // A frame can be removed (or its source swapped) while its upload is still
+  // in flight, in which case `handleLoadEnd` never runs and the composer would
+  // keep waiting on an entry no mounted child owns any more — leaving Post
+  // disabled forever (PDT-5020). Clearing it from this cleanup keeps the
+  // bookkeeping in the same component that added it.
+  useEffect(() => {
+    return () => {
+      onUploadingChange?.(false, source);
+    };
+  }, [onUploadingChange, source]);
 
   const onRetryUpload = () => {
     uploadFileToAmity();

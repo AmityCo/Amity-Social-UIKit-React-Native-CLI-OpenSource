@@ -42,7 +42,10 @@ export type SelectedMediaComponentProps = {
   ) => void;
   onUploadError?: (hasError: boolean, source: string) => void;
   isEditMode?: boolean;
-  setIsUploading?: (arg: boolean) => void;
+  // Per-frame upload state, keyed by the item's `source` url — the parent
+  // aggregates it instead of holding one boolean that the first upload to
+  // finish would clear on behalf of every other frame (PDT-5020).
+  onUploadingChange?: (isUploading: boolean, source: string) => void;
 };
 
 export function SelectedMediaComponent({
@@ -52,7 +55,7 @@ export function SelectedMediaComponent({
   onLoadFinish,
   onUploadError,
   isEditMode = false,
-  setIsUploading,
+  onUploadingChange,
 }: SelectedMediaComponentProps) {
   const styles = useStyles();
   const scrollRef = useRef<ScrollView>(null);
@@ -176,7 +179,7 @@ export function SelectedMediaComponent({
           fileCount={total}
           isEditMode={isEditMode}
           postId={item.postId}
-          setIsUploading={setIsUploading}
+          onUploadingChange={onUploadingChange}
           onPlay={() => setViewerIndex(index)}
         />
       ) : (
@@ -196,7 +199,7 @@ export function SelectedMediaComponent({
             fileCount={total}
             isEditMode={isEditMode}
             postId={item.postId}
-            setIsUploading={setIsUploading}
+            onUploadingChange={onUploadingChange}
           />
         </Pressable>
       )}
