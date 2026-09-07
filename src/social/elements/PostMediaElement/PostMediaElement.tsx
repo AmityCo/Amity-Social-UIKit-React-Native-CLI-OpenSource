@@ -92,6 +92,18 @@ export function PostMediaElement({
   const mediaPosts = useMemo(() => (posts ?? []).filter(isMediaPost), [posts]);
   const ratio = useMemo(() => getAttachmentRatio(mediaPosts[0]), [mediaPosts]);
 
+  // A reload starts the carousel over. It cannot be left to unmounting: the
+  // feed keys its items by post id, so a reload reuses this instance and both
+  // `current` and the ScrollView's own offset would otherwise survive it,
+  // leaving the viewer on whichever frame they had reached before.
+  const feedReloadToken = useUIKitSelector(
+    (state: RootState) => state.ui.feedReloadToken
+  );
+  useEffect(() => {
+    setCurrent(0);
+    scrollRef.current?.scrollTo({ x: 0, animated: false });
+  }, [feedReloadToken]);
+
   if (mediaPosts.length === 0) {
     if (!loading) return null;
     // Loading placeholder: a full-bleed frame in the base-shade4 colour, so the
