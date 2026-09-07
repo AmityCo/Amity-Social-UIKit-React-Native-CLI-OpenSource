@@ -11,7 +11,7 @@ import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
 import { deleteAmityFile, uploadVideoFile } from '../../../core/legacy/file';
 import {
-  closeIcon,
+  mediaRemoveIcon,
   playBtn,
   toastIcon,
   videoControlIcon,
@@ -328,10 +328,15 @@ const LoadingVideo = ({
           `!isUploadError` term was unreachable. */}
       <TouchableOpacity
         style={styles.closeButton}
+        // The button matches web at 28dp, which is still under Apple's 44pt
+        // minimum touch target. Grow the touch area rather than the black
+        // disc, so the visual stays in parity while the frame stays tappable:
+        // 28 + 8 on each side lands exactly on 44.
+        hitSlop={8}
         disabled={(loading || isProcess) && !isUploadError}
         onPress={handleDelete}
       >
-        <SvgXml xml={closeIcon('white')} width="12" height="12" />
+        <SvgXml xml={mediaRemoveIcon()} width="20" height="20" />
       </TouchableOpacity>
     </View>
   );
