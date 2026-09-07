@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import NetInfo from '@react-native-community/netinfo';
 import {
   View,
   TouchableOpacity,
@@ -118,6 +119,17 @@ const LoadingVideo = ({
   const uploadFileToAmity = useCallback(async () => {
     onUploadingChange?.(true, source);
     setIsUploadError(false);
+    // A retry re-enters this function with `loading` already false — the failed
+    // attempt's `handleLoadEnd` cleared it and nothing ever set it back, so
+    // `setLoading` only ever ran downwards in this component. The frame then
+    // re-uploaded with no spinner at all, which reads as "finished instantly"
+    // while Post stays disabled for the length of the upload (PDT-5019).
+    // Progress and the processing flag are stale from the failed attempt too,
+    // so reset the whole visual upload state here rather than only in the
+    // mount effect, which does not re-run on a retry.
+    setLoading(true);
+    setProgress(0);
+    setIsProcess(false);
     // Clearing the local flag alone left this source inside the parent's
     // `videoErrors` set, and that set is otherwise only cleared by the
     // mount effect below — which does not re-run on a retry, since none of
@@ -163,6 +175,30 @@ const LoadingVideo = ({
       onUploadError?.(true, source);
     }
   }, [source]);
+
+  // PDT-4997 / PDT-5019: both tickets expect the frame to end up uploaded and
+  // Post to be enabled once connectivity returns. Nothing retried on its own —
+  // the error key only cleared on a manual tap on that specific frame, and the
+  // peek carousel can leave a failed frame off-screen entirely, so Post stayed
+  // disabled with no visible cause. Retry when the device regains a
+  // connection, using the same NetInfo listener idiom as post Detail and the
+  // livestream screens.
+  //
+  // Gated on a disconnected -> connected transition, not merely on being
+  // connected: addEventListener fires immediately with the current state, so a
+  // failure that happened while online (a server error, say) would otherwise
+  // re-fire on every resubscribe and spin.
+  const wasDisconnectedRef = useRef(false);
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      const isConnected = !!state.isConnected;
+      if (isConnected && wasDisconnectedRef.current && isUploadError) {
+        uploadFileToAmity();
+      }
+      wasDisconnectedRef.current = !isConnected;
+    });
+    return () => unsubscribe();
+  }, [isUploadError, uploadFileToAmity]);
 
   const handleDelete = async () => {
     if (fileId && !isEditMode) {
@@ -251,7 +287,7 @@ const LoadingVideo = ({
         <View style={styles.image} />
       )}
 
-      {loading ? (
+      {loading && (
         <View style={styles.overlay}>
           {isProcess ? (
             <Progress.CircleSnail
@@ -269,19 +305,26 @@ const LoadingVideo = ({
             />
           )}
         </View>
-      ) : isUploadError ? (
+      )}
+      {!loading && isUploadError && (
         <TouchableOpacity style={styles.overlay} onPress={onRetryUpload}>
           <SvgXml xml={toastIcon()} width="24" height="24" />
         </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.closeButton}
-          disabled={(loading || isProcess) && !isUploadError}
-          onPress={handleDelete}
-        >
-          <SvgXml xml={closeIcon('white')} width="12" height="12" />
-        </TouchableOpacity>
       )}
+
+      {/* Sibling of the overlays, never an `else` branch of them: a failed
+          frame must keep its remove button, otherwise a video that cannot
+          upload can never be taken out of the composer (PDT-5019). This is
+          the shape LoadingImage already uses, and it is what the `disabled`
+          guard below was written for — inside the old if/else chain that
+          `!isUploadError` term was unreachable. */}
+      <TouchableOpacity
+        style={styles.closeButton}
+        disabled={(loading || isProcess) && !isUploadError}
+        onPress={handleDelete}
+      >
+        <SvgXml xml={closeIcon('white')} width="12" height="12" />
+      </TouchableOpacity>
     </View>
   );
 };

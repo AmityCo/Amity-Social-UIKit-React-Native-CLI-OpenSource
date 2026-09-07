@@ -768,12 +768,32 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         ];
       });
 
+      // Stage the picks and claim their upload slots in one go. Staging alone
+      // used to flip `isInputValid` true on the very next render — the frames
+      // exist, and `uploadingSources` is still empty because each child only
+      // registers from its own mount effect — so Post sat enabled for ~940 ms
+      // with nothing uploaded and a quick tap posted media that had no fileId
+      // yet. Seeding here makes "staged" and "gated" the same update; children
+      // still clear their own entry when they finish, and the unmount cleanup
+      // still covers a frame removed mid-flight.
+      const staged = isPhoto ? displayImages : displayVideos;
+      const accepted = appendWithinCap(
+        staged,
+        dedupeMediaPicks(staged, candidates)
+      );
+      // Only the entries that actually survived dedupe and the cap — seeding a
+      // key no child will ever mount for would leave Post disabled forever.
+      const newlyStaged = accepted.slice(staged.length);
       const setter = isPhoto ? setDisplayImages : setDisplayVideos;
-      setter((prev) =>
-        appendWithinCap(prev, dedupeMediaPicks(prev, candidates))
+      setter(accepted);
+      setUploadingSources((prev) =>
+        newlyStaged.reduce(
+          (acc, item) => toggleUploadingSource(acc, item.url, true),
+          prev
+        )
       );
     },
-    [activeMediaType, displayImages.length, displayVideos.length]
+    [activeMediaType, displayImages, displayVideos]
   );
 
   const onPressImage = useCallback(

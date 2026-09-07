@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import NetInfo from '@react-native-community/netinfo';
 import { View, Image, TouchableOpacity } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
@@ -63,6 +64,17 @@ const LoadingImage = ({
   const uploadFileToAmity = useCallback(async () => {
     onUploadingChange?.(true, source);
     setIsUploadError(false);
+    // A retry re-enters this function with `loading` already false — the failed
+    // attempt's `handleLoadEnd` cleared it and nothing ever set it back, so
+    // `setLoading` only ever ran downwards in this component. The frame then
+    // re-uploaded with no spinner at all, which reads as "finished instantly"
+    // while Post stays disabled for the length of the upload (PDT-5019).
+    // Progress and the processing flag are stale from the failed attempt too,
+    // so reset the whole visual upload state here rather than only in the
+    // mount effect, which does not re-run on a retry.
+    setLoading(true);
+    setProgress(0);
+    setIsProcess(false);
     // Clearing the local flag alone left this source inside the parent's
     // `imageErrors` set, and that set is otherwise only cleared by the
     // mount effect below — which does not re-run on a retry, since neither
@@ -109,6 +121,30 @@ const LoadingImage = ({
     onUploadingChange,
     source,
   ]);
+
+  // PDT-4997 / PDT-5019: both tickets expect the frame to end up uploaded and
+  // Post to be enabled once connectivity returns. Nothing retried on its own —
+  // the error key only cleared on a manual tap on that specific frame, and the
+  // peek carousel can leave a failed frame off-screen entirely, so Post stayed
+  // disabled with no visible cause. Retry when the device regains a
+  // connection, using the same NetInfo listener idiom as post Detail and the
+  // livestream screens.
+  //
+  // Gated on a disconnected -> connected transition, not merely on being
+  // connected: addEventListener fires immediately with the current state, so a
+  // failure that happened while online (a server error, say) would otherwise
+  // re-fire on every resubscribe and spin.
+  const wasDisconnectedRef = useRef(false);
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      const isConnected = !!state.isConnected;
+      if (isConnected && wasDisconnectedRef.current && isUploadError) {
+        uploadFileToAmity();
+      }
+      wasDisconnectedRef.current = !isConnected;
+    });
+    return () => unsubscribe();
+  }, [isUploadError, uploadFileToAmity]);
 
   const handleDelete = async () => {
     if (fileId && !isEditMode) {

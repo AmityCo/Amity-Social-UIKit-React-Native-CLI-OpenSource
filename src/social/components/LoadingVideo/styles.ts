@@ -44,8 +44,12 @@ export const useStyles = () => {
       top: 7,
       right: 7,
       padding: 7,
-      backgroundColor: 'rgba(255, 255, 255, 0.4)',
+      // Matches LoadingImage exactly: the icon is closeIcon('white') in both,
+      // so the white scrim this used to carry left a white-on-white button
+      // that all but disappeared over a light frame (PDT-5019).
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
       borderRadius: 72,
+      zIndex: 10,
     },
     playButton: {
       width: 100,
