@@ -1,5 +1,10 @@
 import { uploadFile, uploadImageFile, uploadVideoFile } from '../file';
 
+jest.mock('@react-native-community/netinfo', () => ({
+  __esModule: true,
+  default: { fetch: jest.fn() },
+}));
+
 jest.mock('@amityco/ts-sdk-react-native', () => ({
   FileRepository: {
     uploadFile: jest.fn(),
@@ -11,6 +16,7 @@ jest.mock('@amityco/ts-sdk-react-native', () => ({
 }));
 
 const { FileRepository } = require('@amityco/ts-sdk-react-native');
+const NetInfo = require('@react-native-community/netinfo').default;
 
 const PATH = 'file:///tmp/clip.mp4';
 
@@ -37,7 +43,12 @@ const uploaders: [string, jest.Mock, () => Promise<unknown>][] = [
   ['uploadFile', FileRepository.uploadFile, () => uploadFile(PATH)],
 ];
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  // Online unless a test says otherwise — the uploaders now refuse to even
+  // start an attempt while offline.
+  NetInfo.fetch.mockResolvedValue({ isConnected: true });
+});
 
 describe.each(uploaders)('%s (PDT-5019)', (_name, sdkMethod, call) => {
   it('rejects instead of hanging when the network drops mid-upload', async () => {
@@ -51,6 +62,17 @@ describe.each(uploaders)('%s (PDT-5019)', (_name, sdkMethod, call) => {
     sdkMethod.mockResolvedValue({ data: undefined });
 
     await expect(settle(call())).resolves.toBe('rejected');
+  });
+
+  it('rejects immediately when offline, instead of handing the request to a stack that may never answer', async () => {
+    // iOS is why this exists: NSURLSession waits for connectivity rather than
+    // failing, so the promise never settled and the frame kept its spinner
+    // with no route to the failed state. Android rejected fast, which is why
+    // the same build looked fixed there.
+    NetInfo.fetch.mockResolvedValue({ isConnected: false });
+
+    await expect(settle(call())).resolves.toBe('rejected');
+    expect(sdkMethod).not.toHaveBeenCalled();
   });
 
   it('resolves with the uploaded files on success', async () => {

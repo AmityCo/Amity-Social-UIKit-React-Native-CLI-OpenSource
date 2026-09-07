@@ -1,5 +1,6 @@
 import { FileRepository, ContentFeedType } from '@amityco/ts-sdk-react-native';
 
+import NetInfo from '@react-native-community/netinfo';
 import { Platform } from 'react-native';
 import { appendFileToFormData } from '../utils/fileUpload';
 
@@ -27,6 +28,37 @@ export type UploadError = {
 const NO_FILE_DATA_ERROR: UploadError = {
   message: 'Upload failed - no file data returned',
 };
+
+/**
+ * Thrown before an attempt is even made when the device has no connection.
+ *
+ * Rejecting up front is not belt-and-braces — on iOS it is the only thing that
+ * produces a failure at all. Android's networking stack rejects an offline
+ * request almost immediately, so the uploaders' `catch` ran and the frame
+ * showed its error state; NSURLSession instead sits on the request waiting for
+ * connectivity, so the promise never settled, the `catch` never ran, and the
+ * frame stayed on its spinner forever with no way to reach the failed state
+ * (PDT-5019, reported again on iOS after the Android fix). PDT-4310 asks for
+ * "an error state per attachment that failed to upload" whatever the platform.
+ */
+const OFFLINE_ERROR: UploadError = {
+  message: 'Upload failed - no internet connection',
+  code: 'OFFLINE',
+};
+
+/**
+ * Reject immediately when there is no connection, rather than handing the
+ * request to a networking stack that may never answer.
+ *
+ * Only covers being offline as the attempt STARTS. A connection dropped
+ * mid-upload still leaves iOS waiting, because nothing here can abort a
+ * request already inside the SDK — the composer's reconnect retry is what
+ * eventually recovers that case.
+ */
+async function assertOnline(): Promise<void> {
+  const state = await NetInfo.fetch();
+  if (!state.isConnected) throw OFFLINE_ERROR;
+}
 
 /**
  * Normalise whatever the SDK / networking layer threw into an `UploadError`.
@@ -73,6 +105,8 @@ export async function uploadFile(
 
   let file: Amity.File<any>[] | undefined;
 
+  await assertOnline();
+
   try {
     appendFileToFormData(formData, 'files', filePath, fileName, fileType);
 
@@ -101,6 +135,8 @@ export async function uploadImageFile(
   const fileType = Platform.OS === 'ios' ? 'image/jpeg' : 'image/jpg';
 
   let file: Amity.File<'image'>[] | undefined;
+
+  await assertOnline();
 
   try {
     appendFileToFormData(formData, 'files', filePath, fileName, fileType);
@@ -139,6 +175,8 @@ export async function uploadVideoFile(
   const fileName = parts[parts.length - 1];
 
   let file: Amity.File<any>[] | undefined;
+
+  await assertOnline();
 
   try {
     appendFileToFormData(formData, 'files', filePath, fileName, 'video/mp4');
