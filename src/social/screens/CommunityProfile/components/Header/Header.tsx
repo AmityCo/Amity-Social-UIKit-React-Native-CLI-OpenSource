@@ -72,8 +72,11 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
     ? community.postSetting === 'ADMIN_REVIEW_POST_REQUIRED'
     : !!(community as Record<string, any>)?.needApprovalOnPostCreation;
 
+  // `postedUserId` is the field web reads; `creator` is what this screen read
+  // before. Keep both — the author of a pending post must not lose the banner
+  // if one of the two is absent from a payload.
   const isPendingPostOwner = !!pendingPosts?.some(
-    (post) => post.postedUserId === client?.userId
+    (post) => (post.postedUserId ?? post.creator?.userId) === client?.userId
   );
 
   const styles = useStyles(themeStyles);
