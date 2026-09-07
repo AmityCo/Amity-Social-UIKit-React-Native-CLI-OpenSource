@@ -38,8 +38,8 @@ const NO_FILE_DATA_ERROR: UploadError = {
  * showed its error state; NSURLSession instead sits on the request waiting for
  * connectivity, so the promise never settled, the `catch` never ran, and the
  * frame stayed on its spinner forever with no way to reach the failed state
- * (PDT-5019, reported again on iOS after the Android fix). PDT-4310 asks for
- * "an error state per attachment that failed to upload" whatever the platform.
+ * The spec asks for an error state per attachment that failed to upload,
+ * whatever the platform.
  */
 const OFFLINE_ERROR: UploadError = {
   message: 'Upload failed - no internet connection',

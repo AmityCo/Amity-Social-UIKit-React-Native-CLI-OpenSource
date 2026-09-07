@@ -28,7 +28,7 @@ export interface IDisplayImage {
    * DISPLAY only. `url` is replaced by the remote `?size=medium` url the
    * instant the upload finishes, so the composer frame stops rendering the
    * file on disk and starts fetching over the network — go offline and the
-   * already-uploaded frame turns grey (PDT-5003), even though the local file
+   * already-uploaded frame turns grey, even though the local file
    * is still sitting there. Rendering from this instead keeps the frame
    * painted whatever the network is doing. Absent for edit-mode children,
    * which have no local file, so callers fall back to `url`. */

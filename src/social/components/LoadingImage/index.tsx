@@ -23,7 +23,7 @@ interface OverlayImageProps {
   /** Local path to render from, when the item still has one. `source` stays
    * the identity/bookkeeping key and becomes the remote url once the upload
    * finishes; painting from that url means an already-uploaded frame goes
-   * grey the moment the device is offline (PDT-5003). Falls back to `source`
+   * grey the moment the device is offline. Falls back to `source`
    * for edit-mode children, which have no local file. */
   displayUri?: string;
   fileId?: string;
@@ -75,7 +75,7 @@ const LoadingImage = ({
     // attempt's `handleLoadEnd` cleared it and nothing ever set it back, so
     // `setLoading` only ever ran downwards in this component. The frame then
     // re-uploaded with no spinner at all, which reads as "finished instantly"
-    // while Post stays disabled for the length of the upload (PDT-5019).
+    // while Post stays disabled for the length of the upload.
     // Progress and the processing flag are stale from the failed attempt too,
     // so reset the whole visual upload state here rather than only in the
     // mount effect, which does not re-run on a retry.
@@ -129,8 +129,8 @@ const LoadingImage = ({
     source,
   ]);
 
-  // PDT-4997 / PDT-5019: both tickets expect the frame to end up uploaded and
-  // Post to be enabled once connectivity returns. Nothing retried on its own —
+  // The frame is expected to end up uploaded, and Post enabled, once
+  // connectivity returns. Nothing retried on its own —
   // the error key only cleared on a manual tap on that specific frame, and the
   // peek carousel can leave a failed frame off-screen entirely, so Post stayed
   // disabled with no visible cause. Retry when the device regains a

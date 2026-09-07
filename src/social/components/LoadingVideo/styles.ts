@@ -51,7 +51,7 @@ export const useStyles = () => {
       padding: 4,
       // Matches LoadingImage exactly: the icon is closeIcon('white') in both,
       // so the white scrim this used to carry left a white-on-white button
-      // that all but disappeared over a light frame (PDT-5019).
+      // that all but disappeared over a light frame.
       backgroundColor: 'rgba(0, 0, 0, 0.4)',
       borderRadius: 72,
       zIndex: 10,

@@ -30,7 +30,7 @@ interface OverlayImageProps {
    * stays the identity/bookkeeping key and becomes the remote url once the
    * upload finishes; decoding the thumbnail from that url means an
    * already-uploaded frame goes grey the moment the device is offline
-   * (PDT-5003). Falls back to `source` for edit-mode children, which have no
+   * Falls back to `source` for edit-mode children, which have no
    * local file. */
   displayUri?: string;
   onClose?: (originalPath: string, fileId?: string, postId?: string) => void;
@@ -131,7 +131,7 @@ const LoadingVideo = ({
     // attempt's `handleLoadEnd` cleared it and nothing ever set it back, so
     // `setLoading` only ever ran downwards in this component. The frame then
     // re-uploaded with no spinner at all, which reads as "finished instantly"
-    // while Post stays disabled for the length of the upload (PDT-5019).
+    // while Post stays disabled for the length of the upload.
     // Progress and the processing flag are stale from the failed attempt too,
     // so reset the whole visual upload state here rather than only in the
     // mount effect, which does not re-run on a retry.
@@ -184,8 +184,8 @@ const LoadingVideo = ({
     }
   }, [source]);
 
-  // PDT-4997 / PDT-5019: both tickets expect the frame to end up uploaded and
-  // Post to be enabled once connectivity returns. Nothing retried on its own —
+  // The frame is expected to end up uploaded, and Post enabled, once
+  // connectivity returns. Nothing retried on its own —
   // the error key only cleared on a manual tap on that specific frame, and the
   // peek carousel can leave a failed frame off-screen entirely, so Post stayed
   // disabled with no visible cause. Retry when the device regains a
@@ -322,7 +322,7 @@ const LoadingVideo = ({
 
       {/* Sibling of the overlays, never an `else` branch of them: a failed
           frame must keep its remove button, otherwise a video that cannot
-          upload can never be taken out of the composer (PDT-5019). This is
+          upload can never be taken out of the composer. This is
           the shape LoadingImage already uses, and it is what the `disabled`
           guard below was written for — inside the old if/else chain that
           `!isUploadError` term was unreachable. */}
