@@ -169,6 +169,7 @@ export function SelectedMediaComponent({
         <LoadingVideo
           carousel
           source={item.url}
+          displayUri={item.localUrl}
           onClose={onClose}
           index={index}
           onLoadFinish={onLoadFinish}
@@ -190,6 +191,7 @@ export function SelectedMediaComponent({
           <LoadingImage
             carousel
             source={item.url}
+            displayUri={item.localUrl}
             onClose={onClose}
             index={index}
             onLoadFinish={onLoadFinish}

@@ -26,6 +26,13 @@ import { useUIKitDispatch } from '../../../core/stores/store';
 
 interface OverlayImageProps {
   source: string;
+  /** Local path to render/decode from, when the item still has one. `source`
+   * stays the identity/bookkeeping key and becomes the remote url once the
+   * upload finishes; decoding the thumbnail from that url means an
+   * already-uploaded frame goes grey the moment the device is offline
+   * (PDT-5003). Falls back to `source` for edit-mode children, which have no
+   * local file. */
+  displayUri?: string;
   onClose?: (originalPath: string, fileId?: string, postId?: string) => void;
   onLoadFinish?: (
     fileId: string,
@@ -58,6 +65,7 @@ const LoadingVideo = ({
   onLoadFinish,
   onUploadError,
   isUploaded = false,
+  displayUri,
   thumbNail,
   onPlay,
   fileId,
@@ -102,7 +110,7 @@ const LoadingVideo = ({
   };
 
   const processThumbNail = async () => {
-    const generatedThumbNail = await createVideoThumbnail(source);
+    const generatedThumbNail = await createVideoThumbnail(displayUri ?? source);
     thumbNailImageRef.current = generatedThumbNail.path;
     setThumbNailImage(generatedThumbNail.path);
   };

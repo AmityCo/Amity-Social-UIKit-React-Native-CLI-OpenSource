@@ -627,6 +627,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         // attachments and must never de-duplicate against each other, nor
         // against a library pick that happens to share a basename.
         localId: url,
+        localUrl: url,
         fileId: '',
         isUploaded: false,
       };
@@ -759,6 +760,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
             // file name and keep the name as a second key either way — that is
             // what catches a re-pick when no id came back.
             localId: asset.id ?? fileName,
+            localUrl: asset.uri,
             localFileName: fileName,
             fileId: '',
             isUploaded: false,

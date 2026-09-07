@@ -20,6 +20,12 @@ interface OverlayImageProps {
   onUploadError?: (hasError: boolean, source: string) => void;
   index?: number;
   isUploaded: boolean;
+  /** Local path to render from, when the item still has one. `source` stays
+   * the identity/bookkeeping key and becomes the remote url once the upload
+   * finishes; painting from that url means an already-uploaded frame goes
+   * grey the moment the device is offline (PDT-5003). Falls back to `source`
+   * for edit-mode children, which have no local file. */
+  displayUri?: string;
   fileId?: string;
   isEditMode?: boolean;
   fileCount?: number;
@@ -38,6 +44,7 @@ const LoadingImage = ({
   onLoadFinish,
   onUploadError,
   isUploaded = false,
+  displayUri,
   fileId = '',
   isEditMode = false,
   fileCount,
@@ -189,7 +196,7 @@ const LoadingImage = ({
       }
     >
       <Image
-        source={{ uri: source }}
+        source={{ uri: displayUri ?? source }}
         resizeMode={carousel ? 'cover' : 'contain'}
         style={[
           styles.image,

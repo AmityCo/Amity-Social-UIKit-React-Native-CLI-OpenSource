@@ -24,6 +24,15 @@ export interface IDisplayImage {
    * underneath an in-flight upload. Optional because the legacy
    * EditPostModal builds these objects too. */
   localId?: string;
+  /** The local file path the item was picked or captured from, kept for
+   * DISPLAY only. `url` is replaced by the remote `?size=medium` url the
+   * instant the upload finishes, so the composer frame stops rendering the
+   * file on disk and starts fetching over the network — go offline and the
+   * already-uploaded frame turns grey (PDT-5003), even though the local file
+   * is still sitting there. Rendering from this instead keeps the frame
+   * painted whatever the network is doing. Absent for edit-mode children,
+   * which have no local file, so callers fall back to `url`. */
+  localUrl?: string;
   /** The picker's original `asset.fileName` for a library pick, kept as the
    * secondary de-duplication key next to `localId`: `asset.id` is
    * only populated on some picker configurations, so the name is what catches
