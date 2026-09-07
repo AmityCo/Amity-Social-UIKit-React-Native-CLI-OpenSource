@@ -1,9 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { MyMD3Theme } from '../../../core/providers/AmityUIKitProvider';
 
 export const useStyles = () => {
   const theme = useTheme<MyMD3Theme>();
+  const { top } = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     container: {
@@ -15,7 +17,13 @@ export const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingHorizontal: 16,
-      height: 56,
+      // The viewer is a full-screen Modal, so its own content starts at y=0
+      // with nothing above it — the 56pt header sat under the notch / Dynamic
+      // Island and the close button could not be tapped at all. Inset the
+      // header instead of the container so the media itself still fills the
+      // screen behind it.
+      paddingTop: top,
+      height: 56 + top,
       zIndex: 2,
     },
     headerBtn: {
