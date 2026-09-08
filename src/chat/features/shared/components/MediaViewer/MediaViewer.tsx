@@ -63,6 +63,9 @@ export function MediaViewer({
         <View style={styles.topBar}>
           <Pressable
             style={styles.closeButton}
+            // 32pt is under the 44pt minimum touch target; the same hitSlop the
+            // video controls' header button uses brings it up to 48pt.
+            hitSlop={8}
             onPress={onClose}
             accessibilityRole="button"
             accessibilityLabel="Close"

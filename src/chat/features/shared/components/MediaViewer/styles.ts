@@ -3,13 +3,24 @@
 // icons 1.5rem→24; radius 9999→9999. Backdrop and bars follow web's literals rather
 // than tokens (web hardcodes them too, and the token set ships no opaque black):
 // overlay rgb(0,0,0), bars rgba(0,0,0,0.5). rgb()/rgba() not hex, per the no-hex gate.
+//
+// The viewer is a full-screen Modal, so it renders edge-to-edge with no safe-area
+// inset of its own: web's `top: 0` bar lands under the status bar / notch. The top
+// bar therefore pads by the real top inset (same reason ImageViewer/styles.ts pins
+// its bar below the notch) so the close button stays reachable. `useSafeAreaInsets`
+// inside this Modal follows the Toast mounted in the same subtree.
 
 import { StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToken } from '../../../../../core/design/theme/useToken';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 
+// Web's bar padding (1rem). Also the floor when a platform reports no top inset.
+const BAR_PADDING = 16;
+
 export const useStyles = () => {
   const token = useToken();
+  const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     overlay: {
@@ -33,7 +44,11 @@ export const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      padding: 16,
+      paddingHorizontal: BAR_PADDING,
+      paddingBottom: BAR_PADDING,
+      // Keeps the close button clear of the iOS status bar / notch (44pt+ on the
+      // devices this was reported on) and of Android's translucent status bar.
+      paddingTop: Math.max(insets.top, BAR_PADDING),
       // Web .mediaViewer__topBar/__bottomBar: rgb(0 0 0 / 50%). The previous
       // badge token resolved to the same 50%, but expressing it as a literal
       // matches ImageViewer (3b2e546c) and drops the unrelated token.
