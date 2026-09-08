@@ -69,11 +69,12 @@ export function MediaViewer({
   const listRef = useRef<FlatList<MediaViewerItem>>(null);
   const videoRef = useRef<VideoRef | null>(null);
   const [current, setCurrent] = useState(initialIndex);
-  // Mute-carry (PDT-4309 / PDT-4312): the first video plays unmuted; each swipe
-  // defaults the next video to muted — until the user unmutes, after which
-  // subsequent videos stay unmuted.
+  // The sound setting belongs to the viewing session, not to one frame: the
+  // first video opens unmuted and swiping carries whatever the viewer last
+  // chose. Re-defaulting each new frame to muted meant a swipe silenced a
+  // session the viewer never muted, since opening unmuted is a default rather
+  // than an explicit choice.
   const [muted, setMuted] = useState(false);
-  const keepUnmutedRef = useRef(false);
 
   // --- playback controls (ported from web VideoPlayerControls) ---
   const [userPaused, setUserPaused] = useState(false);
@@ -118,7 +119,6 @@ export function MediaViewer({
     }
     setCurrent(initialIndex);
     setMuted(false);
-    keepUnmutedRef.current = false;
     resetPlayback();
     revealControls();
   }, [visible, initialIndex, resetPlayback, revealControls, clearHideTimer]);
@@ -129,7 +129,6 @@ export function MediaViewer({
       const idx = Math.round(e.nativeEvent.contentOffset.x / width);
       if (idx !== current) {
         setCurrent(idx);
-        setMuted(!keepUnmutedRef.current);
         resetPlayback();
         revealControls();
       }
@@ -138,11 +137,7 @@ export function MediaViewer({
   );
 
   const toggleMute = useCallback(() => {
-    setMuted((prev) => {
-      const next = !prev;
-      keepUnmutedRef.current = !next; // user unmuted -> keep unmuted afterwards
-      return next;
-    });
+    setMuted((prev) => !prev);
     revealControls();
   }, [revealControls]);
 
@@ -297,7 +292,11 @@ export function MediaViewer({
                 style={styles.media}
                 resizeMode="contain"
                 paused={index !== current || !visible || userPaused}
-                muted={muted && index === current}
+                // Only the frame on screen may be audible. `paused` alone is
+                // not a reliable gag on an off-screen native player, so an
+                // unmuted session must not leave a neighbouring frame able to
+                // emit sound.
+                muted={muted || index !== current}
                 repeat
                 playInBackground={false}
                 playWhenInactive={false}

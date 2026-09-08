@@ -19,7 +19,7 @@ import { usePostCollection } from '../../../../../hooks/collections/post/usePost
 import ActionButton from '../../../../../elements/ActionButton';
 import { usePendingPostQuery } from '../../../../../hooks/usePendingPostQuery';
 import { BrandBadge } from '../../../../../elements/BrandBadge';
-import { isModerator, useUser } from '../../../../../hooks';
+import { useCommunityPermission } from '../../../../../hooks';
 
 import { SvgXml } from 'react-native-svg';
 import { Title } from '../../../../../elements';
@@ -50,8 +50,13 @@ const usePendingPostList = ({
     },
   });
 
-  const currentUser = useUser(client.userId || '');
-  const isCommunityModerator = isModerator(currentUser?.roles);
+  // Reviewing a community's posts is a property of the membership, not of the
+  // user: a moderator of one community carries no moderator role on their own
+  // user object, so reading the user's roles hid the accept/decline buttons
+  // from every moderator who was not also a network-wide admin.
+  const { canReviewCommunityPosts } = useCommunityPermission(
+    community.communityId
+  );
 
   useEffect(() => {
     onPendingPostCountChange?.(collection.data.length);
@@ -91,7 +96,7 @@ const usePendingPostList = ({
     renderDivider,
     openBottomSheet,
     handleDeletePost,
-    isCommunityModerator,
+    canReviewCommunityPosts,
   };
 };
 
@@ -110,7 +115,7 @@ const PendingPostList = ({
     renderDivider,
     openBottomSheet,
     handleDeletePost,
-    isCommunityModerator,
+    canReviewCommunityPosts,
   } = usePendingPostList({ community, onPendingPostCountChange });
 
   return (
@@ -221,7 +226,7 @@ const PendingPostList = ({
                 mentionPositionArr={item?.metadata?.mentioned ?? []}
               />
             </View>
-            {isCommunityModerator && (
+            {canReviewCommunityPosts && (
               <>
                 <View style={styles.divider} />
                 <View style={styles.actionContainer}>

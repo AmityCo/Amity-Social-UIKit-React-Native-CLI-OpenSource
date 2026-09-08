@@ -4,8 +4,7 @@ import { ComponentID, PageID } from '../../../../enums';
 import {
   useAmityComponent,
   useCommunity,
-  isModerator,
-  useUser,
+  useCommunityPermission,
   useGlobalBehavior,
 } from '../../../../hooks';
 import { useStyles } from './styles';
@@ -64,8 +63,21 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
     componentId,
   });
 
-  const currentUser = useUser(client?.userId || '');
-  const isCommunityModerator = isModerator(currentUser?.roles);
+  const { canReviewCommunityPosts } = useCommunityPermission(communityId);
+
+  // A community may still be on the legacy flag when the SDK has not mapped it
+  // to `postSetting`, and reading `postSetting` alone hid the banner for those
+  // communities. Same fallback web applies.
+  const requiresPostApproval = community?.postSetting
+    ? community.postSetting === 'ADMIN_REVIEW_POST_REQUIRED'
+    : !!(community as Record<string, any>)?.needApprovalOnPostCreation;
+
+  // `postedUserId` is the field web reads; `creator` is what this screen read
+  // before. Keep both — the author of a pending post must not lose the banner
+  // if one of the two is absent from a payload.
+  const isPendingPostOwner = !!pendingPosts?.some(
+    (post) => (post.postedUserId ?? post.creator?.userId) === client?.userId
+  );
 
   const styles = useStyles(themeStyles);
 
@@ -174,18 +186,15 @@ const AmityCommunityHeaderComponent: FC<AmityCommunityHeaderComponentProps> = ({
               />
             </View>
           )}
-          {(isCommunityModerator ||
-            pendingPosts?.some(
-              (post) => post.creator?.userId === client.userId
-            )) &&
+          {(canReviewCommunityPosts || isPendingPostOwner) &&
             pendingPosts?.length > 0 &&
             community.isJoined &&
-            community?.postSetting === 'ADMIN_REVIEW_POST_REQUIRED' && (
+            requiresPostApproval && (
               <CommunityPendingPost
                 number={pendingPosts.length}
                 pageId={pageId}
                 componentId={componentId}
-                isModerator={isCommunityModerator}
+                isModerator={canReviewCommunityPosts}
                 style={styles.pendingPostWrap}
                 onPress={() => {
                   navigation.navigate('CommunityPendingRequest', {

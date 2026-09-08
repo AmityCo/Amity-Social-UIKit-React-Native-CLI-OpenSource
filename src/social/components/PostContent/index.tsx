@@ -25,6 +25,7 @@ import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMentio
 import { IMentionPosition } from '../../../core/types';
 import PollContent from '../PollContent';
 import { MediaViewer, type MediaViewerItem } from '../MediaViewer';
+import { classifyPostChildren } from '../../utils/postChildren';
 
 interface IPostContent {
   post: Amity.Post;
@@ -107,41 +108,8 @@ const PostContent: React.FC<IPostContent> = ({
         })
       );
 
-      const images: string[] = [];
-      const videos: IVideoPost[] = [];
-      const polls: { pollId: string }[] = [];
-      const livestreams: Amity.Room['roomId'][] = [];
-      const media: Amity.Post[] = [];
-
-      response.forEach((item) => {
-        if (item?.dataType === 'image' && item?.data?.fileId) {
-          const url: string = `https://api.${apiRegion}.amity.co/api/v3/files/${item?.data.fileId}/download?size=medium`;
-          if (!images.includes(url)) {
-            images.push(url);
-            if (item.post) media.push(item.post);
-          }
-        } else if (
-          item?.dataType === 'video' &&
-          item?.data?.videoFileId.original
-        ) {
-          const isExisted = videos.some(
-            (video) =>
-              video.videoFileId.original === item.data.videoFileId.original
-          );
-          if (!isExisted) {
-            videos.push(item.data);
-            if (item.post) media.push(item.post);
-          }
-        } else if (item?.dataType === 'poll') {
-          if (!polls.some((poll) => poll.pollId === item.data.pollId)) {
-            polls.push(item.data);
-          }
-        } else if (item?.dataType === 'room') {
-          if (!livestreams.includes(item.data.roomId)) {
-            livestreams.push(item.data.roomId);
-          }
-        }
-      });
+      const { images, videos, polls, livestreams, media } =
+        classifyPostChildren(response, apiRegion);
 
       // Set unconditionally so navigating to a post without media clears the
       // previous media (see the effect below which no longer eagerly resets).

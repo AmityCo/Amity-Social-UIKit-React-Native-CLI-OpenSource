@@ -92,6 +92,34 @@ export function PostMediaElement({
   const mediaPosts = useMemo(() => (posts ?? []).filter(isMediaPost), [posts]);
   const ratio = useMemo(() => getAttachmentRatio(mediaPosts[0]), [mediaPosts]);
 
+  // A reload starts the carousel over. It cannot be left to unmounting: the
+  // feed keys its items by post id, so a reload reuses this instance and both
+  // `current` and the ScrollView's own offset would otherwise survive it,
+  // leaving the viewer on whichever frame they had reached before.
+  const feedReloadToken = useUIKitSelector(
+    (state: RootState) => state.ui.feedReloadToken
+  );
+  useEffect(() => {
+    setCurrent(0);
+    scrollRef.current?.scrollTo({ x: 0, animated: false });
+  }, [feedReloadToken]);
+
+  // An edit that removes frames must not leave the carousel pointing past the
+  // end of what is left. The feed reuses this instance across the edit, so both
+  // `current` and the ScrollView's own offset outlive the frame they referred
+  // to: the counter read "4/3" over an empty frame, and the indicator drew no
+  // active dot at all because no page matched the index.
+  const frameCount = mediaPosts.length;
+  useEffect(() => {
+    const lastIndex = Math.max(0, frameCount - 1);
+    if (current <= lastIndex) return;
+    setCurrent(lastIndex);
+    scrollRef.current?.scrollTo({
+      x: lastIndex * (trackWidth || screenWidth),
+      animated: false,
+    });
+  }, [frameCount, current, trackWidth, screenWidth]);
+
   if (mediaPosts.length === 0) {
     if (!loading) return null;
     // Loading placeholder: a full-bleed frame in the base-shade4 colour, so the
