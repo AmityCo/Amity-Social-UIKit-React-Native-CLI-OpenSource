@@ -140,7 +140,7 @@ export function MessageList({
     return map;
   }, [data]);
 
-  // PDT-4927: a parent that lives on an EARLIER page is not in `data`, so the
+  // A parent that lives on an EARLIER page is not in `data`, so the
   // lookup above misses it and MessageReplyQuote used to sit on its loading
   // spinner forever — there was no second lookup and no terminal state. Fetch
   // exactly those parents by id as live objects (web's per-quote

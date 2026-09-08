@@ -9,7 +9,7 @@
 // (that would flash its consumer back to a loading state each time a new page
 // arrives and the id set shifts). Gated on `useAuth().isConnected`.
 //
-// PDT-4927: MessageList only resolved reply parents from the messages already in
+// MessageList only resolved reply parents from the messages already in
 // the list, so a parent sitting on an earlier page stayed unresolved and its
 // quote spun forever. This hook fills those gaps.
 

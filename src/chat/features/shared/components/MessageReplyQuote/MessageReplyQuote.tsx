@@ -91,7 +91,7 @@ export function MessageReplyQuote({
   // The spinner is now reachable ONLY while the parent is genuinely still being
   // fetched. It used to also cover every empty `parent`, and since the wiring
   // layer resolved parents purely from the loaded page, a parent on an earlier
-  // page was permanently empty and permanently spinning (PDT-4927). An empty
+  // page was permanently empty and permanently spinning. An empty
   // parent that is no longer loading falls through to the unavailable quote
   // below, so this always reaches a settled state.
   if (isLoading && !parent) {
@@ -203,7 +203,7 @@ function DeletedQuote({ isUser }: { isUser: boolean }) {
   );
 }
 
-// PDT-4927 terminal state: the parent could not be resolved at all (its live
+// Terminal state: the parent could not be resolved at all (its live
 // object settled with no message — it is no longer accessible to the viewer).
 // Reuses the deleted bubble's shape and the existing "Message unavailable"
 // string — the same one MessageReplyBand shows for a parent it cannot display —
