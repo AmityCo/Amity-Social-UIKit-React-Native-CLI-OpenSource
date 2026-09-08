@@ -1,9 +1,10 @@
 // AmityMessageComposer — RN match of AmityUiKitWeb
 // v4/chat/features/shared/components/MessageComposer/MessageComposer. Takes a
-// `composer` object (= ReturnType<typeof useMessageComposer>) plus the overlay
-// openers, and renders the media section + edit panel + reply band + TextEditor.
-// All orchestration (text/canSend/send/edit/reply/media/mentions) lives in the
-// composer object; this component is pure view + input wiring.
+// `composer` object (= ReturnType<typeof useMessageComposer>) and renders the
+// media section + edit panel + reply band + TextEditor. All orchestration
+// (text/canSend/send/edit/reply/media/mentions) lives in the composer object;
+// this component is pure view + input wiring. No overlay openers are passed in:
+// the reply band is inert, so nothing here navigates.
 //
 // RN specifics vs web:
 //  - Web mounts a Lexical contentEditable TextEditor with initialText /
@@ -46,18 +47,10 @@ type MessageComposer = ReturnType<typeof useMessageComposer>;
 
 type AmityMessageComposerProps = {
   composer: MessageComposer;
-  onOpenSeeMore: (text: string, title?: string) => void;
-  onOpenImage: (url: string, message: Amity.Message) => void;
-  onOpenVideo: (message: Amity.Message) => void;
 };
 
 // 5. Named function component
-export function AmityMessageComposer({
-  composer,
-  onOpenSeeMore,
-  onOpenImage,
-  onOpenVideo,
-}: AmityMessageComposerProps) {
+export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
   const {
     subChannelId,
     enableMention,
@@ -183,9 +176,6 @@ export function AmityMessageComposer({
           replyTo={replyTo}
           currentUserId={currentUserId}
           onCancel={cancelReply}
-          onOpenSeeMore={onOpenSeeMore}
-          onOpenImage={onOpenImage}
-          onOpenVideo={onOpenVideo}
         />
       ) : null}
 

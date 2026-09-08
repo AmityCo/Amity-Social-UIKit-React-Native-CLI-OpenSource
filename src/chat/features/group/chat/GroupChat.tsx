@@ -121,12 +121,7 @@ export function GroupChat({
       {c.showMutedBanner ? (
         <MutedBanner variant={c.mutedVariant} />
       ) : (
-        <AmityMessageComposer
-          composer={c.composer}
-          onOpenSeeMore={c.openSeeMore}
-          onOpenImage={c.openImageViewer}
-          onOpenVideo={c.openVideoPlayer}
-        />
+        <AmityMessageComposer composer={c.composer} />
       )}
 
       {c.imageViewerProps ? <ImageViewer {...c.imageViewerProps} /> : null}

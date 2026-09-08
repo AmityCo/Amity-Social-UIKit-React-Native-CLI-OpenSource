@@ -1,9 +1,9 @@
 // MessageReplyBand — ported from AmityUiKitWeb features/shared/components/
 // MessageReplyBand. The "Replying to X" band shown above the composer while
-// composing a reply. Tapping the band opens the parent (see-more / image /
-// video); the trailing close button cancels the reply. Web tracked live
-// deletion via useMessageObject; RN has no such hook, so deletion is read from
-// replyTo.isDeleted (the wiring layer supplies a fresh message).
+// composing a reply. The band itself is inert: tapping it must do nothing. Only
+// the trailing close button is interactive, and it cancels the reply. Web
+// tracked live deletion via useMessageObject; RN has no such hook, so deletion
+// is read from replyTo.isDeleted (the wiring layer supplies a fresh message).
 
 // 1. React / RN imports
 import { Image, Pressable, View } from 'react-native';
@@ -22,9 +22,6 @@ type MessageReplyBandProps = {
   replyTo: Amity.Message;
   currentUserId?: string | null;
   onCancel: () => void;
-  onOpenSeeMore: (text: string, title?: string) => void;
-  onOpenImage: (url: string, message: Amity.Message) => void;
-  onOpenVideo: (message: Amity.Message) => void;
 };
 
 type MessageData = {
@@ -38,14 +35,10 @@ export function MessageReplyBand({
   replyTo,
   currentUserId,
   onCancel,
-  onOpenSeeMore,
-  onOpenImage,
-  onOpenVideo,
 }: MessageReplyBandProps) {
   const { styles } = useStyles();
   const yourselfLabel = useString('amity_chat_message_replying_yourself');
   const unknownUserLabel = useString('amity_chat_unknown_user');
-  const repliedMessageTitle = useString('amity_chat_message_replied_message');
   const replyingToLabel = useString('amity_chat_replying_to');
 
   const isParentDeleted = !!replyTo.isDeleted;
@@ -57,30 +50,8 @@ export function MessageReplyBand({
     ? yourselfLabel
     : creatorName ?? unknownUserLabel;
 
-  function handleBandPress() {
-    if (isParentDeleted) return;
-    const data = replyTo.data as MessageData | undefined;
-    if (replyTo.dataType === 'text') {
-      onOpenSeeMore((data?.text ?? '').toString(), repliedMessageTitle);
-      return;
-    }
-    if (replyTo.dataType === 'image') {
-      onOpenImage('', replyTo);
-      return;
-    }
-    if (replyTo.dataType === 'video') {
-      onOpenVideo(replyTo);
-    }
-  }
-
   return (
-    <Pressable
-      style={styles.band}
-      onPress={handleBandPress}
-      disabled={isParentDeleted}
-      accessibilityRole="button"
-      accessibilityLabel={repliedMessageTitle}
-    >
+    <View style={styles.band}>
       <View style={styles.textCol}>
         <Typography
           variant="captionBold"
@@ -104,7 +75,7 @@ export function MessageReplyBand({
           tokenColor={AmityColorToken.IconIconButtonGhostSecondaryDefault}
         />
       </Pressable>
-    </Pressable>
+    </View>
   );
 }
 
