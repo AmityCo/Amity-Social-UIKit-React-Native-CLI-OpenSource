@@ -104,6 +104,22 @@ export function PostMediaElement({
     scrollRef.current?.scrollTo({ x: 0, animated: false });
   }, [feedReloadToken]);
 
+  // An edit that removes frames must not leave the carousel pointing past the
+  // end of what is left. The feed reuses this instance across the edit, so both
+  // `current` and the ScrollView's own offset outlive the frame they referred
+  // to: the counter read "4/3" over an empty frame, and the indicator drew no
+  // active dot at all because no page matched the index.
+  const frameCount = mediaPosts.length;
+  useEffect(() => {
+    const lastIndex = Math.max(0, frameCount - 1);
+    if (current <= lastIndex) return;
+    setCurrent(lastIndex);
+    scrollRef.current?.scrollTo({
+      x: lastIndex * (trackWidth || screenWidth),
+      animated: false,
+    });
+  }, [frameCount, current, trackWidth, screenWidth]);
+
   if (mediaPosts.length === 0) {
     if (!loading) return null;
     // Loading placeholder: a full-bleed frame in the base-shade4 colour, so the

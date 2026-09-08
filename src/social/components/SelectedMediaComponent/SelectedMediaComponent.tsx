@@ -150,6 +150,24 @@ export function SelectedMediaComponent({
     uri: m.url,
   }));
 
+  // Removing a frame must not leave the strip parked past the last one. The
+  // ScrollView keeps its offset while the content shrinks underneath it, so
+  // deleting the frame that was on screen left a half-scrolled gap where it had
+  // been instead of settling on the frame that took its place.
+  const offsetRef = useRef(0);
+  const previousTotalRef = useRef(total);
+  useEffect(() => {
+    const previousTotal = previousTotalRef.current;
+    previousTotalRef.current = total;
+    if (total >= previousTotal || slideWidth <= 0) return;
+
+    const maxOffset = Math.max(0, (total - 1) * (slideWidth + SPACE_BETWEEN));
+    if (offsetRef.current <= maxOffset) return;
+
+    offsetRef.current = maxOffset;
+    scrollRef.current?.scrollTo({ x: maxOffset, animated: false });
+  }, [total, slideWidth]);
+
   // PDT-4310/4312: on close, return to the frame originally tapped from — not
   // the last frame viewed in full screen.
   const handleCloseViewer = () => {
@@ -229,6 +247,10 @@ export function SelectedMediaComponent({
                 decelerationRate="fast"
                 snapToInterval={slideWidth + SPACE_BETWEEN}
                 snapToAlignment="start"
+                scrollEventThrottle={16}
+                onScroll={(event) => {
+                  offsetRef.current = event.nativeEvent.contentOffset.x;
+                }}
               >
                 {media.map((item, index) => (
                   <View
