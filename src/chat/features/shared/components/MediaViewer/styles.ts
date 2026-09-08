@@ -3,13 +3,27 @@
 // icons 1.5rem→24; radius 9999→9999. Backdrop and bars follow web's literals rather
 // than tokens (web hardcodes them too, and the token set ships no opaque black):
 // overlay rgb(0,0,0), bars rgba(0,0,0,0.5). rgb()/rgba() not hex, per the no-hex gate.
+//
+// The viewer is a full-screen Modal, so it renders edge-to-edge and web's
+// `top: 0` bar landed underneath the iOS status bar — on a notch/Dynamic Island
+// device that put the close button behind the system chrome, where the tap never
+// reached it. The top bar pads by the measured top inset instead, so the button
+// clears the status bar on every device class (20 on a flat status bar, 44 on a
+// notch, 59 on Dynamic Island) rather than the fixed 44 that ImageViewer/styles.ts
+// hardcodes. Insets come from the SafeAreaProvider in AmityUIKitProvider — context
+// crosses the Modal, the same way the Toast in this subtree reads its bottom inset.
 
 import { StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToken } from '../../../../../core/design/theme/useToken';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 
+// Web's bar padding (1rem). Also the floor when a platform reports no top inset.
+const BAR_PADDING = 16;
+
 export const useStyles = () => {
   const token = useToken();
+  const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     overlay: {
@@ -33,7 +47,13 @@ export const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      padding: 16,
+      paddingHorizontal: BAR_PADDING,
+      paddingBottom: BAR_PADDING,
+      // Pushes the close button out from under the status bar / Dynamic Island,
+      // and out from under Android's translucent status bar (the Modal sets
+      // statusBarTranslucent). Floors at the web padding so a device that
+      // reports no top inset still gets the original spacing.
+      paddingTop: Math.max(insets.top, BAR_PADDING),
       // Web .mediaViewer__topBar/__bottomBar: rgb(0 0 0 / 50%). The previous
       // badge token resolved to the same 50%, but expressing it as a literal
       // matches ImageViewer (3b2e546c) and drops the unrelated token.
