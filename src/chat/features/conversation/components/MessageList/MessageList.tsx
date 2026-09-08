@@ -14,6 +14,7 @@ import { DateSeparator } from '../../../shared/components/DateSeparator';
 import { ScrollToLatestButton } from '../../../shared/components/ScrollToLatestButton';
 import { NewMessageNotification } from '../../../shared/components/NewMessageNotification';
 import { Loader } from '../../../../../core/design/atoms/Loader';
+import { useMessagesByIdsQuery } from '../../../../hooks/queries';
 import type { ChatItem } from '../../../../utils/groupMessagesByDate';
 import {
   isSyntheticPendingMessage,
@@ -130,13 +131,32 @@ export function MessageList({
     });
   }, [items]);
 
-  // Resolve reply parents from the loaded items (no separate live lookup for M2).
+  // Resolve reply parents from the loaded items — the cheap path, and the only
+  // one needed when the parent happens to sit on the same page as its reply.
   const messageById = useMemo(() => {
     const map = new Map<string, Amity.Message>();
     for (const it of data)
       if (it.kind === 'message') map.set(it.message.messageId, it.message);
     return map;
   }, [data]);
+
+  // A parent that lives on an EARLIER page is not in `data`, so the
+  // lookup above misses it and MessageReplyQuote used to sit on its loading
+  // spinner forever — there was no second lookup and no terminal state. Fetch
+  // exactly those parents by id as live objects (web's per-quote
+  // `useMessageObject`), so a reply's quote resolves regardless of which page
+  // its parent is on.
+  const unresolvedParentIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const it of data) {
+      if (it.kind !== 'message') continue;
+      const { parentId } = it.message;
+      if (parentId && !messageById.has(parentId)) ids.add(parentId);
+    }
+    return Array.from(ids);
+  }, [data, messageById]);
+
+  const { byId: fetchedParents } = useMessagesByIdsQuery(unresolvedParentIds);
 
   const scrollToLatest = useCallback(() => {
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -197,6 +217,19 @@ export function MessageList({
             : messageFileId
             ? previews.byFileId.get(messageFileId)
             : undefined;
+          // In-page lookup first, then the by-id fetch for a parent on an
+          // earlier page. `isParentLoading` is what keeps the quote's spinner
+          // from being permanent: once the live object settles without a
+          // message, the quote falls through to its unavailable state.
+          const { parentId } = message;
+          const fetchedParent = parentId
+            ? fetchedParents.get(parentId)
+            : undefined;
+          const parent = parentId
+            ? messageById.get(parentId) ?? fetchedParent?.message ?? null
+            : null;
+          const isParentLoading =
+            !!parentId && !parent && (fetchedParent?.loading ?? true);
           return (
             <MessageRow
               message={message}
@@ -205,11 +238,8 @@ export function MessageList({
               isUser={isUser}
               isGroupChat={isGroupChat}
               currentUserId={currentUserId}
-              parent={
-                message.parentId
-                  ? messageById.get(message.parentId) ?? null
-                  : null
-              }
+              parent={parent}
+              isParentLoading={isParentLoading}
               onOpenImage={onOpenImage}
               onOpenVideo={onOpenVideo}
               onOpenFailedSheet={onOpenFailedSheet}
