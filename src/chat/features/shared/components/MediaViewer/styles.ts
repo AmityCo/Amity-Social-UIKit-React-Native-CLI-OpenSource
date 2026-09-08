@@ -4,11 +4,14 @@
 // than tokens (web hardcodes them too, and the token set ships no opaque black):
 // overlay rgb(0,0,0), bars rgba(0,0,0,0.5). rgb()/rgba() not hex, per the no-hex gate.
 //
-// The viewer is a full-screen Modal, so it renders edge-to-edge with no safe-area
-// inset of its own: web's `top: 0` bar lands under the status bar / notch. The top
-// bar therefore pads by the real top inset (same reason ImageViewer/styles.ts pins
-// its bar below the notch) so the close button stays reachable. `useSafeAreaInsets`
-// inside this Modal follows the Toast mounted in the same subtree.
+// PDT-4918: the viewer is a full-screen Modal, so it renders edge-to-edge and web's
+// `top: 0` bar landed underneath the iOS status bar — on a notch/Dynamic Island
+// device that put the close button behind the system chrome, where the tap never
+// reached it. The top bar pads by the measured top inset instead, so the button
+// clears the status bar on every device class (20 on a flat status bar, 44 on a
+// notch, 59 on Dynamic Island) rather than the fixed 44 that ImageViewer/styles.ts
+// hardcodes. Insets come from the SafeAreaProvider in AmityUIKitProvider — context
+// crosses the Modal, the same way the Toast in this subtree reads its bottom inset.
 
 import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -46,8 +49,10 @@ export const useStyles = () => {
       justifyContent: 'flex-start',
       paddingHorizontal: BAR_PADDING,
       paddingBottom: BAR_PADDING,
-      // Keeps the close button clear of the iOS status bar / notch (44pt+ on the
-      // devices this was reported on) and of Android's translucent status bar.
+      // Pushes the close button out from under the status bar / Dynamic Island,
+      // and out from under Android's translucent status bar (the Modal sets
+      // statusBarTranslucent). Floors at the web padding so a device that
+      // reports no top inset still gets the original spacing.
       paddingTop: Math.max(insets.top, BAR_PADDING),
       // Web .mediaViewer__topBar/__bottomBar: rgb(0 0 0 / 50%). The previous
       // badge token resolved to the same 50%, but expressing it as a literal
