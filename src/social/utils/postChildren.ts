@@ -25,12 +25,15 @@ export type ClassifiedPostChildren = {
 /**
  * Sort a post's resolved children into what each surface needs.
  *
- * Every payload read here has to be treated as absent-until-proven: a child
- * exists as soon as the post does, while the fields describing its file arrive
- * later. A video child in particular carries `videoFileId` only once the
- * server has a file for it, so reading through that key rather than past it
- * raises a TypeError — and the ErrorBoundary around the whole UIKit turns one
- * such child into a full-screen error page for the entire app.
+ * Every hop into a child's payload is guarded, because the cost of being wrong
+ * is out of proportion to the saving: an ErrorBoundary sits around the whole
+ * UIKit without an onError, so one TypeError in here replaces the entire app
+ * with a generic error page and takes its own stack down with it.
+ *
+ * `ContentDataVideo` types `videoFileId` as always present but every size
+ * inside it as optional, so `original` is the hop that can legitimately be
+ * missing. The keys above it are guarded on the same principle rather than on
+ * evidence that they go missing.
  */
 export function classifyPostChildren(
   children: ResolvedPostChild[],

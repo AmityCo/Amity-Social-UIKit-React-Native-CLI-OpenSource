@@ -15,9 +15,9 @@ const videoChild = (
 });
 
 /**
- * A video child the server has accepted but has no file for yet. The child post
- * exists — it is in `children` and resolves — while `data` carries only what
- * the server already knows.
+ * A video child whose payload has no reachable `original` size. `videoFileId`
+ * is typed as always present, so this shape stands for the wider class of
+ * incomplete payloads rather than for one the server is known to send.
  */
 const processingVideoChild = (postId: string): ResolvedPostChild => ({
   post: { postId } as Amity.Post,
@@ -31,14 +31,14 @@ const imageChild = (fileId: string, postId = fileId): ResolvedPostChild => ({
   data: { fileId },
 });
 
-describe('classifyPostChildren — a child whose file fields have not arrived', () => {
+describe('classifyPostChildren — a child with an incomplete payload', () => {
   it('is the payload shape that used to crash', () => {
     const child = processingVideoChild('p1');
 
     // What the feed read before: the chain stopped at `data`, then took two
-    // more hops unguarded. This is the throw the ErrorBoundary around the whole
-    // UIKit caught, which is why the app showed its generic error page instead
-    // of the feed.
+    // more hops unguarded. Pins down what such a payload costs — a TypeError
+    // that the app-wide ErrorBoundary turns into a full-screen error page —
+    // without claiming the server sends this shape.
     expect(() => (child.data as any).videoFileId.original).toThrow(TypeError);
   });
 
