@@ -9,7 +9,7 @@
 //     BottomSheetComponent) with `container="drawer"` — the identical pattern the
 //     conversation user-action menu uses. NOT an Alert dialog.
 //   - Non-synthetic delete/resend use the existing RN `useDeleteMessage` /
-//     `useCreateMessage` mutations instead of web's query hooks. PDT-4914: resend
+//     `useCreateMessage` mutations instead of web's query hooks. Resend
 //     re-sends under the failed message's own SDK identity (see handleResend)
 //     rather than web's useResendMessageQuery recreate-then-delete-the-original.
 
@@ -75,7 +75,7 @@ export function useFailedMessageSheet({
       }
       return;
     }
-    // PDT-4914: resend THIS message — do not create a second one.
+    // Resend THIS message — do not create a second one.
     //
     // A non-synthetic failed bubble is the SDK's own optimistic message: the
     // create never reached the server, so it still carries the client-generated
