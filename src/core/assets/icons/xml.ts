@@ -60,6 +60,21 @@ export const closeIcon = (
 ): string => `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M7.65234 6.25L11.4492 2.48828C11.6602 2.27734 11.6602 1.89062 11.4492 1.67969L10.5703 0.800781C10.3594 0.589844 9.97266 0.589844 9.76172 0.800781L6 4.59766L2.20312 0.800781C1.99219 0.589844 1.60547 0.589844 1.39453 0.800781L0.515625 1.67969C0.304688 1.89062 0.304688 2.27734 0.515625 2.48828L4.3125 6.25L0.515625 10.0469C0.304688 10.2578 0.304688 10.6445 0.515625 10.8555L1.39453 11.7344C1.60547 11.9453 1.99219 11.9453 2.20312 11.7344L6 7.9375L9.76172 11.7344C9.97266 11.9453 10.3594 11.9453 10.5703 11.7344L11.4492 10.8555C11.6602 10.6445 11.6602 10.2578 11.4492 10.0469L7.65234 6.25Z" fill="${color}"/>
 </svg>`;
+// Ported verbatim from web UIKit icons/Close, for the carousel composer's
+// per-frame remove button.
+//
+// Not a swap for `closeIcon` above, which eleven other screens render — the
+// difference that matters here is that this one carries its padding INSIDE its
+// own 32-unit viewBox: the cross spans 8.4 to 23.6, so it fills about 47% of
+// the box against `closeIcon`'s near-100%. Rendered at 20 inside a 28dp disc it
+// draws a ~9dp cross with the scrim still visible around it, which is exactly
+// what web looks like. Using `closeIcon` at the same 20 filled the disc edge to
+// edge and left a bare white X floating on the photo.
+export const mediaRemoveIcon = (
+  color: string = '#FFFFFF'
+): string => `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M18.2031 16.2861L23.2656 21.3486C23.5469 21.6299 23.5469 22.1455 23.2656 22.4268L22.0938 23.5986C21.8125 23.8799 21.2969 23.8799 21.0156 23.5986L16 18.5361L10.9375 23.5986C10.6562 23.8799 10.1406 23.8799 9.85938 23.5986L8.6875 22.4268C8.40625 22.1455 8.40625 21.6299 8.6875 21.3486L13.75 16.2861L8.6875 11.2705C8.40625 10.9893 8.40625 10.4736 8.6875 10.1924L9.85938 9.02051C10.1406 8.73926 10.6562 8.73926 10.9375 9.02051L16 14.083L21.0156 9.02051C21.2969 8.73926 21.8125 8.73926 22.0938 9.02051L23.2656 10.1924C23.5469 10.4736 23.5469 10.9893 23.2656 11.2705L18.2031 16.2861Z" fill="${color}"/>
+</svg>`;
 // Ported from web UIKit icons/MutedFilled (speaker + waves) — shown when audio
 // is ON (unmuted). Used by the carousel full-screen media viewer.
 export const soundOnIcon = (

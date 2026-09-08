@@ -89,24 +89,35 @@ const LoadingVideo = ({
   }, [progress]);
 
   const uploadFileToAmity = useCallback(async () => {
-    const file: Amity.File<any>[] = await uploadVideoFile(
-      source,
-      (percent: number) => {
-        setProgress(percent);
+    // `uploadVideoFile` now rejects on a failed upload instead of
+    // hanging on an unsettled promise, so this call needs a catch. This legacy
+    // component has no error UI to show (unlike its v4 counterpart, which
+    // renders a tappable retry overlay) — the least-bad end state is to stop
+    // the spinner so the frame is not stuck pretending to make progress, and
+    // to leave the close button reachable so the user can drop the attachment.
+    try {
+      const file: Amity.File<any>[] = await uploadVideoFile(
+        source,
+        (percent: number) => {
+          setProgress(percent);
+        }
+      );
+      if (file) {
+        setIsProcess(false);
+        handleLoadEnd();
+        onLoadFinish &&
+          onLoadFinish(
+            file[0]?.fileId as string,
+            file[0]?.fileUrl as string,
+            file[0]?.attributes.name as string,
+            index as number,
+            source,
+            thumbNail
+          );
       }
-    );
-    if (file) {
+    } catch (error) {
       setIsProcess(false);
       handleLoadEnd();
-      onLoadFinish &&
-        onLoadFinish(
-          file[0]?.fileId as string,
-          file[0]?.fileUrl as string,
-          file[0]?.attributes.name as string,
-          index as number,
-          source,
-          thumbNail
-        );
     }
   }, [source]);
 
