@@ -2,10 +2,11 @@
 // channelId + display name from the route and renders the Chat container, wiring
 // the header back button to navigation.goBack. Mirrors AmityUiKitWeb ChatPage.
 
-// 1. React / RN imports
-import { SafeAreaView } from 'react-native';
-
 // 2. Third-party imports
+// SafeAreaView from react-native-safe-area-context (not react-native): the core
+// one is iOS-only, so under Android's mandatory edge-to-edge the system
+// navigation bar painted over the message composer (PDT-5184).
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   useNavigation,
   useRoute,
