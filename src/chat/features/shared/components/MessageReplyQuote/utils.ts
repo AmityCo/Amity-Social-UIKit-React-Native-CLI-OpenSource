@@ -8,7 +8,11 @@ import { resolveString } from '../../../../../core/localization';
 
 type GetReplyHeaderParams = {
   child: Amity.Message;
-  parent: Amity.Message;
+  /**
+   * Absent when the parent could not be resolved at all — see the
+   * deleted/unavailable branch below (PDT-4927).
+   */
+  parent?: Amity.Message | null;
   currentUserId?: string | null;
   isGroupChat: boolean;
 };
@@ -28,15 +32,19 @@ export function getReplyHeader({
   isGroupChat,
 }: GetReplyHeaderParams): string {
   const isCurrentUser = !!currentUserId && child.creatorId === currentUserId;
-  const isParentCurrentUser =
-    !!currentUserId && parent.creatorId === currentUserId;
-  const isParentDeleted = parent.isDeleted === true;
 
-  if (isParentDeleted) {
+  // A deleted parent and a parent that cannot be fetched at all (PDT-4927 —
+  // the live object settled with no message) share this header: there is no
+  // separate copy for the latter, and to the reader both mean the same thing,
+  // that the message being replied to can no longer be shown.
+  if (!parent || parent.isDeleted === true) {
     return isCurrentUser
       ? resolveString('amity_chat_reply_you_to_deleted')
       : resolveString('amity_chat_reply_to_deleted');
   }
+
+  const isParentCurrentUser =
+    !!currentUserId && parent.creatorId === currentUserId;
 
   if (!isGroupChat) {
     if (isParentCurrentUser) {

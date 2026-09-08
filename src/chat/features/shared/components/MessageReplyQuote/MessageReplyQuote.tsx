@@ -1,9 +1,11 @@
 // MessageReplyQuote — ported from AmityUiKitWeb features/shared/components/
 // MessageReplyQuote. The quoted parent message rendered above a reply bubble:
 // a "replied to" header plus a tappable snapshot of the parent (text / image /
-// video / custom / deleted). Web fetched the parent via useMessageObject; RN has
-// no such hook, so the resolved `parent` (and optional `isLoading`) are passed in
-// by the wiring layer. Media dimensions are clamped via getReplyThumbnailSize.
+// video / custom / deleted / unavailable). Web fetched the parent via
+// useMessageObject; RN has no such hook, so the resolved `parent` and its
+// `isLoading` are passed in by the wiring layer (MessageList, which reads the
+// loaded page first and falls back to useMessagesByIdsQuery for a parent on an
+// earlier page). Media dimensions are clamped via getReplyThumbnailSize.
 
 // 1. React / RN imports
 import { useState, type ReactNode } from 'react';
@@ -86,7 +88,13 @@ export function MessageReplyQuote({
 }: MessageReplyQuoteProps) {
   const { styles, headerIconColor } = useStyles(isUser);
 
-  if (isLoading || !parent) {
+  // The spinner is now reachable ONLY while the parent is genuinely still being
+  // fetched. It used to also cover every empty `parent`, and since the wiring
+  // layer resolved parents purely from the loaded page, a parent on an earlier
+  // page was permanently empty and permanently spinning (PDT-4927). An empty
+  // parent that is no longer loading falls through to the unavailable quote
+  // below, so this always reaches a settled state.
+  if (isLoading && !parent) {
     return (
       <View style={styles.container}>
         <View style={styles.placeholder} accessibilityState={{ busy: true }}>
@@ -118,13 +126,17 @@ export function MessageReplyQuote({
           {headerText}
         </Typography>
       </View>
-      <ParentBody
-        parent={parent}
-        isUser={isUser}
-        onOpenSeeMore={onOpenSeeMore}
-        onOpenImage={onOpenImage}
-        onOpenVideo={onOpenVideo}
-      />
+      {parent ? (
+        <ParentBody
+          parent={parent}
+          isUser={isUser}
+          onOpenSeeMore={onOpenSeeMore}
+          onOpenImage={onOpenImage}
+          onOpenVideo={onOpenVideo}
+        />
+      ) : (
+        <UnavailableQuote isUser={isUser} />
+      )}
     </View>
   );
 }
@@ -184,6 +196,27 @@ function DeletedQuote({ isUser }: { isUser: boolean }) {
         />
         <Typography variant="caption" style={styles.deletedText}>
           {deletedLabel}
+        </Typography>
+      </View>
+      <View style={styles.overlay} pointerEvents="none" />
+    </View>
+  );
+}
+
+// PDT-4927 terminal state: the parent could not be resolved at all (its live
+// object settled with no message — it is no longer accessible to the viewer).
+// Reuses the deleted bubble's shape and the existing "Message unavailable"
+// string — the same one MessageReplyBand shows for a parent it cannot display —
+// so the quote settles instead of spinning. No trash glyph: nothing here says
+// the parent was deleted, only that it cannot be shown.
+function UnavailableQuote({ isUser }: { isUser: boolean }) {
+  const { styles } = useStyles(isUser);
+  const unavailableLabel = useString('amity_chat_message_unavailable');
+  return (
+    <View style={styles.quote}>
+      <View style={styles.deletedBubble}>
+        <Typography variant="caption" style={styles.deletedText}>
+          {unavailableLabel}
         </Typography>
       </View>
       <View style={styles.overlay} pointerEvents="none" />
