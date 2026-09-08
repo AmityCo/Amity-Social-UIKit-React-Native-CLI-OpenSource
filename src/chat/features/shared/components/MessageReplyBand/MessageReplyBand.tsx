@@ -1,10 +1,9 @@
 // MessageReplyBand — ported from AmityUiKitWeb features/shared/components/
 // MessageReplyBand. The "Replying to X" band shown above the composer while
-// composing a reply. The band itself is inert — tapping it must do nothing
-// (PDT-4929); only the trailing close button is interactive, and it cancels
-// the reply. Web tracked live deletion via useMessageObject; RN has no such
-// hook, so deletion is read from replyTo.isDeleted (the wiring layer supplies
-// a fresh message).
+// composing a reply. The band itself is inert: tapping it must do nothing. Only
+// the trailing close button is interactive, and it cancels the reply. Web
+// tracked live deletion via useMessageObject; RN has no such hook, so deletion
+// is read from replyTo.isDeleted (the wiring layer supplies a fresh message).
 
 // 1. React / RN imports
 import { Image, Pressable, View } from 'react-native';

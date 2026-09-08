@@ -4,7 +4,7 @@
 // media section + edit panel + reply band + TextEditor. All orchestration
 // (text/canSend/send/edit/reply/media/mentions) lives in the composer object;
 // this component is pure view + input wiring. No overlay openers are passed in:
-// the reply band is inert (PDT-4929), so nothing here navigates.
+// the reply band is inert, so nothing here navigates.
 //
 // RN specifics vs web:
 //  - Web mounts a Lexical contentEditable TextEditor with initialText /
