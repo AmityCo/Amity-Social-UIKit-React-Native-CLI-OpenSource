@@ -3,7 +3,7 @@
 // the header back button to navigation.goBack. Mirrors AmityUiKitWeb ChatPage.
 
 // 1. React / RN imports
-import { SafeAreaView } from 'react-native';
+import { KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
 
 // 2. Third-party imports
 import {
@@ -26,12 +26,25 @@ export default function AmityChatPage() {
   const { params } = useRoute<RouteProp<RootStackParamList, 'AmityChatPage'>>();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Chat
-        channelId={params.channelId}
-        userDisplayName={params.userDisplayName}
-        onBack={() => navigation.goBack()}
-      />
-    </SafeAreaView>
+    // PDT-4910 (iOS only): KeyboardAvoidingView must be the ROOT of the screen.
+    // Its 'padding' math is `frame.y + frame.height - keyboardScreenY`, where
+    // `frame` comes from onLayout (PARENT-relative) while the keyboard Y is an
+    // absolute SCREEN coordinate. Nested inside SafeAreaView it therefore
+    // under-shot by the safe-area insets and left the composer behind the
+    // keyboard. At the root the two coordinate spaces agree. Android is
+    // unaffected: `behavior` is undefined there (native adjustResize handles it)
+    // and RN's SafeAreaView is a plain View on Android.
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <SafeAreaView style={styles.container}>
+        <Chat
+          channelId={params.channelId}
+          userDisplayName={params.userDisplayName}
+          onBack={() => navigation.goBack()}
+        />
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }

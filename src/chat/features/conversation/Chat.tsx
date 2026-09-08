@@ -5,7 +5,7 @@
 // MutedBanner|MessageComposer, ImageViewer, VideoPlayer, MessageFullTextScreen.
 
 // 1. React / RN imports
-import { Dimensions, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 
 // 2. Internal imports
 import useFile from '../../../core/hooks/useFile';
@@ -68,10 +68,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <View style={styles.container}>
       <Header
         // A 1-1 conversation's title is the OTHER participant's display name, not
         // the channel's displayName (which is often empty for conversations).
@@ -149,6 +146,6 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           onClose={c.closeReport}
         />
       ) : null}
-    </KeyboardAvoidingView>
+    </View>
   );
 }
