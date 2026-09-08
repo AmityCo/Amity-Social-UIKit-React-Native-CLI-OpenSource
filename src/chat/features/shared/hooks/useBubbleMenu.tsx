@@ -13,9 +13,9 @@
 //   - Save goes through the RN `useSaveMediaMessageQuery` port, which resolves the
 //     message's file URL, downloads it and writes it into the device gallery via
 //     CameraRoll, then raises the saved/failed chat toast (web downloaded via the
-//     browser). Same hook the media viewer's save icon uses (BUG: PDT-4917 —
-//     `handleBubbleSave` used to be a stub, so tapping Save on an image neither
-//     saved to the gallery nor showed the "Saved photo." toast).
+//     browser). Same hook the media viewer's save icon uses; `handleBubbleSave`
+//     used to be a stub, so tapping Save on an image neither saved to the
+//     gallery nor showed the "Saved photo." toast.
 //   - Report: web opened a Drawer (mobile) / Popup (desktop) with ContentReportReason.
 //     RN keeps the report target in local state (`reportMessage`) and the orchestrator
 //     (useChatMessage) surfaces it so Chat/GroupChat render the full-screen
