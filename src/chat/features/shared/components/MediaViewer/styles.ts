@@ -4,7 +4,7 @@
 // than tokens (web hardcodes them too, and the token set ships no opaque black):
 // overlay rgb(0,0,0), bars rgba(0,0,0,0.5). rgb()/rgba() not hex, per the no-hex gate.
 //
-// PDT-4918: the viewer is a full-screen Modal, so it renders edge-to-edge and web's
+// The viewer is a full-screen Modal, so it renders edge-to-edge and web's
 // `top: 0` bar landed underneath the iOS status bar — on a notch/Dynamic Island
 // device that put the close button behind the system chrome, where the tap never
 // reached it. The top bar pads by the measured top inset instead, so the button
