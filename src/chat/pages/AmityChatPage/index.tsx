@@ -5,7 +5,7 @@
 // 2. Third-party imports
 // SafeAreaView from react-native-safe-area-context (not react-native): the core
 // one is iOS-only, so under Android's mandatory edge-to-edge the system
-// navigation bar painted over the message composer (PDT-5184).
+// navigation bar painted over the message composer.
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   useNavigation,
