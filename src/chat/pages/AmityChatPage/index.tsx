@@ -26,7 +26,7 @@ export default function AmityChatPage() {
   const { params } = useRoute<RouteProp<RootStackParamList, 'AmityChatPage'>>();
 
   return (
-    // PDT-4910 (iOS only): KeyboardAvoidingView must be the ROOT of the screen.
+    // iOS only: KeyboardAvoidingView must be the ROOT of the screen.
     // Its 'padding' math is `frame.y + frame.height - keyboardScreenY`, where
     // `frame` comes from onLayout (PARENT-relative) while the keyboard Y is an
     // absolute SCREEN coordinate. Nested inside SafeAreaView it therefore

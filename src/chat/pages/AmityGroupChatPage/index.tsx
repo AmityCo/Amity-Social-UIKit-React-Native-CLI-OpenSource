@@ -19,7 +19,7 @@ export default function AmityGroupChatPage() {
     useRoute<RouteProp<RootStackParamList, 'AmityGroupChatPage'>>();
 
   return (
-    // PDT-4910 (iOS only): see AmityChatPage — KeyboardAvoidingView has to be
+    // iOS only: see AmityChatPage — KeyboardAvoidingView has to be
     // the root of the screen for its padding math to line up with the keyboard's
     // absolute screen coordinates.
     <KeyboardAvoidingView
