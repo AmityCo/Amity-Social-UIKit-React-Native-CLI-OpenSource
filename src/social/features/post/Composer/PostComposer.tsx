@@ -733,6 +733,16 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         mediaType,
         quality: 1,
         selectionLimit: MAX_MEDIA_ATTACHMENTS - current,
+        // Required for `asset.id`, which is what recognises a re-pick of an
+        // asset already staged. Without it the iOS picker builds its
+        // PHPickerConfiguration without a photo library, so results carry no
+        // assetIdentifier and the native side never resolves a PHAsset —
+        // leaving `id` undefined and the fallback key, `fileName`, a fresh
+        // UUID per pick. Both dedupe keys were therefore unique every time
+        // and picking the same photo twice staged it twice. Android was
+        // unaffected: its filename is the MediaStore display name, stable
+        // across picks.
+        includeExtra: true,
       });
       if (result.didCancel || !result.assets?.length) return;
 
