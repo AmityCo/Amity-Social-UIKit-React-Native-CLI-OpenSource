@@ -65,6 +65,7 @@ const AvatarElement: FC<AvatarElementType> = ({
       const avatar = await getAvatarUrl({
         fileId: avatarId,
         imageSize: ImageSizeState.small,
+        type: 'user',
       });
 
       setAvatarUrl(avatar ?? null);

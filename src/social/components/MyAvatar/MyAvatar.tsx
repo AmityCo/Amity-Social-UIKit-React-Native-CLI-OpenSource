@@ -30,6 +30,7 @@ const MyAvatar: FC<MyAvatarProp> = (props) => {
       const avatar = await getAvatarUrl({
         fileId: data.avatarFileId,
         imageSize: ImageSizeState.small,
+        type: 'user',
       });
 
       setAvatarUrl(avatar ?? null);

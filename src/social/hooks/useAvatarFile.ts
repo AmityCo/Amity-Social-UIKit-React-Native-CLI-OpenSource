@@ -9,7 +9,12 @@ import {
 interface useAvatarFileProps {
   fileId: string;
   imageSize?: ImageSizeSubset;
-  type?: 'user' | 'community';
+  /**
+   * Which default to fall back on. Required rather than defaulted: the
+   * fallback is a picture, and a caller that has not thought about which
+   * picture is usually a caller that wanted a file url, not an avatar.
+   */
+  type: 'user' | 'community';
 }
 
 /**
@@ -30,7 +35,7 @@ export const useAvatarFile = () => {
     async ({
       fileId,
       imageSize = ImageSizeState.medium,
-      type = 'user',
+      type,
     }: useAvatarFileProps) => {
       if (!fileId)
         return type === 'community'

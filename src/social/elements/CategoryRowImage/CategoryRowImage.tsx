@@ -1,6 +1,8 @@
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, memo } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import { useAmityElement, useAvatarFile } from '../../hooks';
+import { FileRepository } from '@amityco/ts-sdk-react-native';
+import { useAmityElement, useFile } from '../../hooks';
+import { ImageSizeState } from '../../enums/imageSizeState';
 import { PageID, ComponentID, ElementID } from '../../enums';
 import { SvgXml } from 'react-native-svg';
 import { category as categoryIcon } from '../../../core/assets/icons';
@@ -17,14 +19,19 @@ const CategoryRowImage: FC<CategoryRowImageProps> = ({
   componentId = ComponentID.WildCardComponent,
 }) => {
   const elementId = ElementID.category_row_image;
-  const { getAvatarUrl } = useAvatarFile();
   const { themeStyles, isExcluded } = useAmityElement({
     pageId,
     componentId,
     elementId,
   });
 
-  const [imageUri, setImageUri] = useState<string | null>(null);
+  // A category is not an avatar: resolve the file itself, so a file that does
+  // not resolve leaves imageUri null and the category glyph below shows. The
+  // avatar hook would have answered with a picture of a person instead.
+  const avatarFile = useFile<'image'>(avatarFileId);
+  const imageUri = avatarFile?.fileUrl
+    ? FileRepository.fileUrlWithSize(avatarFile.fileUrl, ImageSizeState.small)
+    : null;
 
   const styles = StyleSheet.create({
     contianer: {
@@ -48,19 +55,6 @@ const CategoryRowImage: FC<CategoryRowImageProps> = ({
       height: '100%',
     },
   });
-
-  useEffect(() => {
-    if (!avatarFileId) return;
-
-    const fetchImage = async () => {
-      const image = await getAvatarUrl({ fileId: avatarFileId });
-      if (image) {
-        setImageUri(image);
-      }
-    };
-
-    fetchImage();
-  }, [avatarFileId, getAvatarUrl]);
 
   if (isExcluded) return null;
 

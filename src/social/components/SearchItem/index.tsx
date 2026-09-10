@@ -58,6 +58,10 @@ export default function SearchItem({
       const fileUrl = await getAvatarUrl({
         fileId: target?.avatarFileId,
         imageSize: ImageSizeState.small,
+        // A search result is a user or a community, and the fallback below
+        // already distinguishes them — but it could never be reached while the
+        // hook answered every miss with the user avatar.
+        type: target?.targetType === 'community' ? 'community' : 'user',
       });
 
       const avatarUrl = fileUrl
