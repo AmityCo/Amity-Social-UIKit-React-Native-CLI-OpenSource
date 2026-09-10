@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@7.25.1-144f8feb.0":
-  version "7.25.1-144f8feb.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.25.1-144f8feb.0.tgz#af16da32e4e1df3f5f9104f44fb8cc9d6a1c85e6"
-  integrity sha512-Yqc63y1KpRkoC/tNyDDI0/Wo7mBc3DQ+i2yQmMJ0FSghJCJNMhLhmThd5hkicc9lWswSvhTJhbcsFPdk16tSgQ==
+"@amityco/ts-sdk-react-native@7.26.1-0905139c.0":
+  version "7.26.1-0905139c.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.26.1-0905139c.0.tgz#02c9c62ab28bddaf341f6b2d11a5032ccc0504e1"
+  integrity sha512-mCwXG6kjHk3kFWzoaancBk1bZ3FuY4TEHuovHS3L1YjdmAbFQnvkyQOsMOsrh1TwMJjONrLdy4hcQ/ggXo5TWA==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     "@react-native-community/netinfo" "^9.4.1"
@@ -1886,11 +1886,6 @@
   integrity sha512-gvRvjR5JAaUZF8tv2Kcq/Gbt3JHwbKFYfmb445rhOj6NUMx3qPLixmDx5pZAyb9at1bYvJ4/eTUipU5aki45xw==
   dependencies:
     merge-options "^3.0.4"
-
-"@react-native-camera-roll/camera-roll@^7.10.2":
-  version "7.10.2"
-  resolved "https://registry.yarnpkg.com/@react-native-camera-roll/camera-roll/-/camera-roll-7.10.2.tgz#af2234f60f0b55aff9afb60888ce7f0669d52593"
-  integrity sha512-XgJQJDFUycmqSX+MH7vTcRigQwEIQNLIu1GvOngCZRwlSV2mF61UzeruSmmHwkBcGnHZFXkKg9fil0FQVfyglw==
 
 "@react-native-clipboard/clipboard@^1.16.3":
   version "1.16.3"
