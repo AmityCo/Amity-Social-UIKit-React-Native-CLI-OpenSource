@@ -131,3 +131,28 @@ export function toggleUploadingSource(
   }
   return updated;
 }
+
+/**
+ * The entries the feed's local-thumbnail bridge should hold for a just-created
+ * video post.
+ *
+ * A video's server thumbnail does not exist until transcoding finishes, so the
+ * feed falls back to the frame the composer decoded at pick time, matched on
+ * the uploaded video's fileId. Entries without both halves are dropped: a row
+ * with an empty url still satisfies the feed's lookup, which suppresses its own
+ * pending state and leaves the frame blank instead of showing the play button
+ * over a plain background.
+ */
+export function toLocalVideoThumbnails(
+  videos: Pick<IDisplayImage, 'fileId' | 'thumbNail'>[]
+): { fileId: string; thumbnailUrl: string }[] {
+  return videos.reduce<{ fileId: string; thumbnailUrl: string }[]>(
+    (acc, { fileId, thumbNail }) => {
+      if (!fileId || !thumbNail) return acc;
+
+      acc.push({ fileId, thumbnailUrl: thumbNail });
+      return acc;
+    },
+    []
+  );
+}

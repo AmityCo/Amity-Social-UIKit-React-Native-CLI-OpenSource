@@ -57,7 +57,6 @@ import {
   PostRepository,
   UserRepository,
 } from '@amityco/ts-sdk-react-native';
-import { useFile } from '../../../hooks';
 import useMention from '../../../hooks/useMention';
 import { getPostErrorMessage } from '../../../utils/errors';
 import {
@@ -65,6 +64,7 @@ import {
   appendWithinCap,
   applyFinishedUpload,
   dedupeMediaPicks,
+  toLocalVideoThumbnails,
   toggleUploadingSource,
 } from '../../../utils/mediaAttachments';
 import {
@@ -94,7 +94,6 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   const { AmityPostComposerPageBehavior } = useBehaviour();
   const { isExcluded, themeStyles, accessibilityId } = useAmityPage({ pageId });
   const styles = useStyles(themeStyles);
-  const { getImage } = useFile();
   const isEditMode = mode === AmityPostComposerMode.EDIT;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -237,11 +236,26 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   // fall back to the round trip on a cache miss. `fileUrlWithSize` is just
   // `?size=`, so both branches produce the same url.
   const resolveFileUrl = useCallback(
-    async (fileUrl: string | undefined, fileId: string | undefined) =>
-      fileUrl
-        ? FileRepository.fileUrlWithSize(fileUrl, ImageSizeState.full)
-        : getImage({ fileId, imageSize: ImageSizeState.full }),
-    [getImage]
+    async (fileUrl: string | undefined, fileId: string | undefined) => {
+      if (fileUrl)
+        return FileRepository.fileUrlWithSize(fileUrl, ImageSizeState.full);
+      if (!fileId) return undefined;
+
+      // Resolve the file directly rather than through useFile: that hook
+      // answers a miss with the default *avatar* image, which is right for a
+      // profile picture and wrong for post media. A video whose thumbnail the
+      // server has not produced yet has no file to resolve, and handing back an
+      // avatar made the carousel render a person icon behind the play button as
+      // though it were the real frame — and, because the url looked valid, it
+      // was also stored as the local thumbnail the feed falls back on.
+      const file = await FileRepository.getFile(fileId);
+      const resolved = file?.data?.fileUrl;
+
+      return resolved
+        ? FileRepository.fileUrlWithSize(resolved, ImageSizeState.full)
+        : undefined;
+    },
+    []
   );
 
   const getPostInfo = useCallback(
@@ -526,10 +540,11 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
         dispatch(
           setLocalVideoThumbnails({
             postId: response.postId,
-            videos: displayVideos.map((item) => ({
-              fileId: item.fileId ?? '',
-              thumbnailUrl: item.thumbNail ?? '',
-            })),
+            // Only frames that actually decoded: an entry with no thumbnail
+            // would still satisfy the feed's lookup and suppress its own
+            // pending state, leaving the frame blank instead of showing the
+            // play affordance over a plain background.
+            videos: toLocalVideoThumbnails(displayVideos),
           })
         );
       }
