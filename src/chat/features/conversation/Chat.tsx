@@ -5,9 +5,10 @@
 // MutedBanner|MessageComposer, ImageViewer, VideoPlayer, MessageFullTextScreen.
 
 // 1. React / RN imports
-import { Dimensions, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 
 // 2. Internal imports
+import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import useFile from '../../../core/hooks/useFile';
 import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
 import { AmityMessageComposer } from '../../components/AmityMessageComposer';
@@ -68,10 +69,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <ChatKeyboardAvoidingView style={styles.container}>
       <Header
         // A 1-1 conversation's title is the OTHER participant's display name, not
         // the channel's displayName (which is often empty for conversations).
@@ -149,6 +147,6 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           onClose={c.closeReport}
         />
       ) : null}
-    </KeyboardAvoidingView>
+    </ChatKeyboardAvoidingView>
   );
 }

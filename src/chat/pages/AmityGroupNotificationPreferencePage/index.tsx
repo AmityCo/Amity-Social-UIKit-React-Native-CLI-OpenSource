@@ -4,7 +4,7 @@
 // RN adaptation: the route is not yet registered in RouteParamList (the
 // orchestrator wires it), so the channelId param is typed locally to keep this
 // file compiling independently.
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, type RouteProp } from '@react-navigation/native';
 
 import { NotificationPreference } from '../../features/group/notification-preference';

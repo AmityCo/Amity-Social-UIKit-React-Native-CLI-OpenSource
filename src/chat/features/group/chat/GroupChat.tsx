@@ -3,8 +3,9 @@
 // composer, viewers, action menu, see-more), driven by useGroupChat. Adds a group
 // Header (→ settings) and a banned empty-state branch.
 
-import { Dimensions, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 
+import { ChatKeyboardAvoidingView } from '../../../elements/ChatKeyboardAvoidingView';
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
 import { AmityMessageComposer } from '../../../components/AmityMessageComposer';
 import { ImageViewer } from '../../shared/components/ImageViewer';
@@ -73,10 +74,7 @@ export function GroupChat({
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <ChatKeyboardAvoidingView style={styles.container}>
       <Header
         channel={c.channel}
         channelDisplayName={c.channelDisplayName}
@@ -146,6 +144,6 @@ export function GroupChat({
           onClose={c.closeReport}
         />
       ) : null}
-    </KeyboardAvoidingView>
+    </ChatKeyboardAvoidingView>
   );
 }

@@ -4,7 +4,7 @@
 // AmityChatPage is registered in the navigator (M2); pressing a row opens the thread.
 
 // 1. React / RN imports
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // 2. Third-party imports
 import { useNavigation } from '@react-navigation/native';

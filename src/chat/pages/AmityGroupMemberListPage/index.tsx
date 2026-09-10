@@ -1,5 +1,5 @@
 // AmityGroupMemberListPage — group members list (member/moderator tabs).
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   useNavigation,
   useRoute,

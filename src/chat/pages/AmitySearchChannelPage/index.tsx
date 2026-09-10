@@ -6,7 +6,7 @@
 // RN adaptation: web wraps the page in `useAmityPage`'s theme/accessibility
 // container; the RN pages use a plain SafeAreaView (mirrors AmityGroupMemberListPage).
 
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SearchChannel } from '../../features/search';
 

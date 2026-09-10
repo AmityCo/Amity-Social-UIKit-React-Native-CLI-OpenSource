@@ -1,5 +1,5 @@
 // AmityAddGroupMemberPage — add members to an existing group.
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   useNavigation,
   useRoute,
@@ -17,7 +17,7 @@ export default function AmityAddGroupMemberPage() {
     useRoute<RouteProp<RootStackParamList, 'AmityAddGroupMemberPage'>>();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
       <AddGroupMember
         channelId={params.channelId}
         onClose={() => navigation.goBack()}

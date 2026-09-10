@@ -3,7 +3,7 @@
 // the header back button to navigation.goBack. Mirrors AmityUiKitWeb ChatPage.
 
 // 1. React / RN imports
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // 2. Third-party imports
 import {
@@ -26,7 +26,7 @@ export default function AmityChatPage() {
   const { params } = useRoute<RouteProp<RootStackParamList, 'AmityChatPage'>>();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top', 'left', 'right']} style={styles.container}>
       <Chat
         channelId={params.channelId}
         userDisplayName={params.userDisplayName}

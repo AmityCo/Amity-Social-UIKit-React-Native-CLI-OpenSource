@@ -8,7 +8,7 @@
 //     (matches AmityChatHomePage).
 
 // 1. React / RN imports
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // 2. Internal imports (relative)
 import { ArchivedChat } from '../../features/archive';
