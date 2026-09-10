@@ -45,6 +45,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import {
   Keyboard,
+  LayoutAnimation,
   Platform,
   useWindowDimensions,
   View,
@@ -103,11 +104,18 @@ function useKeyboardOverlap(): number {
     const hideEvent =
       Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
-    const handleShow = (event: KeyboardEvent) =>
+    const handleShow = (event: KeyboardEvent) => {
+      animateWith(event);
       setKeyboardTop(event.endCoordinates.screenY);
+    };
+
+    const handleHide = (event: KeyboardEvent) => {
+      animateWith(event);
+      setKeyboardTop(null);
+    };
 
     const showSub = Keyboard.addListener(showEvent, handleShow);
-    const hideSub = Keyboard.addListener(hideEvent, () => setKeyboardTop(null));
+    const hideSub = Keyboard.addListener(hideEvent, handleHide);
 
     return () => {
       showSub.remove();
@@ -118,4 +126,23 @@ function useKeyboardOverlap(): number {
   if (keyboardTop === null) return 0;
 
   return Math.max(windowHeight - keyboardTop, 0);
+}
+
+// Match the padding change to the keyboard's own slide, using the duration and
+// curve the OS reports. Without this the padding reaches its final value on the
+// next frame while the keyboard is still travelling, which on iOS leaves a band
+// of empty background between the compose bar and the keyboard for the length of
+// the animation (verified on an iPhone 16 Pro: the compose bar sat ~96pt above
+// the arriving keyboard mid-slide). Android reports no duration on the `Did`
+// events — the keyboard is already in place by then — so this is a no-op there.
+function animateWith({ duration, easing }: KeyboardEvent) {
+  if (!duration || !easing) return;
+
+  const config = {
+    // RCTLayoutAnimation rejects durations below 10ms.
+    duration: Math.max(duration, 10),
+    type: LayoutAnimation.Types[easing] ?? LayoutAnimation.Types.keyboard,
+  };
+
+  LayoutAnimation.configureNext({ ...config, update: config });
 }
