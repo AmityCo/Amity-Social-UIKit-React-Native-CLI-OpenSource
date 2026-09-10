@@ -14,6 +14,7 @@ import {
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 // 3. Internal imports (relative)
+import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import type { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { Chat } from '../../features/conversation';
 import { useStyles } from './styles';
@@ -27,11 +28,13 @@ export default function AmityChatPage() {
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.container}>
-      <Chat
-        channelId={params.channelId}
-        userDisplayName={params.userDisplayName}
-        onBack={() => navigation.goBack()}
-      />
+      <ChatKeyboardAvoidingView>
+        <Chat
+          channelId={params.channelId}
+          userDisplayName={params.userDisplayName}
+          onBack={() => navigation.goBack()}
+        />
+      </ChatKeyboardAvoidingView>
     </SafeAreaView>
   );
 }

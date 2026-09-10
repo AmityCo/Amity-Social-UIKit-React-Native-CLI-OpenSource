@@ -1,32 +1,54 @@
-// ChatKeyboardAvoidingView — the single keyboard/bottom-inset owner for every
-// chat screen that has a bottom-anchored input (compose bar, search field).
+// ChatKeyboardAvoidingView — the single keyboard/bottom-inset owner for chat.
 //
-// Why this exists: each screen used to inline its own KeyboardAvoidingView with
-// `behavior={ios ? 'padding' : undefined}` and no bottom inset, while the page
-// wrapper used React Native's built-in SafeAreaView (a no-op on Android). That
-// combination produced three separate QA reports from one root cause:
-//   - PDT-4910: iOS compose bar sat behind the keyboard.
-//   - PDT-5184: Android navigation bar overlapped the compose bar.
-//   - PDT-4925: the New Conversation search screen had no KAV at all, so the
-//     empty state stayed under the keyboard.
+// The contract: every chat page renders SafeAreaView with edges
+// ['top','left','right'] (NO bottom) and mounts this component directly inside
+// it, so the page owns layout and the feature underneath owns only content.
+// While the keyboard is closed it pads by the safe-area inset so bottom-anchored
+// content clears the navigation bar; while the keyboard is up it pads by however
+// much of the window the keyboard actually covers, which shrinks the content box
+// instead of letting the keyboard overlap it.
 //
-// The contract: the hosting page renders SafeAreaView with edges
-// ['top','left','right'] (NO bottom) and this component owns the bottom edge —
-// it pads by the bottom inset while the keyboard is closed and drops that
-// padding once the keyboard is up, so the inset and the keyboard never stack.
+// Every page mounts it, not just the ones with an input today: the padding is a
+// no-op until a keyboard actually opens, and mounting it uniformly means a
+// screen that later grows a text field cannot silently miss out.
 //
-// None of the three reports above has been re-tested on a device. What is
-// verified is the mechanism: safe-area-context reads real WindowInsets, so the
-// keyboard-closed case (which is what PDT-5184 reported) gets a real bottom
-// inset under edge-to-edge and a harmless zero without it. The keyboard-open
-// path on Android is the weak spot — see the behavior prop below.
+// Why this does not use RN's KeyboardAvoidingView
+// -----------------------------------------------
+// KeyboardAvoidingView derives its displacement from
+// `frame.y + frame.height - keyboardY`, where the frame comes from its own
+// onLayout — parent-relative — and keyboardY is screen-absolute. Mounted inside
+// a SafeAreaView that pads the top inset, the two disagree by exactly that
+// inset, so the compose bar lands short of the keyboard by the status-bar
+// height. `behavior` cannot correct that, and the correction that would
+// (keyboardVerticalOffset = insets.top) silently depends on which edges the
+// hosting page happens to pad.
+//
+// Measured on a Galaxy S24 (Android 16, targetSdk 36, edge-to-edge), keyboard
+// open, in dp: window height 832, keyboard screenY 473.6, reported keyboard
+// height 343.5, bottom inset 14.9. Two things follow:
+//   - The window height is unchanged with the keyboard up, so the OS is not
+//     resizing the window (edge-to-edge ignores windowSoftInputMode=adjustResize
+//     from Android 15 on) and the app has to consume the IME inset itself.
+//   - The real occlusion is `windowHeight - screenY` = 358.4dp, which is the
+//     reported keyboard height PLUS the bottom inset: Android reports the
+//     keyboard height with the navigation-bar inset already subtracted, and the
+//     keyboard covers the navigation bar. Adding the safe-area inset on top of
+//     that would over-pad and float the compose bar above the keyboard.
+//
+// `windowHeight - screenY` is also the right expression on iOS (the window spans
+// the screen there, so it reduces to the keyboard height, home indicator
+// included) and it self-corrects on any OS that does resize the window: the
+// window shrinks to the keyboard's top edge, the difference goes to zero, and
+// the already-shrunk layout is left alone.
 
 // 1. React / RN imports
 import { useEffect, useState, type ReactNode } from 'react';
 import {
   Keyboard,
-  KeyboardAvoidingView,
   Platform,
+  useWindowDimensions,
+  View,
+  type KeyboardEvent,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
@@ -50,38 +72,30 @@ export function ChatKeyboardAvoidingView({
 }: ChatKeyboardAvoidingViewProps) {
   const { styles } = useStyles();
   const insets = useSafeAreaInsets();
-  const isKeyboardOpen = useIsKeyboardOpen();
+  const keyboardOverlap = useKeyboardOverlap();
 
-  // While the keyboard is up it already occupies the bottom edge, so the
-  // safe-area inset would double-pad and lift the composer off the keyboard.
-  const paddingBottom = isKeyboardOpen ? 0 : insets.bottom;
+  // The overlap already reaches the bottom of the window, so it replaces the
+  // safe-area inset rather than stacking with it.
+  const paddingBottom = keyboardOverlap > 0 ? keyboardOverlap : insets.bottom;
 
   return (
-    <KeyboardAvoidingView
-      style={[styles.container, { paddingBottom }, style]}
-      // iOS never resizes the app window for the keyboard, so the view pads
-      // itself.
-      //
-      // Android is left undefined because the manifest sets
-      // windowSoftInputMode=adjustResize. TREAT THAT AS UNVERIFIED: the example
-      // app targets SDK 36 and ships no windowOptOutEdgeToEdgeEnforcement, so
-      // the OS runs it edge-to-edge, where adjustResize no longer resizes the
-      // window the way it did pre-Android-15 and the app is expected to consume
-      // the IME inset itself. The Android keyboard path has not been checked on
-      // a device; if the compose bar fails to rise with the keyboard there,
-      // this is the line to revisit (see also edgeToEdgeEnabled=false in
-      // example/android/gradle.properties, which disagrees with the OS).
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      {children}
-    </KeyboardAvoidingView>
+    <View style={[styles.container, { paddingBottom }, style]}>{children}</View>
   );
 }
 
-// Tracks keyboard visibility. iOS emits the `Will` pair (so padding animates in
-// step with the keyboard); Android only reliably emits the `Did` pair.
-function useIsKeyboardOpen(): boolean {
-  const [isOpen, setIsOpen] = useState(false);
+// How much of the window the keyboard currently covers, in dp; 0 when closed.
+//
+// Only the keyboard's top edge is held in state — the window height is read
+// during render, so a rotation or a split-screen resize while the keyboard is
+// already up recomputes instead of keeping a stale overlap.
+//
+// iOS emits the `Will` pair, so the padding moves in step with the keyboard;
+// Android only reliably emits the `Did` pair. Neither platform re-emits when the
+// keyboard merely changes height while open (switching to an emoji panel, say),
+// which is the same limitation RN's own KeyboardAvoidingView carries.
+function useKeyboardOverlap(): number {
+  const { height: windowHeight } = useWindowDimensions();
+  const [keyboardTop, setKeyboardTop] = useState<number | null>(null);
 
   useEffect(() => {
     const showEvent =
@@ -89,8 +103,11 @@ function useIsKeyboardOpen(): boolean {
     const hideEvent =
       Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
-    const showSub = Keyboard.addListener(showEvent, () => setIsOpen(true));
-    const hideSub = Keyboard.addListener(hideEvent, () => setIsOpen(false));
+    const handleShow = (event: KeyboardEvent) =>
+      setKeyboardTop(event.endCoordinates.screenY);
+
+    const showSub = Keyboard.addListener(showEvent, handleShow);
+    const hideSub = Keyboard.addListener(hideEvent, () => setKeyboardTop(null));
 
     return () => {
       showSub.remove();
@@ -98,5 +115,7 @@ function useIsKeyboardOpen(): boolean {
     };
   }, []);
 
-  return isOpen;
+  if (keyboardTop === null) return 0;
+
+  return Math.max(windowHeight - keyboardTop, 0);
 }

@@ -8,11 +8,13 @@
 //   - Web wraps everything in a `<form onSubmit>`; RN has no form, so `handleNext`
 //     is wired to the Header's Next button via `onNext`.
 
-// 1. Third-party imports
+// 1. React / RN imports
+import { View } from 'react-native';
+
+// 2. Third-party imports
 import { Controller } from 'react-hook-form';
 
-// 2. Internal imports (relative)
-import { ChatKeyboardAvoidingView } from '../../../elements/ChatKeyboardAvoidingView';
+// 3. Internal imports (relative)
 import { Header } from './components/Header/Header';
 import { UserList } from './components/UserList/UserList';
 import {
@@ -21,7 +23,7 @@ import {
 } from './hooks/useSelectGroupMember';
 import { useStyles } from './styles';
 
-// 3. Named function component
+// 4. Named function component
 export function SelectGroupMember({
   selectedGroupMember,
 }: SelectGroupMemberPageProps) {
@@ -40,7 +42,7 @@ export function SelectGroupMember({
   } = useSelectGroupMember({ selectedGroupMember });
 
   return (
-    <ChatKeyboardAvoidingView style={styles.selectGroupMember}>
+    <View style={styles.selectGroupMember}>
       <Header
         onClose={handleClose}
         onNext={handleNext}
@@ -61,6 +63,6 @@ export function SelectGroupMember({
           />
         )}
       />
-    </ChatKeyboardAvoidingView>
+    </View>
   );
 }

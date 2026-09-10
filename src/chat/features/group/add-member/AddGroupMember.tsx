@@ -12,7 +12,6 @@
 import { View } from 'react-native';
 
 // 2. Internal imports
-import { ChatKeyboardAvoidingView } from '../../../elements/ChatKeyboardAvoidingView';
 import { Header } from './components/Header';
 import { AddMemberButton } from './components/AddMemberButton';
 import { UserList } from './components/UserList';
@@ -41,7 +40,7 @@ export function AddGroupMember({ channelId, onClose }: AddGroupMemberProps) {
   } = useAddGroupMember({ channelId, onClose });
 
   return (
-    <ChatKeyboardAvoidingView style={styles.addGroupMember}>
+    <View style={styles.addGroupMember}>
       <Header
         searchValue={searchText}
         selectedUsers={selectedUsers}
@@ -57,6 +56,6 @@ export function AddGroupMember({ channelId, onClose }: AddGroupMemberProps) {
         />
       </View>
       <AddMemberButton isDisabled={!isFormValid} onSubmit={handleAddMember} />
-    </ChatKeyboardAvoidingView>
+    </View>
   );
 }

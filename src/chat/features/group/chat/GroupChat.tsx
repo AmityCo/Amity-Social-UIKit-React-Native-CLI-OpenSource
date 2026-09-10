@@ -5,7 +5,6 @@
 
 import { Dimensions, View } from 'react-native';
 
-import { ChatKeyboardAvoidingView } from '../../../elements/ChatKeyboardAvoidingView';
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
 import { AmityMessageComposer } from '../../../components/AmityMessageComposer';
 import { ImageViewer } from '../../shared/components/ImageViewer';
@@ -74,7 +73,7 @@ export function GroupChat({
   }
 
   return (
-    <ChatKeyboardAvoidingView style={styles.container}>
+    <View style={styles.container}>
       <Header
         channel={c.channel}
         channelDisplayName={c.channelDisplayName}
@@ -144,6 +143,6 @@ export function GroupChat({
           onClose={c.closeReport}
         />
       ) : null}
-    </ChatKeyboardAvoidingView>
+    </View>
   );
 }

@@ -8,6 +8,7 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, type RouteProp } from '@react-navigation/native';
 
+import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import { EditGroupNotification } from '../../features/group/edit-notification';
 
 type ParamList = {
@@ -19,8 +20,10 @@ export default function AmityEditGroupNotificationPage() {
     useRoute<RouteProp<ParamList, 'AmityEditGroupNotificationPage'>>();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <EditGroupNotification channelId={params.channelId} />
+    <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
+      <ChatKeyboardAvoidingView>
+        <EditGroupNotification channelId={params.channelId} />
+      </ChatKeyboardAvoidingView>
     </SafeAreaView>
   );
 }

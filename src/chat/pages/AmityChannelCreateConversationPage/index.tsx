@@ -6,6 +6,7 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // 2. Internal imports (relative)
+import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import { CreateConversation } from '../../features/conversation/create';
 import { useStyles } from './styles';
 
@@ -15,7 +16,9 @@ export default function AmityChannelCreateConversationPage() {
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.container}>
-      <CreateConversation />
+      <ChatKeyboardAvoidingView>
+        <CreateConversation />
+      </ChatKeyboardAvoidingView>
     </SafeAreaView>
   );
 }

@@ -7,6 +7,7 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, type RouteProp } from '@react-navigation/native';
 
+import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import { NotificationPreference } from '../../features/group/notification-preference';
 
 type ParamList = {
@@ -18,8 +19,10 @@ export default function AmityGroupNotificationPreferencePage() {
     useRoute<RouteProp<ParamList, 'AmityGroupNotificationPreferencePage'>>();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <NotificationPreference channelId={params.channelId} />
+    <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
+      <ChatKeyboardAvoidingView>
+        <NotificationPreference channelId={params.channelId} />
+      </ChatKeyboardAvoidingView>
     </SafeAreaView>
   );
 }
