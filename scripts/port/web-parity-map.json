@@ -1,0 +1,829 @@
+{
+  "_comment": "Accounting manifest for web→RN parity. check-web-parity.mjs enumerates the web design system + chat tree LIVE from git, then requires every web unit to be accounted for here. status: 'port' (must have a matching RN file) | 'merge' (folded into another RN unit — give mergedInto) | 'skip' (intentionally not ported — give reason). A web unit NOT listed here = UNACCOUNTED → the check fails, forcing a conscious decision (no silent gaps). milestone tags let `--milestone=N` gate each phase.",
+  "web": {
+    "branchDefault": "origin/feat/PDT-3712-chat-dark-theme",
+    "repoDefault": "AmityUiKitWeb"
+  },
+  "roots": {
+    "design/atoms": "src/v4/core/design/atoms",
+    "design/molecules": "src/v4/core/design/molecules",
+    "design/components": "src/v4/core/design/components",
+    "design/elements": "src/v4/core/design/elements",
+    "chat/elements": "src/v4/chat/elements",
+    "chat/components": "src/v4/chat/components",
+    "chat/internal-components": "src/v4/chat/internal-components",
+    "chat/pages": "src/v4/chat/pages",
+    "chat/features/home/elements": "src/v4/chat/features/home/elements"
+  },
+  "rnDesignRoot": "src/core/design",
+  "_curatedNote": "The guide's 10 feature-level components live nested under src/v4/chat/features/** (not a single enumerable root), so they are tracked here explicitly. check-web-parity verifies each 'web' source path still exists (drift) and each RN target exists (coverage). kind 'hooks-only' has no standalone folder.",
+  "curated": {
+    "AmityMentionPicker": {
+      "web": "src/v4/chat/hooks/useMention.ts",
+      "rn": "src/social/features/chat/hooks/useMention",
+      "milestone": 2,
+      "kind": "hooks-only"
+    },
+    "AmityConversationChatUserActionComponent": {
+      "web": "src/v4/chat/features/conversation",
+      "rn": "src/social/features/chat/components/AmityConversationChatUserActionComponent",
+      "milestone": 3,
+      "kind": "component",
+      "skipFidelity": true
+    },
+    "AmityGroupMemberActionComponent": {
+      "web": "src/v4/chat/features/group",
+      "rn": "src/social/features/chat/components/AmityGroupMemberActionComponent",
+      "milestone": 3,
+      "kind": "component",
+      "skipFidelity": true
+    },
+    "Typography": {
+      "web": "src/v4/core/components/Typography",
+      "rn": "src/core/design/components/Typography",
+      "milestone": 1,
+      "kind": "component"
+    }
+  },
+  "units": {
+    "design/atoms/Avatar": {
+      "status": "port",
+      "rn": "src/core/design/atoms/Avatar",
+      "milestone": 1
+    },
+    "design/atoms/Badge": {
+      "status": "port",
+      "rn": "src/core/design/atoms/Badge",
+      "milestone": 1
+    },
+    "design/atoms/Divider": {
+      "status": "port",
+      "rn": "src/core/design/atoms/Divider",
+      "milestone": 1
+    },
+    "design/atoms/Loader": {
+      "status": "port",
+      "rn": "src/core/design/atoms/Loader",
+      "milestone": 2
+    },
+    "design/atoms/Button": {
+      "status": "port",
+      "rn": "src/core/design/atoms/Button",
+      "milestone": 1
+    },
+    "design/atoms/Input": {
+      "status": "port",
+      "rn": "src/core/design/atoms/Input",
+      "milestone": 2
+    },
+    "design/atoms/Selection": {
+      "status": "port",
+      "rn": "src/core/design/atoms/Selection",
+      "milestone": 3
+    },
+    "design/atoms/Tab": {
+      "status": "port",
+      "rn": "src/core/design/atoms/Tab",
+      "milestone": 1
+    },
+    "design/atoms/Toast": {
+      "status": "skip",
+      "reason": "RN uses the existing redux toast (core/stores/slices/toastSlice + useToast/showToast); web Toast atom substituted",
+      "milestone": 4
+    },
+    "design/atoms/Progress": {
+      "status": "skip",
+      "reason": "not used by chat surfaces (livestream/story only)"
+    },
+    "design/atoms/Toggle": {
+      "status": "skip",
+      "reason": "chat settings use RN Switch; revisit if a spec'd Toggle atom is required"
+    },
+    "design/molecules/SearchInput": {
+      "status": "port",
+      "rn": "src/core/design/molecules/SearchInput",
+      "milestone": 3
+    },
+    "design/molecules/Tabs": {
+      "status": "port",
+      "rn": "src/core/design/molecules/Tabs",
+      "milestone": 1,
+      "note": "the tab bar chat actually uses (4 files); composes atoms/Tab. Ported as its own file — Social keeps its existing components untouched."
+    },
+    "design/components/Popover": {
+      "status": "port",
+      "rn": "src/core/design/components/Popover",
+      "milestone": 2
+    },
+    "design/components/Menu": {
+      "status": "port",
+      "rn": "src/core/design/components/Menu",
+      "milestone": 2
+    },
+    "design/components/MenuOptionButton": {
+      "status": "port",
+      "rn": "src/core/design/components/MenuOptionButton",
+      "milestone": 2
+    },
+    "design/components/Skeleton": {
+      "status": "port",
+      "rn": "src/core/design/components/Skeleton",
+      "milestone": 1
+    },
+    "design/components/TextEditor": {
+      "status": "port",
+      "rn": "src/core/design/components/TextEditor",
+      "milestone": 2
+    },
+    "design/components/Tabs": {
+      "status": "skip",
+      "reason": "not used by chat v4 tree (0 imports); chat uses molecules/Tabs + atoms/Tab"
+    },
+    "design/components/Button": {
+      "status": "skip",
+      "reason": "chat v4 uses atoms/Button (21 files); components/Button only referenced by legacy LiveChat"
+    },
+    "design/components/ContentReportReason": {
+      "status": "skip",
+      "reason": "social content-report flow, not chat"
+    },
+    "design/components/CheckboxGroup": {
+      "status": "skip",
+      "reason": "not used by chat surfaces"
+    },
+    "design/components/RadioGroup": {
+      "status": "skip",
+      "reason": "not used by chat surfaces"
+    },
+    "design/components/FormInput": {
+      "status": "skip",
+      "reason": "not used by chat surfaces"
+    },
+    "design/components/InputText": {
+      "status": "skip",
+      "reason": "not used by chat surfaces"
+    },
+    "design/elements/ModeratorBadge": {
+      "status": "port",
+      "rn": "src/core/design/elements/ModeratorBadge",
+      "milestone": 1
+    },
+    "design/elements/PrivateBadge": {
+      "status": "port",
+      "rn": "src/core/design/elements/PrivateBadge",
+      "milestone": 1
+    },
+    "chat/elements/Avatar": {
+      "status": "port",
+      "rn": "src/social/features/chat/elements/Avatar",
+      "milestone": 1
+    },
+    "chat/elements/ConversationChatAvatar": {
+      "status": "port",
+      "rn": "src/social/features/chat/elements/ConversationChatAvatar",
+      "milestone": 1
+    },
+    "chat/elements/TopBar": {
+      "status": "port",
+      "rn": "src/social/features/chat/elements/TopBar",
+      "milestone": 2
+    },
+    "chat/elements/ArchivedBadge": {
+      "status": "port",
+      "rn": "src/social/features/chat/elements/ArchivedBadge",
+      "milestone": 1
+    },
+    "chat/elements/SenderMessageBubble": {
+      "status": "skip",
+      "reason": "legacy LiveChat element — renders internal-components/LiveChatMessageContent (skip) and is imported only by the legacy chat/components/MessageList (skip). The v4 thread bubble is features/shared/components/MessageBubble → tracked as curated/AmityMessageBubble."
+    },
+    "chat/elements/ReceiverMessageBubble": {
+      "status": "skip",
+      "reason": "legacy LiveChat element — renders internal-components/LiveChatMessageContent (skip) and is imported only by the legacy chat/components/MessageList (skip). The v4 thread bubble is features/shared/components/MessageBubble → tracked as curated/AmityMessageBubble."
+    },
+    "chat/elements/MediaUploadOverlay": {
+      "status": "port",
+      "rn": "src/social/features/chat/elements/MediaUploadOverlay",
+      "milestone": 2
+    },
+    "chat/elements/WaitingForNetwork": {
+      "status": "port",
+      "rn": "src/social/features/chat/elements/WaitingForNetwork",
+      "milestone": 2
+    },
+    "chat/elements/ReactionPicker": {
+      "status": "port",
+      "rn": "src/social/features/chat/elements/ReactionPicker",
+      "milestone": 4
+    },
+    "chat/elements/AvatarPicker": {
+      "status": "port",
+      "rn": "src/social/features/chat/elements/AvatarPicker",
+      "milestone": 3
+    },
+    "chat/elements/GroupNameField": {
+      "status": "port",
+      "rn": "src/social/features/chat/elements/GroupNameField",
+      "milestone": 3
+    },
+    "chat/elements/SettingMenu": {
+      "status": "port",
+      "rn": "src/social/features/chat/elements/SettingMenu",
+      "milestone": 3
+    },
+    "chat/features/home/elements/CreateChatMenu": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/elements/CreateChatMenu",
+      "milestone": 2,
+      "note": "the '+' new-chat header button. Composes atoms/Button + components/Popover+Menu (all M2). Direct-chat path wires to CreateConversationPage (M2); group path (SelectGroupMemberPage) lights up in M3."
+    },
+    "chat/features/home/elements/SearchButton": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/elements/SearchButton",
+      "milestone": 4,
+      "note": "the search header button. Composes atoms/Button (M1, done) + Search icon; only its destination SearchChannelPage (M4) is missing."
+    },
+    "chat/features/home/elements/ChatHomeMenu": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/elements/ChatHomeMenu",
+      "milestone": 4,
+      "note": "the '⋯' header menu → ArchivedChatPage. Composes atoms/Button + components/Popover+Menu; destination ArchivedChatPage (M4)."
+    },
+    "chat/components/ActionMenu": {
+      "status": "skip",
+      "reason": "legacy LiveChat generation — not imported by the chat v4 tree (verified via import graph)"
+    },
+    "chat/components/ChatHeader": {
+      "status": "skip",
+      "reason": "legacy; v4 features have their own Header"
+    },
+    "chat/components/LivechatMessageComposer": {
+      "status": "skip",
+      "reason": "LiveChat only, not chat v4"
+    },
+    "chat/components/MessageComposer": {
+      "status": "skip",
+      "reason": "legacy; superseded by features/shared/components/MessageComposer"
+    },
+    "chat/components/MessageList": {
+      "status": "skip",
+      "reason": "legacy; superseded by features/shared/components/MessageList"
+    },
+    "chat/components/MessageQuickReaction": {
+      "status": "skip",
+      "reason": "legacy LiveChat reaction UI"
+    },
+    "chat/components/MessageReactionPicker": {
+      "status": "skip",
+      "reason": "legacy; v4 uses features/shared reaction components"
+    },
+    "chat/components/MessageReactionPreview": {
+      "status": "skip",
+      "reason": "legacy LiveChat reaction UI"
+    },
+    "chat/components/ReactionBar": {
+      "status": "skip",
+      "reason": "legacy LiveChat reaction UI"
+    },
+    "chat/components/SwipeToLeft": {
+      "status": "skip",
+      "reason": "legacy LiveChat gesture helper"
+    },
+    "chat/internal-components/ChatFeed": {
+      "status": "skip",
+      "reason": "legacy LiveChat internal — not imported by chat v4 tree"
+    },
+    "chat/internal-components/HomeIndicator": {
+      "status": "skip",
+      "reason": "legacy LiveChat internal"
+    },
+    "chat/internal-components/LiveChatMessageContent": {
+      "status": "skip",
+      "reason": "LiveChat only"
+    },
+    "chat/internal-components/LiveChatNotification": {
+      "status": "skip",
+      "reason": "LiveChat only"
+    },
+    "chat/internal-components/MessageBubble": {
+      "status": "skip",
+      "reason": "legacy; superseded by features/shared/components/MessageBubble"
+    },
+    "chat/internal-components/MessageBubbleSkeleton": {
+      "status": "skip",
+      "reason": "legacy LiveChat internal"
+    },
+    "chat/internal-components/MessageComposer": {
+      "status": "skip",
+      "reason": "legacy; superseded by features/shared/components/MessageComposer"
+    },
+    "chat/internal-components/MessageOptions": {
+      "status": "skip",
+      "reason": "legacy; superseded by features/shared MessageActionsPopover"
+    },
+    "chat/internal-components/ReactionFloating": {
+      "status": "skip",
+      "reason": "legacy LiveChat reaction animation"
+    },
+    "chat/pages/ChatHomePage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityChatHomePage",
+      "milestone": 1
+    },
+    "chat/pages/ChatPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityChatPage",
+      "milestone": 2
+    },
+    "chat/pages/ChannelCreateConversationPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityChannelCreateConversationPage",
+      "milestone": 2
+    },
+    "chat/pages/GroupChatPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityGroupChatPage",
+      "milestone": 3
+    },
+    "chat/pages/CreateGroupChatPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityCreateGroupChatPage",
+      "milestone": 3
+    },
+    "chat/pages/SelectGroupMemberPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmitySelectGroupMemberPage",
+      "milestone": 3
+    },
+    "chat/pages/AddGroupMemberPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityAddGroupMemberPage",
+      "milestone": 3
+    },
+    "chat/pages/GroupMemberListPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityGroupMemberListPage",
+      "milestone": 3
+    },
+    "chat/pages/BannedGroupMemberListPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityBannedGroupMemberListPage",
+      "milestone": 3
+    },
+    "chat/pages/GroupSettingPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityGroupSettingPage",
+      "milestone": 3
+    },
+    "chat/pages/EditGroupProfilePage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityEditGroupProfilePage",
+      "milestone": 3
+    },
+    "chat/pages/EditGroupMemberPermissionsPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityEditGroupMemberPermissionsPage",
+      "milestone": 3
+    },
+    "chat/pages/GroupNotificationPreferencePage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityGroupNotificationPreferencePage",
+      "milestone": 4
+    },
+    "chat/pages/EditGroupNotificationPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityEditGroupNotificationPage",
+      "milestone": 4
+    },
+    "chat/pages/ArchivedChatPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmityArchivedChatPage",
+      "milestone": 4
+    },
+    "chat/pages/SearchChannelPage": {
+      "status": "port",
+      "rn": "src/social/features/chat/pages/AmitySearchChannelPage",
+      "milestone": 4
+    },
+    "chat/pages/Application": {
+      "status": "skip",
+      "reason": "app shell / Storybook entry (ChatUIKit) — infra, not a spec page"
+    },
+    "chat/pages/LiveChat": {
+      "status": "skip",
+      "reason": "livestream chat — a separate surface, not in the chat v4 guide"
+    }
+  },
+  "featureRoot": "src/v4/chat/features",
+  "features": {
+    "features/archive/ArchivedChat": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/archive/ArchivedChat",
+      "milestone": 4
+    },
+    "features/archive/components/ArchivedChannelList": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/archive/components/ArchivedChannelList",
+      "milestone": 4
+    },
+    "features/archive/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/archive/components/Header",
+      "milestone": 4
+    },
+    "features/conversation/chat/Chat": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/conversation/Chat",
+      "milestone": 2
+    },
+    "features/conversation/chat/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/conversation/components/Header",
+      "milestone": 2
+    },
+    "features/conversation/create/CreateConversation": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/conversation/create/CreateConversation",
+      "milestone": 2
+    },
+    "features/conversation/create/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/conversation/create/components/Header",
+      "milestone": 2
+    },
+    "features/conversation/create/components/UserItem": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/conversation/create/components/UserItem",
+      "milestone": 2
+    },
+    "features/conversation/create/components/UserList": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/conversation/create/components/UserList",
+      "milestone": 2
+    },
+    "features/group/add-member/AddGroupMember": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/add-member/AddGroupMember",
+      "milestone": 3
+    },
+    "features/group/add-member/components/AddMemberButton": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/add-member/components/AddMemberButton",
+      "milestone": 3
+    },
+    "features/group/add-member/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/add-member/components/Header",
+      "milestone": 3
+    },
+    "features/group/banned-members/BannedGroupMembers": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/banned-members/BannedGroupMembers",
+      "milestone": 3
+    },
+    "features/group/banned-members/components/BannedMemberList": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/banned-members/components/BannedMemberList",
+      "milestone": 3
+    },
+    "features/group/banned-members/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/banned-members/components/Header",
+      "milestone": 3
+    },
+    "features/group/chat/GroupChat": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/chat/GroupChat",
+      "milestone": 3
+    },
+    "features/group/chat/components/BannedEmptyState": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/chat/components/BannedEmptyState",
+      "milestone": 3
+    },
+    "features/group/chat/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/chat/components/Header",
+      "milestone": 3
+    },
+    "features/group/create/CreateGroupChat": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/create/CreateGroupChat",
+      "milestone": 3
+    },
+    "features/group/create/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/create/components/Header",
+      "milestone": 3
+    },
+    "features/group/create/components/MemberGrid": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/create/components/MemberGrid",
+      "milestone": 3
+    },
+    "features/group/create/components/PrivacySection": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/create/components/PrivacySection",
+      "milestone": 3
+    },
+    "features/group/edit-notification/EditGroupNotification": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/edit-notification/EditGroupNotification",
+      "milestone": 4
+    },
+    "features/group/edit-notification/components/NotificationMode": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/edit-notification/components/NotificationMode",
+      "milestone": 4
+    },
+    "features/group/edit-notification/components/NotificationModeRow": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/edit-notification/components/NotificationModeRow",
+      "milestone": 4,
+      "wiringOptional": true,
+      "reason": "web builds this component but never imports it (NotificationMode does not use it); faithfully ported + left unwired, matching web"
+    },
+    "features/group/edit-permission/EditGroupMemberPermissions": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/edit-permission/EditGroupMemberPermissions",
+      "milestone": 3
+    },
+    "features/group/edit-permission/components/MemberPermission": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/edit-permission/components/MemberPermission",
+      "milestone": 3
+    },
+    "features/group/edit-profile/EditGroupProfile": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/edit-profile/EditGroupProfile",
+      "milestone": 3
+    },
+    "features/group/edit-profile/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/edit-profile/components/Header",
+      "milestone": 3
+    },
+    "features/group/members/GroupMembers": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/members/GroupMembers",
+      "milestone": 3
+    },
+    "features/group/members/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/members/components/Header",
+      "milestone": 3
+    },
+    "features/group/members/components/MemberItem": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/members/components/MemberItem",
+      "milestone": 3
+    },
+    "features/group/members/components/MemberList": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/members/components/MemberList",
+      "milestone": 3
+    },
+    "features/group/members/components/MemberTabs": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/members/components/MemberTabs",
+      "milestone": 3
+    },
+    "features/group/notification-preference/NotificationPreference": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/notification-preference/NotificationPreference",
+      "milestone": 4
+    },
+    "features/group/notification-preference/components/AllowNotifications": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/notification-preference/components/AllowNotifications",
+      "milestone": 4
+    },
+    "features/group/notification-preference/components/DisabledByModeratorBanner": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/notification-preference/components/DisabledByModeratorBanner",
+      "milestone": 4
+    },
+    "features/group/select-member/SelectGroupMember": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/select-member/SelectGroupMember",
+      "milestone": 3
+    },
+    "features/group/select-member/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/select-member/components/Header",
+      "milestone": 3
+    },
+    "features/group/select-member/components/SelectedUsersBar": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/select-member/components/SelectedUsersBar",
+      "milestone": 3
+    },
+    "features/group/select-member/components/UserItem": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/select-member/components/UserItem",
+      "milestone": 3
+    },
+    "features/group/select-member/components/UserList": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/select-member/components/UserList",
+      "milestone": 3
+    },
+    "features/group/setting/GroupSetting": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/setting/GroupSetting",
+      "milestone": 3
+    },
+    "features/group/setting/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/group/setting/components/Header",
+      "milestone": 3
+    },
+    "features/home/ChatHome": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/ChatHome",
+      "milestone": 1
+    },
+    "features/home/components/ChannelItem": {
+      "status": "port",
+      "rn": "src/social/features/chat/components/AmityChatListItem",
+      "milestone": 1
+    },
+    "features/home/components/ChannelList": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/components/ChannelList",
+      "milestone": 1
+    },
+    "features/home/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/components/Header",
+      "milestone": 1
+    },
+    "features/home/components/NotificationsDisabledBanner": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/components/NotificationsDisabledBanner",
+      "milestone": 1
+    },
+    "features/home/elements/ChatHomeMenu": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/elements/ChatHomeMenu",
+      "milestone": 4
+    },
+    "features/home/elements/CreateChatMenu": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/elements/CreateChatMenu",
+      "milestone": 2
+    },
+    "features/home/elements/SearchButton": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/home/elements/SearchButton",
+      "milestone": 4
+    },
+    "features/search/SearchChannel": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/search/SearchChannel",
+      "milestone": 4
+    },
+    "features/search/components/Header": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/search/components/Header",
+      "milestone": 4
+    },
+    "features/search/components/SearchChannelList": {
+      "status": "port",
+      "rn": "src/social/features/chat/components/AmitySearchChannelResults",
+      "milestone": 4
+    },
+    "features/search/components/SearchMessageList": {
+      "status": "port",
+      "rn": "src/social/features/chat/components/AmitySearchMessageResults",
+      "milestone": 4
+    },
+    "features/shared/components/AddTile": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/AddTile",
+      "milestone": 3,
+      "note": "used only by group/create MemberGrid (M3), not the M2 thread"
+    },
+    "features/shared/components/DateSeparator": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/DateSeparator",
+      "milestone": 2
+    },
+    "features/shared/components/DeletedMessagePill": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/DeletedMessagePill",
+      "milestone": 2
+    },
+    "features/shared/components/EmptyState": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/EmptyState",
+      "milestone": 2
+    },
+    "features/shared/components/FailedToShow": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/FailedToShow",
+      "milestone": 2
+    },
+    "features/shared/components/ImageViewer": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/ImageViewer",
+      "milestone": 2
+    },
+    "features/shared/components/MediaViewer": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/MediaViewer",
+      "milestone": 2
+    },
+    "features/shared/components/MessageActionsPopover": {
+      "status": "port",
+      "rn": "src/social/features/chat/components/AmityMessageActionMenu",
+      "milestone": 2
+    },
+    "features/shared/components/MessageBubble": {
+      "status": "port",
+      "rn": "src/social/features/chat/components/AmityMessageBubble",
+      "milestone": 2
+    },
+    "features/shared/components/MessageComposer": {
+      "status": "port",
+      "rn": "src/social/features/chat/components/AmityMessageComposer",
+      "milestone": 2
+    },
+    "features/shared/components/MessageComposer/components/MediaSection": {
+      "status": "port",
+      "rn": "src/social/features/chat/components/AmityMediaAttachmentPicker",
+      "milestone": 2
+    },
+    "features/shared/components/MessageFullTextScreen": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/MessageFullTextScreen",
+      "milestone": 2
+    },
+    "features/shared/components/MessageLinkPreview": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/MessageLinkPreview",
+      "milestone": 2
+    },
+    "features/shared/components/MessageList": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/conversation/components/MessageList",
+      "milestone": 2
+    },
+    "features/shared/components/MessageReactionBadge": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/MessageReactionBadge",
+      "milestone": 4
+    },
+    "features/shared/components/MessageReactorListSheet": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/MessageReactorListSheet",
+      "milestone": 4
+    },
+    "features/shared/components/MessageReplyBand": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/MessageReplyBand",
+      "milestone": 2
+    },
+    "features/shared/components/MessageReplyQuote": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/MessageReplyQuote",
+      "milestone": 2
+    },
+    "features/shared/components/MessageRow": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/conversation/components/MessageRow",
+      "milestone": 2
+    },
+    "features/shared/components/MutedBanner": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/MutedBanner",
+      "milestone": 2
+    },
+    "features/shared/components/NewMessageNotification": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/NewMessageNotification",
+      "milestone": 2
+    },
+    "features/shared/components/ScrollToLatestButton": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/ScrollToLatestButton",
+      "milestone": 2
+    },
+    "features/shared/components/SelectedMember": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/SelectedMember",
+      "milestone": 3
+    },
+    "features/shared/components/VideoPlayer": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/VideoPlayer",
+      "milestone": 2
+    },
+    "features/shared/components/YouTile": {
+      "status": "port",
+      "rn": "src/social/features/chat/features/shared/components/YouTile",
+      "milestone": 3,
+      "note": "used only by group/create MemberGrid (M3), not the M2 thread"
+    }
+  }
+}

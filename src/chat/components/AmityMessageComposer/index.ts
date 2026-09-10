@@ -1,0 +1,1 @@
+export { AmityMessageComposer } from './AmityMessageComposer';

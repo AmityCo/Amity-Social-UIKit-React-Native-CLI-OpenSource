@@ -7,6 +7,22 @@ import { navigationRef, onNavigationReady } from './navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './RouteParamList';
 import useAuth from '../hooks/useAuth';
+import AmityChatHomePage from '../../chat/pages/AmityChatHomePage';
+import AmityChatPage from '../../chat/pages/AmityChatPage';
+import AmityChannelCreateConversationPage from '../../chat/pages/AmityChannelCreateConversationPage';
+import AmityGroupChatPage from '../../chat/pages/AmityGroupChatPage';
+import AmitySelectGroupMemberPage from '../../chat/pages/AmitySelectGroupMemberPage';
+import AmityCreateGroupChatPage from '../../chat/pages/AmityCreateGroupChatPage';
+import AmityAddGroupMemberPage from '../../chat/pages/AmityAddGroupMemberPage';
+import AmityGroupMemberListPage from '../../chat/pages/AmityGroupMemberListPage';
+import AmityBannedGroupMemberListPage from '../../chat/pages/AmityBannedGroupMemberListPage';
+import AmityGroupSettingPage from '../../chat/pages/AmityGroupSettingPage';
+import AmityEditGroupProfilePage from '../../chat/pages/AmityEditGroupProfilePage';
+import AmityEditGroupMemberPermissionsPage from '../../chat/pages/AmityEditGroupMemberPermissionsPage';
+import AmitySearchChannelPage from '../../chat/pages/AmitySearchChannelPage';
+import AmityArchivedChatPage from '../../chat/pages/AmityArchivedChatPage';
+import AmityGroupNotificationPreferencePage from '../../chat/pages/AmityGroupNotificationPreferencePage';
+import AmityEditGroupNotificationPage from '../../chat/pages/AmityEditGroupNotificationPage';
 import AmitySocialHomePage from '../../social/screens/SocialHomePage';
 import PostDetail from '../../social/screens/PostDetail';
 import CreatePost from '../../social/screens/CreatePost';
@@ -61,7 +77,12 @@ const Stack = createNativeStackNavigator<
   'AmitySocialUIKit'
 >();
 
-export default function AmitySocialUIKitV4Navigator() {
+export default function AmitySocialUIKitV4Navigator({
+  initialRouteName = 'AmitySocialHomePage',
+}: {
+  /** Entry screen. Defaults to Social; AmityUiKitChat passes 'AmityChatHomePage'. */
+  initialRouteName?: keyof RootStackParamList;
+} = {}) {
   const theme = useTheme<MyMD3Theme>();
   const { isGlobalBan, isVisitorUsageLimitReached } = useAuth();
   const { AmityGlobalBehaviour } = useBehaviour();
@@ -94,6 +115,7 @@ export default function AmitySocialUIKitV4Navigator() {
       <NavigationContainer ref={navigationRef} onReady={onNavigationReady}>
         <Stack.Navigator
           id="AmitySocialUIKit"
+          initialRouteName={initialRouteName}
           screenOptions={{
             headerShown: false,
             headerShadowVisible: false,
@@ -108,6 +130,69 @@ export default function AmitySocialUIKitV4Navigator() {
             },
           }}
         >
+          {/* --- Chat (PDT-3713) --- */}
+          <Stack.Screen
+            name="AmityChatHomePage"
+            component={AmityChatHomePage}
+          />
+          <Stack.Screen name="AmityChatPage" component={AmityChatPage} />
+          <Stack.Screen
+            name="AmityChannelCreateConversationPage"
+            component={AmityChannelCreateConversationPage}
+          />
+          <Stack.Screen
+            name="AmityGroupChatPage"
+            component={AmityGroupChatPage}
+          />
+          <Stack.Screen
+            name="AmitySelectGroupMemberPage"
+            component={AmitySelectGroupMemberPage}
+          />
+          <Stack.Screen
+            name="AmityCreateGroupChatPage"
+            component={AmityCreateGroupChatPage}
+          />
+          <Stack.Screen
+            name="AmityAddGroupMemberPage"
+            component={AmityAddGroupMemberPage}
+          />
+          <Stack.Screen
+            name="AmityGroupMemberListPage"
+            component={AmityGroupMemberListPage}
+          />
+          <Stack.Screen
+            name="AmityBannedGroupMemberListPage"
+            component={AmityBannedGroupMemberListPage}
+          />
+          <Stack.Screen
+            name="AmityGroupSettingPage"
+            component={AmityGroupSettingPage}
+          />
+          <Stack.Screen
+            name="AmityEditGroupProfilePage"
+            component={AmityEditGroupProfilePage}
+          />
+          <Stack.Screen
+            name="AmityEditGroupMemberPermissionsPage"
+            component={AmityEditGroupMemberPermissionsPage}
+          />
+          {/* --- Chat: M4 (search / archive / group notifications) --- */}
+          <Stack.Screen
+            name="AmitySearchChannelPage"
+            component={AmitySearchChannelPage}
+          />
+          <Stack.Screen
+            name="AmityArchivedChatPage"
+            component={AmityArchivedChatPage}
+          />
+          <Stack.Screen
+            name="AmityGroupNotificationPreferencePage"
+            component={AmityGroupNotificationPreferencePage}
+          />
+          <Stack.Screen
+            name="AmityEditGroupNotificationPage"
+            component={AmityEditGroupNotificationPage}
+          />
           {/* --- Social Home --- */}
           <Stack.Screen
             name="AmitySocialHomePage"

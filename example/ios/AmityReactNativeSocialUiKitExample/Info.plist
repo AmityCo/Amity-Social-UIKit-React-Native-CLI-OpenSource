@@ -41,6 +41,8 @@
 	<string>App needs access to the microphone to record audio.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>App needs access to the gallery to select photos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>App needs access to the gallery to save photos and videos.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UIBackgroundModes</key>

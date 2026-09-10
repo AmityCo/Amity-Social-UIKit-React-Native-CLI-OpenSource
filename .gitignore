@@ -86,3 +86,6 @@ lib/
 
 # Claude
 .claude/plans
+
+# Example app env (keys) — commit .env.example instead
+example/.env
