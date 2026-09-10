@@ -11,7 +11,7 @@ import {
 } from '../../../core/assets/icons/xml';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../core/routes/RouteParamList';
-import { useFile } from '../../hooks/useFile';
+import { useAvatarFile } from '../../hooks/useAvatarFile';
 import { ImageSizeState } from '../../enums/imageSizeState';
 import { useStoryPermission } from '../../hooks/useStoryPermission';
 import useConfig from '../../hooks/useConfig';
@@ -32,7 +32,7 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
   const { getUiKitConfig } = useConfig();
   const { hasStoryPermission } = useStoryPermission(communityId);
   const { getStoryTarget, storyTarget, stories, getStories } = useStory();
-  const { getImage } = useFile();
+  const { getAvatarUrl } = useAvatarFile();
   const [avatarUrl, setAvatarUrl] = useState(undefined);
   const [viewStory, setViewStory] = useState(false);
   const shouldRestoreStory = useRef(false);
@@ -51,14 +51,14 @@ const CommunityStories = ({ communityId, community }: ICommunityStories) => {
 
   useEffect(() => {
     (async () => {
-      const avatarImage = await getImage({
+      const avatarImage = await getAvatarUrl({
         fileId: community?.avatarFileId,
         imageSize: ImageSizeState.small,
         type: 'community',
       });
       setAvatarUrl(avatarImage);
     })();
-  }, [community?.avatarFileId, getImage]);
+  }, [community?.avatarFileId, getAvatarUrl]);
 
   useFocusEffect(
     useCallback(() => {
