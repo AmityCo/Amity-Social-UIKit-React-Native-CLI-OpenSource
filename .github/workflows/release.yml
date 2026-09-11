@@ -1,0 +1,124 @@
+name: Release
+
+on:
+  # Phase 1 (manual): developer chooses the version -> opens a bump PR into production
+  workflow_dispatch:
+    inputs:
+      release_as:
+        description: 'Version bump'
+        type: choice
+        options: [none, patch, minor, major, stable]
+        default: none
+      pre_release:
+        description: 'Pre-release label'
+        type: choice
+        options: [none, RC, alpha, beta]
+        default: none
+  # Phase 2 (automatic): after the bump PR merges, publish + tag
+  push:
+    branches: [production]
+
+env:
+  SKIP_YARN_COREPACK_CHECK: true
+  COREPACK_ROOT: true
+
+jobs:
+  prepare-release:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout production
+        uses: actions/checkout@v4
+        with:
+          ref: production
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Compute version bump (standard-version)
+        run: |
+          ARGS="--skip.tag"
+          if [ "${{ inputs.release_as }}" = "stable" ]; then
+            # promote current pre-release (e.g. 4.2.0-rc.3) to stable (4.2.0)
+            STABLE=$(node -p "require('./package.json').version.split('-')[0]")
+            ARGS="$ARGS --release-as $STABLE"
+          elif [ "${{ inputs.release_as }}" != "none" ]; then
+            ARGS="$ARGS --release-as ${{ inputs.release_as }}"
+          fi
+          if [ "${{ inputs.pre_release }}" != "none" ]; then
+            ARGS="$ARGS --prerelease ${{ inputs.pre_release }}"
+          fi
+          npx standard-version $ARGS
+
+      - name: Open bump PR into production
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          BRANCH="chore/release-v$VERSION"
+          git checkout -b "$BRANCH"
+          git push -u origin "$BRANCH"
+          gh pr create --base production --head "$BRANCH" \
+            --title "chore: release v$VERSION" \
+            --body "Automated version bump and changelog for v$VERSION. After this PR merges, the Release workflow will build, publish to npm, and create the v$VERSION tag and GitHub Release. The back-merge PR into develop will follow." \
+          || echo "PR already exists"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check whether this version is already released
+        id: check
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+            echo "Tag v$VERSION already exists - nothing to publish."
+          else
+            echo "released=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup
+        if: steps.check.outputs.released == 'false'
+        uses: ./.github/actions/setup
+
+      - name: Build package
+        if: steps.check.outputs.released == 'false'
+        run: yarn prepack
+
+      - name: Publish to npm
+        if: steps.check.outputs.released == 'false'
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create tag and GitHub Release
+        if: steps.check.outputs.released == 'false'
+        run: |
+          VERSION=${{ steps.check.outputs.version }}
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
+          if [[ "$VERSION" == *"-"* ]]; then PRERELEASE="--prerelease"; else PRERELEASE=""; fi
+          gh release create "v$VERSION" --title "v$VERSION" $PRERELEASE \
+            --notes "$(awk '/^#{1,3} /{n++} n==2{exit} n>=1{print}' CHANGELOG.md)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

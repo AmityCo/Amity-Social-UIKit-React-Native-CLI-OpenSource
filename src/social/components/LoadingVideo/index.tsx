@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import NetInfo from '@react-native-community/netinfo';
 import {
   View,
   TouchableOpacity,
@@ -9,7 +10,12 @@ import {
 import * as Progress from 'react-native-progress';
 import { SvgXml } from 'react-native-svg';
 import { deleteAmityFile, uploadVideoFile } from '../../../core/legacy/file';
-import { closeIcon, playBtn, toastIcon } from '../../../core/assets/icons/xml';
+import {
+  mediaRemoveIcon,
+  playBtn,
+  toastIcon,
+  videoControlIcon,
+} from '../../../core/assets/icons/xml';
 import { useStyles } from './styles';
 import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';
@@ -20,6 +26,13 @@ import { useUIKitDispatch } from '../../../core/stores/store';
 
 interface OverlayImageProps {
   source: string;
+  /** Local path to render/decode from, when the item still has one. `source`
+   * stays the identity/bookkeeping key and becomes the remote url once the
+   * upload finishes; decoding the thumbnail from that url means an
+   * already-uploaded frame goes grey the moment the device is offline
+   * Falls back to `source` for edit-mode children, which have no
+   * local file. */
+  displayUri?: string;
   onClose?: (originalPath: string, fileId?: string, postId?: string) => void;
   onLoadFinish?: (
     fileId: string,
@@ -38,7 +51,12 @@ interface OverlayImageProps {
   isEditMode?: boolean;
   fileCount?: number;
   postId?: string;
-  setIsUploading?: (arg: boolean) => void;
+  // Reports this frame's upload state keyed by its own `source`, so the
+  // composer can gate Post on every frame at once. The old shared
+  // `setIsUploading` boolean was flipped back to false by whichever upload
+  // finished first, unlocking Post while the other frames were still in flight.
+  onUploadingChange?: (isUploading: boolean, source: string) => void;
+  carousel?: boolean;
 }
 const LoadingVideo = ({
   source,
@@ -47,13 +65,15 @@ const LoadingVideo = ({
   onLoadFinish,
   onUploadError,
   isUploaded = false,
+  displayUri,
   thumbNail,
   onPlay,
   fileId,
   isEditMode = false,
   fileCount,
   postId,
-  setIsUploading,
+  onUploadingChange,
+  carousel = false,
 }: OverlayImageProps) => {
   const dispatch = useUIKitDispatch();
   const { showToastMessage } = uiSlice.actions;
@@ -62,6 +82,10 @@ const LoadingVideo = ({
   const [isProcess, setIsProcess] = useState<boolean>(false);
   const [isUploadError, setIsUploadError] = useState(false);
   const [thumbNailImage, setThumbNailImage] = useState(thumbNail ?? '');
+  // `uploadFileToAmity` is memoised on [source] only, so reading the state
+  // there would capture the empty first-render value. Mirror it into a ref so
+  // the upload callback always sees the frame that was actually decoded.
+  const thumbNailImageRef = useRef(thumbNail ?? '');
   const styles = useStyles();
   const [playingUri, setPlayingUri] = useState<string>('');
   const [isPause, setIsPause] = useState<boolean>(true);
@@ -82,11 +106,12 @@ const LoadingVideo = ({
 
   const handleLoadEnd = () => {
     setLoading(false);
-    setIsUploading(false);
+    onUploadingChange?.(false, source);
   };
 
   const processThumbNail = async () => {
-    const generatedThumbNail = await createVideoThumbnail(source);
+    const generatedThumbNail = await createVideoThumbnail(displayUri ?? source);
+    thumbNailImageRef.current = generatedThumbNail.path;
     setThumbNailImage(generatedThumbNail.path);
   };
   useEffect(() => {
@@ -100,8 +125,25 @@ const LoadingVideo = ({
   }, [progress]);
 
   const uploadFileToAmity = useCallback(async () => {
-    setIsUploading(true);
+    onUploadingChange?.(true, source);
     setIsUploadError(false);
+    // A retry re-enters this function with `loading` already false — the failed
+    // attempt's `handleLoadEnd` cleared it and nothing ever set it back, so
+    // `setLoading` only ever ran downwards in this component. The frame then
+    // re-uploaded with no spinner at all, which reads as "finished instantly"
+    // while Post stays disabled for the length of the upload.
+    // Progress and the processing flag are stale from the failed attempt too,
+    // so reset the whole visual upload state here rather than only in the
+    // mount effect, which does not re-run on a retry.
+    setLoading(true);
+    setProgress(0);
+    setIsProcess(false);
+    // Clearing the local flag alone left this source inside the parent's
+    // `videoErrors` set, and that set is otherwise only cleared by the
+    // mount effect below — which does not re-run on a retry, since none of
+    // `fileId`/`isUploaded`/`source` changed. Post stayed disabled even after
+    // the retry uploaded fine, so tell the parent the error is gone up front.
+    onUploadError?.(false, source);
     try {
       const file: Amity.File<any>[] = await uploadVideoFile(
         source,
@@ -119,7 +161,12 @@ const LoadingVideo = ({
             file[0]?.attributes.name as string,
             index as number,
             source,
-            thumbNail
+            // Hand back the frame this component decoded, not the incoming
+            // prop — for a newly picked video that prop is empty, so the
+            // generated thumbnail used to be dropped on the floor. The
+            // composer stores it so the feed can show it while the server is
+            // still transcoding (PDT-4904).
+            thumbNailImageRef.current || thumbNail
           );
       } else {
         handleLoadEnd();
@@ -136,6 +183,30 @@ const LoadingVideo = ({
       onUploadError?.(true, source);
     }
   }, [source]);
+
+  // The frame is expected to end up uploaded, and Post enabled, once
+  // connectivity returns. Nothing retried on its own —
+  // the error key only cleared on a manual tap on that specific frame, and the
+  // peek carousel can leave a failed frame off-screen entirely, so Post stayed
+  // disabled with no visible cause. Retry when the device regains a
+  // connection, using the same NetInfo listener idiom as post Detail and the
+  // livestream screens.
+  //
+  // Gated on a disconnected -> connected transition, not merely on being
+  // connected: addEventListener fires immediately with the current state, so a
+  // failure that happened while online (a server error, say) would otherwise
+  // re-fire on every resubscribe and spin.
+  const wasDisconnectedRef = useRef(false);
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      const isConnected = !!state.isConnected;
+      if (isConnected && wasDisconnectedRef.current && isUploadError) {
+        uploadFileToAmity();
+      }
+      wasDisconnectedRef.current = !isConnected;
+    });
+    return () => unsubscribe();
+  }, [isUploadError, uploadFileToAmity]);
 
   const handleDelete = async () => {
     if (fileId && !isEditMode) {
@@ -156,20 +227,51 @@ const LoadingVideo = ({
   }, [fileId, isUploaded, source]);
 
   const handleOnPlay = () => {
+    // In carousel mode the parent (onPlay) owns the full-screen media viewer,
+    // so this component never mounts the inline <Video> and never receives a
+    // dismiss callback to unpause with. Leaving `isPause` alone keeps the play
+    // icon rendered, which is what the frame shows once the viewer closes
+    // (PDT-4904); toggling it here hid the icon for the rest of the session.
+    if (onPlay) {
+      onPlay(source);
+      return;
+    }
     setIsPause(!isPause);
     playVideoFullScreen(source);
-    onPlay && onPlay(source);
   };
+
+  // A frame can be removed (or its source swapped) while its upload is still
+  // in flight, in which case `handleLoadEnd` never runs and the composer would
+  // keep waiting on an entry no mounted child owns any more — leaving Post
+  // disabled forever. Clearing it from this cleanup keeps the
+  // bookkeeping in the same component that added it.
+  useEffect(() => {
+    return () => {
+      onUploadingChange?.(false, source);
+    };
+  }, [onUploadingChange, source]);
 
   const onRetryUpload = () => {
     uploadFileToAmity();
   };
 
   return (
-    <View style={fileCount >= 3 ? styles.image3XContainer : styles.container}>
+    <View
+      style={
+        carousel
+          ? styles.carouselContainer
+          : fileCount >= 3
+          ? styles.image3XContainer
+          : styles.container
+      }
+    >
       {!loading && !isUploadError && isPause && (
         <TouchableOpacity style={styles.playButton} onPress={handleOnPlay}>
-          <SvgXml xml={playBtn} width="50" height="50" />
+          <SvgXml
+            xml={carousel ? videoControlIcon : playBtn}
+            width={carousel ? 40 : 50}
+            height={carousel ? 40 : 50}
+          />
         </TouchableOpacity>
       )}
       {playingUri && !isPause ? (
@@ -193,7 +295,7 @@ const LoadingVideo = ({
         <View style={styles.image} />
       )}
 
-      {loading ? (
+      {loading && (
         <View style={styles.overlay}>
           {isProcess ? (
             <Progress.CircleSnail
@@ -211,19 +313,31 @@ const LoadingVideo = ({
             />
           )}
         </View>
-      ) : isUploadError ? (
+      )}
+      {!loading && isUploadError && (
         <TouchableOpacity style={styles.overlay} onPress={onRetryUpload}>
           <SvgXml xml={toastIcon()} width="24" height="24" />
         </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.closeButton}
-          disabled={(loading || isProcess) && !isUploadError}
-          onPress={handleDelete}
-        >
-          <SvgXml xml={closeIcon('white')} width="12" height="12" />
-        </TouchableOpacity>
       )}
+
+      {/* Sibling of the overlays, never an `else` branch of them: a failed
+          frame must keep its remove button, otherwise a video that cannot
+          upload can never be taken out of the composer. This is
+          the shape LoadingImage already uses, and it is what the `disabled`
+          guard below was written for — inside the old if/else chain that
+          `!isUploadError` term was unreachable. */}
+      <TouchableOpacity
+        style={styles.closeButton}
+        // The button matches web at 28dp, which is still under Apple's 44pt
+        // minimum touch target. Grow the touch area rather than the black
+        // disc, so the visual stays in parity while the frame stays tappable:
+        // 28 + 8 on each side lands exactly on 44.
+        hitSlop={8}
+        disabled={(loading || isProcess) && !isUploadError}
+        onPress={handleDelete}
+      >
+        <SvgXml xml={mediaRemoveIcon()} width="20" height="20" />
+      </TouchableOpacity>
     </View>
   );
 };

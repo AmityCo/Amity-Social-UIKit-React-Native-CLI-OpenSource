@@ -36,5 +36,17 @@ target 'AmityReactNativeSocialUiKitExample' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # livekit-react-native-webrtc uses a WebRTC API that the newer WebRTC SDK
+    # marks as deprecated, and the pod compiles deprecation warnings as errors.
+    # Do not fail the build on deprecation warnings in the WebRTC pods.
+    installer.pods_project.targets.each do |target|
+      if target.name.downcase.include?('webrtc')
+        target.build_configurations.each do |build_config|
+          build_config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = 'NO'
+          build_config.build_settings['WARNING_CFLAGS'] = ['$(inherited)', '-Wno-error=deprecated-declarations']
+        end
+      end
+    end
   end
 end

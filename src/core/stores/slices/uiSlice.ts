@@ -20,6 +20,10 @@ interface UIState {
   toastMessage?: string;
   isLoadingToast?: boolean;
   isSuccessToast?: boolean;
+  /** Bumped once per feed reload. Feed items are keyed by post id, so a reload
+   * reuses their component instances and any position they were holding
+   * survives it; anything that must start over on a reload watches this. */
+  feedReloadToken: number;
 }
 const initialState: UIState = {
   showPostTypeChoiceModal: false,
@@ -30,6 +34,7 @@ const initialState: UIState = {
   postSetting: null,
   needApprovalOnPostCreation: true,
   isPublic: false,
+  feedReloadToken: 0,
 };
 
 const uiSlice = createSlice({
@@ -86,6 +91,9 @@ const uiSlice = createSlice({
       state.toastMessage = action.payload.toastMessage;
       state.isLoadingToast = action.payload.isLoadingToast;
       state.isSuccessToast = action.payload.isSuccessToast;
+    },
+    markFeedReloaded: (state) => {
+      state.feedReloadToken += 1;
     },
     hideToastMessage: (state) => {
       state.showToastMessage = false;

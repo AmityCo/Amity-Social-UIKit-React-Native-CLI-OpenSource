@@ -13,6 +13,10 @@ export const useStyles = () => {
       height: width / 3 - 16,
       margin: 3,
     },
+    carouselContainer: {
+      width: '100%',
+      height: '100%',
+    },
     image: {
       width: '100%',
       height: '100%',
@@ -51,9 +55,14 @@ export const useStyles = () => {
     },
     closeButton: {
       position: 'absolute',
-      top: 7,
-      right: 7,
-      padding: 7,
+      // Matched to the web UIKit's remove button, which is 20px of icon inside
+      // 4px of padding at an 8px offset. The old 12/7 pair came to nearly the
+      // same 26dp outer size but filled only 46% of the circle with the glyph
+      // against web's 71%, so it read as a heavy black disc with a tiny cross
+      // in it.
+      top: 8,
+      right: 8,
+      padding: 4,
       backgroundColor: 'rgba(0, 0, 0, 0.4)',
       borderRadius: 72,
       zIndex: 10,

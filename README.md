@@ -150,6 +150,13 @@ Add following permissions to `info.plist` file (ios/{YourAppName}/Info.plist)
  <string>App needs access to the gallery to select photos.</string>
 ```
 
+> **`NSPhotoLibraryUsageDescription` is required from 4.1.0 on.** Opening the
+> media picker now asks iOS for photo-library authorization, which it needs to
+> recognise a photo the user has already added and avoid attaching it twice.
+> iOS terminates any app that requests that authorization without this key, so
+> a build missing it crashes the moment the picker opens — earlier versions
+> tolerated its absence because they never requested the permission at all.
+
 ### Add Camera permission (Android)
 
 Add following permissions to `AndroidManifest.xml` file (android/app/src/main/AndroidManifest.xml)
