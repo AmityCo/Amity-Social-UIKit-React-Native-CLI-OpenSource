@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/compare/v4.1.0...v4.2.0) (2026-09-11)
+
+### ⚠ BREAKING CHANGES
+
+- **post-composer:** opening the media composer's photo picker now requests
+  photo-library authorization on iOS, which it did not do before. A host
+  app whose Info.plist has no NSPhotoLibraryUsageDescription is terminated
+  by iOS the moment the picker opens ("This app has crashed because it
+  attempted to access privacy-sensitive data without a usage
+  description"). Add the key before upgrading. Users also see a new
+  photo-library permission prompt; if they deny it, duplicate picks are
+  staged as before and nothing crashes.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+### Features
+
+- **social:** add video playback controls to full-screen media viewer (PDT-3424) ([dfb439b](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/dfb439b17ddab8e5df27141fd5ab5cce33c73951))
+- **social:** carousel media post (PDT-3424) ([21d3e89](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/21d3e8993142ff04b8c4cb110d01303260a7ec20)), closes [#1830](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/issues/1830) [#1834](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/issues/1834)
+- **social:** silently drop duplicate media selections (PDT-4314) ([fe2678f](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/fe2678f6705254624258d29a527a7df2ffbde9ea))
+
+### Bug Fixes
+
+- ci OS failed ([c18d32a](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/c18d32a597c11180ac768ca79e9e3b2614590ade))
+- **community-header:** gate the pending-post banner on community moderator role (PDT-5116) ([26ca267](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/26ca267b5b328cd1daa40b9c849f8086eba03031))
+- **community-header:** keep the pending-post author's banner if postedUserId is absent (PDT-5116) ([b617ae6](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/b617ae60afee63bca023838807a64470b9feef30))
+- do not fail ios build on deprecation warnings in webrtc pods ([3563fd3](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/3563fd3d0d5cba8ec7b91e29db9dec4bc5f3198e))
+- **example:** render the app when no FCM token is available ([df0d9f1](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/df0d9f18da0c51a652a264e2c7b8fa5d225c8ec9))
+- **feed:** stop a missing postId writing a "-1" entry on update (PDT-5080) ([725c6c5](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/725c6c5eefa296804865b830f2b42543cd45d84e))
+- **media-viewer:** carry the sound setting across carousel frames (PDT-5067) ([8751b95](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/8751b956bdddb91cec51264177a66d91e702322b))
+- **media-viewer:** inset the header by the top safe area ([d4a7e88](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/d4a7e889ca899664502c78d45e568086614b3f7a))
+- PDT-4684 - align my communities list order across platforms ([8facc33](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/8facc3311c493ff50600e9670767cf84f6988f1a))
+- PDT-4904 - carousel play icon, video frame ratio and feed thumbnail ([0d89e5d](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/0d89e5d4d7b0177349772e11b56309a658b2948f))
+- **PDT-4904:** the carousel play icon survives the full-screen player, and a video frame stops defaulting to square ([02e998b](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/02e998b40a852c6fcbc5f71ec9aab02782894b9f))
+- PDT-4997, PDT-5020 - per-item composer upload gating and retry error clearing ([0ac3344](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/0ac334406d759ceb84f0d35c39d1c698373a632a))
+- PDT-5019 - handle upload rejection in legacy LoadingVideo ([3ed0ecf](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/3ed0ecf81e64e2d4e7152c4255bc0f3e8420104a))
+- PDT-5019 - surface video upload failure instead of hanging ([6e83a15](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/6e83a15012ab219f23e362bec541046b1a9cc47c))
+- PDT-5040, PDT-5003 - stable media identity for dedup and upload completion ([761481a](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/761481a76ae4bcf66088ddea0b7ba15860b49225))
+- **pending-post:** gate accept/decline on the community moderator role (PDT-5116) ([42f6a7e](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/42f6a7eb20463881740b1b93ec435e2b4c38b36c))
+- **post-composer:** allow adding media when editing a post (PDT-4869) ([3a57712](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/3a57712fc330e33ee07147cd60c3fb8ffa5306ad))
+- **post-composer:** ask the iOS picker for asset ids so a re-pick dedupes (PDT-5040) ([ddb3d72](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/ddb3d7299ae4e93a6ce7bab16d3081a22c886f16))
+- **post-composer:** keep an uploaded frame painted from its local file (PDT-5003) ([3fd5371](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/3fd537169b5303da134e5104d7432c1ec0fe775f))
+- **post-composer:** media upload failure and gating fixes (PDT-4997, PDT-5019, PDT-5020) ([3283ef1](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/3283ef1aa1f25fdac80726f34de8d2004717597e))
+- **post-composer:** resolve edit-mode media from the linked post, drop the timeout ([59dc1d8](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/59dc1d8517765a1fba6b16bed6a4d910ec52b706))
+- **post-composer:** resolve edit-mode media from the post's own children ([a8c3275](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/a8c3275e812bc8e72c56f76e6747e1a626e5cbe7))
+- **post-composer:** show the right media buttons on the first frame in edit mode ([3172c4d](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/3172c4d2cdca90a787aa21a30c5a1b1593a63384))
+- **post-media:** keep the carousel inside range when frames are removed ([66a3da7](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/66a3da7ce9f52c9633bcb74b76e424115bf4f3c7))
+- **post-media:** reset the carousel to the first frame on a feed reload (PDT-5069) ([104428c](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/104428c446751cda2e00f119d9f18dc19c95ecf8))
+- **post-media:** reset the carousel when the feed regains focus too (PDT-5069) ([8094153](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/8094153832fafeb3830843cb0e3969b276dc7f23))
+- **post-media:** stop showing the default avatar as a video thumbnail (PDT-5080) ([3a63a77](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/3a63a77b1ca6b419067b04f4c3f027df0c40f37e))
+- **social:** composer peek inset via editor padding, not component (PDT-3424) ([11cdc85](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/11cdc8548efd153b34ae5218909fc29cd925e884))
+- **social:** load edited post's carousel media via usePostByIds (PDT-3424) ([79bc765](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/79bc765b258a5b695105c9ba44d52d802e64b514))
+- **social:** remove skip buttons from full-screen video controls (PDT-3424) ([8388cd7](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/8388cd7d9a0454de1b172e6c07a6c865d9309fd2))
+- **social:** spec-align composer ratio, peek inset & indicator slide-in (PDT-3424) ([804691a](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/804691a1746add6cac2c25f9b3b0100aa2993da7))
+- **upload:** reject an offline upload up front so iOS reaches the failed state (PDT-5019) ([ae9dcf7](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/ae9dcf794830361e180248bb879039ab0a16e3e0))
+
 ## [4.1.0](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/compare/v4.0.1...v4.1.0) (2026-07-03)
 
 ### Features
