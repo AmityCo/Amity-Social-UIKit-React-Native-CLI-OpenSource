@@ -3,9 +3,10 @@
 // and the sibling AmityChatPage wrapper pattern (SafeAreaView + feature entry).
 
 // 1. React / RN imports
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // 2. Internal imports (relative)
+import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import { CreateConversation } from '../../features/conversation/create';
 import { useStyles } from './styles';
 
@@ -14,8 +15,10 @@ export default function AmityChannelCreateConversationPage() {
   const { styles } = useStyles();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <CreateConversation />
+    <SafeAreaView edges={['top', 'left', 'right']} style={styles.container}>
+      <ChatKeyboardAvoidingView>
+        <CreateConversation />
+      </ChatKeyboardAvoidingView>
     </SafeAreaView>
   );
 }

@@ -4,13 +4,14 @@
 // AmityChatPage is registered in the navigator (M2); pressing a row opens the thread.
 
 // 1. React / RN imports
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // 2. Third-party imports
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 // 3. Internal imports (relative)
+import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import { ChatHome } from '../../features/home';
 import { useStyles } from './styles';
 
@@ -20,20 +21,22 @@ export default function AmityChatHomePage() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ChatHome
-        onChannelPress={(channelId, displayName, type) =>
-          type === 'community'
-            ? navigation.navigate('AmityGroupChatPage', { channelId })
-            : navigation.navigate('AmityChatPage', {
-                channelId,
-                userDisplayName: displayName,
-              })
-        }
-        onCreatePress={() =>
-          navigation.navigate('AmityChannelCreateConversationPage')
-        }
-      />
+    <SafeAreaView edges={['top', 'left', 'right']} style={styles.container}>
+      <ChatKeyboardAvoidingView>
+        <ChatHome
+          onChannelPress={(channelId, displayName, type) =>
+            type === 'community'
+              ? navigation.navigate('AmityGroupChatPage', { channelId })
+              : navigation.navigate('AmityChatPage', {
+                  channelId,
+                  userDisplayName: displayName,
+                })
+          }
+          onCreatePress={() =>
+            navigation.navigate('AmityChannelCreateConversationPage')
+          }
+        />
+      </ChatKeyboardAvoidingView>
     </SafeAreaView>
   );
 }
