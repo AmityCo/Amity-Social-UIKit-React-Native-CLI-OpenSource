@@ -26,8 +26,10 @@ import {
   MessageRepository,
 } from '@amityco/ts-sdk-react-native';
 import { useQueryClient } from '@tanstack/react-query';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // 3. Internal imports
+import { ChatKeyboardAvoidingView } from '../../../../elements/ChatKeyboardAvoidingView';
 import { Typography } from '../../../../../core/design/components/Typography';
 import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
@@ -171,135 +173,150 @@ export function ContentReportReason({
       onRequestClose={onClose}
       transparent={false}
     >
-      <View style={styles.screen}>
-        <View style={styles.header}>
-          <View style={[styles.headerSlot, styles.headerSlotLeft]}>
-            {isShowOthersOption ? (
-              <Pressable
-                style={styles.iconButton}
-                onPress={handleBack}
-                accessibilityRole="button"
-                accessibilityLabel="Back"
-              >
-                <AmityIcon
-                  name="chevron-left"
-                  size={24}
-                  tokenColor={
-                    AmityColorToken.IconIconButtonGhostSecondaryDefault
-                  }
-                />
-              </Pressable>
-            ) : null}
-          </View>
-          <View style={[styles.headerSlot, styles.headerSlotCenter]}>
-            <Typography
-              variant="titleBold"
-              style={styles.title}
-              numberOfLines={1}
-            >
-              {isShowOthersOption ? othersTitle : reportReasonTitle}
-            </Typography>
-          </View>
-          <View style={[styles.headerSlot, styles.headerSlotRight]}>
-            {isShowOthersOption ? (
-              <Pressable
-                style={styles.iconButton}
-                onPress={onClose}
-                accessibilityRole="button"
-                accessibilityLabel={closeButtonText}
-              >
-                <AmityIcon
-                  name="cross-l"
-                  size={24}
-                  tokenColor={
-                    AmityColorToken.IconIconButtonGhostSecondaryDefault
-                  }
-                />
-              </Pressable>
-            ) : null}
-          </View>
-        </View>
+      {/* A React Native Modal renders in its own native hierarchy, outside the
+          page that mounted it, so neither the page's SafeAreaView nor its
+          ChatKeyboardAvoidingView reaches this content — this screen has to own
+          both edges itself, on the same contract the chat pages use. Without it
+          the header sits under the status bar and the submit button sits under
+          the home indicator, and the keyboard covers the button outright once
+          the free-text reason is focused.
 
-        <ScrollView
-          style={styles.content}
-          contentContainerStyle={styles.contentContainer}
-        >
-          {isShowOthersOption ? (
-            <View style={styles.othersField}>
-              <Input.Text
-                title={reportOtherReasonDesc}
-                optionalLabel={reportOtherReasonOptional}
-                showCharacterCount
-                maxLength={MAX_LENGTH_DESCRIBE}
-                placeholder={reportTextPlaceholder}
-                value={otherReasonText}
-                onChange={setOtherReasonText}
-                // LEADS WEB (PDT-4142): web's ContentReportReason also omits
-                // multiLine — its Input.Text then renders a single-line <input>,
-                // which is the bug the ticket reports, still open there.
-                // Without this the field stays single-line, so a reason typed up
-                // to MAX_LENGTH_DESCRIBE scrolls sideways instead of wrapping.
-                // multiLine also top-aligns the row so the label sits level with
-                // the first line.
-                multiLine
-              />
+          The Modal needs its own SafeAreaProvider for the same reason: the one
+          at the provider root measures the app's window, not the modal's, so
+          inside here its insets read as zero and SafeAreaView pads nothing. */}
+      <SafeAreaProvider>
+        <SafeAreaView edges={['top', 'left', 'right']} style={styles.screen}>
+          <ChatKeyboardAvoidingView>
+            <View style={styles.header}>
+              <View style={[styles.headerSlot, styles.headerSlotLeft]}>
+                {isShowOthersOption ? (
+                  <Pressable
+                    style={styles.iconButton}
+                    onPress={handleBack}
+                    accessibilityRole="button"
+                    accessibilityLabel="Back"
+                  >
+                    <AmityIcon
+                      name="chevron-left"
+                      size={24}
+                      tokenColor={
+                        AmityColorToken.IconIconButtonGhostSecondaryDefault
+                      }
+                    />
+                  </Pressable>
+                ) : null}
+              </View>
+              <View style={[styles.headerSlot, styles.headerSlotCenter]}>
+                <Typography
+                  variant="titleBold"
+                  style={styles.title}
+                  numberOfLines={1}
+                >
+                  {isShowOthersOption ? othersTitle : reportReasonTitle}
+                </Typography>
+              </View>
+              <View style={[styles.headerSlot, styles.headerSlotRight]}>
+                {isShowOthersOption ? (
+                  <Pressable
+                    style={styles.iconButton}
+                    onPress={onClose}
+                    accessibilityRole="button"
+                    accessibilityLabel={closeButtonText}
+                  >
+                    <AmityIcon
+                      name="cross-l"
+                      size={24}
+                      tokenColor={
+                        AmityColorToken.IconIconButtonGhostSecondaryDefault
+                      }
+                    />
+                  </Pressable>
+                ) : null}
+              </View>
             </View>
-          ) : (
-            <>
-              <Typography variant="caption" style={styles.description}>
-                {reportListDescription}
-              </Typography>
-              {REPORT_REASONS.map((reason) => (
-                <View key={reason.value} style={styles.rowSurface}>
-                  <Selection.Radio
-                    isSelected={selectedReason === reason.value}
-                    onSelect={() => handleRadioChange(reason.value)}
-                    accessibilityLabel={resolveString(reason.labelKey)}
+
+            <ScrollView
+              style={styles.content}
+              contentContainerStyle={styles.contentContainer}
+            >
+              {isShowOthersOption ? (
+                <View style={styles.othersField}>
+                  <Input.Text
+                    title={reportOtherReasonDesc}
+                    optionalLabel={reportOtherReasonOptional}
+                    showCharacterCount
+                    maxLength={MAX_LENGTH_DESCRIBE}
+                    placeholder={reportTextPlaceholder}
+                    value={otherReasonText}
+                    onChange={setOtherReasonText}
+                    // LEADS WEB (PDT-4142): web's ContentReportReason also omits
+                    // multiLine — its Input.Text then renders a single-line <input>,
+                    // which is the bug the ticket reports, still open there.
+                    // Without this the field stays single-line, so a reason typed up
+                    // to MAX_LENGTH_DESCRIBE scrolls sideways instead of wrapping.
+                    // multiLine also top-aligns the row so the label sits level with
+                    // the first line.
+                    multiLine
+                  />
+                </View>
+              ) : (
+                <>
+                  <Typography variant="caption" style={styles.description}>
+                    {reportListDescription}
+                  </Typography>
+                  {REPORT_REASONS.map((reason) => (
+                    <View key={reason.value} style={styles.rowSurface}>
+                      <Selection.Radio
+                        isSelected={selectedReason === reason.value}
+                        onSelect={() => handleRadioChange(reason.value)}
+                        accessibilityLabel={resolveString(reason.labelKey)}
+                      >
+                        <Typography variant="bodyBold" style={styles.option}>
+                          {resolveString(reason.labelKey)}
+                        </Typography>
+                      </Selection.Radio>
+                    </View>
+                  ))}
+                  <Pressable
+                    style={styles.row}
+                    onPress={() => {
+                      setSelectedReason(ContentFlagReasonEnum.Others);
+                      setIsShowOthersOption(true);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel={othersTitle}
                   >
                     <Typography variant="bodyBold" style={styles.option}>
-                      {resolveString(reason.labelKey)}
+                      {othersTitle}
                     </Typography>
-                  </Selection.Radio>
-                </View>
-              ))}
-              <Pressable
-                style={styles.row}
-                onPress={() => {
-                  setSelectedReason(ContentFlagReasonEnum.Others);
-                  setIsShowOthersOption(true);
-                }}
-                accessibilityRole="button"
-                accessibilityLabel={othersTitle}
-              >
-                <Typography variant="bodyBold" style={styles.option}>
-                  {othersTitle}
-                </Typography>
-                <AmityIcon
-                  name="chevron-right"
-                  size={24}
-                  tokenColor={AmityColorToken.IconListLeadingDefaultDefault}
-                />
-              </Pressable>
-            </>
-          )}
-        </ScrollView>
+                    <AmityIcon
+                      name="chevron-right"
+                      size={24}
+                      tokenColor={AmityColorToken.IconListLeadingDefaultDefault}
+                    />
+                  </Pressable>
+                </>
+              )}
+            </ScrollView>
 
-        <View style={styles.bottomBar}>
-          <Button
-            hierarchy="primary"
-            size="lg"
-            fullWidth
-            label={submitButtonText}
-            disabled={isDisabledSubmitButton}
-            onPress={handleSubmitReport}
-          />
-        </View>
-        {/* The global <Toast /> is mounted outside this Modal, so RN renders it
-            beneath the native Modal layer. Mount a Toast inside the Modal too so
-            the report-error toast (Modal stays open on failure) is visible; it
-            reads the same redux toast state via context. */}
-        <Toast />
-      </View>
+            <View style={styles.bottomBar}>
+              <Button
+                hierarchy="primary"
+                size="lg"
+                fullWidth
+                label={submitButtonText}
+                disabled={isDisabledSubmitButton}
+                onPress={handleSubmitReport}
+              />
+            </View>
+            {/* The global <Toast /> is mounted outside this Modal, so RN renders it
+                beneath the native Modal layer. Mount a Toast inside the Modal too so
+                the report-error toast (Modal stays open on failure) is visible; it
+                reads the same redux toast state via context. */}
+            <Toast />
+          </ChatKeyboardAvoidingView>
+        </SafeAreaView>
+      </SafeAreaProvider>
     </Modal>
   );
 }
