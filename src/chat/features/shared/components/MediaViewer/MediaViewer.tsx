@@ -8,14 +8,17 @@
 import type { ReactNode } from 'react';
 import { Modal, Pressable, View } from 'react-native';
 
-// 2. Internal imports
+// 2. Third-party imports
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+
+// 3. Internal imports
 import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../core/localization';
 import Toast from '../../../../../social/components/Toast';
 import { useStyles } from './styles';
 
-// 3. Types
+// 4. Types
 type MediaViewerProps = {
   accessibilityLabel: string;
   onClose: () => void;
@@ -27,7 +30,7 @@ type MediaViewerProps = {
   saveAccessibilityLabel?: string;
 };
 
-// 4. Named function component
+// 5. Named function component
 export function MediaViewer({
   accessibilityLabel,
   onClose,
@@ -53,78 +56,92 @@ export function MediaViewer({
       onRequestClose={onClose}
       statusBarTranslucent
     >
-      <View
-        style={styles.overlay}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityViewIsModal
-      >
-        <View style={styles.stage}>{children}</View>
+      {/* The bars are pinned to the screen edges, so they take the safe-area
+          insets through a SafeAreaView — without the top inset the close button
+          sits under the status bar, and behind the Dynamic Island on the devices
+          that have one, which does not pass touches through: the button cannot
+          be tapped and the viewer cannot be closed. The provider has to be
+          mounted here, inside the Modal: the one the UIKit mounts at its root
+          sits wherever the host app placed it (in the sample app that is below
+          the status bar, so its top inset reads zero), and a Modal's content is
+          a separate native hierarchy anyway. */}
+      <SafeAreaProvider>
+        <View
+          style={styles.overlay}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityViewIsModal
+        >
+          <View style={styles.stage}>{children}</View>
 
-        <View style={styles.topBar}>
-          <Pressable
-            style={styles.closeButton}
-            onPress={onClose}
-            accessibilityRole="button"
-            accessibilityLabel="Close"
+          <SafeAreaView edges={['top', 'left', 'right']} style={styles.topBar}>
+            <Pressable
+              style={styles.closeButton}
+              onPress={onClose}
+              accessibilityRole="button"
+              accessibilityLabel="Close"
+            >
+              <AmityIcon
+                name="cross-r"
+                size={24}
+                tokenColor={
+                  AmityColorToken.IconIconButtonTransparentPrimaryDefault
+                }
+              />
+            </Pressable>
+          </SafeAreaView>
+
+          <SafeAreaView
+            edges={['bottom', 'left', 'right']}
+            style={styles.bottomBar}
           >
-            <AmityIcon
-              name="cross-r"
-              size={24}
-              tokenColor={
-                AmityColorToken.IconIconButtonTransparentPrimaryDefault
-              }
-            />
-          </Pressable>
-        </View>
+            {canDelete ? (
+              <Pressable
+                style={styles.bottomIconButton}
+                onPress={onDelete}
+                accessibilityRole="button"
+                accessibilityLabel={deleteAccessibilityLabel ?? deleteLabel}
+              >
+                <AmityIcon
+                  name="trash-r"
+                  size={24}
+                  tokenColor={
+                    AmityColorToken.IconIconButtonTransparentPrimaryDefault
+                  }
+                />
+              </Pressable>
+            ) : (
+              <View />
+            )}
 
-        <View style={styles.bottomBar}>
-          {canDelete ? (
-            <Pressable
-              style={styles.bottomIconButton}
-              onPress={onDelete}
-              accessibilityRole="button"
-              accessibilityLabel={deleteAccessibilityLabel ?? deleteLabel}
-            >
-              <AmityIcon
-                name="trash-r"
-                size={24}
-                tokenColor={
-                  AmityColorToken.IconIconButtonTransparentPrimaryDefault
-                }
-              />
-            </Pressable>
-          ) : (
-            <View />
-          )}
+            {canSave ? (
+              <Pressable
+                style={styles.bottomIconButton}
+                onPress={onSave}
+                accessibilityRole="button"
+                accessibilityLabel={saveAccessibilityLabel ?? saveLabel}
+              >
+                <AmityIcon
+                  name="arrow-down-to-bracket-r"
+                  size={24}
+                  tokenColor={
+                    AmityColorToken.IconIconButtonTransparentPrimaryDefault
+                  }
+                />
+              </Pressable>
+            ) : (
+              <View />
+            )}
+          </SafeAreaView>
 
-          {canSave ? (
-            <Pressable
-              style={styles.bottomIconButton}
-              onPress={onSave}
-              accessibilityRole="button"
-              accessibilityLabel={saveAccessibilityLabel ?? saveLabel}
-            >
-              <AmityIcon
-                name="arrow-down-to-bracket-r"
-                size={24}
-                tokenColor={
-                  AmityColorToken.IconIconButtonTransparentPrimaryDefault
-                }
-              />
-            </Pressable>
-          ) : (
-            <View />
-          )}
+          {/* Save success/failure toasts fire while this Modal is open. The global
+              <Toast /> is mounted outside it, so RN would render it beneath the
+              native Modal layer; mount one inside too — it reads the same redux
+              toast state, so only one pill is ever visible. */}
+          <View pointerEvents="box-none" style={styles.toastLayer}>
+            <Toast />
+          </View>
         </View>
-
-        {/* Save success/failure toasts fire while this Modal is open. The global
-            <Toast /> is mounted outside it, so RN would render it beneath the
-            native Modal layer; mount one inside too — it reads the same redux
-            toast state, so only one pill is ever visible. */}
-        <View pointerEvents="box-none" style={styles.toastLayer}>
-          <Toast />
-        </View>
-      </View>
+      </SafeAreaProvider>
     </Modal>
   );
 }
