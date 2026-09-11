@@ -1,0 +1,59 @@
+name: Require review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [develop, production]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+permissions:
+  pull-requests: read
+
+concurrency:
+  group: require-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review-approved:
+    name: PR has an approving review
+    runs-on: ubuntu-latest
+    # pull_request_review fires for PRs into any branch; only enforce for our protected bases
+    if: >-
+      github.event_name == 'pull_request' ||
+      contains(fromJSON('["develop", "production"]'), github.event.pull_request.base.ref)
+    steps:
+      - name: Check for an approving review
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              per_page: 100,
+            });
+
+            // Keep only each reviewer's most recent APPROVED / CHANGES_REQUESTED state.
+            // (COMMENTED and DISMISSED reviews neither approve nor block.)
+            const latest = new Map();
+            for (const review of reviews) {
+              if (review.user.login === context.payload.pull_request.user.login) continue;
+              if (!['APPROVED', 'CHANGES_REQUESTED'].includes(review.state)) continue;
+              latest.set(review.user.login, review.state);
+            }
+
+            const approvers = [...latest.entries()]
+              .filter(([, state]) => state === 'APPROVED')
+              .map(([login]) => login);
+            const blockers = [...latest.entries()]
+              .filter(([, state]) => state === 'CHANGES_REQUESTED')
+              .map(([login]) => login);
+
+            if (blockers.length > 0) {
+              core.setFailed(`Changes requested by: ${blockers.join(', ')} — address the feedback and get re-approval.`);
+            } else if (approvers.length === 0) {
+              core.setFailed('This PR needs at least one approving review before it can be merged.');
+            } else {
+              core.info(`Approved by: ${approvers.join(', ')} — OK to merge.`);
+            }
