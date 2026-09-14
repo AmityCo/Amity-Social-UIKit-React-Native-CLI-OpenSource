@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AmityCommunityPrivacyEnum } from '../../shared/types';
 import { useStyles } from '../styles';
 import { useMutation } from '@tanstack/react-query';
-import useFile from '../../../../hooks/files/useFile';
+import { useFile } from '../../../../hooks';
 
 const schema = z.object({
   image: z.custom<Amity.File<'image'>>().optional(),

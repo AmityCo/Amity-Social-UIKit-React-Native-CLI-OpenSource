@@ -1,6 +1,6 @@
 import { FC, memo, useEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import { useAmityElement, useFile } from '../../hooks';
+import { useAmityElement, useAvatarFile } from '../../hooks';
 import { PageID, ComponentID, ElementID } from '../../enums';
 import { SvgXml } from 'react-native-svg';
 import { category as categoryIcon } from '../../../core/assets/icons';
@@ -17,7 +17,7 @@ const CategoryRowImage: FC<CategoryRowImageProps> = ({
   componentId = ComponentID.WildCardComponent,
 }) => {
   const elementId = ElementID.category_row_image;
-  const { getImage } = useFile();
+  const { getAvatarUrl } = useAvatarFile();
   const { themeStyles, isExcluded } = useAmityElement({
     pageId,
     componentId,
@@ -53,14 +53,14 @@ const CategoryRowImage: FC<CategoryRowImageProps> = ({
     if (!avatarFileId) return;
 
     const fetchImage = async () => {
-      const image = await getImage({ fileId: avatarFileId });
+      const image = await getAvatarUrl({ fileId: avatarFileId });
       if (image) {
         setImageUri(image);
       }
     };
 
     fetchImage();
-  }, [avatarFileId, getImage]);
+  }, [avatarFileId, getAvatarUrl]);
 
   if (isExcluded) return null;
 

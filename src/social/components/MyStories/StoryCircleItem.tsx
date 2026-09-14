@@ -8,7 +8,7 @@ import {
   storyRing,
 } from '../../../core/assets/icons/xml';
 import { ComponentID, ElementID, ImageSizeState, PageID } from '../../enums';
-import { useFile, useStoryPermission } from '../../hooks';
+import { useAvatarFile, useStoryPermission } from '../../hooks';
 import useConfig from '../../hooks/useConfig';
 import { useStyles } from './styles';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
@@ -32,7 +32,7 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
   );
   const [communityLoading, setCommunityLoading] = useState(true);
   const { hasStoryPermission } = useStoryPermission(storyTarget.targetId);
-  const { getImage } = useFile();
+  const { getAvatarUrl } = useAvatarFile();
   const { getUiKitConfig } = useConfig();
   const styles = useStyles();
   const storyRingColor: string[] =
@@ -58,7 +58,7 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
         if (!loading) {
           setCommunityData(data);
           setCommunityLoading(false);
-          const avatarImage = await getImage({
+          const avatarImage = await getAvatarUrl({
             fileId: data.avatarFileId,
             imageSize: ImageSizeState.small,
             type: 'community',
@@ -68,7 +68,7 @@ const StoryCircleItem: FC<IStoryCircleItem> = ({
       }
     );
     return () => unsubscribe();
-  }, [getImage, storyTarget.targetId, storyTarget.targetType]);
+  }, [getAvatarUrl, storyTarget.targetId, storyTarget.targetType]);
 
   if (storyTarget.targetType !== 'community') return null;
 
