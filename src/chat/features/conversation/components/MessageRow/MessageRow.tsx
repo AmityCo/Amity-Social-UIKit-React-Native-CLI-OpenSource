@@ -152,17 +152,10 @@ export function MessageRow({
           {isUser && isFailed ? (
             // Web renders a failed message as the bubble + a small Button.Icon
             // that opens the failed sheet (Resend/Delete), before the outbound
-            // bubble. Bare exclamation (not circled) in a transparent/primary
-            // icon button.
-            //
-            // The weight was wrong. Web's `<Exclamation />` default
-            // export is the REGULAR weight (Exclamation.tsx assigns Regular as
-            // the default), not Solid. At 16px the solid glyph's bar is 33%
-            // thicker and its dot 25% larger than the regular one, which is
-            // what read as "larger than the design" — the button (24) and the
-            // glyph (16) already matched web after 6ac2b01.
+            // bubble. Web's `Exclamation` glyph is a BARE solid exclamation (not
+            // circled) in a transparent/primary icon button — RN `exclamation-s`.
             <Button.Icon
-              icon="exclamation-r"
+              icon="exclamation-s"
               styleType="transparent"
               hierarchy="primary"
               size={24}
