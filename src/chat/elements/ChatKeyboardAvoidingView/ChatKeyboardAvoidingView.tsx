@@ -1,7 +1,7 @@
 // ChatKeyboardAvoidingView — the single keyboard/bottom-inset owner for chat.
 //
 // The contract: every chat page renders SafeAreaView with edges
-// ['top','left','right'] (NO bottom) and mounts this component directly inside
+// ['top','left','right'] (NO bottom) and mounts this component DIRECTLY inside
 // it, so the page owns layout and the feature underneath owns only content.
 // While the keyboard is closed it pads by the safe-area inset so bottom-anchored
 // content clears the navigation bar; while the keyboard is up it pads by however
@@ -13,59 +13,43 @@
 // screen that later grows a text field cannot silently miss out. Full-screen
 // Modals mount it themselves — a Modal renders in its own native hierarchy, so
 // nothing a page wraps around its content reaches inside one.
+// `yarn check:keyboard-avoiding` enforces that every such surface mounts it.
 //
-// Why this does not use RN's KeyboardAvoidingView
-// -----------------------------------------------
-// KeyboardAvoidingView derives its displacement from
-// `frame.y + frame.height - keyboardY`, where the frame comes from its own
-// onLayout — parent-relative — and keyboardY is screen-absolute. Mounted inside
-// a SafeAreaView that pads the top inset, the two disagree by exactly that
-// inset, so the compose bar lands short of the keyboard by the status-bar
-// height. `behavior` cannot correct that, and the correction that would
-// (keyboardVerticalOffset = insets.top) silently depends on which edges the
-// hosting page happens to pad.
-//
-// How the overlap is measured
+// How the two paddings add up
 // ---------------------------
-// This view's own bottom edge on screen, minus the keyboard's top edge. Measuring the view rather than the window is what makes one code path
-// work everywhere, because whether the OS resizes anything varies by surface:
-//   - A chat page on Android 15+ is NOT resized. Edge-to-edge ignores
-//     windowSoftInputMode=adjustResize, so the view still reaches the bottom of
-//     the screen and the full keyboard height has to be padded. Measured on a
-//     Galaxy S24 (Android 16, targetSdk 36), keyboard open, in dp: window height
-//     832 (unchanged with the keyboard up), keyboard screenY 473.6, reported
-//     keyboard height 343.5, bottom inset 14.9. The real occlusion is 358.4 —
-//     the reported height PLUS the bottom inset, because Android reports the
-//     height with the navigation-bar inset already subtracted while the keyboard
-//     covers the navigation bar.
-//   - A Modal on Android IS resized: it gets its own dialog window, which the
-//     OS shrinks to the keyboard's top edge. Padding by the window-derived
-//     occlusion there double-counted and collapsed the content to nothing.
-//   - iOS never resizes either surface, and the measurement reduces to the
-//     keyboard height with the home indicator included.
-// Measuring the view covers all three without a platform branch: where the OS
-// already shrank the layout, the view's bottom is above the keyboard and the
-// difference is zero.
+// RN's KeyboardAvoidingView owns `paddingBottom` outright in its 'padding'
+// branch — it composes its own value LAST, so a caller's paddingBottom in
+// `style` is always discarded, even while the keyboard is closed and the value
+// is 0. That rules out expressing both halves of the contract on the KAV
+// itself. So the safe-area inset lives on the inner View instead, and the two
+// are made to sum to the real occlusion rather than stack on top of it:
 //
-// The measurement re-runs on every layout pass as well as on the keyboard
-// events, because the two have no guaranteed order. In the Modal case the
-// keyboard event lands first and measures the still-full-height dialog, then
-// the resize arrives and the layout pass corrects the value to zero.
+//   keyboardVerticalOffset = -insets.bottom
+//
+// `keyboardY = keyboardFrame.screenY - keyboardVerticalOffset`, so a NEGATIVE
+// offset raises keyboardY and KAV pads by `occlusion - insets.bottom`; the
+// inner View adds the inset back, landing exactly on `occlusion`. The inset is
+// already inside the occlusion on both platforms: on Android the OS reports the
+// keyboard height with the navigation-bar inset subtracted while the keyboard
+// physically covers the bar, and on iOS the keyboard covers the home indicator.
+//
+// With the keyboard closed the offset is never read — RN short-circuits to
+// bottom = 0 as soon as the keyboard event is null — so the inner inset stands
+// alone and bottom-anchored content clears the navigation bar.
+//
+// Why `behavior` is 'padding' on Android too
+// ------------------------------------------
+// Leaving it undefined there makes KAV a plain View that relies on the OS
+// resizing the window. Under Android 15+ edge-to-edge (targetSdk 36 here) that
+// resize no longer happens: windowSoftInputMode=adjustResize is inert and the
+// IME arrives as an inset the app has to consume itself.
 
 // 1. React / RN imports
+import { useCallback, useRef, type ReactNode } from 'react';
 import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
-import {
-  Keyboard,
-  LayoutAnimation,
-  Platform,
+  KeyboardAvoidingView,
   View,
-  type KeyboardEvent,
+  type LayoutChangeEvent,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
@@ -89,102 +73,78 @@ export function ChatKeyboardAvoidingView({
 }: ChatKeyboardAvoidingViewProps) {
   const { styles } = useStyles();
   const insets = useSafeAreaInsets();
-  const viewRef = useRef<View>(null);
-  const { overlap, remeasure } = useKeyboardOverlap(viewRef);
-
-  // The overlap already reaches the bottom of this view, so it replaces the
-  // safe-area inset rather than stacking with it.
-  const paddingBottom = overlap > 0 ? overlap : insets.bottom;
+  const contentRef = useRef<View>(null);
+  const assertNoAncestorOffset = useAncestorOffsetAssertion(contentRef);
 
   return (
-    <View
-      ref={viewRef}
-      onLayout={remeasure}
-      style={[styles.container, { paddingBottom }, style]}
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={-insets.bottom}
+      onLayout={assertNoAncestorOffset}
+      style={[styles.container, style]}
     >
-      {children}
-    </View>
+      <View
+        ref={contentRef}
+        style={[styles.container, { paddingBottom: insets.bottom }]}
+      >
+        {children}
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
-// How much of this view the keyboard currently covers, in dp; 0 when closed.
-//
-// iOS emits the `Will` pair, so the padding moves in step with the keyboard;
-// Android only reliably emits the `Did` pair. Neither platform re-emits when the
-// keyboard merely changes height while open (switching to an emoji panel, say),
-// which is the same limitation RN's own KeyboardAvoidingView carries.
-function useKeyboardOverlap(viewRef: React.RefObject<View | null>) {
-  const [overlap, setOverlap] = useState(0);
-  const keyboardTopRef = useRef<number | null>(null);
+/**
+ * Dev-only guard for the one invariant KeyboardAvoidingView depends on without
+ * ever checking: that its parent's origin sits at the top of the screen.
+ *
+ * KAV derives its displacement from `frame.y + frame.height`, where the frame
+ * comes from its own onLayout and is therefore PARENT-relative, while the
+ * keyboard is reported in screen coordinates. The two describe the same edge
+ * only when nothing between this view and the top of the screen introduces an
+ * offset — so `frame.y` has to equal this view's absolute top. Mounted one
+ * level deeper than the page's SafeAreaView, a wrapper absorbs the top inset,
+ * `frame.y` collapses to 0, and KAV pads short by exactly that inset: the
+ * compose bar ends up under the keyboard by a status bar's worth, with no
+ * error, no warning, and a layout that still looks plausible.
+ *
+ * This measures the invariant rather than the JSX shape that usually implies
+ * it: a static rule cannot see padding that lives in another file's stylesheet,
+ * and would flag harmless wrappers that introduce no offset at all.
+ *
+ * The content View's absolute top is the KAV's own absolute top — the KAV only
+ * ever pads its BOTTOM — so it can stand in for a ref that RN does not expose.
+ * KeyboardAvoidingView is a plain class component with no forwarded ref and no
+ * `measure` method; its inner ref is private.
+ */
+function useAncestorOffsetAssertion(contentRef: React.RefObject<View | null>) {
+  return useCallback(
+    (event: LayoutChangeEvent) => {
+      if (!__DEV__) return;
 
-  const remeasure = useCallback(() => {
-    if (keyboardTopRef.current === null) {
-      setOverlap(0);
-      return;
-    }
+      // The very frame KAV is about to do its arithmetic on.
+      const { y: parentRelativeTop } = event.nativeEvent.layout;
 
-    const keyboardTop = keyboardTopRef.current;
+      contentRef.current?.measure((_x, _y, _width, height, _pageX, pageY) => {
+        // A measurement taken mid-teardown reads as zero and proves nothing.
+        if (height === 0) return;
 
-    // `measure` (pageY), not `measureInWindow`: on Android the window
-    // measurement leaves out the status-bar offset, so the view's bottom reads
-    // one status bar short of where it is and the compose bar ends up partly
-    // under the keyboard. Measured on a Galaxy S24 with the keyboard up, in dp:
-    // measureInWindow bottom 794.7 against a real screen bottom of 832, which
-    // pageY + height reports correctly.
-    viewRef.current?.measure((_x, _y, _width, height, _pageX, pageY) => {
-      // A measurement taken mid-teardown reads as zero; ignore it rather than
-      // dropping the padding and letting the keyboard cover the content.
-      if (height === 0) return;
+        const drift = pageY - parentRelativeTop;
 
-      setOverlap(Math.max(pageY + height - keyboardTop, 0));
-    });
-  }, [viewRef]);
+        // Sub-pixel rounding between the two measurement paths is expected.
+        if (Math.abs(drift) < 1) return;
 
-  useEffect(() => {
-    const showEvent =
-      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-    const hideEvent =
-      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-
-    const handleShow = (event: KeyboardEvent) => {
-      animateWith(event);
-      keyboardTopRef.current = event.endCoordinates.screenY;
-      remeasure();
-    };
-
-    const handleHide = (event: KeyboardEvent) => {
-      animateWith(event);
-      keyboardTopRef.current = null;
-      setOverlap(0);
-    };
-
-    const showSub = Keyboard.addListener(showEvent, handleShow);
-    const hideSub = Keyboard.addListener(hideEvent, handleHide);
-
-    return () => {
-      showSub.remove();
-      hideSub.remove();
-    };
-  }, [remeasure]);
-
-  return { overlap, remeasure };
-}
-
-// Match the padding change to the keyboard's own slide, using the duration and
-// curve the OS reports. Without this the padding reaches its final value on the
-// next frame while the keyboard is still travelling, which on iOS leaves a band
-// of empty background between the compose bar and the keyboard for the length of
-// the animation (verified on an iPhone 16 Pro: the compose bar sat ~96pt above
-// the arriving keyboard mid-slide). Android reports no duration on the `Did`
-// events — the keyboard is already in place by then — so this is a no-op there.
-function animateWith({ duration, easing }: KeyboardEvent) {
-  if (!duration || !easing) return;
-
-  const config = {
-    // RCTLayoutAnimation rejects durations below 10ms.
-    duration: Math.max(duration, 10),
-    type: LayoutAnimation.Types[easing] ?? LayoutAnimation.Types.keyboard,
-  };
-
-  LayoutAnimation.configureNext({ ...config, update: config });
+        console.error(
+          `[ChatKeyboardAvoidingView] mounted under ${drift}dp of ancestor ` +
+            `offset. KeyboardAvoidingView measures its frame relative to its ` +
+            `parent (top ${parentRelativeTop}dp) while the keyboard is ` +
+            `reported in screen coordinates (this view really starts at ` +
+            `${pageY}dp), so it will pad ${drift}dp short and the keyboard ` +
+            `will cover that much content. Mount this directly inside the ` +
+            `screen's SafeAreaView, with nothing between them that adds ` +
+            `padding, margin or a transform.`
+        );
+      });
+    },
+    [contentRef]
+  );
 }
