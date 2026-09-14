@@ -5,7 +5,10 @@
 //
 // RN adaptations from web:
 //   - Web's `AddTile` `ariaLabel`/`onPress` → RN `accessibilityLabel`/`onPress`.
-//   - CSS grid (repeat(4, 4rem) + space-between) → a wrapping flex row.
+//   - CSS grid (repeat(4, 4rem) + space-between) → a wrapping flex row whose
+//     cells are pinned to 25% each, since RN flexbox has no column-count. Every
+//     tile is wrapped in a `cell` View so the row always breaks after four
+//     (PDT-5208 - see styles.ts).
 
 // 1. React / RN imports
 import { View } from 'react-native';
@@ -43,18 +46,22 @@ export function MemberGrid({
         {memberLabel}
       </Typography>
       <View style={styles.list}>
-        <AddTile
-          onPress={onAddMember}
-          accessibilityLabel={addMemberLabel}
-          label={addMemberLabel}
-        />
-        {currentUser && <YouTile user={currentUser} />}
-        {members.map((user) => (
-          <SelectedMember
-            key={user.userId}
-            user={user}
-            onRemove={onRemoveMember}
+        <View style={styles.cell}>
+          <AddTile
+            onPress={onAddMember}
+            accessibilityLabel={addMemberLabel}
+            label={addMemberLabel}
           />
+        </View>
+        {currentUser && (
+          <View style={styles.cell}>
+            <YouTile user={currentUser} />
+          </View>
+        )}
+        {members.map((user) => (
+          <View key={user.userId} style={styles.cell}>
+            <SelectedMember user={user} onRemove={onRemoveMember} />
+          </View>
         ))}
       </View>
     </View>
