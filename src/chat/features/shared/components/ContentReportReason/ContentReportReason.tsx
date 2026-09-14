@@ -1,10 +1,14 @@
 // ContentReportReason — ported from AmityUiKitWeb
 // core/design/components/ContentReportReason/ContentReportReason.tsx, scoped to the
 // message-report flow (web's component also handled post/comment; RN only needs
-// message here). Web rendered it inside a Drawer (mobile) / Popup (desktop); the RN
-// bug being fixed was that the report UI appeared as a partial bottom sheet, so this
-// is a full-screen Modal — matching the sibling MessageFullTextScreen overlay pattern
-// and how every other chat overlay is threaded through useChatMessage.
+// message here). Web renders it in a Drawer (mobile) / Popup (desktop); RN matches
+// the mobile side with a bottom sheet at 90% of the viewport, per Figma
+// (PDT-5225 / PDT-5261).
+//
+// An earlier fix took this the other way — a partial sheet was reported as a bug and
+// the screen became a full-screen Modal, which then lost the drag handle, the
+// backdrop and tap-outside-to-close along with it. The sheet was never the problem;
+// its height was.
 //
 // RN adaptations vs web:
 //   - reporting goes through RN's own `useFlagMessageQuery().report`, the port of
@@ -14,11 +18,12 @@
 //     stays disabled while offline (documented deviation).
 
 // 1. React / RN imports
-import { useState } from 'react';
-import { Modal, Pressable, ScrollView, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
 
 // 2. Third-party imports
 import { ContentFlagReasonEnum } from '@amityco/ts-sdk-react-native';
+import BottomSheet, { type BottomSheetMethods } from '@devvie/bottom-sheet';
 
 // 3. Internal imports
 import { Typography } from '../../../../../core/design/components/Typography';
@@ -31,7 +36,6 @@ import { resolveString, useString } from '../../../../../core/localization';
 import { useFlagMessageQuery } from '../../../../hooks/queries';
 import { useNetworkOnline } from '../../../../hooks/useNetworkOnline';
 import { FailedToShow } from '../FailedToShow';
-import Toast from '../../../../../social/components/Toast';
 import { useStyles } from './styles';
 
 // 4. Types
@@ -87,6 +91,7 @@ export function ContentReportReason({
   onClose,
 }: ContentReportReasonProps) {
   const { styles } = useStyles();
+  const sheetRef = useRef<BottomSheetMethods>(null);
   const { online } = useNetworkOnline();
   const { report, isMessageDeleted, isPendingReport } = useFlagMessageQuery({
     messageId: message.messageId,
@@ -131,6 +136,12 @@ export function ContentReportReason({
   const isDisabledSubmitButton =
     !selectedReason || isOthersReasonBlank || !online || isPendingReport;
 
+  // The sheet animates itself open/closed; `visible` is the source of truth.
+  useEffect(() => {
+    if (visible) sheetRef.current?.open();
+    else sheetRef.current?.close();
+  }, [visible]);
+
   function handleBack() {
     // Web resets both the selected reason and the sub-view flag.
     setSelectedReason(undefined);
@@ -156,11 +167,16 @@ export function ContentReportReason({
   }
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      onRequestClose={onClose}
-      transparent={false}
+    <BottomSheet
+      ref={sheetRef}
+      // 90% of the viewport, per Figma — a full-height sheet, not a full screen.
+      height="90%"
+      closeOnDragDown
+      closeOnBackdropPress
+      // The body scrolls; without this the sheet swallows the ScrollView's pans.
+      disableBodyPanning
+      onClose={onClose}
+      style={styles.sheet}
     >
       <View style={styles.screen}>
         {isMessageDeleted ? (
@@ -309,12 +325,7 @@ export function ContentReportReason({
             />
           )}
         </View>
-        {/* The global <Toast /> is mounted outside this Modal, so RN renders it
-            beneath the native Modal layer. Mount a Toast inside the Modal too so
-            the report-error toast (Modal stays open on failure) is visible; it
-            reads the same redux toast state via context. */}
-        <Toast />
       </View>
-    </Modal>
+    </BottomSheet>
   );
 }

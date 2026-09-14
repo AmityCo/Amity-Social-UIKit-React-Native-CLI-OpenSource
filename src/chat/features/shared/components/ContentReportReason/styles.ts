@@ -1,19 +1,29 @@
 // Styles for ContentReportReason — ported from AmityUiKitWeb
 // core/design/components/ContentReportReason/ContentReportReason.module.css.
-// Web is a full-viewport sheet (`height: 100vh`); RN uses a full-screen Modal.
+// Web is a drawer at `data-full-height` (capped at 96%); RN is a bottom sheet at 90%
+// per Figma (PDT-5225).
 // Geometry: header padding 0.75rem/1rem → 12/16; description padding 12/16; list
 // rows padding 1rem → 16; bottom bar padding 1rem → 16; others field padding
 // 1.5rem 1rem 0 → paddingTop 24 / paddingHorizontal 16. Web token
 // `text-list-textdescription-default-default` → RN `TextListTextDescriptionDefaultDefault`.
 
 import { StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToken } from '../../../../../core/design/theme/useToken';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 
 export const useStyles = () => {
   const token = useToken();
+  const { bottom } = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
+    // The sheet body itself. Matches the shared BottomSheetComponent's container:
+    // sheet background + the bottom safe-area inset, since a bottom sheet's lower
+    // edge sits on the screen edge (home indicator / gesture bar).
+    sheet: {
+      backgroundColor: token(AmityColorToken.SurfaceSheetsBackgroundGeneral),
+      paddingBottom: bottom,
+    },
     screen: {
       flex: 1,
       backgroundColor: token(AmityColorToken.SurfaceSheetsBackgroundGeneral),
