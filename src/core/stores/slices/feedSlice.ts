@@ -30,6 +30,9 @@ const feedSlice = createSlice({
     ) => {
       const { postId, postDetail } = action.payload;
       const index = state.postList.findIndex((item) => item.postId === postId);
+      // Same miss as in globalfeedSlice: a postId this list never held wrote a
+      // "-1" property instead of updating anything, leaving the entries stale.
+      if (index < 0) return;
       state.postList[index] = postDetail;
     },
     deleteByPostId: (state, action: PayloadAction<{ postId: string }>) => {

@@ -12,6 +12,17 @@ interface useFileProps {
   type?: 'user' | 'community';
 }
 
+/**
+ * Resolves an **avatar** file to a display url.
+ *
+ * A miss — no id, no file, no url — answers with the default avatar (or
+ * community avatar) image, which is the right placeholder for a profile
+ * picture and the wrong one for anything else. Post media must not be resolved
+ * through here: handing an avatar back for a video whose thumbnail is still
+ * transcoding renders a person icon in the carousel as though it were the
+ * frame. Resolve media with FileRepository directly and let an unresolved file
+ * stay undefined.
+ */
 export const useFile = () => {
   const getImage = useCallback(
     async ({

@@ -60,7 +60,10 @@
     },
     "story_page/*/*": {},
     "story_page/*/progress_bar": {
-      "progress_color": ["#339AF9", "#78FA58"],
+      "progress_color": [
+        "#339AF9",
+        "#78FA58"
+      ],
       "background_color": "#AB1234"
     },
     "story_page/*/overflow_menu": {
@@ -119,7 +122,10 @@
     },
     "*/story_tab_component/*": {},
     "*/story_tab_component/story_ring": {
-      "progress_color": ["#339AF9", "#78FA58"],
+      "progress_color": [
+        "#339AF9",
+        "#78FA58"
+      ],
       "background_color": "#AB1234"
     },
     "*/story_tab_component/create_new_story_button": {
@@ -167,10 +173,10 @@
     "social_home_page/my_communities/community_avatar": {},
     "social_home_page/my_communities/community_display_name": {},
     "social_home_page/my_communities/community_private_badge": {
-      "image": "lockIcon"
+      "icon": "lockIcon"
     },
     "social_home_page/my_communities/community_official_badge": {
-      "image": "officialBadgeIcon"
+      "icon": "officialBadgeIcon"
     },
     "social_home_page/my_communities/community_category_name": {},
     "social_home_page/my_communities/community_members_count": {},
@@ -178,10 +184,10 @@
     "social_home_page/global_feed_component/*": {},
     "global_search_page/*/*": {},
     "post_detail_page/*/back_button": {
-      "image": "backButtonIcon"
+      "icon": "backButtonIcon"
     },
     "post_detail_page/*/menu_button": {
-      "image": "menuIcon"
+      "icon": "menuIcon"
     },
     "*/post_content/moderator_badge": {
       "icon": "badgeIcon",
@@ -189,7 +195,7 @@
     },
     "*/post_content/timestamp": {},
     "*/post_content/menu_button": {
-      "image": "menuIcon"
+      "icon": "menuIcon"
     },
     "*/post_content/post_content_view_count": {},
     "*/post_content/reaction_button": {
@@ -207,7 +213,7 @@
     "social_global_search_page/*/*": {},
     "social_global_search_page/top_search_bar/*": {},
     "social_global_search_page/top_search_bar/search_icon": {
-      "image": "search_light"
+      "icon": "search_light"
     },
     "social_global_search_page/top_search_bar/clear_button": {
       "icon": "clear"
@@ -218,10 +224,10 @@
     "social_global_search_page/community_search_result/community_avatar": {},
     "social_global_search_page/community_search_result/community_display_name": {},
     "social_global_search_page/community_search_result/community_private_badge": {
-      "image": "lockIcon"
+      "icon": "lockIcon"
     },
     "social_global_search_page/community_search_result/community_official_badge": {
-      "image": "officialBadgeIcon"
+      "icon": "officialBadgeIcon"
     },
     "social_global_search_page/community_search_result/community_category_name": {},
     "social_global_search_page/community_search_result/community_members_count": {},
@@ -636,7 +642,6 @@
     "user_profile_page/*/user_video_feed_tab_button": {
       "text": "Videos"
     },
-
     "user_profile_page/user_profile_header/follow_user_button": {
       "text": "Follow",
       "image": "value"
@@ -662,7 +667,6 @@
     "user_profile_page/user_profile_header/user_follower": {
       "text": "value"
     },
-
     "user_profile_page/user_feed/*": {},
     "user_profile_page/user_feed/empty_user_feed": {
       "text": "No posts yet"
@@ -679,7 +683,6 @@
     "user_profile_page/user_feed/blocked_user_feed_info": {
       "text": "Unblock to see their posts."
     },
-
     "user_profile_page/user_image_feed/*": {},
     "user_profile_page/user_image_feed/empty_user_image_feed": {
       "text": "No images yet"
@@ -696,7 +699,6 @@
     "user_profile_page/user_image_feed/blocked_user_image_feed_info": {
       "text": "Unblock to see their images."
     },
-
     "user_profile_page/user_video_feed/*": {},
     "user_profile_page/user_video_feed/empty_user_video_feed": {
       "text": "No videos yet"
@@ -713,17 +715,14 @@
     "user_profile_page/user_video_feed/blocked_user_video_feed_info": {
       "text": "Unblock to see their videos."
     },
-
     "user_relationship_page/*/*": {},
     "user_relationship_page/*/back_button": {
       "image": "value"
     },
-
     "user_pending_follow_request_page/*/*": {},
     "user_pending_follow_request_page/*/back_button": {
       "image": "value"
     },
-
     "edit_user_profile_page/*/*": {},
     "edit_user_profile_page/*/back_button": {
       "image": "value"
@@ -740,7 +739,6 @@
     "edit_user_profile_page/*/update_user_profile_button": {
       "text": "Save"
     },
-
     "blocked_users_page/*/*": {},
     "blocked_users_page/*/back_button": {
       "image": "value"
@@ -791,10 +789,6 @@
       "image": "icon",
       "text": "Copy post link"
     },
-    "community_notification_page/*/*": {},
-    "community_posts_notification_page/*/*": {},
-    "community_comments_notification_page/*/*": {},
-    "community_stories_notification_page/*/*": {},
     "community_livestreams_notification_page/*/*": {}
   }
 }

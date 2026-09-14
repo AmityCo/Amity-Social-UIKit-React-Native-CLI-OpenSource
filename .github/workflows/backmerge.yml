@@ -1,0 +1,56 @@
+name: Back-merge production to develop
+
+on:
+  push:
+    branches: [production]
+
+jobs:
+  backmerge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge production into develop and push
+        id: merge
+        run: |
+          git fetch origin production
+          if git merge-base --is-ancestor origin/production HEAD; then
+            echo "develop already contains production - nothing to do"
+            echo "result=uptodate" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git merge origin/production --no-edit; then
+            if git push origin develop; then
+              echo "merged and pushed directly to develop"
+              echo "result=pushed" >> "$GITHUB_OUTPUT"
+            else
+              echo "push rejected (github-actions has no bypass on develop yet) - falling back to PR"
+              echo "result=pr" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            git merge --abort
+            echo "merge conflict - falling back to PR"
+            echo "result=pr" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fall back to opening a PR
+        if: steps.merge.outputs.result == 'pr'
+        run: |
+          gh pr create --base develop --head production \
+            --title "chore: back-merge production into develop" \
+            --body "The automatic direct merge was not possible (merge conflict, or the github-actions app has no bypass permission on develop). Please resolve and merge this PR to keep develop in sync after the release." \
+          || echo "PR already exists"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

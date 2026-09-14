@@ -2,13 +2,13 @@
 # yarn lockfile v1
 
 
-"@amityco/ts-sdk-react-native@7.24.1-a63fc29a.0":
-  version "7.24.1-a63fc29a.0"
-  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.24.1-a63fc29a.0.tgz#9a7daf044900e50bc5c6c81f68aa893c325ef358"
-  integrity sha512-Nm2/y6ngnsBPtTN45hRceY+PIacBhiMI2FzK6We08Y1Yjxf9jeMpxlaJ5tVzpJe4ajv8AQG6W6ZrjJkxsvCRog==
+"@amityco/ts-sdk-react-native@7.27.0":
+  version "7.27.0"
+  resolved "https://registry.yarnpkg.com/@amityco/ts-sdk-react-native/-/ts-sdk-react-native-7.27.0.tgz#3d2f1a2271bc61b3ea64a238378b7c1b2f667a3f"
+  integrity sha512-pgS8MVdsu5MuUbQSo2XCOrQ5op4uNtXy75WQVcbFu1LAoT8u09qgGpyt1XfVsUqcl1nq7mcwKzhvLT7NvT74hA==
   dependencies:
-    "@react-native-async-storage/async-storage" "^2.2.0"
-    "@react-native-community/netinfo" "^11.5.2"
+    "@react-native-async-storage/async-storage" "^1.17.7"
+    "@react-native-community/netinfo" "^9.4.1"
     agentkeepalive "^4.2.1"
     axios "1.12.0"
     debug "^4.3.4"
@@ -4582,9 +4582,9 @@ invariant@^2.2.4:
     loose-envify "^1.0.0"
 
 ip-address@^10.1.1:
-  version "10.3.1"
-  resolved "https://registry.yarnpkg.com/ip-address/-/ip-address-10.3.1.tgz#929f9629d1724f7e1b7485ce89752f3675336a10"
-  integrity sha512-1e9d3kb97NHJTIJDZW9rKqW2h6+dFa50Dy0fpPSMQp2ADje5gvKsXmdiK6dwY5t76TaTt5+P5N1Y/LoToIxP6g==
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/ip-address/-/ip-address-10.5.0.tgz#fcd6d7dfe9e68416b7cb71afe9bc960b3e38c13b"
+  integrity sha512-R5SnVLJmgYYvf2F2ZgwSBnelz5G4q5AxIC277GDfUaNbrZKNANcBC7RHqYYePlszf4kBolVkJauG0ZjHHFh55g==
 
 is-arguments@^1.1.1:
   version "1.2.0"
@@ -7449,9 +7449,9 @@ ws@^7, ws@^7.5.10:
   integrity sha512-+dbF1tHwZpXcbOJdVOkzLDxZP1ailvSxM6ZweXTegylPny803bFhA+vqBYw4s31NSAk4S2Qz+AKXK9a4wkdjcQ==
 
 ws@^8.18.3:
-  version "8.21.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.21.1.tgz#045650cd4b1207809e7547146223c3814a9af586"
-  integrity sha512-+0NTnW77fFN/DjQi6k/Sq/Yvk4Sgajw7urW8V+asjXnRgDs9gyGkdb7EzgfhA4goXsRIZKE28fzIXBHEzhuiWw==
+  version "8.21.3"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.21.3.tgz#660b4faddb6a3e575c86e078126919961f4de4fc"
+  integrity sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==
 
 y18n@^4.0.0:
   version "4.0.3"
