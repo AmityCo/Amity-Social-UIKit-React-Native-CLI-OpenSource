@@ -25,7 +25,7 @@ export const useStyles = () => {
       paddingBottom: bottom,
     },
     screen: {
-      flex: 1,
+      height: '100%',
       backgroundColor: token(AmityColorToken.SurfaceSheetsBackgroundGeneral),
     },
     header: {
