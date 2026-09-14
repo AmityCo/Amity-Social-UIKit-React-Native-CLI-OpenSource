@@ -122,7 +122,14 @@ export function ContentReportReason({
     'amity_chat_report_message_unavailable_desc'
   );
 
-  const isDisabledSubmitButton = !selectedReason || !online || isPendingReport;
+  // Tapping the "Others" row selects the reason before a single character is
+  // typed, so `selectedReason` on its own leaves Submit live over an empty
+  // free-text field — and submitting then sends '' as the reason.
+  const isOthersReasonBlank =
+    selectedReason === ContentFlagReasonEnum.Others && !otherReasonText.trim();
+
+  const isDisabledSubmitButton =
+    !selectedReason || isOthersReasonBlank || !online || isPendingReport;
 
   function handleBack() {
     // Web resets both the selected reason and the sub-view flag.
@@ -135,12 +142,12 @@ export function ContentReportReason({
   }
 
   function handleSubmitReport() {
-    if (!message.messageId || !selectedReason || isPendingReport) return;
+    if (!message.messageId || isDisabledSubmitButton) return;
 
     // Web sends the free text for Others, the enum value otherwise.
     const reason =
       selectedReason === ContentFlagReasonEnum.Others
-        ? otherReasonText
+        ? otherReasonText.trim()
         : selectedReason;
 
     // The hook owns the toasts, the duplicate-report guard, the NOT_FOUND →
