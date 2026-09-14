@@ -52,7 +52,7 @@ export const getBubbleMaxWidth = () =>
 // The design SoT records media as a flat `maxWidth: 240` and raises it as an
 // open designer question ("Unclear whether media should follow 60% or stay a
 // fixed 240 square"; Android leaves media at 240). We follow web here because
-// PDT-4916 explicitly cites the web mobile UIKit as the expected result — under
+// the ticket explicitly cites the web mobile UIKit as the expected result — under
 // a 240 cap a landscape image would still render 1:1, which is the bug.
 
 export const MEDIA_BUBBLE_HEIGHT = 240;

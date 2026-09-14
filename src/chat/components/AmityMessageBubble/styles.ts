@@ -26,7 +26,7 @@ const TEXT_FONT_SIZE = 14;
 const TEXT_LINE_HEIGHT = 20;
 const TEXT_PADDING_H = 16;
 
-// PDT-4870 — leading compensation.
+// Leading compensation.
 //
 // The spec's box is padding 10/16/10/16 around a 20px line. On the web that
 // renders centred because CSS distributes the difference between the line
@@ -87,7 +87,7 @@ export const useStyles = () => {
         AmityColorToken.SurfaceChatBubbleMessageInboundPressed
       ),
     },
-    // PDT-4870: the leading was 18 where the SoT says 20, and the padding is
+    // The leading was 18 where the SoT says 20, and the padding is
     // asymmetric to compensate for RN's lack of CSS half-leading — see
     // TEXT_LEADING_EXCESS above. includeFontPadding: false removes Android's
     // additional font padding, which otherwise stacks on the same bias.
@@ -103,7 +103,7 @@ export const useStyles = () => {
     // the line count depends on the wrap width, and giving it a definite height
     // makes iOS lay the text into that bounded box, so onTextLayout reports
     // just the lines that fit and never exceeds maxLines — no "See more" ever
-    // appears (PDT-4911). StyleSheet.absoluteFillObject was doing exactly that,
+    // appears at all. StyleSheet.absoluteFillObject was doing exactly that,
     // because it pins bottom: 0 as well as the sides. Anchor top/left/right and
     // leave the height free. The parent Pressable is overflow: 'hidden', so the
     // taller probe cannot paint outside the bubble.
@@ -179,7 +179,7 @@ export const useStyles = () => {
     // Repeat the surrounding text's metrics exactly: the 500-weight mention
     // <Text> otherwise renders taller than the body line box and its bottom
     // gets clipped (Android). These MUST track TEXT_FONT_SIZE/TEXT_LINE_HEIGHT
-    // — a mismatch reintroduces PDT-4870's vertical offset on any line that
+    // — a mismatch reintroduces the vertical offset above on any line that
     // mixes plain text with a mention.
     mentionOwn: {
       fontSize: TEXT_FONT_SIZE,
@@ -241,7 +241,7 @@ export const useStyles = () => {
     },
 
     // --- Media (image / video) ---
-    // PDT-4916: these were pinned to a fixed 240×240, so landscape AND portrait
+    // These were pinned to a fixed 240×240, so landscape AND portrait
     // media were both centre-cropped square. Web locks the HEIGHT at 240 and
     // lets the width shrink to the media's own ratio, capped at 320 (image) /
     // 240 (video) — see getMediaBubbleSize in src/chat/constants/bubble.

@@ -478,7 +478,7 @@ function ImageBubble({
   const [hasLoadError, setHasLoadError] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [preloaded, setPreloaded] = useState(false);
-  // PDT-4916: the bubble follows the image's own ratio. RN gives us the
+  // The bubble follows the image's own ratio. RN gives us the
   // intrinsic size on the <Image onLoad> event, which is the same mechanism the
   // reply quote already uses (MessageReplyQuote → getReplyThumbnailSize).
   // Until it arrives the styled square stands in.
@@ -625,13 +625,13 @@ function VideoBubble({
   const fileId = getFileId(message);
   const videoUrl = useVideoFileUrl(fileId);
   const [pressed, setPressed] = useState(false);
-  // PDT-4916: same ratio treatment as the image bubble, measured from
+  // Same ratio treatment as the image bubble, measured from
   // react-native-video's onLoad payload instead of <Image onLoad>.
   const [mediaSize, setMediaSize] = useState<{
     width: number;
     height: number;
   } | null>(null);
-  // PDT-4923: the poster <Video> is mounted `paused`, and react-native-video 6
+  // The poster <Video> is mounted `paused`, and react-native-video 6
   // paints no first frame until playback or a seek — so a failed/pending video
   // showed only the bubble's grey loading surface plus the play chip. Web forces
   // a decoded frame with preload="metadata" and the media fragment `#t=0.1`;
@@ -691,7 +691,7 @@ function VideoBubble({
           muted
           controls={false}
           onLoad={(data) => {
-            // naturalSize gives the video's intrinsic dimensions (PDT-4916).
+            // naturalSize gives the video's intrinsic dimensions.
             setMediaSize(
               getMediaBubbleSize(
                 data.naturalSize?.width,
@@ -700,7 +700,7 @@ function VideoBubble({
               )
             );
             // Nudge off frame 0 so a decoded frame is actually painted while
-            // paused — web's `#t=0.1` (PDT-4923).
+            // paused — the equivalent of web's `#t=0.1`.
             if (!seededPoster.current) {
               seededPoster.current = true;
               posterRef.current?.seek(0.1);

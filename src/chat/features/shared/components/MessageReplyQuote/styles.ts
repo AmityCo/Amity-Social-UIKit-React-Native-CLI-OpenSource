@@ -9,7 +9,7 @@
 // The quote's width (web's 14.25rem→228, and the placeholder's 228) is NOT a
 // fixed value — 228 is the 60%-of-viewport rule on Figma's 375px artboard. It
 // is derived from that rule here so the quote tracks the reply bubble at every
-// screen size (PDT-4926). See src/chat/constants/bubble.
+// screen size. See src/chat/constants/bubble.
 
 import { StyleSheet } from 'react-native';
 import { useToken } from '../../../../../core/design/theme/useToken';
@@ -56,7 +56,7 @@ export const useStyles = (isUser: boolean) => {
         AmityColorToken.SurfaceChatBubbleReplyOverlayDefault
       ),
     },
-    // PDT-4926: this was a flat 228, which is the 60%-of-viewport rule's value
+    // This was a flat 228, which is the 60%-of-viewport rule's value
     // on Figma's 375px artboard — not the contract (see
     // src/chat/constants/bubble). Held fixed, the quote fell progressively
     // narrower than the reply bubble as the screen got wider: on an iPhone XR

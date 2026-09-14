@@ -155,7 +155,7 @@ export function MessageRow({
             // bubble. Bare exclamation (not circled) in a transparent/primary
             // icon button.
             //
-            // PDT-4915: the weight was wrong. Web's `<Exclamation />` default
+            // The weight was wrong. Web's `<Exclamation />` default
             // export is the REGULAR weight (Exclamation.tsx assigns Regular as
             // the default), not Solid. At 16px the solid glyph's bar is 33%
             // thicker and its dot 25% larger than the regular one, which is
