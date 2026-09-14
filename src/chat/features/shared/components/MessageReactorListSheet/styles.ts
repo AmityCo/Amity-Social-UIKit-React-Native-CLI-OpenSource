@@ -33,11 +33,20 @@ export const useStyles = () => {
       flex: 1,
     },
     // .messageReactorListSheet__tabList (underlined: row, gap 20, padding 0 per web sheet)
+    // The 1px baseline rule under the whole tab strip mirrors web's reaction-list
+    // tab bar (`ReactionList.module.css .tabList { border-bottom: 1px solid
+    // var(--asc-color-base-shade4) }`); the same baseline is used for web's other
+    // v4 tab strip (`MentionMenu.module.css .mentionTabs__tabList`), which resolves
+    // it through the SoT divider token `Line/Divider/Post/Default`. The RN port
+    // built this bar inline from the Tab atom, which carries only the per-tab
+    // 2px ACTIVE indicator, so the section separator was dropped entirely.
     tabList: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 20,
       paddingHorizontal: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: token(AmityColorToken.LineDividerPostDefault),
     },
     // one underlined tab (SoT geometry: height 56, paddingTop 16, gap 14, indicator 2)
     tab: {

@@ -4,9 +4,14 @@ import { AmityColorToken } from '../../tokens/amity-color-tokens';
 import type { ButtonHierarchy, ButtonSize, ButtonTone } from './Button';
 
 // ── Geometry: SoT geometry.json → button.main ──
-// label sizes lg {15/20} sm {13/18}; iconGlyph 16; weight 590 → RN '600'.
+// label sizes lg {15/20} sm {13/18}; weight 590 → RN '600'.
 // Tertiary uses paddingH_tertiary (4) but keeps full height + paddingV (ghost-like,
 // NOT link-like). Border width 0.0625rem = 1px.
+// Icon glyph is SIZE-DEPENDENT, mirroring web Main.module.css:
+//   `.mainButton__icon svg { width: 1.25rem }`                    → lg 20
+//   `[data-size='sm'] .mainButton__icon svg { width: 1rem }`      → sm 16
+// (previously hardcoded to 16 for both, so lg leading icons rendered 4px small).
+// letterSpacing mirrors web's `letter-spacing: -0.025rem` → -0.4px.
 const GEOMETRY = {
   lg: {
     height: 40,
@@ -17,6 +22,7 @@ const GEOMETRY = {
     fontSize: 15,
     lineHeight: 20,
     gap: 8,
+    iconGlyph: 20,
   },
   sm: {
     height: 28,
@@ -27,10 +33,11 @@ const GEOMETRY = {
     fontSize: 13,
     lineHeight: 18,
     gap: 4,
+    iconGlyph: 16,
   },
 } as const;
 
-const ICON_GLYPH = 16;
+const LETTER_SPACING = -0.4;
 const BORDER_WIDTH = 1;
 const FONT_WEIGHT = '600' as const;
 
@@ -302,8 +309,9 @@ export const useStyles = (
       fontSize: g.fontSize,
       lineHeight: g.lineHeight,
       fontWeight: FONT_WEIGHT,
+      letterSpacing: LETTER_SPACING,
     },
   });
 
-  return { styles, palette, iconGlyph: ICON_GLYPH };
+  return { styles, palette, iconGlyph: g.iconGlyph };
 };
