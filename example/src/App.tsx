@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import messaging from '@react-native-firebase/messaging';
 import {
   PermissionsAndroid,
