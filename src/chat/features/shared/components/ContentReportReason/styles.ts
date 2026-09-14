@@ -83,6 +83,11 @@ export const useStyles = () => {
       paddingTop: 24,
       paddingHorizontal: 16,
     },
+    // The error state fills the space the header + list would have taken, so the
+    // icon/title/description group sits optically centred in the sheet.
+    failed: {
+      flex: 1,
+    },
     bottomBar: {
       padding: 16,
       borderTopWidth: 1,

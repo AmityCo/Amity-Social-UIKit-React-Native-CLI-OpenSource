@@ -7,12 +7,9 @@
 // and how every other chat overlay is threaded through useChatMessage.
 //
 // RN adaptations vs web:
-//   - web's `useFlagMessageQuery` (react-query) is inlined here as a direct
-//     `MessageRepository.flagMessage(messageId, reason)` call — RN has no react-query
-//     wrapper for messages and the report screen only reports (never toggles/unreports).
-//   - web's deleted/error branch (`FailedToShow` + a Close button on NOT_FOUND /
-//     400400) is dropped — RN has no `FailedToShow`; failures surface as an error
-//     toast instead (documented deviation).
+//   - reporting goes through RN's own `useFlagMessageQuery().report`, the port of
+//     web's hook of the same name, so report and unreport share one code path and
+//     one flag-state cache.
 //   - web's offline info-toast `useEffect` is dropped; the Submit button already
 //     stays disabled while offline (documented deviation).
 
@@ -21,11 +18,7 @@ import { useState } from 'react';
 import { Modal, Pressable, ScrollView, View } from 'react-native';
 
 // 2. Third-party imports
-import {
-  ContentFlagReasonEnum,
-  MessageRepository,
-} from '@amityco/ts-sdk-react-native';
-import { useQueryClient } from '@tanstack/react-query';
+import { ContentFlagReasonEnum } from '@amityco/ts-sdk-react-native';
 
 // 3. Internal imports
 import { Typography } from '../../../../../core/design/components/Typography';
@@ -35,9 +28,9 @@ import { Selection } from '../../../../../core/design/atoms/Selection';
 import { Input } from '../../../../../core/design/atoms/Input';
 import { Button } from '../../../../../core/design/atoms/Button';
 import { resolveString, useString } from '../../../../../core/localization';
-import { useChatNotifications } from '../../../../hooks/useChatNotifications';
-import { flagMessageQueryKey } from '../../../../hooks/queries';
+import { useFlagMessageQuery } from '../../../../hooks/queries';
 import { useNetworkOnline } from '../../../../hooks/useNetworkOnline';
+import { FailedToShow } from '../FailedToShow';
 import Toast from '../../../../../social/components/Toast';
 import { useStyles } from './styles';
 
@@ -94,16 +87,18 @@ export function ContentReportReason({
   onClose,
 }: ContentReportReasonProps) {
   const { styles } = useStyles();
-  const { success, error } = useChatNotifications();
-  const queryClient = useQueryClient();
   const { online } = useNetworkOnline();
+  const { report, isMessageDeleted, isPendingReport } = useFlagMessageQuery({
+    messageId: message.messageId,
+    // Only subscribe while the sheet is up; the bubble menu owns its own instance.
+    enabled: visible && !!message.messageId,
+  });
 
   const [isShowOthersOption, setIsShowOthersOption] = useState(false);
   const [otherReasonText, setOtherReasonText] = useState('');
   const [selectedReason, setSelectedReason] = useState<
     Amity.ContentFlagReason | undefined
   >(undefined);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const othersTitle = useString('amity_social_button_others');
   const reportReasonTitle = useString('amity_social_button_report_reason');
@@ -123,10 +118,11 @@ export function ContentReportReason({
   const submitButtonText = useString(
     'amity_social_button_report_submit_button'
   );
-  const reportSuccessToast = useString('amity_chat_toast_message_reported');
-  const reportErrorToast = useString('amity_chat_toast_message_reported_error');
+  const messageUnavailableDesc = useString(
+    'amity_chat_report_message_unavailable_desc'
+  );
 
-  const isDisabledSubmitButton = !selectedReason || !online || isSubmitting;
+  const isDisabledSubmitButton = !selectedReason || !online || isPendingReport;
 
   function handleBack() {
     // Web resets both the selected reason and the sub-view flag.
@@ -138,8 +134,8 @@ export function ContentReportReason({
     setSelectedReason(value);
   }
 
-  async function handleSubmitReport() {
-    if (!message.messageId || !selectedReason || isSubmitting) return;
+  function handleSubmitReport() {
+    if (!message.messageId || !selectedReason || isPendingReport) return;
 
     // Web sends the free text for Others, the enum value otherwise.
     const reason =
@@ -147,21 +143,9 @@ export function ContentReportReason({
         ? otherReasonText
         : selectedReason;
 
-    setIsSubmitting(true);
-    try {
-      await MessageRepository.flagMessage(message.messageId, reason);
-      // Refresh the bubble menu's flag state so Report flips to Unreport
-      // (reinforces the menu's own refetch-on-open; see useFlagMessageQuery).
-      queryClient.invalidateQueries({
-        queryKey: flagMessageQueryKey(message.messageId),
-      });
-      success({ content: reportSuccessToast });
-      onClose();
-    } catch {
-      error({ content: reportErrorToast });
-    } finally {
-      setIsSubmitting(false);
-    }
+    // The hook owns the toasts, the duplicate-report guard, the NOT_FOUND →
+    // isMessageDeleted swap, and refreshing the flag state the bubble menu reads.
+    report({ reason, onSuccess: onClose });
   }
 
   return (
@@ -172,127 +156,151 @@ export function ContentReportReason({
       transparent={false}
     >
       <View style={styles.screen}>
-        <View style={styles.header}>
-          <View style={[styles.headerSlot, styles.headerSlotLeft]}>
-            {isShowOthersOption ? (
-              <Pressable
-                style={styles.iconButton}
-                onPress={handleBack}
-                accessibilityRole="button"
-                accessibilityLabel="Back"
-              >
-                <AmityIcon
-                  name="chevron-left"
-                  size={24}
-                  tokenColor={
-                    AmityColorToken.IconIconButtonGhostSecondaryDefault
-                  }
-                />
-              </Pressable>
-            ) : null}
-          </View>
-          <View style={[styles.headerSlot, styles.headerSlotCenter]}>
-            <Typography
-              variant="titleBold"
-              style={styles.title}
-              numberOfLines={1}
-            >
-              {isShowOthersOption ? othersTitle : reportReasonTitle}
-            </Typography>
-          </View>
-          <View style={[styles.headerSlot, styles.headerSlotRight]}>
-            {isShowOthersOption ? (
-              <Pressable
-                style={styles.iconButton}
-                onPress={onClose}
-                accessibilityRole="button"
-                accessibilityLabel={closeButtonText}
-              >
-                <AmityIcon
-                  name="cross-l"
-                  size={24}
-                  tokenColor={
-                    AmityColorToken.IconIconButtonGhostSecondaryDefault
-                  }
-                />
-              </Pressable>
-            ) : null}
-          </View>
-        </View>
-
-        <ScrollView
-          style={styles.content}
-          contentContainerStyle={styles.contentContainer}
-        >
-          {isShowOthersOption ? (
-            <View style={styles.othersField}>
-              <Input.Text
-                title={reportOtherReasonDesc}
-                optionalLabel={reportOtherReasonOptional}
-                showCharacterCount
-                maxLength={MAX_LENGTH_DESCRIBE}
-                placeholder={reportTextPlaceholder}
-                value={otherReasonText}
-                onChange={setOtherReasonText}
-                // LEADS WEB (PDT-4142): web's ContentReportReason also omits
-                // multiLine — its Input.Text then renders a single-line <input>,
-                // which is the bug the ticket reports, still open there.
-                // Without this the field stays single-line, so a reason typed up
-                // to MAX_LENGTH_DESCRIBE scrolls sideways instead of wrapping.
-                // multiLine also top-aligns the row so the label sits level with
-                // the first line.
-                multiLine
-              />
+        {isMessageDeleted ? (
+          // PDT-5229: the message was deleted out from under this sheet.
+          // Replace the body with the settled error state — what web does on
+          // NOT_FOUND — rather than leaving the form up behind a toast.
+          <FailedToShow
+            style={styles.failed}
+            description={messageUnavailableDesc}
+          />
+        ) : (
+          <>
+            <View style={styles.header}>
+              <View style={[styles.headerSlot, styles.headerSlotLeft]}>
+                {isShowOthersOption ? (
+                  <Pressable
+                    style={styles.iconButton}
+                    onPress={handleBack}
+                    accessibilityRole="button"
+                    accessibilityLabel="Back"
+                  >
+                    <AmityIcon
+                      name="chevron-left"
+                      size={24}
+                      tokenColor={
+                        AmityColorToken.IconIconButtonGhostSecondaryDefault
+                      }
+                    />
+                  </Pressable>
+                ) : null}
+              </View>
+              <View style={[styles.headerSlot, styles.headerSlotCenter]}>
+                <Typography
+                  variant="titleBold"
+                  style={styles.title}
+                  numberOfLines={1}
+                >
+                  {isShowOthersOption ? othersTitle : reportReasonTitle}
+                </Typography>
+              </View>
+              <View style={[styles.headerSlot, styles.headerSlotRight]}>
+                {isShowOthersOption ? (
+                  <Pressable
+                    style={styles.iconButton}
+                    onPress={onClose}
+                    accessibilityRole="button"
+                    accessibilityLabel={closeButtonText}
+                  >
+                    <AmityIcon
+                      name="cross-l"
+                      size={24}
+                      tokenColor={
+                        AmityColorToken.IconIconButtonGhostSecondaryDefault
+                      }
+                    />
+                  </Pressable>
+                ) : null}
+              </View>
             </View>
-          ) : (
-            <>
-              <Typography variant="caption" style={styles.description}>
-                {reportListDescription}
-              </Typography>
-              {REPORT_REASONS.map((reason) => (
-                <View key={reason.value} style={styles.rowSurface}>
-                  <Selection.Radio
-                    isSelected={selectedReason === reason.value}
-                    onSelect={() => handleRadioChange(reason.value)}
-                    accessibilityLabel={resolveString(reason.labelKey)}
+
+            <ScrollView
+              style={styles.content}
+              contentContainerStyle={styles.contentContainer}
+            >
+              {isShowOthersOption ? (
+                <View style={styles.othersField}>
+                  <Input.Text
+                    title={reportOtherReasonDesc}
+                    optionalLabel={reportOtherReasonOptional}
+                    showCharacterCount
+                    maxLength={MAX_LENGTH_DESCRIBE}
+                    placeholder={reportTextPlaceholder}
+                    value={otherReasonText}
+                    onChange={setOtherReasonText}
+                    // multiLine is what lets a reason typed up to
+                    // MAX_LENGTH_DESCRIBE wrap instead of scrolling sideways, and it
+                    // top-aligns the row so the label sits level with the first line.
+                    // Web passes it too (an earlier note here claimed otherwise —
+                    // that was true of PDT-4142's snapshot, not of current web).
+                    // blockNewLine then refuses Enter without giving the wrap up: the
+                    // design allows a long reason, just not a multi-line one
+                    // (PDT-5228).
+                    multiLine
+                    blockNewLine
+                  />
+                </View>
+              ) : (
+                <>
+                  <Typography variant="caption" style={styles.description}>
+                    {reportListDescription}
+                  </Typography>
+                  {REPORT_REASONS.map((reason) => (
+                    <View key={reason.value} style={styles.rowSurface}>
+                      <Selection.Radio
+                        isSelected={selectedReason === reason.value}
+                        onSelect={() => handleRadioChange(reason.value)}
+                        accessibilityLabel={resolveString(reason.labelKey)}
+                      >
+                        <Typography variant="bodyBold" style={styles.option}>
+                          {resolveString(reason.labelKey)}
+                        </Typography>
+                      </Selection.Radio>
+                    </View>
+                  ))}
+                  <Pressable
+                    style={styles.row}
+                    onPress={() => {
+                      setSelectedReason(ContentFlagReasonEnum.Others);
+                      setIsShowOthersOption(true);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel={othersTitle}
                   >
                     <Typography variant="bodyBold" style={styles.option}>
-                      {resolveString(reason.labelKey)}
+                      {othersTitle}
                     </Typography>
-                  </Selection.Radio>
-                </View>
-              ))}
-              <Pressable
-                style={styles.row}
-                onPress={() => {
-                  setSelectedReason(ContentFlagReasonEnum.Others);
-                  setIsShowOthersOption(true);
-                }}
-                accessibilityRole="button"
-                accessibilityLabel={othersTitle}
-              >
-                <Typography variant="bodyBold" style={styles.option}>
-                  {othersTitle}
-                </Typography>
-                <AmityIcon
-                  name="chevron-right"
-                  size={24}
-                  tokenColor={AmityColorToken.IconListLeadingDefaultDefault}
-                />
-              </Pressable>
-            </>
-          )}
-        </ScrollView>
+                    <AmityIcon
+                      name="chevron-right"
+                      size={24}
+                      tokenColor={AmityColorToken.IconListLeadingDefaultDefault}
+                    />
+                  </Pressable>
+                </>
+              )}
+            </ScrollView>
+          </>
+        )}
 
         <View style={styles.bottomBar}>
-          <Button
-            hierarchy="primary"
-            size="lg"
-            fullWidth
-            label={submitButtonText}
-            disabled={isDisabledSubmitButton}
-            onPress={handleSubmitReport}
-          />
+          {isMessageDeleted ? (
+            <Button
+              hierarchy="primary"
+              size="lg"
+              fullWidth
+              label={closeButtonText}
+              onPress={onClose}
+            />
+          ) : (
+            <Button
+              hierarchy="primary"
+              size="lg"
+              fullWidth
+              label={submitButtonText}
+              disabled={isDisabledSubmitButton}
+              onPress={handleSubmitReport}
+            />
+          )}
         </View>
         {/* The global <Toast /> is mounted outside this Modal, so RN renders it
             beneath the native Modal layer. Mount a Toast inside the Modal too so
