@@ -331,7 +331,7 @@ Only proceed past this gate if the user picks "Create PR".
 
 - **Title:** identical to the commit subject — `<verb>: PDT-<num> - <short summary>` (e.g. `fix: PDT-2985 - too many users mentioned alert on post composer`). Match the existing repo PR titles.
 - **Base branch:** the same base used in Stage 3. Never default to `main`.
-- **Reviewers:** `ChayanitBm`, `pitchaya-sp` (default team reviewers).
+- **Reviewers:** none. Do **not** request reviewers when opening the PR — the author adds them afterwards. (Requesting the author themselves is rejected by GitHub with `Review cannot be requested from pull request author`, which fails the whole create call.)
 - **Assignee:** `@me` (the user creating the PR).
 - **Body:** read `.github/pull_request_template.md` and fill in each section. Use a HEREDOC so multi-line content renders correctly.
 
@@ -351,7 +351,6 @@ gh pr create \
   --base <base-branch-from-Stage-3> \
   --head <branch> \
   --title "<commit subject>" \
-  --reviewer ChayanitBm,pitchaya-sp \
   --assignee @me \
   --body "$(cat <<'EOF'
 **Jira ticket :** https://socialplus.atlassian.net/browse/PDT-<num>
