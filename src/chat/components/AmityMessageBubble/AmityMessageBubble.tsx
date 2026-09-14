@@ -35,11 +35,7 @@ import { DeletedMessagePill } from '../../features/shared/components/DeletedMess
 import { MessageLinkPreview } from '../../features/shared/components/MessageLinkPreview';
 import { extractFirstPreviewUrl } from '../../utils/previewLink';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
-import {
-  MEDIA_BUBBLE_MAX_WIDTH_IMAGE,
-  MEDIA_BUBBLE_MAX_WIDTH_VIDEO,
-  getMediaBubbleSize,
-} from '../../constants';
+import { getMediaBubbleSize } from '../../constants';
 import { useStyles } from './styles';
 
 // PDT-4109: one flat limit for every text bubble. There used to be a second
@@ -220,6 +216,7 @@ export function AmityMessageBubble({
       return (
         <ImageBubble
           message={message}
+          isUser={isUser}
           isActive={isActive}
           onOpenImage={onOpenImage}
           onLongPress={onLongPress}
@@ -233,6 +230,7 @@ export function AmityMessageBubble({
       return (
         <VideoBubble
           message={message}
+          isUser={isUser}
           isActive={isActive}
           onOpenVideo={onOpenVideo}
           onLongPress={onLongPress}
@@ -449,6 +447,7 @@ function TextBubble({
 
 // ---------- Image ----------
 type ImageBubbleProps = {
+  isUser: boolean;
   message: Amity.Message;
   isActive?: boolean;
   onOpenImage?: (url: string, message: Amity.Message) => void;
@@ -461,6 +460,7 @@ type ImageBubbleProps = {
 
 function ImageBubble({
   message,
+  isUser,
   isActive = false,
   onOpenImage,
   onLongPress,
@@ -469,7 +469,7 @@ function ImageBubble({
   onMediaLoaded,
   onCancelUpload,
 }: ImageBubbleProps) {
-  const { styles } = useStyles();
+  const { styles, imageMaxWidth } = useStyles(isUser);
   const failedLabel = useString('amity_chat_message_failed_to_send');
   const fileId = getFileId(message);
   const mediumUrl = useFile({ fileId, imageSize: ImageSizeState.medium });
@@ -563,9 +563,7 @@ function ImageBubble({
           setLoaded(true);
           // nativeEvent.source carries the decoded bitmap's intrinsic size.
           const { width, height } = e.nativeEvent.source;
-          setMediaSize(
-            getMediaBubbleSize(width, height, MEDIA_BUBBLE_MAX_WIDTH_IMAGE)
-          );
+          setMediaSize(getMediaBubbleSize(width, height, imageMaxWidth));
         }}
         onError={() => setHasLoadError(true)}
       />
@@ -600,6 +598,7 @@ function ImageBubble({
 
 // ---------- Video ----------
 type VideoBubbleProps = {
+  isUser: boolean;
   message: Amity.Message;
   isActive?: boolean;
   onOpenVideo?: (message: Amity.Message) => void;
@@ -612,6 +611,7 @@ type VideoBubbleProps = {
 
 function VideoBubble({
   message,
+  isUser,
   isActive = false,
   onOpenVideo,
   onLongPress,
@@ -620,7 +620,7 @@ function VideoBubble({
   onMediaLoaded,
   onCancelUpload,
 }: VideoBubbleProps) {
-  const { styles } = useStyles();
+  const { styles, videoMaxWidth } = useStyles(isUser);
   const failedLabel = useString('amity_chat_message_failed_to_send');
   const fileId = getFileId(message);
   const videoUrl = useVideoFileUrl(fileId);
@@ -696,7 +696,7 @@ function VideoBubble({
               getMediaBubbleSize(
                 data.naturalSize?.width,
                 data.naturalSize?.height,
-                MEDIA_BUBBLE_MAX_WIDTH_VIDEO
+                videoMaxWidth
               )
             );
             // Nudge off frame 0 so a decoded frame is actually painted while

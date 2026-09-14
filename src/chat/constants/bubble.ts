@@ -55,9 +55,51 @@ export const getBubbleMaxWidth = () =>
 // the ticket explicitly cites the web mobile UIKit as the expected result — under
 // a 240 cap a landscape image would still render 1:1, which is the bug.
 
+// Web puts media inside `.messageRow { max-width: 80% }`, so a landscape image
+// narrows to whatever the row can spare instead of pushing the timestamp out.
+// RN cannot port that as a cap on the row: `content` is a column, so its
+// children's WIDTH is a cross-axis size — flexShrink never applies to it, and
+// Yoga lays those children out against an unconstrained width and only then
+// clamps the parent, leaving the bubble at its measured width and overflowing.
+// Measured at 402pt before this: image 320 wide, timestamp at x=384..414,
+// clipped to "11:0" on a 402pt screen.
+//
+// So resolve web's row budget arithmetically and cap the media itself, which
+// lands on web's numbers exactly (402pt: 284 outbound, 244 inbound).
+
+/** Web `.messageRow { max-width: 80% }`. */
+export const ROW_MAX_WIDTH_RATIO = 0.8;
+
+/** The 24-hour HH:MM timestamp beside a bubble (measured 29.7-31.7 at captionSmall). */
+const TIMESTAMP_WIDTH = 30;
+
+/** bubbleRow's gap between the bubble and the timestamp. */
+const BUBBLE_ROW_GAP = 8;
+
+/** Avatar + row gap, present on inbound rows only — why web is narrower there. */
+const AVATAR_ALLOWANCE = 32 + 8;
+
 export const MEDIA_BUBBLE_HEIGHT = 240;
 export const MEDIA_BUBBLE_MAX_WIDTH_IMAGE = 320;
 export const MEDIA_BUBBLE_MAX_WIDTH_VIDEO = 240;
+
+/**
+ * A media cap narrowed to web's row budget for the current window.
+ *
+ * Resolved from `Dimensions` rather than written as a percentage style: a `%`
+ * maxWidth needs a parent with a definite width, and the list's cell wrapper
+ * has none, so it would silently never bind. Call this from inside `useStyles`
+ * so a rotation or split-screen resize re-resolves it.
+ */
+export const getMediaBubbleMaxWidth = (cap: number, isUser: boolean) => {
+  const rowBudget =
+    Math.round(Dimensions.get('window').width * ROW_MAX_WIDTH_RATIO) -
+    (isUser ? 0 : AVATAR_ALLOWANCE) -
+    BUBBLE_ROW_GAP -
+    TIMESTAMP_WIDTH;
+
+  return Math.max(0, Math.min(cap, rowBudget));
+};
 
 /**
  * Web's media-bubble box for a piece of media whose intrinsic size is known.

@@ -12,6 +12,7 @@ import {
   MEDIA_BUBBLE_HEIGHT,
   MEDIA_BUBBLE_MAX_WIDTH_IMAGE,
   MEDIA_BUBBLE_MAX_WIDTH_VIDEO,
+  getMediaBubbleMaxWidth,
   getBubbleMaxWidth,
 } from '../../constants';
 
@@ -54,12 +55,22 @@ const TEXT_LEADING_EXCESS =
 const TEXT_PADDING_TOP = 10 - Math.round(TEXT_LEADING_EXCESS / 2);
 const TEXT_PADDING_BOTTOM = 10 + Math.round(TEXT_LEADING_EXCESS / 2);
 
-export const useStyles = () => {
+export const useStyles = (isUser = false) => {
   const token = useToken();
 
   // Resolved per render, not cached at module scope, so rotation re-applies the
   // 60%-of-viewport rule instead of keeping the launch-time width.
   const bubbleMaxWidth = getBubbleMaxWidth();
+  // Resolved per render for the same reason, and handed back so the onLoad
+  // handlers size the media against the same number the style caps at.
+  const imageMaxWidth = getMediaBubbleMaxWidth(
+    MEDIA_BUBBLE_MAX_WIDTH_IMAGE,
+    isUser
+  );
+  const videoMaxWidth = getMediaBubbleMaxWidth(
+    MEDIA_BUBBLE_MAX_WIDTH_VIDEO,
+    isUser
+  );
 
   const styles = StyleSheet.create({
     bubble: {
@@ -252,18 +263,25 @@ export const useStyles = () => {
     // square below is just the pre-measurement box, matching the placeholders.
     imageBubble: {
       position: 'relative',
+      // Web's bubble is an inline-block inside the 80%-capped row, so it
+      // narrows when the row runs out of width. Yoga won't shrink a node with
+      // a measured width unless told to.
+      flexShrink: 1,
+      minWidth: 0,
       width: MEDIA_BUBBLE_HEIGHT,
       height: MEDIA_BUBBLE_HEIGHT,
-      maxWidth: MEDIA_BUBBLE_MAX_WIDTH_IMAGE,
+      maxWidth: imageMaxWidth,
       borderRadius: 20,
       overflow: 'hidden',
       backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
     },
     videoBubble: {
       position: 'relative',
+      flexShrink: 1,
+      minWidth: 0,
       width: MEDIA_BUBBLE_HEIGHT,
       height: MEDIA_BUBBLE_HEIGHT,
-      maxWidth: MEDIA_BUBBLE_MAX_WIDTH_VIDEO,
+      maxWidth: videoMaxWidth,
       borderRadius: 20,
       overflow: 'hidden',
       backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
@@ -273,6 +291,8 @@ export const useStyles = () => {
       height: '100%',
     },
     mediaPlaceholder: {
+      flexShrink: 1,
+      minWidth: 0,
       alignItems: 'center',
       justifyContent: 'center',
       width: 240,
@@ -281,6 +301,8 @@ export const useStyles = () => {
       backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
     },
     mediaBroken: {
+      flexShrink: 1,
+      minWidth: 0,
       alignItems: 'center',
       justifyContent: 'center',
       width: 240,
@@ -331,5 +353,5 @@ export const useStyles = () => {
     },
   });
 
-  return { styles, token };
+  return { styles, token, imageMaxWidth, videoMaxWidth };
 };
