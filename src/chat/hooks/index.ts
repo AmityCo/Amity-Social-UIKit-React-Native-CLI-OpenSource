@@ -8,4 +8,5 @@ export * from './useChatNavigation';
 export * from './useNetworkOnline';
 export * from './useCurrentUserId';
 export * from './useChannelMyMembership';
+export * from './useMessagePreviewSetting';
 export * from '../features/shared/hooks';
