@@ -22,7 +22,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 // 2. Third-party imports
-import { ContentFlagReasonEnum } from '@amityco/ts-sdk-react-native';
+import {
+  ContentFlagReasonEnum,
+  MessageRepository,
+} from '@amityco/ts-sdk-react-native';
 import BottomSheet, { type BottomSheetMethods } from '@devvie/bottom-sheet';
 
 // 3. Internal imports
@@ -100,11 +103,41 @@ export function ContentReportReason({
   // measures its own box and publishes it; hand that over instead.
   const surfaceHeight = useChatSurfaceHeight();
   const { online } = useNetworkOnline();
-  const { report, isMessageDeleted, isPendingReport } = useFlagMessageQuery({
+  const {
+    report,
+    isMessageDeleted: isMessageDeletedFromReport,
+    isPendingReport,
+  } = useFlagMessageQuery({
     messageId: message.messageId,
     // Only subscribe while the sheet is up; the bubble menu owns its own instance.
     enabled: visible && !!message.messageId,
   });
+
+  // A report that comes back 400400 is only one way to learn the message went
+  // away, and it needs the user to press Submit first. Web reads the live
+  // message object alongside it — `isMessageDeletedFromReport || liveMessage
+  // ?.isDeleted` — so the sheet settles into the error state the moment the
+  // message is deleted, whether or not anything was submitted. Same subscription
+  // MessageReactorListSheet already uses.
+  const [liveMessage, setLiveMessage] = useState<Amity.Message>(message);
+
+  useEffect(() => {
+    if (!visible || !message.messageId) return undefined;
+
+    const unsubscribe = MessageRepository.getMessage(
+      message.messageId,
+      (result) => {
+        // A loading callback carries no data; overwriting on it would wipe the
+        // message the sheet was opened with.
+        if (result.data) setLiveMessage(result.data);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [visible, message.messageId]);
+
+  const isMessageDeleted =
+    isMessageDeletedFromReport || !!liveMessage.isDeleted;
 
   const [isShowOthersOption, setIsShowOthersOption] = useState(false);
   const [otherReasonText, setOtherReasonText] = useState('');
