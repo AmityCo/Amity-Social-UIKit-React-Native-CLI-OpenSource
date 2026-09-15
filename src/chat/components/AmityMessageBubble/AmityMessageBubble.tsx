@@ -644,9 +644,12 @@ function VideoBubble({
   const thumbnailUri = localPreviewUrl ?? videoUrl;
 
   if (!thumbnailUri) {
+    // PDT-4921 / PDT-5235: a video that has no poster yet still shows the upload
+    // ring, so it needs the same cancel affordance as the scrim path below —
+    // otherwise Loader.Upload renders no X and the send can't be cancelled.
     return (
       <View style={styles.mediaPlaceholder}>
-        <Loader.Upload size="medium" />
+        <Loader.Upload size="medium" onCancel={onCancelUpload} />
       </View>
     );
   }

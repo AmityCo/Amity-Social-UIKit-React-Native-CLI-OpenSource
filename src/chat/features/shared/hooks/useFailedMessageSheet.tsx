@@ -1,7 +1,7 @@
 // useFailedMessageSheet — ported from AmityUiKitWeb v4/chat/features/shared/hooks/useFailedMessageSheet.
-// Presents the "message failed to send" action sheet (Resend / Delete) and wires
-// the retry/discard callbacks. The return shape (UseFailedMessageSheetReturn) is
-// preserved verbatim from web so useChatMessage consumes it unchanged.
+// Presents the "message failed to send" action sheet (Resend / Delete / Cancel) and
+// wires the retry/discard callbacks. The return shape (UseFailedMessageSheetReturn)
+// is preserved verbatim from web so useChatMessage consumes it unchanged.
 //
 // RN adaptation from web:
 //   - Web opened a bottom Drawer holding a `Menu` (Resend / Delete). RN presents
@@ -54,6 +54,7 @@ export function useFailedMessageSheet({
   });
   const resendLabel = useString('amity_chat_message_resend');
   const deleteLabel = useString('amity_chat_option_delete');
+  const cancelLabel = useString('amity_chat_cancel');
 
   async function handleResend(message: Amity.Message) {
     if (isSyntheticPendingMessage(message)) {
@@ -101,7 +102,8 @@ export function useFailedMessageSheet({
 
   function openFailedSheet(message: Amity.Message) {
     openBottomSheet({
-      height: bottomSheetHeight[2 as keyof typeof bottomSheetHeight],
+      // Three rows now (Resend / Delete / Cancel), so the sheet takes the 3-row height.
+      height: bottomSheetHeight[3 as keyof typeof bottomSheetHeight],
       content: (
         <View style={styles.sheetContainer}>
           <Menu variant="chat" container="drawer">
@@ -122,6 +124,11 @@ export function useFailedMessageSheet({
                 handleDelete(message);
               }}
             />
+            {/* PDT-5197: LEADS WEB. Web's popover is dismissed by clicking away,
+                so its sheet has only Resend/Delete. The RN sheet is a drawer, and
+                the Figma for it (3702-37185) adds an explicit Cancel row that just
+                closes the sheet and leaves the failed bubble in place. */}
+            <Menu.Item label={cancelLabel} onPress={closeBottomSheet} />
           </Menu>
         </View>
       ),
