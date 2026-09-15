@@ -6,14 +6,17 @@
 // RN adaptation: web wraps the page in `useAmityPage`'s theme/accessibility
 // container; the RN pages use a plain SafeAreaView (mirrors AmityGroupMemberListPage).
 
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import { SearchChannel } from '../../features/search';
 
 export default function AmitySearchChannelPage() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <SearchChannel />
+    <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
+      <ChatKeyboardAvoidingView>
+        <SearchChannel />
+      </ChatKeyboardAvoidingView>
     </SafeAreaView>
   );
 }
