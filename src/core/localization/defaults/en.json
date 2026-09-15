@@ -32,7 +32,7 @@
   "amity_chat_search_tab_chats": "Chats",
   "amity_chat_search_tab_messages": "Messages",
   "amity_chat_archived_navbar_title": "Archived chats",
-  "amity_chat_archived_empty_title": "No archive chat",
+  "amity_chat_archived_empty_title": "No archived chat",
   "amity_chat_archived_toast": "Chat archived.",
   "amity_chat_archive_error_toast": "Failed to archive chat. Please try again.",
   "amity_chat_archive_limit_title": "Too many chats archived",
