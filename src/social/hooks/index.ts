@@ -12,6 +12,7 @@ export * from './useUiKitConfig';
 export * from './useAmityGlobalSearchViewModel';
 export * from './useCommunities';
 export * from './useCommunity';
+export * from './useCommunityPermission';
 export * from './useCategory';
 export * from './useUiKitReference';
 export * from './isModerator';

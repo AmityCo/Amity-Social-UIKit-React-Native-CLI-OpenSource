@@ -1,5 +1,5 @@
 // AmityGroupMemberListPage — group members list (member/moderator tabs).
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   useNavigation,
   useRoute,
@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import type { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { GroupMembers } from '../../features/group/members';
 
@@ -17,16 +18,18 @@ export default function AmityGroupMemberListPage() {
     useRoute<RouteProp<RootStackParamList, 'AmityGroupMemberListPage'>>();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <GroupMembers
-        channelId={params.channelId}
-        onBack={() => navigation.goBack()}
-        onAddMember={() =>
-          navigation.navigate('AmityAddGroupMemberPage', {
-            channelId: params.channelId,
-          })
-        }
-      />
+    <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
+      <ChatKeyboardAvoidingView>
+        <GroupMembers
+          channelId={params.channelId}
+          onBack={() => navigation.goBack()}
+          onAddMember={() =>
+            navigation.navigate('AmityAddGroupMemberPage', {
+              channelId: params.channelId,
+            })
+          }
+        />
+      </ChatKeyboardAvoidingView>
     </SafeAreaView>
   );
 }

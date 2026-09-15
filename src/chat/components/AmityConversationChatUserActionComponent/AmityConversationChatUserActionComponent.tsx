@@ -19,8 +19,9 @@
 // state is read once from `getSettings().isEnabled`. Icon/label are action-facing:
 // enabled → `bell-slash-r` + "Turn off notification"; disabled → `bell-s` +
 // "Turn on notification" (iOS `bellSlashR`/`bellS`). `isBlockedByMe` is read live
-// from `UserRepository.Relationship.getFollowInfo` (`status === 'blocked'`) so the
-// block/unblock label is always correct; report toggles flag/unflag off its own
+// from the shared `useFollowInfo` hook (web's `v4/chat/hooks/objects/useFollowInfo`)
+// so the block/unblock label is always correct and matches the blocked banner the
+// conversation shows in place of the composer; report toggles flag/unflag off its own
 // live `UserRepository.isUserFlaggedByMe` state (label flips Report ↔ Unreport
 // user), mirroring the block/unblock row. Web's
 // `ConfirmProvider` maps to the native `Alert.alert`. SDK calls are gated on
@@ -41,6 +42,7 @@ import { resolveString } from '../../../core/localization';
 import useAuth from '../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
 import { useChatNotifications } from '../../hooks/useChatNotifications';
+import { useFollowInfo } from '../../hooks/useFollowInfo';
 import { useStyles } from './styles';
 
 // 4. Types
@@ -70,26 +72,16 @@ export function AmityConversationChatUserActionComponent({
   const userId = user.userId;
   const displayName = user.displayName ?? user.userId;
 
-  const [isBlockedByMe, setIsBlockedByMe] = useState(false);
+  // Block state comes from the shared `useFollowInfo` live hook — the same source
+  // the conversation uses to swap its composer for the blocked banner, so the menu
+  // label and the banner can never disagree (PDT-5281).
+  const { isBlockedByMe } = useFollowInfo(userId);
   // Report state: read once from `UserRepository.isUserFlaggedByMe`; the report
   // row toggles flag/unflag live so the label flips Report ↔ Unreport user.
   const [isFlaggedByMe, setIsFlaggedByMe] = useState(false);
   // Channel push-notification state (web `useChannelPushNotificationQuery`):
   // read once from `getSettings().isEnabled`; the row toggles it live.
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(true);
-
-  useEffect(() => {
-    if (!isConnected || !userId) return undefined;
-    const unsub = UserRepository.Relationship.getFollowInfo(
-      userId,
-      ({ data }) => {
-        setIsBlockedByMe(data?.status === 'blocked');
-      }
-    );
-    return () => {
-      unsub();
-    };
-  }, [isConnected, userId]);
 
   useEffect(() => {
     if (!isConnected || !userId) return undefined;

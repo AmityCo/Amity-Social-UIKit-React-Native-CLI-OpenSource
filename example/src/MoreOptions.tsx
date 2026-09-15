@@ -1,7 +1,7 @@
 // Screen 2 — "Local Custom"
 // Advanced toggles: Security, Behaviour, Appearance.
 
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {
   Platform,
   ScrollView,

@@ -1,25 +1,80 @@
 // Styles for AmityMessageBubble — ported from AmityUiKitWeb MessageBubble.module.css
 // (.textBubble / .textBubble__text). Geometry: border-radius 1.25rem→20, text
-// padding 0.625rem 1rem 0 + margin-bottom 0.625rem → paddingTop 10 / horizontal 16 /
-// bottom 10, font-size 0.875rem→14, line-height 1.3→18. Colours resolve through the
-// design tokens (surface/text chatbubble, inbound vs outbound). No hardcoded hex.
+// padding 0.625rem 1rem 0 + margin-bottom 0.625rem → 10 vertical / 16 horizontal,
+// though the vertical padding is redistributed to compensate for RN's leading
+// model — see TEXT_LEADING_EXCESS below. Colours resolve through the design
+// tokens (surface/text chatbubble, inbound vs outbound). No hardcoded hex.
 
-import { Dimensions, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useToken } from '../../../core/design/theme/useToken';
 import { AmityColorToken } from '../../../core/design/tokens/amity-color-tokens';
+import {
+  MEDIA_BUBBLE_HEIGHT,
+  MEDIA_BUBBLE_MAX_WIDTH_IMAGE,
+  MEDIA_BUBBLE_MAX_WIDTH_VIDEO,
+  getMediaBubbleMaxWidth,
+  getBubbleMaxWidth,
+} from '../../constants';
 
-// Web caps the text bubble at 60vw. In RN a percentage maxWidth resolves against the
-// bubble's parent, and inside the action-menu Popover wrapper that parent has an
-// indefinite width — Yoga then collapses the Text to its minimum intrinsic width
-// (word/char-per-line). Use a concrete pixel cap off the screen width instead.
-const BUBBLE_MAX_WIDTH = Math.round(Dimensions.get('window').width * 0.72);
+// Body text metrics, shared with the mention spans and the measuring probe so
+// every one of them wraps and clamps identically. See src/chat/constants/bubble.
+//
+// SoT tokens/geometry.json → typography.styles "Body" is iOS 15 / Android 14 /
+// Web 14, all at lineHeight 20. This repo's Typography atom deliberately takes
+// the Web column throughout (Typography/styles.ts: body = 14 / 20 / 400), so the
+// bubble matches it rather than picking the iOS size on both platforms.
+const TEXT_FONT_SIZE = 14;
+const TEXT_LINE_HEIGHT = 20;
+const TEXT_PADDING_H = 16;
 
-export const useStyles = () => {
+// Leading compensation.
+//
+// The spec's box is padding 10/16/10/16 around a 20px line. On the web that
+// renders centred because CSS distributes the difference between the line
+// height and the font's natural line box as HALF-LEADING: half above the
+// glyphs, half below. RN does not do this. iOS maps lineHeight onto
+// NSParagraphStyle min/maxLineHeight and TextKit grows the line upward from the
+// baseline; Android's CustomLineHeightSpan sets ascent = -(height - descent)
+// and leaves the descent alone. Both put 100% of the extra space ABOVE the ink.
+//
+// At 14px both SF Pro and Roboto have a natural line box of ~16.4px, so a 20px
+// line carries ~3.6px of extra leading — all of it on top. Inside symmetric
+// 10/10 padding the visible gap is then ~13.6 above the text and 10 below,
+// which is what QA reported as the text sitting near the bottom of the bubble.
+// (Note this gets WORSE, not better, as lineHeight rises: the old 14/18 had
+// only ~1.6px of it.)
+//
+// Shift the text up by half the excess and keep the box height identical:
+// 8 + 20 + 12 === 10 + 20 + 10 === 40. Applied to the padding rather than to
+// lineHeight so the 20px leading — which is what the spec actually specifies,
+// and what governs multi-line spacing — is preserved. It also self-corrects for
+// multi-line text: the excess appears above every line, but only the first
+// line's shows as a gap at the top of the block.
+const TEXT_LEADING_EXCESS =
+  TEXT_LINE_HEIGHT - Math.round(TEXT_FONT_SIZE * 1.17);
+const TEXT_PADDING_TOP = 10 - Math.round(TEXT_LEADING_EXCESS / 2);
+const TEXT_PADDING_BOTTOM = 10 + Math.round(TEXT_LEADING_EXCESS / 2);
+
+export const useStyles = (isUser = false) => {
   const token = useToken();
+
+  // Resolved per render, not cached at module scope, so rotation re-applies the
+  // 60%-of-viewport rule instead of keeping the launch-time width.
+  const bubbleMaxWidth = getBubbleMaxWidth();
+  // Resolved per render for the same reason, and handed back so the onLoad
+  // handlers size the media against the same number the style caps at.
+  const imageMaxWidth = getMediaBubbleMaxWidth(
+    MEDIA_BUBBLE_MAX_WIDTH_IMAGE,
+    isUser
+  );
+  const videoMaxWidth = getMediaBubbleMaxWidth(
+    MEDIA_BUBBLE_MAX_WIDTH_VIDEO,
+    isUser
+  );
 
   const styles = StyleSheet.create({
     bubble: {
-      maxWidth: BUBBLE_MAX_WIDTH,
+      maxWidth: bubbleMaxWidth,
       borderRadius: 20,
       overflow: 'hidden',
     },
@@ -43,30 +98,43 @@ export const useStyles = () => {
         AmityColorToken.SurfaceChatBubbleMessageInboundPressed
       ),
     },
+    // The leading was 18 where the SoT says 20, and the padding is
+    // asymmetric to compensate for RN's lack of CSS half-leading — see
+    // TEXT_LEADING_EXCESS above. includeFontPadding: false removes Android's
+    // additional font padding, which otherwise stacks on the same bias.
     text: {
-      paddingTop: 10,
-      paddingHorizontal: 16,
-      paddingBottom: 10,
-      fontSize: 14,
-      lineHeight: 18,
+      paddingTop: TEXT_PADDING_TOP,
+      paddingHorizontal: TEXT_PADDING_H,
+      paddingBottom: TEXT_PADDING_BOTTOM,
+      fontSize: TEXT_FONT_SIZE,
+      lineHeight: TEXT_LINE_HEIGHT,
+      includeFontPadding: false,
     },
-    // Two-line skeleton shown while a long message's line count is measured.
-    // Carries the text bubble's padding, and a fixed width of 240 (bubble max)
-    // minus its 16 side padding — the measuring probe fills this container, so a
-    // width that collapsed to the bars' intrinsic size would make it count lines
-    // for the wrong width.
-    // The off-screen line-count probe. Absolutely filled so it inherits the
-    // container's width (the measurement depends on width, not height), and fully
-    // transparent — opacity does not affect layout, so onTextLayout still fires.
+    // The off-screen line-count probe. It must be constrained on WIDTH ONLY:
+    // the line count depends on the wrap width, and giving it a definite height
+    // makes iOS lay the text into that bounded box, so onTextLayout reports
+    // just the lines that fit and never exceeds maxLines — no "See more" ever
+    // appears at all. StyleSheet.absoluteFillObject was doing exactly that,
+    // because it pins bottom: 0 as well as the sides. Anchor top/left/right and
+    // leave the height free. The parent Pressable is overflow: 'hidden', so the
+    // taller probe cannot paint outside the bubble.
     textProbe: {
-      ...StyleSheet.absoluteFillObject,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
       opacity: 0,
     },
+    // Two-line skeleton shown while a long message's line count is measured.
+    // Carries the text bubble's padding. Its width is derived from the same
+    // 60%-of-viewport rule as the bubble, minus the side padding: the probe
+    // fills this container, so a width that disagreed with the real bubble's
+    // would count lines for the wrong wrap width on every platform.
     textSkeleton: {
       paddingTop: 10,
-      paddingHorizontal: 16,
+      paddingHorizontal: TEXT_PADDING_H,
       paddingBottom: 10,
-      width: 240 - 32,
+      width: bubbleMaxWidth - TEXT_PADDING_H * 2,
       gap: 8,
     },
     textOwn: {
@@ -79,8 +147,9 @@ export const useStyles = () => {
       fontStyle: 'italic',
     },
     // "See more" affordance for truncated long messages, faithful to web:
-    // a 1px divider (textBubble__divider) then a space-between row (textBubble__seeMore)
-    // of label + chevron-right icon (textBubble__seeMoreIcon 0.75rem→12).
+    // a 1px divider (textBubble__divider) then a space-between row
+    // (textBubble__seeMore) of label + chevron-right icon
+    // (textBubble__seeMoreIcon 1.25rem→20, set at the call site).
     divider: {
       height: 1,
     },
@@ -94,17 +163,22 @@ export const useStyles = () => {
         AmityColorToken.LineChatBubbleInboundDividerDefault
       ),
     },
+    // SoT: the row is padded 8 / 16 / 8 / 16 with the label leading and a 20px
+    // chevron trailing (space-between), and the divider above spans the full
+    // bubble width edge-to-edge.
     seeMoreRow: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingVertical: 10,
-      paddingHorizontal: 16,
+      paddingVertical: 8,
+      paddingHorizontal: TEXT_PADDING_H,
     },
+    // Web sets this row's label to Typography.Caption — 12/16/400, not the
+    // 14/18/700 the port used.
     seeMoreLabel: {
-      fontSize: 14,
-      lineHeight: 18,
-      fontWeight: '700',
+      fontSize: 12,
+      lineHeight: 16,
+      fontWeight: '400',
     },
     seeMoreOwn: {
       color: token(AmityColorToken.TextChatBubbleOutboundSeeMoreDefault),
@@ -113,19 +187,23 @@ export const useStyles = () => {
       color: token(AmityColorToken.TextChatBubbleInboundSeeMoreDefault),
     },
     // Mention span inside the text (web textBubble__mention, weight 500).
-    // Repeat the surrounding text's fontSize/lineHeight (14/18): the 500-weight
-    // mention <Text> otherwise renders taller than the 18px line box sized from
-    // the 14px body text and its bottom gets clipped (Android).
+    // Repeat the surrounding text's metrics exactly: the 500-weight mention
+    // <Text> otherwise renders taller than the body line box and its bottom
+    // gets clipped (Android). These MUST track TEXT_FONT_SIZE/TEXT_LINE_HEIGHT
+    // — a mismatch reintroduces the vertical offset above on any line that
+    // mixes plain text with a mention.
     mentionOwn: {
-      fontSize: 14,
-      lineHeight: 18,
+      fontSize: TEXT_FONT_SIZE,
+      lineHeight: TEXT_LINE_HEIGHT,
       fontWeight: '500',
+      includeFontPadding: false,
       color: token(AmityColorToken.TextChatBubbleOutboundMentionedDefault),
     },
     mentionOther: {
-      fontSize: 14,
-      lineHeight: 18,
+      fontSize: TEXT_FONT_SIZE,
+      lineHeight: TEXT_LINE_HEIGHT,
       fontWeight: '500',
+      includeFontPadding: false,
       color: token(AmityColorToken.TextChatBubbleInboundMentionedDefault),
     },
     // "Edited" caption (web textBubble__editedCaption: padding 0 16 10).
@@ -174,22 +252,36 @@ export const useStyles = () => {
     },
 
     // --- Media (image / video) ---
-    // Web used height 15rem→240 with variable width (inline-block, capped at 20rem/320).
-    // In an RN flex row an Image has no intrinsic width to size against, so we pin a
-    // fixed 240×240 frame (media fills it, cover-cropped) — reported as a fidelity delta
-    // vs web's variable width.
+    // These were pinned to a fixed 240×240, so landscape AND portrait
+    // media were both centre-cropped square. Web locks the HEIGHT at 240 and
+    // lets the width shrink to the media's own ratio, capped at 320 (image) /
+    // 240 (video) — see getMediaBubbleSize in src/chat/constants/bubble.
+    //
+    // These styles now carry only the height and the cap; the concrete width
+    // arrives as an inline style once the media reports its intrinsic size
+    // (<Image onLoad> → nativeEvent.source, <Video onLoad> → naturalSize). The
+    // square below is just the pre-measurement box, matching the placeholders.
     imageBubble: {
       position: 'relative',
-      width: 240,
-      height: 240,
+      // Web's bubble is an inline-block inside the 80%-capped row, so it
+      // narrows when the row runs out of width. Yoga won't shrink a node with
+      // a measured width unless told to.
+      flexShrink: 1,
+      minWidth: 0,
+      width: MEDIA_BUBBLE_HEIGHT,
+      height: MEDIA_BUBBLE_HEIGHT,
+      maxWidth: imageMaxWidth,
       borderRadius: 20,
       overflow: 'hidden',
       backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
     },
     videoBubble: {
       position: 'relative',
-      width: 240,
-      height: 240,
+      flexShrink: 1,
+      minWidth: 0,
+      width: MEDIA_BUBBLE_HEIGHT,
+      height: MEDIA_BUBBLE_HEIGHT,
+      maxWidth: videoMaxWidth,
       borderRadius: 20,
       overflow: 'hidden',
       backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
@@ -199,6 +291,8 @@ export const useStyles = () => {
       height: '100%',
     },
     mediaPlaceholder: {
+      flexShrink: 1,
+      minWidth: 0,
       alignItems: 'center',
       justifyContent: 'center',
       width: 240,
@@ -207,6 +301,8 @@ export const useStyles = () => {
       backgroundColor: token(AmityColorToken.SurfaceMediaImageLoading),
     },
     mediaBroken: {
+      flexShrink: 1,
+      minWidth: 0,
       alignItems: 'center',
       justifyContent: 'center',
       width: 240,
@@ -257,5 +353,5 @@ export const useStyles = () => {
     },
   });
 
-  return { styles, token };
+  return { styles, token, imageMaxWidth, videoMaxWidth };
 };
