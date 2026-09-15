@@ -45,10 +45,14 @@ type MessageRowProps = {
   bubbleHandlers?: BubbleHandlers;
   /** Viewer moderates this channel — unlocks Delete on other people's messages. */
   viewerIsModerator?: boolean;
+  /** Viewer is muted here — trims Edit/Reply/Report out of the action menu. */
+  viewerIsMutedInChannel?: boolean;
   /** Local preview for an in-flight or failed upload (see MessageList). */
   localPreviewUrl?: string;
   /** The remote media has loaded — the local preview can be dropped. */
   onMediaLoaded?: (fileId: string) => void;
+  /** Cancel this message's in-flight upload (already bound to its client id). */
+  onCancelUpload?: () => void;
 };
 
 // 4. Named function component
@@ -66,8 +70,10 @@ export function MessageRow({
   onSeeMore,
   bubbleHandlers,
   viewerIsModerator = false,
+  viewerIsMutedInChannel = false,
   localPreviewUrl,
   onMediaLoaded,
+  onCancelUpload,
 }: MessageRowProps) {
   const { styles } = useStyles();
   const sendingLabel = useString('amity_chat_sending_status');
@@ -195,6 +201,7 @@ export function MessageRow({
               message={message}
               currentUserId={currentUserId}
               viewerIsModerator={viewerIsModerator}
+              viewerIsMutedInChannel={viewerIsMutedInChannel}
               placement={isUser ? 'bottom right' : 'bottom left'}
               handlers={{
                 onEdit: bubbleHandlers?.onEdit ?? (() => {}),
@@ -217,6 +224,7 @@ export function MessageRow({
                   localPreviewUrl={localPreviewUrl}
                   isUploading={isUploading}
                   onMediaLoaded={onMediaLoaded}
+                  onCancelUpload={onCancelUpload}
                   onLongPress={() => {
                     onOpenBubbleMenu?.(message);
                     openPopover();
