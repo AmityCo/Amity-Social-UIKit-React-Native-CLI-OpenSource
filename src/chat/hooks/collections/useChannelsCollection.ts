@@ -19,6 +19,12 @@ export type UseChannelsCollectionParams = {
   limit?: number;
   /** Drop archived channels from the collection (web home list passes true). */
   excludeArchives?: boolean;
+  /**
+   * Bump to force a re-subscribe with the same params (PDT-5205). The home list
+   * uses it to re-query when the screen regains focus, so a conversation created
+   * on another screen is present the moment the user comes back.
+   */
+  refreshKey?: number;
 };
 
 export type UseChannelsCollectionResult = {
@@ -37,6 +43,7 @@ export function useChannelsCollection({
   isDeleted = false,
   limit = DEFAULT_LIMIT,
   excludeArchives,
+  refreshKey = 0,
 }: UseChannelsCollectionParams = {}): UseChannelsCollectionResult {
   const [channels, setChannels] = useState<Amity.Channel[]>([]);
   const [loading, setLoading] = useState(true);
@@ -88,6 +95,7 @@ export function useChannelsCollection({
     isDeleted,
     limit,
     excludeArchives,
+    refreshKey,
   ]);
 
   function loadMore() {
