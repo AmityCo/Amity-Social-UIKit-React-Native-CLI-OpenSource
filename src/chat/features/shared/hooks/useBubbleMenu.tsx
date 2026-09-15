@@ -10,8 +10,12 @@
 //   - Copy uses `@react-native-clipboard/clipboard` (`Clipboard.setString`, sync)
 //     instead of `navigator.clipboard.writeText`; the copied-success toast fires
 //     through the useChatNotifications stub.
-//   - Save has no RN infra yet (web's `useSaveMediaMessageQuery`) — `handleBubbleSave`
-//     is a documented stub.
+//   - Save goes through the RN `useSaveMediaMessageQuery` port, which resolves the
+//     message's file URL, downloads it and writes it into the device gallery via
+//     CameraRoll, then raises the saved/failed chat toast (web downloaded via the
+//     browser). Same hook the media viewer's save icon uses; `handleBubbleSave`
+//     used to be a stub, so tapping Save on an image neither saved to the
+//     gallery nor showed the "Saved photo." toast.
 //   - Report: web opened a Drawer (mobile) / Popup (desktop) with ContentReportReason.
 //     RN keeps the report target in local state (`reportMessage`) and the orchestrator
 //     (useChatMessage) surfaces it so Chat/GroupChat render the full-screen
@@ -26,7 +30,10 @@ import { useState } from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 
 import { useString } from '../../../../core/localization';
-import { useDeleteMessageQuery } from '../../../hooks/queries';
+import {
+  useDeleteMessageQuery,
+  useSaveMediaMessageQuery,
+} from '../../../hooks/queries';
 import { useChatNotifications } from '../../../hooks/useChatNotifications';
 
 type BubbleMenuState = {
@@ -89,6 +96,7 @@ export function useBubbleMenu({
   }
 
   const { requestDelete } = useDeleteMessageQuery();
+  const { requestSave } = useSaveMediaMessageQuery();
 
   function openBubbleMenu(message: Amity.Message, anchor?: unknown) {
     setBubbleMenu({ message, anchor });
@@ -129,8 +137,10 @@ export function useBubbleMenu({
 
   function handleBubbleSave() {
     if (!bubbleMenu) return;
+    // Capture the target before closing: closeBubbleMenu clears `bubbleMenu`.
+    const message = bubbleMenu.message;
     closeBubbleMenu();
-    // TODO: no RN media-save infra yet (web's useSaveMediaMessageQuery). Stubbed.
+    requestSave(message);
   }
 
   function handleBubbleReport(message: Amity.Message) {
