@@ -13,10 +13,20 @@ import { AmityPostCategory } from '../../social/enums/AmityPostContentComponentS
 export type RootStackParamList = {
   // --- Chat (PDT-3713) ---
   AmityChatHomePage: undefined;
-  AmityChatPage: { channelId: string; userDisplayName?: string };
+  // `jumpToMessageId` (PDT-5252): scroll the thread to that message on open —
+  // set by a message search result, matching web's ChatPage push.
+  AmityChatPage: {
+    channelId: string;
+    userDisplayName?: string;
+    jumpToMessageId?: string;
+  };
   AmityChannelCreateConversationPage: undefined;
   // --- Chat: group flows (PDT-3713 M3) ---
-  AmityGroupChatPage: { channelId: string; isJustCreated?: boolean };
+  AmityGroupChatPage: {
+    channelId: string;
+    isJustCreated?: boolean;
+    jumpToMessageId?: string;
+  };
   AmitySelectGroupMemberPage: undefined;
   AmityCreateGroupChatPage: { selectedUsers: Amity.User[] };
   AmityAddGroupMemberPage: { channelId: string };

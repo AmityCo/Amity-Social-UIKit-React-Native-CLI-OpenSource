@@ -32,6 +32,7 @@ export default function AmityChatPage() {
         <Chat
           channelId={params.channelId}
           userDisplayName={params.userDisplayName}
+          jumpToMessageId={params.jumpToMessageId}
           onBack={() => navigation.goBack()}
         />
       </ChatKeyboardAvoidingView>

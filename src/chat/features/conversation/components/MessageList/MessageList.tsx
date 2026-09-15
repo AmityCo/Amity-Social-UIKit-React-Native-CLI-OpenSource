@@ -5,7 +5,7 @@
 // NewMessageNotification affordances. Older pages load on onEndReached.
 
 // 1. React / RN imports
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { FlatList, View } from 'react-native';
 
 // 2. Internal imports
@@ -70,9 +70,25 @@ type MessageListProps = {
    * file uri instead of the CDN url.
    */
   onMediaLoaded?: (fileId: string) => void;
+  /**
+   * Scroll to this message once it is in the loaded window, centred (PDT-5252).
+   * Set when the thread is opened from a message search result.
+   */
+  jumpToMessageId?: string;
 };
 
 const AT_BOTTOM_THRESHOLD = 48;
+
+/**
+ * How many extra pages of history the jump will pull in looking for its target
+ * before giving up. The thread opens at the newest page, so a match from far up
+ * the history needs paging; the cap keeps a message that is not reachable (or
+ * was deleted) from paging the whole channel in.
+ */
+const JUMP_MAX_PAGES = 10;
+
+/** Delay before re-attempting a scrollToIndex that missed (see onScrollToIndexFailed). */
+const JUMP_RETRY_MS = 250;
 
 /** Web MessageList: pendingPreviewByClientId + pendingPreviewByFileId. A synthetic
  *  message is matched by its client id; once the upload has a fileId the real
@@ -111,6 +127,7 @@ export function MessageList({
   viewerIsModerator = false,
   pendingUploads,
   onMediaLoaded,
+  jumpToMessageId,
 }: MessageListProps) {
   const { styles } = useStyles();
   const previews = useMemo(
@@ -137,6 +154,34 @@ export function MessageList({
       if (it.kind === 'message') map.set(it.message.messageId, it.message);
     return map;
   }, [data]);
+
+  // PDT-5252: jump to a searched message. Web opens the thread on a collection
+  // anchored around the message; RN's collection always starts at the newest
+  // page, so we scroll when the target is loaded and otherwise page backwards
+  // until it is (bounded by JUMP_MAX_PAGES). Each id is honoured once.
+  const jumpedToRef = useRef<string | null>(null);
+  const jumpPagesRef = useRef(0);
+  useEffect(() => {
+    if (!jumpToMessageId || jumpedToRef.current === jumpToMessageId) return;
+    const index = data.findIndex(
+      (it) => it.kind === 'message' && it.message.messageId === jumpToMessageId
+    );
+    if (index >= 0) {
+      jumpedToRef.current = jumpToMessageId;
+      jumpPagesRef.current = 0;
+      // viewPosition 0.5 centres the row, which is what QA asked for.
+      listRef.current?.scrollToIndex({
+        index,
+        viewPosition: 0.5,
+        animated: true,
+      });
+      return;
+    }
+    if (hasMore && !isLoading && jumpPagesRef.current < JUMP_MAX_PAGES) {
+      jumpPagesRef.current += 1;
+      onLoadMore?.();
+    }
+  }, [jumpToMessageId, data, hasMore, isLoading, onLoadMore]);
 
   const scrollToLatest = useCallback(() => {
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -223,6 +268,24 @@ export function MessageList({
         }}
         onScroll={handleScroll}
         scrollEventThrottle={16}
+        // Rows are variable height, so scrollToIndex can miss on the first try
+        // (an off-screen row has no measured layout yet). Nudge the list to the
+        // estimated offset, then retry once the rows around it have laid out —
+        // the effect above will not fire again on its own, since nothing in its
+        // deps changed.
+        onScrollToIndexFailed={({ averageItemLength, index }) => {
+          listRef.current?.scrollToOffset({
+            offset: averageItemLength * index,
+            animated: false,
+          });
+          setTimeout(() => {
+            listRef.current?.scrollToIndex({
+              index,
+              viewPosition: 0.5,
+              animated: true,
+            });
+          }, JUMP_RETRY_MS);
+        }}
         onEndReached={hasMore ? onLoadMore : undefined}
         onEndReachedThreshold={0.5}
       />
