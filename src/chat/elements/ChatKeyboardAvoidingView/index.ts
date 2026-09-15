@@ -1,0 +1,1 @@
+export { ChatKeyboardAvoidingView } from './ChatKeyboardAvoidingView';
