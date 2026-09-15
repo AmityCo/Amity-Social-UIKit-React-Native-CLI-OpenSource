@@ -97,12 +97,18 @@ export const useStyles = (isUser: boolean) => {
     mediaBoxBroken: {
       backgroundColor: token(AmityColorToken.SurfaceMediaImageBroken),
     },
+    // PDT-5143: the chip is centred by filling the quote and centring its child,
+    // the way MessageReplyBand's does (and the RN idiom for web's
+    // `top/left: 50%` + `translate(-50%, -50%)`). The previous percentage
+    // top/left plus negative margins is the one combination Yoga resolves
+    // differently per platform, and inside the quote's `overflow: 'hidden'` it
+    // left the play indicator off the thumbnail entirely.
     playChip: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      marginTop: -20,
-      marginLeft: -20,
+      ...StyleSheet.absoluteFillObject,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    playChipInner: {
       width: 40,
       height: 40,
       alignItems: 'center',

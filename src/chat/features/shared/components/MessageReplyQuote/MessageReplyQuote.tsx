@@ -359,11 +359,13 @@ function VideoQuote({
       />
       <View style={styles.overlay} pointerEvents="none" />
       <View style={styles.playChip} pointerEvents="none">
-        <AmityIcon
-          name="video-play-s"
-          size={24}
-          tokenColor={AmityColorToken.IconIconButtonTransparentPrimaryDefault}
-        />
+        <View style={styles.playChipInner}>
+          <AmityIcon
+            name="video-play-s"
+            size={24}
+            tokenColor={AmityColorToken.IconIconButtonTransparentPrimaryDefault}
+          />
+        </View>
       </View>
     </Pressable>
   );
