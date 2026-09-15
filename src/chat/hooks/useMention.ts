@@ -83,7 +83,17 @@ export function useMention({
 
     if (channelId) {
       unsubRef.current = ChannelRepository.Membership.searchMembers(
-        { channelId, search: keyword, memberships: ['member'], limit },
+        // PDT-5311: `['member']` excluded anyone the moderators had muted, so a
+        // muted user could not be mentioned at all. A mute silences their own
+        // sending, not other people's ability to address them. Web passes no
+        // memberships filter here; `['member', 'muted']` is the same set minus
+        // banned users, and matches what the member list queries.
+        {
+          channelId,
+          search: keyword,
+          memberships: ['member', 'muted'],
+          limit,
+        },
         ({ data, loading }) => {
           if (loading) return;
           setUsers(
