@@ -9,8 +9,9 @@
 //     BottomSheetComponent) with `container="drawer"` — the identical pattern the
 //     conversation user-action menu uses. NOT an Alert dialog.
 //   - Non-synthetic delete/resend use the existing RN `useDeleteMessage` /
-//     `useCreateMessage` mutations instead of web's query hooks (resend = recreate
-//     the message, then delete the original — same as web's useResendMessageQuery).
+//     `useCreateMessage` mutations instead of web's query hooks. Resend
+//     re-sends under the failed message's own SDK identity (see handleResend)
+//     rather than web's useResendMessageQuery recreate-then-delete-the-original.
 
 import { StyleSheet, View } from 'react-native';
 
@@ -31,6 +32,16 @@ type UseFailedMessageSheetParams = {
 
 export type UseFailedMessageSheetReturn = {
   openFailedSheet: (message: Amity.Message) => void;
+};
+
+/**
+ * Fields the SDK's optimistic message carries that the public `Amity.Message`
+ * type does not declare: a media send passes `fileId` at the TOP LEVEL of the
+ * createMessage bundle (not inside `data`), and `createMessageOptimistic`
+ * spreads that bundle straight into the cached message.
+ */
+type OptimisticMessageExtras = {
+  fileId?: string;
 };
 
 export function useFailedMessageSheet({
@@ -64,24 +75,48 @@ export function useFailedMessageSheet({
       }
       return;
     }
-    // Non-synthetic resend: recreate then delete the original (web's requestResend).
-    // The original is only removed once the new message is actually created —
-    // deleting it on failure would drop the text the user is trying to send.
+    // Resend THIS message — do not create a second one.
+    //
+    // A non-synthetic failed bubble is the SDK's own optimistic message: the
+    // create never reached the server, so it still carries the client-generated
+    // `LOCAL_…` messageId that `createMessageOptimistic` gave it, and it sits in
+    // both the message cache and the getMessages collection under
+    // `referenceId ?? messageId` (the SDK's `idResolvers.message`).
+    //
+    // `createMessage` reuses `bundle.referenceId` as the optimistic message's
+    // own messageId, so handing the failed message's id back as `referenceId`
+    // makes the SDK overwrite that exact entry instead of allocating a new one:
+    // the existing row goes error → syncing → synced in place, and the server
+    // sees the same referenceId (its idempotency key), so a create that did
+    // land server-side is reconciled rather than duplicated.
+    //
+    // Web (and RN until now) instead created the message under a fresh id and
+    // then deleted the original, which is what QA reported: a brand-new bubble
+    // appended to the thread, with both bubbles on screen until the delete of
+    // the original landed.
+    const referenceId = message.referenceId ?? message.messageId;
+    if (!referenceId) return;
+
+    // Carried over so a resend doesn't silently drop the reply target,
+    // mentions, tags or already-uploaded file of the message being resent.
+    const { fileId } = message as Amity.Message & OptimisticMessageExtras;
+
     try {
       await createMessage({
         subChannelId: message.subChannelId,
         dataType: message.dataType,
         data: message.data,
-        parentId: message.parentId,
+        referenceId,
+        ...(message.parentId ? { parentId: message.parentId } : {}),
+        ...(message.metadata ? { metadata: message.metadata } : {}),
+        ...(message.mentionees ? { mentionees: message.mentionees } : {}),
+        ...(message.tags ? { tags: message.tags } : {}),
+        ...(fileId ? { fileId } : {}),
       } as Parameters<typeof createMessage>[0]);
     } catch {
-      // useCreateMessage's onError already raised the toast. Swallow the
-      // rejection so it isn't an unhandled promise, and leave the original
-      // failed bubble in place.
-      return;
-    }
-    if (message.messageId) {
-      await deleteMessage(message.messageId);
+      // useCreateMessage's onError already raised the toast, and the SDK has put
+      // this same row back to syncState 'error', so the failed bubble stays
+      // exactly where it was. Swallow the rejection so it isn't unhandled.
     }
   }
 
