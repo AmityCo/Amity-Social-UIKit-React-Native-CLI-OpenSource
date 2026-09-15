@@ -27,11 +27,18 @@ import { useStyles } from './styles';
 export type ChatProps = {
   channelId?: string;
   userDisplayName?: string;
+  /** Scroll to this message once it is loaded (PDT-5252, from message search). */
+  jumpToMessageId?: string;
   onBack: () => void;
 };
 
 // 4. Named function component
-export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
+export function Chat({
+  channelId,
+  userDisplayName,
+  jumpToMessageId,
+  onBack,
+}: ChatProps) {
   const { styles } = useStyles();
   const c = useConversation(channelId);
 
@@ -107,6 +114,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           onSeeMore={c.openSeeMore}
           pendingUploads={c.composer.pendingUploads}
           onMediaLoaded={c.composer.handleMediaLoaded}
+          jumpToMessageId={jumpToMessageId}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
             onReply: c.handleBubbleReply,

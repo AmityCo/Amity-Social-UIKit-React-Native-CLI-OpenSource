@@ -22,12 +22,15 @@ import { useStyles } from './styles';
 export type GroupChatProps = {
   channelId?: string;
   isJustCreated?: boolean;
+  /** Scroll to this message once it is loaded (PDT-5252, from message search). */
+  jumpToMessageId?: string;
   onBack: () => void;
 };
 
 export function GroupChat({
   channelId,
   isJustCreated,
+  jumpToMessageId,
   onBack,
 }: GroupChatProps) {
   const { styles } = useStyles();
@@ -101,6 +104,7 @@ export function GroupChat({
           onSeeMore={c.openSeeMore}
           pendingUploads={c.composer.pendingUploads}
           onMediaLoaded={c.composer.handleMediaLoaded}
+          jumpToMessageId={jumpToMessageId}
           // PDT-4155 (web PR 1818): only group channels have moderators, so web
           // threads isModerator from useGroupChat and the 1:1 Chat does not.
           viewerIsModerator={c.isModerator}
