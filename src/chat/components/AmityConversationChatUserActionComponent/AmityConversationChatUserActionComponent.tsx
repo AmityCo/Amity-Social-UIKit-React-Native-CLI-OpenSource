@@ -177,7 +177,17 @@ export function AmityConversationChatUserActionComponent({
           {
             text: resolveString('amity_chat_unblock_confirm_label'),
             onPress: async () => {
-              await UserRepository.Relationship.unBlockUser(userId);
+              // PDT-5284: unhandled before, so unblocking with no connection
+              // rejected silently — no toast, and an unhandled promise on top.
+              // The failure strings already existed, nothing raised them.
+              try {
+                await UserRepository.Relationship.unBlockUser(userId);
+              } catch {
+                error({
+                  content: resolveString('amity_chat_unblock_failed'),
+                });
+                return;
+              }
               success({ content: resolveString('amity_chat_unblock_success') });
             },
           },
@@ -193,7 +203,13 @@ export function AmityConversationChatUserActionComponent({
             text: resolveString('amity_chat_block_confirm_label'),
             style: 'destructive',
             onPress: async () => {
-              await UserRepository.Relationship.blockUser(userId);
+              // PDT-5284, as above.
+              try {
+                await UserRepository.Relationship.blockUser(userId);
+              } catch {
+                error({ content: resolveString('amity_chat_block_failed') });
+                return;
+              }
               success({ content: resolveString('amity_chat_block_success') });
             },
           },
@@ -232,7 +248,11 @@ export function AmityConversationChatUserActionComponent({
     },
     {
       key: 'block',
-      icon: 'ban-r',
+      // PDT-5282 — LEADS WEB (web useConversationActions uses <Ban/> here). The
+      // Figma for this row is the person-with-slash glyph; `ban-r` is the bare
+      // prohibition circle, which reads as the group BAN action instead. The
+      // group ban rows keep `ban-r`.
+      icon: 'user-slash-r',
       label: resolveString(
         isBlockedByMe
           ? 'amity_chat_action_unblock_user'
