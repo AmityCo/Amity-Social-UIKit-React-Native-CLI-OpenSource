@@ -15,6 +15,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 // 3. Internal imports (relative)
 import type { RootStackParamList } from '../../../core/routes/RouteParamList';
+import { ChatSurface } from '../../hooks/useChatSurfaceHeight';
 import { Chat } from '../../features/conversation';
 import { useStyles } from './styles';
 
@@ -27,11 +28,15 @@ export default function AmityChatPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Chat
-        channelId={params.channelId}
-        userDisplayName={params.userDisplayName}
-        onBack={() => navigation.goBack()}
-      />
+      {/* Publishes the page's own height, so a sheet inside can size against
+          the page rather than the device — see useChatSurfaceHeight. */}
+      <ChatSurface>
+        <Chat
+          channelId={params.channelId}
+          userDisplayName={params.userDisplayName}
+          onBack={() => navigation.goBack()}
+        />
+      </ChatSurface>
     </SafeAreaView>
   );
 }

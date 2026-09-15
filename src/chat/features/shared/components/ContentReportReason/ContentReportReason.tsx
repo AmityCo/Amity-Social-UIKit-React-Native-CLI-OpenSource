@@ -35,6 +35,7 @@ import { Button } from '../../../../../core/design/atoms/Button';
 import { resolveString, useString } from '../../../../../core/localization';
 import { useFlagMessageQuery } from '../../../../hooks/queries';
 import { useNetworkOnline } from '../../../../hooks/useNetworkOnline';
+import { useChatSurfaceHeight } from '../../../../hooks/useChatSurfaceHeight';
 import { FailedToShow } from '../FailedToShow';
 import { useStyles } from './styles';
 
@@ -92,6 +93,12 @@ export function ContentReportReason({
 }: ContentReportReasonProps) {
   const { styles } = useStyles();
   const sheetRef = useRef<BottomSheetMethods>(null);
+
+  // devvie reads `height="90%"` against `containerHeight`, and its default for
+  // that is the DEVICE screen — so under a host app's own chrome the sheet comes
+  // out taller than 90% of the page it actually lives in (PDT-5225). The page
+  // measures its own box and publishes it; hand that over instead.
+  const surfaceHeight = useChatSurfaceHeight();
   const { online } = useNetworkOnline();
   const { report, isMessageDeleted, isPendingReport } = useFlagMessageQuery({
     messageId: message.messageId,
@@ -177,6 +184,7 @@ export function ContentReportReason({
       ref={sheetRef}
       // 90% of the viewport, per Figma — a full-height sheet, not a full screen.
       height="90%"
+      containerHeight={surfaceHeight}
       closeOnDragDown
       closeOnBackdropPress
       // The body scrolls; without this the sheet swallows the ScrollView's pans.

@@ -9,6 +9,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import type { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { GroupChat } from '../../features/group/chat';
+import { ChatSurface } from '../../hooks/useChatSurfaceHeight';
 
 export default function AmityGroupChatPage() {
   const navigation =
@@ -18,11 +19,15 @@ export default function AmityGroupChatPage() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <GroupChat
-        channelId={params.channelId}
-        isJustCreated={params.isJustCreated}
-        onBack={() => navigation.goBack()}
-      />
+      {/* Publishes the page's own height, so a sheet inside can size against
+          the page rather than the device — see useChatSurfaceHeight. */}
+      <ChatSurface>
+        <GroupChat
+          channelId={params.channelId}
+          isJustCreated={params.isJustCreated}
+          onBack={() => navigation.goBack()}
+        />
+      </ChatSurface>
     </SafeAreaView>
   );
 }
