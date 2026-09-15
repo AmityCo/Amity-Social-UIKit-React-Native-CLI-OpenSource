@@ -85,7 +85,6 @@ export const useStyles = () => {
     mentionOverlay: {
       marginHorizontal: 8,
       marginBottom: 8,
-      maxHeight: 112,
       borderRadius: 12,
       overflow: 'hidden',
       backgroundColor: token(AmityColorToken.SurfacePopoverBackgroundDefault),
@@ -95,9 +94,20 @@ export const useStyles = () => {
       shadowRadius: 12,
       elevation: 8,
     },
-    // web bottom-mode .mentionList: padding 0.25rem 0 → 4 vertical.
+    // PDT-5302: the close button's own band, above the list (it used to be
+    // absolutely positioned over the first row). 24px button + 4/4 padding = 32.
+    mentionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      paddingTop: 4,
+      paddingRight: 4,
+    },
+    // web bottom-mode .mentionList: padding 0.25rem 0 → 4 vertical. The 112 cap
+    // moved here from mentionOverlay so the header band does not eat into the
+    // list's visible rows.
     mentionList: {
       paddingVertical: 4,
+      maxHeight: 112,
     },
     // web UserMentionItem__item: grid [2rem avatar | auto], gap 0.75rem→12,
     // padding 0.75rem→12, bg surface-popover-lists-default.
@@ -150,9 +160,6 @@ export const useStyles = () => {
     // web mentionContainer__closeButton (bottom mode): top 0 / right 0.25rem→4,
     // 1.5rem→24 circle, padding 0.25rem→4, surface-iconbutton-filled-secondary.
     mentionCloseButton: {
-      position: 'absolute',
-      top: 4,
-      right: 4,
       width: 24,
       height: 24,
       borderRadius: 9999,
