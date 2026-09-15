@@ -123,6 +123,12 @@ export function ContentReportReason({
   const submitButtonText = useString(
     'amity_social_button_report_submit_button'
   );
+  // FailedToShow's own defaults are the livestream pair — right words, wrong
+  // key for anyone overriding copy, since editing the report screen's title
+  // would move the livestream one with it. Pass chat's own keys for both lines.
+  const messageUnavailableTitle = useString(
+    'amity_chat_report_message_unavailable_title'
+  );
   const messageUnavailableDesc = useString(
     'amity_chat_report_message_unavailable_desc'
   );
@@ -185,6 +191,7 @@ export function ContentReportReason({
           // NOT_FOUND — rather than leaving the form up behind a toast.
           <FailedToShow
             style={styles.failed}
+            title={messageUnavailableTitle}
             description={messageUnavailableDesc}
           />
         ) : (

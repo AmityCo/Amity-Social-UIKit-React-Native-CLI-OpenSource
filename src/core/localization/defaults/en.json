@@ -209,6 +209,7 @@
   "amity_chat_message_replied_message": "Replied message",
   "amity_chat_message_replying_yourself": "yourself",
   "amity_chat_message_unavailable": "Message unavailable",
+  "amity_chat_report_message_unavailable_title": "Something went wrong",
   "amity_chat_report_message_unavailable_desc": "The message you're looking for is unavailable.",
   "amity_chat_message_resend": "Resend",
   "amity_chat_editing_message": "Editing message",

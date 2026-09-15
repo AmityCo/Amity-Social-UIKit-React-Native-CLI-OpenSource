@@ -1106,6 +1106,7 @@
   "amity_chat_message_replied_message": "ตอบกลับข้อความ",
   "amity_chat_message_replying_yourself": "ตัวเอง",
   "amity_chat_message_unavailable": "ข้อความไม่สามารถใช้งานได้",
+  "amity_chat_report_message_unavailable_title": "เกิดข้อผิดพลาดบางอย่าง",
   "amity_chat_report_message_unavailable_desc": "ข้อความที่คุณกำลังมองหาไม่พร้อมใช้งาน",
   "amity_chat_message_resend": "ส่งใหม่",
   "amity_chat_editing_message": "กำลังแก้ไขข้อความ",
