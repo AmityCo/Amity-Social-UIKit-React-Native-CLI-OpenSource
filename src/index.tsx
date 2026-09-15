@@ -3,6 +3,7 @@ import {
   AmityPageRenderer,
   AmityUiKitProvider,
   AmityUiKitSocial,
+  AmityUiKitChat,
   ErrorBoundary,
   navigate,
 } from './core';
@@ -106,6 +107,7 @@ export {
   AmityUiKitProvider,
   ErrorBoundary,
   AmityUiKitSocial,
+  AmityUiKitChat,
   AmityStoryTabComponent,
   AmityStoryTabComponentEnum,
   AmityCreateStoryPage,

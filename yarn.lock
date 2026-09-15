@@ -1455,20 +1455,7 @@
     "@babel/parser" "^7.28.6"
     "@babel/types" "^7.28.6"
 
-"@babel/traverse--for-generate-function-map@npm:@babel/traverse@^7.25.3":
-  version "7.27.4"
-  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.27.4.tgz#b0045ac7023c8472c3d35effd7cc9ebd638da6ea"
-  integrity sha512-oNcu2QbHqts9BtOWJosOVJapWjBDSxGCpFvikNR5TGDYDQf3JwpIoMzIKrvfoti93cLfPJEG4tH9SPVeyCGgdA==
-  dependencies:
-    "@babel/code-frame" "^7.27.1"
-    "@babel/generator" "^7.27.3"
-    "@babel/parser" "^7.27.4"
-    "@babel/template" "^7.27.2"
-    "@babel/types" "^7.27.3"
-    debug "^4.3.1"
-    globals "^11.1.0"
-
-"@babel/traverse@^7.25.3", "@babel/traverse@^7.27.1", "@babel/traverse@^7.27.3", "@babel/traverse@^7.27.4":
+"@babel/traverse--for-generate-function-map@npm:@babel/traverse@^7.25.3", "@babel/traverse@^7.25.3", "@babel/traverse@^7.27.1", "@babel/traverse@^7.27.3", "@babel/traverse@^7.27.4":
   version "7.27.4"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.27.4.tgz#b0045ac7023c8472c3d35effd7cc9ebd638da6ea"
   integrity sha512-oNcu2QbHqts9BtOWJosOVJapWjBDSxGCpFvikNR5TGDYDQf3JwpIoMzIKrvfoti93cLfPJEG4tH9SPVeyCGgdA==
@@ -2816,19 +2803,17 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@react-native-async-storage/async-storage@^1.17.7":
-  version "1.24.0"
-  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.24.0.tgz#888efbc62a26f7d9464b32f4d3027b7f2771999b"
-  integrity sha512-W4/vbwUOYOjco0x3toB8QCr7EjIP6nE9G7o8PMguvvjYT5Awg09lyV4enACRx4s++PPulBiBSjL0KTFx2u0Z/g==
-  dependencies:
-    merge-options "^3.0.4"
-
-"@react-native-async-storage/async-storage@^2.2.0":
+"@react-native-async-storage/async-storage@2.2.0", "@react-native-async-storage/async-storage@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-2.2.0.tgz#a3aa565253e46286655560172f4e366e8969f5ad"
   integrity sha512-gvRvjR5JAaUZF8tv2Kcq/Gbt3JHwbKFYfmb445rhOj6NUMx3qPLixmDx5pZAyb9at1bYvJ4/eTUipU5aki45xw==
   dependencies:
     merge-options "^3.0.4"
+
+"@react-native-camera-roll/camera-roll@^7.10.2":
+  version "7.10.2"
+  resolved "https://registry.yarnpkg.com/@react-native-camera-roll/camera-roll/-/camera-roll-7.10.2.tgz#af2234f60f0b55aff9afb60888ce7f0669d52593"
+  integrity sha512-XgJQJDFUycmqSX+MH7vTcRigQwEIQNLIu1GvOngCZRwlSV2mF61UzeruSmmHwkBcGnHZFXkKg9fil0FQVfyglw==
 
 "@react-native-clipboard/clipboard@^1.16.3":
   version "1.16.3"
@@ -2866,15 +2851,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.3.0.tgz#9e558170c106bbafaa1ef502bd8e6d4651012bf9"
   integrity sha512-+zDZ20NUnSWghj7Ku5aFphMzuM9JulqCW+aPXT6IfIXFbb8tzYTTOSeRFOtuekJ99ibW2fUCSsjuKNlwDIbHFg==
 
-"@react-native-community/netinfo@^11.4.1":
-  version "11.4.1"
-  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-11.4.1.tgz#a3c247aceab35f75dd0aa4bfa85d2be5a4508688"
-  integrity sha512-B0BYAkghz3Q2V09BF88RA601XursIEA111tnc2JOaN7axJWmNefmfjZqw/KdSxKZp7CZUuPpjBmz/WCR9uaHYg==
-
-"@react-native-community/netinfo@^9.4.1":
-  version "9.5.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-9.5.0.tgz#93663bbb105feb8f729b8f0271ee06ffc009f024"
-  integrity sha512-sppTBobjvIlPYXyDAyb5WJoBaQq1hprnHj1PWICsA10mVnlmwX5ZVkgO2vGjsfFtb+fmWK9XtZF+aQ6ijqQcwg==
+"@react-native-community/netinfo@11.5.2", "@react-native-community/netinfo@^11.5.2":
+  version "11.5.2"
+  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-11.5.2.tgz#daf3bc1b5cf6e9fc6725600c9e95875b5e50e694"
+  integrity sha512-/g0m65BtX9HU+bPiCH2517bOHpEIUsGrWFXDzi1a5nNKn5KujQgm04WhL7/OSXWKHyrT8VVtUoJA0XKRxueBpQ==
 
 "@react-native-firebase/app@^20.1.0":
   version "20.5.0"
@@ -8044,6 +8024,11 @@ lines-and-columns@^1.1.6:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
+
+linkifyjs@4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/linkifyjs/-/linkifyjs-4.1.3.tgz#0edbc346428a7390a23ea2e5939f76112c9ae07f"
+  integrity sha512-auMesunaJ8yfkHvK4gfg1K0SaKX/6Wn9g2Aac/NwX+l5VdmFZzo/hdPGxEOETj+ryRa4/fiOPjeeKURSAJx1sg==
 
 lint-staged@^15.2.0:
   version "15.5.2"

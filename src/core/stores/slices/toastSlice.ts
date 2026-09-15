@@ -7,6 +7,9 @@ type ToastState = {
   type: 'failed' | 'success' | 'informative' | 'loading';
   duration?: number;
   bottomPosition?: number;
+  // `custom` renders the dark pill used by chat notifications (bound to the
+  // CustomToast design tokens); `default` keeps the app-wide toast appearance.
+  variant?: 'default' | 'custom';
 };
 const initialState: ToastState = {
   visible: false,
@@ -14,6 +17,7 @@ const initialState: ToastState = {
   type: 'loading',
   duration: 2500,
   bottomPosition: 16,
+  variant: 'default',
 };
 
 const toastSlice = createSlice({
@@ -27,6 +31,7 @@ const toastSlice = createSlice({
       state.duration = action.payload.duration ?? initialState.duration;
       state.bottomPosition =
         action.payload.bottomPosition ?? initialState.bottomPosition;
+      state.variant = action.payload.variant ?? initialState.variant;
     },
     hideToast: (state) => {
       state.visible = false;
@@ -34,6 +39,7 @@ const toastSlice = createSlice({
       state.type = 'loading';
       state.duration = 2500;
       state.bottomPosition = 16;
+      state.variant = 'default';
     },
   },
 });

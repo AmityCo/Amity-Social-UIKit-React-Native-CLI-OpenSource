@@ -1,0 +1,1 @@
+export { SearchChannel } from './SearchChannel';

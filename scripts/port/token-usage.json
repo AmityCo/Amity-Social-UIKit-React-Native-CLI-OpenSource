@@ -1,0 +1,373 @@
+{
+  "src/v4/chat/components/SwipeToLeft/SwipeToLeft.module.css": [
+    "IconSquareButtonDefaultSecondaryDefault",
+    "SurfacePageBackgroundDefault",
+    "SurfaceSquareButtonDefaultSecondaryDefault",
+    "TextSquareButtonDefaultSecondaryDefault"
+  ],
+  "src/v4/chat/elements/ArchivedBadge/ArchivedBadge.module.css": [
+    "IconBadgeSemanticBadgeChatArchivedDefault",
+    "SurfaceBadgeSemanticBadgeChatArchived",
+    "TextBadgeSemanticBadgeChatArchivedDefault"
+  ],
+  "src/v4/chat/elements/Avatar/Avatar.module.css": [
+    "IconAvatarDefault",
+    "SurfaceAvatarProfileDefault",
+    "TextAvatarAtomicGeneral"
+  ],
+  "src/v4/chat/elements/AvatarPicker/AvatarPicker.module.css": [
+    "IconAvatarDefault",
+    "SurfaceAvatarProfileDefault"
+  ],
+  "src/v4/chat/elements/ReactionPicker/ReactionPicker.module.css": [
+    "SurfaceReactionsReactionPopoverReactionNameActive",
+    "SurfaceReactionsReactionPopoverReactionStateActive",
+    "TextReactionsReactionPopoverReactionNameGeneral"
+  ],
+  "src/v4/chat/elements/SettingMenu/SettingMenu.module.css": [
+    "IconFeaturedIconTinted",
+    "IconListLeadingDefaultDefault",
+    "SurfaceFeaturedIconTinted",
+    "SurfaceListDefaultDefault",
+    "TextListHeaderDefaultDefault",
+    "TextListHeaderDestructiveDefault",
+    "TextListTrailingTextGeneral"
+  ],
+  "src/v4/chat/elements/TopBar/TopBar.module.css": [
+    "SurfacePageBackgroundDefault",
+    "TextSheetsHeaderTitleDefault"
+  ],
+  "src/v4/chat/elements/WaitingForNetwork/WaitingForNetwork.module.css": [
+    "TextListTextDescriptionDefaultDefault"
+  ],
+  "src/v4/chat/features/archive/ArchivedChat.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/conversation/chat/Chat.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/conversation/chat/components/Header/Header.module.css": [
+    "LineDividerPostDefault",
+    "SurfaceListDefaultDefault",
+    "TextListHeaderDefaultDefault",
+    "TextListTrailingSubtextDefault"
+  ],
+  "src/v4/chat/features/conversation/create/CreateConversation.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/conversation/create/components/Header/Header.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/conversation/create/components/UserItem/UserItem.module.css": [
+    "SurfaceListDefaultDefault",
+    "SurfaceListDefaultHover",
+    "TextListHeaderDefaultDefault"
+  ],
+  "src/v4/chat/features/group/add-member/AddGroupMember.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/add-member/components/AddMemberButton/AddMemberButton.module.css": [
+    "LineDividerPostDefault",
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/add-member/components/Header/Header.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/banned-members/BannedGroupMembers.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/chat/GroupChat.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/chat/components/BannedEmptyState/BannedEmptyState.module.css": [
+    "IconEmptyStateIconDefault",
+    "TextEmptyStateDescriptionDefault",
+    "TextEmptyStateTitleDefault"
+  ],
+  "src/v4/chat/features/group/chat/components/Header/Header.module.css": [
+    "LineDividerPostDefault",
+    "SurfaceAvatarProfileDefault",
+    "SurfaceListDefaultDefault",
+    "TextListHeaderDefaultDefault",
+    "TextListTextDescriptionDefaultDefault"
+  ],
+  "src/v4/chat/features/group/create/CreateGroupChat.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/create/components/MemberGrid/MemberGrid.module.css": [
+    "TextInputUserInputTitleDefault"
+  ],
+  "src/v4/chat/features/group/create/components/PrivacySection/PrivacySection.module.css": [
+    "IconFeaturedIconTinted",
+    "SurfaceFeaturedIconTinted",
+    "SurfaceListDefaultDefault",
+    "SurfaceListDefaultHover",
+    "TextListHeaderDefaultDefault",
+    "TextListTextDescriptionDefaultDefault"
+  ],
+  "src/v4/chat/features/group/edit-notification/EditGroupNotification.module.css": [
+    "SurfaceListDefaultDefault",
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/edit-notification/components/NotificationMode/NotificationMode.module.css": [
+    "TextListHeaderDefaultDefault",
+    "TextListTextDescriptionDefaultDefault"
+  ],
+  "src/v4/chat/features/group/edit-notification/components/NotificationModeRow/NotificationModeRow.module.css": [
+    "TextListHeaderDefaultDefault",
+    "TextListTextDescriptionDefaultDefault"
+  ],
+  "src/v4/chat/features/group/edit-permission/EditGroupMemberPermissions.module.css": [
+    "SurfaceListDefaultDefault",
+    "SurfacePageBackgroundDefault",
+    "TextListHeaderDefaultDefault"
+  ],
+  "src/v4/chat/features/group/edit-permission/components/MemberPermission/MemberPermission.module.css": [
+    "TextListHeaderDefaultDefault",
+    "TextListTextDescriptionDefaultDefault"
+  ],
+  "src/v4/chat/features/group/edit-profile/EditGroupProfile.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/members/GroupMembers.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/members/components/MemberItem/MemberItem.module.css": [
+    "SurfaceListDefaultDefault",
+    "TextListHeaderDefaultDefault",
+    "TextListTextDescriptionDefaultDefault"
+  ],
+  "src/v4/chat/features/group/members/components/MemberList/MemberList.module.css": [
+    "IconListLeadingDefaultDefault"
+  ],
+  "src/v4/chat/features/group/members/components/MemberTabs/MemberTabs.module.css": [
+    "SurfaceListDefaultDefault",
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/notification-preference/NotificationPreference.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/notification-preference/components/AllowNotifications/AllowNotifications.module.css": [
+    "SurfaceListDefaultDefault",
+    "TextListHeaderDefaultDefault",
+    "TextListHeaderDefaultDisabled",
+    "TextListTextDescriptionDefaultDefault",
+    "TextListTextDescriptionDefaultDisabled"
+  ],
+  "src/v4/chat/features/group/notification-preference/components/DisabledByModeratorBanner/DisabledByModeratorBanner.module.css": [
+    "IconBannerGreyBGDescriptionGeneral",
+    "SurfaceBannerSubdueGeneral",
+    "TextBannerGreyBGTextDescriptionGeneral"
+  ],
+  "src/v4/chat/features/group/select-member/SelectGroupMember.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/select-member/components/Header/Header.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/select-member/components/SelectedUsersBar/SelectedUsersBar.module.css": [
+    "LineDividerPostDefault",
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/group/select-member/components/UserItem/UserItem.module.css": [
+    "TextListHeaderDefaultDefault"
+  ],
+  "src/v4/chat/features/group/select-member/components/UserList/UserList.module.css": [
+    "SurfaceListDefaultHover"
+  ],
+  "src/v4/chat/features/group/setting/GroupSetting.module.css": [
+    "LineDividerPostDefault",
+    "SurfacePageBackgroundDefault",
+    "TextListHeaderDefaultDefault"
+  ],
+  "src/v4/chat/features/home/ChatHome.module.css": [
+    "SurfaceListDefaultDefault"
+  ],
+  "src/v4/chat/features/home/components/ChannelItem/ChannelItem.module.css": [
+    "IconListDescriptionGeneral",
+    "SurfaceListDefaultHover",
+    "SurfaceListSkeletonSkeleton",
+    "TextListHeaderDefaultDefault",
+    "TextListHeaderDefaultHighlight",
+    "TextListSubheadDefaultDefault",
+    "TextListTextDescriptionDefaultDefault",
+    "TextListTextDescriptionDefaultHighlight",
+    "TextListTrailingSubtextDefault"
+  ],
+  "src/v4/chat/features/home/components/ChannelList/ChannelList.module.css": [
+    "SurfacePageBackgroundDefault",
+    "TextEmptyStateDescriptionDefault",
+    "TextEmptyStateTitleDefault"
+  ],
+  "src/v4/chat/features/home/components/Header/Header.module.css": [
+    "SurfaceListDefaultDefault",
+    "TextListHeaderDefaultDefault"
+  ],
+  "src/v4/chat/features/home/components/NotificationsDisabledBanner/NotificationsDisabledBanner.module.css": [
+    "IconBannerGreyBGDescriptionGeneral",
+    "SurfaceBannerSubdueGeneral",
+    "TextBannerGreyBGTextDescriptionGeneral"
+  ],
+  "src/v4/chat/features/search/SearchChannel.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/search/components/Header/Header.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/shared/components/AddTile/AddTile.module.css": [
+    "TextIconButtonLabelGeneral"
+  ],
+  "src/v4/chat/features/shared/components/DateSeparator/DateSeparator.module.css": [
+    "SurfaceDateAndTimeDateSeparatorDefault",
+    "TextDateAndTimeDateSeparatorDefault"
+  ],
+  "src/v4/chat/features/shared/components/DeletedMessagePill/DeletedMessagePill.module.css": [
+    "BorderChatBubbleInboundDeleted",
+    "BorderChatBubbleOutboundDeleted",
+    "TextChatBubbleInboundMessagesDeleted",
+    "TextChatBubbleOutboundMessagesDeleted"
+  ],
+  "src/v4/chat/features/shared/components/EmptyState/EmptyState.module.css": [
+    "IconEmptyStateIconDefault",
+    "TextEmptyStateTitleDefault"
+  ],
+  "src/v4/chat/features/shared/components/FailedToShow/FailedToShow.module.css": [
+    "IconEmptyStateIconDefault",
+    "TextEmptyStateDescriptionDefault",
+    "TextEmptyStateTitleDefault"
+  ],
+  "src/v4/chat/features/shared/components/MediaViewer/MediaViewer.module.css": [
+    "IconIconButtonTransparentPrimaryDefault",
+    "SurfaceIconButtonTransparentPrimaryEnabled"
+  ],
+  "src/v4/chat/features/shared/components/MessageActionsPopover/MessageActionsPopover.module.css": [
+    "SurfacePopoverBackgroundDefault",
+    "SurfaceReactionsReactionPopoverFilledDefault"
+  ],
+  "src/v4/chat/features/shared/components/MessageBubble/MessageBubble.module.css": [
+    "IconChatBubbleInboundSeeMoreDefault",
+    "IconChatBubbleOutboundSeeMoreDefault",
+    "IconIconButtonTransparentPrimaryDefault",
+    "IconMediaImageBroken",
+    "LineChatBubbleInboundDividerDefault",
+    "LineChatBubbleOutboundDividerDefault",
+    "SurfaceChatBubbleMessageInboundDefault",
+    "SurfaceChatBubbleMessageInboundPressed",
+    "SurfaceChatBubbleMessageOutboundDefault",
+    "SurfaceChatBubbleMessageOutboundPressed",
+    "SurfaceIconButtonTransparentPrimaryEnabled",
+    "SurfaceMediaImageBroken",
+    "SurfaceMediaImageLoading",
+    "TextChatBubbleInboundEditedLabelDefault",
+    "TextChatBubbleInboundLinkDefault",
+    "TextChatBubbleInboundMentionedDefault",
+    "TextChatBubbleInboundMessagesDefault",
+    "TextChatBubbleInboundSeeMoreDefault",
+    "TextChatBubbleOutboundEditedLabelDefault",
+    "TextChatBubbleOutboundHelperTextDefault",
+    "TextChatBubbleOutboundMentionedDefault",
+    "TextChatBubbleOutboundMessagesDefault",
+    "TextChatBubbleOutboundSeeMoreDefault"
+  ],
+  "src/v4/chat/features/shared/components/MessageComposer/MessageComposer.module.css": [
+    "IconIconButtonFilledPrimaryDefault",
+    "IconIconButtonFilledSecondaryDefault",
+    "IconIconButtonFilledSecondaryDisabled",
+    "IconIconButtonGhostSecondaryDefault",
+    "LineDividerPostDefault",
+    "SurfaceIconButtonFilledPrimaryEnabled",
+    "SurfaceIconButtonFilledSecondaryDisabled",
+    "SurfaceIconButtonFilledSecondaryEnabled",
+    "SurfaceInputBoxedInputDefault",
+    "SurfaceListDefaultHover",
+    "SurfacePageBackgroundDefault",
+    "TextInputTextInputPlaceholderEnabled",
+    "TextInputTextInputPlaceholderEnabledFilled",
+    "TextListOverlineDefaultDefault"
+  ],
+  "src/v4/chat/features/shared/components/MessageComposer/components/MediaSection/MediaSection.module.css": [
+    "IconIconButtonFilledSecondaryDefault",
+    "SurfaceIconButtonFilledSecondaryEnabled",
+    "SurfaceIconButtonFilledSecondaryHover",
+    "TextIconButtonLabelGeneral"
+  ],
+  "src/v4/chat/features/shared/components/MessageFullTextScreen/MessageFullTextScreen.module.css": [
+    "SurfacePageBackgroundDefault",
+    "TextChatBubbleInboundLinkDefault",
+    "TextChatBubbleInboundMessagesDefault",
+    "TextSheetsHeaderTitleDefault"
+  ],
+  "src/v4/chat/features/shared/components/MessageLinkPreview/MessageLinkPreview.module.css": [
+    "IconMediaImageBroken",
+    "SurfaceCardPreviewLinkDefault",
+    "SurfaceCardPreviewLinkSkeleton",
+    "SurfaceMediaImageBroken",
+    "SurfaceMediaImageLoading",
+    "TextCardPreviewLinkDomainDefault",
+    "TextCardPreviewLinkTitleDefault"
+  ],
+  "src/v4/chat/features/shared/components/MessageList/MessageList.module.css": [
+    "SurfacePageBackgroundDefault"
+  ],
+  "src/v4/chat/features/shared/components/MessageReactionBadge/MessageReactionBadge.module.css": [
+    "BorderReactionReactionAtomDefault",
+    "BorderReactionReactionCountActive",
+    "BorderReactionReactionCountDefault",
+    "SurfaceReactionsReactionCountActive",
+    "SurfaceReactionsReactionCountDefault",
+    "TextReactionsChatReactionCountActive",
+    "TextReactionsChatReactionCountDefault"
+  ],
+  "src/v4/chat/features/shared/components/MessageReactorListSheet/MessageReactorListSheet.module.css": [
+    "IconEmptyStateIconDefault",
+    "SurfacePageBackgroundDefault",
+    "TextEmptyStateDescriptionDefault",
+    "TextEmptyStateTitleDefault",
+    "TextListHeaderDefaultDefault",
+    "TextListTextDescriptionDefaultDefault"
+  ],
+  "src/v4/chat/features/shared/components/MessageReplyBand/MessageReplyBand.module.css": [
+    "IconIconButtonGhostSecondaryDefault",
+    "SurfaceListDefaultHover",
+    "TextListOverlineDefaultDefault",
+    "TextListTextDescriptionDefaultDefault"
+  ],
+  "src/v4/chat/features/shared/components/MessageReplyQuote/MessageReplyQuote.module.css": [
+    "BorderChatBubbleInboundDeleted",
+    "IconChatBubbleInboundHeaderRepliedToDefault",
+    "IconChatBubbleInboundMessagesDeleted",
+    "IconChatBubbleOutboundHeaderRepliedToDefault",
+    "IconIconButtonTransparentPrimaryDefault",
+    "IconMediaImageBroken",
+    "SurfaceChatBubbleReplyMessageDefault",
+    "SurfaceChatBubbleReplyOverlayDefault",
+    "SurfaceIconButtonTransparentPrimaryEnabled",
+    "SurfaceMediaImageBroken",
+    "SurfaceMediaImageLoading",
+    "TextChatBubbleInboundHeaderRepliedToDefault",
+    "TextChatBubbleInboundLinkDefault",
+    "TextChatBubbleInboundMessagesDefault",
+    "TextChatBubbleInboundMessagesDeleted",
+    "TextChatBubbleOutboundHeaderRepliedToDefault"
+  ],
+  "src/v4/chat/features/shared/components/MessageRow/MessageRow.module.css": [
+    "TextChatBubbleInboundHeaderUserNameDefault",
+    "TextTimestampDefault"
+  ],
+  "src/v4/chat/features/shared/components/MutedBanner/MutedBanner.module.css": [
+    "SurfaceBannerSubdueGeneral",
+    "TextBannerGreyBGTextDescriptionGeneral"
+  ],
+  "src/v4/chat/features/shared/components/NewMessageNotification/NewMessageNotification.module.css": [
+    "IconMediaImageBroken",
+    "SurfaceCustomToastDefaultDefault",
+    "SurfaceMediaImageLoaded",
+    "TextCustomToastDefault"
+  ],
+  "src/v4/chat/features/shared/components/SelectedMember/SelectedMember.module.css": [
+    "TextAvatarLabelDefault"
+  ],
+  "src/v4/chat/features/shared/components/YouTile/YouTile.module.css": [
+    "TextAvatarLabelDefault"
+  ]
+}
