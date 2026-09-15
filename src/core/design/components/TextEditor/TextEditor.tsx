@@ -13,6 +13,7 @@
 import {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -115,10 +116,22 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
     const minInputHeight = LINE_HEIGHT;
     const maxInputHeight = maxHeight - WRAPPER_VERTICAL_PADDING * 2;
     const [contentHeight, setContentHeight] = useState(minInputHeight);
-    const inputHeight = Math.min(
-      Math.max(contentHeight, minInputHeight),
-      maxInputHeight
-    );
+    // PDT-5170: an empty editor is always one line tall, regardless of the last
+    // measurement. Sending a multi-line message clears `value` programmatically,
+    // and RN does not reliably re-fire onContentSizeChange for that on either
+    // platform — so the composer stayed at its expanded height with only the
+    // placeholder in it. Deriving the empty case here (rather than resetting the
+    // state in an effect) also avoids a frame at the stale height.
+    const isEmpty = value.length === 0;
+    const inputHeight = isEmpty
+      ? minInputHeight
+      : Math.min(Math.max(contentHeight, minInputHeight), maxInputHeight);
+
+    // Drop the stale measurement once the editor empties, so the first keystroke
+    // of the next message does not render one frame at the old multi-line height.
+    useEffect(() => {
+      if (isEmpty) setContentHeight(minInputHeight);
+    }, [isEmpty, minInputHeight]);
 
     const handleContentSizeChange = useCallback(
       (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {

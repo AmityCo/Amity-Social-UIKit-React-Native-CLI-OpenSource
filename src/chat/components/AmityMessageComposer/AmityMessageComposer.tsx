@@ -181,6 +181,28 @@ export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
 
       {showMentions ? (
         <View style={styles.mentionOverlay}>
+          {/* PDT-5302: the close button used to be absolutely positioned over the
+              panel, so it sat on top of the first row ("All / Notify everyone").
+              Figma (12041-242340) puts it in its own header band above the list,
+              so it gets a real row and the list starts below it. Web has no close
+              button here at all — Lexical's typeahead dismisses on blur — so this
+              band is RN-only. */}
+          <View style={styles.mentionHeader}>
+            <Pressable
+              style={styles.mentionCloseButton}
+              onPress={() => setQuery(null)}
+              accessibilityRole="button"
+              accessibilityLabel="Close mentions"
+            >
+              <AmityIcon
+                name="cross-r"
+                size={16}
+                tokenColor={
+                  AmityColorToken.IconIconButtonFilledSecondaryDefault
+                }
+              />
+            </Pressable>
+          </View>
           <ScrollView
             style={styles.mentionList}
             keyboardShouldPersistTaps="handled"
@@ -241,19 +263,6 @@ export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
               </Pressable>
             ))}
           </ScrollView>
-          {/* web MentionMenu close button (top-right); dismisses the menu. */}
-          <Pressable
-            style={styles.mentionCloseButton}
-            onPress={() => setQuery(null)}
-            accessibilityRole="button"
-            accessibilityLabel="Close mentions"
-          >
-            <AmityIcon
-              name="cross-r"
-              size={16}
-              tokenColor={AmityColorToken.IconIconButtonFilledSecondaryDefault}
-            />
-          </Pressable>
         </View>
       ) : null}
 
