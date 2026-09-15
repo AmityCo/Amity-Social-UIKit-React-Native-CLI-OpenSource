@@ -5,13 +5,16 @@
 // opens the shared bubble action menu.
 
 // 1. React / RN imports
+import { useState } from 'react';
 import { View } from 'react-native';
 
 // 2. Internal imports
 import useFile from '../../../../../core/hooks/useFile';
+import { ImageSizeState } from '../../../../../core/enums';
 import { Typography } from '../../../../../core/design/components/Typography';
 import { useString } from '../../../../../core/localization';
 import { Avatar } from '../../../../elements/Avatar';
+import { ImageViewer } from '../../../shared/components/ImageViewer';
 import { AmityMessageBubble } from '../../../../components/AmityMessageBubble';
 import { AmityMessageActionMenu } from '../../../../components/AmityMessageActionMenu';
 import { MessageReplyQuote } from '../../../shared/components/MessageReplyQuote';
@@ -45,6 +48,8 @@ type MessageRowProps = {
   bubbleHandlers?: BubbleHandlers;
   /** Viewer moderates this channel — unlocks Delete on other people's messages. */
   viewerIsModerator?: boolean;
+  /** This message's SENDER is a channel moderator — badges their avatar. */
+  isSenderModerator?: boolean;
   /** Local preview for an in-flight or failed upload (see MessageList). */
   localPreviewUrl?: string;
   /** The remote media has loaded — the local preview can be dropped. */
@@ -66,6 +71,7 @@ export function MessageRow({
   onSeeMore,
   bubbleHandlers,
   viewerIsModerator = false,
+  isSenderModerator = false,
   localPreviewUrl,
   onMediaLoaded,
 }: MessageRowProps) {
@@ -74,7 +80,18 @@ export function MessageRow({
 
   const creator = message.creator;
   const displayName = creator?.displayName ?? '';
-  const avatarUrl = useFile({ fileId: creator?.avatarFileId ?? '' });
+  const avatarFileId = creator?.avatarFileId ?? '';
+  const avatarUrl = useFile({ fileId: avatarFileId });
+  // PDT-5189: tapping the sender avatar opens their profile picture full screen.
+  // Web MessageRow does the same with a local ImageViewer, at 'large' size.
+  const avatarLargeUrl = useFile({
+    fileId: avatarFileId,
+    imageSize: ImageSizeState.large,
+  });
+  const [isAvatarViewerOpen, setIsAvatarViewerOpen] = useState(false);
+  const fullScreenAvatarUrl = creator?.isDeleted
+    ? undefined
+    : avatarLargeUrl ?? avatarUrl;
 
   const isDeleted = !!message.isDeleted;
   const syncState = message.syncState;
@@ -113,9 +130,25 @@ export function MessageRow({
           <Avatar.User
             avatarUrl={avatarUrl}
             displayName={displayName}
+            // PDT-5134: web MessageList derives this from its moderatorIds set and
+            // hands MessageRow `isModerator`; the badge itself already existed on
+            // Avatar.User, nothing was feeding it.
+            isModerator={isSenderModerator}
             size="sm"
+            onPress={
+              fullScreenAvatarUrl
+                ? () => setIsAvatarViewerOpen(true)
+                : undefined
+            }
           />
         </View>
+      ) : null}
+
+      {isAvatarViewerOpen && fullScreenAvatarUrl ? (
+        <ImageViewer
+          src={fullScreenAvatarUrl}
+          onClose={() => setIsAvatarViewerOpen(false)}
+        />
       ) : null}
 
       <View
