@@ -9,4 +9,5 @@ export * from './useNetworkOnline';
 export * from './useCurrentUserId';
 export * from './useChannelMyMembership';
 export * from './useChatSurfaceHeight';
+export * from './useFollowInfo';
 export * from '../features/shared/hooks';

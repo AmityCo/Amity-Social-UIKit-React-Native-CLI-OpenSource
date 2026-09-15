@@ -3,7 +3,7 @@
 // the header back button to navigation.goBack. Mirrors AmityUiKitWeb ChatPage.
 
 // 1. React / RN imports
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // 2. Third-party imports
 import {
@@ -14,6 +14,7 @@ import {
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 // 3. Internal imports (relative)
+import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import type { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { ChatSurface } from '../../hooks/useChatSurfaceHeight';
 import { Chat } from '../../features/conversation';
@@ -27,15 +28,21 @@ export default function AmityChatPage() {
   const { params } = useRoute<RouteProp<RootStackParamList, 'AmityChatPage'>>();
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Publishes the page's own height, so a sheet inside can size against
-          the page rather than the device — see useChatSurfaceHeight. */}
+    <SafeAreaView edges={['top', 'left', 'right']} style={styles.container}>
+      {/* Publishes the page's own height, so a sheet inside can size against the
+          page rather than the device. It wraps the keyboard owner rather than
+          sitting inside it: the owner gives up height while a keyboard is open,
+          which is the one reading this measurement must not take. It adds no
+          padding of its own, so the owner's frame still starts at the page's
+          top — the invariant its own assertion checks. */}
       <ChatSurface>
-        <Chat
-          channelId={params.channelId}
-          userDisplayName={params.userDisplayName}
-          onBack={() => navigation.goBack()}
-        />
+        <ChatKeyboardAvoidingView>
+          <Chat
+            channelId={params.channelId}
+            userDisplayName={params.userDisplayName}
+            onBack={() => navigation.goBack()}
+          />
+        </ChatKeyboardAvoidingView>
       </ChatSurface>
     </SafeAreaView>
   );
