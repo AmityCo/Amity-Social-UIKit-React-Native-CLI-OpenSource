@@ -56,6 +56,12 @@ type MessageListProps = {
   /** Viewer moderates this channel — unlocks Delete on other people's messages. */
   viewerIsModerator?: boolean;
   /**
+   * User ids of this channel's moderators, for the moderator badge on an inbound
+   * sender avatar (PDT-5134). Web MessageList takes the same `moderatorIds` set
+   * and derives `isModerator` per row; useGroupChat already builds it.
+   */
+  moderatorIds?: Set<string>;
+  /**
    * In-flight/failed uploads, used to give each media bubble its local preview.
    * Web derives the same thing in its MessageList (pendingPreviewByClientId /
    * ByFileId) — without it a failed upload has no image source at all and the
@@ -109,6 +115,7 @@ export function MessageList({
   onSeeMore,
   bubbleHandlers,
   viewerIsModerator = false,
+  moderatorIds,
   pendingUploads,
   onMediaLoaded,
 }: MessageListProps) {
@@ -189,6 +196,9 @@ export function MessageList({
           if (item.kind === 'date') return <DateSeparator label={item.label} />;
           const { message } = item;
           const isUser = !!currentUserId && message.creatorId === currentUserId;
+          // Web MessageList: `!isUserMsg && isGroupChat && moderatorIds?.has(creatorId)`.
+          const isSenderModerator =
+            !isUser && !!isGroupChat && !!moderatorIds?.has(message.creatorId);
           const messageFileId =
             (message.data as { fileId?: string } | undefined)?.fileId ??
             (message as unknown as { fileId?: string }).fileId;
@@ -218,6 +228,7 @@ export function MessageList({
               onSeeMore={onSeeMore}
               bubbleHandlers={bubbleHandlers}
               viewerIsModerator={viewerIsModerator}
+              isSenderModerator={isSenderModerator}
             />
           );
         }}
