@@ -26,8 +26,6 @@ import { isSyntheticPendingMessage } from './useMessageComposer';
 type UseFailedMessageSheetParams = {
   onRetryUpload: (clientId: string) => void;
   onDiscardUpload: (clientId: string) => void;
-  onRetryText: (clientId: string) => void;
-  onDiscardText: (clientId: string) => void;
 };
 
 export type UseFailedMessageSheetReturn = {
@@ -47,8 +45,6 @@ type OptimisticMessageExtras = {
 export function useFailedMessageSheet({
   onRetryUpload,
   onDiscardUpload,
-  onRetryText,
-  onDiscardText,
 }: UseFailedMessageSheetParams): UseFailedMessageSheetReturn {
   const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
     useBottomSheet();
@@ -67,12 +63,11 @@ export function useFailedMessageSheet({
   const deleteLabel = useString('amity_chat_option_delete');
 
   async function handleResend(message: Amity.Message) {
+    // Synthetic bubbles are media-only (PDT-4914): a pending upload has no SDK
+    // row until its file lands, so the composer owns its retry. Text never gets
+    // here — the SDK's own optimistic row is the failed bubble, handled below.
     if (isSyntheticPendingMessage(message)) {
-      if (message.dataType === 'text') {
-        onRetryText(message.__syntheticClientId);
-      } else {
-        onRetryUpload(message.__syntheticClientId);
-      }
+      onRetryUpload(message.__syntheticClientId);
       return;
     }
     // Resend THIS message — do not create a second one.
@@ -122,11 +117,7 @@ export function useFailedMessageSheet({
 
   function handleDelete(message: Amity.Message) {
     if (isSyntheticPendingMessage(message)) {
-      if (message.dataType === 'text') {
-        onDiscardText(message.__syntheticClientId);
-      } else {
-        onDiscardUpload(message.__syntheticClientId);
-      }
+      onDiscardUpload(message.__syntheticClientId);
       return;
     }
     if (message.messageId) {
