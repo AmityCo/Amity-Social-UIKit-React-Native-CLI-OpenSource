@@ -18,25 +18,34 @@ export const useStyles = () => {
       flexDirection: 'column',
       gap: 8,
     },
-    // Reaction-picker pill — its own floating surface (bg comes from ReactionPicker;
-    // this adds the pill radius + shadow + compact content width).
+    // Reaction-picker slot — positioning ONLY.
+    //
+    // This used to add a radius, a clip and a second shadow on top of the ones
+    // ReactionPicker's own pill already draws. The clip is what forced the
+    // picker to reserve a transparent band above its pill so the floating
+    // label would not be cropped, and this box then drew its shadow around that
+    // empty band — a grey bar hanging above the picker, with the pill pushed
+    // ~44px off the bubble whenever the popover opened below a message. The
+    // pill supplies the whole surface (background, 9999 radius, elevation-08
+    // shadow), so this wrapper has nothing left to draw and nothing to clip.
     pickerCard: {
       alignSelf: 'flex-start',
-      borderRadius: 20,
-      overflow: 'hidden',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.16,
-      shadowRadius: 16,
-      elevation: 8,
     },
     // Menu card — its own floating surface (mirrors the standard popover card).
+    //
+    // No `overflow: 'hidden'` here: on iOS that sets clipsToBounds, which clips
+    // the layer's own shadow away, so the card rendered completely flat. Android
+    // draws from `elevation` instead and was unaffected, which is why only iOS
+    // looked wrong. The clip was not buying anything either — Menu.Item carries
+    // its own borderRadius 8 and the card's 4px padding already insets every row
+    // inside the 12px corner.
     menuCard: {
       alignSelf: 'stretch',
       minWidth: 200,
       borderRadius: 12,
-      overflow: 'hidden',
       padding: 4,
       backgroundColor: token(AmityColorToken.SurfacePopoverBackgroundDefault),
+      shadowColor: 'rgb(41, 43, 50)',
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.16,
       shadowRadius: 16,
