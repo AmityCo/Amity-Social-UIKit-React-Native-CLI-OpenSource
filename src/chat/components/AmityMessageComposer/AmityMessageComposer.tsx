@@ -291,6 +291,10 @@ export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
           onSend={onSend}
           placeholder={placeholder}
           placeholderTextColor={placeholderColor}
+          // Web's MessageComposer passes maxLines={4} on both the mention and
+          // plain editors; RN was falling through to the TextEditor default
+          // (120px wrapper = 5 lines), so the composer grew one line too far.
+          maxLines={4}
           autoFocus={isEditing}
           onMentionQueryChange={enableMention ? setQuery : undefined}
         />
