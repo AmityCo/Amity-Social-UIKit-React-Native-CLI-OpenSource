@@ -16,29 +16,36 @@
 //   - Confirm dialog: web `useConfirmContext().confirm` → RN `Alert.alert`.
 //   - Avatar: web's `AvatarPicker` took an SDK `File` via `{ value, onChange }`;
 //     the RN AvatarPicker is presentational (`imageUrl`/`onPick`/`isUploading`),
-//     so this hook owns the pick+upload: `launchImageLibrary` → FormData →
-//     `FileRepository.uploadImage` → `fileId` (the useMessageComposer pattern).
-//     The form stores `avatarFileId` (string|null) rather than a File object.
+//     so this hook owns the pick+upload. It delegates to the repo's
+//     `useImagePicker` (the same hook the sibling edit-profile screen uses),
+//     which wraps launchCamera/launchImageLibrary and `useUpload`. The form
+//     stores `avatarFileId` (string|null) rather than a File object.
+//   - PDT-5061: the AvatarPicker now reports which source the user chose in its
+//     Camera/Photo sheet (web's drawer), so this hook branches openCamera vs
+//     openImageGallery instead of always opening the gallery.
+//   - PDT-5177: going through `useImagePicker`/`useUpload` is also what surfaces
+//     the "Inappropriate image" dialog on a moderation rejection (error 400314 /
+//     INVALID_IMAGE) - the old inline FileRepository.uploadImage call swallowed
+//     that error in a bare catch. The preview is resolved from the *uploaded*
+//     fileId rather than the local uri, so a rejected image is never shown as
+//     the group avatar.
 
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {
-  ChannelRepository,
-  FileRepository,
-  Client,
-} from '@amityco/ts-sdk-react-native';
-import { launchImageLibrary, type Asset } from 'react-native-image-picker';
+import { ChannelRepository, Client } from '@amityco/ts-sdk-react-native';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
+import useFile from '../../../../../core/hooks/useFile';
 import { useString } from '../../../../../core/localization';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';
-import { appendFileToFormData } from '../../../../../core/utils/fileUpload';
 import type { RootStackParamList } from '../../../../../core/routes/RouteParamList';
+import useImagePicker from '../../../../../social/hooks/useImagePicker';
+import type { AvatarPickerSource } from '../../../../elements/AvatarPicker';
 import { generateDisplayName } from '../utils/generateDisplayName';
 
 // Web reads GROUP_NAME_MAX_LENGTH from chat/constants; inlined to match the
@@ -72,20 +79,6 @@ const schema = z.object({
 
 export type CreateGroupChatForm = z.infer<typeof schema>;
 
-// Build the RN multipart file part the SDK's uploadImage expects (iOS file://
-// strip + { uri, name, type }), mirroring useMessageComposer's toFormData.
-function toFormData(asset: Asset): FormData {
-  const formData = new FormData();
-  appendFileToFormData(
-    formData,
-    'files',
-    asset.uri ?? '',
-    asset.fileName ?? 'upload',
-    asset.type ?? 'application/octet-stream'
-  );
-  return formData;
-}
-
 export function useCreateGroupChat({
   selectedUsers,
 }: CreateGroupChatPageProps) {
@@ -105,10 +98,11 @@ export function useCreateGroupChat({
     'amity_chat_leave_without_finishing_message'
   );
 
-  const [avatarImageUrl, setAvatarImageUrl] = useState<string | undefined>(
-    undefined
-  );
-  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const {
+    openCamera,
+    openImageGallery,
+    isLoading: isUploadingAvatar,
+  } = useImagePicker();
 
   const form = useForm<CreateGroupChatForm>({
     mode: 'onChange',
@@ -138,33 +132,39 @@ export function useCreateGroupChat({
     params?: object
   ) => void;
 
-  const handlePickAvatar = useCallback(async () => {
-    if (isUploadingAvatar) return;
-    const response = await launchImageLibrary({
-      mediaType: 'photo',
-      selectionLimit: 1,
-    });
-    if (response.didCancel || response.errorCode) return;
-    const asset = response.assets?.[0];
-    if (!asset || !asset.uri) return;
+  // Preview the *uploaded* avatar, not the local uri: an image the backend
+  // rejects (PDT-5177) must never end up shown as the group avatar.
+  const avatarFileId = form.watch('avatarFileId');
+  const avatarImageUrl = useFile({ fileId: avatarFileId ?? '' });
 
-    const previousUrl = avatarImageUrl;
-    setAvatarImageUrl(asset.uri);
-    setIsUploadingAvatar(true);
-    try {
-      const uploaded = await FileRepository.uploadImage(toFormData(asset));
-      const fileId = uploaded?.data?.[0]?.fileId;
-      if (!fileId) throw new Error('Upload did not return a fileId.');
-      form.setValue('avatarFileId', fileId, { shouldValidate: true });
-    } catch {
-      // No dedicated avatar-upload-error string exists; revert the preview so
-      // the tile falls back to the placeholder rather than showing a wrong toast.
-      setAvatarImageUrl(previousUrl);
-      form.setValue('avatarFileId', null, { shouldValidate: true });
-    } finally {
-      setIsUploadingAvatar(false);
-    }
-  }, [avatarImageUrl, isUploadingAvatar, form]);
+  // PDT-5061: `source` comes from the AvatarPicker's Camera/Photo sheet.
+  // useImagePicker handles the camera permission prompt, the unsupported-type
+  // alert and — via useUpload — the "Inappropriate image" dialog (PDT-5177);
+  // it resolves to the uploaded Amity.File, or a falsy value when the user
+  // cancelled or the upload was rejected.
+  const handlePickAvatar = useCallback(
+    async (source: AvatarPickerSource) => {
+      if (isUploadingAvatar) return;
+      // useImagePicker declares `void | Amity.File<'image'>`; at runtime it
+      // resolves to the uploaded file, or a nullish value when the user
+      // cancelled, the type was unsupported, or the upload was rejected.
+      const uploaded = (
+        source === 'camera'
+          ? await openCamera({ mediaType: 'photo', quality: 1 })
+          : await openImageGallery({
+              mediaType: 'photo',
+              quality: 1,
+              selectionLimit: 1,
+            })
+      ) as Amity.File<'image'> | undefined;
+      if (uploaded?.fileId) {
+        form.setValue('avatarFileId', uploaded.fileId, {
+          shouldValidate: true,
+        });
+      }
+    },
+    [isUploadingAvatar, openCamera, openImageGallery, form]
+  );
 
   function handleClose() {
     Alert.alert(leaveWithoutFinishingTitle, leaveWithoutFinishingContent, [

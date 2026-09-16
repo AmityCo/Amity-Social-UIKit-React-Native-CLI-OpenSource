@@ -32,6 +32,7 @@ import useFile from '../../../../../core/hooks/useFile';
 import { useString } from '../../../../../core/localization';
 import { useToast } from '../../../../../core/stores/slices/toastSlice';
 import useImagePicker from '../../../../../social/hooks/useImagePicker';
+import type { AvatarPickerSource } from '../../../../elements/AvatarPicker';
 
 // Web imports GROUP_NAME_MAX_LENGTH from chat/constants (= 100); inlined to match
 // the GroupNameField element port.
@@ -47,7 +48,7 @@ export function useEditGroupProfile({ channelId }: EditGroupProfileProps) {
   const { isConnected } = useAuth();
   const { showToast } = useToast();
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const { openImageGallery, imageUri, isLoading, uploadedImage } =
+  const { openCamera, openImageGallery, imageUri, isLoading, uploadedImage } =
     useImagePicker();
 
   const updateSuccessToast = useString('amity_chat_group_edit_profile');
@@ -108,7 +109,14 @@ export function useEditGroupProfile({ channelId }: EditGroupProfileProps) {
     navigation.goBack();
   }
 
-  function handlePickAvatar() {
+  // PDT-5061: the shared AvatarPicker now asks Camera vs Photo up front (web's
+  // drawer), so honour the chosen source here too rather than always opening
+  // the gallery — otherwise the Camera row would silently open the library.
+  function handlePickAvatar(source: AvatarPickerSource) {
+    if (source === 'camera') {
+      openCamera({ mediaType: 'photo', quality: 1 });
+      return;
+    }
     openImageGallery({ mediaType: 'photo', quality: 1, selectionLimit: 1 });
   }
 

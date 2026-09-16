@@ -1,35 +1,34 @@
 // ContentReportReason — ported from AmityUiKitWeb
 // core/design/components/ContentReportReason/ContentReportReason.tsx, scoped to the
 // message-report flow (web's component also handled post/comment; RN only needs
-// message here). Web rendered it inside a Drawer (mobile) / Popup (desktop); the RN
-// bug being fixed was that the report UI appeared as a partial bottom sheet, so this
-// is a full-screen Modal — matching the sibling MessageFullTextScreen overlay pattern
-// and how every other chat overlay is threaded through useChatMessage.
+// message here). Web renders it in a Drawer (mobile) / Popup (desktop); RN matches
+// the mobile side with a bottom sheet at 90% of the viewport, per Figma
+// (PDT-5225 / PDT-5261).
+//
+// An earlier fix took this the other way — a partial sheet was reported as a bug and
+// the screen became a full-screen Modal, which then lost the drag handle, the
+// backdrop and tap-outside-to-close along with it. The sheet was never the problem;
+// its height was.
 //
 // RN adaptations vs web:
-//   - web's `useFlagMessageQuery` (react-query) is inlined here as a direct
-//     `MessageRepository.flagMessage(messageId, reason)` call — RN has no react-query
-//     wrapper for messages and the report screen only reports (never toggles/unreports).
-//   - web's deleted/error branch (`FailedToShow` + a Close button on NOT_FOUND /
-//     400400) is dropped — RN has no `FailedToShow`; failures surface as an error
-//     toast instead (documented deviation).
+//   - reporting goes through RN's own `useFlagMessageQuery().report`, the port of
+//     web's hook of the same name, so report and unreport share one code path and
+//     one flag-state cache.
 //   - web's offline info-toast `useEffect` is dropped; the Submit button already
 //     stays disabled while offline (documented deviation).
 
 // 1. React / RN imports
-import { useState } from 'react';
-import { Modal, Pressable, ScrollView, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
 
 // 2. Third-party imports
 import {
   ContentFlagReasonEnum,
   MessageRepository,
 } from '@amityco/ts-sdk-react-native';
-import { useQueryClient } from '@tanstack/react-query';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import BottomSheet, { type BottomSheetMethods } from '@devvie/bottom-sheet';
 
 // 3. Internal imports
-import { ChatKeyboardAvoidingView } from '../../../../elements/ChatKeyboardAvoidingView';
 import { Typography } from '../../../../../core/design/components/Typography';
 import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
@@ -37,10 +36,10 @@ import { Selection } from '../../../../../core/design/atoms/Selection';
 import { Input } from '../../../../../core/design/atoms/Input';
 import { Button } from '../../../../../core/design/atoms/Button';
 import { resolveString, useString } from '../../../../../core/localization';
-import { useChatNotifications } from '../../../../hooks/useChatNotifications';
-import { flagMessageQueryKey } from '../../../../hooks/queries';
+import { useFlagMessageQuery } from '../../../../hooks/queries';
 import { useNetworkOnline } from '../../../../hooks/useNetworkOnline';
-import Toast from '../../../../../social/components/Toast';
+import { useChatSurfaceHeight } from '../../../../hooks/useChatSurfaceHeight';
+import { FailedToShow } from '../FailedToShow';
 import { useStyles } from './styles';
 
 // 4. Types
@@ -96,16 +95,55 @@ export function ContentReportReason({
   onClose,
 }: ContentReportReasonProps) {
   const { styles } = useStyles();
-  const { success, error } = useChatNotifications();
-  const queryClient = useQueryClient();
+  const sheetRef = useRef<BottomSheetMethods>(null);
+
+  // devvie reads `height="90%"` against `containerHeight`, and its default for
+  // that is the DEVICE screen — so under a host app's own chrome the sheet comes
+  // out taller than 90% of the page it actually lives in (PDT-5225). The page
+  // measures its own box and publishes it; hand that over instead.
+  const surfaceHeight = useChatSurfaceHeight();
   const { online } = useNetworkOnline();
+  const {
+    report,
+    isMessageDeleted: isMessageDeletedFromReport,
+    isPendingReport,
+  } = useFlagMessageQuery({
+    messageId: message.messageId,
+    // Only subscribe while the sheet is up; the bubble menu owns its own instance.
+    enabled: visible && !!message.messageId,
+  });
+
+  // A report that comes back 400400 is only one way to learn the message went
+  // away, and it needs the user to press Submit first. Web reads the live
+  // message object alongside it — `isMessageDeletedFromReport || liveMessage
+  // ?.isDeleted` — so the sheet settles into the error state the moment the
+  // message is deleted, whether or not anything was submitted. Same subscription
+  // MessageReactorListSheet already uses.
+  const [liveMessage, setLiveMessage] = useState<Amity.Message>(message);
+
+  useEffect(() => {
+    if (!visible || !message.messageId) return undefined;
+
+    const unsubscribe = MessageRepository.getMessage(
+      message.messageId,
+      (result) => {
+        // A loading callback carries no data; overwriting on it would wipe the
+        // message the sheet was opened with.
+        if (result.data) setLiveMessage(result.data);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [visible, message.messageId]);
+
+  const isMessageDeleted =
+    isMessageDeletedFromReport || !!liveMessage.isDeleted;
 
   const [isShowOthersOption, setIsShowOthersOption] = useState(false);
   const [otherReasonText, setOtherReasonText] = useState('');
   const [selectedReason, setSelectedReason] = useState<
     Amity.ContentFlagReason | undefined
   >(undefined);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const othersTitle = useString('amity_social_button_others');
   const reportReasonTitle = useString('amity_social_button_report_reason');
@@ -125,10 +163,30 @@ export function ContentReportReason({
   const submitButtonText = useString(
     'amity_social_button_report_submit_button'
   );
-  const reportSuccessToast = useString('amity_chat_toast_message_reported');
-  const reportErrorToast = useString('amity_chat_toast_message_reported_error');
+  // FailedToShow's own defaults are the livestream pair — right words, wrong
+  // key for anyone overriding copy, since editing the report screen's title
+  // would move the livestream one with it. Pass chat's own keys for both lines.
+  const messageUnavailableTitle = useString(
+    'amity_chat_report_message_unavailable_title'
+  );
+  const messageUnavailableDesc = useString(
+    'amity_chat_report_message_unavailable_desc'
+  );
 
-  const isDisabledSubmitButton = !selectedReason || !online || isSubmitting;
+  // Tapping the "Others" row selects the reason before a single character is
+  // typed, so `selectedReason` on its own leaves Submit live over an empty
+  // free-text field — and submitting then sends '' as the reason.
+  const isOthersReasonBlank =
+    selectedReason === ContentFlagReasonEnum.Others && !otherReasonText.trim();
+
+  const isDisabledSubmitButton =
+    !selectedReason || isOthersReasonBlank || !online || isPendingReport;
+
+  // The sheet animates itself open/closed; `visible` is the source of truth.
+  useEffect(() => {
+    if (visible) sheetRef.current?.open();
+    else sheetRef.current?.close();
+  }, [visible]);
 
   function handleBack() {
     // Web resets both the selected reason and the sub-view flag.
@@ -140,53 +198,45 @@ export function ContentReportReason({
     setSelectedReason(value);
   }
 
-  async function handleSubmitReport() {
-    if (!message.messageId || !selectedReason || isSubmitting) return;
+  function handleSubmitReport() {
+    if (!message.messageId || isDisabledSubmitButton) return;
 
     // Web sends the free text for Others, the enum value otherwise.
     const reason =
       selectedReason === ContentFlagReasonEnum.Others
-        ? otherReasonText
+        ? otherReasonText.trim()
         : selectedReason;
 
-    setIsSubmitting(true);
-    try {
-      await MessageRepository.flagMessage(message.messageId, reason);
-      // Refresh the bubble menu's flag state so Report flips to Unreport
-      // (reinforces the menu's own refetch-on-open; see useFlagMessageQuery).
-      queryClient.invalidateQueries({
-        queryKey: flagMessageQueryKey(message.messageId),
-      });
-      success({ content: reportSuccessToast });
-      onClose();
-    } catch {
-      error({ content: reportErrorToast });
-    } finally {
-      setIsSubmitting(false);
-    }
+    // The hook owns the toasts, the duplicate-report guard, the NOT_FOUND →
+    // isMessageDeleted swap, and refreshing the flag state the bubble menu reads.
+    report({ reason, onSuccess: onClose });
   }
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      onRequestClose={onClose}
-      transparent={false}
+    <BottomSheet
+      ref={sheetRef}
+      // 90% of the viewport, per Figma — a full-height sheet, not a full screen.
+      height="90%"
+      containerHeight={surfaceHeight}
+      closeOnDragDown
+      closeOnBackdropPress
+      // The body scrolls; without this the sheet swallows the ScrollView's pans.
+      disableBodyPanning
+      onClose={onClose}
+      style={styles.sheet}
     >
-      {/* A React Native Modal renders in its own native hierarchy, outside the
-          page that mounted it, so neither the page's SafeAreaView nor its
-          ChatKeyboardAvoidingView reaches this content — this screen has to own
-          both edges itself, on the same contract the chat pages use. Without it
-          the header sits under the status bar and the submit button sits under
-          the home indicator, and the keyboard covers the button outright once
-          the free-text reason is focused.
-
-          The Modal needs its own SafeAreaProvider for the same reason: the one
-          at the provider root measures the app's window, not the modal's, so
-          inside here its insets read as zero and SafeAreaView pads nothing. */}
-      <SafeAreaProvider>
-        <SafeAreaView edges={['top', 'left', 'right']} style={styles.screen}>
-          <ChatKeyboardAvoidingView>
+      <View style={styles.screen}>
+        {isMessageDeleted ? (
+          // PDT-5229: the message was deleted out from under this sheet.
+          // Replace the body with the settled error state — what web does on
+          // NOT_FOUND — rather than leaving the form up behind a toast.
+          <FailedToShow
+            style={styles.failed}
+            title={messageUnavailableTitle}
+            description={messageUnavailableDesc}
+          />
+        ) : (
+          <>
             <View style={styles.header}>
               <View style={[styles.headerSlot, styles.headerSlotLeft]}>
                 {isShowOthersOption ? (
@@ -249,14 +299,16 @@ export function ContentReportReason({
                     placeholder={reportTextPlaceholder}
                     value={otherReasonText}
                     onChange={setOtherReasonText}
-                    // LEADS WEB (PDT-4142): web's ContentReportReason also omits
-                    // multiLine — its Input.Text then renders a single-line <input>,
-                    // which is the bug the ticket reports, still open there.
-                    // Without this the field stays single-line, so a reason typed up
-                    // to MAX_LENGTH_DESCRIBE scrolls sideways instead of wrapping.
-                    // multiLine also top-aligns the row so the label sits level with
-                    // the first line.
+                    // multiLine is what lets a reason typed up to
+                    // MAX_LENGTH_DESCRIBE wrap instead of scrolling sideways, and it
+                    // top-aligns the row so the label sits level with the first line.
+                    // Web passes it too (an earlier note here claimed otherwise —
+                    // that was true of PDT-4142's snapshot, not of current web).
+                    // blockNewLine then refuses Enter without giving the wrap up: the
+                    // design allows a long reason, just not a multi-line one
+                    // (PDT-5228).
                     multiLine
+                    blockNewLine
                   />
                 </View>
               ) : (
@@ -298,25 +350,30 @@ export function ContentReportReason({
                 </>
               )}
             </ScrollView>
+          </>
+        )}
 
-            <View style={styles.bottomBar}>
-              <Button
-                hierarchy="primary"
-                size="lg"
-                fullWidth
-                label={submitButtonText}
-                disabled={isDisabledSubmitButton}
-                onPress={handleSubmitReport}
-              />
-            </View>
-            {/* The global <Toast /> is mounted outside this Modal, so RN renders it
-                beneath the native Modal layer. Mount a Toast inside the Modal too so
-                the report-error toast (Modal stays open on failure) is visible; it
-                reads the same redux toast state via context. */}
-            <Toast />
-          </ChatKeyboardAvoidingView>
-        </SafeAreaView>
-      </SafeAreaProvider>
-    </Modal>
+        <View style={styles.bottomBar}>
+          {isMessageDeleted ? (
+            <Button
+              hierarchy="primary"
+              size="lg"
+              fullWidth
+              label={closeButtonText}
+              onPress={onClose}
+            />
+          ) : (
+            <Button
+              hierarchy="primary"
+              size="lg"
+              fullWidth
+              label={submitButtonText}
+              disabled={isDisabledSubmitButton}
+              onPress={handleSubmitReport}
+            />
+          )}
+        </View>
+      </View>
+    </BottomSheet>
   );
 }
