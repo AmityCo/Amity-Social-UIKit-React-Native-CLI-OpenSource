@@ -20,8 +20,9 @@
 //  - `useNotifications('chat').error` → redux toast (useToast → showToast).
 //  - `useConfirmContext().info` (title/body/ok dialog) → RN Alert.alert.
 //  - `useEditMessageQuery().requestEdit` + `handleTextMessageError` util +
-//    `ERROR_CODE` / `COMPOSER_MAX_FILE_SIZE` constants are inlined here so the
-//    hook stays self-contained (those web modules have no RN counterpart).
+//    the `COMPOSER_MAX_FILE_SIZE` constant are inlined here so the hook stays
+//    self-contained (those web modules have no RN counterpart). `ERROR_CODE`
+//    lives in `src/chat/constants` — the report flow needs it too.
 //  - FormData is built with the repo's appendFileToFormData helper (iOS file://
 //    strip + the RN { uri, name, type } multipart part).
 
@@ -43,7 +44,7 @@ import type { Asset } from 'react-native-image-picker';
 import { resolveString, useString } from '../../../../core/localization';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
 import { appendFileToFormData } from '../../../../core/utils/fileUpload';
-import { ERROR_RESPONSE } from '../../../constants';
+import { ERROR_CODE, ERROR_RESPONSE } from '../../../constants';
 
 // 4. Types
 type CreateMessageParams = Parameters<
@@ -118,14 +119,10 @@ type UseMessageComposerParams = {
   onEditCompleted?: () => void;
 };
 
-// Inlined web `~/v4/chat/constants` values with no RN counterpart.
+// Inlined web `~/v4/chat/constants` value with no RN counterpart. ERROR_CODE
+// used to sit here too; it moved to `src/chat/constants` when the report flow
+// needed NOT_FOUND as well.
 const COMPOSER_MAX_FILE_SIZE = 1 * 1024 * 1024 * 1024;
-const ERROR_CODE = {
-  MESSAGE_TOO_LONG: '400000',
-  BLOCKED_WORD: '400308',
-  IMAGE_NUDITY: '400314',
-  NOT_FOUND: '400400',
-};
 
 type Notify = {
   errorToast: (args: { content: string }) => void;
