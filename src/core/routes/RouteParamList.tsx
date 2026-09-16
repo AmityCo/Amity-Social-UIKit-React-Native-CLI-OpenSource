@@ -27,7 +27,12 @@ export type RootStackParamList = {
     isJustCreated?: boolean;
     jumpToMessageId?: string;
   };
-  AmitySelectGroupMemberPage: undefined;
+  // Optional: the chat-list "+" menu opens this with no params, while the
+  // create-group screen's Add-member tile re-opens it carrying the members
+  // already chosen so they come back pre-selected.
+  AmitySelectGroupMemberPage:
+    | { selectedGroupMember?: Amity.User[] }
+    | undefined;
   AmityCreateGroupChatPage: { selectedUsers: Amity.User[] };
   AmityAddGroupMemberPage: { channelId: string };
   AmityGroupMemberListPage: { channelId: string };

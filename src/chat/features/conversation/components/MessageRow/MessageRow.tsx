@@ -35,7 +35,6 @@ type MessageRowProps = {
   isUser: boolean;
   isGroupChat?: boolean;
   currentUserId?: string | null;
-  parent?: Amity.Message | null;
   onOpenImage?: (url: string, message: Amity.Message) => void;
   onOpenVideo?: (message: Amity.Message) => void;
   onOpenFailedSheet?: (message: Amity.Message) => void;
@@ -57,7 +56,6 @@ export function MessageRow({
   isUser,
   isGroupChat = false,
   currentUserId,
-  parent,
   onOpenImage,
   onOpenVideo,
   onOpenFailedSheet,
@@ -136,7 +134,7 @@ export function MessageRow({
 
         {message.parentId && !isDeleted ? (
           <MessageReplyQuote
-            parent={parent}
+            parentId={message.parentId}
             child={message}
             isUser={isUser}
             isGroupChat={isGroupChat}

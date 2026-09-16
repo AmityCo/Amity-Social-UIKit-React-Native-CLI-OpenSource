@@ -1,5 +1,5 @@
 import { UserRepository } from '@amityco/ts-sdk-react-native';
-import useLiveObject from '../useLiveObject';
+import useLiveObject from '../../../../core/hooks/objects/useLiveObject';
 
 type UseUserParams = {
   userId: Parameters<typeof UserRepository.getUser>[0];

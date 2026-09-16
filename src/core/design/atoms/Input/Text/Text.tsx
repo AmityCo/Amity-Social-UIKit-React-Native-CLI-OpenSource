@@ -19,6 +19,12 @@ export type TextProps = {
   showCharacterCount?: boolean;
   maxLength?: number;
   multiLine?: boolean;
+  /** Strip line breaks from the value as it is entered. `multiLine` controls how
+   *  the text *wraps*; this controls whether the user may start a new line at all,
+   *  so a field can wrap long text while still refusing Enter (PDT-5228). Applied
+   *  on change rather than on key press because Android does not reliably report a
+   *  cancellable Enter, and because it also catches a pasted multi-line string. */
+  blockNewLine?: boolean;
   isDisabled?: boolean;
   isInvalid?: boolean;
   highlightMatch?: boolean;
@@ -40,6 +46,7 @@ export function Text({
   showCharacterCount = false,
   maxLength,
   multiLine = false,
+  blockNewLine = false,
   isDisabled = false,
   isInvalid = false,
   highlightMatch = false,
@@ -64,6 +71,10 @@ export function Text({
     highlight: highlightMatch,
     multiLine,
   });
+
+  function handleChangeText(next: string) {
+    onChange?.(blockNewLine ? next.replace(/[\r\n]+/g, '') : next);
+  }
 
   const counter = showCharacterCount ? (
     <RNText style={styles.count}>
@@ -90,7 +101,7 @@ export function Text({
         <TextInput
           style={styles.input}
           value={value}
-          onChangeText={onChange}
+          onChangeText={handleChangeText}
           placeholder={placeholder}
           placeholderTextColor={placeholderColor}
           selectionColor={cursorColor}

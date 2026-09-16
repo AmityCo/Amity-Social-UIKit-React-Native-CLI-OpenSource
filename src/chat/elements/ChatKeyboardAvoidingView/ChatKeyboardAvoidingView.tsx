@@ -24,14 +24,18 @@
 // itself. So the safe-area inset lives on the inner View instead, and the two
 // are made to sum to the real occlusion rather than stack on top of it:
 //
-//   keyboardVerticalOffset = -insets.bottom
+//   keyboardVerticalOffset = ancestorOffset - insets.bottom
 //
-// `keyboardY = keyboardFrame.screenY - keyboardVerticalOffset`, so a NEGATIVE
-// offset raises keyboardY and KAV pads by `occlusion - insets.bottom`; the
-// inner View adds the inset back, landing exactly on `occlusion`. The inset is
-// already inside the occlusion on both platforms: on Android the OS reports the
-// keyboard height with the navigation-bar inset subtracted while the keyboard
-// physically covers the bar, and on iOS the keyboard covers the home indicator.
+// `keyboardY = keyboardFrame.screenY - keyboardVerticalOffset`, so the
+// `-insets.bottom` half raises keyboardY and KAV pads by
+// `occlusion - insets.bottom`; the inner View adds the inset back, landing
+// exactly on `occlusion`. The inset is already inside the occlusion on both
+// platforms: on Android the OS reports the keyboard height with the
+// navigation-bar inset subtracted while the keyboard physically covers the bar,
+// and on iOS the keyboard covers the home indicator.
+//
+// The `ancestorOffset` half repairs KAV's own frame of reference — see
+// `useAncestorOffset` below.
 //
 // With the keyboard closed the offset is never read — RN short-circuits to
 // bottom = 0 as soon as the keyboard event is null — so the inner inset stands
@@ -45,7 +49,7 @@
 // IME arrives as an inset the app has to consume itself.
 
 // 1. React / RN imports
-import { useCallback, useRef, type ReactNode } from 'react';
+import { useCallback, useRef, useState, type ReactNode } from 'react';
 import {
   KeyboardAvoidingView,
   View,
@@ -74,13 +78,14 @@ export function ChatKeyboardAvoidingView({
   const { styles } = useStyles();
   const insets = useSafeAreaInsets();
   const contentRef = useRef<View>(null);
-  const assertNoAncestorOffset = useAncestorOffsetAssertion(contentRef);
+  const { ancestorOffset, measureAncestorOffset } =
+    useAncestorOffset(contentRef);
 
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      keyboardVerticalOffset={-insets.bottom}
-      onLayout={assertNoAncestorOffset}
+      keyboardVerticalOffset={ancestorOffset - insets.bottom}
+      onLayout={measureAncestorOffset}
       style={[styles.container, style]}
     >
       <View
@@ -94,33 +99,39 @@ export function ChatKeyboardAvoidingView({
 }
 
 /**
- * Dev-only guard for the one invariant KeyboardAvoidingView depends on without
- * ever checking: that its parent's origin sits at the top of the screen.
+ * Measures the one invariant KeyboardAvoidingView depends on without ever
+ * checking: that its parent's origin sits at the top of the screen.
  *
  * KAV derives its displacement from `frame.y + frame.height`, where the frame
  * comes from its own onLayout and is therefore PARENT-relative, while the
  * keyboard is reported in screen coordinates. The two describe the same edge
  * only when nothing between this view and the top of the screen introduces an
- * offset — so `frame.y` has to equal this view's absolute top. Mounted one
- * level deeper than the page's SafeAreaView, a wrapper absorbs the top inset,
- * `frame.y` collapses to 0, and KAV pads short by exactly that inset: the
- * compose bar ends up under the keyboard by a status bar's worth, with no
- * error, no warning, and a layout that still looks plausible.
+ * offset. A host app that renders the UIKit under its own header — the example
+ * app's module nav bar, a tab bar, any wrapper with padding — breaks that
+ * silently: `frame.y` collapses while the view really starts further down, and
+ * KAV pads short by exactly that difference, leaving the keyboard over the
+ * compose bar with no error and a layout that still looks plausible.
  *
- * This measures the invariant rather than the JSX shape that usually implies
- * it: a static rule cannot see padding that lives in another file's stylesheet,
- * and would flag harmless wrappers that introduce no offset at all.
+ * So measure the difference and hand it back as `keyboardVerticalOffset`:
+ *
+ *   padding  = (frame.y + frame.height) - (keyboardScreenY - offset)
+ *   frame.y  = absoluteTop - ancestorOffset
+ *   ⇒ offset = ancestorOffset - insets.bottom  lands padding on the occlusion.
+ *
+ * Correcting beats asserting because the offset is the host app's to own, not
+ * this component's: an integrator is entitled to mount the UIKit below their
+ * own chrome, and a warning telling them not to would have no fix behind it.
  *
  * The content View's absolute top is the KAV's own absolute top — the KAV only
  * ever pads its BOTTOM — so it can stand in for a ref that RN does not expose.
  * KeyboardAvoidingView is a plain class component with no forwarded ref and no
  * `measure` method; its inner ref is private.
  */
-function useAncestorOffsetAssertion(contentRef: React.RefObject<View | null>) {
-  return useCallback(
-    (event: LayoutChangeEvent) => {
-      if (!__DEV__) return;
+function useAncestorOffset(contentRef: React.RefObject<View | null>) {
+  const [ancestorOffset, setAncestorOffset] = useState(0);
 
+  const measureAncestorOffset = useCallback(
+    (event: LayoutChangeEvent) => {
       // The very frame KAV is about to do its arithmetic on.
       const { y: parentRelativeTop } = event.nativeEvent.layout;
 
@@ -128,23 +139,17 @@ function useAncestorOffsetAssertion(contentRef: React.RefObject<View | null>) {
         // A measurement taken mid-teardown reads as zero and proves nothing.
         if (height === 0) return;
 
-        const drift = pageY - parentRelativeTop;
+        const offset = pageY - parentRelativeTop;
 
-        // Sub-pixel rounding between the two measurement paths is expected.
-        if (Math.abs(drift) < 1) return;
-
-        console.error(
-          `[ChatKeyboardAvoidingView] mounted under ${drift}dp of ancestor ` +
-            `offset. KeyboardAvoidingView measures its frame relative to its ` +
-            `parent (top ${parentRelativeTop}dp) while the keyboard is ` +
-            `reported in screen coordinates (this view really starts at ` +
-            `${pageY}dp), so it will pad ${drift}dp short and the keyboard ` +
-            `will cover that much content. Mount this directly inside the ` +
-            `screen's SafeAreaView, with nothing between them that adds ` +
-            `padding, margin or a transform.`
+        setAncestorOffset((current) =>
+          // Sub-pixel rounding between the two measurement paths is expected;
+          // re-rendering on it would only churn.
+          Math.abs(offset - current) < 1 ? current : offset
         );
       });
     },
     [contentRef]
   );
+
+  return { ancestorOffset, measureAncestorOffset };
 }

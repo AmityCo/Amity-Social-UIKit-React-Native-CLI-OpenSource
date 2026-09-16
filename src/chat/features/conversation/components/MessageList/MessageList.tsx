@@ -147,14 +147,6 @@ export function MessageList({
     });
   }, [items]);
 
-  // Resolve reply parents from the loaded items (no separate live lookup for M2).
-  const messageById = useMemo(() => {
-    const map = new Map<string, Amity.Message>();
-    for (const it of data)
-      if (it.kind === 'message') map.set(it.message.messageId, it.message);
-    return map;
-  }, [data]);
-
   // PDT-5252: jump to a searched message. Web opens the thread on a collection
   // anchored around the message; RN's collection always starts at the newest
   // page, so we scroll when the target is loaded and otherwise page backwards
@@ -250,11 +242,6 @@ export function MessageList({
               isUser={isUser}
               isGroupChat={isGroupChat}
               currentUserId={currentUserId}
-              parent={
-                message.parentId
-                  ? messageById.get(message.parentId) ?? null
-                  : null
-              }
               onOpenImage={onOpenImage}
               onOpenVideo={onOpenVideo}
               onOpenFailedSheet={onOpenFailedSheet}
