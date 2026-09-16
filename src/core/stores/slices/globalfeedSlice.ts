@@ -66,6 +66,11 @@ const globalFeedSlice = createSlice({
       const index = state.postList.findIndex(
         (item) => !isAmityAd(item) && item.postId === postId
       );
+      // A post edited from a feed this list never held (a community feed, say)
+      // is simply not here. Without this guard the -1 miss was written as a
+      // "-1" property on the array: the real entries stayed stale and nothing
+      // reported a failure.
+      if (index < 0) return;
       state.postList[index] = postDetail;
     },
     deleteByPostId: (state, action: PayloadAction<{ postId: string }>) => {

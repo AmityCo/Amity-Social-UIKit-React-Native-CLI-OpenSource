@@ -1,7 +1,7 @@
 // Screen 1 — "React Native UI-Kit"
 // LoginFlow container: manages screen state 1 → 2 → 3.
 
-import React, {useCallback, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {
   Platform,
   ScrollView,
