@@ -178,7 +178,7 @@ export function VideoPlayer({
           accessibilityLabel={muted ? 'Unmute' : 'Mute'}
         >
           <AmityIcon
-            name={muted ? 'volume-slash-s' : 'volume-high-s'}
+            name={muted ? 'volume-slash-r' : 'volume-r'}
             size={24}
             tokenColor={AmityColorToken.IconIconButtonTransparentPrimaryDefault}
           />

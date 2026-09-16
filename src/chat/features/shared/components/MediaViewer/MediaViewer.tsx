@@ -6,7 +6,7 @@
 
 // 1. React / RN imports
 import type { ReactNode } from 'react';
-import { Modal, Pressable, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
 
 // 2. Third-party imports
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -15,6 +15,8 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../core/localization';
+import LinearGradient from 'react-native-linear-gradient';
+
 import Toast from '../../../../../social/components/Toast';
 import { useStyles } from './styles';
 
@@ -36,12 +38,6 @@ type MediaViewerProps = {
    * swallowed the tap.
    */
   headerRight?: ReactNode;
-  /**
-   * Suppress the top bar's own solid scrim so a caller supplying `headerRight`
-   * can lay its own gradient behind the row (web's VideoHeader uses a
-   * black-20%-to-transparent gradient, not the viewer's flat 50% black).
-   */
-  transparentTopBar?: boolean;
 };
 
 // 5. Named function component
@@ -55,7 +51,6 @@ export function MediaViewer({
   onSave,
   saveAccessibilityLabel,
   headerRight,
-  transparentTopBar = false,
 }: MediaViewerProps) {
   const { styles } = useStyles();
   const deleteLabel = useString('amity_chat_option_delete');
@@ -89,10 +84,14 @@ export function MediaViewer({
         >
           <View style={styles.stage}>{children}</View>
 
-          <SafeAreaView
-            edges={['top', 'left', 'right']}
-            style={[styles.topBar, transparentTopBar && styles.topBarBare]}
-          >
+          <SafeAreaView edges={['top', 'left', 'right']} style={styles.topBar}>
+            {/* Web's VideoHeader scrim: black 20% fading to transparent. The
+                port used a flat 50%-black bar, which web has nowhere. */}
+            <LinearGradient
+              colors={['rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0)']}
+              style={StyleSheet.absoluteFill}
+              pointerEvents="none"
+            />
             <Pressable
               style={styles.closeButton}
               onPress={onClose}

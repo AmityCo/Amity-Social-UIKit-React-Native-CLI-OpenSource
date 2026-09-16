@@ -43,16 +43,10 @@ export const useStyles = () => {
       // still sits left, so this is safe for the image viewer too.
       justifyContent: 'space-between',
       padding: 16,
-      // Web .mediaViewer__topBar/__bottomBar: rgb(0 0 0 / 50%). The previous
-      // badge token resolved to the same 50%, but expressing it as a literal
-      // matches ImageViewer (3b2e546c) and drops the unrelated token.
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      // No background of its own: web's chat player has no solid top bar at all.
+      // Its close and mute sit on VideoHeader's gradient, which is drawn as an
+      // absolute fill inside this row.
       zIndex: 3,
-    },
-    // Web's VideoHeader draws its own gradient behind the row; a caller that
-    // supplies one suppresses this flat scrim so the two do not stack.
-    topBarBare: {
-      backgroundColor: 'transparent',
     },
     // In flow beneath the stage, mirroring web's `.videoPlayer__bottomBar`.
     bottomBar: {
@@ -60,10 +54,11 @@ export const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: 16,
-      // Web .mediaViewer__topBar/__bottomBar: rgb(0 0 0 / 50%). The previous
-      // badge token resolved to the same 50%, but expressing it as a literal
-      // matches ImageViewer (3b2e546c) and drops the unrelated token.
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      // Web `.videoPlayer__bottomBar` fills with
+      // --asc-color-surface-media-overlay-transparentblack (#00000080).
+      backgroundColor: token(
+        AmityColorToken.SurfaceMediaOverlayTransparentBlack
+      ),
       zIndex: 3,
     },
     // Host for the chat toast mounted inside this Modal (the global <Toast /> is
