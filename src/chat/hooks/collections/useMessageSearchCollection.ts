@@ -50,6 +50,12 @@ export function useMessageSearchCollection({
     const params: Amity.SearchMessageLiveCollection = {
       query: trimmed,
       limit: LIST_PAGE_LIMIT,
+      // PDT-5251 asks for results ordered by latest activity. Web sends neither
+      // sort field and takes whatever the SDK defaults to (relevance), so this
+      // is a deliberate step AHEAD of web — web should follow, or the two
+      // platforms order the same search differently.
+      sortBy: 'createdAt',
+      orderBy: 'desc',
     };
 
     const unsub = MessageRepository.searchMessage(
