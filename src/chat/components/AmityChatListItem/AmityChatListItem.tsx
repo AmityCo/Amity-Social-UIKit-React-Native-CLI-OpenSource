@@ -32,7 +32,6 @@ import { ConversationChatAvatar } from '../../elements/ConversationChatAvatar';
 import { ArchivedBadge } from '../../elements/ArchivedBadge';
 import { formatTimestamp } from '../../utils/timestamp';
 import { highlightMatch } from '../../utils/highlightMatch';
-import { useChannelMessagePreview } from './hooks';
 import { useStyles } from './styles';
 
 // Search-match highlight colours (web channelItem__highlight /
@@ -113,10 +112,6 @@ export function AmityChatListItem({
   const timestampSource = channel.lastActivity;
   const timestamp = timestampSource ? formatTimestamp(timestampSource) : '';
 
-  // `channel.messagePreview` goes stale when the previewed message is deleted —
-  // resolve it against the live message events + the network preview setting.
-  const messagePreview = useChannelMessagePreview(channel);
-
   return (
     <Pressable
       accessibilityRole="button"
@@ -161,7 +156,7 @@ export function AmityChatListItem({
 
         <View style={styles.previewRow}>
           <MessagePreview
-            preview={messagePreview}
+            preview={channel.messagePreview}
             iconColor={token(AmityColorToken.IconListDescriptionGeneral)}
           />
           <View style={styles.notifications}>
