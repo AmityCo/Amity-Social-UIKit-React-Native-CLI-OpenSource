@@ -37,7 +37,6 @@ import {
   Client,
 } from '@amityco/ts-sdk-react-native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import NetInfo from '@react-native-community/netinfo';
 import type { Asset } from 'react-native-image-picker';
 
 // 3. Internal imports
@@ -84,17 +83,6 @@ export type PendingUpload = {
   createdAt: string;
   failureReason?: FailureReason;
   parentId?: string;
-};
-
-export type PendingText = {
-  clientId: string;
-  text: string;
-  parentId?: string;
-  metadata?: { mentioned: Mentioned[] };
-  mentionees?: Mentionees;
-  status: 'failed';
-  failureReason?: FailureReason;
-  createdAt: string;
 };
 
 export type SyntheticPendingMessage = Amity.Message & {
@@ -170,6 +158,23 @@ function createClientId(): string {
   return `pending-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+/**
+ * The SDK identity a pending media upload takes when its file finally lands and
+ * it calls `createMessage`, derived from the client id the synthetic bubble has
+ * been using so the hand-off keeps the SAME row.
+ *
+ * `createMessage` uses `bundle.referenceId` as the optimistic message's own
+ * messageId, so every retry of one upload overwrites that row instead of
+ * appending another — without it each retry minted a fresh id and left another
+ * failed bubble behind (PDT-4914).
+ *
+ * The `LOCAL_` prefix is load-bearing: `deleteMessage` takes its local-only
+ * branch for any id *containing* `LOCAL_`, so Delete keeps working on the row.
+ */
+function syntheticReferenceId(clientId: string) {
+  return `LOCAL_${clientId}`;
+}
+
 function toFormData(asset: Asset): FormData {
   const formData = new FormData();
   appendFileToFormData(
@@ -238,23 +243,12 @@ export function useMessageComposer({
     []
   );
 
-  // RN network state (web read react-use `online`; null → treat as online).
-  const [isOnline, setIsOnline] = useState(true);
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      setIsOnline(state.isConnected !== false);
-    });
-    return () => unsubscribe();
-  }, []);
-
   const [text, setText] = useState<string>('');
   const [showMediaSection, setShowMediaSection] = useState(false);
   const [pendingUploads, setPendingUploads] = useState<PendingUpload[]>([]);
-  const [pendingTexts, setPendingTexts] = useState<PendingText[]>([]);
   const [editorMentions, setEditorMentions] = useState<Mentioned[]>([]);
   const [replyTo, setReplyTo] = useState<Amity.Message | null>(null);
   const cancelledClientIdsRef = useRef<Set<string>>(new Set());
-  const retryingClientIdsRef = useRef<Set<string>>(new Set());
   const textRef = useRef<string>('');
   const mentionsRef = useRef<Mentioned[]>([]);
   const wasEditingRef = useRef<boolean>(false);
@@ -392,22 +386,18 @@ export function useMessageComposer({
     setShowMediaSection(false);
     setReplyTo(null);
 
-    if (!isOnline) {
-      const pending: PendingText = {
-        clientId: createClientId(),
-        text: trimmed,
-        ...(parentId ? { parentId } : {}),
-        ...(metadata ? { metadata } : {}),
-        ...(mentionees ? { mentionees } : {}),
-        status: 'failed',
-        failureReason: 'generic',
-        createdAt: new Date().toISOString(),
-      };
-      setPendingTexts((prev) => [...prev, pending]);
-      onMessageCreated?.();
-      return;
-    }
-
+    // Offline is NOT a special case (PDT-4914). `createMessage` runs
+    // `createMessageOptimistic` before it ever touches the network, so the failed
+    // bubble exists either way — and the SDK keys both the cached row and the
+    // live-collection entry off `referenceId ?? messageId`, i.e. the same
+    // `LOCAL_…` id on every emission, so a `new Set` there collapses the
+    // optimistic, errored and finally synced states into ONE row.
+    //
+    // A parallel offline branch that appended our own synthetic bubble gave that
+    // one message two owners: ours vanished on unmount (state) while the SDK's
+    // survived in cache and re-emitted on the next collection update. That is the
+    // "failed bubble disappears when you leave the chat, then comes back when you
+    // send the next message" report, and the earlier duplicate-bubble one too.
     try {
       await createMessageMutation(
         {
@@ -426,8 +416,8 @@ export function useMessageComposer({
             // PDT-4033: the SDK createMessage optimistically inserts the message
             // into the getMessages collection and keeps it with syncState 'error'
             // on rejection, so the failed bubble is ALREADY shown by the live
-            // collection. We must NOT also append our own synthetic PendingText —
-            // that produced a DUPLICATE failed bubble. Just surface the toast.
+            // collection. Nothing to add here but the toast — resend and delete
+            // for that bubble are owned by useFailedMessageSheet.
             handleTextMessageError(err, { errorToast, info });
           },
         }
@@ -448,7 +438,6 @@ export function useMessageComposer({
     requestEdit,
     onEditCompleted,
     subChannelId,
-    isOnline,
     createMessageMutation,
     onMessageCreated,
     errorToast,
@@ -530,8 +519,9 @@ export function useMessageComposer({
           subChannelId,
           dataType: pending.dataType,
           fileId,
+          referenceId: syntheticReferenceId(pending.clientId),
           ...(pending.parentId ? { parentId: pending.parentId } : {}),
-        });
+        } as Parameters<typeof createMessageMutation>[0]);
       } catch (err) {
         if (cancelledClientIdsRef.current.has(pending.clientId)) {
           cancelledClientIdsRef.current.delete(pending.clientId);
@@ -614,43 +604,6 @@ export function useMessageComposer({
     [pendingUploads, runMediaUpload]
   );
 
-  const handleRetryText = useCallback(
-    async (clientId: string) => {
-      const target = pendingTexts.find((p) => p.clientId === clientId);
-      if (!target) return;
-      if (retryingClientIdsRef.current.has(clientId)) return;
-      retryingClientIdsRef.current.add(clientId);
-      try {
-        await createMessageMutation({
-          subChannelId,
-          dataType: 'text',
-          data: { text: target.text },
-          ...(target.metadata ? { metadata: target.metadata } : {}),
-          ...(target.mentionees ? { mentionees: target.mentionees } : {}),
-          ...(target.parentId ? { parentId: target.parentId } : {}),
-        });
-        setPendingTexts((prev) => prev.filter((p) => p.clientId !== clientId));
-        onMessageCreated?.();
-      } catch (err) {
-        handleTextMessageError(err, { errorToast, info });
-      } finally {
-        retryingClientIdsRef.current.delete(clientId);
-      }
-    },
-    [
-      pendingTexts,
-      subChannelId,
-      createMessageMutation,
-      onMessageCreated,
-      errorToast,
-      info,
-    ]
-  );
-
-  const handleDiscardText = useCallback((clientId: string) => {
-    setPendingTexts((prev) => prev.filter((p) => p.clientId !== clientId));
-  }, []);
-
   function handleCancelUpload(clientId: string) {
     cancelledClientIdsRef.current.add(clientId);
     setPendingUploads((prev) =>
@@ -671,8 +624,13 @@ export function useMessageComposer({
     setPendingUploads((prev) => prev.filter((p) => p.fileId !== fileId));
   }, []);
 
+  // Media only. A text send has nothing to show before `createMessage` — the SDK
+  // puts its own optimistic row in the collection on the first call — whereas a
+  // media send has to upload the file first and only calls `createMessage` once
+  // it has a fileId, so the bubble during (and after a failed) upload can only
+  // come from here.
   const syntheticMessages = useMemo<SyntheticPendingMessage[]>(() => {
-    const media = pendingUploads
+    return pendingUploads
       .filter((p) => !p.fileId)
       .map(
         (p) =>
@@ -690,32 +648,13 @@ export function useMessageComposer({
             createdAt: p.createdAt,
             isDeleted: false,
           } as unknown as SyntheticPendingMessage)
-      );
-
-    const texts = pendingTexts.map(
-      (p) =>
-        ({
-          __syntheticClientId: p.clientId,
-          __failureReason: p.failureReason,
-          messageId: '',
-          subChannelId,
-          creatorId: currentUserId ?? '',
-          dataType: 'text',
-          data: { text: p.text },
-          metadata: p.metadata,
-          parentId: p.parentId,
-          syncState: 'error' as Amity.SyncState,
-          createdAt: p.createdAt,
-          isDeleted: false,
-        } as unknown as SyntheticPendingMessage)
-    );
-
-    return [...media, ...texts].sort((a, b) => {
-      const at = new Date(a.createdAt).getTime();
-      const bt = new Date(b.createdAt).getTime();
-      return at - bt;
-    });
-  }, [pendingUploads, pendingTexts, subChannelId, currentUserId]);
+      )
+      .sort((a, b) => {
+        const at = new Date(a.createdAt).getTime();
+        const bt = new Date(b.createdAt).getTime();
+        return at - bt;
+      });
+  }, [pendingUploads, subChannelId, currentUserId]);
 
   return {
     subChannelId,
@@ -743,8 +682,6 @@ export function useMessageComposer({
     handleRetryUpload,
     handleCancelUpload,
     handleDiscardUpload,
-    handleRetryText,
-    handleDiscardText,
     handleMediaLoaded,
   };
 }

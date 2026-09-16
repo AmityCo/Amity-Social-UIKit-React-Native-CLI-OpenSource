@@ -163,8 +163,6 @@ export function useChatMessage({
   const { openFailedSheet } = useFailedMessageSheet({
     onRetryUpload: composer.handleRetryUpload,
     onDiscardUpload: composer.handleDiscardUpload,
-    onRetryText: composer.handleRetryText,
-    onDiscardText: composer.handleDiscardText,
   });
 
   const {
