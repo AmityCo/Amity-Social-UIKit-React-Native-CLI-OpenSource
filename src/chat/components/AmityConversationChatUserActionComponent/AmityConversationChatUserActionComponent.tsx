@@ -139,7 +139,9 @@ export function AmityConversationChatUserActionComponent({
   }
 
   async function handleReport() {
-    if (!isConnected) return;
+    // Same as handleToggleBlock below: no connectivity guard. The failure
+    // strings and the catch were already here, and the guard was what stopped
+    // them ever being reached.
     const next = !isFlaggedByMe;
     try {
       if (next) {
@@ -167,7 +169,10 @@ export function AmityConversationChatUserActionComponent({
   }
 
   function handleToggleBlock() {
-    if (!isConnected) return;
+    // No connectivity guard, matching web's `useUserBlockQuery`: bailing early
+    // swallowed the tap with no feedback at all, and PDT-5284 is specifically
+    // about surfacing the failure. Let the call run and let the catch below
+    // raise the toast.
     if (isBlockedByMe) {
       Alert.alert(
         resolveString('amity_chat_unblock_confirm_title'),
