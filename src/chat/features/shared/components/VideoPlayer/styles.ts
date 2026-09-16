@@ -7,6 +7,18 @@ import { StyleSheet } from 'react-native';
 
 export const useStyles = () => {
   const styles = StyleSheet.create({
+    // PDT-5309: the mute glyph was a bare white icon on the footage and vanished
+    // against light content. Same 32px 50%-black chip the viewer's close button
+    // carries, so the two ends of web's single VideoHeader row match.
+    muteButton: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+
     stage: {
       width: '100%',
       height: '100%',
