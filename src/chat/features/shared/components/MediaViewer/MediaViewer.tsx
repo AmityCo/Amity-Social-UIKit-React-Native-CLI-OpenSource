@@ -28,6 +28,20 @@ type MediaViewerProps = {
   deleteAccessibilityLabel?: string;
   onSave?: () => void;
   saveAccessibilityLabel?: string;
+  /**
+   * Rendered in the top bar, to the RIGHT of the close button. Web's
+   * `VideoHeader` is a single row — close on the left, mute on the right — so
+   * the video player passes its mute toggle in here rather than drawing a
+   * second header of its own underneath this one, where the bar covered it and
+   * swallowed the tap.
+   */
+  headerRight?: ReactNode;
+  /**
+   * Suppress the top bar's own solid scrim so a caller supplying `headerRight`
+   * can lay its own gradient behind the row (web's VideoHeader uses a
+   * black-20%-to-transparent gradient, not the viewer's flat 50% black).
+   */
+  transparentTopBar?: boolean;
 };
 
 // 5. Named function component
@@ -40,6 +54,8 @@ export function MediaViewer({
   deleteAccessibilityLabel,
   onSave,
   saveAccessibilityLabel,
+  headerRight,
+  transparentTopBar = false,
 }: MediaViewerProps) {
   const { styles } = useStyles();
   const deleteLabel = useString('amity_chat_option_delete');
@@ -73,7 +89,10 @@ export function MediaViewer({
         >
           <View style={styles.stage}>{children}</View>
 
-          <SafeAreaView edges={['top', 'left', 'right']} style={styles.topBar}>
+          <SafeAreaView
+            edges={['top', 'left', 'right']}
+            style={[styles.topBar, transparentTopBar && styles.topBarBare]}
+          >
             <Pressable
               style={styles.closeButton}
               onPress={onClose}
@@ -88,6 +107,7 @@ export function MediaViewer({
                 }
               />
             </Pressable>
+            {headerRight}
           </SafeAreaView>
 
           <SafeAreaView

@@ -12,31 +12,6 @@ export const useStyles = () => {
     overlay: {
       ...StyleSheet.absoluteFillObject,
     },
-    header: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      paddingVertical: 16,
-      paddingHorizontal: 12,
-    },
-    // PDT-5309: the mute toggle sits directly on the video, and against light
-    // footage a bare white glyph disappeared. Give it the same dark circular
-    // chip the viewer's close button already has (MediaViewer.closeButton:
-    // 32 round, SurfaceIconButtonTransparentPrimaryEnabled = 50% black), so the
-    // two header buttons finally match each other and the Figma.
-    headerButton: {
-      width: 32,
-      height: 32,
-      padding: 4,
-      borderRadius: 9999,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
     centerWrap: {
       ...StyleSheet.absoluteFillObject,
       alignItems: 'center',
