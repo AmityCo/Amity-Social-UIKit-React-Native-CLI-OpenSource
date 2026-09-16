@@ -351,12 +351,20 @@ function MessagePreview({
   );
 }
 
+// PDT-5164: the design draws this badge as a 20x20 filled `Chat/Mention`
+// circle with an `at-r` glyph at 16x16, inset 2px on every side (Figma chat
+// list `12041:242261`, and the AmityChatListItem SoT's icon table lists the
+// mention glyph as `at-r` @ 16). RN was drawing `at-s` at the full chip size,
+// so the glyph's outer arc reached the chip edge: the light-blue surface was
+// invisible and the `@` read as a blue ring around white, which is what QA
+// reported. The 2px inset is what makes it read as a filled circle.
 function MentionBadge() {
   return (
     <Badge.Icon
-      icon="at-s"
+      icon="at-r"
       preset={{ family: 'chat', case: 'mention' }}
       size={20}
+      glyphSize={16}
     />
   );
 }
