@@ -9,6 +9,7 @@ import { Pressable, View } from 'react-native';
 
 // 2. Third-party imports
 import ImageView from 'react-native-image-viewing';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // 3. Internal imports
 import { AmityIcon } from '../../../../../core/design/icons';
@@ -50,23 +51,34 @@ export function ImageViewer({
       // Web MediaViewer overlay is solid black (.mediaViewer__overlay background);
       // rgb() (no hex) keeps the repo's no-hex gate happy.
       backgroundColor="rgb(0, 0, 0)"
+      // The bars take the real safe-area insets through a SafeAreaView, and the
+      // provider has to be mounted here, inside the viewer's own Modal: the
+      // provider the UIKit mounts at its root sits wherever the host app placed
+      // it (in the sample app that is below the status bar, so its top inset
+      // reads zero), and a Modal's content is a separate native hierarchy
+      // anyway. The top padding used to be a hardcoded 44 — the old notch
+      // height. On a Dynamic Island device the inset is 59, so the close button
+      // sat under the island, which does not pass touches through: the button
+      // could not be tapped at all and the viewer could not be closed.
       HeaderComponent={() => (
-        <View style={styles.topBar}>
-          <Pressable
-            style={styles.closeButton}
-            onPress={onClose}
-            accessibilityRole="button"
-            accessibilityLabel="Close"
-          >
-            <AmityIcon
-              name="cross-r"
-              size={24}
-              tokenColor={
-                AmityColorToken.IconIconButtonTransparentPrimaryDefault
-              }
-            />
-          </Pressable>
-        </View>
+        <SafeAreaProvider>
+          <SafeAreaView edges={['top', 'left', 'right']} style={styles.topBar}>
+            <Pressable
+              style={styles.closeButton}
+              onPress={onClose}
+              accessibilityRole="button"
+              accessibilityLabel="Close"
+            >
+              <AmityIcon
+                name="cross-r"
+                size={24}
+                tokenColor={
+                  AmityColorToken.IconIconButtonTransparentPrimaryDefault
+                }
+              />
+            </Pressable>
+          </SafeAreaView>
+        </SafeAreaProvider>
       )}
       // Always rendered: besides the action bar it hosts the chat toast. Save
       // success/failure toasts fire while this Modal is open, and the global
@@ -83,45 +95,50 @@ export function ImageViewer({
           </View>
 
           {canDelete || canSave ? (
-            <View style={styles.bottomBar}>
-              {canDelete ? (
-                <Pressable
-                  style={styles.bottomIconButton}
-                  onPress={onDelete}
-                  accessibilityRole="button"
-                  accessibilityLabel={deleteLabel}
-                >
-                  <AmityIcon
-                    name="trash-r"
-                    size={24}
-                    tokenColor={
-                      AmityColorToken.IconIconButtonTransparentPrimaryDefault
-                    }
-                  />
-                </Pressable>
-              ) : (
-                <View />
-              )}
+            <SafeAreaProvider>
+              <SafeAreaView
+                edges={['bottom', 'left', 'right']}
+                style={styles.bottomBar}
+              >
+                {canDelete ? (
+                  <Pressable
+                    style={styles.bottomIconButton}
+                    onPress={onDelete}
+                    accessibilityRole="button"
+                    accessibilityLabel={deleteLabel}
+                  >
+                    <AmityIcon
+                      name="trash-r"
+                      size={24}
+                      tokenColor={
+                        AmityColorToken.IconIconButtonTransparentPrimaryDefault
+                      }
+                    />
+                  </Pressable>
+                ) : (
+                  <View />
+                )}
 
-              {canSave ? (
-                <Pressable
-                  style={styles.bottomIconButton}
-                  onPress={onSave}
-                  accessibilityRole="button"
-                  accessibilityLabel={saveLabel}
-                >
-                  <AmityIcon
-                    name="arrow-down-to-bracket-r"
-                    size={24}
-                    tokenColor={
-                      AmityColorToken.IconIconButtonTransparentPrimaryDefault
-                    }
-                  />
-                </Pressable>
-              ) : (
-                <View />
-              )}
-            </View>
+                {canSave ? (
+                  <Pressable
+                    style={styles.bottomIconButton}
+                    onPress={onSave}
+                    accessibilityRole="button"
+                    accessibilityLabel={saveLabel}
+                  >
+                    <AmityIcon
+                      name="arrow-down-to-bracket-r"
+                      size={24}
+                      tokenColor={
+                        AmityColorToken.IconIconButtonTransparentPrimaryDefault
+                      }
+                    />
+                  </Pressable>
+                ) : (
+                  <View />
+                )}
+              </SafeAreaView>
+            </SafeAreaProvider>
           ) : null}
         </>
       )}

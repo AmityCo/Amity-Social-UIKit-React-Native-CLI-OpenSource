@@ -11,12 +11,26 @@ export const useStyles = () => {
   const token = useToken();
 
   const styles = StyleSheet.create({
+    // No maxWidth here on purpose. Web has `.messageRow { max-width: 80% }`,
+    // but this row also holds the avatar and the timestamp, and the design SoT
+    // is explicit that the 60% rule targets the bubble's message content
+    // (Figma `ChatBubble / Message Content` = 228) and NOT the whole row
+    // (`ChatBubble` = 343): "implementations must not let the avatar or
+    // timestamp consume the bubble's budget."
+    //
+    // An 80% cap here does exactly that. At 375pt: cap 300, against a 60%
+    // bubble (225) + avatar (32 + 8 gap) + timestamp (~33 + 8 gap) = 306 — so
+    // the cap binds and shaves the bubble, by an amount that varies with the
+    // clock string. That is precisely the Android defect the SoT documents
+    // (a `widthIn(max = 280.dp)` on the Row shared with the timestamp left the
+    // bubble at 55.6% of a 411dp screen); it was fixed there by removing the
+    // Row cap. The bubble carries its own hard 60% cap, so nothing here can
+    // overflow: worst case is ~74% of the window.
     row: {
       flexDirection: 'row',
       alignItems: 'flex-end',
       gap: 8,
       paddingVertical: 4,
-      maxWidth: '80%',
     },
     rowOwn: {
       alignSelf: 'flex-end',

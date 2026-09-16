@@ -49,27 +49,31 @@ function toMessage(content: ChatNotificationOptions['content']): string {
 // Mirrors the toast slice's `type` union (not exported from there).
 type ToastType = 'failed' | 'success' | 'informative' | 'loading';
 
-// Bottom offset for `alignment: 'with-composer'`: web's
-// `.chatToast[data-alignment='with-composer'] { bottom: calc(3.5rem + 1rem) }`
-// = 56px composer + 16px gap. Added on top of the safe-area inset by the Toast.
-const WITH_COMPOSER_BOTTOM = 72;
+// Bottom offset for every chat toast: web's BASE rule
+// `.chatToast { bottom: calc(var(--asc-keyboard-inset, 0px) + 3.5rem + 1rem) }`
+// = 56px composer + 16px gap, so chat toasts clear the compose bar regardless of
+// alignment (`[data-alignment='with-composer']` re-states the same value, and
+// 'fullscreen' does not override bottom at all — that selector targets a different
+// element). Added on top of the safe-area inset by the Toast.
+const CHAT_TOAST_BOTTOM = 72;
 
 export function useChatNotifications(): UseChatNotificationsReturn {
   const { showToast, hideToast } = useToast();
 
-  // Web raises the chat toast above the composer for `alignment: 'with-composer'`
-  // (CSS `.chatToast[data-alignment='with-composer'] { bottom: calc(3.5rem + 1rem) }`
-  // — 56px composer + 16px gap). Map only that alignment to a raised bottom offset;
-  // every other value (fullscreen | withSidebar | live-chat) is a web desktop/sidebar
-  // layout concern with no RN analog and keeps the toast's default bottom position.
+  // Every chat toast is raised above the compose bar, matching web's base
+  // `.chatToast` bottom offset (see CHAT_TOAST_BOTTOM). PDT-5281: previously only
+  // `alignment: 'with-composer'` was mapped and every other alignment fell back to
+  // the app-wide 16px bottom, so chat toasts emitted with web's other alignments
+  // (e.g. the block/unblock toasts, which web tags 'fullscreen') rendered on top of
+  // the compose bar instead of above it. `alignment` stays accepted-and-ignored:
+  // its remaining web values are desktop/sidebar layout concerns with no RN analog.
   const emit = (type: ToastType, data: ChatNotificationOptions) =>
     showToast({
       message: toMessage(data.content),
       type,
       duration: data.duration,
       variant: 'custom',
-      bottomPosition:
-        data.alignment === 'with-composer' ? WITH_COMPOSER_BOTTOM : undefined,
+      bottomPosition: CHAT_TOAST_BOTTOM,
     });
 
   return {
