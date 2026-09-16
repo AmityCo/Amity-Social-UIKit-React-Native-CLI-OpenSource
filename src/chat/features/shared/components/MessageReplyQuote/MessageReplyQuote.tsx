@@ -1,9 +1,12 @@
 // MessageReplyQuote — ported from AmityUiKitWeb features/shared/components/
 // MessageReplyQuote. The quoted parent message rendered above a reply bubble:
 // a "replied to" header plus a tappable snapshot of the parent (text / image /
-// video / custom / deleted). Web fetched the parent via useMessageObject; RN has
-// no such hook, so the resolved `parent` (and optional `isLoading`) are passed in
-// by the wiring layer. Media dimensions are clamped via getReplyThumbnailSize.
+// video / custom / deleted / unavailable). The parent is resolved HERE from its
+// id, the way web's quote calls `useMessageObject(parentId)` and iOS's bubble
+// view model observes `chatManager.getMessage(messageId: parentId)` — never by
+// looking the id up in whatever page the list has loaded, which is what left a
+// parent on an earlier page spinning forever (PDT-4927). Media dimensions are
+// clamped via getReplyThumbnailSize.
 
 // 1. React / RN imports
 import { useState, type ReactNode } from 'react';
@@ -25,17 +28,17 @@ import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-t
 import useFile from '../../../../../core/hooks/useFile';
 import { ImageSizeState } from '../../../../../core/enums';
 import { useString } from '../../../../../core/localization';
+import { useMessageObject } from '../../../../hooks/objects';
 import { getReplyHeader, getReplyThumbnailSize } from './utils';
 import { useStyles } from './styles';
 
 // 3. Types
 type MessageReplyQuoteProps = {
-  parent?: Amity.Message | null;
+  parentId: string;
   child: Amity.Message;
   isUser: boolean;
   isGroupChat: boolean;
   currentUserId?: string | null;
-  isLoading?: boolean;
   onOpenSeeMore: (text: string, title?: string) => void;
   onOpenImage: (url: string, message: Amity.Message) => void;
   onOpenVideo: (message: Amity.Message) => void;
@@ -74,19 +77,23 @@ function renderQuoteTextWithLinks(
 
 // 4. Named function component
 export function MessageReplyQuote({
-  parent,
+  parentId,
   child,
   isUser,
   isGroupChat,
   currentUserId,
-  isLoading,
   onOpenSeeMore,
   onOpenImage,
   onOpenVideo,
 }: MessageReplyQuoteProps) {
   const { styles, headerIconColor } = useStyles(isUser);
+  const { message: parent, isLoading } = useMessageObject(parentId);
 
-  if (isLoading || !parent) {
+  // Spinner only while the live object is genuinely still resolving. Web guards
+  // this as `isLoading || !parent`, so a parent that will never arrive spins
+  // there forever; a settled-but-empty parent falls through to the unavailable
+  // quote below instead. iOS has no spinner at all and renders an empty quote.
+  if (isLoading && !parent) {
     return (
       <View style={styles.container}>
         <View style={styles.placeholder} accessibilityState={{ busy: true }}>
@@ -118,13 +125,17 @@ export function MessageReplyQuote({
           {headerText}
         </Typography>
       </View>
-      <ParentBody
-        parent={parent}
-        isUser={isUser}
-        onOpenSeeMore={onOpenSeeMore}
-        onOpenImage={onOpenImage}
-        onOpenVideo={onOpenVideo}
-      />
+      {parent ? (
+        <ParentBody
+          parent={parent}
+          isUser={isUser}
+          onOpenSeeMore={onOpenSeeMore}
+          onOpenImage={onOpenImage}
+          onOpenVideo={onOpenVideo}
+        />
+      ) : (
+        <UnavailableQuote isUser={isUser} />
+      )}
     </View>
   );
 }
@@ -184,6 +195,27 @@ function DeletedQuote({ isUser }: { isUser: boolean }) {
         />
         <Typography variant="caption" style={styles.deletedText}>
           {deletedLabel}
+        </Typography>
+      </View>
+      <View style={styles.overlay} pointerEvents="none" />
+    </View>
+  );
+}
+
+// Terminal state: the parent could not be resolved at all (its live
+// object settled with no message — it is no longer accessible to the viewer).
+// Reuses the deleted bubble's shape and the existing "Message unavailable"
+// string — the same one MessageReplyBand shows for a parent it cannot display —
+// so the quote settles instead of spinning. No trash glyph: nothing here says
+// the parent was deleted, only that it cannot be shown.
+function UnavailableQuote({ isUser }: { isUser: boolean }) {
+  const { styles } = useStyles(isUser);
+  const unavailableLabel = useString('amity_chat_message_unavailable');
+  return (
+    <View style={styles.quote}>
+      <View style={styles.deletedBubble}>
+        <Typography variant="caption" style={styles.deletedText}>
+          {unavailableLabel}
         </Typography>
       </View>
       <View style={styles.overlay} pointerEvents="none" />
