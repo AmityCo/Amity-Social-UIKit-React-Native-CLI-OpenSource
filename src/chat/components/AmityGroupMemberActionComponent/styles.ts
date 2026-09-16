@@ -12,7 +12,10 @@ export const useStyles = () => {
   const styles = StyleSheet.create({
     sheetContainer: {
       paddingHorizontal: 16,
-      paddingBottom: 8,
+      // PDT-5188: 16, matching the sibling AmityConversationChatUserActionComponent
+      // and the design's gap below the last option. The safe-area inset is added
+      // to the sheet's requested height in the component, not here.
+      paddingBottom: 16,
     },
   });
 

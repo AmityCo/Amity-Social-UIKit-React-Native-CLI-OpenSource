@@ -19,6 +19,7 @@
 // 1. React / RN imports
 import { useEffect, useState, type ReactNode } from 'react';
 import { Alert, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // 2. Third-party imports
 import {
@@ -78,6 +79,7 @@ export function AmityGroupMemberActionComponent({
   const { success } = useChatNotifications();
   const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
     useBottomSheet();
+  const insets = useSafeAreaInsets();
 
   const userId = user.userId;
 
@@ -308,10 +310,18 @@ export function AmityGroupMemberActionComponent({
   // `anchor` render-prop; its `openPopover` now opens the sheet.
   function openActionSheet() {
     openBottomSheet({
+      // PDT-5188: `bottomSheetHeight` sizes the sheet for the menu rows alone,
+      // but the shared BottomSheetComponent also puts `paddingBottom:
+      // insets.bottom` on the sheet — so on a device with a home indicator that
+      // inset is taken OUT of the same budget (5 rows: 25 drag handle + 240 rows
+      // + 16 padding + 34 inset = 315 against a 300 sheet). The last option then
+      // sat flush on the sheet's bottom edge, over the home indicator. Android
+      // reports a 0 inset, which is why this only reproduced on iOS. Add the
+      // inset on top of the map's value so it stops competing with the rows.
       height:
         bottomSheetHeight[
           visibleItems.length as keyof typeof bottomSheetHeight
-        ],
+        ] + insets.bottom,
       content: (
         <View style={styles.sheetContainer}>
           <Menu variant="chat" container="drawer">
