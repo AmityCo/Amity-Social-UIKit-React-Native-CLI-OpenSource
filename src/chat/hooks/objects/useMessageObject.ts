@@ -10,19 +10,23 @@
 // The point of all three is that a reply's parent is fetched from its
 // `parentId`, never looked up in whatever page the list happens to have loaded —
 // which is why neither web nor iOS ever had PDT-4927.
+//
+// Built on the shared `useLiveObject` wrapper, so subscribe/unsubscribe and the
+// focus handling live in one place. Two behaviours are layered on top of it,
+// both deliberate — see the comments at each.
 
 import { useEffect, useState } from 'react';
 import { MessageRepository } from '@amityco/ts-sdk-react-native';
 
 import useAuth from '../../../core/hooks/useAuth';
+import useLiveObject from '../../../core/hooks/objects/useLiveObject';
 
 export type UseMessageObjectResult = {
   message?: Amity.Message;
   /**
    * Still resolving. Turns false on the first settled callback — including an
    * errored one — so a consumer always reaches a terminal state instead of
-   * showing a loader forever. Web leaves `isLoading` true in that case and
-   * spins indefinitely; we deliberately do not.
+   * showing a loader forever.
    */
   isLoading: boolean;
   error?: unknown;
@@ -31,37 +35,41 @@ export type UseMessageObjectResult = {
 export function useMessageObject(
   messageId?: string | null
 ): UseMessageObjectResult {
-  // The SDK needs a connected client before getMessage can run.
+  // The SDK needs a connected client before getMessage can run. Disconnected we
+  // hold no subscription and stay loading rather than settling on "unavailable",
+  // since the message is expected to resolve once the connection is back.
   const { isConnected } = useAuth();
-  const [message, setMessage] = useState<Amity.Message | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<unknown>(undefined);
+  const enabled = !!isConnected && !!messageId;
 
+  const { item, isLoading, error } = useLiveObject<
+    string,
+    Amity.Message,
+    never
+  >({
+    fetcher: MessageRepository.getMessage,
+    params: messageId ?? '',
+    enabled,
+  });
+
+  // The wrapper only ever assigns on `response.data`, so it never forgets the
+  // last message. A recycled row whose parentId changes would keep rendering the
+  // previous parent until the new one arrived; pin what we return to the id it
+  // was fetched for.
+  const [loadedForId, setLoadedForId] = useState<string | null>(null);
   useEffect(() => {
-    // Nothing to resolve, or offline: stay in the loading state rather than
-    // settling on "unavailable" for a message that is expected to arrive once
-    // the connection is back.
-    if (!isConnected || !messageId) {
-      setIsLoading(true);
-      return undefined;
-    }
+    if (item && messageId) setLoadedForId(messageId);
+  }, [item, messageId]);
 
-    // A new id must not keep showing the previous message.
-    setMessage(undefined);
-    setIsLoading(true);
-    setError(undefined);
+  const message =
+    item && loadedForId === messageId ? (item as Amity.Message) : undefined;
 
-    const unsubscribe = MessageRepository.getMessage(
-      messageId,
-      ({ data, loading, error: liveError }) => {
-        setMessage(data ?? undefined);
-        setIsLoading(!liveError && loading);
-        if (liveError) setError(liveError);
-      }
-    );
-
-    return () => unsubscribe();
-  }, [isConnected, messageId]);
-
-  return { message, isLoading, error };
+  return {
+    message,
+    // The wrapper mirrors the SDK's own `loading` flag, which leaves a message
+    // that can never be fetched spinning forever — the exact failure PDT-4927 is
+    // about, and one web still has (`isLoading || !parent` guards its spinner).
+    // Treat an errored live object as settled instead.
+    isLoading: enabled ? isLoading && !error : true,
+    error: error ?? undefined,
+  };
 }
