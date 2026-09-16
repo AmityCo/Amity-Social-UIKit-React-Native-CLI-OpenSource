@@ -4,6 +4,7 @@ import {
 } from '@amityco/ts-sdk-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import globalFeedSlice from '../../core/stores/slices/globalfeedSlice';
+import uiSlice from '../../core/stores/slices/uiSlice';
 import { globalFeedPageLimit } from '../features/feed/components/GlobalFeed/GlobalFeed';
 import { InteractionManager } from 'react-native';
 import {
@@ -35,6 +36,7 @@ export const useCustomRankingGlobalFeed = ({
   const interactionHandleRef = useRef<{ cancel: () => void } | null>(null);
 
   const { setNewGlobalFeed } = globalFeedSlice.actions;
+  const { markFeedReloaded } = uiSlice.actions;
 
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(false);
@@ -112,8 +114,13 @@ export const useCustomRankingGlobalFeed = ({
     onNextPageRef.current = null;
     hasInitialDataRef.current = false;
 
+    // The list keys posts by id, so a reload hands the same component
+    // instances back their old state instead of remounting them. Announce the
+    // reload so anything holding a position can start over.
+    dispatch(markFeedReloaded());
+
     unsubscribeRef.current = fetchCustomRanking();
-  }, [fetchCustomRanking]);
+  }, [dispatch, fetchCustomRanking, markFeedReloaded]);
 
   return {
     loading: fetching,

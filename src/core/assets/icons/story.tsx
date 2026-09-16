@@ -1,7 +1,7 @@
 import { SVGProps } from 'react';
 
 const icon = (props?: SVGProps<SVGSVGElement>) => {
-  const { width = 24, height = 24, fill = '#292B32' } = props || {};
+  const { width = 24, height = 24, fill = 'currentColor' } = props || {};
 
   return `<svg
     width="${width}"

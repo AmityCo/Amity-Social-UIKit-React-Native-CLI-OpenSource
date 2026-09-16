@@ -1,7 +1,6 @@
 // Screen 3 — "Select Module"
 // Shown after login. User picks Chat or Social to enter.
 
-import React from 'react';
 import {
   ScrollView,
   StyleSheet,
