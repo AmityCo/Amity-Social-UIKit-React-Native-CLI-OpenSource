@@ -35,14 +35,6 @@ type MessageRowProps = {
   isUser: boolean;
   isGroupChat?: boolean;
   currentUserId?: string | null;
-  parent?: Amity.Message | null;
-  /**
-   * The parent is still being resolved (it lives on a page that is not loaded,
-   * so MessageList is fetching it by id). Drives the reply quote's loading
-   * state; when it is false and `parent` is still empty the quote settles on
-   * its unavailable state rather than spinning.
-   */
-  isParentLoading?: boolean;
   onOpenImage?: (url: string, message: Amity.Message) => void;
   onOpenVideo?: (message: Amity.Message) => void;
   onOpenFailedSheet?: (message: Amity.Message) => void;
@@ -64,8 +56,6 @@ export function MessageRow({
   isUser,
   isGroupChat = false,
   currentUserId,
-  parent,
-  isParentLoading,
   onOpenImage,
   onOpenVideo,
   onOpenFailedSheet,
@@ -144,8 +134,7 @@ export function MessageRow({
 
         {message.parentId && !isDeleted ? (
           <MessageReplyQuote
-            parent={parent}
-            isLoading={isParentLoading}
+            parentId={message.parentId}
             child={message}
             isUser={isUser}
             isGroupChat={isGroupChat}
