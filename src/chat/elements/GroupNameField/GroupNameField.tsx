@@ -1,6 +1,14 @@
 // GroupNameField element — ported from AmityUiKitWeb chat/elements/GroupNameField.
 // A labeled, character-counted text field for the group chat name. Wraps the
 // Input.Text atom (the RN port of web's Input.Text), keeping web's prop API.
+//
+// PDT-5168: a group name is single-line. Web passes no `multiLine` to Input.Text
+// (so it renders a plain <input>, which cannot hold a newline); the RN port had
+// added `multiLine`, which turned the field into a growing multiline TextInput
+// that swallowed the return key and pushed the rest of the form off screen.
+// Dropping `multiLine` restores web's shape, and `stripNewLines` on change also
+// covers a *pasted* multi-line string — which no key handler would catch, and
+// which Android does not reliably report as a cancellable Enter.
 
 // 1. React / RN imports
 import { View } from 'react-native';
@@ -22,6 +30,12 @@ export type GroupNameFieldProps = {
   placeholder?: string;
   onChange: (value: string) => void;
 };
+
+// Keep the value on one line whatever route the text arrives by (typing, paste,
+// autofill, a keyboard's own newline insertion).
+function stripNewLines(text: string): string {
+  return text.replace(/[\r\n]+/g, '');
+}
 
 // 3. Named function component
 export function GroupNameField({
@@ -50,11 +64,10 @@ export function GroupNameField({
         title={label}
         optionalLabel={marker}
         value={value}
-        onChange={onChange}
+        onChange={(text) => onChange(stripNewLines(text))}
         placeholder={placeholder ?? defaultPlaceholder}
         showCharacterCount
         maxLength={GROUP_NAME_MAX_LENGTH}
-        multiLine
       />
     </View>
   );

@@ -146,14 +146,6 @@ export function MessageList({
     });
   }, [items]);
 
-  // Resolve reply parents from the loaded items (no separate live lookup for M2).
-  const messageById = useMemo(() => {
-    const map = new Map<string, Amity.Message>();
-    for (const it of data)
-      if (it.kind === 'message') map.set(it.message.messageId, it.message);
-    return map;
-  }, [data]);
-
   const scrollToLatest = useCallback(() => {
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
     onClearNewMessage?.();
@@ -229,11 +221,6 @@ export function MessageList({
               isUser={isUser}
               isGroupChat={isGroupChat}
               currentUserId={currentUserId}
-              parent={
-                message.parentId
-                  ? messageById.get(message.parentId) ?? null
-                  : null
-              }
               onOpenImage={onOpenImage}
               onOpenVideo={onOpenVideo}
               onOpenFailedSheet={onOpenFailedSheet}
