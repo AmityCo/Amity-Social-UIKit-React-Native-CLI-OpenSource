@@ -6,7 +6,14 @@
 
 // 1. React / RN imports
 import { type ReactNode } from 'react';
-import { View, Text, Image, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
 // 2. Internal imports
 import { AmityIcon } from '../../icons';
@@ -28,6 +35,12 @@ export type AvatarProps = {
   state?: AvatarState;
   borderWidth?: AvatarBorderWidth;
   indicator?: ReactNode;
+  /**
+   * Positional override for the indicator slot, for surfaces whose design
+   * anchors the badge differently (web does the same with a `className` on the
+   * indicator). Merged over the atom defaults, which stay unchanged.
+   */
+  indicatorStyle?: StyleProp<ViewStyle>;
   label?: string;
   onPress?: () => void;
 };
@@ -42,6 +55,7 @@ export function Avatar({
   state = 'default',
   borderWidth = 0,
   indicator,
+  indicatorStyle,
   label,
   onPress,
 }: AvatarProps) {
@@ -85,7 +99,9 @@ export function Avatar({
         ) : (
           frame
         )}
-        {indicator ? <View style={styles.indicator}>{indicator}</View> : null}
+        {indicator ? (
+          <View style={[styles.indicator, indicatorStyle]}>{indicator}</View>
+        ) : null}
       </View>
       {label ? <Text style={styles.label}>{label}</Text> : null}
     </View>
