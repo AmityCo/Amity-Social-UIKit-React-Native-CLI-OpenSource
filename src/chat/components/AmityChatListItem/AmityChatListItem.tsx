@@ -376,8 +376,11 @@ function UnreadBadge({ count }: { count: number }) {
 
 // Skeleton row (surface-list-skeleton background): an avatar circle (2.5rem = 40)
 // plus TWO stacked pill lines mirroring the real row's name + message-preview
-// lines (per QA — the web build the team QAs against shows two lines). Lines are
-// 10px tall pills; name ~140 wide, preview ~100 wide.
+// lines. PDT-5248: the widths were the wrong way round — 140 then 100, so the
+// lines tapered and the second read as a stray fragment of the first. The
+// design's loading row (Figma `12041:242258`) is a 64-high row with the SHORT
+// 140x10 pill on top and the LONG 200x10 pill below it, gap 12 — the same
+// 8.75rem / 12.5rem pair web renders. Both pills keep radius 12.
 function AmityChatListItemSkeleton() {
   const { styles } = useStyles();
   return (
@@ -385,7 +388,7 @@ function AmityChatListItemSkeleton() {
       <Skeleton circle width={40} height={40} />
       <View style={styles.skeletonLines}>
         <Skeleton width={140} height={10} borderRadius={12} />
-        <Skeleton width={100} height={10} borderRadius={12} />
+        <Skeleton width={200} height={10} borderRadius={12} />
       </View>
     </View>
   );
