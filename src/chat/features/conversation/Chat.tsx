@@ -40,7 +40,7 @@ export function Chat({
   onBack,
 }: ChatProps) {
   const { styles } = useStyles();
-  const c = useConversation(channelId);
+  const c = useConversation(channelId, jumpToMessageId);
 
   // Receiver avatar for the header (1-1 conversation), resolved from the other
   // participant's avatarFileId — the same source AmityChatListItem uses for the
@@ -114,7 +114,10 @@ export function Chat({
           onSeeMore={c.openSeeMore}
           pendingUploads={c.composer.pendingUploads}
           onMediaLoaded={c.composer.handleMediaLoaded}
-          jumpToMessageId={jumpToMessageId}
+          jumpToMessageId={c.jumpToMessageId}
+          onJumpHandled={c.clearJumpToMessageId}
+          hasPrev={c.hasPrev}
+          onLoadPrev={c.loadPrev}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
             onReply: c.handleBubbleReply,

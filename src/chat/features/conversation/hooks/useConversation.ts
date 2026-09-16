@@ -10,7 +10,7 @@ import useAuth from '../../../../core/hooks/useAuth';
 import { useFollowInfo } from '../../../hooks/useFollowInfo';
 import { useChatMessage } from '../../shared/hooks/useChatMessage';
 
-export function useConversation(channelId?: string) {
+export function useConversation(channelId?: string, jumpToMessageId?: string) {
   const { isConnected } = useAuth();
 
   const [channel, setChannel] = useState<Amity.Channel | undefined>(undefined);
@@ -26,7 +26,11 @@ export function useConversation(channelId?: string) {
 
   const isGroupChat = channel?.type === 'community';
 
-  const chat = useChatMessage({ channelId, enableMention: isGroupChat });
+  const chat = useChatMessage({
+    channelId,
+    enableMention: isGroupChat,
+    jumpToMessageId,
+  });
 
   // The other participant in a 1-1 conversation (for the header user-action menu),
   // resolved from the channel preview members like AmityChatListItem does.

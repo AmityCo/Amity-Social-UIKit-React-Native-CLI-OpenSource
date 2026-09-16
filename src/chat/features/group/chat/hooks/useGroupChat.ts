@@ -18,9 +18,15 @@ const CHANNEL_MODERATOR = 'channel-moderator';
 export type UseGroupChatParams = {
   channelId?: string;
   isJustCreated?: boolean;
+  /** Open the thread anchored on this message (PDT-5252, from message search). */
+  jumpToMessageId?: string;
 };
 
-export function useGroupChat({ channelId, isJustCreated }: UseGroupChatParams) {
+export function useGroupChat({
+  channelId,
+  isJustCreated,
+  jumpToMessageId,
+}: UseGroupChatParams) {
   const { isConnected } = useAuth();
   const { push } = useChatNavigation();
 
@@ -63,6 +69,7 @@ export function useGroupChat({ channelId, isJustCreated }: UseGroupChatParams) {
     isJustCreated,
     enableMention: true,
     viewerIsMutedInChannel: isUserMuted,
+    jumpToMessageId,
   });
 
   function handleOpenSettings() {
