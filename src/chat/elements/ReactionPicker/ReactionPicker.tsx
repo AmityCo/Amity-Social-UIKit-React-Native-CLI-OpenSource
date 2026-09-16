@@ -22,9 +22,8 @@
 //     `pickerCard` (overflow:'hidden', borderRadius:20) clipped it (5043).
 // Both are fixed here by reinstating web's interaction: a PanResponder on the
 // row maps the touch's pageX onto the measured icon slots and drives a
-// `hovered` reaction, and the root reserves vertical headroom (HEADROOM) so the
-// lifted icon and its floating label render INSIDE the picker's bounds and are
-// no longer clipped by the ancestor card.
+// `hovered` reaction, and the label overhangs the pill the way web's does —
+// `pickerCard` no longer draws a clipping surface, so nothing crops it.
 //
 // Geometry mirrored from ReactionPicker.module.css:
 //   .reactionButton[data-touch-hovered] .reactionButton__icon
@@ -118,6 +117,25 @@ export function ReactionPicker({
     ).start();
   }, [hovered, reactions, lifts]);
 
+  // --- shared label --------------------------------------------------------
+  // The label is one node at the root, so its reveal needs its own 0→1 driver
+  // (the per-icon `lifts` still drive the icons themselves).
+  const labelAnim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(labelAnim, {
+      toValue: hovered ? 1 : 0,
+      duration: LIFT_DURATION_MS,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  }, [hovered, labelAnim]);
+
+  // Measured so the label can be centred over the hovered icon and kept inside
+  // the pill. Both come from onLayout, so the first hover after mount already
+  // has them.
+  const [pillWidth, setPillWidth] = useState(0);
+  const [labelWidth, setLabelWidth] = useState(0);
+
   // --- drag tracking -------------------------------------------------------
   // The PanResponder closure is built once, so everything it reads lives in a
   // ref; `hovered` state is only the render mirror.
@@ -205,13 +223,63 @@ export function ReactionPicker({
     });
   }
 
+  // Centre the label on the hovered icon, then keep it inside the pill. The
+  // slots are row-relative, so add the pill's padding to reach pill coordinates;
+  // `labelAnchor` already centres the bubble, so the shift is measured from the
+  // pill's centre. A name wider than the pill just stays centred.
+  let labelShift = 0;
+  if (hovered && pillWidth > 0 && labelWidth > 0) {
+    const slot = slotsRef.current.find((s) => s && s.name === hovered);
+    if (slot) {
+      const iconCentre = PILL_PADDING + (slot.start + slot.end) / 2;
+      const maxShift = Math.max(0, (pillWidth - labelWidth) / 2);
+      const wanted = iconCentre - pillWidth / 2;
+      labelShift = Math.max(-maxShift, Math.min(maxShift, wanted));
+    }
+  }
+
   if (!reactions || reactions.length === 0) return null;
 
   return (
-    // The transparent headroom band is what keeps the lifted icon and the
-    // floating label inside the picker's own box (PDT-5043).
     <View style={styles.root}>
-      <View style={styles.pill}>
+      {/* Centred across the pill, then shifted over the hovered icon and
+          clamped so it never pokes out of the pill's width. */}
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.labelAnchor,
+          {
+            opacity: labelAnim,
+            transform: [
+              { translateX: labelShift },
+              {
+                translateY: labelAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, LABEL_TRANSLATE_Y],
+                }),
+              },
+            ],
+          },
+        ]}
+      >
+        <View
+          style={styles.label}
+          onLayout={(event) => setLabelWidth(event.nativeEvent.layout.width)}
+        >
+          <Typography
+            variant="caption"
+            style={styles.labelText}
+            numberOfLines={1}
+          >
+            {hovered ? getChatReactionLabel(hovered) : ''}
+          </Typography>
+        </View>
+      </Animated.View>
+
+      <View
+        style={styles.pill}
+        onLayout={(event) => setPillWidth(event.nativeEvent.layout.width)}
+      >
         <View
           ref={rowRef}
           style={styles.row}
@@ -237,35 +305,6 @@ export function ReactionPicker({
                 accessibilityLabel={`React with ${getChatReactionLabel(name)}`}
               >
                 <View style={styles.reactionButton}>
-                  {/* .reactionButton__text — always mounted, revealed by the
-                      hover driver (web animates opacity/visibility, not
-                      mount/unmount). */}
-                  <Animated.View
-                    pointerEvents="none"
-                    style={[
-                      styles.label,
-                      {
-                        opacity: lift,
-                        transform: [
-                          {
-                            translateY: lift.interpolate({
-                              inputRange: [0, 1],
-                              outputRange: [0, LABEL_TRANSLATE_Y],
-                            }),
-                          },
-                        ],
-                      },
-                    ]}
-                  >
-                    <Typography
-                      variant="caption"
-                      style={styles.labelText}
-                      numberOfLines={1}
-                    >
-                      {getChatReactionLabel(name)}
-                    </Typography>
-                  </Animated.View>
-
                   {/* PDT-4143 (web PR 1822) narrowed this to the active state
                       only — it used to light up on hover / touch-hover too, which
                       made a reaction look already-selected while being pressed.

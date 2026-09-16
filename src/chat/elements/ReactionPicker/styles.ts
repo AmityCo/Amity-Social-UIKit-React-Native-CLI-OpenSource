@@ -17,15 +17,19 @@ import { AmityColorToken } from '../../../core/design/tokens/amity-color-tokens'
 // treats the touch as having left the bar.
 export const PILL_PADDING = 8;
 
-// PDT-5043: headroom reserved ABOVE the pill so the touch-hovered icon and its
-// floating name label render inside the picker's own box. Web needs no such
-// reservation — its popover is an unclipped absolutely-positioned layer — but in
-// RN the action menu's `pickerCard` sets overflow:'hidden', so anything drawn
-// above the pill was clipped away. Worst case measured from web's geometry:
-// label base top -2.05rem (-32.8) + hover translateY(-9) = 41.8px above the icon
-// box, of which the pill's own 8px padding already covers part; 36 clears it
-// with margin to spare (the 1.3× icon scale only reaches 12.8px up).
-const HEADROOM = 36;
+// PDT-5043 originally reserved a 36px transparent band above the pill so the
+// floating label was not clipped by the action menu's `pickerCard`
+// (overflow:'hidden'). That clip is gone — `pickerCard` no longer draws a
+// surface at all — so the band is no longer needed, and it was the reason the
+// picker floated ~44px from the bubble whenever the popover opened below a
+// message (8px anchor gap + 36px of empty band). The label now overhangs the
+// pill the way web's does.
+//
+// Web puts the label `top: -2.05rem` from its own 2rem button, and lifts it a
+// further 9px on hover. Measured from the picker root: down past the pill's
+// padding to the icon's top edge, then back up by that offset.
+const LABEL_TOP_FROM_ICON = -33;
+const LABEL_TOP = PILL_PADDING + LABEL_TOP_FROM_ICON;
 
 export const useStyles = () => {
   const token = useToken();
@@ -36,7 +40,6 @@ export const useStyles = () => {
     // hugs the bar.
     root: {
       alignSelf: 'flex-start',
-      paddingTop: HEADROOM,
     },
     // .messageActionsPopover__reactionPicker (the filled pill)
     pill: {
@@ -94,20 +97,31 @@ export const useStyles = () => {
         AmityColorToken.SurfaceReactionsReactionPopoverReactionStateActive
       ),
     },
-    // .reactionButton__text (floating label tooltip). Base offset only — the
-    // hover reveal (opacity + translateY(-9)) is animated in the component.
-    label: {
+    // .reactionButton__text (floating label tooltip).
+    //
+    // ONE label for the whole picker, not one per icon. Web can hang a label off
+    // each 2rem button because its tooltip escapes the button box; in RN an
+    // absolutely-positioned child with no left/right is clamped to its
+    // containing block, so a per-button label could never be wider than the 32px
+    // `reactionButton` — which is why every name came back ellipsised no matter
+    // what `maxWidth` said. This anchor spans the pill and centres its content,
+    // so the bubble sizes to the full name and is then shifted over whichever
+    // icon is hovered.
+    labelAnchor: {
       position: 'absolute',
-      top: -33,
-      alignSelf: 'center',
-      maxWidth: 64,
+      top: LABEL_TOP,
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+      zIndex: 2,
+    },
+    label: {
       paddingVertical: 2,
       paddingHorizontal: 6,
       borderRadius: 28,
       backgroundColor: token(
         AmityColorToken.SurfaceReactionsReactionPopoverReactionNameActive
       ),
-      zIndex: 2,
     },
     labelText: {
       textTransform: 'capitalize',
