@@ -186,23 +186,34 @@ export const useStyles = (isUser = false) => {
     seeMoreOther: {
       color: token(AmityColorToken.TextChatBubbleInboundSeeMoreDefault),
     },
-    // Mention span inside the text (web textBubble__mention, weight 500).
-    // Repeat the surrounding text's metrics exactly: the 500-weight mention
-    // <Text> otherwise renders taller than the body line box and its bottom
-    // gets clipped (Android). These MUST track TEXT_FONT_SIZE/TEXT_LINE_HEIGHT
-    // — a mismatch reintroduces the vertical offset above on any line that
-    // mixes plain text with a mention.
+    // Mention span inside the text.
+    //
+    // LEADS WEB (PDT-5295): web's `highlightText__mention` uses weight 500, but
+    // the design's Mention-user screens (Figma `12041:242337`-`12041:242340`)
+    // render `Text/ChatBubble/{Inbound,Outbound}/Mentioned/Default` at SF Pro
+    // **590** / 15 / 20 — semibold, the same 590 the chat list's display name
+    // carries and which this repo maps to '600'. At 500 the mention was barely
+    // distinguishable from the body text, and Android compounds it: with no
+    // Medium face resolved for the numeric weight it falls back to regular, so
+    // the highlight disappeared entirely there. Drop this marker once web
+    // re-syncs to 590.
+    //
+    // Repeat the surrounding text's metrics exactly: the heavier mention <Text>
+    // otherwise renders taller than the body line box and its bottom gets
+    // clipped (Android). These MUST track TEXT_FONT_SIZE/TEXT_LINE_HEIGHT — a
+    // mismatch reintroduces the vertical offset above on any line that mixes
+    // plain text with a mention.
     mentionOwn: {
       fontSize: TEXT_FONT_SIZE,
       lineHeight: TEXT_LINE_HEIGHT,
-      fontWeight: '500',
+      fontWeight: '600',
       includeFontPadding: false,
       color: token(AmityColorToken.TextChatBubbleOutboundMentionedDefault),
     },
     mentionOther: {
       fontSize: TEXT_FONT_SIZE,
       lineHeight: TEXT_LINE_HEIGHT,
-      fontWeight: '500',
+      fontWeight: '600',
       includeFontPadding: false,
       color: token(AmityColorToken.TextChatBubbleInboundMentionedDefault),
     },
