@@ -54,22 +54,27 @@ export const useStyles = () => {
       ),
     },
     // --- Edit panel ----------------------------------------------------------
+    // PDT-4930 — web .messageComposer__editPanel: row, align center, space
+    // between, gap 0.75rem→12, padding 0.75rem 0.75rem 0.75rem 1rem→12/12/12/16,
+    // background surface-list-default-hover. No border: web draws none, and the
+    // grey band is what separates the panel from the input row.
     editPanel: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-      borderBottomWidth: 1,
-      borderBottomColor: token(AmityColorToken.LineDividerPostDefault),
+      gap: 12,
+      paddingTop: 12,
+      paddingBottom: 12,
+      paddingRight: 12,
+      paddingLeft: 16,
+      backgroundColor: token(AmityColorToken.SurfaceListDefaultHover),
     },
-    editPanelInfo: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
-    },
+    // web .messageComposer__editPanelTitle: flex 1 0 0, min-width 0,
+    // colour text-list-overline-default-default.
     editPanelLabel: {
-      color: token(AmityColorToken.TextBaseSubdue),
+      flex: 1,
+      minWidth: 0,
+      color: token(AmityColorToken.TextListOverlineDefaultDefault),
     },
     editPanelClose: {
       width: 24,

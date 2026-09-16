@@ -145,17 +145,16 @@ export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
   return (
     <View style={styles.container}>
       {isEditing ? (
+        // PDT-4930: web's messageComposer__editPanel is a two-child row — the
+        // CaptionBold title (flex 1) and the close button — on a
+        // surface-list-default-hover band with no leading glyph and no divider.
+        // RN had added a `pen-r` icon in an extra info wrapper and left the band
+        // on the composer's own (white) surface with a bottom border; all three
+        // are dropped so the band matches web and the design.
         <View style={styles.editPanel}>
-          <View style={styles.editPanelInfo}>
-            <AmityIcon
-              name="pen-r"
-              size={20}
-              tokenColor={AmityColorToken.TextBaseSubdue}
-            />
-            <Typography variant="captionBold" style={styles.editPanelLabel}>
-              {editingLabel}
-            </Typography>
-          </View>
+          <Typography variant="captionBold" style={styles.editPanelLabel}>
+            {editingLabel}
+          </Typography>
           <Pressable
             style={styles.editPanelClose}
             onPress={cancelEdit}
@@ -165,7 +164,7 @@ export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
             <AmityIcon
               name="cross-r"
               size={20}
-              tokenColor={AmityColorToken.TextBaseSubdue}
+              tokenColor={AmityColorToken.IconIconButtonGhostSecondaryDefault}
             />
           </Pressable>
         </View>
