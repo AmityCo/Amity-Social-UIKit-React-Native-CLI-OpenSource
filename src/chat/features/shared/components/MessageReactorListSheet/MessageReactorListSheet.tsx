@@ -31,7 +31,11 @@ import { abbreviateCount } from '../../../../../core/utils/abbreviateCount';
 import { useCurrentUserId } from '../../../../hooks/useCurrentUserId';
 import { useMessageReactions } from '../../hooks/useMessageReactions';
 import { useReactorsCollection } from '../../hooks/useReactorsCollection';
-import { ReactionGlyph, SmilePlus } from '../../utils/reactionIcons';
+import {
+  FaceEyesXmarks,
+  ReactionGlyph,
+  SmilePlus,
+} from '../../utils/reactionIcons';
 import { useStyles } from './styles';
 
 // 3. Types
@@ -210,7 +214,13 @@ export function MessageReactorListSheet({
         })}
       </View>
 
-      {totalCount === 0 ? (
+      {/* PDT-5047 (web PDT-5241): a deleted message has no reactions to load, so
+          it gets its own state rather than the "be the first to react" empty
+          state, which invites an action that is not possible. Checked before the
+          count, since a deleted message also reports 0. */}
+      {isMessageDeleted ? (
+        <MessageUnavailableState />
+      ) : totalCount === 0 ? (
         <EmptyState />
       ) : (
         <FlatList
@@ -302,6 +312,29 @@ function EmptyState() {
   return (
     <View style={styles.emptyState}>
       <SmilePlus size={48} color={emptyStateIconColor} />
+      <View style={styles.emptyStateText}>
+        <Typography variant="titleBold" style={styles.emptyStateTitle}>
+          {title}
+        </Typography>
+        <Typography variant="caption" style={styles.emptyStateDescription}>
+          {description}
+        </Typography>
+      </View>
+    </View>
+  );
+}
+
+// Deleted-message state (web MessageUnavailableState).
+function MessageUnavailableState() {
+  const { styles, emptyStateIconColor } = useStyles();
+  const title = useString('amity_common_button_unable_to_load_reactions');
+  const description = useString(
+    'amity_common_button_reactions_not_available',
+    'message'
+  );
+  return (
+    <View style={styles.emptyState}>
+      <FaceEyesXmarks size={64} color={emptyStateIconColor} />
       <View style={styles.emptyStateText}>
         <Typography variant="titleBold" style={styles.emptyStateTitle}>
           {title}

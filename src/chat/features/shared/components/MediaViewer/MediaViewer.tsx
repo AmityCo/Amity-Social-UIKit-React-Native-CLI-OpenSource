@@ -6,7 +6,7 @@
 
 // 1. React / RN imports
 import type { ReactNode } from 'react';
-import { Modal, Pressable, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
 
 // 2. Third-party imports
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -15,6 +15,8 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../core/localization';
+import LinearGradient from 'react-native-linear-gradient';
+
 import Toast from '../../../../../social/components/Toast';
 import { useStyles } from './styles';
 
@@ -28,6 +30,14 @@ type MediaViewerProps = {
   deleteAccessibilityLabel?: string;
   onSave?: () => void;
   saveAccessibilityLabel?: string;
+  /**
+   * Rendered in the top bar, to the RIGHT of the close button. Web's
+   * `VideoHeader` is a single row — close on the left, mute on the right — so
+   * the video player passes its mute toggle in here rather than drawing a
+   * second header of its own underneath this one, where the bar covered it and
+   * swallowed the tap.
+   */
+  headerRight?: ReactNode;
 };
 
 // 5. Named function component
@@ -40,6 +50,7 @@ export function MediaViewer({
   deleteAccessibilityLabel,
   onSave,
   saveAccessibilityLabel,
+  headerRight,
 }: MediaViewerProps) {
   const { styles } = useStyles();
   const deleteLabel = useString('amity_chat_option_delete');
@@ -74,6 +85,13 @@ export function MediaViewer({
           <View style={styles.stage}>{children}</View>
 
           <SafeAreaView edges={['top', 'left', 'right']} style={styles.topBar}>
+            {/* Web's VideoHeader scrim: black 20% fading to transparent. The
+                port used a flat 50%-black bar, which web has nowhere. */}
+            <LinearGradient
+              colors={['rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0)']}
+              style={StyleSheet.absoluteFill}
+              pointerEvents="none"
+            />
             <Pressable
               style={styles.closeButton}
               onPress={onClose}
@@ -88,6 +106,7 @@ export function MediaViewer({
                 }
               />
             </Pressable>
+            {headerRight}
           </SafeAreaView>
 
           <SafeAreaView
