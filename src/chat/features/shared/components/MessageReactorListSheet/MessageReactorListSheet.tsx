@@ -26,12 +26,18 @@ import {
 import { Typography } from '../../../../../core/design/components/Typography';
 import { Skeleton } from '../../../../../core/design/components/Skeleton';
 import { Avatar } from '../../../../../core/design/atoms/Avatar';
+import { BrandBadge } from '../../../../../core/design/elements/BrandBadge';
 import { useString } from '../../../../../core/localization';
+import { LIST_SKELETON_ROW_COUNT } from '../../../../constants';
 import { abbreviateCount } from '../../../../../core/utils/abbreviateCount';
 import { useCurrentUserId } from '../../../../hooks/useCurrentUserId';
 import { useMessageReactions } from '../../hooks/useMessageReactions';
 import { useReactorsCollection } from '../../hooks/useReactorsCollection';
-import { ReactionGlyph, SmilePlus } from '../../utils/reactionIcons';
+import {
+  FaceEyesXmarks,
+  ReactionGlyph,
+  SmilePlus,
+} from '../../utils/reactionIcons';
 import { useStyles } from './styles';
 
 // 3. Types
@@ -210,7 +216,13 @@ export function MessageReactorListSheet({
         })}
       </View>
 
-      {totalCount === 0 ? (
+      {/* PDT-5047 (web PDT-5241): a deleted message has no reactions to load, so
+          it gets its own state rather than the "be the first to react" empty
+          state, which invites an action that is not possible. Checked before the
+          count, since a deleted message also reports 0. */}
+      {isMessageDeleted ? (
+        <MessageUnavailableState />
+      ) : totalCount === 0 ? (
         <EmptyState />
       ) : (
         <FlatList
@@ -231,7 +243,13 @@ export function MessageReactorListSheet({
             if (hasMore && !isLoading && !isLoadingFirstPage) loadMore();
           }}
           ListFooterComponent={
-            isLoadingFirstPage || isLoading ? <SkeletonRows count={3} /> : null
+            // PDT-5171: web renders LIST_SKELETON_ROW_COUNT (9) rows here, which
+            // is what fills the sheet's visible area. The port hardcoded 3, so
+            // the first page showed three rows and left the rest of the sheet
+            // blank. RN already carries the same constant — use it.
+            isLoadingFirstPage || isLoading ? (
+              <SkeletonRows count={LIST_SKELETON_ROW_COUNT} />
+            ) : null
           }
           contentContainerStyle={styles.list}
         />
@@ -277,9 +295,20 @@ function ReactorRow({ reactor, isOwn = false, onPress }: ReactorRowProps) {
         />
       )}
       <View style={styles.rowText}>
-        <Typography variant="bodyBold" style={styles.rowTitle}>
-          {reactor.user?.displayName ?? ''}
-        </Typography>
+        <View style={styles.rowTitleRow}>
+          <Typography
+            variant="bodyBold"
+            style={styles.rowTitle}
+            numberOfLines={1}
+          >
+            {reactor.user?.displayName ?? ''}
+          </Typography>
+          {/* PDT-5165 — LEADS WEB: web's reactor sheet has no brand badge, but
+              the ticket asks for it here too, matching the member list. */}
+          {reactor.user?.isBrand ? (
+            <BrandBadge accessibilityLabel="Brand" />
+          ) : null}
+        </View>
         {isOwn ? (
           <Typography variant="caption" style={styles.rowCaption}>
             {tapToRemoveLabel}
@@ -302,6 +331,29 @@ function EmptyState() {
   return (
     <View style={styles.emptyState}>
       <SmilePlus size={48} color={emptyStateIconColor} />
+      <View style={styles.emptyStateText}>
+        <Typography variant="titleBold" style={styles.emptyStateTitle}>
+          {title}
+        </Typography>
+        <Typography variant="caption" style={styles.emptyStateDescription}>
+          {description}
+        </Typography>
+      </View>
+    </View>
+  );
+}
+
+// Deleted-message state (web MessageUnavailableState).
+function MessageUnavailableState() {
+  const { styles, emptyStateIconColor } = useStyles();
+  const title = useString('amity_common_button_unable_to_load_reactions');
+  const description = useString(
+    'amity_common_button_reactions_not_available',
+    'message'
+  );
+  return (
+    <View style={styles.emptyState}>
+      <FaceEyesXmarks size={64} color={emptyStateIconColor} />
       <View style={styles.emptyStateText}>
         <Typography variant="titleBold" style={styles.emptyStateTitle}>
           {title}

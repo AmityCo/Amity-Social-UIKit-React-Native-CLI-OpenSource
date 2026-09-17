@@ -38,6 +38,12 @@ export const useStyles = () => {
         AmityColorToken.SurfaceBadgeSemanticBadgePostStatusTotalMedia
       ),
     },
+    // Camera / Photo source sheet (PDT-5061). Padding matches the composer's
+    // camera sheet (AmityMediaAttachmentPicker) so the two drawers line up.
+    sourceSheet: {
+      paddingHorizontal: 16,
+      paddingBottom: 16,
+    },
   });
 
   return { styles, token };

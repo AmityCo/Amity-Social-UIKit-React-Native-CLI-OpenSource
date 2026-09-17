@@ -50,6 +50,10 @@ export function useMessageSearchCollection({
     const params: Amity.SearchMessageLiveCollection = {
       query: trimmed,
       limit: LIST_PAGE_LIMIT,
+      // Results are ordered by latest activity. Without these the SDK falls
+      // back to relevance ordering.
+      sortBy: 'createdAt',
+      orderBy: 'desc',
     };
 
     const unsub = MessageRepository.searchMessage(

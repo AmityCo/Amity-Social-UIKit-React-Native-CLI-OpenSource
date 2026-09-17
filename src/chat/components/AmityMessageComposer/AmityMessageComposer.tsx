@@ -1,9 +1,10 @@
 // AmityMessageComposer — RN match of AmityUiKitWeb
 // v4/chat/features/shared/components/MessageComposer/MessageComposer. Takes a
-// `composer` object (= ReturnType<typeof useMessageComposer>) plus the overlay
-// openers, and renders the media section + edit panel + reply band + TextEditor.
-// All orchestration (text/canSend/send/edit/reply/media/mentions) lives in the
-// composer object; this component is pure view + input wiring.
+// `composer` object (= ReturnType<typeof useMessageComposer>) and renders the
+// media section + edit panel + reply band + TextEditor. All orchestration
+// (text/canSend/send/edit/reply/media/mentions) lives in the composer object;
+// this component is pure view + input wiring. No overlay openers are passed in:
+// the reply band is inert, so nothing here navigates.
 //
 // RN specifics vs web:
 //  - Web mounts a Lexical contentEditable TextEditor with initialText /
@@ -46,18 +47,10 @@ type MessageComposer = ReturnType<typeof useMessageComposer>;
 
 type AmityMessageComposerProps = {
   composer: MessageComposer;
-  onOpenSeeMore: (text: string, title?: string) => void;
-  onOpenImage: (url: string, message: Amity.Message) => void;
-  onOpenVideo: (message: Amity.Message) => void;
 };
 
 // 5. Named function component
-export function AmityMessageComposer({
-  composer,
-  onOpenSeeMore,
-  onOpenImage,
-  onOpenVideo,
-}: AmityMessageComposerProps) {
+export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
   const {
     subChannelId,
     enableMention,
@@ -150,69 +143,62 @@ export function AmityMessageComposer({
   }
 
   return (
-    <View style={styles.container}>
-      {isEditing ? (
-        <View style={styles.editPanel}>
-          <View style={styles.editPanelInfo}>
-            <AmityIcon
-              name="pen-r"
-              size={20}
-              tokenColor={AmityColorToken.TextBaseSubdue}
-            />
-            <Typography variant="captionBold" style={styles.editPanelLabel}>
-              {editingLabel}
-            </Typography>
-          </View>
-          <Pressable
-            style={styles.editPanelClose}
-            onPress={cancelEdit}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel edit"
-          >
-            <AmityIcon
-              name="cross-r"
-              size={20}
-              tokenColor={AmityColorToken.TextBaseSubdue}
-            />
-          </Pressable>
-        </View>
-      ) : null}
-
-      {!isEditing && replyTo ? (
-        <MessageReplyBand
-          replyTo={replyTo}
-          currentUserId={currentUserId}
-          onCancel={cancelReply}
-          onOpenSeeMore={onOpenSeeMore}
-          onOpenImage={onOpenImage}
-          onOpenVideo={onOpenVideo}
-        />
-      ) : null}
-
+    <>
+      {/* Outside the bordered container on purpose: the design puts the
+          divider BETWEEN this panel and the compose bar, and the close
+          button overhangs the panel's top edge, so it must not land on a
+          border. */}
       {showMentions ? (
-        <View style={styles.mentionOverlay}>
-          <ScrollView
-            style={styles.mentionList}
-            keyboardShouldPersistTaps="handled"
-          >
-            {suggestions.map((suggestion) => (
-              <Pressable
-                key={suggestion.userId}
-                style={({ pressed }) => [
-                  styles.mentionItem,
-                  pressed && styles.mentionItemPressed,
-                ]}
-                onPress={() => handlePickMention(suggestion)}
-                accessibilityRole="button"
-              >
-                {suggestion.type === 'channel' ? (
-                  // web UserMentionItem "all" row: @-glyph featured-icon circle +
-                  // display name + "notify everyone" description.
-                  <>
-                    <View style={styles.mentionAllIconCircle}>
-                      <Text style={styles.mentionAllGlyph}>@</Text>
-                    </View>
-                    <View style={styles.mentionAllRightPane}>
+        <View style={styles.mentionContainer}>
+          <View style={styles.mentionOverlay}>
+            <ScrollView
+              style={styles.mentionList}
+              keyboardShouldPersistTaps="handled"
+            >
+              {suggestions.map((suggestion) => (
+                <Pressable
+                  key={suggestion.userId}
+                  style={({ pressed }) => [
+                    styles.mentionItem,
+                    pressed && styles.mentionItemPressed,
+                  ]}
+                  onPress={() => handlePickMention(suggestion)}
+                  accessibilityRole="button"
+                >
+                  {suggestion.type === 'channel' ? (
+                    // web UserMentionItem "all" row: @-glyph featured-icon circle +
+                    // display name + "notify everyone" description.
+                    <>
+                      <View style={styles.mentionAllIconCircle}>
+                        <Text style={styles.mentionAllGlyph}>@</Text>
+                      </View>
+                      <View style={styles.mentionAllRightPane}>
+                        <Typography
+                          variant="captionBold"
+                          style={styles.mentionDisplayName}
+                          numberOfLines={1}
+                        >
+                          {suggestion.display}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          style={styles.mentionAllDescription}
+                          numberOfLines={1}
+                        >
+                          {everyoneLabel}
+                        </Typography>
+                      </View>
+                    </>
+                  ) : (
+                    // web UserMentionItem user row: 2rem avatar + display name.
+                    <>
+                      <View style={styles.mentionAvatar}>
+                        <Avatar.User
+                          avatarUrl={suggestion.avatarUrl}
+                          displayName={suggestion.display}
+                          size="sm"
+                        />
+                      </View>
                       <Typography
                         variant="captionBold"
                         style={styles.mentionDisplayName}
@@ -220,38 +206,15 @@ export function AmityMessageComposer({
                       >
                         {suggestion.display}
                       </Typography>
-                      <Typography
-                        variant="caption"
-                        style={styles.mentionAllDescription}
-                        numberOfLines={1}
-                      >
-                        {everyoneLabel}
-                      </Typography>
-                    </View>
-                  </>
-                ) : (
-                  // web UserMentionItem user row: 2rem avatar + display name.
-                  <>
-                    <View style={styles.mentionAvatar}>
-                      <Avatar.User
-                        avatarUrl={suggestion.avatarUrl}
-                        displayName={suggestion.display}
-                        size="sm"
-                      />
-                    </View>
-                    <Typography
-                      variant="captionBold"
-                      style={styles.mentionDisplayName}
-                      numberOfLines={1}
-                    >
-                      {suggestion.display}
-                    </Typography>
-                  </>
-                )}
-              </Pressable>
-            ))}
-          </ScrollView>
-          {/* web MentionMenu close button (top-right); dismisses the menu. */}
+                    </>
+                  )}
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+          {/* Sibling of the panel, not a child: it overhangs the panel's top
+              edge by 8 and its right edge by 4, and the panel clips its own
+              content. */}
           <Pressable
             style={styles.mentionCloseButton}
             onPress={() => setQuery(null)}
@@ -266,60 +229,99 @@ export function AmityMessageComposer({
           </Pressable>
         </View>
       ) : null}
+      <View style={styles.container}>
+        {isEditing ? (
+          // A two-child row: the CaptionBold title (flex 1) and the close
+          // button, on a surface-list-default-hover band. The design has no
+          // leading glyph and no divider here, so the earlier `pen-r` icon and
+          // its info wrapper are gone and the band carries the hover surface
+          // rather than the composer's own.
+          <View style={styles.editPanel}>
+            <Typography variant="captionBold" style={styles.editPanelLabel}>
+              {editingLabel}
+            </Typography>
+            <Pressable
+              style={styles.editPanelClose}
+              onPress={cancelEdit}
+              accessibilityRole="button"
+              accessibilityLabel="Cancel edit"
+            >
+              <AmityIcon
+                name="cross-r"
+                size={20}
+                tokenColor={AmityColorToken.IconIconButtonGhostSecondaryDefault}
+              />
+            </Pressable>
+          </View>
+        ) : null}
 
-      <View style={styles.inputRow}>
-        {isEditing ? null : (
-          <Pressable
-            style={styles.iconButton}
-            onPress={onToggle}
-            accessibilityRole="button"
-            accessibilityLabel="Attach media"
-            accessibilityState={{ expanded: showMediaSection }}
-          >
-            <AmityIcon
-              name={showMediaSection ? 'cross-r' : 'plus-r'}
-              size={24}
-              tokenColor={AmityColorToken.IconIconButtonFilledSecondaryDefault}
-            />
-          </Pressable>
-        )}
+        {!isEditing && replyTo ? (
+          <MessageReplyBand
+            replyTo={replyTo}
+            currentUserId={currentUserId}
+            onCancel={cancelReply}
+          />
+        ) : null}
 
-        <TextEditor
-          key={editingMessageId ?? 'create'}
-          ref={editorRef}
-          value={text}
-          onChangeText={onTextChanged}
-          onSend={onSend}
-          placeholder={placeholder}
-          placeholderTextColor={placeholderColor}
-          autoFocus={isEditing}
-          onMentionQueryChange={enableMention ? setQuery : undefined}
-        />
+        <View style={styles.inputRow}>
+          {isEditing ? null : (
+            <Pressable
+              style={styles.iconButton}
+              onPress={onToggle}
+              accessibilityRole="button"
+              accessibilityLabel="Attach media"
+              accessibilityState={{ expanded: showMediaSection }}
+            >
+              <AmityIcon
+                name={showMediaSection ? 'cross-r' : 'plus-r'}
+                size={24}
+                tokenColor={
+                  AmityColorToken.IconIconButtonFilledSecondaryDefault
+                }
+              />
+            </Pressable>
+          )}
 
-        {showMediaSection ? null : (
-          <Pressable
-            style={[styles.sendButton, canSend && styles.sendButtonEnabled]}
-            onPress={onSend}
-            disabled={!canSend}
-            accessibilityRole="button"
-            accessibilityLabel="Send message"
-          >
-            <AmityIcon
-              name="arrow-up-r"
-              size={24}
-              tokenColor={
-                canSend
-                  ? AmityColorToken.IconIconButtonFilledPrimaryDefault
-                  : AmityColorToken.IconIconButtonFilledSecondaryDisabled
-              }
-            />
-          </Pressable>
-        )}
+          <TextEditor
+            key={editingMessageId ?? 'create'}
+            ref={editorRef}
+            value={text}
+            onChangeText={onTextChanged}
+            onSend={onSend}
+            placeholder={placeholder}
+            placeholderTextColor={placeholderColor}
+            // Four lines, then the input scrolls. Without this it fell through to
+            // the TextEditor default (a 120px wrapper = five lines).
+            maxLines={4}
+            autoFocus={isEditing}
+            onMentionQueryChange={enableMention ? setQuery : undefined}
+          />
+
+          {showMediaSection ? null : (
+            <Pressable
+              style={[styles.sendButton, canSend && styles.sendButtonEnabled]}
+              onPress={onSend}
+              disabled={!canSend}
+              accessibilityRole="button"
+              accessibilityLabel="Send message"
+            >
+              <AmityIcon
+                name="arrow-up-r"
+                size={24}
+                tokenColor={
+                  canSend
+                    ? AmityColorToken.IconIconButtonFilledPrimaryDefault
+                    : AmityColorToken.IconIconButtonFilledSecondaryDisabled
+                }
+              />
+            </Pressable>
+          )}
+        </View>
+
+        {!isEditing && showMediaSection ? (
+          <AmityMediaAttachmentPicker onPickAsset={handleSelectMedia} />
+        ) : null}
       </View>
-
-      {!isEditing && showMediaSection ? (
-        <AmityMediaAttachmentPicker onPickAsset={handleSelectMedia} />
-      ) : null}
-    </View>
+    </>
   );
 }

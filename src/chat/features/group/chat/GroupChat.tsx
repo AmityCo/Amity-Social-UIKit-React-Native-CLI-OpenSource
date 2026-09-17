@@ -3,7 +3,7 @@
 // composer, viewers, action menu, see-more), driven by useGroupChat. Adds a group
 // Header (→ settings) and a banned empty-state branch.
 
-import { Dimensions, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
 import { AmityMessageComposer } from '../../../components/AmityMessageComposer';
@@ -22,16 +22,19 @@ import { useStyles } from './styles';
 export type GroupChatProps = {
   channelId?: string;
   isJustCreated?: boolean;
+  /** Scroll to this message once it is loaded (from message search). */
+  jumpToMessageId?: string;
   onBack: () => void;
 };
 
 export function GroupChat({
   channelId,
   isJustCreated,
+  jumpToMessageId,
   onBack,
 }: GroupChatProps) {
   const { styles } = useStyles();
-  const c = useGroupChat({ channelId, isJustCreated });
+  const c = useGroupChat({ channelId, isJustCreated, jumpToMessageId });
   // Reactor-list sheet — RN MOBILE ADAPTATION: push the reactor list into the
   // repo's global @devvie bottom sheet so it slides up as a sheet with a backdrop
   // + drag/tap-to-close (BUG #15).
@@ -73,10 +76,7 @@ export function GroupChat({
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <View style={styles.container}>
       <Header
         channel={c.channel}
         channelDisplayName={c.channelDisplayName}
@@ -104,9 +104,17 @@ export function GroupChat({
           onSeeMore={c.openSeeMore}
           pendingUploads={c.composer.pendingUploads}
           onMediaLoaded={c.composer.handleMediaLoaded}
+          jumpToMessageId={c.jumpToMessageId}
+          onJumpHandled={c.clearJumpToMessageId}
+          hasPrev={c.hasPrev}
+          onLoadPrev={c.loadPrev}
+          onCancelUpload={c.composer.handleCancelUpload}
           // PDT-4155 (web PR 1818): only group channels have moderators, so web
           // threads isModerator from useGroupChat and the 1:1 Chat does not.
           viewerIsModerator={c.isModerator}
+          // Badges the moderator's avatar on their inbound messages.
+          moderatorIds={c.moderatorIds}
+          viewerIsMutedInChannel={c.viewerIsMutedInChannel}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
             onReply: c.handleBubbleReply,
@@ -121,12 +129,7 @@ export function GroupChat({
       {c.showMutedBanner ? (
         <MutedBanner variant={c.mutedVariant} />
       ) : (
-        <AmityMessageComposer
-          composer={c.composer}
-          onOpenSeeMore={c.openSeeMore}
-          onOpenImage={c.openImageViewer}
-          onOpenVideo={c.openVideoPlayer}
-        />
+        <AmityMessageComposer composer={c.composer} />
       )}
 
       {c.imageViewerProps ? <ImageViewer {...c.imageViewerProps} /> : null}
@@ -146,6 +149,6 @@ export function GroupChat({
           onClose={c.closeReport}
         />
       ) : null}
-    </KeyboardAvoidingView>
+    </View>
   );
 }

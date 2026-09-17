@@ -8,7 +8,7 @@
 // caption, and a flat 10-line clamp.
 
 // 1. React / RN imports
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   Image,
   Linking,
@@ -17,10 +17,11 @@ import {
   View,
   type StyleProp,
   type TextStyle,
+  Platform,
 } from 'react-native';
 
 // 2. Third-party imports
-import Video from 'react-native-video';
+import Video, { type VideoRef } from 'react-native-video';
 
 // 3. Internal imports
 import useFile from '../../../core/hooks/useFile';
@@ -35,7 +36,9 @@ import { DeletedMessagePill } from '../../features/shared/components/DeletedMess
 import { MessageLinkPreview } from '../../features/shared/components/MessageLinkPreview';
 import { extractFirstPreviewUrl } from '../../utils/previewLink';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
-import { useStyles } from './styles';
+import { getMediaBubbleSize } from '../../constants';
+import { isSyntheticPendingMessage } from '../../features/shared/hooks/useMessageComposer';
+import { TEXT_VERTICAL_PADDING, useStyles } from './styles';
 
 // PDT-4109: one flat limit for every text bubble. There used to be a second
 // TEXT_MAX_LINES_WITH_LINK = 5 applied when the text contained a URL, which
@@ -46,6 +49,12 @@ const TEXT_MAX_LINES = 10; // web chat.ts
 // measuring pass — and the reserved See-more space — entirely. Well under the
 // real threshold: the 240px bubble fits ~30 characters a line, ~300 for ten.
 const MIN_CHARS_TO_OVERFLOW = 120;
+
+// iOS only. Android measures a multi-line Text correctly, so the probe-driven
+// minHeight below is pure cost there — and its line heights are reported with
+// different metrics, which made the bubbles render wrong when it was applied on
+// both platforms.
+const IOS_LAST_LINE_FIX = Platform.OS === 'ios';
 // Skeleton bar height while a long message is measured — a shade under the 18px
 // line height so two bars plus their gap read as two lines of text.
 const SKELETON_LINE_HEIGHT = 14;
@@ -185,11 +194,23 @@ function isErrorState(message: Amity.Message): boolean {
 // left a generic failure with no explanation at all; PDT-4128's oversize upload
 // marks 'generic', so the inline error the ticket asks for depends on this.
 //
-// RN has no 'cancelled' reason: cancelling drops the pending upload via
-// cancelledClientIdsRef instead of marking it failed, so there is nothing to
-// exclude here and the gate is simply "did it fail".
-function showsFailedCaption(isFailed: boolean): boolean {
-  return isFailed;
+// A cancelled upload is failed but NOT a failure the user needs telling about —
+// they stopped it themselves. Web excludes it the same way
+// (`if (!isFailed || isCancelledUpload) return bubble`).
+//
+// This used to claim RN had no 'cancelled' reason because cancelling dropped the
+// pending upload outright. It does not: `handleCancelUpload` marks the upload
+// failed and leaves it in place, so before PDT-4921 made the cancel button
+// reachable this was simply never exercised.
+function showsFailedCaption(
+  isFailed: boolean,
+  message: Amity.Message
+): boolean {
+  if (!isFailed) return false;
+  return !(
+    isSyntheticPendingMessage(message) &&
+    message.__failureReason === 'cancelled'
+  );
 }
 
 // 5. Named function component (dispatcher)
@@ -215,6 +236,7 @@ export function AmityMessageBubble({
       return (
         <ImageBubble
           message={message}
+          isUser={isUser}
           isActive={isActive}
           onOpenImage={onOpenImage}
           onLongPress={onLongPress}
@@ -228,6 +250,7 @@ export function AmityMessageBubble({
       return (
         <VideoBubble
           message={message}
+          isUser={isUser}
           isActive={isActive}
           onOpenVideo={onOpenVideo}
           onLongPress={onLongPress}
@@ -271,6 +294,8 @@ function TextBubble({
   // null = not measured yet. The visible Text is clamped from the very first
   // frame either way, so this only decides whether "See more" is offered.
   const [overflowing, setOverflowing] = useState<boolean | null>(null);
+  // The text's true height, measured free of the in-flow bound below.
+  const [textHeight, setTextHeight] = useState<number | null>(null);
   const seeMoreLabel = useString('amity_chat_see_more');
   const editedLabel = useString('amity_chat_status_edited');
 
@@ -340,9 +365,13 @@ function TextBubble({
         >
           {seeMoreLabel}
         </Text>
+        {/* SoT + current web CSS: 20px chevron, inset 16 (aligned with the
+            text). The port's 12 came from scripts/port/geometry.json, whose
+            .textBubble__seeMoreIcon entry is stale at 0.75rem — the live
+            stylesheet is 1.25rem. */}
         <AmityIcon
           name="chevron-right"
-          size={12}
+          size={20}
           tokenColor={
             isUser
               ? AmityColorToken.IconChatBubbleOutboundSeeMoreDefault
@@ -374,7 +403,23 @@ function TextBubble({
             <Skeleton height={SKELETON_LINE_HEIGHT} width="60%" />
           </View>
         ) : (
-          <Text style={textStyle} numberOfLines={maxLines}>
+          <Text
+            style={[
+              textStyle,
+              // iOS measures a Text as the sum of its line boxes MINUS the last
+              // line's leading, then lays the text into that short box and drops
+              // the line that no longer fits: every multi-line message rendered
+              // one line short (measured: a 3-line bubble got 56pt of text area
+              // where it needs 60). Padding cannot fix it — the text area is
+              // always the box minus the padding — so the height has to come
+              // from a minHeight, taken from the probe below, which measures
+              // correctly because its height is unconstrained.
+              IOS_LAST_LINE_FIX && textHeight !== null
+                ? { minHeight: textHeight + TEXT_VERTICAL_PADDING }
+                : null,
+            ]}
+            numberOfLines={maxLines}
+          >
             {renderTextWithMentions(
               text,
               mentioned,
@@ -392,7 +437,14 @@ function TextBubble({
             Android (TouchTargetHelper honours it only on a ReactViewGroup), so an
             absolutely-filling Text would swallow the bubble's long-press.
             Unmounted once answered. */}
-        {mightOverflow && overflowing === null ? (
+        {/* On Android this is the original overflow-only probe: it runs for
+            long messages until it has answered. On iOS it also supplies the
+            measured height every message needs, so it runs for all of them. */}
+        {(
+          IOS_LAST_LINE_FIX
+            ? textHeight === null
+            : mightOverflow && overflowing === null
+        ) ? (
           <View
             style={styles.textProbe}
             pointerEvents="none"
@@ -401,9 +453,17 @@ function TextBubble({
           >
             <Text
               style={textStyle}
-              onTextLayout={(e) =>
-                setOverflowing(e.nativeEvent.lines.length > maxLines)
-              }
+              onTextLayout={(e) => {
+                const { lines } = e.nativeEvent;
+                setOverflowing(lines.length > maxLines);
+                // Clamped the same way the visible Text is, so the minHeight
+                // describes what will actually be shown.
+                setTextHeight(
+                  lines
+                    .slice(0, maxLines)
+                    .reduce((sum, line) => sum + line.height, 0)
+                );
+              }}
             >
               {renderTextWithMentions(
                 text,
@@ -440,6 +500,7 @@ function TextBubble({
 
 // ---------- Image ----------
 type ImageBubbleProps = {
+  isUser: boolean;
   message: Amity.Message;
   isActive?: boolean;
   onOpenImage?: (url: string, message: Amity.Message) => void;
@@ -452,6 +513,7 @@ type ImageBubbleProps = {
 
 function ImageBubble({
   message,
+  isUser,
   isActive = false,
   onOpenImage,
   onLongPress,
@@ -460,7 +522,7 @@ function ImageBubble({
   onMediaLoaded,
   onCancelUpload,
 }: ImageBubbleProps) {
-  const { styles } = useStyles();
+  const { styles, imageMaxWidth } = useStyles(isUser);
   const failedLabel = useString('amity_chat_message_failed_to_send');
   const fileId = getFileId(message);
   const mediumUrl = useFile({ fileId, imageSize: ImageSizeState.medium });
@@ -469,6 +531,14 @@ function ImageBubble({
   const [hasLoadError, setHasLoadError] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [preloaded, setPreloaded] = useState(false);
+  // The bubble follows the image's own ratio. RN gives us the
+  // intrinsic size on the <Image onLoad> event, which is the same mechanism the
+  // reply quote already uses (MessageReplyQuote → getReplyThumbnailSize).
+  // Until it arrives the styled square stands in.
+  const [mediaSize, setMediaSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
 
   const isFailed = isErrorState(message);
   const displaySrc = localPreviewUrl ?? mediumUrl;
@@ -521,11 +591,11 @@ function ImageBubble({
 
   const showUploadOverlay = isUploading && !isFailed;
   const canOpen = !!onOpenImage && !!openUrl && !isFailed && !isUploading;
-  const showFailedCaption = showsFailedCaption(isFailed);
+  const showFailedCaption = showsFailedCaption(isFailed, message);
 
   const bubble = (
     <Pressable
-      style={styles.imageBubble}
+      style={[styles.imageBubble, mediaSize]}
       accessibilityRole="button"
       accessibilityLabel="Open image"
       onPressIn={() => setPressed(true)}
@@ -542,7 +612,12 @@ function ImageBubble({
         style={styles.mediaImage}
         resizeMode="cover"
         onLoadStart={() => setLoaded(false)}
-        onLoad={() => setLoaded(true)}
+        onLoad={(e) => {
+          setLoaded(true);
+          // nativeEvent.source carries the decoded bitmap's intrinsic size.
+          const { width, height } = e.nativeEvent.source;
+          setMediaSize(getMediaBubbleSize(width, height, imageMaxWidth));
+        }}
         onError={() => setHasLoadError(true)}
       />
       {/* BUG #5 — RN <Image> (unlike web's progressive <img>) renders nothing while a
@@ -576,6 +651,7 @@ function ImageBubble({
 
 // ---------- Video ----------
 type VideoBubbleProps = {
+  isUser: boolean;
   message: Amity.Message;
   isActive?: boolean;
   onOpenVideo?: (message: Amity.Message) => void;
@@ -588,6 +664,7 @@ type VideoBubbleProps = {
 
 function VideoBubble({
   message,
+  isUser,
   isActive = false,
   onOpenVideo,
   onLongPress,
@@ -596,30 +673,47 @@ function VideoBubble({
   onMediaLoaded,
   onCancelUpload,
 }: VideoBubbleProps) {
-  const { styles } = useStyles();
+  const { styles, videoMaxWidth } = useStyles(isUser);
   const failedLabel = useString('amity_chat_message_failed_to_send');
   const fileId = getFileId(message);
   const videoUrl = useVideoFileUrl(fileId);
   const [pressed, setPressed] = useState(false);
+  // Same ratio treatment as the image bubble, measured from
+  // react-native-video's onLoad payload instead of <Image onLoad>.
+  const [mediaSize, setMediaSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+  // The poster <Video> is mounted `paused`, and react-native-video 6
+  // paints no first frame until playback or a seek — so a failed/pending video
+  // showed only the bubble's grey loading surface plus the play chip. Web forces
+  // a decoded frame with preload="metadata" and the media fragment `#t=0.1`;
+  // seeking to 0.1s on load is the RN equivalent. Guarded by a ref+flag so the
+  // seek runs once and does not fight the paused state on every re-render.
+  const posterRef = useRef<VideoRef | null>(null);
+  const seededPoster = useRef(false);
 
   const isFailed = isErrorState(message);
   const thumbnailUri = localPreviewUrl ?? videoUrl;
 
   if (!thumbnailUri) {
+    // PDT-4921 / PDT-5235: a video that has no poster yet still shows the upload
+    // ring, so it needs the same cancel affordance as the scrim path below —
+    // otherwise Loader.Upload renders no X and the send can't be cancelled.
     return (
       <View style={styles.mediaPlaceholder}>
-        <Loader.Upload size="medium" />
+        <Loader.Upload size="medium" onCancel={onCancelUpload} />
       </View>
     );
   }
 
   const showUploadOverlay = isUploading && !isFailed;
   const canOpen = !!onOpenVideo && !isFailed && !isUploading;
-  const showFailedCaption = showsFailedCaption(isFailed);
+  const showFailedCaption = showsFailedCaption(isFailed, message);
 
   const bubble = (
     <Pressable
-      style={styles.videoBubble}
+      style={[styles.videoBubble, mediaSize]}
       accessibilityRole="button"
       accessibilityLabel="Play video"
       onPressIn={() => setPressed(true)}
@@ -645,12 +739,29 @@ function VideoBubble({
       */}
       <View style={styles.mediaImage} pointerEvents="none">
         <Video
+          ref={posterRef}
           source={{ uri: thumbnailUri }}
           style={styles.mediaImage}
           resizeMode="cover"
           paused
           muted
           controls={false}
+          onLoad={(data) => {
+            // naturalSize gives the video's intrinsic dimensions.
+            setMediaSize(
+              getMediaBubbleSize(
+                data.naturalSize?.width,
+                data.naturalSize?.height,
+                videoMaxWidth
+              )
+            );
+            // Nudge off frame 0 so a decoded frame is actually painted while
+            // paused — the equivalent of web's `#t=0.1`.
+            if (!seededPoster.current) {
+              seededPoster.current = true;
+              posterRef.current?.seek(0.1);
+            }
+          }}
         />
       </View>
       {/* Web's hidden preload <video src={videoUrl} onLoadedMetadata={...}>: warm

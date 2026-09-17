@@ -5,7 +5,7 @@
 // MutedBanner|MessageComposer, ImageViewer, VideoPlayer, MessageFullTextScreen.
 
 // 1. React / RN imports
-import { Dimensions, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 
 // 2. Internal imports
 import useFile from '../../../core/hooks/useFile';
@@ -27,13 +27,20 @@ import { useStyles } from './styles';
 export type ChatProps = {
   channelId?: string;
   userDisplayName?: string;
+  /** Scroll to this message once it is loaded (from message search). */
+  jumpToMessageId?: string;
   onBack: () => void;
 };
 
 // 4. Named function component
-export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
+export function Chat({
+  channelId,
+  userDisplayName,
+  jumpToMessageId,
+  onBack,
+}: ChatProps) {
   const { styles } = useStyles();
-  const c = useConversation(channelId);
+  const c = useConversation(channelId, jumpToMessageId);
 
   // Receiver avatar for the header (1-1 conversation), resolved from the other
   // participant's avatarFileId — the same source AmityChatListItem uses for the
@@ -68,10 +75,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <View style={styles.container}>
       <Header
         // A 1-1 conversation's title is the OTHER participant's display name, not
         // the channel's displayName (which is often empty for conversations).
@@ -79,6 +83,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
         // fall back to the navigation-passed name only while that loads.
         title={c.otherUser?.displayName || userDisplayName || ''}
         avatarUrl={otherUserAvatarUrl}
+        isBrand={(c.otherUser as { isBrand?: boolean } | undefined)?.isBrand}
         onBack={onBack}
         trailing={
           c.otherUser ? (
@@ -110,6 +115,12 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           onSeeMore={c.openSeeMore}
           pendingUploads={c.composer.pendingUploads}
           onMediaLoaded={c.composer.handleMediaLoaded}
+          jumpToMessageId={c.jumpToMessageId}
+          onJumpHandled={c.clearJumpToMessageId}
+          hasPrev={c.hasPrev}
+          onLoadPrev={c.loadPrev}
+          onCancelUpload={c.composer.handleCancelUpload}
+          viewerIsMutedInChannel={c.viewerIsMutedInChannel}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
             onReply: c.handleBubbleReply,
@@ -124,12 +135,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
       {c.showMutedBanner ? (
         <MutedBanner variant={c.mutedVariant} />
       ) : (
-        <AmityMessageComposer
-          composer={c.composer}
-          onOpenSeeMore={c.openSeeMore}
-          onOpenImage={c.openImageViewer}
-          onOpenVideo={c.openVideoPlayer}
-        />
+        <AmityMessageComposer composer={c.composer} />
       )}
 
       {c.imageViewerProps ? <ImageViewer {...c.imageViewerProps} /> : null}
@@ -149,6 +155,6 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           onClose={c.closeReport}
         />
       ) : null}
-    </KeyboardAvoidingView>
+    </View>
   );
 }

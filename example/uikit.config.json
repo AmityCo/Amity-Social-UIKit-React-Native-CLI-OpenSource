@@ -60,10 +60,7 @@
     },
     "story_page/*/*": {},
     "story_page/*/progress_bar": {
-      "progress_color": [
-        "#339AF9",
-        "#78FA58"
-      ],
+      "progress_color": ["#339AF9", "#78FA58"],
       "background_color": "#AB1234"
     },
     "story_page/*/overflow_menu": {
@@ -122,10 +119,7 @@
     },
     "*/story_tab_component/*": {},
     "*/story_tab_component/story_ring": {
-      "progress_color": [
-        "#339AF9",
-        "#78FA58"
-      ],
+      "progress_color": ["#339AF9", "#78FA58"],
       "background_color": "#AB1234"
     },
     "*/story_tab_component/create_new_story_button": {

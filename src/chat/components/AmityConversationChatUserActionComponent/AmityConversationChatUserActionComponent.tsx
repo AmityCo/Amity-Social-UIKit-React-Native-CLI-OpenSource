@@ -19,8 +19,9 @@
 // state is read once from `getSettings().isEnabled`. Icon/label are action-facing:
 // enabled → `bell-slash-r` + "Turn off notification"; disabled → `bell-s` +
 // "Turn on notification" (iOS `bellSlashR`/`bellS`). `isBlockedByMe` is read live
-// from `UserRepository.Relationship.getFollowInfo` (`status === 'blocked'`) so the
-// block/unblock label is always correct; report toggles flag/unflag off its own
+// from the shared `useFollowInfo` hook (web's `v4/chat/hooks/objects/useFollowInfo`)
+// so the block/unblock label is always correct and matches the blocked banner the
+// conversation shows in place of the composer; report toggles flag/unflag off its own
 // live `UserRepository.isUserFlaggedByMe` state (label flips Report ↔ Unreport
 // user), mirroring the block/unblock row. Web's
 // `ConfirmProvider` maps to the native `Alert.alert`. SDK calls are gated on
@@ -41,6 +42,7 @@ import { resolveString } from '../../../core/localization';
 import useAuth from '../../../core/hooks/useAuth';
 import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
 import { useChatNotifications } from '../../hooks/useChatNotifications';
+import { useFollowInfo } from '../../hooks/useFollowInfo';
 import { useStyles } from './styles';
 
 // 4. Types
@@ -70,26 +72,16 @@ export function AmityConversationChatUserActionComponent({
   const userId = user.userId;
   const displayName = user.displayName ?? user.userId;
 
-  const [isBlockedByMe, setIsBlockedByMe] = useState(false);
+  // Block state comes from the shared `useFollowInfo` live hook — the same source
+  // the conversation uses to swap its composer for the blocked banner, so the menu
+  // label and the banner can never disagree (PDT-5281).
+  const { isBlockedByMe } = useFollowInfo(userId);
   // Report state: read once from `UserRepository.isUserFlaggedByMe`; the report
   // row toggles flag/unflag live so the label flips Report ↔ Unreport user.
   const [isFlaggedByMe, setIsFlaggedByMe] = useState(false);
   // Channel push-notification state (web `useChannelPushNotificationQuery`):
   // read once from `getSettings().isEnabled`; the row toggles it live.
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(true);
-
-  useEffect(() => {
-    if (!isConnected || !userId) return undefined;
-    const unsub = UserRepository.Relationship.getFollowInfo(
-      userId,
-      ({ data }) => {
-        setIsBlockedByMe(data?.status === 'blocked');
-      }
-    );
-    return () => {
-      unsub();
-    };
-  }, [isConnected, userId]);
 
   useEffect(() => {
     if (!isConnected || !userId) return undefined;
@@ -147,7 +139,9 @@ export function AmityConversationChatUserActionComponent({
   }
 
   async function handleReport() {
-    if (!isConnected) return;
+    // Same as handleToggleBlock below: no connectivity guard. The failure
+    // strings and the catch were already here, and the guard was what stopped
+    // them ever being reached.
     const next = !isFlaggedByMe;
     try {
       if (next) {
@@ -175,7 +169,10 @@ export function AmityConversationChatUserActionComponent({
   }
 
   function handleToggleBlock() {
-    if (!isConnected) return;
+    // No connectivity guard, matching web's `useUserBlockQuery`: bailing early
+    // swallowed the tap with no feedback at all, and PDT-5284 is specifically
+    // about surfacing the failure. Let the call run and let the catch below
+    // raise the toast.
     if (isBlockedByMe) {
       Alert.alert(
         resolveString('amity_chat_unblock_confirm_title'),
@@ -185,7 +182,17 @@ export function AmityConversationChatUserActionComponent({
           {
             text: resolveString('amity_chat_unblock_confirm_label'),
             onPress: async () => {
-              await UserRepository.Relationship.unBlockUser(userId);
+              // PDT-5284: unhandled before, so unblocking with no connection
+              // rejected silently — no toast, and an unhandled promise on top.
+              // The failure strings already existed, nothing raised them.
+              try {
+                await UserRepository.Relationship.unBlockUser(userId);
+              } catch {
+                error({
+                  content: resolveString('amity_chat_unblock_failed'),
+                });
+                return;
+              }
               success({ content: resolveString('amity_chat_unblock_success') });
             },
           },
@@ -201,7 +208,13 @@ export function AmityConversationChatUserActionComponent({
             text: resolveString('amity_chat_block_confirm_label'),
             style: 'destructive',
             onPress: async () => {
-              await UserRepository.Relationship.blockUser(userId);
+              // PDT-5284, as above.
+              try {
+                await UserRepository.Relationship.blockUser(userId);
+              } catch {
+                error({ content: resolveString('amity_chat_block_failed') });
+                return;
+              }
               success({ content: resolveString('amity_chat_block_success') });
             },
           },
@@ -240,7 +253,11 @@ export function AmityConversationChatUserActionComponent({
     },
     {
       key: 'block',
-      icon: 'ban-r',
+      // PDT-5282 — LEADS WEB (web useConversationActions uses <Ban/> here). The
+      // Figma for this row is the person-with-slash glyph; `ban-r` is the bare
+      // prohibition circle, which reads as the group BAN action instead. The
+      // group ban rows keep `ban-r`.
+      icon: 'user-slash-r',
       label: resolveString(
         isBlockedByMe
           ? 'amity_chat_action_unblock_user'
