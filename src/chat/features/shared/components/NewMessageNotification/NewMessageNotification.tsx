@@ -139,11 +139,13 @@ export function NewMessageNotification({
             ) : null}
           </View>
         ) : null}
-        <AmityIcon
-          name="chevron-down"
-          size={28}
-          tokenColor={AmityColorToken.IconIconButtonGhostSecondaryDefault}
-        />
+        <View style={styles.chevron}>
+          <AmityIcon
+            name="chevron-down"
+            size={20}
+            tokenColor={AmityColorToken.IconIconButtonGhostSecondaryDefault}
+          />
+        </View>
       </View>
     </Pressable>
   );
