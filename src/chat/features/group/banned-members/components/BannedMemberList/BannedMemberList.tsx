@@ -62,7 +62,6 @@ export function BannedMemberList({
             <Menu.Item
               icon="ban-r"
               label={resolveString('amity_chat_member_action_unban')}
-              typography="body"
               onPress={() => {
                 closeBottomSheet();
                 onUnban(member);
