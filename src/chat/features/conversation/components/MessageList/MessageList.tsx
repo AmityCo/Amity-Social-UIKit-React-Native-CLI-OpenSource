@@ -62,6 +62,20 @@ type MessageListProps = {
    */
   moderatorIds?: Set<string>;
   /**
+   * The viewer is muted in this channel — trims Edit/Reply/Report out of the
+   * message action menu (web GroupChat → MessageList → MessageActionsPopover).
+   * PDT-5237 / PDT-5247: the trimming already lived in AmityMessageActionMenu but
+   * nothing threaded the flag down here, so it always saw the `false` default.
+   */
+  viewerIsMutedInChannel?: boolean;
+  /**
+   * Cancel an in-flight upload, by the synthetic message's client id (web
+   * GroupChat → MessageList → MessageBubble `onCancelUpload`). PDT-4921: without
+   * it MediaUploadOverlay gets no `onCancel` and Loader.Upload renders no X, so
+   * a sending video could not be cancelled.
+   */
+  onCancelUpload?: (clientId: string) => void;
+  /**
    * In-flight/failed uploads, used to give each media bubble its local preview.
    * Web derives the same thing in its MessageList (pendingPreviewByClientId /
    * ByFileId) — without it a failed upload has no image source at all and the
@@ -116,6 +130,8 @@ export function MessageList({
   bubbleHandlers,
   viewerIsModerator = false,
   moderatorIds,
+  viewerIsMutedInChannel = false,
+  onCancelUpload,
   pendingUploads,
   onMediaLoaded,
 }: MessageListProps) {
@@ -199,6 +215,14 @@ export function MessageList({
             : messageFileId
             ? previews.byFileId.get(messageFileId)
             : undefined;
+          // Web MessageBubble: `isSynthetic && onCancelUpload ? () =>
+          // onCancelUpload(clientId) : undefined`. Only a synthetic (still local,
+          // in-flight) message can be cancelled — once the real message exists the
+          // upload is already done.
+          const cancelUpload =
+            onCancelUpload && isSyntheticPendingMessage(message)
+              ? () => onCancelUpload(message.__syntheticClientId)
+              : undefined;
           return (
             <MessageRow
               message={message}
@@ -216,6 +240,8 @@ export function MessageList({
               bubbleHandlers={bubbleHandlers}
               viewerIsModerator={viewerIsModerator}
               isSenderModerator={isSenderModerator}
+              viewerIsMutedInChannel={viewerIsMutedInChannel}
+              onCancelUpload={cancelUpload}
             />
           );
         }}
