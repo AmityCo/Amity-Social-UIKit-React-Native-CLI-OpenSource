@@ -1,8 +1,9 @@
-// Styles for NewMessageNotification — ported from NewMessageNotification.module.css.
-// Geometry: pinned left/right 1rem→16, bottom 0.5rem→8, height 2.5rem→40,
-// padding 0.375rem/0.625rem→ top/bottom 6, left 6, right 10; radius 0.5rem→8;
-// gaps 0.5rem/0.625rem→8/10; thumb 1.75rem→28, radius 0.25rem→4; arrow 0.625rem→10
-// rotated 180°. box-shadow dropped (RN, no hex allowed). Colours via tokens.
+// Styles for NewMessageNotification.
+// Geometry: pinned 16 left/right, 8 up from the bottom, 40 tall, padding 6/8,
+// fully rounded; gaps 16 (avatar → text) and 8 (thumb → chevron); thumb 28
+// square at radius 4 with a 20 play badge over a 16 glyph; chevron 28.
+// The design's drop shadow is omitted — it would need a raw hex, which this repo
+// does not allow outside the token set. Colours all resolve through tokens.
 
 import { StyleSheet } from 'react-native';
 import { useToken } from '../../../../../core/design/theme/useToken';
@@ -22,27 +23,29 @@ export const useStyles = () => {
       justifyContent: 'space-between',
       gap: 8,
       height: 40,
-      paddingTop: 6,
-      paddingBottom: 6,
-      paddingLeft: 6,
-      paddingRight: 10,
-      borderRadius: 8,
-      backgroundColor: token(AmityColorToken.SurfaceCustomToastDefaultDefault),
+      paddingVertical: 6,
+      paddingHorizontal: 8,
+      borderRadius: 9999,
+      // The banner surface, not the toast one: Surface/CustomToast/Default/Default
+      // is the same dark grey in BOTH themes, which is why the pill stayed dark
+      // under a light theme. The banner token flips with the theme, and this pill
+      // is a banner — it sits in the page, not over it as a transient toast.
+      backgroundColor: token(AmityColorToken.SurfaceBannerSubdueGeneral),
     },
     left: {
       flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 10,
+      gap: 16,
     },
     preview: {
       flexShrink: 1,
-      color: token(AmityColorToken.TextCustomToastDefault),
+      color: token(AmityColorToken.TextBannerSubdueHeaderGeneral),
     },
     right: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 10,
+      gap: 8,
       flexShrink: 0,
     },
     thumb: {
@@ -58,8 +61,16 @@ export const useStyles = () => {
       width: '100%',
       height: '100%',
     },
-    arrow: {
-      transform: [{ rotate: '180deg' }],
+    playBadge: {
+      position: 'absolute',
+      width: 20,
+      height: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 9999,
+      backgroundColor: token(
+        AmityColorToken.SurfaceIconButtonTransparentPrimaryEnabled
+      ),
     },
   });
 

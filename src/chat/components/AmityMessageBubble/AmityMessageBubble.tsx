@@ -35,6 +35,7 @@ import { MediaUploadOverlay } from '../../elements/MediaUploadOverlay';
 import { DeletedMessagePill } from '../../features/shared/components/DeletedMessagePill';
 import { MessageLinkPreview } from '../../features/shared/components/MessageLinkPreview';
 import { extractFirstPreviewUrl } from '../../utils/previewLink';
+import { splitTextByLinks } from '../../utils/linkifyText';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
 import { getMediaBubbleSize } from '../../constants';
 import { isSyntheticPendingMessage } from '../../features/shared/hooks/useMessageComposer';
@@ -58,47 +59,42 @@ const IOS_LAST_LINE_FIX = Platform.OS === 'ios';
 // Skeleton bar height while a long message is measured — a shade under the 18px
 // line height so two bars plus their gap read as two lines of text.
 const SKELETON_LINE_HEIGHT = 14;
-// Splits a text run into linkable (coloured/tappable) segments.
-const URL_SPLIT_RE = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
-
-function openLink(raw: string): void {
-  const url = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
-  Linking.openURL(url).catch(() => {});
+function openLink(href: string): void {
+  Linking.openURL(href).catch(() => {});
 }
 
-// Split a non-mention text run into plain strings + tappable link spans, ported
-// from web's <Linkify> (navigable: onPress → Linking.openURL). linkStyle carries
-// the underline (+ inbound-link colour when the bubble is inbound).
+// Split a non-mention text run into plain strings + tappable link spans (onPress
+// → Linking.openURL). linkStyle carries the underline, plus the inbound-link
+// colour when the bubble is inbound. URL detection lives in utils/linkifyText.
 function renderLinkedText(
   text: string,
   keyPrefix: string,
   linkStyle: StyleProp<TextStyle>
 ): ReactNode[] {
   const out: ReactNode[] = [];
-  text.split(URL_SPLIT_RE).forEach((part, i) => {
-    if (!part) return;
-    if (/^(?:https?:\/\/|www\.)/i.test(part)) {
+  splitTextByLinks(text).forEach((segment, i) => {
+    if (!segment.value) return;
+    if (segment.kind === 'link') {
       out.push(
         <Text
           key={`${keyPrefix}-l-${i}`}
           style={linkStyle}
-          onPress={() => openLink(part)}
+          onPress={() => openLink(segment.href)}
         >
-          {part}
+          {segment.value}
         </Text>
       );
     } else {
-      out.push(part);
+      out.push(segment.value);
     }
   });
   return out;
 }
 
-// Render message text with @mention spans highlighted, ported from web
-// renderTextWithMentions: metadata.mentioned = [{ index, length }] marks the runs to
-// style with the mention token. Following web, only the non-mention runs are
-// linkified (lead/tail slices) — mention spans stay plain — and in-text URLs render
-// as tappable link spans (renderLinkedText).
+// Render message text with @mention spans highlighted: metadata.mentioned =
+// [{ index, length }] marks the runs to style with the mention token. Only the
+// non-mention runs are linkified (lead/tail slices) — a mention span stays plain,
+// so a display name that looks like a domain is never turned into a link.
 function renderTextWithMentions(
   text: string,
   mentioned: { index: number; length: number }[] | undefined,
