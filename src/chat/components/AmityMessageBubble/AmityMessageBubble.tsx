@@ -17,6 +17,7 @@ import {
   View,
   type StyleProp,
   type TextStyle,
+  Platform,
 } from 'react-native';
 
 // 2. Third-party imports
@@ -37,7 +38,7 @@ import { extractFirstPreviewUrl } from '../../utils/previewLink';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
 import { getMediaBubbleSize } from '../../constants';
 import { isSyntheticPendingMessage } from '../../features/shared/hooks/useMessageComposer';
-import { useStyles } from './styles';
+import { TEXT_VERTICAL_PADDING, useStyles } from './styles';
 
 // PDT-4109: one flat limit for every text bubble. There used to be a second
 // TEXT_MAX_LINES_WITH_LINK = 5 applied when the text contained a URL, which
@@ -48,6 +49,12 @@ const TEXT_MAX_LINES = 10; // web chat.ts
 // measuring pass — and the reserved See-more space — entirely. Well under the
 // real threshold: the 240px bubble fits ~30 characters a line, ~300 for ten.
 const MIN_CHARS_TO_OVERFLOW = 120;
+
+// iOS only. Android measures a multi-line Text correctly, so the probe-driven
+// minHeight below is pure cost there — and its line heights are reported with
+// different metrics, which made the bubbles render wrong when it was applied on
+// both platforms.
+const IOS_LAST_LINE_FIX = Platform.OS === 'ios';
 // Skeleton bar height while a long message is measured — a shade under the 18px
 // line height so two bars plus their gap read as two lines of text.
 const SKELETON_LINE_HEIGHT = 14;
@@ -287,6 +294,8 @@ function TextBubble({
   // null = not measured yet. The visible Text is clamped from the very first
   // frame either way, so this only decides whether "See more" is offered.
   const [overflowing, setOverflowing] = useState<boolean | null>(null);
+  // The text's true height, measured free of the in-flow bound below.
+  const [textHeight, setTextHeight] = useState<number | null>(null);
   const seeMoreLabel = useString('amity_chat_see_more');
   const editedLabel = useString('amity_chat_status_edited');
 
@@ -394,7 +403,23 @@ function TextBubble({
             <Skeleton height={SKELETON_LINE_HEIGHT} width="60%" />
           </View>
         ) : (
-          <Text style={textStyle} numberOfLines={maxLines}>
+          <Text
+            style={[
+              textStyle,
+              // iOS measures a Text as the sum of its line boxes MINUS the last
+              // line's leading, then lays the text into that short box and drops
+              // the line that no longer fits: every multi-line message rendered
+              // one line short (measured: a 3-line bubble got 56pt of text area
+              // where it needs 60). Padding cannot fix it — the text area is
+              // always the box minus the padding — so the height has to come
+              // from a minHeight, taken from the probe below, which measures
+              // correctly because its height is unconstrained.
+              IOS_LAST_LINE_FIX && textHeight !== null
+                ? { minHeight: textHeight + TEXT_VERTICAL_PADDING }
+                : null,
+            ]}
+            numberOfLines={maxLines}
+          >
             {renderTextWithMentions(
               text,
               mentioned,
@@ -412,7 +437,14 @@ function TextBubble({
             Android (TouchTargetHelper honours it only on a ReactViewGroup), so an
             absolutely-filling Text would swallow the bubble's long-press.
             Unmounted once answered. */}
-        {mightOverflow && overflowing === null ? (
+        {/* On Android this is the original overflow-only probe: it runs for
+            long messages until it has answered. On iOS it also supplies the
+            measured height every message needs, so it runs for all of them. */}
+        {(
+          IOS_LAST_LINE_FIX
+            ? textHeight === null
+            : mightOverflow && overflowing === null
+        ) ? (
           <View
             style={styles.textProbe}
             pointerEvents="none"
@@ -421,9 +453,17 @@ function TextBubble({
           >
             <Text
               style={textStyle}
-              onTextLayout={(e) =>
-                setOverflowing(e.nativeEvent.lines.length > maxLines)
-              }
+              onTextLayout={(e) => {
+                const { lines } = e.nativeEvent;
+                setOverflowing(lines.length > maxLines);
+                // Clamped the same way the visible Text is, so the minHeight
+                // describes what will actually be shown.
+                setTextHeight(
+                  lines
+                    .slice(0, maxLines)
+                    .reduce((sum, line) => sum + line.height, 0)
+                );
+              }}
             >
               {renderTextWithMentions(
                 text,

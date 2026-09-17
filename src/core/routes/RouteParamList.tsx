@@ -13,10 +13,20 @@ import { AmityPostCategory } from '../../social/enums/AmityPostContentComponentS
 export type RootStackParamList = {
   // --- Chat (PDT-3713) ---
   AmityChatHomePage: undefined;
-  AmityChatPage: { channelId: string; userDisplayName?: string };
+  // `jumpToMessageId`: scroll the thread to that message on open — set by a
+  // message search result.
+  AmityChatPage: {
+    channelId: string;
+    userDisplayName?: string;
+    jumpToMessageId?: string;
+  };
   AmityChannelCreateConversationPage: undefined;
   // --- Chat: group flows (PDT-3713 M3) ---
-  AmityGroupChatPage: { channelId: string; isJustCreated?: boolean };
+  AmityGroupChatPage: {
+    channelId: string;
+    isJustCreated?: boolean;
+    jumpToMessageId?: string;
+  };
   // Optional: the chat-list "+" menu opens this with no params, while the
   // create-group screen's Add-member tile re-opens it carrying the members
   // already chosen so they come back pre-selected.

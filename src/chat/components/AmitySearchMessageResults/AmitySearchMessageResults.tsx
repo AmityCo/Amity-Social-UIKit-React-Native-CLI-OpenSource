@@ -6,16 +6,11 @@
 //
 // RN adaptations from web:
 //   - Web `useIntersectionObserver` sentinel → FlatList `onEndReached`.
-//   - Web `ChannelItem` took `messageBodyOverride` / `timestampOverride` props to
-//     show the matched message text + time. RN's `AmityChatListItem` (DO NOT TOUCH)
-//     has no such props but *reads* `channel.messagePreview` + `channel.lastActivity`,
-//     so we pass a shallow-cloned channel with those two fields overridden — the
-//     same rendered result without modifying the shared item.
-//   - Web `searchQuery` / `highlightStyle="bold"` matched-text highlight is not
-//     supported by AmityChatListItem → not rendered (documented deviation).
-//   - Web pushed ChatPage/GroupChatPage with `jumpToMessageId` (+ userId/avatar for
-//     conversations). RouteParamList (DO NOT TOUCH) has no such params, so we
-//     navigate to the channel without the jump (documented; orchestrator to add).
+//
+// AmityChatListItem takes `messageBodyOverride` / `timestampOverride` /
+// `searchQuery` / `highlightStyle` props (replacing the shallow-cloned-channel
+// workaround and adding the matched-text highlight), and RouteParamList carries
+// `jumpToMessageId` so tapping a result scrolls the thread to it.
 
 // 1. React / RN imports
 import { useMemo } from 'react';
@@ -86,9 +81,11 @@ export function AmitySearchMessageResults({
   function handleNavigate(message: Amity.Message) {
     const channel = channelById.get(message.channelId);
     if (!channel) return;
+    // Carry the matched message id so the thread scrolls to it on open.
     if (channel.type === 'community') {
       navigation.navigate('AmityGroupChatPage', {
         channelId: channel.channelId,
+        jumpToMessageId: message.messageId,
       });
     } else {
       const otherMember = channel.previewMembers?.find(
@@ -97,35 +94,9 @@ export function AmitySearchMessageResults({
       navigation.navigate('AmityChatPage', {
         channelId: channel.channelId,
         userDisplayName: otherMember?.user?.displayName,
+        jumpToMessageId: message.messageId,
       });
     }
-  }
-
-  // Clone the channel, overriding the preview + timestamp with the matched
-  // message so AmityChatListItem renders the message text + its createdAt.
-  function toMessageRowChannel(
-    channel: Amity.Channel,
-    message: Amity.Message
-  ): Amity.Channel {
-    const text = (message.data as { text?: string } | undefined)?.text ?? '';
-    const messagePreview: NonNullable<Amity.Channel['messagePreview']> = {
-      messagePreviewId: message.messageId,
-      subChannelName: channel.displayName ?? '',
-      channelId: message.channelId,
-      subChannelId: message.subChannelId,
-      segment: message.channelSegment,
-      subChannelUpdatedAt: message.updatedAt,
-      createdAt: message.createdAt,
-      updatedAt: message.updatedAt,
-      dataType: 'text',
-      data: { text },
-      isDeleted: false,
-    };
-    return {
-      ...channel,
-      lastActivity: message.createdAt,
-      messagePreview,
-    };
   }
 
   if (!shouldCall) {
@@ -145,10 +116,16 @@ export function AmitySearchMessageResults({
       renderItem={({ item: message }) => {
         const channel = channelById.get(message.channelId);
         if (!channel) return null;
+        const text =
+          (message.data as { text?: string } | undefined)?.text ?? '';
         return (
           <AmityChatListItem
-            channel={toMessageRowChannel(channel, message)}
+            channel={channel}
             isArchived={archivedIds.has(channel.channelId)}
+            searchQuery={trimmed}
+            highlightStyle="bold"
+            messageBodyOverride={text}
+            timestampOverride={message.createdAt as string}
             hideUnreadIndicators
             onPress={() => handleNavigate(message)}
           />

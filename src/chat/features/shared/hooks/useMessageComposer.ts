@@ -281,11 +281,32 @@ export function useMessageComposer({
     wasEditingRef.current = !!editingMessage;
   }, [editingMessage, originalText, editingMentionsMeta]);
 
+  // Keep the reply target live while the band is up. `replyTo` used to be the
+  // snapshot captured at startReply, so a parent deleted by its sender while the
+  // viewer was composing kept showing its original text and left the send button
+  // enabled. Subscribes with the same MessageRepository.getMessage call the
+  // reactor sheet uses, keyed on the id — which never changes for a given band,
+  // so the refresh cannot re-trigger itself.
+  const replyToId = replyTo?.messageId;
+  useEffect(() => {
+    if (!replyToId) return undefined;
+    const unsubscribe = MessageRepository.getMessage(replyToId, (result) => {
+      if (!result.data) return;
+      setReplyTo((prev) =>
+        prev?.messageId === result.data.messageId ? result.data : prev
+      );
+    });
+    return () => unsubscribe();
+  }, [replyToId]);
+
   const trimmedText = text.trim();
   const trimmedOriginal = originalText.trim();
+  // A reply whose parent has been deleted cannot be sent (the band shows
+  // "Message unavailable"), so the send button goes disabled with it.
+  const isReplyTargetDeleted = !isEditing && !!replyTo?.isDeleted;
   const canSend = isEditing
     ? trimmedText.length > 0 && trimmedText !== trimmedOriginal
-    : trimmedText.length > 0;
+    : trimmedText.length > 0 && !isReplyTargetDeleted;
 
   const { mutateAsync: createMessageMutation } = useMutation<
     CreateMessageResponse,

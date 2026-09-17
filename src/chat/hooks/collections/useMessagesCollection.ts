@@ -21,6 +21,13 @@ export type UseMessagesCollectionResult = {
   loading: boolean;
   hasNextPage: boolean;
   loadMore: () => void;
+  /**
+   * Only ever true for a collection opened with `aroundMessageId`: the anchored
+   * page has NEWER messages below it. A collection opened at the newest page has
+   * nothing after it.
+   */
+  hasPrevPage: boolean;
+  loadPrev: () => void;
   error: unknown;
 };
 
@@ -31,8 +38,10 @@ export function useMessagesCollection(
   const [messages, setMessages] = useState<Amity.Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasPrevPage, setHasPrevPage] = useState(false);
   const [error, setError] = useState<unknown>(undefined);
   const onNextPageRef = useRef<(() => void) | undefined>(undefined);
+  const onPrevPageRef = useRef<(() => void) | undefined>(undefined);
 
   // The SDK's MessageRepository needs a connected client — calling getMessages
   // before the session is 'established' throws. Gate the subscription on it.
@@ -45,6 +54,7 @@ export function useMessagesCollection(
     includingTags,
     excludingTags,
     includeDeleted,
+    aroundMessageId,
   } = params;
 
   useEffect(() => {
@@ -62,12 +72,16 @@ export function useMessagesCollection(
         error: err,
         hasNextPage: nextPage,
         onNextPage,
+        hasPrevPage: prevPage,
+        onPrevPage,
       }) => {
         setLoading(isLoading);
         if (!isLoading && data) {
           setMessages([...data]);
           setHasNextPage(Boolean(nextPage));
           onNextPageRef.current = nextPage ? onNextPage : undefined;
+          setHasPrevPage(Boolean(prevPage));
+          onPrevPageRef.current = prevPage ? onPrevPage : undefined;
         }
         if (err) setError(err);
       }
@@ -86,11 +100,24 @@ export function useMessagesCollection(
     includingTags?.join(','),
     excludingTags?.join(','),
     includeDeleted,
+    aroundMessageId,
   ]);
 
   function loadMore() {
     onNextPageRef.current?.();
   }
 
-  return { messages, loading, hasNextPage, loadMore, error };
+  function loadPrev() {
+    onPrevPageRef.current?.();
+  }
+
+  return {
+    messages,
+    loading,
+    hasNextPage,
+    loadMore,
+    hasPrevPage,
+    loadPrev,
+    error,
+  };
 }
