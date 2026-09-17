@@ -18,11 +18,9 @@
 //     non-fatal (the conversation-open path still marks read).
 
 // 1. React / RN imports
-import { useCallback, useRef, useState } from 'react';
 import { FlatList, View } from 'react-native';
 
 // 2. Third-party imports
-import { useFocusEffect } from '@react-navigation/native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { SvgXml } from 'react-native-svg';
 import { SubChannelRepository } from '@amityco/ts-sdk-react-native';
@@ -69,26 +67,9 @@ export function ChannelList({
   onCreatePress,
 }: ChannelListProps) {
   const { styles } = useStyles();
-  // PDT-5205: a conversation created from the New-conversation flow was not in
-  // the list when the user came back — the live collection was subscribed before
-  // that channel existed and did not pick it up. Re-query whenever the list
-  // regains focus. The first focus is skipped: the collection has just
-  // subscribed on mount and re-subscribing there would only double the fetch.
-  const [refreshKey, setRefreshKey] = useState(0);
-  const hasFocusedRef = useRef(false);
-  useFocusEffect(
-    useCallback(() => {
-      if (!hasFocusedRef.current) {
-        hasFocusedRef.current = true;
-        return;
-      }
-      setRefreshKey((key) => key + 1);
-    }, [])
-  );
   const { channels, loading, hasNextPage, loadMore } = useChannelsCollection({
     types,
     excludeArchives: true,
-    refreshKey,
   });
   const { archiveChannel } = useChannelArchiveQuery();
   const archiveLabel = useString('amity_chat_archive');
