@@ -29,6 +29,7 @@ import { AmityColorToken } from '../../../core/design/tokens/amity-color-tokens'
 import { useString } from '../../../core/localization';
 import useFile from '../../../core/hooks/useFile';
 import { Avatar } from '../../elements/Avatar';
+import { BrandBadge } from '../../../core/design/elements/BrandBadge';
 import { ConversationChatAvatar } from '../../elements/ConversationChatAvatar';
 import { ArchivedBadge } from '../../elements/ArchivedBadge';
 import { formatTimestamp } from '../../utils/timestamp';
@@ -240,9 +241,18 @@ function ChannelName({
     }
     const name = otherUser?.displayName ?? channel.displayName ?? '';
     return (
-      <Typography style={styles.name} numberOfLines={1}>
-        {renderName(name)}
-      </Typography>
+      <>
+        <Typography style={styles.name} numberOfLines={1}>
+          {renderName(name)}
+        </Typography>
+        {/* AHEAD OF WEB and of the design SoT: neither shows a brand badge in
+            the chat list row — asked for by QA. */}
+        {(otherUser as { isBrand?: boolean } | undefined)?.isBrand ? (
+          <View style={styles.brandBadge}>
+            <BrandBadge accessibilityLabel="Brand" />
+          </View>
+        ) : null}
+      </>
     );
   }
 

@@ -6,8 +6,8 @@
 //     from `user.avatar.fileUrl`; RN resolves `user.avatarFileId` through the
 //     shared `useFile` hook, mirroring the conversation/create UserItem.
 //   - Web's core `Avatar` atom → the chat `Avatar.User` element (round, size md).
-//   - The web `BrandBadge` (shown when `user.isBrand`) has no RN design element,
-//     so it is omitted (same decision as the conversation/create UserItem).
+//   - Web pulls its `BrandBadge` from `social/`, which chat must not depend on
+//     (CLAUDE.md); RN uses the core element added for PDT-5165 instead.
 //   - Web renders no press handler here — the row's selection is owned by the
 //     wrapping `Selection.Checkbox`, so this component is purely presentational.
 
@@ -16,6 +16,7 @@ import { View } from 'react-native';
 
 // 2. Internal imports (relative)
 import { Avatar } from '../../../../../elements/Avatar';
+import { BrandBadge } from '../../../../../../core/design/elements/BrandBadge';
 import { Typography } from '../../../../../../core/design/components/Typography';
 import { Skeleton } from '../../../../../../core/design/components/Skeleton';
 import useFile from '../../../../../../core/hooks/useFile';
@@ -39,6 +40,9 @@ export function UserItem({ user }: UserItemProps) {
         <Typography variant="bodyBold" style={styles.name} numberOfLines={1}>
           {displayName}
         </Typography>
+        {/* PDT-5165: web renders this right after the name in this row too
+            (.userItem__brandBadge, 1rem). */}
+        {user.isBrand ? <BrandBadge accessibilityLabel="Brand" /> : null}
       </View>
     </View>
   );

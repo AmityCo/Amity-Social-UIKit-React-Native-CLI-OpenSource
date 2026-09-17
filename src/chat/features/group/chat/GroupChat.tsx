@@ -108,9 +108,11 @@ export function GroupChat({
           onJumpHandled={c.clearJumpToMessageId}
           hasPrev={c.hasPrev}
           onLoadPrev={c.loadPrev}
+          onCancelUpload={c.composer.handleCancelUpload}
           // PDT-4155 (web PR 1818): only group channels have moderators, so web
           // threads isModerator from useGroupChat and the 1:1 Chat does not.
           viewerIsModerator={c.isModerator}
+          viewerIsMutedInChannel={c.viewerIsMutedInChannel}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
             onReply: c.handleBubbleReply,

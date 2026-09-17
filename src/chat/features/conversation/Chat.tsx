@@ -83,6 +83,7 @@ export function Chat({
         // fall back to the navigation-passed name only while that loads.
         title={c.otherUser?.displayName || userDisplayName || ''}
         avatarUrl={otherUserAvatarUrl}
+        isBrand={(c.otherUser as { isBrand?: boolean } | undefined)?.isBrand}
         onBack={onBack}
         trailing={
           c.otherUser ? (
@@ -118,6 +119,8 @@ export function Chat({
           onJumpHandled={c.clearJumpToMessageId}
           hasPrev={c.hasPrev}
           onLoadPrev={c.loadPrev}
+          onCancelUpload={c.composer.handleCancelUpload}
+          viewerIsMutedInChannel={c.viewerIsMutedInChannel}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
             onReply: c.handleBubbleReply,
