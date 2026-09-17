@@ -7,7 +7,7 @@
 //     the shared `useFile` hook (getFile → fileUrlWithSize).
 //   - Web's `Avatar` atom → the chat `Avatar.User` element (round, size md/40).
 //   - Web pulls its `BrandBadge` from `social/`, which chat must not depend on
-//     (CLAUDE.md); RN uses the core element added for PDT-5165 instead.
+//     (CLAUDE.md); RN uses the core element instead.
 //   - `react-aria` Button → Pressable.
 
 // 1. React / RN imports
@@ -48,8 +48,7 @@ export function UserItem({ user, onPress }: UserItemProps) {
         <Typography variant="bodyBold" style={styles.name} numberOfLines={1}>
           {displayName}
         </Typography>
-        {/* PDT-5165: web renders this right after the name in this row too
-            (.userItem__brandBadge, 1rem). */}
+        {/* Sits right after the name, 16 square. */}
         {user.isBrand ? <BrandBadge accessibilityLabel="Brand" /> : null}
       </View>
     </Pressable>

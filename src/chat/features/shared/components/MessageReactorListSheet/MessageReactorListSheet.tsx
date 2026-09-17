@@ -216,7 +216,7 @@ export function MessageReactorListSheet({
         })}
       </View>
 
-      {/* PDT-5047 (web PDT-5241): a deleted message has no reactions to load, so
+      {/* A deleted message has no reactions to load, so
           it gets its own state rather than the "be the first to react" empty
           state, which invites an action that is not possible. Checked before the
           count, since a deleted message also reports 0. */}
@@ -243,7 +243,7 @@ export function MessageReactorListSheet({
             if (hasMore && !isLoading && !isLoadingFirstPage) loadMore();
           }}
           ListFooterComponent={
-            // PDT-5171: web renders LIST_SKELETON_ROW_COUNT (9) rows here, which
+            // Web renders LIST_SKELETON_ROW_COUNT (9) rows here, which
             // is what fills the sheet's visible area. The port hardcoded 3, so
             // the first page showed three rows and left the rest of the sheet
             // blank. RN already carries the same constant — use it.
@@ -303,8 +303,7 @@ function ReactorRow({ reactor, isOwn = false, onPress }: ReactorRowProps) {
           >
             {reactor.user?.displayName ?? ''}
           </Typography>
-          {/* PDT-5165 — LEADS WEB: web's reactor sheet has no brand badge, but
-              the ticket asks for it here too, matching the member list. */}
+          {/* The badge appears here as well, matching the member list. */}
           {reactor.user?.isBrand ? (
             <BrandBadge accessibilityLabel="Brand" />
           ) : null}

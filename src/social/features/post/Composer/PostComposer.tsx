@@ -533,8 +533,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       dispatch(hideToastMessage());
       // The server has no thumbnail for these videos until it finishes
       // transcoding, so hand the feed the frames the composer already decoded
-      // to bridge that window (PDT-4904, web parity: LayoutProvider
-      // videoThumbnail). Keyed by the uploaded original video's fileId, which
+      // to bridge that window. Keyed by the uploaded original video's fileId, which
       // is what the created post exposes as `data.videoFileId.original`.
       if (type === 'video' && displayVideos.length > 0) {
         dispatch(
@@ -764,7 +763,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
       // iOS video is the one pick whose dims cannot be trusted: the picker
       // reports the track's stored `naturalSize` with no rotation alongside
       // it, so a portrait iPhone clip arrives as 1920×1080 and would
-      // classify the frame 16:9 (PDT-4904). Images on both platforms, and
+      // classify the frame 16:9. Images on both platforms, and
       // Android video (its extractor swaps w/h on 90°/270°), are already
       // display-oriented and unaffected. With no rotation to correct the iOS
       // value by, carry nothing and let SelectedMediaComponent measure the
@@ -955,7 +954,7 @@ const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
     []
   );
 
-  // PDT-4310 / PDT-4312: at the 10-attachment cap the camera + gallery icons
+  // At the 10-attachment cap the camera + gallery icons
   // are disabled until the user removes a frame.
   const isMediaCapReached =
     displayImages.length >= MAX_MEDIA_ATTACHMENTS ||

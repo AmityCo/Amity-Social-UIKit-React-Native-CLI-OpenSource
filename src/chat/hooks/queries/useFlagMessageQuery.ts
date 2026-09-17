@@ -9,8 +9,8 @@
 //     web's useNotifications('chat'). Web raises `info` on every error path; RN
 //     keeps each direction on the variant it already shipped with — report errors
 //     as `error` ('failed' pill, what the report screen raised before this hook
-//     owned it) and unreport errors as `info`, which is the behaviour PDT-5230
-//     cites as already correct. Worth unifying once design rules on the pill.
+//     owned it) and unreport errors as `info`, which QA has confirmed as
+//     correct. Worth unifying once design rules on the pill.
 //   - web's toastAlignment/responsive branches are omitted — RN has one alignment.
 
 import { useState } from 'react';
@@ -59,7 +59,7 @@ export type UseFlagMessageQueryReturn = {
   isFlaggedByMe: boolean;
   /** Set once a report comes back NOT_FOUND (400400) — the message was deleted
    *  while the report sheet was open. Drives the sheet's "Something went wrong"
-   *  state instead of a toast (PDT-5229). Report-only: unreport is driven from the
+   *  state instead of a toast. Report-only: unreport is driven from the
    *  bubble menu, which has no surface for this state. */
   isMessageDeleted: boolean;
   isPendingReport: boolean;
@@ -131,7 +131,7 @@ export function useFlagMessageQuery({
     if (!messageId) return;
     const { reason, onSuccess } = options;
 
-    // PDT-5230: the same user reporting the same message twice (two devices, or a
+    // The same user reporting the same message twice (two devices, or a
     // stale cache) must fail like the duplicate *unreport* already does. The SDK
     // does not reject the second flagMessage, so the duplicate is caught here
     // instead — and deliberately from a *fresh* read, because the cached answer

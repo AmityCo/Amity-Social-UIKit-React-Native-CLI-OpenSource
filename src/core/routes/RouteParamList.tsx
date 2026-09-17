@@ -11,7 +11,7 @@ import {
 import { AmityPostCategory } from '../../social/enums/AmityPostContentComponentStyle';
 
 export type RootStackParamList = {
-  // --- Chat (PDT-3713) ---
+  // --- Chat ---
   AmityChatHomePage: undefined;
   // `jumpToMessageId`: scroll the thread to that message on open — set by a
   // message search result.
@@ -21,7 +21,7 @@ export type RootStackParamList = {
     jumpToMessageId?: string;
   };
   AmityChannelCreateConversationPage: undefined;
-  // --- Chat: group flows (PDT-3713 M3) ---
+  // --- Chat: group flows ---
   AmityGroupChatPage: {
     channelId: string;
     isJustCreated?: boolean;

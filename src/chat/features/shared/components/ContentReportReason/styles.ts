@@ -1,7 +1,7 @@
 // Styles for ContentReportReason — ported from AmityUiKitWeb
 // core/design/components/ContentReportReason/ContentReportReason.module.css.
 // Web is a drawer at `data-full-height` (capped at 96%); RN is a bottom sheet at 90%
-// per Figma (PDT-5225).
+// per Figma.
 // Geometry: header padding 0.75rem/1rem → 12/16; description padding 12/16; list
 // rows padding 1rem → 16; bottom bar padding 1rem → 16; others field padding
 // 1.5rem 1rem 0 → paddingTop 24 / paddingHorizontal 16. Web token

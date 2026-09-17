@@ -8,7 +8,7 @@
 //     affordance and delegates the actual pick + upload to the caller via
 //     `onPick`. Web `{ value, onChange }` -> `{ imageUrl, onPick }`.
 //   - Web `<img>` -> RN `<Image>`; web `Loader.Spinner` -> RN `ActivityIndicator`.
-//   - Source sheet (PDT-5061): web's mobile branch opens a drawer holding a
+//   - Source sheet: web's mobile branch opens a drawer holding a
 //     CameraButton + ImageButton before any file is chosen. RN mirrors that with
 //     the bottom sheet + Menu used by AmityMediaAttachmentPicker, then reports
 //     the chosen source to `onPick`. Tapping the tile must never jump straight

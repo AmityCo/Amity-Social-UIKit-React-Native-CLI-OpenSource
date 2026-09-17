@@ -21,7 +21,7 @@ export type TextProps = {
   multiLine?: boolean;
   /** Strip line breaks from the value as it is entered. `multiLine` controls how
    *  the text *wraps*; this controls whether the user may start a new line at all,
-   *  so a field can wrap long text while still refusing Enter (PDT-5228). Applied
+   *  so a field can wrap long text while still refusing Enter. Applied
    *  on change rather than on key press because Android does not reliably report a
    *  cancellable Enter, and because it also catches a pasted multi-line string. */
   blockNewLine?: boolean;

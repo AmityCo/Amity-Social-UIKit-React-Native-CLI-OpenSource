@@ -3,7 +3,7 @@
 // `Client.getLinkPreviewMetadata(url)`. Web's debounce/refetch flags collapse to
 // a single `isLoading`.
 //
-// PDT-4912 / PDT-5308: both SDKs return the `/api/v1/link-preview` payload
+// Both SDKs return the `/api/v1/link-preview` payload
 // VERBATIM — neither maps its fields. Web therefore normalises the raw payload in
 // v4/utils/previewLink.ts#getLinkPreviewMetadata:
 //   `{ ...data, title: data.title || '', imageUrl: data.image || '', domain: ... }`
