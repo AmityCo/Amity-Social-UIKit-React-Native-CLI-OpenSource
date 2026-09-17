@@ -13,8 +13,8 @@ import { AmityPostCategory } from '../../social/enums/AmityPostContentComponentS
 export type RootStackParamList = {
   // --- Chat (PDT-3713) ---
   AmityChatHomePage: undefined;
-  // `jumpToMessageId` (PDT-5252): scroll the thread to that message on open —
-  // set by a message search result, matching web's ChatPage push.
+  // `jumpToMessageId`: scroll the thread to that message on open — set by a
+  // message search result.
   AmityChatPage: {
     channelId: string;
     userDisplayName?: string;

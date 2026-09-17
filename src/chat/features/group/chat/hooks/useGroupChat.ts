@@ -18,7 +18,7 @@ const CHANNEL_MODERATOR = 'channel-moderator';
 export type UseGroupChatParams = {
   channelId?: string;
   isJustCreated?: boolean;
-  /** Open the thread anchored on this message (PDT-5252, from message search). */
+  /** Open the thread anchored on this message (from message search). */
   jumpToMessageId?: string;
 };
 

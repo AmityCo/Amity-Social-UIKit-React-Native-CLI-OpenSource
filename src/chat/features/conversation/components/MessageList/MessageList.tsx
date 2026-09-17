@@ -92,8 +92,8 @@ type MessageListProps = {
    */
   onMediaLoaded?: (fileId: string) => void;
   /**
-   * Scroll to this message once it is in the loaded window, centred (PDT-5252).
-   * Set when the thread is opened from a message search result.
+   * Scroll to this message once it is in the loaded window, centred. Set when
+   * the thread is opened from a message search result.
    */
   jumpToMessageId?: string;
   /** Called when the jump target turns out to be unreachable, so the anchor is dropped. */
@@ -105,7 +105,7 @@ type MessageListProps = {
 
 const AT_BOTTOM_THRESHOLD = 48;
 
-/** How long the jumped-to row shakes, matching web's 1s `message-list-bounce`. */
+/** How long the jumped-to row shakes. */
 const BOUNCE_MS = 1000;
 
 /** Delay before re-attempting a scrollToIndex that missed (see onScrollToIndexFailed). */
@@ -114,10 +114,9 @@ const JUMP_RETRY_MS = 250;
 /** How many times that re-attempt is allowed before the jump gives up. */
 const JUMP_MAX_RETRIES = 4;
 
-// Web marks the jumped-to row with `message-list-bounce`: a 1s horizontal shake
-// (translateX 0 → -10 at 40% → 0 at 50% → -5 at 60% → 0). RN has no keyframes,
-// so the same stops are played as an Animated sequence. Transform only, so it
-// runs on the native driver and cannot stutter the list.
+// The jumped-to row is marked with a 1s horizontal shake (translateX 0 → -10 at
+// 40% → 0 at 50% → -5 at 60% → 0), played as an Animated sequence. Transform
+// only, so it runs on the native driver and cannot stutter the list.
 //
 // Wraps EVERY message row, not just the one bouncing. Mounting the wrapper only
 // around the target changes that row's element type when the bounce ends, which
@@ -219,12 +218,12 @@ export function MessageList({
     });
   }, [items]);
 
-  // PDT-5252: jump to a searched message. The collection is already anchored on
-  // it (useChatMessage passes `aroundMessageId`, as web does), so the row is in
-  // the loaded window and this only has to scroll to it and flag the bounce.
-  // Web's fallback is kept: if it is not there once loading has finished and
-  // there is no more history, the message is unreachable — drop the anchor so
-  // the collection falls back to the newest page. Each id is honoured once.
+  // Jump to a searched message. The collection is already anchored on it
+  // (useChatMessage passes `aroundMessageId`), so the row is in the loaded
+  // window and this only has to scroll to it and flag the bounce. If it is not
+  // there once loading has finished and there is no more history, the message is
+  // unreachable — drop the anchor so the collection falls back to the newest
+  // page. Each id is honoured once.
   const jumpedToRef = useRef<string | null>(null);
   const [bouncingMessageId, setBouncingMessageId] = useState<string | null>(
     null
@@ -242,8 +241,8 @@ export function MessageList({
   const jumpPendingRef = useRef<string | null>(null);
   const jumpRetryRef = useRef(0);
 
-  // Web's isLoadingPrev: set when a newer page is asked for, cleared when the
-  // collection stops loading.
+  // Set when a newer page is asked for, cleared when the collection stops
+  // loading.
   // FlatList fires onStartReached more than once for a single approach (measured:
   // twice, 60ms apart), and the state has not flushed by the second call — so the
   // guard has to be a ref or the newer page is requested twice.
@@ -268,9 +267,8 @@ export function MessageList({
     );
     if (index < 0) return false;
     jumpPendingRef.current = messageId;
-    // viewPosition 0.5 centres the row — web's scrollIntoView({block:'center'}).
-    // Not animated: web's scrollIntoView has no `behavior`, so it defaults to
-    // 'auto' — an instant jump. Animating it travels the whole way through the
+    // viewPosition 0.5 centres the row. Not animated: an instant jump is what
+    // the design asks for, and animating it travels the whole way through the
     // thread instead, which reads as the page flickering.
     listRef.current?.scrollToIndex({
       index,
@@ -333,13 +331,13 @@ export function MessageList({
   // while paginating older messages, suppressed during the first-page load (which the
   // parent covers with a skeleton). In an inverted FlatList the visual top — the
   // older-messages / onEndReached side — is the ListFooterComponent, so the spinner
-  // lives there. Web's second (bottom / loadPrev) loader — the newer-messages
-  // side, reached only from a jump — is the ListHeaderComponent for the same
-  // reason. Web gates it on `isLoadingPrev && !isLoadingFirstPage`.
+  // lives there. The second loader — the newer-messages side, reached only from
+  // a jump — is the ListHeaderComponent for the same reason, gated on
+  // `isLoadingPrev && !isLoadingFirstPage`.
   const showTopLoader = !!isLoading && !isLoadingFirstPage;
   const showBottomLoader = isLoadingPrev && !isLoadingFirstPage;
 
-  // Match web's mutually-exclusive affordances: the new-message banner shows only
+  // The two affordances are mutually exclusive: the new-message banner shows only
   // when a genuinely new message arrived while scrolled away (`newMessage` is gated
   // upstream in useChatMessage); the scroll-to-latest button shows otherwise. This
   // keeps the banner from co-appearing with the button (web: showScrollButton =
@@ -361,10 +359,9 @@ export function MessageList({
         // 0, which in an inverted list is the end the viewer is looking at. Left
         // to itself the list keeps its offset, so the content jumps by a page's
         // height and lands back near the start, which fires onStartReached again
-        // and walks the whole way to the newest message. This is the native
-        // equivalent of web's `scrollTop += diff` after a prepend. Not enabled
-        // for normal threads: there it would stop an incoming message from
-        // pushing itself into view at the bottom.
+        // and walks the whole way to the newest message. Not enabled for normal
+        // threads: there it would stop an incoming message from pushing itself
+        // into view at the bottom.
         maintainVisibleContentPosition={
           jumpToMessageId ? { minIndexForVisible: 1 } : undefined
         }
@@ -377,7 +374,7 @@ export function MessageList({
         }
         ListHeaderComponent={
           showBottomLoader ? (
-            // Same geometry as the top one — web's two loader classes are identical.
+            // Same geometry as the top one.
             <View style={styles.topLoader}>
               <Loader.Spinner size="sm" />
             </View>
@@ -459,9 +456,8 @@ export function MessageList({
         }}
         onEndReached={hasMore ? onLoadMore : undefined}
         onEndReachedThreshold={0.5}
-        // Inverted, so the list's START is the newest end. Web pages the same
-        // direction from `atBottomNow && hasPrev`; this is the RN equivalent and
-        // only ever fires for a collection anchored on a jump target.
+        // Inverted, so the list's START is the newest end. Only ever fires for a
+        // collection anchored on a jump target.
         onStartReached={
           jumpSettled && hasPrev
             ? () => {

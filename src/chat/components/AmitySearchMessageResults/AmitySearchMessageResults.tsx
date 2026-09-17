@@ -7,11 +7,10 @@
 // RN adaptations from web:
 //   - Web `useIntersectionObserver` sentinel → FlatList `onEndReached`.
 //
-// PDT-5251 / PDT-5270 / PDT-5252 closed the three deviations this port carried:
-// AmityChatListItem now takes web's `messageBodyOverride` / `timestampOverride` /
+// AmityChatListItem takes `messageBodyOverride` / `timestampOverride` /
 // `searchQuery` / `highlightStyle` props (replacing the shallow-cloned-channel
-// workaround and adding the missing matched-text highlight), and RouteParamList
-// carries `jumpToMessageId` so tapping a result scrolls the thread to it.
+// workaround and adding the matched-text highlight), and RouteParamList carries
+// `jumpToMessageId` so tapping a result scrolls the thread to it.
 
 // 1. React / RN imports
 import { useMemo } from 'react';
@@ -82,8 +81,7 @@ export function AmitySearchMessageResults({
   function handleNavigate(message: Amity.Message) {
     const channel = channelById.get(message.channelId);
     if (!channel) return;
-    // PDT-5252: carry the matched message id so the thread scrolls to it, the
-    // way web pushes ChatPage/GroupChatPage with `jumpToMessageId`.
+    // Carry the matched message id so the thread scrolls to it on open.
     if (channel.type === 'community') {
       navigation.navigate('AmityGroupChatPage', {
         channelId: channel.channelId,

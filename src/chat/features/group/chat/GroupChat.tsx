@@ -22,7 +22,7 @@ import { useStyles } from './styles';
 export type GroupChatProps = {
   channelId?: string;
   isJustCreated?: boolean;
-  /** Scroll to this message once it is loaded (PDT-5252, from message search). */
+  /** Scroll to this message once it is loaded (from message search). */
   jumpToMessageId?: string;
   onBack: () => void;
 };

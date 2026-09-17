@@ -43,10 +43,10 @@ const HIGHLIGHT_TOKEN = {
   bold: AmityColorToken.TextListTextDescriptionDefaultHighlight,
 } as const;
 
-// Web applies ONE highlight class to both the name and the message body, and
-// .channelItem__highlightBold carries `font-weight: 600` on top of its colour
-// (.channelItem__highlight is colour only) — so the weight has to travel with
-// the colour here too, not just in one of the two call sites.
+// ONE highlight style applies to both the name and the message body, and the
+// bold variant carries `fontWeight: '600'` on top of its colour (the plain one
+// is colour only) — so the weight has to travel with the colour, not be set at
+// only one of the two call sites.
 function highlightTextStyle(
   token: (
     colorToken: (typeof HIGHLIGHT_TOKEN)[keyof typeof HIGHLIGHT_TOKEN]
@@ -73,12 +73,12 @@ export type AmityChatListItemProps = {
   /** Which highlight colour to use for the matched substring. */
   highlightStyle?: keyof typeof HIGHLIGHT_TOKEN;
   /**
-   * Replace the channel's own message preview with this text (web ChannelItem
-   * `messageBodyOverride`). The message-search tab renders the MATCHED message
-   * here, and it is the string `searchQuery` highlights (PDT-5251, PDT-5270).
+   * Replace the channel's own message preview with this text. The message-search
+   * tab renders the MATCHED message here, and it is the string `searchQuery`
+   * highlights.
    */
   messageBodyOverride?: string;
-  /** Replace the row's timestamp (web `timestampOverride`) — the matched message's createdAt. */
+  /** Replace the row's timestamp — the matched message's createdAt. */
   timestampOverride?: string;
 };
 
@@ -327,8 +327,8 @@ function MessagePreview({
     noPreview: useString('amity_chat_message_no_preview'),
   };
 
-  // Web ChannelItem: the override short-circuits every preview branch, and it is
-  // the string the search query highlights.
+  // The override short-circuits every preview branch, and it is the string the
+  // search query highlights.
   if (bodyOverride !== undefined) {
     return (
       <Typography style={styles.preview} numberOfLines={2}>

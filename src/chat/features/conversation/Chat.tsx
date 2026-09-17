@@ -27,7 +27,7 @@ import { useStyles } from './styles';
 export type ChatProps = {
   channelId?: string;
   userDisplayName?: string;
-  /** Scroll to this message once it is loaded (PDT-5252, from message search). */
+  /** Scroll to this message once it is loaded (from message search). */
   jumpToMessageId?: string;
   onBack: () => void;
 };

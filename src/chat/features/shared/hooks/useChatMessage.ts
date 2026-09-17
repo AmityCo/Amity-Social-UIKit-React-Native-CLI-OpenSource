@@ -43,9 +43,9 @@ type UseChatMessageParams = {
   enableMention?: boolean;
   viewerIsMutedInChannel?: boolean;
   /**
-   * Open the thread anchored on this message (PDT-5252, from message search).
-   * Web does the same: the id goes to the collection as `aroundMessageId`, so
-   * the SDK returns the page containing it instead of the newest page.
+   * Open the thread anchored on this message (from message search). The id goes
+   * to the collection as `aroundMessageId`, so the SDK returns the page
+   * containing it instead of the newest page.
    */
   jumpToMessageId?: string;
 };
@@ -86,8 +86,8 @@ export function useChatMessage({
   // True between asking for a newer page and that page landing.
   const pagingPrevRef = useRef(false);
 
-  // Web clears the anchor only when the message turns out to be unreachable, so
-  // the collection falls back to the newest page instead of staying empty.
+  // Cleared only when the message turns out to be unreachable, so the
+  // collection falls back to the newest page instead of staying empty.
   const clearJumpToMessageId = useCallback(
     () => setPendingJumpToMessageId(null),
     []
@@ -106,9 +106,8 @@ export function useChatMessage({
       subChannelId: channelId ?? '',
       limit: 20,
       includeDeleted: true,
-      // Mirrors web's useChatMessage. Held in state rather than read straight
-      // from the prop so the anchored collection survives until the page is
-      // left, the way web's `pendingJumpToMessageId` does.
+      // Held in state rather than read straight from the prop, so the anchored
+      // collection survives until the page is left.
       aroundMessageId: pendingJumpToMessageId ?? undefined,
     },
     !!channelId
@@ -272,7 +271,7 @@ export function useChatMessage({
     prevLatestIdRef.current = currentId;
     if (!currentId || !prevId || currentId === prevId) return;
     if (atBottom) return;
-    // Web has this guard too: an incomplete message is not worth announcing.
+    // An incomplete message is not worth announcing.
     if (latestMessage?.creatorId === undefined) return;
     // Paging NEWER messages in (only possible on a collection anchored by a
     // jump) moves `latestMessage` without anything having arrived, and the
@@ -311,7 +310,7 @@ export function useChatMessage({
     hasMore: hasNextPage,
     loadMore,
     // Non-empty only while the collection is anchored on a jump target: the
-    // messages newer than it sit after the anchored page (web hasPrev/loadPrev).
+    // messages newer than it sit after the anchored page.
     hasPrev: hasPrevPage,
     loadPrev: loadPrevTrackingBanner,
     latestMessage,

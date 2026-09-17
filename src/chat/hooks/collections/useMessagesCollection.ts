@@ -23,8 +23,8 @@ export type UseMessagesCollectionResult = {
   loadMore: () => void;
   /**
    * Only ever true for a collection opened with `aroundMessageId`: the anchored
-   * page has NEWER messages below it, and web pages them in with hasPrev /
-   * loadPrev. A collection opened at the newest page has nothing after it.
+   * page has NEWER messages below it. A collection opened at the newest page has
+   * nothing after it.
    */
   hasPrevPage: boolean;
   loadPrev: () => void;
