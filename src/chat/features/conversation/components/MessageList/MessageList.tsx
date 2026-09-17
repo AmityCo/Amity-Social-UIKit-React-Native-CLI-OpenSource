@@ -5,8 +5,15 @@
 // NewMessageNotification affordances. Older pages load on onEndReached.
 
 // 1. React / RN imports
-import { useCallback, useMemo, useRef } from 'react';
-import { FlatList, View } from 'react-native';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+import { Animated, FlatList, View } from 'react-native';
 
 // 2. Internal imports
 import { MessageRow } from '../MessageRow';
@@ -56,6 +63,12 @@ type MessageListProps = {
   /** Viewer moderates this channel — unlocks Delete on other people's messages. */
   viewerIsModerator?: boolean;
   /**
+   * User ids of this channel's moderators, for the moderator badge on an inbound
+   * sender avatar. `isModerator` is derived per row; useGroupChat already builds
+   * the set.
+   */
+  moderatorIds?: Set<string>;
+  /**
    * The viewer is muted in this channel — trims Edit/Reply/Report out of the
    * message action menu (web GroupChat → MessageList → MessageActionsPopover).
    * PDT-5237 / PDT-5247: the trimming already lived in AmityMessageActionMenu but
@@ -84,9 +97,70 @@ type MessageListProps = {
    * file uri instead of the CDN url.
    */
   onMediaLoaded?: (fileId: string) => void;
+  /**
+   * Scroll to this message once it is in the loaded window, centred. Set when
+   * the thread is opened from a message search result.
+   */
+  jumpToMessageId?: string;
+  /** Called when the jump target turns out to be unreachable, so the anchor is dropped. */
+  onJumpHandled?: () => void;
+  /** True while messages newer than the loaded window exist (anchored collection only). */
+  hasPrev?: boolean;
+  onLoadPrev?: () => void;
 };
 
 const AT_BOTTOM_THRESHOLD = 48;
+
+/** How long the jumped-to row shakes. */
+const BOUNCE_MS = 1000;
+
+/** Delay before re-attempting a scrollToIndex that missed (see onScrollToIndexFailed). */
+const JUMP_RETRY_MS = 250;
+
+/** How many times that re-attempt is allowed before the jump gives up. */
+const JUMP_MAX_RETRIES = 4;
+
+// The jumped-to row is marked with a 1s horizontal shake (translateX 0 → -10 at
+// 40% → 0 at 50% → -5 at 60% → 0), played as an Animated sequence. Transform
+// only, so it runs on the native driver and cannot stutter the list.
+//
+// Wraps EVERY message row, not just the one bouncing. Mounting the wrapper only
+// around the target changes that row's element type when the bounce ends, which
+// remounts the whole subtree and resets the bubble's measuring state — the row
+// drops back to its loading skeleton for a frame.
+function BouncingRow({
+  bouncing,
+  children,
+}: {
+  bouncing: boolean;
+  children: ReactNode;
+}) {
+  const shift = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!bouncing) return undefined;
+    const step = (toValue: number, duration: number) =>
+      Animated.timing(shift, { toValue, duration, useNativeDriver: true });
+    const animation = Animated.sequence([
+      Animated.delay(200),
+      step(-10, 200),
+      step(0, 100),
+      step(-5, 100),
+      step(0, 200),
+    ]);
+    animation.start();
+    return () => {
+      animation.stop();
+      shift.setValue(0);
+    };
+  }, [bouncing, shift]);
+
+  return (
+    <Animated.View style={{ transform: [{ translateX: shift }] }}>
+      {children}
+    </Animated.View>
+  );
+}
 
 /** Web MessageList: pendingPreviewByClientId + pendingPreviewByFileId. A synthetic
  *  message is matched by its client id; once the upload has a fileId the real
@@ -123,10 +197,15 @@ export function MessageList({
   onSeeMore,
   bubbleHandlers,
   viewerIsModerator = false,
+  moderatorIds,
   viewerIsMutedInChannel = false,
   onCancelUpload,
   pendingUploads,
   onMediaLoaded,
+  jumpToMessageId,
+  onJumpHandled,
+  hasPrev,
+  onLoadPrev,
 }: MessageListProps) {
   const { styles } = useStyles();
   const previews = useMemo(
@@ -146,10 +225,141 @@ export function MessageList({
     });
   }, [items]);
 
+  // Jump to a searched message. The collection is already anchored on it
+  // (useChatMessage passes `aroundMessageId`), so the row is in the loaded
+  // window and this only has to scroll to it and flag the bounce. If it is not
+  // there once loading has finished and there is no more history, the message is
+  // unreachable — drop the anchor so the collection falls back to the newest
+  // page. Each id is honoured once.
+  const jumpedToRef = useRef<string | null>(null);
+  const [bouncingMessageId, setBouncingMessageId] = useState<string | null>(
+    null
+  );
+  // Prev-paging stays off until the jump has settled. The anchored list opens at
+  // offset 0 — which in an inverted list is the NEWEST end — so onStartReached
+  // would fire immediately, prepend a page of newer messages and shift every
+  // index out from under the scroll that is still in flight.
+  const [jumpSettled, setJumpSettled] = useState(!jumpToMessageId);
+
+  // scrollToIndex is retried against freshly-found indices, never a captured
+  // one: a page can land between the miss and the retry.
+  const dataRef = useRef(data);
+  dataRef.current = data;
+  const jumpPendingRef = useRef<string | null>(null);
+  const jumpRetryRef = useRef(0);
+
+  // Set when a newer page is asked for, cleared when the collection stops
+  // loading.
+  // FlatList fires onStartReached more than once for a single approach (measured:
+  // twice, 60ms apart), and the state has not flushed by the second call — so the
+  // guard has to be a ref or the newer page is requested twice.
+  const [isLoadingPrev, setIsLoadingPrev] = useState(false);
+  const loadingPrevRef = useRef(false);
+  useEffect(() => {
+    if (!isLoading) {
+      loadingPrevRef.current = false;
+      setIsLoadingPrev(false);
+    }
+  }, [isLoading]);
+
+  const settleJump = useCallback(() => {
+    jumpPendingRef.current = null;
+    jumpRetryRef.current = 0;
+    setJumpSettled(true);
+  }, []);
+
+  const scrollToJumpTarget = useCallback((messageId: string) => {
+    const index = dataRef.current.findIndex(
+      (it) => it.kind === 'message' && it.message.messageId === messageId
+    );
+    if (index < 0) return false;
+    jumpPendingRef.current = messageId;
+    // viewPosition 0.5 centres the row. Not animated: an instant jump is what
+    // the design asks for, and animating it travels the whole way through the
+    // thread instead, which reads as the page flickering.
+    listRef.current?.scrollToIndex({
+      index,
+      viewPosition: 0.5,
+      animated: false,
+    });
+    return true;
+  }, []);
+
+  useEffect(() => {
+    if (!jumpToMessageId || jumpedToRef.current === jumpToMessageId) return;
+    if (data.length === 0) return;
+    if (scrollToJumpTarget(jumpToMessageId)) {
+      jumpedToRef.current = jumpToMessageId;
+      setBouncingMessageId(jumpToMessageId);
+      return;
+    }
+    if (!isLoading && !isLoadingFirstPage && !hasMore) {
+      jumpedToRef.current = jumpToMessageId;
+      settleJump();
+      onJumpHandled?.();
+    }
+  }, [
+    jumpToMessageId,
+    data,
+    isLoading,
+    isLoadingFirstPage,
+    hasMore,
+    onJumpHandled,
+    scrollToJumpTarget,
+    settleJump,
+  ]);
+
+  // The bounce also marks the end of the jump: by the time it has played, the
+  // scroll has either landed or run out of retries, so prev-paging can start.
+  useEffect(() => {
+    if (!bouncingMessageId) return undefined;
+    const timer = setTimeout(() => {
+      setBouncingMessageId(null);
+      settleJump();
+    }, BOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [bouncingMessageId, settleJump]);
+
   const scrollToLatest = useCallback(() => {
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
     onClearNewMessage?.();
   }, [onClearNewMessage]);
+
+  // Force-scroll to the newest row whenever the latest message is the viewer's
+  // OWN, independently of `atBottom`; other people's messages only pull the view
+  // down when it is already at the bottom.
+  //
+  // An inverted FlatList keeps offset 0 pinned when rows are prepended, and that
+  // alone used to be relied on. It does not survive a VIEWPORT resize: opening
+  // the keyboard or growing the composer leaves the list parked away from
+  // offset 0, and the message you just sent then lands below the fold with its
+  // last line cut off by the composer.
+  const latestMessage = useMemo(
+    () =>
+      data.find(
+        (it): it is Extract<ChatItem, { kind: 'message' }> =>
+          it.kind === 'message'
+      )?.message,
+    [data]
+  );
+  const latestMessageId = latestMessage?.messageId;
+  const latestCreatorId = latestMessage?.creatorId;
+  const prevLatestIdRef = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    const prevId = prevLatestIdRef.current;
+    prevLatestIdRef.current = latestMessageId;
+    // Skip the first render: the initial page just starts at the bottom, it
+    // does not animate there.
+    if (!latestMessageId || !prevId || latestMessageId === prevId) return;
+
+    const isOwnMessage = !!currentUserId && latestCreatorId === currentUserId;
+    if (!isOwnMessage && !atBottom) return;
+    listRef.current?.scrollToOffset({
+      offset: 0,
+      animated: !isOwnMessage,
+    });
+  }, [latestMessageId, latestCreatorId, currentUserId, atBottom]);
 
   const handleScroll = useCallback(
     (e: { nativeEvent: { contentOffset: { y: number } } }) => {
@@ -164,11 +374,13 @@ export function MessageList({
   // while paginating older messages, suppressed during the first-page load (which the
   // parent covers with a skeleton). In an inverted FlatList the visual top — the
   // older-messages / onEndReached side — is the ListFooterComponent, so the spinner
-  // lives there. Web's second (bottom / loadPrev) loader maps to jump-to-message,
-  // which is out of scope for this port (see useChatMessage), so it is omitted.
+  // lives there. The second loader — the newer-messages side, reached only from
+  // a jump — is the ListHeaderComponent for the same reason, gated on
+  // `isLoadingPrev && !isLoadingFirstPage`.
   const showTopLoader = !!isLoading && !isLoadingFirstPage;
+  const showBottomLoader = isLoadingPrev && !isLoadingFirstPage;
 
-  // Match web's mutually-exclusive affordances: the new-message banner shows only
+  // The two affordances are mutually exclusive: the new-message banner shows only
   // when a genuinely new message arrived while scrolled away (`newMessage` is gated
   // upstream in useChatMessage); the scroll-to-latest button shows otherwise. This
   // keeps the banner from co-appearing with the button (web: showScrollButton =
@@ -185,8 +397,27 @@ export function MessageList({
         contentContainerStyle={styles.content}
         data={data}
         inverted
+        // Only ever set for a list opened on a jump target, because only an
+        // anchored collection pages NEWER messages in — and those land at index
+        // 0, which in an inverted list is the end the viewer is looking at. Left
+        // to itself the list keeps its offset, so the content jumps by a page's
+        // height and lands back near the start, which fires onStartReached again
+        // and walks the whole way to the newest message. Not enabled for normal
+        // threads: there it would stop an incoming message from pushing itself
+        // into view at the bottom.
+        maintainVisibleContentPosition={
+          jumpToMessageId ? { minIndexForVisible: 1 } : undefined
+        }
         ListFooterComponent={
           showTopLoader ? (
+            <View style={styles.topLoader}>
+              <Loader.Spinner size="sm" />
+            </View>
+          ) : null
+        }
+        ListHeaderComponent={
+          showBottomLoader ? (
+            // Same geometry as the top one.
             <View style={styles.topLoader}>
               <Loader.Spinner size="sm" />
             </View>
@@ -197,6 +428,10 @@ export function MessageList({
           if (item.kind === 'date') return <DateSeparator label={item.label} />;
           const { message } = item;
           const isUser = !!currentUserId && message.creatorId === currentUserId;
+          // Inbound rows in a group channel only: `!isUserMsg && isGroupChat
+          // && moderatorIds?.has(creatorId)`.
+          const isSenderModerator =
+            !isUser && !!isGroupChat && !!moderatorIds?.has(message.creatorId);
           const messageFileId =
             (message.data as { fileId?: string } | undefined)?.fileId ??
             (message as unknown as { fileId?: string }).fileId;
@@ -213,7 +448,7 @@ export function MessageList({
             onCancelUpload && isSyntheticPendingMessage(message)
               ? () => onCancelUpload(message.__syntheticClientId)
               : undefined;
-          return (
+          const row = (
             <MessageRow
               message={message}
               localPreviewUrl={localPreviewUrl}
@@ -229,15 +464,59 @@ export function MessageList({
               onSeeMore={onSeeMore}
               bubbleHandlers={bubbleHandlers}
               viewerIsModerator={viewerIsModerator}
+              isSenderModerator={isSenderModerator}
               viewerIsMutedInChannel={viewerIsMutedInChannel}
               onCancelUpload={cancelUpload}
             />
           );
+          return (
+            <BouncingRow bouncing={message.messageId === bouncingMessageId}>
+              {row}
+            </BouncingRow>
+          );
         }}
         onScroll={handleScroll}
         scrollEventThrottle={16}
+        // Rows are variable height, so scrollToIndex can miss on the first try
+        // (an off-screen row has no measured layout yet). Nudge the list to the
+        // estimated offset, then retry once the rows around it have laid out —
+        // the effect above will not fire again on its own, since nothing in its
+        // deps changed.
+        // Rows are variable height, so scrollToIndex can miss on the first try
+        // (an off-screen row has no measured layout yet). Nudge the list to the
+        // estimated offset, then retry — re-finding the index rather than
+        // reusing the one that missed, since a page may have landed meanwhile.
+        onScrollToIndexFailed={({ averageItemLength, index }) => {
+          listRef.current?.scrollToOffset({
+            offset: averageItemLength * index,
+            animated: false,
+          });
+          const messageId = jumpPendingRef.current;
+          if (!messageId || jumpRetryRef.current >= JUMP_MAX_RETRIES) {
+            settleJump();
+            return;
+          }
+          jumpRetryRef.current += 1;
+          setTimeout(() => {
+            if (jumpPendingRef.current !== messageId) return;
+            if (!scrollToJumpTarget(messageId)) settleJump();
+          }, JUMP_RETRY_MS);
+        }}
         onEndReached={hasMore ? onLoadMore : undefined}
         onEndReachedThreshold={0.5}
+        // Inverted, so the list's START is the newest end. Only ever fires for a
+        // collection anchored on a jump target.
+        onStartReached={
+          jumpSettled && hasPrev
+            ? () => {
+                if (loadingPrevRef.current) return;
+                loadingPrevRef.current = true;
+                setIsLoadingPrev(true);
+                onLoadPrev?.();
+              }
+            : undefined
+        }
+        onStartReachedThreshold={0.1}
       />
 
       {showNotification && newMessage ? (
