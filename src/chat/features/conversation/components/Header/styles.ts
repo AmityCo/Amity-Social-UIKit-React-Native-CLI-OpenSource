@@ -35,6 +35,11 @@ export const useStyles = () => {
       flexDirection: 'column',
       alignItems: 'flex-start',
     },
+    nameRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
     name: {
       fontSize: 15,
       lineHeight: 20,

@@ -68,7 +68,7 @@ export type Mentioned = {
 };
 export type Mentionees = (Amity.UserMention | Amity.ChannelMention)[];
 
-export type FailureReason = 'moderation' | 'generic';
+export type FailureReason = 'moderation' | 'generic' | 'cancelled';
 
 export type PendingUpload = {
   clientId: string;
@@ -631,7 +631,12 @@ export function useMessageComposer({
     setPendingUploads((prev) =>
       prev.map((p) =>
         p.clientId === clientId
-          ? { ...p, status: 'failed', failureReason: 'generic' }
+          ? // 'cancelled', not 'generic' — web marks the same thing
+            // (useMessageComposer.handleCancelUpload) and its bubbles read the
+            // reason to keep the "failed to send" caption OFF a upload the user
+            // stopped on purpose. Marking it generic made a cancel look like a
+            // failure.
+            { ...p, status: 'failed', failureReason: 'cancelled' }
           : p
       )
     );
