@@ -182,7 +182,7 @@ export function AmityGroupMemberActionComponent({
     await UserRepository.unflagUser(userId);
     setIsFlaggedByMe(false);
     success({
-      content: resolveString('amity_chat_action_unreport_user_success'),
+      content: resolveString('amity_chat_group_member_list_toast_unreported'),
     });
   }
 
@@ -334,7 +334,6 @@ export function AmityGroupMemberActionComponent({
                 icon={item.icon}
                 label={item.label}
                 destructive={item.destructive}
-                typography="body"
                 onPress={() => {
                   closeBottomSheet();
                   item.onPress();
