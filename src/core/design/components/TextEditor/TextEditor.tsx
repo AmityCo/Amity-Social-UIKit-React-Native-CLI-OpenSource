@@ -23,7 +23,6 @@ import {
   TextInput,
   View,
   type NativeSyntheticEvent,
-  type TextInputContentSizeChangeEventData,
   type TextInputSelectionChangeEventData,
 } from 'react-native';
 
@@ -63,6 +62,12 @@ export type TextEditorProps = {
   autoFocus?: boolean;
   maxHeight?: number;
   /**
+   * Cap the input at N lines before it scrolls internally. Takes precedence
+   * over `maxHeight`, which it derives (N lines + the wrapper's vertical
+   * padding).
+   */
+  maxLines?: number;
+  /**
    * Fires whenever the active `@query` at the caret changes. `null` means the
    * caret is not inside a mention token — the consumer should hide the overlay.
    */
@@ -84,6 +89,7 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
       editable = true,
       autoFocus = false,
       maxHeight = 120,
+      maxLines,
       onMentionQueryChange,
       mentionOverlay,
       style,
@@ -105,27 +111,29 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
       { start: number; end: number } | undefined
     >(undefined);
 
-    // Auto-grow: the input height tracks its content height
-    // (onContentSizeChange), clamped so the boxed wrapper grows from a single
-    // line up to `maxHeight`, then the input scrolls internally — matching web's
-    // composer inputWrapper (min-height 2.5rem → max-height 7.5rem). LINE_HEIGHT
-    // and WRAPPER_VERTICAL_PADDING mirror styles.ts (lineHeight 20 / paddingVertical 10).
+    // Auto-grow: the input sizes itself to its content between one line and
+    // `maxLines`, then scrolls internally. LINE_HEIGHT and
+    // WRAPPER_VERTICAL_PADDING mirror styles.ts (lineHeight 20 /
+    // paddingVertical 10).
+    //
+    // The bounds are handed to the TextInput as minHeight/maxHeight rather than
+    // measured here and written back as an explicit `height`. On iOS that
+    // write-back is self-locking: the height we set becomes the content size
+    // iOS reports, so onContentSizeChange fires once at mount with one line and
+    // never again, and the composer can never grow past its first line. Letting
+    // the native input measure itself also means there is no stored measurement
+    // to go stale when `value` is cleared programmatically after a send — the
+    // height follows the text on both platforms.
     const LINE_HEIGHT = 20;
     const WRAPPER_VERTICAL_PADDING = 10;
+    // When `maxLines` is given it decides the wrapper height, so callers state
+    // the line budget rather than back-computing pixels.
+    const resolvedMaxHeight =
+      maxLines != null
+        ? maxLines * LINE_HEIGHT + WRAPPER_VERTICAL_PADDING * 2
+        : maxHeight;
     const minInputHeight = LINE_HEIGHT;
-    const maxInputHeight = maxHeight - WRAPPER_VERTICAL_PADDING * 2;
-    const [contentHeight, setContentHeight] = useState(minInputHeight);
-    const inputHeight = Math.min(
-      Math.max(contentHeight, minInputHeight),
-      maxInputHeight
-    );
-
-    const handleContentSizeChange = useCallback(
-      (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
-        setContentHeight(e.nativeEvent.contentSize.height);
-      },
-      []
-    );
+    const maxInputHeight = resolvedMaxHeight - WRAPPER_VERTICAL_PADDING * 2;
 
     const emitQuery = useCallback(
       (text: string, caret: number) => {
@@ -236,14 +244,16 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
     const formatted = renderFormattedValue();
 
     return (
-      <View style={[styles.wrapper, { maxHeight }, style]}>
+      <View style={[styles.wrapper, { maxHeight: resolvedMaxHeight }, style]}>
         {mentionOverlay}
         <TextInput
           ref={inputRef}
-          style={[styles.input, { height: inputHeight }]}
+          style={[
+            styles.input,
+            { minHeight: minInputHeight, maxHeight: maxInputHeight },
+          ]}
           {...(formatted === undefined ? { value } : null)}
           onChangeText={handleChangeText}
-          onContentSizeChange={handleContentSizeChange}
           onSelectionChange={handleSelectionChange}
           selection={selection}
           placeholder={placeholder}

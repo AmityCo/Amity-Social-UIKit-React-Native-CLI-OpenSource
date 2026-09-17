@@ -82,12 +82,19 @@ export const useStyles = () => {
     // Container: surface-popover-background, radius 0.75rem→12, max-height 7rem→112,
     // elevation shadow (web box-shadow via elevation-08 tokens; RN has no elevation
     // tokens, approximated with an rgb() shadow). Web uses a shadow, NOT a border.
-    mentionOverlay: {
-      marginHorizontal: 8,
+    // The box the close button anchors to. Figma gives it horizontal padding
+    // only (0 8), so the button can overhang the panel's top edge.
+    mentionContainer: {
+      position: 'relative',
+      paddingHorizontal: 8,
       marginBottom: 8,
-      maxHeight: 112,
+    },
+    mentionOverlay: {
+      paddingVertical: 8,
       borderRadius: 12,
-      overflow: 'hidden',
+      // No `overflow: 'hidden'` here. On iOS that sets clipsToBounds, which
+      // clips the view's own shadow away. The 8px vertical padding already keeps
+      // the rows clear of the rounded corners, so there is nothing to clip.
       backgroundColor: token(AmityColorToken.SurfacePopoverBackgroundDefault),
       shadowColor: 'rgb(40, 41, 61)',
       shadowOffset: { width: 0, height: 4 },
@@ -95,9 +102,10 @@ export const useStyles = () => {
       shadowRadius: 12,
       elevation: 8,
     },
-    // web bottom-mode .mentionList: padding 0.25rem 0 → 4 vertical.
+    // Figma: the popover is 112 tall including its 8/8 padding, so the scrolling
+    // slot inside it is 96.
     mentionList: {
-      paddingVertical: 4,
+      maxHeight: 96,
     },
     // web UserMentionItem__item: grid [2rem avatar | auto], gap 0.75rem→12,
     // padding 0.75rem→12, bg surface-popover-lists-default.
@@ -149,9 +157,12 @@ export const useStyles = () => {
     },
     // web mentionContainer__closeButton (bottom mode): top 0 / right 0.25rem→4,
     // 1.5rem→24 circle, padding 0.25rem→4, surface-iconbutton-filled-secondary.
+    // Figma: 24 round chip at dx 339 / dy -8 against a 359-wide panel — 8 above
+    // the panel's top edge and 4 past its right edge, so it reads as sitting on
+    // the rim rather than inside the list.
     mentionCloseButton: {
       position: 'absolute',
-      top: 4,
+      top: -8,
       right: 4,
       width: 24,
       height: 24,

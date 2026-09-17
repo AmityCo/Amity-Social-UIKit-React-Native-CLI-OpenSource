@@ -28,6 +28,7 @@ import { AmityIcon } from '../../../core/design/icons';
 import { AmityColorToken } from '../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../core/localization';
 import useFile from '../../../core/hooks/useFile';
+import { useUser } from '../../../core/hooks/objects/useUser';
 import { Avatar } from '../../elements/Avatar';
 import { BrandBadge } from '../../../core/design/elements/BrandBadge';
 import { ConversationChatAvatar } from '../../elements/ConversationChatAvatar';
@@ -125,7 +126,16 @@ export function AmityChatListItem({
   const otherMember = isConversation
     ? channel.previewMembers?.find((m) => m.userId !== currentUserId)
     : undefined;
-  const otherUser = otherMember?.user as DeletableUser;
+  // `previewMembers[].user` is the snapshot the channel payload was cached with,
+  // so a user soft-deleted afterwards still reads as active there and the row
+  // kept their original display name. Prefer the live user object; fall back to
+  // the embedded copy until it resolves, and only subscribe for conversation
+  // rows (a group row has no counterpart).
+  const { user: liveOtherUser } = useUser({
+    userId: otherMember?.userId ?? '',
+    enabled: isConversation,
+  });
+  const otherUser = (liveOtherUser ?? otherMember?.user) as DeletableUser;
   const isUserDeleted = Boolean(otherUser?.isDeleted);
   const isModerator = hasModeratorRole(otherMember?.roles);
 
@@ -417,12 +427,20 @@ function MessagePreview({
   );
 }
 
+// PDT-5164: the design draws this badge as a 20x20 filled `Chat/Mention`
+// circle with an `at-r` glyph at 16x16, inset 2px on every side (Figma chat
+// list `12041:242261`, and the AmityChatListItem SoT's icon table lists the
+// mention glyph as `at-r` @ 16). RN was drawing `at-s` at the full chip size,
+// so the glyph's outer arc reached the chip edge: the light-blue surface was
+// invisible and the `@` read as a blue ring around white, which is what QA
+// reported. The 2px inset is what makes it read as a filled circle.
 function MentionBadge() {
   return (
     <Badge.Icon
-      icon="at-s"
+      icon="at-r"
       preset={{ family: 'chat', case: 'mention' }}
       size={20}
+      glyphSize={16}
     />
   );
 }
@@ -442,8 +460,10 @@ function UnreadBadge({ count }: { count: number }) {
 
 // Skeleton row (surface-list-skeleton background): an avatar circle (2.5rem = 40)
 // plus TWO stacked pill lines mirroring the real row's name + message-preview
-// lines (per QA — the web build the team QAs against shows two lines). Lines are
-// 10px tall pills; name ~140 wide, preview ~100 wide.
+// lines. The design's loading row (Figma `12041:242258`) is a 64-high row with
+// the SHORT 140x10 pill on top and the LONG 200x10 pill below it, gap 12. The
+// order matters: with the long pill first the lines taper, and the second reads
+// as a stray fragment of the first. Both pills keep radius 12.
 function AmityChatListItemSkeleton() {
   const { styles } = useStyles();
   return (
@@ -451,7 +471,7 @@ function AmityChatListItemSkeleton() {
       <Skeleton circle width={40} height={40} />
       <View style={styles.skeletonLines}>
         <Skeleton width={140} height={10} borderRadius={12} />
-        <Skeleton width={100} height={10} borderRadius={12} />
+        <Skeleton width={200} height={10} borderRadius={12} />
       </View>
     </View>
   );

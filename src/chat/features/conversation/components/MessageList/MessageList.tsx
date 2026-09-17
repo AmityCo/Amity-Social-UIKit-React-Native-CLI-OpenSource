@@ -63,6 +63,12 @@ type MessageListProps = {
   /** Viewer moderates this channel — unlocks Delete on other people's messages. */
   viewerIsModerator?: boolean;
   /**
+   * User ids of this channel's moderators, for the moderator badge on an inbound
+   * sender avatar. `isModerator` is derived per row; useGroupChat already builds
+   * the set.
+   */
+  moderatorIds?: Set<string>;
+  /**
    * The viewer is muted in this channel — trims Edit/Reply/Report out of the
    * message action menu (web GroupChat → MessageList → MessageActionsPopover).
    * PDT-5237 / PDT-5247: the trimming already lived in AmityMessageActionMenu but
@@ -191,6 +197,7 @@ export function MessageList({
   onSeeMore,
   bubbleHandlers,
   viewerIsModerator = false,
+  moderatorIds,
   viewerIsMutedInChannel = false,
   onCancelUpload,
   pendingUploads,
@@ -318,6 +325,42 @@ export function MessageList({
     onClearNewMessage?.();
   }, [onClearNewMessage]);
 
+  // Force-scroll to the newest row whenever the latest message is the viewer's
+  // OWN, independently of `atBottom`; other people's messages only pull the view
+  // down when it is already at the bottom.
+  //
+  // An inverted FlatList keeps offset 0 pinned when rows are prepended, and that
+  // alone used to be relied on. It does not survive a VIEWPORT resize: opening
+  // the keyboard or growing the composer leaves the list parked away from
+  // offset 0, and the message you just sent then lands below the fold with its
+  // last line cut off by the composer.
+  const latestMessage = useMemo(
+    () =>
+      data.find(
+        (it): it is Extract<ChatItem, { kind: 'message' }> =>
+          it.kind === 'message'
+      )?.message,
+    [data]
+  );
+  const latestMessageId = latestMessage?.messageId;
+  const latestCreatorId = latestMessage?.creatorId;
+  const prevLatestIdRef = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    const prevId = prevLatestIdRef.current;
+    prevLatestIdRef.current = latestMessageId;
+    // Skip the first render: the initial page just starts at the bottom, it
+    // does not animate there.
+    if (!latestMessageId || !prevId || latestMessageId === prevId) return;
+
+    const isOwnMessage = !!currentUserId && latestCreatorId === currentUserId;
+    if (!isOwnMessage && !atBottom) return;
+    listRef.current?.scrollToOffset({
+      offset: 0,
+      animated: !isOwnMessage,
+    });
+  }, [latestMessageId, latestCreatorId, currentUserId, atBottom]);
+
   const handleScroll = useCallback(
     (e: { nativeEvent: { contentOffset: { y: number } } }) => {
       // Inverted list: offset near 0 == pinned to the newest (bottom) message.
@@ -385,6 +428,10 @@ export function MessageList({
           if (item.kind === 'date') return <DateSeparator label={item.label} />;
           const { message } = item;
           const isUser = !!currentUserId && message.creatorId === currentUserId;
+          // Inbound rows in a group channel only: `!isUserMsg && isGroupChat
+          // && moderatorIds?.has(creatorId)`.
+          const isSenderModerator =
+            !isUser && !!isGroupChat && !!moderatorIds?.has(message.creatorId);
           const messageFileId =
             (message.data as { fileId?: string } | undefined)?.fileId ??
             (message as unknown as { fileId?: string }).fileId;
@@ -417,6 +464,7 @@ export function MessageList({
               onSeeMore={onSeeMore}
               bubbleHandlers={bubbleHandlers}
               viewerIsModerator={viewerIsModerator}
+              isSenderModerator={isSenderModerator}
               viewerIsMutedInChannel={viewerIsMutedInChannel}
               onCancelUpload={cancelUpload}
             />

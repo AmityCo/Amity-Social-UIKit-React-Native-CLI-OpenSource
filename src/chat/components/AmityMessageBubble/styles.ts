@@ -55,6 +55,11 @@ const TEXT_LEADING_EXCESS =
 const TEXT_PADDING_TOP = 10 - Math.round(TEXT_LEADING_EXCESS / 2);
 const TEXT_PADDING_BOTTOM = 10 + Math.round(TEXT_LEADING_EXCESS / 2);
 
+// The text block's total vertical padding. Exported because AmityMessageBubble
+// has to add it back when it turns a measured text height into a minHeight for
+// the Text (see the iOS last-line note there).
+export const TEXT_VERTICAL_PADDING = TEXT_PADDING_TOP + TEXT_PADDING_BOTTOM;
+
 export const useStyles = (isUser = false) => {
   const token = useToken();
 
@@ -192,17 +197,23 @@ export const useStyles = (isUser = false) => {
     // gets clipped (Android). These MUST track TEXT_FONT_SIZE/TEXT_LINE_HEIGHT
     // — a mismatch reintroduces the vertical offset above on any line that
     // mixes plain text with a mention.
+    // Outbound mention and outbound body text resolve to the SAME token
+    // (#FFFFFF), so on your own bubble the weight is the only thing separating a
+    // mention from plain text, and 500 against 400 is not legible on Android —
+    // QA read it as "no highlight in mention". 600 is the smallest step that
+    // reads. Inbound is colour-differentiated and keeps the same weight for
+    // consistency. Revisit if Design gives outbound its own mention colour.
     mentionOwn: {
       fontSize: TEXT_FONT_SIZE,
       lineHeight: TEXT_LINE_HEIGHT,
-      fontWeight: '500',
+      fontWeight: '600',
       includeFontPadding: false,
       color: token(AmityColorToken.TextChatBubbleOutboundMentionedDefault),
     },
     mentionOther: {
       fontSize: TEXT_FONT_SIZE,
       lineHeight: TEXT_LINE_HEIGHT,
-      fontWeight: '500',
+      fontWeight: '600',
       includeFontPadding: false,
       color: token(AmityColorToken.TextChatBubbleInboundMentionedDefault),
     },

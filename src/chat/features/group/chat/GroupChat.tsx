@@ -112,6 +112,8 @@ export function GroupChat({
           // PDT-4155 (web PR 1818): only group channels have moderators, so web
           // threads isModerator from useGroupChat and the 1:1 Chat does not.
           viewerIsModerator={c.isModerator}
+          // Badges the moderator's avatar on their inbound messages.
+          moderatorIds={c.moderatorIds}
           viewerIsMutedInChannel={c.viewerIsMutedInChannel}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
