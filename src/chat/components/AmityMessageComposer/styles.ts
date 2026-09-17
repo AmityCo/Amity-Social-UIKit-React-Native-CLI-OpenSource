@@ -54,22 +54,26 @@ export const useStyles = () => {
       ),
     },
     // --- Edit panel ----------------------------------------------------------
+    // Row, align center, space between, gap 12, padding 12/12/12/16, on
+    // surface-list-default-hover. No border: the grey band itself is what
+    // separates the panel from the input row.
     editPanel: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-      borderBottomWidth: 1,
-      borderBottomColor: token(AmityColorToken.LineDividerPostDefault),
+      gap: 12,
+      paddingTop: 12,
+      paddingBottom: 12,
+      paddingRight: 12,
+      paddingLeft: 16,
+      backgroundColor: token(AmityColorToken.SurfaceListDefaultHover),
     },
-    editPanelInfo: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
-    },
+    // Flex 1 0 0 with min-width 0 so a long title truncates instead of
+    // pushing the close button out.
     editPanelLabel: {
-      color: token(AmityColorToken.TextBaseSubdue),
+      flex: 1,
+      minWidth: 0,
+      color: token(AmityColorToken.TextListOverlineDefaultDefault),
     },
     editPanelClose: {
       width: 24,

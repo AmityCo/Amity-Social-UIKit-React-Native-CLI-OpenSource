@@ -231,17 +231,15 @@ export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
       ) : null}
       <View style={styles.container}>
         {isEditing ? (
+          // A two-child row: the CaptionBold title (flex 1) and the close
+          // button, on a surface-list-default-hover band. The design has no
+          // leading glyph and no divider here, so the earlier `pen-r` icon and
+          // its info wrapper are gone and the band carries the hover surface
+          // rather than the composer's own.
           <View style={styles.editPanel}>
-            <View style={styles.editPanelInfo}>
-              <AmityIcon
-                name="pen-r"
-                size={20}
-                tokenColor={AmityColorToken.TextBaseSubdue}
-              />
-              <Typography variant="captionBold" style={styles.editPanelLabel}>
-                {editingLabel}
-              </Typography>
-            </View>
+            <Typography variant="captionBold" style={styles.editPanelLabel}>
+              {editingLabel}
+            </Typography>
             <Pressable
               style={styles.editPanelClose}
               onPress={cancelEdit}
@@ -251,7 +249,7 @@ export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
               <AmityIcon
                 name="cross-r"
                 size={20}
-                tokenColor={AmityColorToken.TextBaseSubdue}
+                tokenColor={AmityColorToken.IconIconButtonGhostSecondaryDefault}
               />
             </Pressable>
           </View>
