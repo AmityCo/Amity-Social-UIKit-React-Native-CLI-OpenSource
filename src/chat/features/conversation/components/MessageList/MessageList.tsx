@@ -56,6 +56,12 @@ type MessageListProps = {
   /** Viewer moderates this channel — unlocks Delete on other people's messages. */
   viewerIsModerator?: boolean;
   /**
+   * User ids of this channel's moderators, for the moderator badge on an inbound
+   * sender avatar. `isModerator` is derived per row; useGroupChat already builds
+   * the set.
+   */
+  moderatorIds?: Set<string>;
+  /**
    * The viewer is muted in this channel — trims Edit/Reply/Report out of the
    * message action menu (web GroupChat → MessageList → MessageActionsPopover).
    * PDT-5237 / PDT-5247: the trimming already lived in AmityMessageActionMenu but
@@ -123,6 +129,7 @@ export function MessageList({
   onSeeMore,
   bubbleHandlers,
   viewerIsModerator = false,
+  moderatorIds,
   viewerIsMutedInChannel = false,
   onCancelUpload,
   pendingUploads,
@@ -197,6 +204,10 @@ export function MessageList({
           if (item.kind === 'date') return <DateSeparator label={item.label} />;
           const { message } = item;
           const isUser = !!currentUserId && message.creatorId === currentUserId;
+          // Inbound rows in a group channel only: `!isUserMsg && isGroupChat
+          // && moderatorIds?.has(creatorId)`.
+          const isSenderModerator =
+            !isUser && !!isGroupChat && !!moderatorIds?.has(message.creatorId);
           const messageFileId =
             (message.data as { fileId?: string } | undefined)?.fileId ??
             (message as unknown as { fileId?: string }).fileId;
@@ -229,6 +240,7 @@ export function MessageList({
               onSeeMore={onSeeMore}
               bubbleHandlers={bubbleHandlers}
               viewerIsModerator={viewerIsModerator}
+              isSenderModerator={isSenderModerator}
               viewerIsMutedInChannel={viewerIsMutedInChannel}
               onCancelUpload={cancelUpload}
             />

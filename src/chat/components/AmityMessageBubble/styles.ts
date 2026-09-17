@@ -192,17 +192,23 @@ export const useStyles = (isUser = false) => {
     // gets clipped (Android). These MUST track TEXT_FONT_SIZE/TEXT_LINE_HEIGHT
     // — a mismatch reintroduces the vertical offset above on any line that
     // mixes plain text with a mention.
+    // Outbound mention and outbound body text resolve to the SAME token
+    // (#FFFFFF), so on your own bubble the weight is the only thing separating a
+    // mention from plain text, and 500 against 400 is not legible on Android —
+    // QA read it as "no highlight in mention". 600 is the smallest step that
+    // reads. Inbound is colour-differentiated and keeps the same weight for
+    // consistency. Revisit if Design gives outbound its own mention colour.
     mentionOwn: {
       fontSize: TEXT_FONT_SIZE,
       lineHeight: TEXT_LINE_HEIGHT,
-      fontWeight: '500',
+      fontWeight: '600',
       includeFontPadding: false,
       color: token(AmityColorToken.TextChatBubbleOutboundMentionedDefault),
     },
     mentionOther: {
       fontSize: TEXT_FONT_SIZE,
       lineHeight: TEXT_LINE_HEIGHT,
-      fontWeight: '500',
+      fontWeight: '600',
       includeFontPadding: false,
       color: token(AmityColorToken.TextChatBubbleInboundMentionedDefault),
     },

@@ -110,6 +110,7 @@ function User({
       imageUrl={avatarUrl}
       initials={initial}
       indicator={isModerator ? <ModeratorBadge /> : undefined}
+      indicatorStyle={styles.userModeratorBadge}
       onPress={onPress}
     />
   );
