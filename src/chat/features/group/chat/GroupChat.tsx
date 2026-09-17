@@ -22,16 +22,19 @@ import { useStyles } from './styles';
 export type GroupChatProps = {
   channelId?: string;
   isJustCreated?: boolean;
+  /** Scroll to this message once it is loaded (from message search). */
+  jumpToMessageId?: string;
   onBack: () => void;
 };
 
 export function GroupChat({
   channelId,
   isJustCreated,
+  jumpToMessageId,
   onBack,
 }: GroupChatProps) {
   const { styles } = useStyles();
-  const c = useGroupChat({ channelId, isJustCreated });
+  const c = useGroupChat({ channelId, isJustCreated, jumpToMessageId });
   // Reactor-list sheet — RN MOBILE ADAPTATION: push the reactor list into the
   // repo's global @devvie bottom sheet so it slides up as a sheet with a backdrop
   // + drag/tap-to-close (BUG #15).
@@ -101,6 +104,10 @@ export function GroupChat({
           onSeeMore={c.openSeeMore}
           pendingUploads={c.composer.pendingUploads}
           onMediaLoaded={c.composer.handleMediaLoaded}
+          jumpToMessageId={c.jumpToMessageId}
+          onJumpHandled={c.clearJumpToMessageId}
+          hasPrev={c.hasPrev}
+          onLoadPrev={c.loadPrev}
           onCancelUpload={c.composer.handleCancelUpload}
           // PDT-4155 (web PR 1818): only group channels have moderators, so web
           // threads isModerator from useGroupChat and the 1:1 Chat does not.

@@ -28,6 +28,7 @@ export default function AmityGroupChatPage() {
           <GroupChat
             channelId={params.channelId}
             isJustCreated={params.isJustCreated}
+            jumpToMessageId={params.jumpToMessageId}
             onBack={() => navigation.goBack()}
           />
         </ChatKeyboardAvoidingView>
