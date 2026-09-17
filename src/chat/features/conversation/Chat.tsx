@@ -108,6 +108,8 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           onSeeMore={c.openSeeMore}
           pendingUploads={c.composer.pendingUploads}
           onMediaLoaded={c.composer.handleMediaLoaded}
+          onCancelUpload={c.composer.handleCancelUpload}
+          viewerIsMutedInChannel={c.viewerIsMutedInChannel}
           bubbleHandlers={{
             onEdit: c.handleBubbleEdit,
             onReply: c.handleBubbleReply,
