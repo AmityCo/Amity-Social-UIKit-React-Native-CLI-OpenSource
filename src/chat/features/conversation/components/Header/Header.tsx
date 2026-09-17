@@ -10,6 +10,7 @@ import { Text, View } from 'react-native';
 
 // 2. Internal imports
 import { Avatar } from '../../../../../core/design/atoms/Avatar';
+import { BrandBadge } from '../../../../../core/design/elements/BrandBadge';
 import { Button } from '../../../../../core/design/atoms/Button';
 import { Typography } from '../../../../../core/design/components/Typography';
 import { Loader } from '../../../../../core/design/atoms/Loader';
@@ -22,13 +23,24 @@ type HeaderProps = {
   title: string;
   /** Receiver's avatar URL (1-1 conversation). Falls back to initials when absent. */
   avatarUrl?: string;
+  /**
+   * Show the brand badge beside the name. AHEAD OF WEB and of the design SoT:
+   * neither puts a brand badge in the conversation header — asked for by QA.
+   */
+  isBrand?: boolean;
   onBack: () => void;
   /** Right-aligned slot (e.g. the conversation user-action menu). */
   trailing?: ReactNode;
 };
 
 // 4. Named function component
-export function Header({ title, avatarUrl, onBack, trailing }: HeaderProps) {
+export function Header({
+  title,
+  avatarUrl,
+  isBrand,
+  onBack,
+  trailing,
+}: HeaderProps) {
   const { styles } = useStyles();
   const { online } = useNetworkOnline();
   const waitingForNetwork = useString('amity_chat_waiting_for_network');
@@ -54,9 +66,12 @@ export function Header({ title, avatarUrl, onBack, trailing }: HeaderProps) {
           initials={initials}
         />
         <View style={styles.title}>
-          <Text style={styles.name} numberOfLines={1}>
-            {title}
-          </Text>
+          <View style={styles.nameRow}>
+            <Text style={styles.name} numberOfLines={1}>
+              {title}
+            </Text>
+            {isBrand ? <BrandBadge accessibilityLabel="Brand" /> : null}
+          </View>
           {!online ? (
             <View style={styles.subtitle}>
               <Loader.Spinner size="sm" />
