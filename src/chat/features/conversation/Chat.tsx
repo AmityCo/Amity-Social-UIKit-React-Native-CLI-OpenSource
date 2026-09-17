@@ -29,13 +29,20 @@ import { useStyles } from './styles';
 export type ChatProps = {
   channelId?: string;
   userDisplayName?: string;
+  /** Scroll to this message once it is loaded (from message search). */
+  jumpToMessageId?: string;
   onBack: () => void;
 };
 
 // 4. Named function component
-export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
+export function Chat({
+  channelId,
+  userDisplayName,
+  jumpToMessageId,
+  onBack,
+}: ChatProps) {
   const { styles } = useStyles();
-  const c = useConversation(channelId);
+  const c = useConversation(channelId, jumpToMessageId);
 
   // Receiver avatar for the header (1-1 conversation), resolved from the other
   // participant's avatarFileId — the same source AmityChatListItem uses for the
@@ -110,6 +117,10 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
           onSeeMore={c.openSeeMore}
           pendingUploads={c.composer.pendingUploads}
           onMediaLoaded={c.composer.handleMediaLoaded}
+          jumpToMessageId={c.jumpToMessageId}
+          onJumpHandled={c.clearJumpToMessageId}
+          hasPrev={c.hasPrev}
+          onLoadPrev={c.loadPrev}
           onCancelUpload={c.composer.handleCancelUpload}
           viewerIsMutedInChannel={c.viewerIsMutedInChannel}
           bubbleHandlers={{

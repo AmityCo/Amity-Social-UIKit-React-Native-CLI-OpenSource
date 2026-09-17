@@ -18,7 +18,7 @@ import { RootStackParamList } from '../../../core/routes/RouteParamList';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { getFileUrlWithSize } from '../../utils';
-import { useUser } from '../../hooks/objects/user/useUser';
+import { useUser } from '../../../core/hooks/objects/useUser';
 import { FileRepository } from '@amityco/ts-sdk-react-native';
 
 type AvatarProps = {

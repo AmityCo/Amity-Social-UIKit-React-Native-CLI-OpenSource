@@ -42,6 +42,12 @@ type UseChatMessageParams = {
   isJustCreated?: boolean;
   enableMention?: boolean;
   viewerIsMutedInChannel?: boolean;
+  /**
+   * Open the thread anchored on this message (from message search). The id goes
+   * to the collection as `aroundMessageId`, so the SDK returns the page
+   * containing it instead of the newest page.
+   */
+  jumpToMessageId?: string;
 };
 
 export function useChatMessage({
@@ -49,6 +55,7 @@ export function useChatMessage({
   isJustCreated,
   enableMention = false,
   viewerIsMutedInChannel = false,
+  jumpToMessageId,
 }: UseChatMessageParams) {
   const { pop } = useChatNavigation();
   const { online: isOnline } = useNetworkOnline();
@@ -73,15 +80,36 @@ export function useChatMessage({
   const [editingMessage, setEditingMessage] = useState<Amity.Message | null>(
     null
   );
+  const [pendingJumpToMessageId, setPendingJumpToMessageId] = useState<
+    string | null
+  >(jumpToMessageId ?? null);
+  // True between asking for a newer page and that page landing.
+  const pagingPrevRef = useRef(false);
+
+  // Cleared only when the message turns out to be unreachable, so the
+  // collection falls back to the newest page instead of staying empty.
+  const clearJumpToMessageId = useCallback(
+    () => setPendingJumpToMessageId(null),
+    []
+  );
 
   const {
     messages,
     loading,
     hasNextPage,
     loadMore,
+    hasPrevPage,
+    loadPrev,
     error: loadError,
   } = useMessagesCollection(
-    { subChannelId: channelId ?? '', limit: 20, includeDeleted: true },
+    {
+      subChannelId: channelId ?? '',
+      limit: 20,
+      includeDeleted: true,
+      // Held in state rather than read straight from the prop, so the anchored
+      // collection survives until the page is left.
+      aroundMessageId: pendingJumpToMessageId ?? undefined,
+    },
     !!channelId
   );
 
@@ -243,12 +271,27 @@ export function useChatMessage({
     prevLatestIdRef.current = currentId;
     if (!currentId || !prevId || currentId === prevId) return;
     if (atBottom) return;
+    // An incomplete message is not worth announcing.
+    if (latestMessage?.creatorId === undefined) return;
+    // Paging NEWER messages in (only possible on a collection anchored by a
+    // jump) moves `latestMessage` without anything having arrived, and the
+    // viewer is never atBottom while reading history — which is exactly the
+    // shape this effect looks for. Skip the one change that the page caused.
+    if (pagingPrevRef.current) {
+      pagingPrevRef.current = false;
+      return;
+    }
     setNewMessage(latestMessage);
   }, [latestMessage?.messageId, atBottom, latestMessage]);
 
   useEffect(() => {
     if (atBottom) setNewMessage(null);
   }, [atBottom]);
+
+  const loadPrevTrackingBanner = useCallback(() => {
+    pagingPrevRef.current = true;
+    loadPrev();
+  }, [loadPrev]);
 
   const clearNewMessage = useCallback(() => setNewMessage(null), []);
   const openSeeMore = useCallback(
@@ -260,10 +303,16 @@ export function useChatMessage({
   return {
     currentUserId,
     items,
+    jumpToMessageId: pendingJumpToMessageId ?? undefined,
+    clearJumpToMessageId,
     isLoadingFirstPage,
     isLoading: loading,
     hasMore: hasNextPage,
     loadMore,
+    // Non-empty only while the collection is anchored on a jump target: the
+    // messages newer than it sit after the anchored page.
+    hasPrev: hasPrevPage,
+    loadPrev: loadPrevTrackingBanner,
     latestMessage,
     isOnline,
     atBottom,
