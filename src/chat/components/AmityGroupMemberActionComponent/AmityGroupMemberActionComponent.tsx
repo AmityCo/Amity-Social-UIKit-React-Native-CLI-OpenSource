@@ -310,8 +310,8 @@ export function AmityGroupMemberActionComponent({
   // `anchor` render-prop; its `openPopover` now opens the sheet.
   function openActionSheet() {
     openBottomSheet({
-      // PDT-5188: `bottomSheetHeight` sizes the sheet for the menu rows alone,
-      // but the shared BottomSheetComponent also puts `paddingBottom:
+      // `bottomSheetHeight` sizes the sheet for the menu rows alone, but the
+      // shared BottomSheetComponent also puts `paddingBottom:
       // insets.bottom` on the sheet — so on a device with a home indicator that
       // inset is taken OUT of the same budget (5 rows: 25 drag handle + 240 rows
       // + 16 padding + 34 inset = 315 against a 300 sheet). The last option then
