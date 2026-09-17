@@ -1,7 +1,11 @@
 export * from './useCamera';
 export * from './useConfig';
 export * from './useConfigImageUri';
-export * from './useFile';
+export * from './useAvatarFile';
+// The general-purpose file hook: `useFile(fileId)` resolves any file and
+// leaves an unresolved one undefined. Exported here so the obvious name
+// reaches the obvious hook — an avatar url comes from useAvatarFile.
+export { default as useFile } from './files/useFile';
 export * from './useGlobalStory';
 export * from './useStory';
 export * from './useStoryPermission';
