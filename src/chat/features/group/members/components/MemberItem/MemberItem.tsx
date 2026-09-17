@@ -9,8 +9,9 @@
 // passes a small unban menu) reuse this row — matching web's shared usage.
 //
 // RN adaptations: web read the avatar synchronously from the SDK; RN resolves
-// `avatarFileId` through `useFile`. Web `BrandBadge` has no RN element and is
-// dropped (as in the create UserItem).
+// `avatarFileId` through `useFile`. The brand badge (PDT-5165) uses the core
+// BrandBadge element — web pulls its own from social/, which chat must not
+// depend on (CLAUDE.md).
 
 // 1. React / RN imports
 import { type ReactNode } from 'react';
@@ -18,6 +19,7 @@ import { View } from 'react-native';
 
 // 2. Internal imports
 import { Avatar } from '../../../../../elements/Avatar';
+import { BrandBadge } from '../../../../../../core/design/elements/BrandBadge';
 import { Typography } from '../../../../../../core/design/components/Typography';
 import { Skeleton } from '../../../../../../core/design/components/Skeleton';
 import { AmityIcon } from '../../../../../../core/design/icons';
@@ -62,6 +64,9 @@ export function MemberItem({
         <Typography variant="bodyBold" style={styles.name} numberOfLines={1}>
           {displayName}
         </Typography>
+        {/* PDT-5165: web renders this right after the name, before the "you"
+            suffix (.memberItem__brandBadge, 1rem, margin-left 0.125rem). */}
+        {user.isBrand ? <BrandBadge accessibilityLabel="Brand" /> : null}
         {isCurrentUser ? (
           <Typography variant="bodyBold" style={styles.youSuffix}>
             {youSuffix}
