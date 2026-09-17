@@ -28,6 +28,7 @@ import { Skeleton } from '../../../../../core/design/components/Skeleton';
 import { Avatar } from '../../../../../core/design/atoms/Avatar';
 import { BrandBadge } from '../../../../../core/design/elements/BrandBadge';
 import { useString } from '../../../../../core/localization';
+import { LIST_SKELETON_ROW_COUNT } from '../../../../constants';
 import { abbreviateCount } from '../../../../../core/utils/abbreviateCount';
 import { useCurrentUserId } from '../../../../hooks/useCurrentUserId';
 import { useMessageReactions } from '../../hooks/useMessageReactions';
@@ -242,7 +243,13 @@ export function MessageReactorListSheet({
             if (hasMore && !isLoading && !isLoadingFirstPage) loadMore();
           }}
           ListFooterComponent={
-            isLoadingFirstPage || isLoading ? <SkeletonRows count={3} /> : null
+            // PDT-5171: web renders LIST_SKELETON_ROW_COUNT (9) rows here, which
+            // is what fills the sheet's visible area. The port hardcoded 3, so
+            // the first page showed three rows and left the rest of the sheet
+            // blank. RN already carries the same constant — use it.
+            isLoadingFirstPage || isLoading ? (
+              <SkeletonRows count={LIST_SKELETON_ROW_COUNT} />
+            ) : null
           }
           contentContainerStyle={styles.list}
         />
