@@ -192,7 +192,6 @@ export const useStyles = (isUser = false) => {
     // gets clipped (Android). These MUST track TEXT_FONT_SIZE/TEXT_LINE_HEIGHT
     // — a mismatch reintroduces the vertical offset above on any line that
     // mixes plain text with a mention.
-    // PDT-5193 — LEADS WEB (web HighlightText.module.css uses font-weight 500).
     // Outbound mention and outbound body text resolve to the SAME token
     // (#FFFFFF), so on your own bubble the weight is the only thing separating a
     // mention from plain text, and 500 against 400 is not legible on Android —

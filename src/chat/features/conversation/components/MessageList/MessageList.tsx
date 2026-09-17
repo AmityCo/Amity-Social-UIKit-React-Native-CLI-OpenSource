@@ -57,8 +57,8 @@ type MessageListProps = {
   viewerIsModerator?: boolean;
   /**
    * User ids of this channel's moderators, for the moderator badge on an inbound
-   * sender avatar (PDT-5134). Web MessageList takes the same `moderatorIds` set
-   * and derives `isModerator` per row; useGroupChat already builds it.
+   * sender avatar. `isModerator` is derived per row; useGroupChat already builds
+   * the set.
    */
   moderatorIds?: Set<string>;
   /**
@@ -204,7 +204,8 @@ export function MessageList({
           if (item.kind === 'date') return <DateSeparator label={item.label} />;
           const { message } = item;
           const isUser = !!currentUserId && message.creatorId === currentUserId;
-          // Web MessageList: `!isUserMsg && isGroupChat && moderatorIds?.has(creatorId)`.
+          // Inbound rows in a group channel only: `!isUserMsg && isGroupChat
+          // && moderatorIds?.has(creatorId)`.
           const isSenderModerator =
             !isUser && !!isGroupChat && !!moderatorIds?.has(message.creatorId);
           const messageFileId =

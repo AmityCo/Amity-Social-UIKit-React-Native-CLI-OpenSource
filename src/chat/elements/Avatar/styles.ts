@@ -7,7 +7,7 @@ import { AmityColorToken } from '../../../core/design/tokens/amity-color-tokens'
 // -0.125rem = -2 (default) and 0.25rem = 4 (lg).
 // Width of the indicator ring the Avatar atom draws around the badge.
 const MODERATOR_BADGE_RING = 3;
-// Web `.avatar__userModeratorBadge` offset: -0.125rem.
+// How far the badge overhangs the avatar frame, per the design.
 const MODERATOR_BADGE_OVERHANG = 2;
 
 export const useStyles = () => {
@@ -49,12 +49,10 @@ export const useStyles = () => {
       position: 'absolute',
     },
 
-    // PDT-5134 — web's `.avatar__userModeratorBadge` nudges the moderator badge
-    // -0.125rem (-2) past the avatar frame on BOTH axes. The atom anchors the
-    // indicator at right/bottom 0, but its 3px ring is a real `borderWidth` in
-    // RN (web draws the same ring as a box-shadow, which takes no layout space),
-    // so the 16px chip ends up 3px inside the frame. Shift by ring + overhang to
-    // land the chip exactly where web puts it.
+    // The badge overhangs the avatar frame by 2 on both axes. The atom anchors
+    // the indicator at right/bottom 0, but its 3px ring is a real `borderWidth`,
+    // which takes layout space and pushes the 16px chip 3px inside the frame.
+    // Shift by ring + overhang to land it where the design puts it.
     userModeratorBadge: {
       right: -(MODERATOR_BADGE_RING + MODERATOR_BADGE_OVERHANG),
       bottom: -(MODERATOR_BADGE_RING + MODERATOR_BADGE_OVERHANG),

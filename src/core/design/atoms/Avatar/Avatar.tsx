@@ -37,8 +37,8 @@ export type AvatarProps = {
   indicator?: ReactNode;
   /**
    * Positional override for the indicator slot, for surfaces whose design
-   * anchors the badge differently (web does the same with a `className` on the
-   * indicator). Merged over the atom defaults, which stay unchanged.
+   * anchors the badge differently. Merged over the atom defaults, which stay
+   * unchanged.
    */
   indicatorStyle?: StyleProp<ViewStyle>;
   label?: string;

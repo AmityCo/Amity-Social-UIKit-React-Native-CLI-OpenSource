@@ -86,8 +86,8 @@ export function MessageRow({
   const displayName = creator?.displayName ?? '';
   const avatarFileId = creator?.avatarFileId ?? '';
   const avatarUrl = useFile({ fileId: avatarFileId });
-  // PDT-5189: tapping the sender avatar opens their profile picture full screen.
-  // Web MessageRow does the same with a local ImageViewer, at 'large' size.
+  // Tapping the sender avatar opens their profile picture full screen, at
+  // 'large' size.
   const avatarLargeUrl = useFile({
     fileId: avatarFileId,
     imageSize: ImageSizeState.large,
@@ -134,9 +134,8 @@ export function MessageRow({
           <Avatar.User
             avatarUrl={avatarUrl}
             displayName={displayName}
-            // PDT-5134: web MessageList derives this from its moderatorIds set and
-            // hands MessageRow `isModerator`; the badge itself already existed on
-            // Avatar.User, nothing was feeding it.
+            // Derived per row from the channel's moderator ids. The badge
+            // itself already existed on Avatar.User; nothing was feeding it.
             isModerator={isSenderModerator}
             size="sm"
             onPress={
