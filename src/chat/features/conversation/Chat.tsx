@@ -76,6 +76,7 @@ export function Chat({ channelId, userDisplayName, onBack }: ChatProps) {
         // fall back to the navigation-passed name only while that loads.
         title={c.otherUser?.displayName || userDisplayName || ''}
         avatarUrl={otherUserAvatarUrl}
+        isBrand={(c.otherUser as { isBrand?: boolean } | undefined)?.isBrand}
         onBack={onBack}
         trailing={
           c.otherUser ? (
