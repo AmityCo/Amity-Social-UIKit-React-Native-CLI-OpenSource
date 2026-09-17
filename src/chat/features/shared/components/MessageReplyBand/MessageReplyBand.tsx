@@ -131,8 +131,12 @@ function ReplyBandThumb({ replyTo }: { replyTo: Amity.Message }) {
       {isVideo ? (
         <View style={styles.playChip}>
           <View style={styles.playChipInner}>
+            {/* The chip already IS the circle (playChipInner is a 24px round
+                scrim), so the glyph inside it is the bare play triangle — not
+                `circle-play-s`, which drew a second circle inside the first.
+                Same glyph the reply quote's play chip uses. */}
             <AmityIcon
-              name="circle-play-s"
+              name="video-play-s"
               size={16}
               tokenColor={
                 AmityColorToken.IconIconButtonTransparentPrimaryDefault

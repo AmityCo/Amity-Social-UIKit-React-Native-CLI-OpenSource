@@ -31,6 +31,13 @@ export type IconProps = BadgeBaseProps & {
   iconColorToken?: ColorTokenRef;
   /** Override the preset's surface (chip background) colour. */
   surfaceColorToken?: ColorTokenRef;
+  /**
+   * Glyph size in px, overriding the default (chip size, or 75% of it when a
+   * border ring is present). Icon-only badges are drawn from a sampled
+   * per-size ramp in Figma rather than a formula, so a case whose render
+   * disagrees with the default passes its measured value here.
+   */
+  glyphSize?: number;
 };
 
 export const presetSlug = (preset?: BadgePreset) =>
@@ -72,6 +79,7 @@ function Icon({
   preset,
   iconColorToken,
   surfaceColorToken,
+  glyphSize: glyphSizeProp,
 }: IconProps) {
   const tokens = {
     ...resolveBadgeTokens(presetSlug(preset)),
@@ -88,7 +96,8 @@ function Icon({
   });
 
   // Web: glyph fills 100% of the chip, or 75% when a border ring is present.
-  const glyphSize = border ? Math.round(size * 0.75) : size;
+  // An explicit `glyphSize` wins over both.
+  const glyphSize = glyphSizeProp ?? (border ? Math.round(size * 0.75) : size);
 
   return (
     <View style={styles.badge} accessibilityRole="none">
