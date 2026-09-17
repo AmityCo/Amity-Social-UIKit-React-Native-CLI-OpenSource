@@ -22,6 +22,7 @@ import { Typography } from '../../../../../../core/design/components/Typography'
 import { Skeleton } from '../../../../../../core/design/components/Skeleton';
 import useFile from '../../../../../../core/hooks/useFile';
 import { Avatar } from '../../../../../elements/Avatar';
+import { BrandBadge } from '../../../../../../core/design/elements/BrandBadge';
 import { EmptyState } from '../../../../../features/shared/components/EmptyState';
 import { useSearchUsers } from '../../../../conversation/create/hooks';
 import { useStyles } from './styles';
@@ -64,9 +65,14 @@ function UserRow({
           displayName={displayName}
           size="md"
         />
-        <Typography variant="bodyBold" style={styles.name} numberOfLines={1}>
-          {displayName}
-        </Typography>
+        <View style={styles.nameRow}>
+          <Typography variant="bodyBold" style={styles.name} numberOfLines={1}>
+            {displayName}
+          </Typography>
+          {/* Sits right after the name, 16 square — the same row shape the
+              select-member and create-conversation pickers use. */}
+          {user.isBrand ? <BrandBadge accessibilityLabel="Brand" /> : null}
+        </View>
       </View>
     </Selection.Checkbox>
   );
