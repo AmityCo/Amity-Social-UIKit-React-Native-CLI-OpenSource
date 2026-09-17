@@ -281,13 +281,12 @@ export function useMessageComposer({
     wasEditingRef.current = !!editingMessage;
   }, [editingMessage, originalText, editingMentionsMeta]);
 
-  // PDT-5144: keep the reply target live while the band is up. `replyTo` used to
-  // be the snapshot captured at startReply, so a parent deleted by its sender
-  // while the viewer was composing kept showing its original text and left the
-  // send button enabled. Web tracked this with useMessageObject; the RN
-  // equivalent is the same MessageRepository.getMessage subscription the reactor
-  // sheet uses. Keyed on the id, which never changes for a given band, so the
-  // refresh cannot re-trigger itself.
+  // Keep the reply target live while the band is up. `replyTo` used to be the
+  // snapshot captured at startReply, so a parent deleted by its sender while the
+  // viewer was composing kept showing its original text and left the send button
+  // enabled. Subscribes with the same MessageRepository.getMessage call the
+  // reactor sheet uses, keyed on the id — which never changes for a given band,
+  // so the refresh cannot re-trigger itself.
   const replyToId = replyTo?.messageId;
   useEffect(() => {
     if (!replyToId) return undefined;

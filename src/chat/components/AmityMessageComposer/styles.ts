@@ -94,17 +94,16 @@ export const useStyles = () => {
       shadowRadius: 12,
       elevation: 8,
     },
-    // PDT-5302: the close button's own band, above the list (it used to be
-    // absolutely positioned over the first row). 24px button + 4/4 padding = 32.
+    // The close button's own band, above the list (it used to be absolutely
+    // positioned over the first row). 24px button + 4/4 padding = 32.
     mentionHeader: {
       flexDirection: 'row',
       justifyContent: 'flex-end',
       paddingTop: 4,
       paddingRight: 4,
     },
-    // web bottom-mode .mentionList: padding 0.25rem 0 → 4 vertical. The 112 cap
-    // moved here from mentionOverlay so the header band does not eat into the
-    // list's visible rows.
+    // 4px vertical padding. The 112 cap moved here from mentionOverlay so the
+    // header band does not eat into the list's visible rows.
     mentionList: {
       paddingVertical: 4,
       maxHeight: 112,

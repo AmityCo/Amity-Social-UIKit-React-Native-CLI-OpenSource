@@ -62,9 +62,9 @@ export type TextEditorProps = {
   autoFocus?: boolean;
   maxHeight?: number;
   /**
-   * Cap the input at N lines before it scrolls internally, mirroring web's
-   * TextEditor `maxLines`. Takes precedence over `maxHeight`, which it derives
-   * (N lines + the wrapper's vertical padding).
+   * Cap the input at N lines before it scrolls internally. Takes precedence
+   * over `maxHeight`, which it derives (N lines + the wrapper's vertical
+   * padding).
    */
   maxLines?: number;
   /**
@@ -112,10 +112,9 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
     >(undefined);
 
     // Auto-grow: the input sizes itself to its content between one line and
-    // `maxLines`, then scrolls internally — matching web's composer editor
-    // (min-height 1.25rem, max-height `line-height * --asc-max-lines`).
-    // LINE_HEIGHT and WRAPPER_VERTICAL_PADDING mirror styles.ts
-    // (lineHeight 20 / paddingVertical 10).
+    // `maxLines`, then scrolls internally. LINE_HEIGHT and
+    // WRAPPER_VERTICAL_PADDING mirror styles.ts (lineHeight 20 /
+    // paddingVertical 10).
     //
     // The bounds are handed to the TextInput as minHeight/maxHeight rather than
     // measured here and written back as an explicit `height`. On iOS that
@@ -123,13 +122,12 @@ export const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
     // iOS reports, so onContentSizeChange fires once at mount with one line and
     // never again, and the composer can never grow past its first line. Letting
     // the native input measure itself also means there is no stored measurement
-    // to go stale when `value` is cleared programmatically after a send
-    // (PDT-5170) — the height follows the text on both platforms.
+    // to go stale when `value` is cleared programmatically after a send — the
+    // height follows the text on both platforms.
     const LINE_HEIGHT = 20;
     const WRAPPER_VERTICAL_PADDING = 10;
-    // `maxLines` is web's own knob (`--asc-max-lines`, capping the editable at
-    // `line-height * N`); when given it decides the wrapper height, so callers
-    // state the line budget rather than back-computing pixels.
+    // When `maxLines` is given it decides the wrapper height, so callers state
+    // the line budget rather than back-computing pixels.
     const resolvedMaxHeight =
       maxLines != null
         ? maxLines * LINE_HEIGHT + WRAPPER_VERTICAL_PADDING * 2

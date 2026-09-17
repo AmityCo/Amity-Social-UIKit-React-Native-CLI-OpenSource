@@ -151,13 +151,12 @@ export function MessageList({
     onClearNewMessage?.();
   }, [onClearNewMessage]);
 
-  // Web MessageList force-scrolls to the newest row whenever the latest message
-  // is the viewer's OWN, independently of `atBottom` (MessageList.tsx: the
-  // `isOwnMessage` branch runs before the `if (!atBottom) return` guard); other
-  // people's messages only pull the view down when it is already at the bottom.
+  // Force-scroll to the newest row whenever the latest message is the viewer's
+  // OWN, independently of `atBottom`; other people's messages only pull the view
+  // down when it is already at the bottom.
   //
-  // An inverted FlatList keeps offset 0 pinned when rows are prepended, so the
-  // port relied on that alone. It does not survive a VIEWPORT resize: opening
+  // An inverted FlatList keeps offset 0 pinned when rows are prepended, and that
+  // alone used to be relied on. It does not survive a VIEWPORT resize: opening
   // the keyboard or growing the composer leaves the list parked away from
   // offset 0, and the message you just sent then lands below the fold with its
   // last line cut off by the composer.
@@ -176,8 +175,8 @@ export function MessageList({
   useEffect(() => {
     const prevId = prevLatestIdRef.current;
     prevLatestIdRef.current = latestMessageId;
-    // Skip the first render: web guards on `!prevId` so the initial page does
-    // not animate, it just starts at the bottom.
+    // Skip the first render: the initial page just starts at the bottom, it
+    // does not animate there.
     if (!latestMessageId || !prevId || latestMessageId === prevId) return;
 
     const isOwnMessage = !!currentUserId && latestCreatorId === currentUserId;

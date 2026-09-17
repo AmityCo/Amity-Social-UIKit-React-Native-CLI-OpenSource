@@ -181,12 +181,10 @@ export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
 
       {showMentions ? (
         <View style={styles.mentionOverlay}>
-          {/* PDT-5302: the close button used to be absolutely positioned over the
-              panel, so it sat on top of the first row ("All / Notify everyone").
-              Figma (12041-242340) puts it in its own header band above the list,
-              so it gets a real row and the list starts below it. Web has no close
-              button here at all — Lexical's typeahead dismisses on blur — so this
-              band is RN-only. */}
+          {/* The close button used to be absolutely positioned over the panel,
+              so it sat on top of the first row ("All / Notify everyone"). Figma
+              (12041-242340) puts it in its own header band above the list, so it
+              gets a real row and the list starts below it. */}
           <View style={styles.mentionHeader}>
             <Pressable
               style={styles.mentionCloseButton}
@@ -291,9 +289,8 @@ export function AmityMessageComposer({ composer }: AmityMessageComposerProps) {
           onSend={onSend}
           placeholder={placeholder}
           placeholderTextColor={placeholderColor}
-          // Web's MessageComposer passes maxLines={4} on both the mention and
-          // plain editors; RN was falling through to the TextEditor default
-          // (120px wrapper = 5 lines), so the composer grew one line too far.
+          // Four lines, then the input scrolls. Without this it fell through to
+          // the TextEditor default (a 120px wrapper = five lines).
           maxLines={4}
           autoFocus={isEditing}
           onMentionQueryChange={enableMention ? setQuery : undefined}
