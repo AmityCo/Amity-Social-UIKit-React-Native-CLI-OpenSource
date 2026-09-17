@@ -55,6 +55,11 @@ const TEXT_LEADING_EXCESS =
 const TEXT_PADDING_TOP = 10 - Math.round(TEXT_LEADING_EXCESS / 2);
 const TEXT_PADDING_BOTTOM = 10 + Math.round(TEXT_LEADING_EXCESS / 2);
 
+// The text block's total vertical padding. Exported because AmityMessageBubble
+// has to add it back when it turns a measured text height into a minHeight for
+// the Text (see the iOS last-line note there).
+export const TEXT_VERTICAL_PADDING = TEXT_PADDING_TOP + TEXT_PADDING_BOTTOM;
+
 export const useStyles = (isUser = false) => {
   const token = useToken();
 

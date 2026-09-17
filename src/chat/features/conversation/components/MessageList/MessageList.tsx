@@ -5,7 +5,7 @@
 // NewMessageNotification affordances. Older pages load on onEndReached.
 
 // 1. React / RN imports
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { FlatList, View } from 'react-native';
 
 // 2. Internal imports
@@ -157,6 +157,42 @@ export function MessageList({
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
     onClearNewMessage?.();
   }, [onClearNewMessage]);
+
+  // Force-scroll to the newest row whenever the latest message is the viewer's
+  // OWN, independently of `atBottom`; other people's messages only pull the view
+  // down when it is already at the bottom.
+  //
+  // An inverted FlatList keeps offset 0 pinned when rows are prepended, and that
+  // alone used to be relied on. It does not survive a VIEWPORT resize: opening
+  // the keyboard or growing the composer leaves the list parked away from
+  // offset 0, and the message you just sent then lands below the fold with its
+  // last line cut off by the composer.
+  const latestMessage = useMemo(
+    () =>
+      data.find(
+        (it): it is Extract<ChatItem, { kind: 'message' }> =>
+          it.kind === 'message'
+      )?.message,
+    [data]
+  );
+  const latestMessageId = latestMessage?.messageId;
+  const latestCreatorId = latestMessage?.creatorId;
+  const prevLatestIdRef = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    const prevId = prevLatestIdRef.current;
+    prevLatestIdRef.current = latestMessageId;
+    // Skip the first render: the initial page just starts at the bottom, it
+    // does not animate there.
+    if (!latestMessageId || !prevId || latestMessageId === prevId) return;
+
+    const isOwnMessage = !!currentUserId && latestCreatorId === currentUserId;
+    if (!isOwnMessage && !atBottom) return;
+    listRef.current?.scrollToOffset({
+      offset: 0,
+      animated: !isOwnMessage,
+    });
+  }, [latestMessageId, latestCreatorId, currentUserId, atBottom]);
 
   const handleScroll = useCallback(
     (e: { nativeEvent: { contentOffset: { y: number } } }) => {
