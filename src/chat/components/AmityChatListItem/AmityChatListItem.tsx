@@ -27,6 +27,7 @@ import { AmityIcon } from '../../../core/design/icons';
 import { AmityColorToken } from '../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../core/localization';
 import useFile from '../../../core/hooks/useFile';
+import { useUser } from '../../../core/hooks/objects/useUser';
 import { Avatar } from '../../elements/Avatar';
 import { BrandBadge } from '../../../core/design/elements/BrandBadge';
 import { ConversationChatAvatar } from '../../elements/ConversationChatAvatar';
@@ -98,7 +99,16 @@ export function AmityChatListItem({
   const otherMember = isConversation
     ? channel.previewMembers?.find((m) => m.userId !== currentUserId)
     : undefined;
-  const otherUser = otherMember?.user as DeletableUser;
+  // `previewMembers[].user` is the snapshot the channel payload was cached with,
+  // so a user soft-deleted afterwards still reads as active there and the row
+  // kept their original display name. Prefer the live user object; fall back to
+  // the embedded copy until it resolves, and only subscribe for conversation
+  // rows (a group row has no counterpart).
+  const { user: liveOtherUser } = useUser({
+    userId: otherMember?.userId ?? '',
+    enabled: isConversation,
+  });
+  const otherUser = (liveOtherUser ?? otherMember?.user) as DeletableUser;
   const isUserDeleted = Boolean(otherUser?.isDeleted);
   const isModerator = hasModeratorRole(otherMember?.roles);
 
