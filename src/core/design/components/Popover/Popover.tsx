@@ -75,6 +75,21 @@ export function Popover({
     height: 0,
   });
   const triggerRef = useRef<View>(null);
+  /**
+   * The backdrop's own measured height.
+   *
+   * `bottom` is resolved against the PARENT box, which here is the backdrop
+   * inside the Modal — and on Android that box excludes the status bar and the
+   * gesture/navigation bar, while `Dimensions.get('window').height` reports the
+   * full screen. Mixing the two put the flipped-above popover ~76dp too high on
+   * a 420dpi device (measured: 84dp of air above the bubble instead of 8dp), and
+   * by a constant, so it read as "the menu is always far from the bubble".
+   *
+   * The `top` branch never had the problem: it is anchor-relative and never
+   * touches this number. Falls back to the Dimensions value until the first
+   * layout, which only affects the very first frame.
+   */
+  const [backdropHeight, setBackdropHeight] = useState<number | null>(null);
 
   const openPopover = () => {
     // Measure the trigger in window coordinates, then open once positioned.
@@ -98,8 +113,11 @@ export function Popover({
   // otherwise clip off the screen).
   const spaceBelow = screenHeight - (anchor.y + anchor.height);
   const isTop = placement.includes('top') || spaceBelow < ESTIMATED_MENU_HEIGHT;
+  // `bottom` is relative to the backdrop, so measure the backdrop rather than
+  // assuming it matches the window (see backdropHeight).
+  const bottomReference = backdropHeight ?? screenHeight;
   const verticalPosition = isTop
-    ? { bottom: screenHeight - anchor.y + ANCHOR_GAP }
+    ? { bottom: bottomReference - anchor.y + ANCHOR_GAP }
     : { top: anchor.y + anchor.height + ANCHOR_GAP };
 
   // Horizontal alignment: right-align to the anchor's right edge, else left-align to
@@ -127,7 +145,14 @@ export function Popover({
         animationType="fade"
         onRequestClose={closePopover}
       >
-        <Pressable style={styles.backdrop} onPress={closePopover}>
+        <Pressable
+          style={styles.backdrop}
+          onPress={closePopover}
+          onLayout={(event) => {
+            const { height } = event.nativeEvent.layout;
+            if (height > 0) setBackdropHeight(height);
+          }}
+        >
           {/* Inner Pressable absorbs taps so touches inside the content do not
               bubble to the backdrop and close the popover. */}
           <Pressable

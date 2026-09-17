@@ -26,6 +26,7 @@ import {
 import { Typography } from '../../../../../core/design/components/Typography';
 import { Skeleton } from '../../../../../core/design/components/Skeleton';
 import { Avatar } from '../../../../../core/design/atoms/Avatar';
+import { BrandBadge } from '../../../../../core/design/elements/BrandBadge';
 import { useString } from '../../../../../core/localization';
 import { abbreviateCount } from '../../../../../core/utils/abbreviateCount';
 import { useCurrentUserId } from '../../../../hooks/useCurrentUserId';
@@ -287,9 +288,20 @@ function ReactorRow({ reactor, isOwn = false, onPress }: ReactorRowProps) {
         />
       )}
       <View style={styles.rowText}>
-        <Typography variant="bodyBold" style={styles.rowTitle}>
-          {reactor.user?.displayName ?? ''}
-        </Typography>
+        <View style={styles.rowTitleRow}>
+          <Typography
+            variant="bodyBold"
+            style={styles.rowTitle}
+            numberOfLines={1}
+          >
+            {reactor.user?.displayName ?? ''}
+          </Typography>
+          {/* PDT-5165 — LEADS WEB: web's reactor sheet has no brand badge, but
+              the ticket asks for it here too, matching the member list. */}
+          {reactor.user?.isBrand ? (
+            <BrandBadge accessibilityLabel="Brand" />
+          ) : null}
+        </View>
         {isOwn ? (
           <Typography variant="caption" style={styles.rowCaption}>
             {tapToRemoveLabel}

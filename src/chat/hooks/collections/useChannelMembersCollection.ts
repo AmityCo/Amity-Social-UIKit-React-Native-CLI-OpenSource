@@ -62,24 +62,49 @@ export function useChannelMembersCollection({
     setIsLoading(true);
     setIsLoadingFirstPage(true);
 
-    const params: Amity.ChannelMembersLiveCollection = {
-      channelId,
-      limit,
-      ...(memberships ? { memberships } : {}),
-      ...(roles ? { roles } : {}),
-      ...(search ? { search } : {}),
+    // PDT-5236: `getMembers` takes a `search` filter, but it does not match from
+    // the first character — a one-letter query came back empty even with members
+    // whose display name starts with it. The SDK's dedicated
+    // `Membership.searchMembers` collection is the one built for keyword search
+    // (it is what useMention already uses, and what the Flutter UIKit QA
+    // compared against uses here). Route a non-empty query through it and keep
+    // `getMembers` for the unfiltered list. LEADS WEB — web's MemberList still
+    // passes `search` to getMembers.
+    const keyword = search?.trim() ?? '';
+    const handleSnapshot = ({
+      data,
+      loading,
+      hasNextPage,
+      onNextPage,
+    }: Amity.LiveCollection<Membership>) => {
+      setMembers(data);
+      setIsLoading(loading);
+      if (!loading) setIsLoadingFirstPage(false);
+      setHasMore(Boolean(hasNextPage));
+      onNextPageRef.current = onNextPage;
     };
 
-    const unsub = ChannelRepository.Membership.getMembers(
-      params,
-      ({ data, loading, hasNextPage, onNextPage }) => {
-        setMembers(data);
-        setIsLoading(loading);
-        if (!loading) setIsLoadingFirstPage(false);
-        setHasMore(Boolean(hasNextPage));
-        onNextPageRef.current = onNextPage;
-      }
-    );
+    const unsub = keyword
+      ? ChannelRepository.Membership.searchMembers(
+          {
+            channelId,
+            search: keyword,
+            limit,
+            includeDeleted: false,
+            ...(memberships ? { memberships } : {}),
+            ...(roles ? { roles } : {}),
+          },
+          handleSnapshot
+        )
+      : ChannelRepository.Membership.getMembers(
+          {
+            channelId,
+            limit,
+            ...(memberships ? { memberships } : {}),
+            ...(roles ? { roles } : {}),
+          },
+          handleSnapshot
+        );
 
     return () => {
       unsub();
