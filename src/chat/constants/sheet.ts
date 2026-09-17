@@ -8,24 +8,30 @@
 
 import { Dimensions } from 'react-native';
 
-/** The reactor sheet takes half the height of the page it opens over. */
+/** The reactor sheet takes half the height of the screen it opens over. */
 export const REACTOR_SHEET_HEIGHT_RATIO = 0.5;
 
 /**
  * The reactor sheet's height for the current layout.
  *
- * `surfaceHeight` is the chat page's own measured box (see useChatSurfaceHeight)
- * and is what the ratio should be taken against: a host app that mounts the
- * UIKit under its own chrome leaves the page smaller than the device screen, so
- * measuring against `Dimensions` there yields a sheet that is half the DEVICE
- * but much more than half the page. The window is only the fallback for the
- * frames before the page has been laid out once.
+ * The ratio is taken against the WINDOW, not against the chat page: the sheet
+ * is anchored to the bottom of the screen, so a ratio of the page would put its
+ * top edge at the page's midpoint rather than the screen's, and it reads as
+ * sitting too low by exactly the height of whatever chrome the host app draws
+ * above the page. The design frames this sheet at 418 of an 812 device, with no
+ * host chrome in the frame at all.
+ *
+ * `surfaceHeight` — the chat page's own measured box (see useChatSurfaceHeight)
+ * — is only a ceiling. A host that leaves the page shorter than half the screen
+ * would otherwise get a sheet tall enough to cover the chat header behind it,
+ * which is the failure the page measurement exists to prevent.
  *
  * Call this at open time rather than caching it, so a rotation or split-screen
  * resize re-resolves the ratio.
  */
-export const getReactorSheetHeight = (surfaceHeight?: number) =>
-  Math.round(
-    (surfaceHeight ?? Dimensions.get('window').height) *
-      REACTOR_SHEET_HEIGHT_RATIO
+export const getReactorSheetHeight = (surfaceHeight?: number) => {
+  const half = Math.round(
+    Dimensions.get('window').height * REACTOR_SHEET_HEIGHT_RATIO
   );
+  return surfaceHeight == null ? half : Math.min(half, surfaceHeight);
+};
