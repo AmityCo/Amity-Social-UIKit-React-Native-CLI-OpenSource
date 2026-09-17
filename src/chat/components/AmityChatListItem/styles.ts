@@ -112,8 +112,8 @@ export const useStyles = () => {
     },
     // Skeleton row — Figma loading row `12041:242258`: 64 high, avatar circle
     // 40x40 at (16, 12) so padding is 12/16, gap 12, skeleton surface
-    // background. (PDT-5248: was 56 high with padding 8, which squeezed the two
-    // pills together.)
+    // background. A shorter row with tighter padding squeezes the two pills
+    // together.
     skeletonRow: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -125,7 +125,7 @@ export const useStyles = () => {
     },
     // Two stacked skeleton lines (name + preview) beside the avatar circle. The
     // design puts the second pill's top at dy 22 against a 10-high first pill,
-    // so the gap is 12 — matching web's skeletonLines gap 0.75rem.
+    // so the gap is 12.
     skeletonLines: {
       flexDirection: 'column',
       gap: 12,
