@@ -45,9 +45,11 @@ export function MessageLinkPreview({ url, style }: MessageLinkPreviewProps) {
   );
 
   const isPending = isLoading;
-  const isAllNull =
-    data != null && !data.title && !data.domain && !data.imageUrl;
-  const isFailure = !isPending && (isError || isAllNull);
+  // Web: `hasNoPreview = data != null && !data.title && !data.imageUrl`. The port
+  // additionally required `!data.domain`, which is harmless but drifts from web —
+  // realigned here while PDT-5308 was being fixed.
+  const hasNoPreview = data != null && !data.title && !data.imageUrl;
+  const isFailure = !isPending && (isError || hasNoPreview);
 
   const imageUrl = data?.imageUrl ?? '';
   const title = data?.title ?? '';
@@ -81,9 +83,13 @@ export function MessageLinkPreview({ url, style }: MessageLinkPreviewProps) {
             onError={() => setImageBroken(true)}
           />
         ) : (
+          // PDT-5308: web sizes the broken glyph via
+          // `.messageLinkPreview__thumbnailIcon` — a 2.5rem box whose svg fills
+          // 100% — so the icon is 40px inside the 96px thumbnail. The port used
+          // 18px, which read as a tiny speck against the box.
           <AmityIcon
             name="image-slash-r"
-            size={18}
+            size={40}
             tokenColor={AmityColorToken.IconMediaImageBroken}
           />
         )}

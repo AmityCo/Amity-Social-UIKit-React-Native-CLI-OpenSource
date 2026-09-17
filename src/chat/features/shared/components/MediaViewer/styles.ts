@@ -19,8 +19,14 @@ export const useStyles = () => {
       // unrelated badge token at 60% black that left the backdrop translucent.
       backgroundColor: 'rgb(0, 0, 0)',
     },
+    // Web's chat VideoPlayer is a COLUMN: `.videoPlayer__player` takes the
+    // remaining height and `.videoPlayer__bottomBar` is a flow sibling below it
+    // (`flex-shrink: 0`, no absolute positioning). The port made the bottom bar
+    // an absolute overlay instead, so it sat on top of the stage and buried the
+    // scrubber — which lives at `bottom: 40` inside the player, clear of the bar
+    // on web because the player's box ends above it.
     stage: {
-      ...StyleSheet.absoluteFillObject,
+      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
       overflow: 'hidden',
@@ -32,27 +38,27 @@ export const useStyles = () => {
       right: 0,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'flex-start',
+      // Web's VideoHeader is `justify-content: space-between` with close on the
+      // left and mute on the right. With no `headerRight` the lone close button
+      // still sits left, so this is safe for the image viewer too.
+      justifyContent: 'space-between',
       padding: 16,
-      // Web .mediaViewer__topBar/__bottomBar: rgb(0 0 0 / 50%). The previous
-      // badge token resolved to the same 50%, but expressing it as a literal
-      // matches ImageViewer (3b2e546c) and drops the unrelated token.
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      // No background of its own: web's chat player has no solid top bar at all.
+      // Its close and mute sit on VideoHeader's gradient, which is drawn as an
+      // absolute fill inside this row.
       zIndex: 3,
     },
+    // In flow beneath the stage, mirroring web's `.videoPlayer__bottomBar`.
     bottomBar: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: 16,
-      // Web .mediaViewer__topBar/__bottomBar: rgb(0 0 0 / 50%). The previous
-      // badge token resolved to the same 50%, but expressing it as a literal
-      // matches ImageViewer (3b2e546c) and drops the unrelated token.
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      // Web `.videoPlayer__bottomBar` fills with
+      // --asc-color-surface-media-overlay-transparentblack (#00000080).
+      backgroundColor: token(
+        AmityColorToken.SurfaceMediaOverlayTransparentBlack
+      ),
       zIndex: 3,
     },
     // Host for the chat toast mounted inside this Modal (the global <Toast /> is

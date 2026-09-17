@@ -14,6 +14,8 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import Video, { type VideoRef } from 'react-native-video';
 
 // 3. Internal imports
+import { AmityIcon } from '../../../../../core/design/icons';
+import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { MediaViewer } from '../MediaViewer';
 import { useVideoFileUrl } from '../../../../hooks/useVideoFileUrl';
 import { VideoControls } from './components/VideoControls';
@@ -163,6 +165,25 @@ export function VideoPlayer({
       onDelete={onDelete}
       // onSave deliberately omitted — hides the download button (MediaViewer
       // renders a spacer in its place, so delete keeps its position).
+      //
+      // Web's VideoHeader puts close and mute in the SAME row, so the mute
+      // toggle goes into the shell's top bar instead of a second header of our
+      // own beneath it — which is where it used to sit, covered and untappable.
+      headerRight={
+        <Pressable
+          style={styles.muteButton}
+          hitSlop={8}
+          onPress={handleToggleMute}
+          accessibilityRole="button"
+          accessibilityLabel={muted ? 'Unmute' : 'Mute'}
+        >
+          <AmityIcon
+            name={muted ? 'volume-slash-r' : 'volume-r'}
+            size={24}
+            tokenColor={AmityColorToken.IconIconButtonTransparentPrimaryDefault}
+          />
+        </Pressable>
+      }
     >
       {src ? (
         <View style={styles.stage}>
@@ -196,11 +217,9 @@ export function VideoPlayer({
             visible={controlsVisible}
             paused={paused}
             isScrubbing={isScrubbing}
-            muted={muted}
             currentTime={currentTime}
             duration={duration}
             onTogglePlay={handleTogglePlay}
-            onToggleMute={handleToggleMute}
             onSkipBackward={handleSkipBackward}
             onSkipForward={handleSkipForward}
             onScrubStart={handleScrubStart}
