@@ -1,7 +1,9 @@
 // Styles for MediaUploadOverlay — ported from AmityUiKitWeb MediaUploadOverlay.module.css.
-// Absolute inset:0 scrim centered over its parent. Web's --asc-color-message-overlay
-// (rgb(41 43 50 / 40%)) has no RN token; substituted with the closest media-context dark
-// scrim (SurfaceBadgeSemanticBadgePostStatusTotalMedia, 50% black) — reported as a gap.
+// Absolute inset:0 scrim centered over its parent, using the same token web's
+// .overlay does (--asc-color-surface-media-overlay-transparentblack). PDT-5235: this
+// previously borrowed SurfaceBadgeSemanticBadgePostStatusTotalMedia, which happens to
+// carry the same 50% black today but is a post-status badge token — it would drift
+// from web under a custom theme.
 
 import { StyleSheet } from 'react-native';
 import { useToken } from '../../../core/design/theme/useToken';
@@ -16,7 +18,7 @@ export const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: token(
-        AmityColorToken.SurfaceBadgeSemanticBadgePostStatusTotalMedia
+        AmityColorToken.SurfaceMediaOverlayTransparentBlack
       ),
     },
   });

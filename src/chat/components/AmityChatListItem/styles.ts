@@ -47,6 +47,13 @@ export const useStyles = () => {
       gap: 4, // web nameGroup gap 0.25rem
       minWidth: 0,
     },
+    // The badge opts out of nameGroup's baseline alignment: an SVG has no text
+    // baseline, so RN pins its bottom edge to the name's and it sits low. Only
+    // the badge is centred — the group row's "(12)" member count still shares a
+    // baseline with the name, as web does.
+    brandBadge: {
+      alignSelf: 'center',
+    },
     // SoT title: size 15, lineHeight 20, weight 590 (≈'600').
     name: {
       flexShrink: 1,
