@@ -36,6 +36,7 @@ import { MessageLinkPreview } from '../../features/shared/components/MessageLink
 import { extractFirstPreviewUrl } from '../../utils/previewLink';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
 import { getMediaBubbleSize } from '../../constants';
+import { isSyntheticPendingMessage } from '../../features/shared/hooks/useMessageComposer';
 import { useStyles } from './styles';
 
 // PDT-4109: one flat limit for every text bubble. There used to be a second
@@ -186,11 +187,23 @@ function isErrorState(message: Amity.Message): boolean {
 // left a generic failure with no explanation at all; PDT-4128's oversize upload
 // marks 'generic', so the inline error the ticket asks for depends on this.
 //
-// RN has no 'cancelled' reason: cancelling drops the pending upload via
-// cancelledClientIdsRef instead of marking it failed, so there is nothing to
-// exclude here and the gate is simply "did it fail".
-function showsFailedCaption(isFailed: boolean): boolean {
-  return isFailed;
+// A cancelled upload is failed but NOT a failure the user needs telling about —
+// they stopped it themselves. Web excludes it the same way
+// (`if (!isFailed || isCancelledUpload) return bubble`).
+//
+// This used to claim RN had no 'cancelled' reason because cancelling dropped the
+// pending upload outright. It does not: `handleCancelUpload` marks the upload
+// failed and leaves it in place, so before PDT-4921 made the cancel button
+// reachable this was simply never exercised.
+function showsFailedCaption(
+  isFailed: boolean,
+  message: Amity.Message
+): boolean {
+  if (!isFailed) return false;
+  return !(
+    isSyntheticPendingMessage(message) &&
+    message.__failureReason === 'cancelled'
+  );
 }
 
 // 5. Named function component (dispatcher)
@@ -538,7 +551,7 @@ function ImageBubble({
 
   const showUploadOverlay = isUploading && !isFailed;
   const canOpen = !!onOpenImage && !!openUrl && !isFailed && !isUploading;
-  const showFailedCaption = showsFailedCaption(isFailed);
+  const showFailedCaption = showsFailedCaption(isFailed, message);
 
   const bubble = (
     <Pressable
@@ -644,16 +657,19 @@ function VideoBubble({
   const thumbnailUri = localPreviewUrl ?? videoUrl;
 
   if (!thumbnailUri) {
+    // PDT-4921 / PDT-5235: a video that has no poster yet still shows the upload
+    // ring, so it needs the same cancel affordance as the scrim path below —
+    // otherwise Loader.Upload renders no X and the send can't be cancelled.
     return (
       <View style={styles.mediaPlaceholder}>
-        <Loader.Upload size="medium" />
+        <Loader.Upload size="medium" onCancel={onCancelUpload} />
       </View>
     );
   }
 
   const showUploadOverlay = isUploading && !isFailed;
   const canOpen = !!onOpenVideo && !isFailed && !isUploading;
-  const showFailedCaption = showsFailedCaption(isFailed);
+  const showFailedCaption = showsFailedCaption(isFailed, message);
 
   const bubble = (
     <Pressable
