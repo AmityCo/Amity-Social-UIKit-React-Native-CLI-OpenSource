@@ -167,8 +167,11 @@ export function AmityGroupMemberActionComponent({
     if (!isConnected) return;
     await UserRepository.flagUser(userId);
     setIsFlaggedByMe(true);
+    // The member list speaks about members, not users — its own toast string,
+    // alongside the sibling promoted/demoted/banned ones. The generic
+    // report-user string stays for the 1:1 conversation menu.
     success({
-      content: resolveString('amity_chat_action_report_user_success'),
+      content: resolveString('amity_chat_group_member_list_toast_reported'),
     });
   }
 

@@ -155,6 +155,7 @@
   "amity_chat_group_member_list_toast_banned": "User banned.",
   "amity_chat_group_member_list_toast_demoted": "Member demoted.",
   "amity_chat_group_member_list_toast_promoted": "Member promoted.",
+  "amity_chat_group_member_list_toast_reported": "Member reported.",
   "amity_chat_action_remove_member": "Member removed.",
   "amity_chat_member_action_demote": "Demote from moderator",
   "amity_chat_member_action_promote": "Promote to moderator",
