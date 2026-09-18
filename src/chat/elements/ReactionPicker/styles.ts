@@ -17,13 +17,13 @@ import { AmityColorToken } from '../../../core/design/tokens/amity-color-tokens'
 // treats the touch as having left the bar.
 export const PILL_PADDING = 8;
 
-// PDT-5043 originally reserved a 36px transparent band above the pill so the
-// floating label was not clipped by the action menu's `pickerCard`
+// A 36px transparent band above the pill originally kept the floating label
+// from being clipped by the action menu's `pickerCard`
 // (overflow:'hidden'). That clip is gone — `pickerCard` no longer draws a
 // surface at all — so the band is no longer needed, and it was the reason the
 // picker floated ~44px from the bubble whenever the popover opened below a
 // message (8px anchor gap + 36px of empty band). The label now overhangs the
-// pill the way web's does.
+// pill instead.
 //
 // Web puts the label `top: -2.05rem` from its own 2rem button, and lifts it a
 // further 9px on hover. Measured from the picker root: down past the pill's
@@ -50,7 +50,7 @@ export const useStyles = () => {
       backgroundColor: token(
         AmityColorToken.SurfaceReactionsReactionPopoverFilledDefault
       ),
-      // PDT-3934: match web reaction-bar elevation-08 (3 stacked layers:
+      // Match web reaction-bar elevation-08 (3 stacked layers:
       // 0 4px 24px 4px / 0 32px 64px -12px / 0 6px 6px -4px). RN can't stack
       // shadows, so approximate with a single heavier, softer shadow; colour is
       // theme-aware (light rgba(41,43,50), dark rgba(0,0,0)) per the token defs.
@@ -76,7 +76,7 @@ export const useStyles = () => {
     },
     // .reactionButton__activeBackground
     //
-    // PDT-5044: web's chat picker draws this circle behind `reaction.image`,
+    // Web's chat picker draws this circle behind `reaction.image`,
     // artwork that carries transparent padding, so a same-size circle still
     // reads as a halo. RN renders the ported ReactionGlyph art instead, whose
     // outer <Circle r=16> fills the whole 32px box opaquely — a 32px circle

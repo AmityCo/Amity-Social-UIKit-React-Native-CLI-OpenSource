@@ -297,7 +297,7 @@ function AmityCreateLivestreamPage() {
         // Do NOT set isConnecting to false here — keep the loading overlay
         // visible until LiveKitRoom fires onConnected, which confirms the
         // video stream is ready. Clearing it prematurely exposes the white
-        // background before the camera feed appears (PDT-3089).
+        // background before the camera feed appears.
 
         // Start the timer when live stream actually starts
         if (timerRef.current) {

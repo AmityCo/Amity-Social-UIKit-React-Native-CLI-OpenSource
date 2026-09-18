@@ -7,7 +7,7 @@
 //     shared `useFile` hook, mirroring the conversation/create UserItem.
 //   - Web's core `Avatar` atom → the chat `Avatar.User` element (round, size md).
 //   - Web pulls its `BrandBadge` from `social/`, which chat must not depend on
-//     (CLAUDE.md); RN uses the core element added for PDT-5165 instead.
+//     (CLAUDE.md); RN uses the core element instead.
 //   - Web renders no press handler here — the row's selection is owned by the
 //     wrapping `Selection.Checkbox`, so this component is purely presentational.
 
@@ -40,8 +40,7 @@ export function UserItem({ user }: UserItemProps) {
         <Typography variant="bodyBold" style={styles.name} numberOfLines={1}>
           {displayName}
         </Typography>
-        {/* PDT-5165: web renders this right after the name in this row too
-            (.userItem__brandBadge, 1rem). */}
+        {/* Sits right after the name, 16 square. */}
         {user.isBrand ? <BrandBadge accessibilityLabel="Brand" /> : null}
       </View>
     </View>

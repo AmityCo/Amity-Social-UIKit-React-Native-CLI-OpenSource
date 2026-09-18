@@ -32,10 +32,9 @@ type VideoPlayerProps = {
   isOwn?: boolean;
   onDelete?: () => void;
   /**
-   * NOT FORWARDED — PDT-4127 hides the save/download button for video this
-   * release (saving is affected by play/pause, and livestream needs a backend
-   * fix). Web did the same in dba25aa77 by dropping onSave from its video
-   * player props and making it optional. Images keep their save button.
+   * NOT FORWARDED — the save/download button is hidden for video this release
+   * (saving is affected by play/pause, and livestream needs a backend fix).
+   * Images keep their save button.
    * Still accepted here (and still supplied by useMediaViewer) so re-enabling
    * is one line: pass `onSave={onSave}` to MediaViewer below.
    */

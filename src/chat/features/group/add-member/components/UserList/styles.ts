@@ -21,6 +21,13 @@ export const useStyles = () => {
       paddingHorizontal: 16,
       minWidth: 0,
     },
+    nameRow: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 2,
+      minWidth: 0,
+    },
     name: {
       flexShrink: 1,
       minWidth: 0,

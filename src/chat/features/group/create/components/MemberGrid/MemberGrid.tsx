@@ -8,7 +8,7 @@
 //   - CSS grid (repeat(4, 4rem) + space-between) → a wrapping flex row whose
 //     cells are pinned to 25% each, since RN flexbox has no column-count. Every
 //     tile is wrapped in a `cell` View so the row always breaks after four
-//     (PDT-5208 - see styles.ts).
+//     (see styles.ts).
 
 // 1. React / RN imports
 import { View } from 'react-native';

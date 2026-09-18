@@ -59,7 +59,7 @@ export const useCreateMessage = ({
         'amity_chat_message_failed_to_send'
       );
 
-      // PDT-4160: use the chat keys, not the social twins. The social strings
+      // Use the chat keys, not the social twins. The social strings
       // carry the old "…contained a blocked word" wording and are shared with
       // the social module, so they can't be reworded from a chat ticket — and
       // this hook is chat-only (useFailedMessageSheet's resend path), so a

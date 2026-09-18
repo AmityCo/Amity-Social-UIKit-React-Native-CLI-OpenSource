@@ -50,12 +50,9 @@ export function useFailedMessageSheet({
     useBottomSheet();
   const { error: errorToast } = useChatNotifications();
   const { deleteMessage } = useDeleteMessage();
-  // LEADS WEB (deaad473): web's requestResend has no onError, so a resend that
-  // fails again is silent there. RN surfaces it.
-  // useCreateMessage maps the SDK error to localized copy but only through its
+  // useCreateMessage maps the SDK error to localized copy, but only through its
   // onError callback. Nothing passed one, so a resend that failed again was
-  // completely silent here too — and mutateAsync's rejection went unhandled on
-  // top. Revisit if web adds its own handling, so the two don't diverge further.
+  // completely silent — and mutateAsync's rejection went unhandled on top.
   const { createMessage } = useCreateMessage({
     onError: (errorMsg) => errorToast({ content: errorMsg }),
   });
@@ -64,7 +61,7 @@ export function useFailedMessageSheet({
   const cancelLabel = useString('amity_chat_cancel');
 
   async function handleResend(message: Amity.Message) {
-    // Synthetic bubbles are media-only (PDT-4914): a pending upload has no SDK
+    // Synthetic bubbles are media-only: a pending upload has no SDK
     // row until its file lands, so the composer owns its retry. Text never gets
     // here — the SDK's own optimistic row is the failed bubble, handled below.
     if (isSyntheticPendingMessage(message)) {
@@ -150,10 +147,10 @@ export function useFailedMessageSheet({
                 handleDelete(message);
               }}
             />
-            {/* PDT-5197: LEADS WEB. Web's popover is dismissed by clicking away,
-                so its sheet has only Resend/Delete. The RN sheet is a drawer, and
-                the Figma for it (3702-37185) adds an explicit Cancel row that just
-                closes the sheet and leaves the failed bubble in place. */}
+            {/* The Figma for this drawer (3702-37185) adds an explicit Cancel
+                row that just closes the sheet and leaves the failed bubble in
+                place. A dismiss-by-tapping-away affordance is not enough on its
+                own here. */}
             <Menu.Item label={cancelLabel} onPress={closeBottomSheet} />
           </Menu>
         </View>

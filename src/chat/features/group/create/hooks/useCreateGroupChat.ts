@@ -20,10 +20,10 @@
 //     `useImagePicker` (the same hook the sibling edit-profile screen uses),
 //     which wraps launchCamera/launchImageLibrary and `useUpload`. The form
 //     stores `avatarFileId` (string|null) rather than a File object.
-//   - PDT-5061: the AvatarPicker now reports which source the user chose in its
+//   - The AvatarPicker now reports which source the user chose in its
 //     Camera/Photo sheet (web's drawer), so this hook branches openCamera vs
 //     openImageGallery instead of always opening the gallery.
-//   - PDT-5177: going through `useImagePicker`/`useUpload` is also what surfaces
+//   - Going through `useImagePicker`/`useUpload` is also what surfaces
 //     the "Inappropriate image" dialog on a moderation rejection (error 400314 /
 //     INVALID_IMAGE) - the old inline FileRepository.uploadImage call swallowed
 //     that error in a bare catch. The preview is resolved from the *uploaded*
@@ -133,13 +133,13 @@ export function useCreateGroupChat({
   ) => void;
 
   // Preview the *uploaded* avatar, not the local uri: an image the backend
-  // rejects (PDT-5177) must never end up shown as the group avatar.
+  // rejects must never end up shown as the group avatar.
   const avatarFileId = form.watch('avatarFileId');
   const avatarImageUrl = useFile({ fileId: avatarFileId ?? '' });
 
-  // PDT-5061: `source` comes from the AvatarPicker's Camera/Photo sheet.
+  // `source` comes from the AvatarPicker's Camera/Photo sheet.
   // useImagePicker handles the camera permission prompt, the unsupported-type
-  // alert and — via useUpload — the "Inappropriate image" dialog (PDT-5177);
+  // alert and — via useUpload — the "Inappropriate image" dialog;
   // it resolves to the uploaded Amity.File, or a falsy value when the user
   // cancelled or the upload was rejected.
   const handlePickAvatar = useCallback(

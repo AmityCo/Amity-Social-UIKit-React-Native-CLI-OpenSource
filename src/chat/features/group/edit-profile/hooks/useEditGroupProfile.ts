@@ -109,7 +109,7 @@ export function useEditGroupProfile({ channelId }: EditGroupProfileProps) {
     navigation.goBack();
   }
 
-  // PDT-5061: the shared AvatarPicker now asks Camera vs Photo up front (web's
+  // The shared AvatarPicker now asks Camera vs Photo up front (web's
   // drawer), so honour the chosen source here too rather than always opening
   // the gallery — otherwise the Camera row would silently open the library.
   function handlePickAvatar(source: AvatarPickerSource) {
