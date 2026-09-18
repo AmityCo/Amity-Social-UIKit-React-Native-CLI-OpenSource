@@ -15,6 +15,7 @@ import { Typography } from '../../../../../core/design/components/Typography';
 import { useString } from '../../../../../core/localization';
 import { Avatar } from '../../../../elements/Avatar';
 import { ImageViewer } from '../../../shared/components/ImageViewer';
+import { useBehaviour } from '../../../../../social/providers/BehaviourProvider';
 import { AmityMessageBubble } from '../../../../components/AmityMessageBubble';
 import { AmityMessageActionMenu } from '../../../../components/AmityMessageActionMenu';
 import { MessageReplyQuote } from '../../../shared/components/MessageReplyQuote';
@@ -93,6 +94,20 @@ export function MessageRow({
     imageSize: ImageSizeState.large,
   });
   const [isAvatarViewerOpen, setIsAvatarViewerOpen] = useState(false);
+  const { AmityMessageBubbleBehavior } = useBehaviour();
+
+  // A host app that wants the tap takes it; otherwise the picture opens full
+  // screen, which is what this row did before there was anywhere to hand it.
+  const handleAvatarPress = () => {
+    if (AmityMessageBubbleBehavior?.onAvatarTap) {
+      AmityMessageBubbleBehavior.onAvatarTap({
+        userId: creator?.userId ?? '',
+        avatarUrl: fullScreenAvatarUrl,
+      });
+      return;
+    }
+    if (fullScreenAvatarUrl) setIsAvatarViewerOpen(true);
+  };
   const fullScreenAvatarUrl = creator?.isDeleted
     ? undefined
     : avatarLargeUrl ?? avatarUrl;
@@ -139,8 +154,8 @@ export function MessageRow({
             isModerator={isSenderModerator}
             size="sm"
             onPress={
-              fullScreenAvatarUrl
-                ? () => setIsAvatarViewerOpen(true)
+              fullScreenAvatarUrl || AmityMessageBubbleBehavior?.onAvatarTap
+                ? handleAvatarPress
                 : undefined
             }
           />
