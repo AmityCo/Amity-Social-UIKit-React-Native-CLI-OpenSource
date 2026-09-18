@@ -40,7 +40,7 @@ import { getMediaBubbleSize } from '../../constants';
 import { isSyntheticPendingMessage } from '../../features/shared/hooks/useMessageComposer';
 import { TEXT_VERTICAL_PADDING, useStyles } from './styles';
 
-// PDT-4109: one flat limit for every text bubble. There used to be a second
+// One flat limit for every text bubble. There used to be a second
 // TEXT_MAX_LINES_WITH_LINK = 5 applied when the text contained a URL, which
 // clamped link-bearing messages far earlier than plain ones. Web deleted that
 // constant (and the hasLink regex that drove it) in dba25aa77.
@@ -191,8 +191,8 @@ function isErrorState(message: Amity.Message): boolean {
 // Web wrapWithFailedCaption: EVERY failed image/video bubble carries the
 // "failed to send" caption — the only exception is an upload the user cancelled
 // (web's __failureReason === 'cancelled'). It used to be moderation-only, which
-// left a generic failure with no explanation at all; PDT-4128's oversize upload
-// marks 'generic', so the inline error the ticket asks for depends on this.
+// left a generic failure with no explanation at all; an oversize upload marks
+// 'generic', so the inline error for that case depends on this.
 //
 // A cancelled upload is failed but NOT a failure the user needs telling about —
 // they stopped it themselves. Web excludes it the same way
@@ -200,8 +200,8 @@ function isErrorState(message: Amity.Message): boolean {
 //
 // This used to claim RN had no 'cancelled' reason because cancelling dropped the
 // pending upload outright. It does not: `handleCancelUpload` marks the upload
-// failed and leaves it in place, so before PDT-4921 made the cancel button
-// reachable this was simply never exercised.
+// failed and leaves it in place, so while the cancel button was unreachable
+// this was simply never exercised.
 function showsFailedCaption(
   isFailed: boolean,
   message: Amity.Message
@@ -303,7 +303,7 @@ function TextBubble({
   const firstUrl = extractFirstPreviewUrl(text);
   // A failed message (synthetic, messageId === '') must NOT generate a link
   // preview — web suppresses it, and fetching metadata for the blocked link on a
-  // synthetic crashes the list (PDT-4033 QA).
+  // synthetic crashes the list.
   const isFailed = message.syncState === ('error' as Amity.SyncState);
   const maxLines = TEXT_MAX_LINES;
   // Only long text can possibly exceed maxLines, so only long text has to wait
@@ -347,7 +347,7 @@ function TextBubble({
       />
       <Pressable
         style={styles.seeMoreRow}
-        // PDT-4150 (web PR 1824): the full-text page takes the sender's display
+        // The full-text page takes the sender's display
         // name as its centred header title; without it the header was blank. The
         // whole chain already carried the optional title — openSeeMore stores it
         // and MessageFullTextScreen renders it — only this call omitted it.
@@ -476,7 +476,7 @@ function TextBubble({
         ) : null}
         {/* Web render order: text → link preview → edited caption → see-more.
             The "See more" row is LAST (below the preview), not between the text
-            and the preview (PDT-4047). */}
+            and the preview. */}
         {firstUrl && !isFailed ? (
           <View style={styles.preview}>
             <MessageLinkPreview url={firstUrl} isOwnMessage={isUser} />
@@ -697,7 +697,7 @@ function VideoBubble({
   const thumbnailUri = localPreviewUrl ?? videoUrl;
 
   if (!thumbnailUri) {
-    // PDT-4921 / PDT-5235: a video that has no poster yet still shows the upload
+    // A video that has no poster yet still shows the upload
     // ring, so it needs the same cancel affordance as the scrim path below —
     // otherwise Loader.Upload renders no X and the send can't be cancelled.
     return (

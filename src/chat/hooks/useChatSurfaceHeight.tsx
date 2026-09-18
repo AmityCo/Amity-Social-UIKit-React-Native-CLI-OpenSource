@@ -7,7 +7,7 @@
 // `Dimensions.get('window').height` — the DEVICE screen. A host app that mounts
 // the UIKit under its own chrome (the example app's module nav header) leaves
 // the page a smaller box, so 90% of the screen is more than 90% of the page and
-// the sheet all but covers the chat header behind it (PDT-5225).
+// the sheet all but covers the chat header behind it.
 //
 // Why the page and not the sheet
 // ------------------------------

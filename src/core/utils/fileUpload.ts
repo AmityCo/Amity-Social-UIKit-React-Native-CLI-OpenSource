@@ -24,7 +24,7 @@
  *                           uploaded."`
  *   • no top-level `name` → `files[0].name` is `null`, so `preferredFilename`
  *                           is sent as `null`.
- * That combination is exactly the failure seen in PDT-3461.
+ * That combination is exactly the failure this helper exists to prevent.
  */
 
 import { Platform } from 'react-native';

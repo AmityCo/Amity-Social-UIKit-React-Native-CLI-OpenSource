@@ -2,8 +2,7 @@
 // core/design/components/ContentReportReason/ContentReportReason.tsx, scoped to the
 // message-report flow (web's component also handled post/comment; RN only needs
 // message here). Web renders it in a Drawer (mobile) / Popup (desktop); RN matches
-// the mobile side with a bottom sheet at 90% of the viewport, per Figma
-// (PDT-5225 / PDT-5261).
+// the mobile side with a bottom sheet at 90% of the viewport, per Figma.
 //
 // An earlier fix took this the other way — a partial sheet was reported as a bug and
 // the screen became a full-screen Modal, which then lost the drag handle, the
@@ -99,7 +98,7 @@ export function ContentReportReason({
 
   // devvie reads `height="90%"` against `containerHeight`, and its default for
   // that is the DEVICE screen — so under a host app's own chrome the sheet comes
-  // out taller than 90% of the page it actually lives in (PDT-5225). The page
+  // out taller than 90% of the page it actually lives in. The page
   // measures its own box and publishes it; hand that over instead.
   const surfaceHeight = useChatSurfaceHeight();
   const { online } = useNetworkOnline();
@@ -227,7 +226,7 @@ export function ContentReportReason({
     >
       <View style={styles.screen}>
         {isMessageDeleted ? (
-          // PDT-5229: the message was deleted out from under this sheet.
+          // The message was deleted out from under this sheet.
           // Replace the body with the settled error state — what web does on
           // NOT_FOUND — rather than leaving the form up behind a toast.
           <FailedToShow
@@ -302,11 +301,8 @@ export function ContentReportReason({
                     // multiLine is what lets a reason typed up to
                     // MAX_LENGTH_DESCRIBE wrap instead of scrolling sideways, and it
                     // top-aligns the row so the label sits level with the first line.
-                    // Web passes it too (an earlier note here claimed otherwise —
-                    // that was true of PDT-4142's snapshot, not of current web).
                     // blockNewLine then refuses Enter without giving the wrap up: the
-                    // design allows a long reason, just not a multi-line one
-                    // (PDT-5228).
+                    // design allows a long reason, just not a multi-line one.
                     multiLine
                     blockNewLine
                   />

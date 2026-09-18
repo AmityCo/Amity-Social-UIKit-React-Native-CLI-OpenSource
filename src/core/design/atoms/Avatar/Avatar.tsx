@@ -79,7 +79,7 @@ export function Avatar({
     } else if (variant === 'text' && initials) {
       content = <Text style={styles.initials}>{initials}</Text>;
     } else {
-      // PDT-3912 (web b5df56286): the fallback glyph is the SOLID user icon
+      // The fallback glyph is the SOLID user icon
       // (User.Regular → User.Solid in web's core Avatar).
       content = (
         <AmityIcon name="user-s" size={glyphSize} tokenColor={glyphColor} />

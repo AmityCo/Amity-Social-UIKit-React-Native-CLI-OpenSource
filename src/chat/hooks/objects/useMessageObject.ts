@@ -8,8 +8,9 @@
 // MessageCache entry used only as a first paint.
 //
 // The point of all three is that a reply's parent is fetched from its
-// `parentId`, never looked up in whatever page the list happens to have loaded —
-// which is why neither web nor iOS ever had PDT-4927.
+// `parentId`, never looked up in whatever page the list happens to have loaded.
+// Looking it up in the loaded page leaves the quote spinning forever whenever
+// the parent sits on a page that has not been fetched.
 
 import { MessageRepository } from '@amityco/ts-sdk-react-native';
 

@@ -56,7 +56,7 @@ export function useUpload() {
       {
         onError: (error) => {
           // Localized, and worded from the same four keys web resolves in
-          // v4/social/hooks/useImageUpload (PDT-5177). These were hardcoded
+          // v4/social/hooks/useImageUpload. These were hardcoded
           // English, so th.json never applied even though every key was already
           // translated — and the generic body read "Please try again." where web
           // says "Upload Not Complete".

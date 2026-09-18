@@ -281,10 +281,9 @@ export function ReactionGlyph({
   return <Glyph size={size} />;
 }
 
-// FaceEyesXmarks — the reactor-sheet "message unavailable" glyph (PDT-5047).
-// Ported verbatim from web core/design/icons/FaceEyesXmarks (added there by
-// PDT-5241). Same treatment as SmilePlus: web fills with `currentColor`, RN
-// takes an explicit resolved colour.
+// FaceEyesXmarks — the reactor-sheet "message unavailable" glyph.
+// Same treatment as SmilePlus: the source fills with `currentColor`, RN takes
+// an explicit resolved colour.
 export function FaceEyesXmarks({
   size = 64,
   color = 'rgb(235,236,239)',

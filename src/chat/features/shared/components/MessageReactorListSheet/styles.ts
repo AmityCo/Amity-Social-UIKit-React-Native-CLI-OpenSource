@@ -107,7 +107,7 @@ export const useStyles = () => {
       alignItems: 'flex-start',
       minWidth: 0,
     },
-    // Name + brand badge sit on one line (PDT-5165); the name shrinks, the badge
+    // Name + brand badge sit on one line; the name shrinks, the badge
     // does not.
     rowTitleRow: {
       flexDirection: 'row',
