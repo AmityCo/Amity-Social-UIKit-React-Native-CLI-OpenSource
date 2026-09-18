@@ -4,9 +4,18 @@ import { AmityColorToken } from '../../tokens/amity-color-tokens';
 import type { ButtonHierarchy, ButtonSize, ButtonTone } from './Button';
 
 // ── Geometry: SoT geometry.json → button.main ──
-// label sizes lg {15/20} sm {13/18}; iconGlyph 16; weight 590 → RN '600'.
+// label sizes lg {15/20} sm {13/18}; weight 590 → RN '600'.
 // Tertiary uses paddingH_tertiary (4) but keeps full height + paddingV (ghost-like,
 // NOT link-like). Border width 0.0625rem = 1px.
+// Icon glyph is SIZE-DEPENDENT: lg 20, sm 16. It was hardcoded to 16 for both,
+// so a leading icon on an lg button rendered 4px small.
+// letterSpacing -0.4 (the spec's -0.025rem).
+//
+// The label is not a bare row child: every Main Button in the design wraps it in
+// a 4px-horizontal-padding box and butts the leading icon straight up against
+// that box — gap 0, NOT the row gap. Modelling it as a row gap instead put all
+// 8px between icon and label and none after the label, so the pair sat right of
+// centre inside the button. LABEL_PAD carries it, and `gap` stays 0.
 const GEOMETRY = {
   lg: {
     height: 40,
@@ -16,7 +25,7 @@ const GEOMETRY = {
     radius: 8,
     fontSize: 15,
     lineHeight: 20,
-    gap: 8,
+    iconGlyph: 20,
   },
   sm: {
     height: 28,
@@ -26,11 +35,12 @@ const GEOMETRY = {
     radius: 6,
     fontSize: 13,
     lineHeight: 18,
-    gap: 4,
+    iconGlyph: 16,
   },
 } as const;
 
-const ICON_GLYPH = 16;
+const LETTER_SPACING = -0.4;
+const LABEL_PAD = 4;
 const BORDER_WIDTH = 1;
 const FONT_WEIGHT = '600' as const;
 
@@ -289,7 +299,7 @@ export const useStyles = (
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: g.gap,
+      gap: 0,
       height: g.height,
       borderRadius: g.radius,
       borderWidth: BORDER_WIDTH,
@@ -298,12 +308,23 @@ export const useStyles = (
       width: iconOnly ? g.height : fullWidth ? '100%' : undefined,
       alignSelf: fullWidth && !iconOnly ? 'stretch' : 'flex-start',
     },
+    // No `lineHeight` here on purpose. The button's height is fixed by the
+    // geometry above and the row centres its children, so the line box has no
+    // layout job — and on iOS a line box taller than the glyphs does not centre
+    // them inside itself: measured on device, a 20pt line box around 15pt text
+    // put the ink 0.83pt below the button's centre line, so the label sat
+    // visibly lower than the leading icon (which centres exactly). Dropping it
+    // brings the label to within 0.17pt of centre. `includeFontPadding: false`
+    // does the matching job on Android, where the default font padding would
+    // otherwise pad the glyph box asymmetrically.
     label: {
       fontSize: g.fontSize,
-      lineHeight: g.lineHeight,
       fontWeight: FONT_WEIGHT,
+      letterSpacing: LETTER_SPACING,
+      paddingHorizontal: LABEL_PAD,
+      includeFontPadding: false,
     },
   });
 
-  return { styles, palette, iconGlyph: ICON_GLYPH };
+  return { styles, palette, iconGlyph: g.iconGlyph };
 };
