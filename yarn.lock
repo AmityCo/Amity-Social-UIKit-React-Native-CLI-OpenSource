@@ -1717,11 +1717,6 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@devvie/bottom-sheet@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@devvie/bottom-sheet/-/bottom-sheet-0.3.0.tgz#ac55957c0536550a2af29bbaa6df6443621fc45e"
-  integrity sha512-Cchl99PwSh+O/keyKHqXLfe+EqWwDIkMjPw50f4tlMrpaNE0PV7egQC5cTPZK6GRgj27mB4ZqsIZbeacwZkw+w==
-
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
   resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"

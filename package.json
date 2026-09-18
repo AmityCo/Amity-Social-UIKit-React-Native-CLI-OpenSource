@@ -231,7 +231,6 @@
     ]
   },
   "dependencies": {
-    "@devvie/bottom-sheet": "^0.3.0",
     "@fawazahmed/react-native-read-more": "^3.0.4",
     "@hookform/resolvers": "^5.2.1",
     "@reduxjs/toolkit": "^1.9.7",

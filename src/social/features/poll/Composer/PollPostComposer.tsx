@@ -16,7 +16,10 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
 import dayjs from 'dayjs';
-import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import {
+  BottomSheet,
+  type BottomSheetMethods,
+} from '../../../../core/design/components/BottomSheet';
 import globalFeedSlice from '../../../../core/stores/slices/globalfeedSlice';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
 import {
@@ -375,7 +378,9 @@ const PollPostComposer = () => {
         ref={bottomSheetRef}
         style={styles.bottomSheet}
         height={(Platform.OS === 'ios' && isShowingDatePicker && 600) || 400}
-        disableBodyPanning={Platform.OS === 'android'}
+        // The Android date picker owns vertical drags inside the sheet, so the
+        // sheet does not take them there.
+        closeOnDragDown={Platform.OS !== 'android'}
       >
         {Platform.OS === 'android' && <AndroidBottomSheet />}
         {Platform.OS === 'ios' && <IOSBottomSheet />}

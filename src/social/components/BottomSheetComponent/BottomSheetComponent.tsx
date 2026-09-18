@@ -1,27 +1,38 @@
-import { useStyles } from './styles';
-import { memo, useEffect, useRef } from 'react';
+// The app's single bottom sheet. Anything that wants one dispatches content and
+// a height through `useBottomSheet`; this is the one place it is rendered.
+//
+// It owns no geometry of its own — the sheet carries the sheet surface, the
+// rounded top, the drag handle and the bottom safe-area inset.
+
+// 1. React / RN imports
+import { memo } from 'react';
+
+// 3. Internal imports (relative)
+import { BottomSheet } from '../../../core/design/components/BottomSheet';
 import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
-import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 
 const BottomSheetComponent = () => {
-  const sheetRef = useRef<BottomSheetMethods>(null);
-  const { closeBottomSheet, content, open, height, dark } = useBottomSheet();
-
-  const { styles } = useStyles({ dark });
-
-  useEffect(() => {
-    open ? sheetRef.current.open() : sheetRef.current.close();
-  }, [open]);
+  const {
+    closeBottomSheet,
+    clearBottomSheetContent,
+    content,
+    open,
+    height,
+    dark,
+  } = useBottomSheet();
 
   return (
     <BottomSheet
-      ref={sheetRef}
-      height={height}
-      closeOnDragDown
-      closeOnBackdropPress
-      style={styles.container}
-      onClose={closeBottomSheet}
-      disableBodyPanning
+      visible={open}
+      height={height ?? 0}
+      dark={dark}
+      onClose={() => {
+        // The sheet has finished animating out by the time this runs, so this
+        // is where the content goes — and `closeBottomSheet` is idempotent, so
+        // a drag-to-close that never went through the store still settles it.
+        closeBottomSheet();
+        clearBottomSheetContent();
+      }}
     >
       {content}
     </BottomSheet>

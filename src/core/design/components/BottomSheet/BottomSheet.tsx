@@ -25,6 +25,7 @@
 import {
   createContext,
   forwardRef,
+  useImperativeHandle,
   useCallback,
   useContext,
   useEffect,
@@ -47,6 +48,8 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   type KeyboardEvent,
+  type StyleProp,
+  type ViewStyle,
   type ScrollViewProps,
 } from 'react-native';
 
@@ -62,8 +65,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStyles } from './styles';
 
 // 4. Types
+export type BottomSheetMethods = {
+  open: () => void;
+  close: () => void;
+};
+
 export type BottomSheetProps = {
-  visible: boolean;
+  /**
+   * Controlled visibility. Leave it out to drive the sheet through its ref
+   * instead — `open()` / `close()` — which is what the surfaces that open a
+   * sheet from a callback rather than from state do.
+   */
+  visible?: boolean;
   /** Sheet height: a number of dp, or a percentage of `containerHeight`. */
   height: number | `${number}%`;
   /**
@@ -79,7 +92,9 @@ export type BottomSheetProps = {
   closeOnDragDown?: boolean;
   /** Tap the backdrop to close. */
   closeOnBackdropPress?: boolean;
-  onClose: () => void;
+  /** Extra styling for the sheet surface — a caller's own padding or colour. */
+  style?: StyleProp<ViewStyle>;
+  onClose?: () => void;
   children: ReactNode;
 };
 
@@ -118,285 +133,354 @@ const ScrollCoordinationContext = createContext<ScrollCoordination | null>(
 const BACKDROP_SPEEDUP = 2.5;
 
 // 5. Named function component
-export function BottomSheet({
-  visible,
-  height,
-  containerHeight,
-  dark = false,
-  closeOnDragDown = true,
-  closeOnBackdropPress = true,
-  onClose,
-  children,
-}: BottomSheetProps) {
-  const { styles } = useStyles({ dark });
-  const insets = useSafeAreaInsets();
-  const window = useWindowDimensions();
+const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
+  function BottomSheet(
+    {
+      visible,
+      height,
+      containerHeight,
+      dark = false,
+      closeOnDragDown = true,
+      closeOnBackdropPress = true,
+      style,
+      onClose,
+      children,
+    },
+    ref
+  ) {
+    const { styles } = useStyles({ dark });
+    const insets = useSafeAreaInsets();
+    const window = useWindowDimensions();
 
-  const container = containerHeight ?? window.height;
-  const resolvedHeight =
-    typeof height === 'number'
-      ? height
-      : (container * parseFloat(height)) / 100;
+    const container = containerHeight ?? window.height;
+    const resolvedHeight =
+      typeof height === 'number'
+        ? height
+        : (container * parseFloat(height)) / 100;
 
-  // Kept mounted through the closing animation, so the sheet slides out instead
-  // of vanishing the moment `visible` flips.
-  const [mounted, setMounted] = useState(visible);
+    // `visible` is optional: when it is not given the sheet keeps its own flag
+    // and the ref drives it.
+    const [selfVisible, setSelfVisible] = useState(false);
+    const isOpen = visible ?? selfVisible;
 
-  // The sheet opens by GROWING from the bottom edge rather than sliding up as a
-  // finished panel, and a drag takes height off the same value — so the bottom
-  // edge is pinned throughout and only the top edge ever moves. Every state the
-  // sheet can be in is one number.
-  const openHeight = useRef(new Animated.Value(0)).current;
-  const dragY = useRef(new Animated.Value(0)).current;
-  const keyboardInset = useRef(new Animated.Value(0)).current;
-  const backdropProgress = useRef(new Animated.Value(0)).current;
+    // Kept mounted through the closing animation, so the sheet slides out instead
+    // of vanishing the moment it is told to close.
+    const [mounted, setMounted] = useState(isOpen);
 
-  // While the sheet is on its way out the keyboard must not resize it: the
-  // dismissal that closes the sheet also dismisses the keyboard, and letting
-  // that grow the sheet back is exactly the upward flash this replaces.
-  const isClosing = useRef(false);
+    // The sheet opens by GROWING from the bottom edge rather than sliding up as a
+    // finished panel, and a drag takes height off the same value — so the bottom
+    // edge is pinned throughout and only the top edge ever moves. Every state the
+    // sheet can be in is one number.
+    const openHeight = useRef(new Animated.Value(0)).current;
+    // One value for both the drag and the close: dragging moves the sheet down,
+    // and closing is the same move carried all the way past the bottom edge. As
+    // two separate quantities — a drag that shrank the height and a close that
+    // translated — releasing a drag reset the height and the sheet flashed back
+    // to full size for a frame on its way out.
+    const slide = useRef(new Animated.Value(0)).current;
+    const keyboardInset = useRef(new Animated.Value(0)).current;
+    const backdropProgress = useRef(new Animated.Value(0)).current;
+    // Height is layout and stays on the JS driver; the slide is a transform and
+    // runs on the UI thread, so neither the drag nor the close depends on how
+    // busy JS is.
 
-  const close = useCallback(() => {
-    if (isClosing.current) return;
-    isClosing.current = true;
+    // While the sheet is on its way out the keyboard must not resize it: the
+    // dismissal that closes the sheet also dismisses the keyboard, and letting
+    // that grow the sheet back is exactly the upward flash this replaces.
+    const isClosing = useRef(false);
 
-    Animated.parallel([
-      Animated.timing(openHeight, {
-        toValue: 0,
-        duration: CLOSE_DURATION,
-        easing: SHEET_EASING,
-        useNativeDriver: false,
-      }),
-      Animated.timing(backdropProgress, {
-        toValue: 0,
-        // The backdrop clears faster than the sheet, so the page behind is
-        // already readable while the last of the sheet is still on its way out.
-        duration: CLOSE_DURATION / BACKDROP_SPEEDUP,
-        useNativeDriver: false,
-      }),
-    ]).start(() => {
-      setMounted(false);
-      dragY.setValue(0);
-      keyboardInset.setValue(0);
-      isClosing.current = false;
-      onClose();
-    });
-  }, [backdropProgress, dragY, keyboardInset, onClose, openHeight]);
+    const close = useCallback(() => {
+      if (isClosing.current) return;
+      isClosing.current = true;
 
-  // Open / close from the outside.
-  useEffect(() => {
-    if (visible) {
-      isClosing.current = false;
-      setMounted(true);
+      // The keyboard leaves with the sheet. Dismissing it here rather than
+      // waiting for focus to be lost keeps the two on the same beat.
+      Keyboard.dismiss();
+
       Animated.parallel([
-        Animated.timing(openHeight, {
-          toValue: resolvedHeight,
-          duration: OPEN_DURATION,
+        // Carries on from wherever a drag left the sheet, straight past the
+        // bottom edge.
+        Animated.timing(slide, {
+          toValue: container,
+          duration: CLOSE_DURATION,
           easing: SHEET_EASING,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(backdropProgress, {
-          toValue: 1,
-          duration: OPEN_DURATION / BACKDROP_SPEEDUP,
-          useNativeDriver: false,
+          toValue: 0,
+          // The backdrop clears faster than the sheet, so the page behind is
+          // already readable while the last of the sheet is still on its way out.
+          duration: CLOSE_DURATION / BACKDROP_SPEEDUP,
+          useNativeDriver: true,
         }),
-      ]).start();
-    } else if (mounted) {
-      close();
-    }
-  }, [visible, mounted, close, openHeight, backdropProgress, resolvedHeight]);
+      ]).start(({ finished }) => {
+        // A close that was interrupted — the sheet reopened while it was still
+        // animating out — must not run the teardown. Animated fires this on
+        // interruption too, and tearing down then unmounts the sheet that was
+        // just reopened and empties the content that was just put in it.
+        if (!finished) return;
 
-  // The keyboard, on the keyboard's own curve. Reading `duration` and `easing`
-  // off the event is what keeps the sheet and the keyboard on one timeline
-  // rather than two that happen to start together.
-  useEffect(() => {
-    const isIOS = Platform.OS === 'ios';
-    // iOS announces the keyboard before it moves; Android only after.
-    const showEvent = isIOS ? 'keyboardWillShow' : 'keyboardDidShow';
-    const hideEvent = isIOS ? 'keyboardWillHide' : 'keyboardDidHide';
-    // iOS measures the keyboard from the bottom of the screen, home indicator
-    // included. Android measures it from the top of the navigation bar even
-    // though the keyboard is drawn over that bar, so it reads short by the
-    // inset and leaves the sheet's last row under the keys.
-    const bottomEdgeCorrection = isIOS ? 0 : insets.bottom;
+        // Nothing is reset here. `setMounted(false)` only takes effect on the
+        // next render, while an Animated value is written to the native view at
+        // once — so resetting the slide here put the sheet back at its open
+        // position, full size and over a full-strength backdrop, for the frame
+        // before the unmount landed. That was the flash. The values are reset
+        // when the sheet next opens instead, where nothing can see them.
+        setMounted(false);
+        setSelfVisible(false);
+        isClosing.current = false;
+        onClose?.();
+      });
+    }, [backdropProgress, container, slide, keyboardInset, onClose]);
 
-    const animateTo = (toValue: number, event?: KeyboardEvent) =>
-      Animated.timing(keyboardInset, {
-        toValue,
-        duration: event?.duration || OPEN_DURATION,
-        easing: SHEET_EASING,
-        useNativeDriver: false,
-      }).start();
-
-    const show = Keyboard.addListener(showEvent, (event) => {
-      if (isClosing.current) return;
-      animateTo(event.endCoordinates.height + bottomEdgeCorrection, event);
-    });
-    const hide = Keyboard.addListener(hideEvent, (event) => {
-      if (isClosing.current) return;
-      animateTo(0, event);
-    });
-
-    return () => {
-      show.remove();
-      hide.remove();
-    };
-  }, [insets.bottom, keyboardInset]);
-
-  // Android's hardware back closes the sheet rather than the screen behind it.
-  useEffect(() => {
-    if (!mounted) return undefined;
-    const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        close();
-        return true;
-      }
+    useImperativeHandle(
+      ref,
+      () => ({
+        open: () => setSelfVisible(true),
+        close: () => setSelfVisible(false),
+      }),
+      []
     );
-    return () => subscription.remove();
-  }, [mounted, close]);
 
-  // The gesture lives in react-native-gesture-handler, not in RN's responder
-  // system. The responder system hands a touch to exactly one view and settles
-  // that at touch-down, so a drag begun on a button or inside a list is that
-  // view's for good and the sheet is never consulted again — measured, not
-  // assumed. Gesture handler negotiates continuously instead, which is what
-  // lets a drag start anywhere on the sheet and still reach the sheet.
-  const scrollRef = useRef<React.ComponentType<object> | null>(null);
-  const atTop = useRef(true);
-  const gestureConfig = useRef({ resolvedHeight, closeOnDragDown, close });
-  gestureConfig.current = { resolvedHeight, closeOnDragDown, close };
+    // Open / close from the outside.
+    useEffect(() => {
+      if (isOpen) {
+        isClosing.current = false;
+        // Wound back here, off screen, rather than at the end of the close.
+        slide.setValue(0);
+        keyboardInset.setValue(0);
+        setMounted(true);
+        Animated.parallel([
+          Animated.timing(openHeight, {
+            toValue: resolvedHeight,
+            duration: OPEN_DURATION,
+            easing: SHEET_EASING,
+            useNativeDriver: false,
+          }),
+          Animated.timing(backdropProgress, {
+            toValue: 1,
+            duration: OPEN_DURATION / BACKDROP_SPEEDUP,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      } else if (mounted) {
+        close();
+      }
+    }, [
+      isOpen,
+      mounted,
+      close,
+      openHeight,
+      backdropProgress,
+      slide,
+      resolvedHeight,
+    ]);
 
-  const pan = useMemo(
-    () =>
-      Gesture.Pan()
-        // Downward only, and only past a few points — so a tap on a button is
-        // still a tap, and an upward flick belongs to the list.
-        .activeOffsetY(DRAG_ACTIVATION_DISTANCE)
-        .failOffsetY(-DRAG_ACTIVATION_DISTANCE)
-        .simultaneousWithExternalGesture(scrollRef)
-        .onUpdate((event) => {
-          if (!gestureConfig.current.closeOnDragDown) return;
-          // A list that can still scroll up keeps the drag.
-          if (!atTop.current) return;
-          if (event.translationY > 0) dragY.setValue(event.translationY);
-        })
-        .onEnd((event) => {
-          if (!gestureConfig.current.closeOnDragDown) return;
+    // The keyboard, on the keyboard's own curve. Reading `duration` and `easing`
+    // off the event is what keeps the sheet and the keyboard on one timeline
+    // rather than two that happen to start together.
+    useEffect(() => {
+      const isIOS = Platform.OS === 'ios';
+      // iOS announces the keyboard before it moves; Android only after.
+      const showEvent = isIOS ? 'keyboardWillShow' : 'keyboardDidShow';
+      const hideEvent = isIOS ? 'keyboardWillHide' : 'keyboardDidHide';
+      // iOS measures the keyboard from the bottom of the screen, home indicator
+      // included. Android measures it from the top of the navigation bar even
+      // though the keyboard is drawn over that bar, so it reads short by the
+      // inset and leaves the sheet's last row under the keys.
+      const bottomEdgeCorrection = isIOS ? 0 : insets.bottom;
 
-          const passedDistance =
-            event.translationY >
-            gestureConfig.current.resolvedHeight * DRAG_CLOSE_RATIO;
-          // velocityY is points per second here, not per frame.
-          const flickedDown = event.velocityY > DRAG_CLOSE_FLING;
+      const animateTo = (toValue: number, event?: KeyboardEvent) =>
+        Animated.timing(keyboardInset, {
+          toValue,
+          duration: event?.duration || OPEN_DURATION,
+          easing: SHEET_EASING,
+          useNativeDriver: false,
+        }).start();
 
-          if (atTop.current && (passedDistance || flickedDown)) {
-            gestureConfig.current.close();
-          } else {
-            Animated.timing(dragY, {
-              toValue: 0,
-              duration: OPEN_DURATION / 2,
-              easing: SHEET_EASING,
-              useNativeDriver: false,
-            }).start();
-          }
-        }),
-    [dragY]
-  );
+      const show = Keyboard.addListener(showEvent, (event) => {
+        if (isClosing.current) return;
+        animateTo(event.endCoordinates.height + bottomEdgeCorrection, event);
+      });
+      const hide = Keyboard.addListener(hideEvent, (event) => {
+        if (isClosing.current) return;
+        animateTo(0, event);
+      });
 
-  const scrollCoordination = useMemo<ScrollCoordination>(
-    () => ({
-      scrollRef,
-      setAtTop: (value: boolean) => {
-        atTop.current = value;
-      },
-    }),
-    []
-  );
+      return () => {
+        show.remove();
+        hide.remove();
+      };
+    }, [insets.bottom, keyboardInset]);
 
-  if (!mounted) return null;
+    // Android's hardware back closes the sheet rather than the screen behind it.
+    useEffect(() => {
+      if (!mounted) return undefined;
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => {
+          close();
+          return true;
+        }
+      );
+      return () => subscription.remove();
+    }, [mounted, close]);
 
-  // The keyboard never takes more than the sheet has.
-  const clampedKeyboardInset = keyboardInset.interpolate({
-    inputRange: [0, resolvedHeight],
-    outputRange: [0, resolvedHeight],
-    extrapolate: 'clamp',
-  });
+    // The gesture lives in react-native-gesture-handler, not in RN's responder
+    // system. The responder system hands a touch to exactly one view and settles
+    // that at touch-down, so a drag begun on a button or inside a list is that
+    // view's for good and the sheet is never consulted again — measured, not
+    // assumed. Gesture handler negotiates continuously instead, which is what
+    // lets a drag start anywhere on the sheet and still reach the sheet.
+    const scrollRef = useRef<React.ComponentType<object> | null>(null);
+    const atTop = useRef(true);
+    const gestureConfig = useRef({ resolvedHeight, closeOnDragDown, close });
+    gestureConfig.current = { resolvedHeight, closeOnDragDown, close };
 
-  // open − drag − keyboard. The open animation and the drag are the same
-  // quantity from the sheet's point of view, which is why a drag interrupted
-  // mid-open has nothing to disagree with.
-  const sheetHeight = Animated.subtract(
-    Animated.subtract(openHeight, dragY),
-    clampedKeyboardInset
-  );
+    const pan = useMemo(
+      () =>
+        Gesture.Pan()
+          // Downward only, and only past a few points — so a tap on a button is
+          // still a tap, and an upward flick belongs to the list.
+          .activeOffsetY(DRAG_ACTIVATION_DISTANCE)
+          .failOffsetY(-DRAG_ACTIVATION_DISTANCE)
+          .simultaneousWithExternalGesture(scrollRef)
+          .onUpdate((event) => {
+            if (!gestureConfig.current.closeOnDragDown) return;
+            // A list that can still scroll up keeps the drag.
+            if (!atTop.current) return;
+            if (event.translationY > 0) slide.setValue(event.translationY);
+          })
+          .onEnd((event) => {
+            if (!gestureConfig.current.closeOnDragDown) return;
 
-  // Shrinking alone would leave the sheet on the bottom of the screen with the
-  // keyboard drawn over it, so it also rises by exactly what it loses. The two
-  // being the same number is what keeps the sheet's TOP edge still while the
-  // keyboard opens — only the body gets shorter.
-  const translateY = Animated.multiply(clampedKeyboardInset, -1);
+            const passedDistance =
+              event.translationY >
+              gestureConfig.current.resolvedHeight * DRAG_CLOSE_RATIO;
+            // velocityY is points per second here, not per frame.
+            const flickedDown = event.velocityY > DRAG_CLOSE_FLING;
 
-  // The backdrop fades on its own faster curve, and thins again as the sheet is
-  // dragged away, so letting go halfway never leaves a full-strength scrim
-  // behind a half-gone sheet.
-  const backdropOpacity = Animated.multiply(
-    backdropProgress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, BACKDROP_OPACITY],
-    }),
-    dragY.interpolate({
+            if (atTop.current && (passedDistance || flickedDown)) {
+              gestureConfig.current.close();
+            } else {
+              Animated.timing(slide, {
+                toValue: 0,
+                duration: OPEN_DURATION / 2,
+                easing: SHEET_EASING,
+                useNativeDriver: true,
+              }).start();
+            }
+          }),
+      [slide]
+    );
+
+    const scrollCoordination = useMemo<ScrollCoordination>(
+      () => ({
+        scrollRef,
+        setAtTop: (value: boolean) => {
+          atTop.current = value;
+        },
+      }),
+      []
+    );
+
+    if (!mounted) return null;
+
+    // The keyboard never takes more than the sheet has.
+    const clampedKeyboardInset = keyboardInset.interpolate({
       inputRange: [0, resolvedHeight],
-      outputRange: [1, 0],
+      outputRange: [0, resolvedHeight],
       extrapolate: 'clamp',
-    })
-  );
+    });
 
-  return (
-    <Modal
-      transparent
-      visible
-      animationType="none"
-      statusBarTranslucent
-      onRequestClose={close}
-    >
-      {/* Gesture handler needs a root of its own in here: a Modal is a separate
+    // open − drag − keyboard. The open animation and the drag are the same
+    // quantity from the sheet's point of view, which is why a drag interrupted
+    // mid-open has nothing to disagree with.
+    const sheetHeight = Animated.subtract(openHeight, clampedKeyboardInset);
+
+    // Shrinking alone would leave the sheet on the bottom of the screen with the
+    // keyboard drawn over it, so it also rises by exactly what it loses. The two
+    // being the same number is what keeps the sheet's TOP edge still while the
+    // keyboard opens — only the body gets shorter.
+    const translateY = Animated.multiply(clampedKeyboardInset, -1);
+
+    // The backdrop fades on its own faster curve, and thins again as the sheet is
+    // dragged away, so letting go halfway never leaves a full-strength scrim
+    // behind a half-gone sheet.
+    const backdropOpacity = Animated.multiply(
+      backdropProgress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, BACKDROP_OPACITY],
+      }),
+      slide.interpolate({
+        inputRange: [0, resolvedHeight],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+      })
+    );
+
+    return (
+      <Modal
+        transparent
+        visible
+        animationType="none"
+        statusBarTranslucent
+        onRequestClose={close}
+      >
+        {/* Gesture handler needs a root of its own in here: a Modal is a separate
           native hierarchy, so the one the provider mounts around the app does
           not reach inside it and gestures would silently never fire. */}
-      <GestureHandlerRootView style={styles.root}>
-        <View style={styles.root} accessibilityViewIsModal>
-          <Animated.View
-            style={[styles.backdrop, { opacity: backdropOpacity }]}
-            pointerEvents={closeOnBackdropPress ? 'auto' : 'none'}
-          >
-            <Pressable
-              style={styles.backdropPressable}
-              onPress={closeOnBackdropPress ? close : undefined}
-              accessibilityRole="button"
-              accessibilityLabel="Close"
-            />
-          </Animated.View>
-
-          <GestureDetector gesture={pan}>
+        <GestureHandlerRootView style={styles.root}>
+          <View style={styles.root} accessibilityViewIsModal>
             <Animated.View
-              style={[
-                styles.sheet,
-                { height: sheetHeight, transform: [{ translateY }] },
-              ]}
+              style={[styles.backdrop, { opacity: backdropOpacity }]}
+              pointerEvents={closeOnBackdropPress ? 'auto' : 'none'}
             >
-              <View style={styles.handleArea}>
-                <View style={styles.handle} />
-              </View>
-              <ScrollCoordinationContext.Provider value={scrollCoordination}>
-                <View style={styles.body}>{children}</View>
-              </ScrollCoordinationContext.Provider>
+              <Pressable
+                style={styles.backdropPressable}
+                onPress={closeOnBackdropPress ? close : undefined}
+                accessibilityRole="button"
+                accessibilityLabel="Close"
+              />
             </Animated.View>
-          </GestureDetector>
-        </View>
-      </GestureHandlerRootView>
-    </Modal>
-  );
-}
+
+            {/* Two layers on purpose: the slide-out is a transform on the UI
+                thread, the sheet's own height and keyboard lift are layout on
+                the JS thread, and a single view cannot be driven by both. */}
+            <Animated.View
+              style={{
+                transform: [
+                  {
+                    translateY: slide,
+                  },
+                ],
+              }}
+            >
+              <GestureDetector gesture={pan}>
+                <Animated.View
+                  style={[
+                    styles.sheet,
+                    style,
+                    { height: sheetHeight, transform: [{ translateY }] },
+                  ]}
+                >
+                  <View style={styles.handleArea}>
+                    <View style={styles.handle} />
+                  </View>
+                  <ScrollCoordinationContext.Provider
+                    value={scrollCoordination}
+                  >
+                    <View style={styles.body}>{children}</View>
+                  </ScrollCoordinationContext.Provider>
+                </Animated.View>
+              </GestureDetector>
+            </Animated.View>
+          </View>
+        </GestureHandlerRootView>
+      </Modal>
+    );
+  }
+);
 
 /**
  * The scroll view a sheet's body should use.
@@ -437,4 +521,10 @@ const BottomSheetScrollView = forwardRef<ScrollView, ScrollViewProps>(
   }
 );
 
-BottomSheet.ScrollView = BottomSheetScrollView;
+/**
+ * `BottomSheet.ScrollView` is the scroll view a sheet's body should use — see
+ * the note on the component below.
+ */
+export const BottomSheet = Object.assign(BottomSheetRoot, {
+  ScrollView: BottomSheetScrollView,
+});
