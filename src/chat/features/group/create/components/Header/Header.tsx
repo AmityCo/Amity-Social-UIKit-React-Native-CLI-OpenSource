@@ -1,8 +1,11 @@
 // Header — create-group header. Ported from AmityUiKitWeb
-// v4/chat/features/group/create/components/Header. The shared TopBar (back) with
+// v4/chat/features/group/create/components/Header. The shared TopBar (close) with
 // a trailing "Create" button.
 //
 // RN adaptations from web:
+//   - Leading control is a close (X), per the design's New group top nav; web
+//     used a back chevron. The select-member step navigates here with `replace`,
+//     so closing (after the leave confirmation) exits the whole flow.
 //   - RN has no `<form>`, so web's `Button.Main type="submit"` becomes a `Button`
 //     (tertiary/sm — the RN analogue of web ghost/primary) wired to `onCreate`.
 
@@ -28,7 +31,7 @@ export function Header({ isFormValid, onClose, onCreate }: HeaderProps) {
   return (
     <TopBar
       title={title}
-      leadingType="back"
+      leadingType="close"
       onLeading={onClose}
       trailing={
         <Button

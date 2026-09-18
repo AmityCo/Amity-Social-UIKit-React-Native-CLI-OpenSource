@@ -10,6 +10,7 @@ import useFile from '../../../../../../core/hooks/useFile';
 import { Button } from '../../../../../../core/design/atoms/Button';
 import { Typography } from '../../../../../../core/design/components/Typography';
 import { Loader } from '../../../../../../core/design/atoms/Loader';
+import { AmityColorToken } from '../../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../../core/localization';
 import { Avatar } from '../../../../../elements/Avatar';
 import { useNetworkOnline } from '../../../../../hooks';
@@ -55,7 +56,10 @@ export function Header({
         </Typography>
         {!isBanned && !online ? (
           <View style={styles.subtitle}>
-            <Loader.Spinner size="sm" />
+            <Loader.Spinner
+              size="sm"
+              tokenColor={AmityColorToken.TextListTextDescriptionDefaultDefault}
+            />
             <Typography variant="caption" style={styles.subtitleText}>
               {waitingForNetwork}
             </Typography>

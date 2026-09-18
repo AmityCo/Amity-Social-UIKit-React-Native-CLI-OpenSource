@@ -1,9 +1,8 @@
 // AddTile — ported from AmityUiKitWeb features/shared/components/AddTile.
 // A small "add" tile: an icon-only plus button above a single-line caption label.
-// DEVIATION FROM WEB: web renders Button.Icon (filled/secondary/40px, a filled
-// circle). Per user intent the plus button is borderless — icon only, no filled
-// background — matching the SelectedMember close/cross button
-// (transparent/primary). `onClick`→`onPress`.
+// The plus button is web's Button.Icon filled/secondary/40 — a light grey circle
+// with a dark grey glyph, as in the design. (An earlier RN build rendered it
+// borderless; QA flagged that as off-design.) `onClick`→`onPress`.
 
 // 1. React / RN imports
 import { View } from 'react-native';
@@ -28,8 +27,8 @@ export function AddTile({ onPress, label, accessibilityLabel }: AddTileProps) {
     <View style={styles.tile}>
       <Button.Icon
         icon="plus-r"
-        styleType="transparent"
-        hierarchy="primary"
+        styleType="filled"
+        hierarchy="secondary"
         size={40}
         onPress={onPress}
         accessibilityLabel={accessibilityLabel}

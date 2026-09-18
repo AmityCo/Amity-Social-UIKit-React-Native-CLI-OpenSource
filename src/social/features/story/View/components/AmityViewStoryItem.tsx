@@ -34,7 +34,10 @@ import { SvgXml } from 'react-native-svg';
 import Modal from 'react-native-modalbox';
 import { ComponentID, ElementID, PageID } from '../../../../enums';
 import useConfig from '../../../../hooks/useConfig';
-import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import {
+  BottomSheet,
+  type BottomSheetMethods,
+} from '../../../../../core/design/components/BottomSheet';
 import CommentList from '../../../../components/Social/CommentList/CommentList';
 import { StoryRepository } from '@amityco/ts-sdk-react-native';
 import { NextOrPrevious } from '../../../../components/StoryKit';

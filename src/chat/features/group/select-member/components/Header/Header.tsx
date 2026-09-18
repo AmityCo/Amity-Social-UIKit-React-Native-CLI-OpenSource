@@ -1,9 +1,11 @@
 // Header — select-group-member header. Ported from AmityUiKitWeb
 // v4/chat/features/group/select-member/components/Header. Composes the shared
-// TopBar (back + a trailing "Next" button) over a search field and the
+// TopBar (close + a trailing "Next" button) over a search field and the
 // SelectedUsersBar strip.
 //
 // RN adaptations from web:
+//   - Leading control is a close (X), per the design's New group top nav; web
+//     used a back chevron. Closing dismisses the whole create-group flow.
 //   - RN has no `<form>`, so web's `Button.Main type="submit"` becomes a
 //     `Button` (tertiary/sm — the RN analogue of web ghost/primary) wired to an
 //     explicit `onNext` prop.
@@ -50,7 +52,7 @@ export function Header({
     <View style={styles.header}>
       <TopBar
         title={title}
-        leadingType="back"
+        leadingType="close"
         onLeading={onClose}
         trailing={
           <Button
