@@ -169,8 +169,11 @@ export function AmityGroupMemberActionComponent({
     if (!isConnected) return;
     await UserRepository.flagUser(userId);
     setIsFlaggedByMe(true);
+    // The member list speaks about members, not users — its own toast string,
+    // alongside the sibling promoted/demoted/banned ones. The generic
+    // report-user string stays for the 1:1 conversation menu.
     success({
-      content: resolveString('amity_chat_action_report_user_success'),
+      content: resolveString('amity_chat_group_member_list_toast_reported'),
     });
   }
 
@@ -179,7 +182,7 @@ export function AmityGroupMemberActionComponent({
     await UserRepository.unflagUser(userId);
     setIsFlaggedByMe(false);
     success({
-      content: resolveString('amity_chat_action_unreport_user_success'),
+      content: resolveString('amity_chat_group_member_list_toast_unreported'),
     });
   }
 
@@ -249,11 +252,8 @@ export function AmityGroupMemberActionComponent({
     },
     {
       key: 'unreport',
-      // LEADS WEB (PDT-4143): web PR 1822 gave the slashed flag to the message
-      // menu and the 1:1 conversation menu but missed this third site — its
-      // MemberList still renders `icon: Flag` for both report and unreport.
-      // Same intent applies here, so RN uses flag-slash-r; drop this marker once
-      // web's member list catches up.
+      // Unreport uses the slashed flag, the same as the message menu and the
+      // 1:1 conversation menu; only `report` gets the plain one.
       icon: 'flag-slash-r',
       label: resolveString('amity_chat_member_action_unreport'),
       visible: isFlaggedByMe,
@@ -331,7 +331,6 @@ export function AmityGroupMemberActionComponent({
                 icon={item.icon}
                 label={item.label}
                 destructive={item.destructive}
-                typography="body"
                 onPress={() => {
                   closeBottomSheet();
                   item.onPress();

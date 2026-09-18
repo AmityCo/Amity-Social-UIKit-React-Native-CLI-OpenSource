@@ -1054,6 +1054,8 @@
   "amity_chat_group_member_list_toast_banned": "แบนผู้ใช้แล้ว",
   "amity_chat_group_member_list_toast_demoted": "ลดตำแหน่งสมาชิกแล้ว",
   "amity_chat_group_member_list_toast_promoted": "เลื่อนตำแหน่งสมาชิกแล้ว",
+  "amity_chat_group_member_list_toast_reported": "รายงานสมาชิกแล้ว",
+  "amity_chat_group_member_list_toast_unreported": "ยกเลิกการรายงานสมาชิกแล้ว",
   "amity_chat_action_remove_member": "ลบสมาชิกแล้ว",
   "amity_chat_member_action_demote": "ลดตำแหน่งจากผู้ดูแล",
   "amity_chat_member_action_promote": "เลื่อนตำแหน่งเป็นผู้ดูแล",

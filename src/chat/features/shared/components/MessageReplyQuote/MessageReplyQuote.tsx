@@ -5,7 +5,7 @@
 // id, the way web's quote calls `useMessageObject(parentId)` and iOS's bubble
 // view model observes `chatManager.getMessage(messageId: parentId)` — never by
 // looking the id up in whatever page the list has loaded, which is what left a
-// parent on an earlier page spinning forever (PDT-4927). Media dimensions are
+// parent on an earlier page spinning forever. Media dimensions are
 // clamped via getReplyThumbnailSize.
 
 // 1. React / RN imports

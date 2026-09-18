@@ -65,11 +65,10 @@ const Toast = () => {
       )}
       {toast.type === 'success' &&
         (isCustom ? (
-          // Web chat toast (Toast atom, variant 'success'): the bare `CheckCircle`
-          // export, which is the REGULAR (outline) variant — Solid is opt-in via
-          // `.Solid`, exactly as for the sibling ExclamationCircle / InfoCircle
-          // icons below. PDT-5281: this was the solid `-s` variant, so chat success
-          // toasts (e.g. "User blocked.") rendered filled instead of outlined.
+          // The chat toast's success glyph is the REGULAR (outline) check circle,
+          // matching the sibling ExclamationCircle / InfoCircle icons below. It
+          // used to be the solid `-s` variant, so chat success toasts ("User
+          // blocked." and friends) rendered filled instead of outlined.
           <AmityIcon name="check-circle-r" size={24} color={iconColor} />
         ) : (
           <SvgXml

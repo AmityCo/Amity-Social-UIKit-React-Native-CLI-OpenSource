@@ -61,12 +61,12 @@ export function useChatNotifications(): UseChatNotificationsReturn {
   const { showToast, hideToast } = useToast();
 
   // Every chat toast is raised above the compose bar, matching web's base
-  // `.chatToast` bottom offset (see CHAT_TOAST_BOTTOM). PDT-5281: previously only
-  // `alignment: 'with-composer'` was mapped and every other alignment fell back to
-  // the app-wide 16px bottom, so chat toasts emitted with web's other alignments
-  // (e.g. the block/unblock toasts, which web tags 'fullscreen') rendered on top of
-  // the compose bar instead of above it. `alignment` stays accepted-and-ignored:
-  // its remaining web values are desktop/sidebar layout concerns with no RN analog.
+  // `.chatToast` bottom offset (see CHAT_TOAST_BOTTOM). Only
+  // `alignment: 'with-composer'` used to be mapped and every other alignment fell
+  // back to the app-wide 16px bottom, so toasts raised with any other alignment
+  // (the block/unblock ones among them) rendered on top of the compose bar
+  // instead of above it. `alignment` stays accepted-and-ignored: its remaining
+  // values are desktop/sidebar layout concerns with no RN analog.
   const emit = (type: ToastType, data: ChatNotificationOptions) =>
     showToast({
       message: toMessage(data.content),

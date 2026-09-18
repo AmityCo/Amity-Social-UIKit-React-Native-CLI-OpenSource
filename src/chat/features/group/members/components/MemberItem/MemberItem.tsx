@@ -9,7 +9,7 @@
 // passes a small unban menu) reuse this row — matching web's shared usage.
 //
 // RN adaptations: web read the avatar synchronously from the SDK; RN resolves
-// `avatarFileId` through `useFile`. The brand badge (PDT-5165) uses the core
+// `avatarFileId` through `useFile`. The brand badge uses the core
 // BrandBadge element — web pulls its own from social/, which chat must not
 // depend on (CLAUDE.md).
 
@@ -64,8 +64,8 @@ export function MemberItem({
         <Typography variant="bodyBold" style={styles.name} numberOfLines={1}>
           {displayName}
         </Typography>
-        {/* PDT-5165: web renders this right after the name, before the "you"
-            suffix (.memberItem__brandBadge, 1rem, margin-left 0.125rem). */}
+        {/* Sits right after the name and before the "you" suffix, 16 square
+            with a 2 left margin. */}
         {user.isBrand ? <BrandBadge accessibilityLabel="Brand" /> : null}
         {isCurrentUser ? (
           <Typography variant="bodyBold" style={styles.youSuffix}>

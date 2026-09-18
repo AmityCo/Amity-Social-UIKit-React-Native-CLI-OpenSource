@@ -6,7 +6,7 @@
 // The default copy is the generic livestream-unavailable pair ("Something went
 // wrong" / "The content you're looking for is unavailable."). A caller that knows
 // what the content was can pass a narrower line — the report sheet says "message"
-// rather than "content" (PDT-5229).
+// rather than "content".
 
 // 1. React / RN imports
 import { View, type StyleProp, type ViewStyle } from 'react-native';

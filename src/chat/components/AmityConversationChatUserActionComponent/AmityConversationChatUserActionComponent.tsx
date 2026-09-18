@@ -74,7 +74,7 @@ export function AmityConversationChatUserActionComponent({
 
   // Block state comes from the shared `useFollowInfo` live hook — the same source
   // the conversation uses to swap its composer for the blocked banner, so the menu
-  // label and the banner can never disagree (PDT-5281).
+  // label and the banner can never disagree.
   const { isBlockedByMe } = useFollowInfo(userId);
   // Report state: read once from `UserRepository.isUserFlaggedByMe`; the report
   // row toggles flag/unflag live so the label flips Report ↔ Unreport user.
@@ -169,10 +169,8 @@ export function AmityConversationChatUserActionComponent({
   }
 
   function handleToggleBlock() {
-    // No connectivity guard, matching web's `useUserBlockQuery`: bailing early
-    // swallowed the tap with no feedback at all, and PDT-5284 is specifically
-    // about surfacing the failure. Let the call run and let the catch below
-    // raise the toast.
+    // No connectivity guard on purpose: bailing early swallowed the tap with no
+    // feedback at all. Let the call run and let the catch below raise the toast.
     if (isBlockedByMe) {
       Alert.alert(
         resolveString('amity_chat_unblock_confirm_title'),
@@ -182,7 +180,7 @@ export function AmityConversationChatUserActionComponent({
           {
             text: resolveString('amity_chat_unblock_confirm_label'),
             onPress: async () => {
-              // PDT-5284: unhandled before, so unblocking with no connection
+              // Unhandled before, so unblocking with no connection
               // rejected silently — no toast, and an unhandled promise on top.
               // The failure strings already existed, nothing raised them.
               try {
@@ -208,7 +206,7 @@ export function AmityConversationChatUserActionComponent({
             text: resolveString('amity_chat_block_confirm_label'),
             style: 'destructive',
             onPress: async () => {
-              // PDT-5284, as above.
+              // As above: no connectivity guard, surface the failure instead.
               try {
                 await UserRepository.Relationship.blockUser(userId);
               } catch {
@@ -241,7 +239,7 @@ export function AmityConversationChatUserActionComponent({
     },
     {
       key: 'report',
-      // PDT-4143 (web PR 1822): the icon flips with the state, not just the
+      // The icon flips with the state, not just the
       // label — `isReported ? FlagSlash : Flag`.
       icon: isFlaggedByMe ? 'flag-slash-r' : 'flag-r',
       label: resolveString(
@@ -253,10 +251,9 @@ export function AmityConversationChatUserActionComponent({
     },
     {
       key: 'block',
-      // PDT-5282 — LEADS WEB (web useConversationActions uses <Ban/> here). The
-      // Figma for this row is the person-with-slash glyph; `ban-r` is the bare
-      // prohibition circle, which reads as the group BAN action instead. The
-      // group ban rows keep `ban-r`.
+      // The Figma for this row is the person-with-slash glyph; `ban-r` is the
+      // bare prohibition circle, which reads as the group BAN action instead.
+      // The group ban rows keep `ban-r`.
       icon: 'user-slash-r',
       label: resolveString(
         isBlockedByMe
@@ -278,7 +275,6 @@ export function AmityConversationChatUserActionComponent({
                 key={item.key}
                 icon={item.icon}
                 label={item.label}
-                typography="body"
                 onPress={() => {
                   closeBottomSheet();
                   item.onPress();
