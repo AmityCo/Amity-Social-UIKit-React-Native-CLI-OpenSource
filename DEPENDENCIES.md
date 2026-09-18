@@ -88,12 +88,14 @@ A complete inventory of every dependency declared in the root [`package.json`](.
 | `react-native-paper`                            | dep          | ^5.10.6                        |
 | `react-native-progress`                         | dep          | ^5.0.0                         |
 | `react-native-radio-buttons-group`              | dep          | ^3.0.2                         |
+| `react-native-reanimated`                       | dev+peer     | ~4.3.4                         |
 | `react-native-safe-area-context`                | dev+peer     | ^5.6.2                         |
 | `react-native-screens`                          | dev+peer     | ^4.18.0                        |
 | `react-native-svg`                              | dev+peer     | ^15.15.1                       |
 | `react-native-video`                            | dev+peer     | ^6.18.0                        |
 | `react-native-video-controls`                   | dev          | ^2.8.1                         |
 | `react-native-vision-camera`                    | dev+peer     | ^4.7.3                         |
+| `react-native-worklets`                         | dev+peer     | ~0.8.3                         |
 | `react-redux`                                   | dep          | ^9.1.2                         |
 | `redux`                                         | dep          | ^4.2.1                         |
 | `release-it`                                    | dev          | ^15.0.0                        |
@@ -131,11 +133,13 @@ These are the packages a consuming app needs to provide. See [MIGRATION.md](./MI
 | `react-native-image-picker`                 | ^8.2.1   |
 | `react-native-linear-gradient`              | ^2.8.3   |
 | `react-native-netinfo`                      | ^1.1.0   |
+| `react-native-reanimated`                   | ~4.3.4   |
 | `react-native-safe-area-context`            | ^5.6.2   |
 | `react-native-screens`                      | ^4.18.0  |
 | `react-native-svg`                          | ^15.15.1 |
 | `react-native-video`                        | ^6.18.0  |
 | `react-native-vision-camera`                | ^4.7.3   |
+| `react-native-worklets`                     | ~0.8.3   |
 
 ---
 

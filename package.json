@@ -104,12 +104,14 @@
     "react-native-haptic-feedback": "^2.3.3",
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
+    "react-native-reanimated": "~4.3.4",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.18.0",
     "react-native-svg": "^15.15.1",
     "react-native-video": "^6.18.0",
     "react-native-video-controls": "^2.8.1",
     "react-native-vision-camera": "^4.7.3",
+    "react-native-worklets": "~0.8.3",
     "release-it": "^15.0.0",
     "turbo": "^1.10.7",
     "typescript": "^5.8.3"
@@ -146,11 +148,13 @@
     "react-native-haptic-feedback": "^2.3.3",
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
+    "react-native-reanimated": "~4.3.4",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.18.0",
     "react-native-svg": "^15.15.1",
     "react-native-video": "^6.18.0",
-    "react-native-vision-camera": "^4.7.3"
+    "react-native-vision-camera": "^4.7.3",
+    "react-native-worklets": "~0.8.3"
   },
   "engines": {
     "node": ">=20"

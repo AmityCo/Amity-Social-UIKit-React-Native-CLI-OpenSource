@@ -10,11 +10,18 @@
 //
 // So there is exactly one description of the box here:
 //
-//   height = open − drag − keyboard        (bottom edge pinned)
-//   offset = −keyboard                     (lifts clear of the keys)
+//   height = open − keyboard               (bottom edge pinned)
+//   offset = drag − keyboard               (slides out, lifts clear of the keys)
 //
 // Opening, dragging and the keyboard are all the same quantity — height — which
 // is why a drag that interrupts an animation has nothing to disagree with.
+//
+// Every one of those values is a reanimated shared value, so the whole box is
+// computed on the UI thread. That matters most for `height`, which is a layout
+// property: RN's own Animated cannot drive layout natively, so on that driver a
+// sheet with a lot of content inside it dropped the entrance animation entirely
+// and simply appeared. Here the height animates in step with the transform even
+// while JS is busy laying the content out.
 //
 // It renders in a Modal on purpose. A Modal is its own native hierarchy, so
 // nothing an ancestor does to its layout — a keyboard-avoiding wrapper padding
@@ -35,9 +42,7 @@ import {
   type ReactNode,
 } from 'react';
 import {
-  Animated,
   BackHandler,
-  Easing,
   Keyboard,
   Modal,
   Platform,
@@ -54,6 +59,13 @@ import {
 } from 'react-native';
 
 // 2. Third-party imports
+import Animated, {
+  Easing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import {
   Gesture,
   GestureDetector,
@@ -112,6 +124,8 @@ const DRAG_CLOSE_FLING = 800;
 /** A drag has to travel this far before it is a drag and not a tap. */
 const DRAG_ACTIVATION_DISTANCE = 8;
 const BACKDROP_OPACITY = 0.32;
+/** The backdrop runs this much faster than the sheet, opening and closing. */
+const BACKDROP_SPEEDUP = 2.5;
 
 /**
  * How the sheet and a scrolling body share one downward drag.
@@ -129,8 +143,6 @@ type ScrollCoordination = {
 const ScrollCoordinationContext = createContext<ScrollCoordination | null>(
   null
 );
-/** The backdrop runs this much faster than the sheet, opening and closing. */
-const BACKDROP_SPEEDUP = 2.5;
 
 // 5. Named function component
 const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
@@ -167,27 +179,28 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
     // of vanishing the moment it is told to close.
     const [mounted, setMounted] = useState(isOpen);
 
-    // The sheet opens by GROWING from the bottom edge rather than sliding up as a
-    // finished panel, and a drag takes height off the same value — so the bottom
-    // edge is pinned throughout and only the top edge ever moves. Every state the
-    // sheet can be in is one number.
-    const openHeight = useRef(new Animated.Value(0)).current;
     // One value for both the drag and the close: dragging moves the sheet down,
     // and closing is the same move carried all the way past the bottom edge. As
     // two separate quantities — a drag that shrank the height and a close that
     // translated — releasing a drag reset the height and the sheet flashed back
     // to full size for a frame on its way out.
-    const slide = useRef(new Animated.Value(0)).current;
-    const keyboardInset = useRef(new Animated.Value(0)).current;
-    const backdropProgress = useRef(new Animated.Value(0)).current;
-    // Height is layout and stays on the JS driver; the slide is a transform and
-    // runs on the UI thread, so neither the drag nor the close depends on how
-    // busy JS is.
+    const slide = useSharedValue(0);
+    // The sheet opens by growing from its bottom edge.
+    const openHeight = useSharedValue(0);
+    const keyboardInset = useSharedValue(0);
+    const backdropProgress = useSharedValue(0);
 
     // While the sheet is on its way out the keyboard must not resize it: the
     // dismissal that closes the sheet also dismisses the keyboard, and letting
     // that grow the sheet back is exactly the upward flash this replaces.
     const isClosing = useRef(false);
+
+    const finishClose = useCallback(() => {
+      setMounted(false);
+      setSelfVisible(false);
+      isClosing.current = false;
+      onClose?.();
+    }, [onClose]);
 
     const close = useCallback(() => {
       if (isClosing.current) return;
@@ -197,41 +210,34 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
       // waiting for focus to be lost keeps the two on the same beat.
       Keyboard.dismiss();
 
-      Animated.parallel([
-        // Carries on from wherever a drag left the sheet, straight past the
-        // bottom edge.
-        Animated.timing(slide, {
-          toValue: container,
-          duration: CLOSE_DURATION,
-          easing: SHEET_EASING,
-          useNativeDriver: true,
-        }),
-        Animated.timing(backdropProgress, {
-          toValue: 0,
-          // The backdrop clears faster than the sheet, so the page behind is
-          // already readable while the last of the sheet is still on its way out.
-          duration: CLOSE_DURATION / BACKDROP_SPEEDUP,
-          useNativeDriver: true,
-        }),
-      ]).start(({ finished }) => {
-        // A close that was interrupted — the sheet reopened while it was still
-        // animating out — must not run the teardown. Animated fires this on
-        // interruption too, and tearing down then unmounts the sheet that was
-        // just reopened and empties the content that was just put in it.
-        if (!finished) return;
-
-        // Nothing is reset here. `setMounted(false)` only takes effect on the
-        // next render, while an Animated value is written to the native view at
-        // once — so resetting the slide here put the sheet back at its open
-        // position, full size and over a full-strength backdrop, for the frame
-        // before the unmount landed. That was the flash. The values are reset
-        // when the sheet next opens instead, where nothing can see them.
-        setMounted(false);
-        setSelfVisible(false);
-        isClosing.current = false;
-        onClose?.();
+      // The backdrop clears faster than the sheet, so the page behind is already
+      // readable while the last of the sheet is still on its way out.
+      backdropProgress.value = withTiming(0, {
+        duration: CLOSE_DURATION / BACKDROP_SPEEDUP,
       });
-    }, [backdropProgress, container, slide, keyboardInset, onClose]);
+
+      // Carries on from wherever a drag left the sheet, straight past the
+      // bottom edge.
+      slide.value = withTiming(
+        container,
+        { duration: CLOSE_DURATION, easing: SHEET_EASING },
+        (completed) => {
+          'worklet';
+          // A close that was interrupted — the sheet reopened while it was
+          // still animating out — must not run the teardown, which would
+          // unmount the sheet that was just reopened and empty the content that
+          // was just put in it.
+          if (completed) runOnJS(finishClose)();
+        }
+      );
+
+      // Nothing is reset here. `setMounted(false)` only takes effect on the next
+      // render, while a shared value reaches the native view at once — so
+      // resetting the slide here put the sheet back at its open position, full
+      // size and over a full-strength backdrop, for the frame before the unmount
+      // landed. That was the flash. The values are wound back when the sheet
+      // next opens instead, where nothing can see them.
+    }, [backdropProgress, container, slide, finishClose]);
 
     useImperativeHandle(
       ref,
@@ -242,43 +248,52 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
       []
     );
 
+    // Held until the Modal is actually on screen — see `startOpen`.
+    const pendingOpen = useRef(false);
+
+    const startOpen = useCallback(() => {
+      openHeight.value = withTiming(resolvedHeight, {
+        duration: OPEN_DURATION,
+        easing: SHEET_EASING,
+      });
+      backdropProgress.value = withTiming(1, {
+        duration: OPEN_DURATION / BACKDROP_SPEEDUP,
+      });
+    }, [backdropProgress, openHeight, resolvedHeight]);
+
     // Open / close from the outside.
     useEffect(() => {
       if (isOpen) {
         isClosing.current = false;
-        // Wound back here, off screen, rather than at the end of the close.
-        slide.setValue(0);
-        keyboardInset.setValue(0);
-        setMounted(true);
-        Animated.parallel([
-          Animated.timing(openHeight, {
-            toValue: resolvedHeight,
-            duration: OPEN_DURATION,
-            easing: SHEET_EASING,
-            useNativeDriver: false,
-          }),
-          Animated.timing(backdropProgress, {
-            toValue: 1,
-            duration: OPEN_DURATION / BACKDROP_SPEEDUP,
-            useNativeDriver: true,
-          }),
-        ]).start();
+        // Wound back here, off screen, rather than at the end of the close,
+        // where resetting them would repaint the sheet at its open position for
+        // the frame before the unmount lands.
+        slide.value = 0;
+        keyboardInset.value = 0;
+        // The close slides the sheet out and never touches the height, so this
+        // has to be wound back by hand or the second open starts at its target
+        // and plays nothing.
+        openHeight.value = 0;
+
+        if (mounted) {
+          // Already on screen, interrupting its own close.
+          startOpen();
+        } else {
+          // A Modal takes a few frames to present, and an animation started now
+          // would spend them off screen — with an ease-out that covers most of
+          // its distance early, the sheet would simply be there when the Modal
+          // appeared. It waits for `onShow` instead.
+          pendingOpen.current = true;
+          setMounted(true);
+        }
       } else if (mounted) {
         close();
       }
-    }, [
-      isOpen,
-      mounted,
-      close,
-      openHeight,
-      backdropProgress,
-      slide,
-      resolvedHeight,
-    ]);
+    }, [isOpen, mounted, close, keyboardInset, openHeight, slide, startOpen]);
 
-    // The keyboard, on the keyboard's own curve. Reading `duration` and `easing`
-    // off the event is what keeps the sheet and the keyboard on one timeline
-    // rather than two that happen to start together.
+    // The keyboard, on the keyboard's own curve. Reading `duration` off the
+    // event is what keeps the sheet and the keyboard on one timeline rather than
+    // two that happen to start together.
     useEffect(() => {
       const isIOS = Platform.OS === 'ios';
       // iOS announces the keyboard before it moves; Android only after.
@@ -290,13 +305,12 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
       // inset and leaves the sheet's last row under the keys.
       const bottomEdgeCorrection = isIOS ? 0 : insets.bottom;
 
-      const animateTo = (toValue: number, event?: KeyboardEvent) =>
-        Animated.timing(keyboardInset, {
-          toValue,
+      const animateTo = (toValue: number, event?: KeyboardEvent) => {
+        keyboardInset.value = withTiming(toValue, {
           duration: event?.duration || OPEN_DURATION,
           easing: SHEET_EASING,
-          useNativeDriver: false,
-        }).start();
+        });
+      };
 
       const show = Keyboard.addListener(showEvent, (event) => {
         if (isClosing.current) return;
@@ -333,9 +347,16 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
     // assumed. Gesture handler negotiates continuously instead, which is what
     // lets a drag start anywhere on the sheet and still reach the sheet.
     const scrollRef = useRef<React.ComponentType<object> | null>(null);
-    const atTop = useRef(true);
-    const gestureConfig = useRef({ resolvedHeight, closeOnDragDown, close });
-    gestureConfig.current = { resolvedHeight, closeOnDragDown, close };
+    // A shared value rather than a ref: the gesture's callbacks run on the UI
+    // thread, where a JS ref cannot be read.
+    const atTop = useSharedValue(true);
+
+    // `close` changes identity whenever the caller's `onClose` does, and the
+    // gesture would be rebuilt and re-attached with it. This is the same call
+    // behind a handle that never changes.
+    const closeRef = useRef(close);
+    closeRef.current = close;
+    const requestClose = useCallback(() => closeRef.current(), []);
 
     const pan = useMemo(
       () =>
@@ -346,78 +367,69 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
           .failOffsetY(-DRAG_ACTIVATION_DISTANCE)
           .simultaneousWithExternalGesture(scrollRef)
           .onUpdate((event) => {
-            if (!gestureConfig.current.closeOnDragDown) return;
+            'worklet';
+            if (!closeOnDragDown) return;
             // A list that can still scroll up keeps the drag.
-            if (!atTop.current) return;
-            if (event.translationY > 0) slide.setValue(event.translationY);
+            if (!atTop.value) return;
+            if (event.translationY > 0) slide.value = event.translationY;
           })
           .onEnd((event) => {
-            if (!gestureConfig.current.closeOnDragDown) return;
+            'worklet';
+            if (!closeOnDragDown) return;
 
             const passedDistance =
-              event.translationY >
-              gestureConfig.current.resolvedHeight * DRAG_CLOSE_RATIO;
+              event.translationY > resolvedHeight * DRAG_CLOSE_RATIO;
             // velocityY is points per second here, not per frame.
             const flickedDown = event.velocityY > DRAG_CLOSE_FLING;
 
-            if (atTop.current && (passedDistance || flickedDown)) {
-              gestureConfig.current.close();
+            if (atTop.value && (passedDistance || flickedDown)) {
+              runOnJS(requestClose)();
             } else {
-              Animated.timing(slide, {
-                toValue: 0,
+              slide.value = withTiming(0, {
                 duration: OPEN_DURATION / 2,
                 easing: SHEET_EASING,
-                useNativeDriver: true,
-              }).start();
+              });
             }
           }),
-      [slide]
+      [atTop, closeOnDragDown, requestClose, resolvedHeight, slide]
     );
 
     const scrollCoordination = useMemo<ScrollCoordination>(
       () => ({
         scrollRef,
         setAtTop: (value: boolean) => {
-          atTop.current = value;
+          atTop.value = value;
         },
       }),
-      []
+      [atTop]
     );
 
-    if (!mounted) return null;
-
-    // The keyboard never takes more than the sheet has.
-    const clampedKeyboardInset = keyboardInset.interpolate({
-      inputRange: [0, resolvedHeight],
-      outputRange: [0, resolvedHeight],
-      extrapolate: 'clamp',
+    // open − keyboard for the box, drag − keyboard for where it sits. The
+    // keyboard never takes more than the sheet has, and the sheet rises by
+    // exactly what it loses — the two being the same number is what keeps the
+    // sheet's TOP edge still while the keyboard opens; only the body shortens.
+    const sheetStyle = useAnimatedStyle(() => {
+      const lift = Math.min(keyboardInset.value, openHeight.value);
+      return {
+        height: Math.max(openHeight.value - lift, 0),
+        transform: [{ translateY: slide.value - lift }],
+      };
     });
-
-    // open − drag − keyboard. The open animation and the drag are the same
-    // quantity from the sheet's point of view, which is why a drag interrupted
-    // mid-open has nothing to disagree with.
-    const sheetHeight = Animated.subtract(openHeight, clampedKeyboardInset);
-
-    // Shrinking alone would leave the sheet on the bottom of the screen with the
-    // keyboard drawn over it, so it also rises by exactly what it loses. The two
-    // being the same number is what keeps the sheet's TOP edge still while the
-    // keyboard opens — only the body gets shorter.
-    const translateY = Animated.multiply(clampedKeyboardInset, -1);
 
     // The backdrop fades on its own faster curve, and thins again as the sheet is
     // dragged away, so letting go halfway never leaves a full-strength scrim
     // behind a half-gone sheet.
-    const backdropOpacity = Animated.multiply(
-      backdropProgress.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, BACKDROP_OPACITY],
-      }),
-      slide.interpolate({
-        inputRange: [0, resolvedHeight],
-        outputRange: [1, 0],
-        extrapolate: 'clamp',
-      })
-    );
+    const backdropStyle = useAnimatedStyle(() => {
+      const dragged =
+        resolvedHeight > 0
+          ? Math.min(Math.max(slide.value / resolvedHeight, 0), 1)
+          : 0;
+      return {
+        opacity: backdropProgress.value * BACKDROP_OPACITY * (1 - dragged),
+      };
+    });
+
+    if (!mounted) return null;
 
     return (
       <Modal
@@ -426,6 +438,15 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
         animationType="none"
         statusBarTranslucent
         onRequestClose={close}
+        onShow={() => {
+          if (!pendingOpen.current) return;
+          pendingOpen.current = false;
+          // Two frames after `onShow`, not on it: iOS reports the Modal as shown
+          // while it is still settling, and an animation started in that window
+          // spends its opening frames — the ones an ease-out puts most of the
+          // distance into — behind a view that is not on screen yet.
+          requestAnimationFrame(() => requestAnimationFrame(startOpen));
+        }}
       >
         {/* Gesture handler needs a root of its own in here: a Modal is a separate
           native hierarchy, so the one the provider mounts around the app does
@@ -433,7 +454,7 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
         <GestureHandlerRootView style={styles.root}>
           <View style={styles.root} accessibilityViewIsModal>
             <Animated.View
-              style={[styles.backdrop, { opacity: backdropOpacity }]}
+              style={[styles.backdrop, backdropStyle]}
               pointerEvents={closeOnBackdropPress ? 'auto' : 'none'}
             >
               <Pressable
@@ -444,37 +465,20 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
               />
             </Animated.View>
 
-            {/* Two layers on purpose: the slide-out is a transform on the UI
-                thread, the sheet's own height and keyboard lift are layout on
-                the JS thread, and a single view cannot be driven by both. */}
-            <Animated.View
-              style={{
-                transform: [
-                  {
-                    translateY: slide,
-                  },
-                ],
-              }}
-            >
-              <GestureDetector gesture={pan}>
-                <Animated.View
-                  style={[
-                    styles.sheet,
-                    style,
-                    { height: sheetHeight, transform: [{ translateY }] },
-                  ]}
-                >
-                  <View style={styles.handleArea}>
-                    <View style={styles.handle} />
-                  </View>
-                  <ScrollCoordinationContext.Provider
-                    value={scrollCoordination}
-                  >
-                    <View style={styles.body}>{children}</View>
-                  </ScrollCoordinationContext.Provider>
-                </Animated.View>
-              </GestureDetector>
-            </Animated.View>
+            {/* One view, because height and offset are now on the same thread:
+                the split that used to be needed — layout on the JS driver, the
+                transform on the native one — is what cost the entrance its
+                animation whenever the content was slow to lay out. */}
+            <GestureDetector gesture={pan}>
+              <Animated.View style={[styles.sheet, style, sheetStyle]}>
+                <View style={styles.handleArea}>
+                  <View style={styles.handle} />
+                </View>
+                <ScrollCoordinationContext.Provider value={scrollCoordination}>
+                  <View style={styles.body}>{children}</View>
+                </ScrollCoordinationContext.Provider>
+              </Animated.View>
+            </GestureDetector>
           </View>
         </GestureHandlerRootView>
       </Modal>
