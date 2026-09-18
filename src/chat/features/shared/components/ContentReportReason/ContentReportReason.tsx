@@ -269,23 +269,25 @@ export function ContentReportReason({
                   {isShowOthersOption ? othersTitle : reportReasonTitle}
                 </Typography>
               </View>
+              {/* The close button belongs to both screens — the design gives
+                  every frame of this sheet an X. Only the back chevron is
+                  conditional, because only the Others screen has somewhere to
+                  go back to. */}
               <View style={[styles.headerSlot, styles.headerSlotRight]}>
-                {isShowOthersOption ? (
-                  <Pressable
-                    style={styles.iconButton}
-                    onPress={requestClose}
-                    accessibilityRole="button"
-                    accessibilityLabel={closeButtonText}
-                  >
-                    <AmityIcon
-                      name="cross-l"
-                      size={24}
-                      tokenColor={
-                        AmityColorToken.IconIconButtonGhostSecondaryDefault
-                      }
-                    />
-                  </Pressable>
-                ) : null}
+                <Pressable
+                  style={styles.iconButton}
+                  onPress={requestClose}
+                  accessibilityRole="button"
+                  accessibilityLabel={closeButtonText}
+                >
+                  <AmityIcon
+                    name="cross-l"
+                    size={24}
+                    tokenColor={
+                      AmityColorToken.IconIconButtonGhostSecondaryDefault
+                    }
+                  />
+                </Pressable>
               </View>
             </View>
 
