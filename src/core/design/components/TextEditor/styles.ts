@@ -35,18 +35,25 @@ export const useStyles = () => {
       // segment — guessing "Enabled/Filled" resolves to the missing sentinel).
       color: token(AmityColorToken.TextInputTextInputPlaceholderEnabledFilled),
     },
-    // Inserted mention token — web colours it with the editor highlight token
-    // (text-input-textinput-placeholder-enabled-highlight = Primary/500·400).
+    // Inserted mention token — the editor highlight colour, at the same semibold
+    // weight a mention carries once the message is sent, so picking a name does
+    // not change how it reads between the composer and the bubble.
+    //
     // Must repeat the input's fontSize/lineHeight: a nested <Text> inside a
     // TextInput does NOT reliably inherit the parent's lineHeight on Android, so
     // without these it renders at the font's natural (taller) line height and its
     // bottom gets clipped by the 20px line box sized from the surrounding text.
+    // The heavier weight makes that natural line height taller still, so the two
+    // values have to stay pinned to the input's.
     mention: {
       color: token(
         AmityColorToken.TextInputTextInputPlaceholderEnabledHighlight
       ),
       fontSize: 16,
       lineHeight: 20,
+      // '600' rather than '500': Android resolves no Medium face for the numeric
+      // weight and falls back to regular, which erases the emphasis entirely.
+      fontWeight: '600',
     },
   });
 

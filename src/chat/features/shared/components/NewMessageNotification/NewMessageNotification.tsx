@@ -1,21 +1,25 @@
-// NewMessageNotification — ported from AmityUiKitWeb features/shared/components/
-// NewMessageNotification. A floating toast pinned to the bottom of the message
+// NewMessageNotification — a floating pill pinned to the bottom of the message
 // list showing the latest incoming message (avatar + preview text + optional
 // media thumbnail) that scrolls to it on press.
 //
-// RN adaptations from web:
-//   - react-aria `Button` → RN `Pressable`.
-//   - Web resolved the media thumb via `useFile` + `FileRepository.fileUrlWithSize`;
-//     RN `useFile` already returns a size-scaled URL, so it is called with the
-//     'small' size directly (avatar/image/video-thumb calls kept unconditional to
-//     respect rules-of-hooks, passing '' when not applicable).
-//   - Web `<img>` → RN `<Image>`; broken/missing thumb → media-broken icon.
-//   - AmityIcon has no `style`; the arrow's 180° rotation lives on a wrapping View.
+// The image thumb goes through `useFile`, which already returns a size-scaled
+// URL, so it asks for 'small' directly; the avatar/image calls stay
+// unconditional (passing '') to respect rules-of-hooks. A missing or broken
+// thumb falls back to the media-broken icon. The video thumb is the video's own
+// first frame, painted by a paused <Video> (see below) — there is no separate
+// thumbnail file to load.
+//
+// The drop shadow the design gives the pill is omitted: it would need a raw hex,
+// which this repo does not allow outside the token set.
 
 // 1. React / RN imports
+import { useRef } from 'react';
 import { Pressable, View, Image } from 'react-native';
 
-// 2. Internal imports
+// 2. Third-party imports
+import Video, { type VideoRef } from 'react-native-video';
+
+// 3. Internal imports
 import { Typography } from '../../../../../core/design/components/Typography';
 import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
@@ -23,9 +27,10 @@ import { resolveString } from '../../../../../core/localization';
 import useFile from '../../../../../core/hooks/useFile';
 import { ImageSizeState } from '../../../../../core/enums';
 import { Avatar } from '../../../../elements/Avatar';
+import { useVideoFileUrl } from '../../../../hooks/useVideoFileUrl';
 import { useStyles } from './styles';
 
-// 3. Types
+// 4. Types
 type NewMessageNotificationProps = {
   message: Amity.Message;
   onPress: () => void;
@@ -46,7 +51,7 @@ function getPreviewText(message: Amity.Message): string {
   }
 }
 
-// 4. Named function component
+// 5. Named function component
 export function NewMessageNotification({
   message,
   onPress,
@@ -55,25 +60,26 @@ export function NewMessageNotification({
 
   const isImage = message.dataType === 'image';
   const isVideo = message.dataType === 'video';
-  const imageFileId = isImage
-    ? (message.data as { fileId?: string } | undefined)?.fileId ?? ''
-    : '';
-  const videoThumbFileId = isVideo
-    ? (message.data as { thumbnailFileId?: string } | undefined)
-        ?.thumbnailFileId ?? ''
-    : '';
+  const fileId =
+    (message.data as { fileId?: string } | undefined)?.fileId ?? '';
 
   const creator = message.creator;
   const avatarUrl = useFile({ fileId: creator?.avatarFileId ?? '' });
   const imageThumb = useFile({
-    fileId: imageFileId,
+    fileId: isImage ? fileId : '',
     imageSize: ImageSizeState.small,
   });
-  const videoThumb = useFile({
-    fileId: videoThumbFileId,
-    imageSize: ImageSizeState.small,
-  });
-  const mediaThumb = isImage ? imageThumb : isVideo ? videoThumb : undefined;
+  // A video message carries no separate thumbnail file — `data.fileId` IS the
+  // video — so reading a `thumbnailFileId` here always came back empty and every
+  // video preview fell through to the media-broken icon. `useVideoFileUrl` is the
+  // raw-url hook that feeds react-native-video everywhere else in chat.
+  const videoUrl = useVideoFileUrl(isVideo ? fileId : undefined);
+
+  // react-native-video 6 paints no frame while `paused` until playback or a
+  // seek, so the poster is nudged off frame 0 exactly once — the same treatment
+  // the video bubble gives its poster.
+  const posterRef = useRef<VideoRef | null>(null);
+  const seededPoster = useRef(false);
 
   return (
     <Pressable
@@ -86,7 +92,7 @@ export function NewMessageNotification({
           <Avatar.User
             avatarUrl={avatarUrl}
             displayName={creator.displayName}
-            size="sm"
+            size="xs"
           />
         ) : null}
         <Typography variant="body" style={styles.preview} numberOfLines={1}>
@@ -96,8 +102,23 @@ export function NewMessageNotification({
       <View style={styles.right}>
         {isImage || isVideo ? (
           <View style={styles.thumb}>
-            {mediaThumb ? (
-              <Image source={{ uri: mediaThumb }} style={styles.thumbImg} />
+            {isVideo && videoUrl ? (
+              <Video
+                ref={posterRef}
+                source={{ uri: videoUrl }}
+                style={styles.thumbImg}
+                resizeMode="cover"
+                paused
+                muted
+                controls={false}
+                onLoad={() => {
+                  if (seededPoster.current) return;
+                  seededPoster.current = true;
+                  posterRef.current?.seek(0.1);
+                }}
+              />
+            ) : isImage && imageThumb ? (
+              <Image source={{ uri: imageThumb }} style={styles.thumbImg} />
             ) : (
               <AmityIcon
                 name="image-r"
@@ -105,13 +126,24 @@ export function NewMessageNotification({
                 tokenColor={AmityColorToken.IconMediaImageBroken}
               />
             )}
+            {isVideo ? (
+              <View style={styles.playBadge} pointerEvents="none">
+                <AmityIcon
+                  name="video-play-s"
+                  size={16}
+                  tokenColor={
+                    AmityColorToken.IconIconButtonTransparentPrimaryDefault
+                  }
+                />
+              </View>
+            ) : null}
           </View>
         ) : null}
-        <View style={styles.arrow}>
+        <View style={styles.chevron}>
           <AmityIcon
-            name="arrow-up-r"
-            size={10}
-            tokenColor={AmityColorToken.TextCustomToastDefault}
+            name="chevron-down"
+            size={20}
+            tokenColor={AmityColorToken.IconIconButtonGhostSecondaryDefault}
           />
         </View>
       </View>

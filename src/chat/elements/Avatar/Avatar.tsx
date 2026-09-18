@@ -34,7 +34,7 @@ export type AvatarUserProps = {
   isDeleted?: boolean;
   /** Show the moderator badge (hidden for deleted users, as on web). */
   isModerator?: boolean;
-  size?: 'sm' | 'md';
+  size?: 'xs' | 'sm' | 'md';
   /** Press handler — replaces web `fullscreen`/ImageViewer, delegated to caller. */
   onPress?: () => void;
 };
@@ -48,19 +48,22 @@ export type AvatarGroupChatProps = {
   variant?: 'default' | 'banned';
 };
 
-// Frame box per User size — web: md 2.5rem = 40, sm 2rem = 32
-// (both are SoT geometry.avatarIcon.avatar.sizes).
-const USER_SIZE: Record<NonNullable<AvatarUserProps['size']>, 32 | 40> = {
+// Frame box per User size — md 40, sm 32, xs 28; all three are SoT
+// geometry.avatarIcon.avatar.sizes.
+const USER_SIZE: Record<NonNullable<AvatarUserProps['size']>, 28 | 32 | 40> = {
+  xs: 28,
   sm: 32,
   md: 40,
 };
 
-// Deleted-user glyph size — web renders the icon at 60% of the frame; rounded to
-// the nearest SoT geometry.avatarIcon.icon.sizes value (md 40*0.6->24, sm 32*0.6->20).
+// Deleted-user glyph size — 60% of the frame, rounded to the nearest SoT
+// geometry.avatarIcon.icon.sizes value (md 40*0.6->24, sm 32*0.6->20,
+// xs 28*0.6->16).
 const USER_DELETED_ICON: Record<
   NonNullable<AvatarUserProps['size']>,
-  20 | 24
+  16 | 20 | 24
 > = {
+  xs: 16,
   sm: 20,
   md: 24,
 };
