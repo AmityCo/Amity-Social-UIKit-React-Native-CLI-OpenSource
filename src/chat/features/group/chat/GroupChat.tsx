@@ -3,9 +3,11 @@
 // composer, viewers, action menu, see-more), driven by useGroupChat. Adds a group
 // Header (→ settings) and a banned empty-state branch.
 
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
+import { getReactorSheetHeight } from '../../../constants';
+import { useChatSurfaceHeight } from '../../../hooks/useChatSurfaceHeight';
 import { AmityMessageComposer } from '../../../components/AmityMessageComposer';
 import { ImageViewer } from '../../shared/components/ImageViewer';
 import { VideoPlayer } from '../../shared/components/VideoPlayer';
@@ -39,14 +41,14 @@ export function GroupChat({
   // repo's global @devvie bottom sheet so it slides up as a sheet with a backdrop
   // + drag/tap-to-close (BUG #15).
   const { openBottomSheet, closeBottomSheet } = useBottomSheet();
+  const surfaceHeight = useChatSurfaceHeight();
 
   function openReactorList(message: Amity.Message) {
-    // Tall drawer — web presents this list in a ~90vh drawer. The sheet content
-    // needs an explicit height (see MessageReactorListSheet: @devvie's inner
-    // wrapper is auto-height, so a flex child collapses), so pass it down too.
-    const reactorSheetHeight = Math.round(
-      Dimensions.get('window').height * 0.7
-    );
+    // Half-height sheet, measured against the page rather than the device (see
+    // getReactorSheetHeight). The sheet content needs an explicit height as well
+    // (see MessageReactorListSheet: @devvie's inner wrapper is auto-height, so a
+    // flex child collapses), so pass the same number down.
+    const reactorSheetHeight = getReactorSheetHeight(surfaceHeight);
     openBottomSheet({
       height: reactorSheetHeight,
       content: (

@@ -125,14 +125,22 @@ export const useStyles = () => {
       color: token(AmityColorToken.TextListTextDescriptionDefaultDefault),
     },
     // .messageReactorListSheet__emptyState
+    //
+    // `flex: 1` is what actually centres this: the sheet content has a definite
+    // height, so without it the block is only as tall as its own contents and
+    // `justifyContent` has nothing to distribute — it sat at the top of a
+    // half-empty sheet. Taking the leftover height below the tab bar (or the
+    // whole sheet, when there is no tab bar) gives the centring something to
+    // work with. The vertical padding is symmetric for the same reason: the old
+    // 48/24 split pushed the visually-centred block 12px low.
     emptyState: {
+      flex: 1,
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
       gap: 16,
-      paddingTop: 48,
+      paddingVertical: 24,
       paddingHorizontal: 24,
-      paddingBottom: 24,
       width: '100%',
     },
     // .messageReactorListSheet__emptyStateText

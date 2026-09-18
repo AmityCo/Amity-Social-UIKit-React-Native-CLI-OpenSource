@@ -158,8 +158,15 @@ export function MessageReactorListSheet({
   }, [myReactor, others]);
 
   // Tab items (web `tabs()`).
+  //
+  // The "All" tab only earns its place when there is more than one reaction to
+  // filter between. With a single distinct reaction its tab and the All tab
+  // would list the same people; with none there is nothing to filter at all, and
+  // an "All 0" tab above the empty state just labels the emptiness twice. The
+  // per-reaction loop below already renders nothing in that case, so an empty
+  // list here means the bar is dropped entirely rather than reserving its row.
   const tabItems: { value: string; icon?: ReactNode; text: string }[] = [];
-  const showAllTab = distinctNames.length === 0 || distinctNames.length > 1;
+  const showAllTab = distinctNames.length > 1;
   if (showAllTab) {
     tabItems.push({
       value: ALL_TAB,
@@ -181,40 +188,42 @@ export function MessageReactorListSheet({
         contentHeight ? { height: contentHeight } : styles.containerFill,
       ]}
     >
-      <View style={styles.tabList}>
-        {tabItems.map((t) => {
-          const active = activeTab === t.value;
-          return (
-            <Pressable
-              key={t.value}
-              style={styles.tab}
-              onPress={() => setActiveTab(t.value)}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: active }}
-            >
-              <View style={styles.tabLabel}>
-                {t.icon}
-                <Typography
+      {tabItems.length > 0 ? (
+        <View style={styles.tabList}>
+          {tabItems.map((t) => {
+            const active = activeTab === t.value;
+            return (
+              <Pressable
+                key={t.value}
+                style={styles.tab}
+                onPress={() => setActiveTab(t.value)}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: active }}
+              >
+                <View style={styles.tabLabel}>
+                  {t.icon}
+                  <Typography
+                    style={[
+                      styles.tabLabelText,
+                      active
+                        ? styles.tabLabelTextActive
+                        : styles.tabLabelTextDefault,
+                    ]}
+                  >
+                    {t.text}
+                  </Typography>
+                </View>
+                <View
                   style={[
-                    styles.tabLabelText,
-                    active
-                      ? styles.tabLabelTextActive
-                      : styles.tabLabelTextDefault,
+                    styles.tabIndicator,
+                    active && styles.tabIndicatorActive,
                   ]}
-                >
-                  {t.text}
-                </Typography>
-              </View>
-              <View
-                style={[
-                  styles.tabIndicator,
-                  active && styles.tabIndicatorActive,
-                ]}
-              />
-            </Pressable>
-          );
-        })}
-      </View>
+                />
+              </Pressable>
+            );
+          })}
+        </View>
+      ) : null}
 
       {/* PDT-5047 (web PDT-5241): a deleted message has no reactions to load, so
           it gets its own state rather than the "be the first to react" empty
