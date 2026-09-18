@@ -32,12 +32,19 @@ export const useStyles = () => {
     flatList: {
       flex: 1,
     },
-    // .messageReactorListSheet__tabList (underlined: row, gap 20, padding 0 per web sheet)
+    // Underlined tab strip: row, gap 20, no vertical padding of its own.
+    //
+    // A 1px baseline rule runs under the whole strip, on the same divider token
+    // every other hairline in chat uses — the two headers and the composer's top
+    // border. The Tab atom carries only the per-tab 2px ACTIVE indicator, so
+    // building this bar inline from it dropped the section separator entirely.
     tabList: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 20,
       paddingHorizontal: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: token(AmityColorToken.LineDividerPostDefault),
     },
     // one underlined tab (SoT geometry: height 56, paddingTop 16, gap 14, indicator 2)
     tab: {

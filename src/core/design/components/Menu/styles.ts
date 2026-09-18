@@ -36,9 +36,9 @@ export const useStyles = ({
     // .menu[data-container='drawer'] .menuItem { padding: 0.875rem 0; }
     paddingHorizontal = 0;
   } else if (variant === 'chat') {
-    // chat popover: padding 0.75rem (12); border-radius 0.5rem (8).
+    // chat popover: padding 12/16; border radius 8.
     paddingVertical = 12;
-    paddingHorizontal = 12;
+    paddingHorizontal = 16;
     borderRadius = 8;
   } else {
     // social popover: gap 0.5rem (8); padding 1rem (16).
@@ -56,6 +56,13 @@ export const useStyles = ({
     ? AmityColorToken.TextListHeaderDestructiveDefault
     : AmityColorToken.TextListHeaderDefaultDefault;
 
+  // --- pressed state ---------------------------------------------------------
+  // There is no hover on a touch device, so the press slice carries the row's
+  // highlight. The chat popover additionally squares the row off while it is
+  // held: a rounded highlight inside an already-rounded card reads as a gap.
+  const pressedBorderRadius =
+    container === 'popover' && variant === 'chat' ? 0 : borderRadius;
+
   const styles = StyleSheet.create({
     menu: {
       paddingVertical: menuPaddingVertical,
@@ -68,6 +75,11 @@ export const useStyles = ({
       paddingVertical,
       paddingHorizontal,
       borderRadius,
+    },
+    // Press affordance, standing in for hover.
+    menuItemPressed: {
+      backgroundColor: token(AmityColorToken.SurfacePopoverListsHover),
+      borderRadius: pressedBorderRadius,
     },
     menuItemLabel: {
       color: token(labelColorToken),
