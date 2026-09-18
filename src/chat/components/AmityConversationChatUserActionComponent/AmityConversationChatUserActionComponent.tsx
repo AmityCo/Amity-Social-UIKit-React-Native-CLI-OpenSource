@@ -278,7 +278,6 @@ export function AmityConversationChatUserActionComponent({
                 key={item.key}
                 icon={item.icon}
                 label={item.label}
-                typography="body"
                 onPress={() => {
                   closeBottomSheet();
                   item.onPress();

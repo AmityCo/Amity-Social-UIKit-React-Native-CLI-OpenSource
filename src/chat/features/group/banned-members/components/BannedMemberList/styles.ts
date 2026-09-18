@@ -1,5 +1,7 @@
-// Styles for BannedMemberList — ported from AmityUiKitWeb BannedMemberList.module.css.
-// FlatList fills its parent; the trailing action popover uses the shared menu padding.
+// Styles for BannedMemberList. The FlatList fills its parent; the unban action
+// renders in the global bottom sheet, whose drawer Menu rows carry no
+// horizontal padding, so the sheet wrapper adds the 16px inset and a bottom
+// inset — the same wrapper the member-list action sheet uses.
 
 import { StyleSheet } from 'react-native';
 
@@ -11,8 +13,9 @@ export const useStyles = () => {
     actionButton: {
       padding: 4,
     },
-    menuContainer: {
-      padding: 4,
+    sheetContainer: {
+      paddingHorizontal: 16,
+      paddingBottom: 8,
     },
   });
 

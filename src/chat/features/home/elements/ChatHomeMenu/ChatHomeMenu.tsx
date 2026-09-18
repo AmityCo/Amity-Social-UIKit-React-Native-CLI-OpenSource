@@ -76,7 +76,6 @@ export function ChatHomeMenu() {
           <Menu.Item
             icon="archive-r"
             label={archivedLabel}
-            typography="body"
             onPress={() => {
               closePopover();
               navigation.navigate('AmityArchivedChatPage');

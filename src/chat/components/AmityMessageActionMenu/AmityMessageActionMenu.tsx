@@ -278,7 +278,6 @@ export function AmityMessageActionMenu({
                   icon={item.icon}
                   label={item.label}
                   destructive={item.destructive}
-                  typography="body"
                   onPress={() => {
                     item.onPress();
                     closePopover();

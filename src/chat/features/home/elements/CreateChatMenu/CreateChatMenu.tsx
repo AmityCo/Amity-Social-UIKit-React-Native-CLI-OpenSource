@@ -109,7 +109,6 @@ export function CreateChatMenu({
           <Menu.Item
             icon="user-plus-r"
             label={directLabel}
-            typography="body"
             onPress={() => {
               closePopover();
               goToCreateConversation();
@@ -118,7 +117,6 @@ export function CreateChatMenu({
           <Menu.Item
             icon="user-group-r"
             label={groupLabel}
-            typography="body"
             onPress={() => {
               closePopover();
               goToNewGroup();
