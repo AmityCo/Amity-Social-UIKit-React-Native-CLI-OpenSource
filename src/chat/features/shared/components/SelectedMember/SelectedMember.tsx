@@ -9,6 +9,9 @@
 //     NewMessageNotification. The core Avatar atom is replaced by the chat
 //     `Avatar.User` element (rounded, initials fallback).
 //   - Web `Button.Icon` (react-aria) remove control → RN `Button.Icon` atom.
+//   - Remove control geometry follows the Figma "User Horizontal List" chip, not
+//     web: a 16px circle with a 10px glyph, overhanging the avatar's top-right
+//     corner (web fills the 16px with the glyph and pins it inside the frame).
 
 // 1. React / RN imports
 import { View } from 'react-native';
@@ -51,6 +54,7 @@ export function SelectedMember({ user, onRemove }: SelectedMemberProps) {
             styleType="transparent"
             hierarchy="primary"
             size={16}
+            iconSize={10}
             style={styles.removeButton}
             onPress={() => onRemove(user.userId)}
             accessibilityLabel={`Remove ${displayName}`}
