@@ -5,7 +5,7 @@
 // model — see TEXT_LEADING_EXCESS below. Colours resolve through the design
 // tokens (surface/text chatbubble, inbound vs outbound). No hardcoded hex.
 
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { useToken } from '../../../core/design/theme/useToken';
 import { AmityColorToken } from '../../../core/design/tokens/amity-color-tokens';
 import {
@@ -24,7 +24,18 @@ import {
 // the Web column throughout (Typography/styles.ts: body = 14 / 20 / 400), so the
 // bubble matches it rather than picking the iOS size on both platforms.
 const TEXT_FONT_SIZE = 14;
-const TEXT_LINE_HEIGHT = 20;
+// The spec's leading is 20, which is what iOS lays out.
+//
+// Android cannot take it. It sizes the text view from the leading it is given
+// rather than from the font's own line box, and at 14px Roboto that box is
+// ascent 14.86 + descent 5.33 = 20.19 — taller than 20. The last line then has
+// nowhere to put its descent and the tails of y/g/p/q are cut off: "Yyyy"
+// renders as "Yvvv" in the bubble while the same message reads correctly in the
+// chat list, which sets no leading of its own. Measured over the debugger, the
+// text view came out 34.67 tall where one line needs 40.
+//
+// 26 clears the font's box on every line with room to spare.
+const TEXT_LINE_HEIGHT = Platform.OS === 'android' ? 26 : 20;
 const TEXT_PADDING_H = 16;
 
 // Leading compensation.
@@ -53,7 +64,11 @@ const TEXT_PADDING_H = 16;
 const TEXT_LEADING_EXCESS =
   TEXT_LINE_HEIGHT - Math.round(TEXT_FONT_SIZE * 1.17);
 const TEXT_PADDING_TOP = 10 - Math.round(TEXT_LEADING_EXCESS / 2);
-const TEXT_PADDING_BOTTOM = 10 + Math.round(TEXT_LEADING_EXCESS / 2);
+// Android keeps the spec's 10 below rather than taking the other half of the
+// excess: the taller leading it needs already sits inside the line box, so
+// adding the compensation underneath as well only pads the bubble out.
+const TEXT_PADDING_BOTTOM =
+  Platform.OS === 'android' ? 10 : 10 + Math.round(TEXT_LEADING_EXCESS / 2);
 
 // The text block's total vertical padding. Exported because AmityMessageBubble
 // has to add it back when it turns a measured text height into a minHeight for
