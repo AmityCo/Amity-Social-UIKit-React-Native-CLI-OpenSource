@@ -136,6 +136,9 @@ export function Popover({
       }
     : { left: Math.min(maxInset, Math.max(SCREEN_MARGIN, anchor.x)) };
 
+  const content =
+    typeof children === 'function' ? children({ closePopover }) : children;
+
   return (
     <View ref={triggerRef} collapsable={false}>
       {trigger({ isOpen, isDesktop: true, openPopover, closePopover })}
@@ -163,9 +166,13 @@ export function Popover({
             ]}
             onPress={() => {}}
           >
-            {typeof children === 'function'
-              ? children({ closePopover })
-              : children}
+            {surface ? (
+              // The card's radius + shadow sit on the Pressable above; the clip
+              // has to be a separate inner layer or iOS clips the shadow away.
+              <View style={styles.clip}>{content}</View>
+            ) : (
+              content
+            )}
           </Pressable>
         </Pressable>
       </Modal>

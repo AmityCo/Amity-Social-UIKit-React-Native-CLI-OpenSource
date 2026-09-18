@@ -14,12 +14,12 @@
 //     `data-touch-hovered`. RN owns that state internally instead (see below),
 //     so the element stays a drop-in for the existing action menu.
 //
-// PDT-5215 / PDT-5043 — one root cause. The port dropped web's touch-hover drag
-// entirely ("web-only interaction"), so:
-//   * no icon ever lifted while dragging across the bar (5215), and
+// Two defects, one root cause: the port dropped the touch-hover drag entirely
+// as a "pointer-only interaction", so:
+//   * no icon ever lifted while dragging across the bar, and
 //   * the name label was bound to Pressable's `pressed` flag and drawn at
 //     top:-33, i.e. outside the picker's own box, where the action menu's
-//     `pickerCard` (overflow:'hidden', borderRadius:20) clipped it (5043).
+//     `pickerCard` (overflow:'hidden', borderRadius:20) clipped it.
 // Both are fixed here by reinstating web's interaction: a PanResponder on the
 // row maps the touch's pageX onto the measured icon slots and drives a
 // `hovered` reaction, and the label overhangs the pill the way web's does —
@@ -305,7 +305,7 @@ export function ReactionPicker({
                 accessibilityLabel={`React with ${getChatReactionLabel(name)}`}
               >
                 <View style={styles.reactionButton}>
-                  {/* PDT-4143 (web PR 1822) narrowed this to the active state
+                  {/* Narrowed to the active state
                       only — it used to light up on hover / touch-hover too, which
                       made a reaction look already-selected while being pressed.
                       Web keeps the halo on .reactionButton, so it stays put while

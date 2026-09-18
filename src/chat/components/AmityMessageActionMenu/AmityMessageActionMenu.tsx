@@ -130,14 +130,14 @@ export function buildMessageActionItems(
       icon: 'arrow-down-to-bracket-r',
       label: resolveString('amity_chat_action_save'),
       onPress: handlers.onSave,
-      // PDT-4127: Save is hidden for video for this release (saving is affected by
+      // Save is hidden for video for this release (saving is affected by
       // play/pause, and the livestream side needs a backend fix). Image save stays.
       // Matches web dba25aa77, which narrowed this from `isImage || isVideo`.
       visible: isImage && isActive,
     },
     {
       key: 'unreport',
-      // PDT-4143 (web PR 1822): unreport uses the slashed flag; only `report`
+      // Unreport uses the slashed flag; only `report`
       // keeps the plain one.
       icon: 'flag-slash-r',
       label: resolveString('amity_chat_option_unreport'),
@@ -159,7 +159,7 @@ export function buildMessageActionItems(
       label: resolveString('amity_chat_option_delete'),
       destructive: true,
       onPress: handlers.onDelete,
-      // PDT-4155 (web PR 1818): a channel moderator can delete anyone's message,
+      // A channel moderator can delete anyone's message,
       // not just their own — web's `visible: isOwn || viewerIsModerator`. RN keeps
       // its extra isActive gate so the option stays hidden on a failed/deleted
       // message, where the messageId is empty and delete would throw.
@@ -278,7 +278,6 @@ export function AmityMessageActionMenu({
                   icon={item.icon}
                   label={item.label}
                   destructive={item.destructive}
-                  typography="body"
                   onPress={() => {
                     item.onPress();
                     closePopover();

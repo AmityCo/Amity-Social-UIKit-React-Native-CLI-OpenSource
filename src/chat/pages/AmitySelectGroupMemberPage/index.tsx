@@ -12,7 +12,7 @@ export default function AmitySelectGroupMemberPage() {
   // equivalent carrier: `useCreateGroupChat.handleAddMember` already navigates
   // here with the members chosen so far, and dropping them meant the picker
   // reopened empty and its submit then REPLACED the create screen's list with
-  // only the newly ticked users (PDT-5061 QA).
+  // only the newly ticked users.
   const { params } =
     useRoute<RouteProp<RootStackParamList, 'AmitySelectGroupMemberPage'>>();
 

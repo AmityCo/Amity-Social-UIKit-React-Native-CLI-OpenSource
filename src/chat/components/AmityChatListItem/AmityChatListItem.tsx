@@ -427,7 +427,7 @@ function MessagePreview({
   );
 }
 
-// PDT-5164: the design draws this badge as a 20x20 filled `Chat/Mention`
+// The design draws this badge as a 20x20 filled `Chat/Mention`
 // circle with an `at-r` glyph at 16x16, inset 2px on every side (Figma chat
 // list `12041:242261`, and the AmityChatListItem SoT's icon table lists the
 // mention glyph as `at-r` @ 16). RN was drawing `at-s` at the full chip size,

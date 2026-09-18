@@ -62,14 +62,12 @@ export function useChannelMembersCollection({
     setIsLoading(true);
     setIsLoadingFirstPage(true);
 
-    // PDT-5236: `getMembers` takes a `search` filter, but it does not match from
+    // `getMembers` takes a `search` filter, but it does not match from
     // the first character — a one-letter query came back empty even with members
     // whose display name starts with it. The SDK's dedicated
     // `Membership.searchMembers` collection is the one built for keyword search
-    // (it is what useMention already uses, and what the Flutter UIKit QA
-    // compared against uses here). Route a non-empty query through it and keep
-    // `getMembers` for the unfiltered list. LEADS WEB — web's MemberList still
-    // passes `search` to getMembers.
+    // (it is what useMention already uses). Route a non-empty query through it
+    // and keep `getMembers` for the unfiltered list.
     const keyword = search?.trim() ?? '';
     const handleSnapshot = ({
       data,

@@ -2,7 +2,7 @@
 // A labeled, character-counted text field for the group chat name. Wraps the
 // Input.Text atom (the RN port of web's Input.Text), keeping web's prop API.
 //
-// PDT-5168: a group name is single-line. Web passes no `multiLine` to Input.Text
+// A group name is single-line. Web passes no `multiLine` to Input.Text
 // (so it renders a plain <input>, which cannot hold a newline); the RN port had
 // added `multiLine`, which turned the field into a growing multiline TextInput
 // that swallowed the return key and pushed the rest of the form off screen.

@@ -19,8 +19,8 @@
 //   - Report: web opened a Drawer (mobile) / Popup (desktop) with ContentReportReason.
 //     RN keeps the report target in local state (`reportMessage`) and the orchestrator
 //     (useChatMessage) surfaces it so Chat/GroupChat render the full-screen
-//     ContentReportReason Modal — the same overlay pattern as see-more (BUG: PDT-4007,
-//     the report UI previously appeared as a partial bottom sheet / no-op).
+//     ContentReportReason Modal — the same overlay pattern as see-more (the
+//     report UI previously appeared as a partial bottom sheet / no-op).
 //   - Reactor-list sheet has no RN component wired here (web opened a Drawer/Popup with
 //     MessageReactorListSheet) — `handleOpenReactorListSheet` is a documented stub;
 //     Chat/GroupChat open the reactor list via the global bottom sheet instead.
