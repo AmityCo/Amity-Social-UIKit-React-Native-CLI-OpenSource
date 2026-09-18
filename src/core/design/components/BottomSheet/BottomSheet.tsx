@@ -190,8 +190,24 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
     // translated — releasing a drag reset the height and the sheet flashed back
     // to full size for a frame on its way out.
     const slide = useSharedValue(0);
-    // The sheet opens by growing from its bottom edge.
-    const openHeight = useSharedValue(0);
+    // The entrance, 0 below the screen to 1 at rest. It moves the sheet rather
+    // than resizing it: a sheet that grew from nothing laid its children out
+    // afresh every frame, and a body built as a fixed header, a flexible middle
+    // and a footer pinned to the bottom — which is how the taller sheets are
+    // built — spends those frames with its middle squeezed to nothing. That
+    // showed as the header arriving first above a hollow gap. Sliding a
+    // finished sheet into place has no intermediate states to show, lays the
+    // content out once instead of once per frame, and is what platform sheets
+    // do. Height stays reserved for the keyboard, which is a single change
+    // rather than an animation of its own.
+    const entrance = useSharedValue(0);
+    // Whether the entrance has actually begun. Between the Modal being mounted
+    // and `startOpen` running there are a few frames that belong to the
+    // platform: on Android the dialog window arrives under its own steam, and
+    // the sheet was caught in one of them part way up the screen with no
+    // backdrop behind it — a flash of the sheet, then nothing, then the real
+    // entrance. The sheet is simply not drawn until it is ours to move.
+    const entranceStarted = useSharedValue(0);
     const keyboardInset = useSharedValue(0);
     const backdropProgress = useSharedValue(0);
 
@@ -269,28 +285,41 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
     const isShown = useRef(false);
 
     const startOpen = useCallback(() => {
-      openHeight.value = withTiming(resolvedHeight, {
+      entranceStarted.value = 1;
+      entrance.value = withTiming(1, {
         duration: OPEN_DURATION,
         easing: SHEET_EASING,
       });
       backdropProgress.value = withTiming(1, {
         duration: OPEN_DURATION / BACKDROP_SPEEDUP,
       });
-    }, [backdropProgress, openHeight, resolvedHeight]);
+    }, [backdropProgress, entrance, entranceStarted]);
+
+    // Which way this effect last acted, so it acts on the transition rather
+    // than on every render it happens to be woken for. It is woken often: it
+    // depends on `close`, `close` on the caller's `onClose`, and a caller
+    // writing that inline hands over a new one each render. Without this, a
+    // render arriving mid-entrance re-ran the open path, which winds the
+    // entrance back to nothing and starts it again — the sheet appeared, snapped
+    // shut and opened a second time.
+    const openHandled = useRef(false);
 
     // Open / close from the outside.
     useEffect(() => {
       if (isOpen) {
+        if (openHandled.current) return;
+        openHandled.current = true;
         isClosing.current = false;
         // Wound back here, off screen, rather than at the end of the close,
         // where resetting them would repaint the sheet at its open position for
         // the frame before the unmount lands.
         slide.value = 0;
         keyboardInset.value = 0;
-        // The close slides the sheet out and never touches the height, so this
-        // has to be wound back by hand or the second open starts at its target
-        // and plays nothing.
-        openHeight.value = 0;
+        // The close carries the sheet out on `slide` and never touches this, so
+        // it has to be wound back by hand or the second open starts at its
+        // target and plays nothing.
+        entrance.value = 0;
+        entranceStarted.value = 0;
 
         if (mounted && isShown.current) {
           // Genuinely on screen, interrupting its own close.
@@ -302,10 +331,20 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
           pendingOpen.current = true;
           if (!mounted) setMounted(true);
         }
-      } else if (mounted) {
-        close();
+      } else {
+        openHandled.current = false;
+        if (mounted) close();
       }
-    }, [isOpen, mounted, close, keyboardInset, openHeight, slide, startOpen]);
+    }, [
+      isOpen,
+      mounted,
+      close,
+      entrance,
+      entranceStarted,
+      keyboardInset,
+      slide,
+      startOpen,
+    ]);
 
     // The keyboard, on the keyboard's own curve. Reading `duration` off the
     // event is what keeps the sheet and the keyboard on one timeline rather than
@@ -425,10 +464,17 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
     // exactly what it loses — the two being the same number is what keeps the
     // sheet's TOP edge still while the keyboard opens; only the body shortens.
     const sheetStyle = useAnimatedStyle(() => {
-      const lift = Math.min(keyboardInset.value, openHeight.value);
+      const lift = Math.min(keyboardInset.value, resolvedHeight);
       return {
-        height: Math.max(openHeight.value - lift, 0),
-        transform: [{ translateY: slide.value - lift }],
+        opacity: entranceStarted.value,
+        height: Math.max(resolvedHeight - lift, 0),
+        transform: [
+          // Its own height below the screen at 0, in place at 1.
+          {
+            translateY:
+              slide.value - lift + (1 - entrance.value) * resolvedHeight,
+          },
+        ],
       };
     });
 
@@ -487,7 +533,21 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
                 transform on the native one — is what cost the entrance its
                 animation whenever the content was slow to lay out. */}
             <GestureDetector gesture={pan}>
-              <Animated.View style={[styles.sheet, style, sheetStyle]}>
+              <Animated.View
+                style={[
+                  styles.sheet,
+                  style,
+                  // The resting position belongs in the plain style too, not
+                  // only in the animated one. There is a frame on Android
+                  // between the dialog window coming in and the animated style
+                  // landing, and a view with no transform yet is drawn where it
+                  // was laid out — which flashed the sheet on screen before the
+                  // entrance had begun, then took it away again. Starting it
+                  // off screen here means that frame shows nothing.
+                  { transform: [{ translateY: resolvedHeight }] },
+                  sheetStyle,
+                ]}
+              >
                 <View style={styles.handleArea}>
                   <View style={styles.handle} />
                 </View>

@@ -5,7 +5,7 @@
 // rounded top, the drag handle and the bottom safe-area inset.
 
 // 1. React / RN imports
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 
 // 3. Internal imports (relative)
 import { BottomSheet } from '../../../core/design/components/BottomSheet';
@@ -21,18 +21,21 @@ const BottomSheetComponent = () => {
     dark,
   } = useBottomSheet();
 
+  // The sheet has finished animating out by the time this runs, so this is
+  // where the content goes — and `closeBottomSheet` is idempotent, so a
+  // drag-to-close that never went through the store still settles it. Kept
+  // stable so the sheet is not woken mid-animation by a new handler.
+  const handleClose = useCallback(() => {
+    closeBottomSheet();
+    clearBottomSheetContent();
+  }, [closeBottomSheet, clearBottomSheetContent]);
+
   return (
     <BottomSheet
       visible={open}
       height={height ?? 0}
       dark={dark}
-      onClose={() => {
-        // The sheet has finished animating out by the time this runs, so this
-        // is where the content goes — and `closeBottomSheet` is idempotent, so
-        // a drag-to-close that never went through the store still settles it.
-        closeBottomSheet();
-        clearBottomSheetContent();
-      }}
+      onClose={handleClose}
     >
       {content}
     </BottomSheet>
