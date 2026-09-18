@@ -1,7 +1,6 @@
 // Styles for AddTile — ported from AddTile.module.css.
 // Geometry: column, center, gap 0.25rem→4, tile width 4rem→64. The plus button
-// is the Button.Icon atom rendered borderless (transparent/primary/40 — a
-// deviation from web's filled-secondary, per user intent); this style covers
+// is the Button.Icon atom (filled/secondary/40, as on web); this style covers
 // only the tile layout + label. Label colour from Text/IconButton/Label/General.
 
 import { StyleSheet } from 'react-native';
