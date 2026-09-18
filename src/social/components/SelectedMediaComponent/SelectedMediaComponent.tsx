@@ -98,7 +98,7 @@ export function SelectedMediaComponent({
       // Android extractor reports 0×0 when MediaMetadataRetriever fails, and
       // iOS picks carry none by design, see PostComposer). Measure the
       // generated thumbnail instead of defaulting to a square frame
-      // (REQ-003d2, PDT-4904): it is a rendered frame, so its dimensions are
+      // (REQ-003d2): it is a rendered frame, so its dimensions are
       // already display-oriented and need no rotation applied.
       //
       // LoadingVideo decodes a thumbnail for this same url too, so frame 0
@@ -168,7 +168,7 @@ export function SelectedMediaComponent({
     scrollRef.current?.scrollTo({ x: maxOffset, animated: false });
   }, [total, slideWidth]);
 
-  // PDT-4310/4312: on close, return to the frame originally tapped from — not
+  // On close, return to the frame originally tapped from — not
   // the last frame viewed in full screen.
   const handleCloseViewer = () => {
     const tapped = viewerIndex ?? 0;

@@ -3,7 +3,7 @@
 // Geometry: horizontal padding 1rem→16; heading padding 1.5rem 0 0.25rem→24/0/4;
 // list vertical padding 1rem→16, row gap 1rem→16. Colours via tokens.
 //
-// PDT-5208: web's list is `grid-template-columns: repeat(4, 4rem)` — a *fixed*
+// Web's list is `grid-template-columns: repeat(4, 4rem)` — a *fixed*
 // four-column track set. The RN port used a free-wrapping flex row with
 // `justifyContent: 'space-between'` and no column gap, which does not behave the
 // same: the 64px tiles simply pack until they run out of width (five per row on

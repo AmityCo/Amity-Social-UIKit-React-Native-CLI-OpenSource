@@ -45,9 +45,9 @@ export function MessageLinkPreview({ url, style }: MessageLinkPreviewProps) {
   );
 
   const isPending = isLoading;
-  // Web: `hasNoPreview = data != null && !data.title && !data.imageUrl`. The port
-  // additionally required `!data.domain`, which is harmless but drifts from web —
-  // realigned here while PDT-5308 was being fixed.
+  // A preview counts as absent when the payload arrived but carries neither a
+  // title nor an image. `domain` is deliberately not part of the test: it is
+  // often present on its own and would keep an empty preview on screen.
   const hasNoPreview = data != null && !data.title && !data.imageUrl;
   const isFailure = !isPending && (isError || hasNoPreview);
 
@@ -83,7 +83,7 @@ export function MessageLinkPreview({ url, style }: MessageLinkPreviewProps) {
             onError={() => setImageBroken(true)}
           />
         ) : (
-          // PDT-5308: web sizes the broken glyph via
+          // Web sizes the broken glyph via
           // `.messageLinkPreview__thumbnailIcon` — a 2.5rem box whose svg fills
           // 100% — so the icon is 40px inside the 96px thumbnail. The port used
           // 18px, which read as a tiny speck against the box.

@@ -1,7 +1,7 @@
 // Styles for MessageLinkPreview — ported from MessageLinkPreview.module.css.
 // Geometry: root radius 0.625rem→10; thumbnail 6rem→96 square; info padding
 // 0.5rem/0.625rem→8/10, gap 0.125rem→2 (loading 0.5rem→8); broken icon 2.5rem→40
-// (.messageLinkPreview__thumbnailIcon, svg at 100% — see PDT-5308).
+// (the glyph fills the box).
 // Title raw CSS 13/18, domain raw CSS 10/13 — replicated via Typography `style`.
 // The web `data-side` selectors resolve to identical colours, so side has no
 // visual effect in RN.

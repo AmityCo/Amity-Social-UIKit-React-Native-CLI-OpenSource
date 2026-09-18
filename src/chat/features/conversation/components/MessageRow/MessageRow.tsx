@@ -220,7 +220,7 @@ export function MessageRow({
               isUser={isUser}
               // Without the preview a failed upload has no media source, and the
               // bubble returns its loading placeholder before reaching the failed
-              // caption — the missing inline error in PDT-4128.
+              // caption, losing the inline error entirely.
               localPreviewUrl={localPreviewUrl}
               onOpenImage={onOpenImage}
               onOpenVideo={onOpenVideo}

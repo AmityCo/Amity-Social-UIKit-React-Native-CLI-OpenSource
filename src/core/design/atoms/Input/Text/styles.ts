@@ -92,9 +92,13 @@ export const useStyles = ({
       fontSize: 13,
       fontWeight: '600',
     },
+    // The marker renders inside the title Text, and RN inherits text style down
+    // a nested Text — so without an explicit weight it picks up the title's 600
+    // and reads as bold. The indicator is a regular-weight caption.
     optional: {
       color: token(AmityColorToken.TextInputTextInputIndicatorDefault),
       fontSize: 13,
+      fontWeight: '400',
     },
     row: {
       flexDirection: 'row',

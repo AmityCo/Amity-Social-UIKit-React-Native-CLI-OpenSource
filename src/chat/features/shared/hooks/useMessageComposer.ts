@@ -117,11 +117,8 @@ type Notify = {
   info: (args: { title: string; content: string; okText?: string }) => void;
 };
 
-// Inlined RN equivalent of web `handleTextMessageError`.
 // The two strings resolved below — amity_chat_toast_banned_word and
-// amity_chat_toast_link_not_allow — carry the V2 Designer copy. RN got there first;
-// web has since shipped the identical en + th values in PR 1823, so this is no
-// longer a divergence and the LEADS WEB marker that was here has been removed.
+// amity_chat_toast_link_not_allow — carry the V2 Designer copy in en and th.
 function handleTextMessageError(error: unknown, notify: Notify): void {
   const message = error instanceof Error ? error.message : String(error);
   if (
@@ -166,7 +163,7 @@ function createClientId(): string {
  * `createMessage` uses `bundle.referenceId` as the optimistic message's own
  * messageId, so every retry of one upload overwrites that row instead of
  * appending another — without it each retry minted a fresh id and left another
- * failed bubble behind (PDT-4914).
+ * failed bubble behind.
  *
  * The `LOCAL_` prefix is load-bearing: `deleteMessage` takes its local-only
  * branch for any id *containing* `LOCAL_`, so Delete keeps working on the row.
@@ -407,7 +404,7 @@ export function useMessageComposer({
     setShowMediaSection(false);
     setReplyTo(null);
 
-    // Offline is NOT a special case (PDT-4914). `createMessage` runs
+    // Offline is NOT a special case. `createMessage` runs
     // `createMessageOptimistic` before it ever touches the network, so the failed
     // bubble exists either way — and the SDK keys both the cached row and the
     // live-collection entry off `referenceId ?? messageId`, i.e. the same
@@ -434,7 +431,7 @@ export function useMessageComposer({
             onMessageCreated?.();
           },
           onError: (err) => {
-            // PDT-4033: the SDK createMessage optimistically inserts the message
+            // The SDK createMessage optimistically inserts the message
             // into the getMessages collection and keeps it with syncState 'error'
             // on rejection, so the failed bubble is ALREADY shown by the live
             // collection. Nothing to add here but the toast — resend and delete
@@ -489,7 +486,7 @@ export function useMessageComposer({
 
   const runMediaUpload = useCallback(
     async (pending: PendingUpload) => {
-      // PDT-4128: an oversize file has to surface as an inline failed bubble in
+      // An oversize file has to surface as an inline failed bubble in
       // the thread, not a toast. The check lives here rather than in
       // handleSelectMedia so the pending bubble is already in the list and can
       // simply be flipped to 'failed' — same move as web e08c3ed32. fileSize is

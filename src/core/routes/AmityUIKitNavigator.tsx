@@ -130,7 +130,7 @@ export default function AmitySocialUIKitV4Navigator({
             },
           }}
         >
-          {/* --- Chat (PDT-3713) --- */}
+          {/* --- Chat --- */}
           <Stack.Screen
             name="AmityChatHomePage"
             component={AmityChatHomePage}

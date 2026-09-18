@@ -148,7 +148,7 @@ const PostContent: React.FC<IPostContent> = ({
     mediaControlsRef.current?.slideTo(viewerIndexRef.current);
   }
 
-  // UC2 (PDT-4309): video carousel opens the swipeable full-screen player
+  // UC2: video carousel opens the swipeable full-screen player
   // (autoplay + mute-carry) instead of the single-video route.
   function openVideoViewer(index: number): void {
     viewerIndexRef.current = index;

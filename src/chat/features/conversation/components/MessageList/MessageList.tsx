@@ -70,16 +70,15 @@ type MessageListProps = {
   moderatorIds?: Set<string>;
   /**
    * The viewer is muted in this channel — trims Edit/Reply/Report out of the
-   * message action menu (web GroupChat → MessageList → MessageActionsPopover).
-   * PDT-5237 / PDT-5247: the trimming already lived in AmityMessageActionMenu but
-   * nothing threaded the flag down here, so it always saw the `false` default.
+   * message action menu. The trimming already lived in AmityMessageActionMenu
+   * but nothing threaded the flag down here, so it always saw the `false`
+   * default.
    */
   viewerIsMutedInChannel?: boolean;
   /**
-   * Cancel an in-flight upload, by the synthetic message's client id (web
-   * GroupChat → MessageList → MessageBubble `onCancelUpload`). PDT-4921: without
+   * Cancel an in-flight upload, by the synthetic message's client id. Without
    * it MediaUploadOverlay gets no `onCancel` and Loader.Upload renders no X, so
-   * a sending video could not be cancelled.
+   * a sending video cannot be cancelled.
    */
   onCancelUpload?: (clientId: string) => void;
   /**

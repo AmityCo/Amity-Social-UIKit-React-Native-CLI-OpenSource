@@ -42,7 +42,7 @@ export function useConversation(channelId?: string, jumpToMessageId?: string) {
   // `const { isBlockedByMe: isUserBlocked } = useFollowInfo({ userId })`.
   // Chat.tsx renders MutedBanner INSTEAD of the composer when showMutedBanner is
   // set, so surfacing this is what removes the compose bar once the viewer blocks
-  // the other participant (PDT-5281).
+  // the other participant.
   const { isBlockedByMe: isUserBlocked } = useFollowInfo(otherUser?.userId);
 
   // Muted/blocked banner: the RN SDK exposes the viewer's channel membership mute via

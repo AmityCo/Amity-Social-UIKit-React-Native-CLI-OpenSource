@@ -8,7 +8,7 @@
 //
 // Kept live rather than one-shot: both consumers depend on the block state
 // flipping in place — the conversation swaps its composer for the blocked banner
-// (PDT-5281) and the user-action menu flips its Block ↔ Unblock label — without
+// And the user-action menu flips its Block ↔ Unblock label — without
 // a remount. Gated on `useAuth().isConnected`.
 
 import { useEffect, useState } from 'react';
