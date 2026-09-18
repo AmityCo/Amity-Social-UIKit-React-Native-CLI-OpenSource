@@ -129,6 +129,15 @@ const DRAG_CLOSE_FLING = 800;
 /** A drag has to travel this far before it is a drag and not a tap. */
 const DRAG_ACTIVATION_DISTANCE = 8;
 const BACKDROP_OPACITY = 0.32;
+/**
+ * How far the sheet carries on underneath the keyboard. A sheet that stops
+ * exactly on the keyboard's top edge leaves the keyboard's own rounded corners
+ * standing over whatever is behind the sheet, so the two far corners show as
+ * dark nicks. Running the surface on past that edge puts sheet behind them.
+ * The overlap is hidden by the keyboard itself, and the content does not move
+ * with it — the sheet's bottom padding grows by the same amount.
+ */
+const KEYBOARD_OVERLAP = 20;
 /** The backdrop runs this much faster than the sheet, opening and closing. */
 const BACKDROP_SPEEDUP = 2.5;
 
@@ -465,14 +474,23 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
     // sheet's TOP edge still while the keyboard opens; only the body shortens.
     const sheetStyle = useAnimatedStyle(() => {
       const lift = Math.min(keyboardInset.value, resolvedHeight);
+      // Only while there is a keyboard to hide it.
+      const overlap = Math.min(KEYBOARD_OVERLAP, keyboardInset.value);
       return {
         opacity: entranceStarted.value,
-        height: Math.max(resolvedHeight - lift, 0),
+        // Taller and lower by the overlap, which leaves the TOP edge where it
+        // was; the extra is bottom padding, so the content keeps its distance
+        // from the keys.
+        height: Math.max(resolvedHeight - lift + overlap, 0),
+        paddingBottom: insets.bottom + overlap,
         transform: [
           // Its own height below the screen at 0, in place at 1.
           {
             translateY:
-              slide.value - lift + (1 - entrance.value) * resolvedHeight,
+              slide.value -
+              lift +
+              overlap +
+              (1 - entrance.value) * resolvedHeight,
           },
         ],
       };
