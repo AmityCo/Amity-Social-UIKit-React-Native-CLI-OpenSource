@@ -110,13 +110,18 @@ export type BottomSheetProps = {
   children: ReactNode;
 };
 
-const OPEN_DURATION = 500;
-const CLOSE_DURATION = 500;
+const OPEN_DURATION = 300;
+const CLOSE_DURATION = 250;
 /**
- * Exponential-out: fast off the mark, long soft landing. A cubic ease reads as
- * abrupt at these durations — the sheet arrives before the eye expects it to.
+ * How far an easing carries the sheet in its opening frames scales with how
+ * tall that sheet is, so a curve that is merely brisk on a short menu can be a
+ * jump on a full-height one: an exponential-out moved a 700-high sheet 144 on
+ * frame one and half its travel inside 50ms, against 31 on frame one for a
+ * 150-high menu. This curve — the one platform sheets use — starts gently
+ * enough that the first frames read as movement at any height, then decelerates
+ * firmly into the end.
  */
-const SHEET_EASING = Easing.out(Easing.exp);
+const SHEET_EASING = Easing.bezier(0.32, 0.72, 0, 1);
 /** Past this much of the sheet's height, releasing a drag closes it. */
 const DRAG_CLOSE_RATIO = 0.3;
 /** A flick this fast (points per second) closes the sheet whatever the distance. */
@@ -196,6 +201,7 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
     const isClosing = useRef(false);
 
     const finishClose = useCallback(() => {
+      isShown.current = false;
       setMounted(false);
       setSelfVisible(false);
       isClosing.current = false;
@@ -250,6 +256,17 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
 
     // Held until the Modal is actually on screen — see `startOpen`.
     const pendingOpen = useRef(false);
+    // Whether the Modal has presented. `mounted` cannot answer that: it is
+    // seeded from `isOpen`, so a sheet whose component mounts with `visible`
+    // already true — which is how a sheet opened by mounting its owner behaves,
+    // as opposed to one kept mounted and toggled — starts life claiming to be
+    // on screen while the Modal has not even begun presenting. The entrance
+    // then ran against nothing: measured at 564ms of animation spent before the
+    // Modal so much as reported itself shown, which at these durations means
+    // the sheet finished opening before it was ever visible and arrived with no
+    // animation at all. The heavier the content the wider that gap, which is
+    // why tall sheets looked like the only casualties.
+    const isShown = useRef(false);
 
     const startOpen = useCallback(() => {
       openHeight.value = withTiming(resolvedHeight, {
@@ -275,16 +292,15 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
         // and plays nothing.
         openHeight.value = 0;
 
-        if (mounted) {
-          // Already on screen, interrupting its own close.
+        if (mounted && isShown.current) {
+          // Genuinely on screen, interrupting its own close.
           startOpen();
         } else {
-          // A Modal takes a few frames to present, and an animation started now
-          // would spend them off screen — with an ease-out that covers most of
-          // its distance early, the sheet would simply be there when the Modal
-          // appeared. It waits for `onShow` instead.
+          // A Modal takes a while to present — longer the more there is inside
+          // it — and an animation started now would spend that time off screen.
+          // It waits for `onShow` instead.
           pendingOpen.current = true;
-          setMounted(true);
+          if (!mounted) setMounted(true);
         }
       } else if (mounted) {
         close();
@@ -439,6 +455,7 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
         statusBarTranslucent
         onRequestClose={close}
         onShow={() => {
+          isShown.current = true;
           if (!pendingOpen.current) return;
           pendingOpen.current = false;
           // Two frames after `onShow`, not on it: iOS reports the Modal as shown
