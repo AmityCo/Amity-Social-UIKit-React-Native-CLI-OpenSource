@@ -14,6 +14,7 @@ import { BrandBadge } from '../../../../../core/design/elements/BrandBadge';
 import { Button } from '../../../../../core/design/atoms/Button';
 import { Typography } from '../../../../../core/design/components/Typography';
 import { Loader } from '../../../../../core/design/atoms/Loader';
+import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../core/localization';
 import { useNetworkOnline } from '../../../../hooks';
 import { useStyles } from './styles';
@@ -74,7 +75,13 @@ export function Header({
           </View>
           {!online ? (
             <View style={styles.subtitle}>
-              <Loader.Spinner size="sm" />
+              {/* Figma: neutral grey spinner matching the caption, not the primary tint. */}
+              <Loader.Spinner
+                size="sm"
+                tokenColor={
+                  AmityColorToken.TextListTextDescriptionDefaultDefault
+                }
+              />
               <Typography variant="caption" style={styles.subtitleText}>
                 {waitingForNetwork}
               </Typography>
