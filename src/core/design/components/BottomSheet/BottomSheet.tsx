@@ -128,7 +128,6 @@ const DRAG_CLOSE_RATIO = 0.3;
 const DRAG_CLOSE_FLING = 800;
 /** A drag has to travel this far before it is a drag and not a tap. */
 const DRAG_ACTIVATION_DISTANCE = 8;
-const BACKDROP_OPACITY = 0.32;
 /**
  * How far the sheet carries on underneath the keyboard. A sheet that stops
  * exactly on the keyboard's top edge leaves the keyboard's own rounded corners
@@ -505,7 +504,9 @@ const BottomSheetRoot = forwardRef<BottomSheetMethods, BottomSheetProps>(
           ? Math.min(Math.max(slide.value / resolvedHeight, 0), 1)
           : 0;
       return {
-        opacity: backdropProgress.value * BACKDROP_OPACITY * (1 - dragged),
+        // The scrim's own colour token carries its alpha, so this animates the
+        // view between transparent and that colour, not to a fraction of it.
+        opacity: backdropProgress.value * (1 - dragged),
       };
     });
 

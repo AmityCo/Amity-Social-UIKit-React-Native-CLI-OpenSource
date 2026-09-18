@@ -21,12 +21,14 @@ const SHEET_RADIUS = 20;
 // of that, and the heights callers ask for carry slack of their own, so the
 // part that still has to be added here is the remainder, not the whole 32.
 const CONTENT_BOTTOM_GAP = 12;
-// The dark sheet is opened over a dark page (the media viewers), where the
-// themed surface would read as a light panel on black.
-const DARK_SHEET_SURFACE = '#191919';
 
 export const useStyles = ({ dark }: { dark?: boolean } = {}) => {
   const token = useToken();
+  // The dark sheet is opened over a dark page (the livestream player and
+  // composer), where the themed surface would read as a light panel on black.
+  // It is the same Surface/Sheets token, asked for in the dark column rather
+  // than the active one, so a customer's dark palette still governs it.
+  const darkToken = useToken('dark');
   const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
@@ -36,7 +38,11 @@ export const useStyles = ({ dark }: { dark?: boolean } = {}) => {
     },
     backdrop: {
       ...StyleSheet.absoluteFillObject,
-      backgroundColor: '#000000',
+      // The scrim carries its own alpha, so the entrance animates this view's
+      // opacity from 0 to 1 rather than to a fraction of its own.
+      backgroundColor: token(
+        AmityColorToken.SurfaceMediaOverlayTransparentBlack
+      ),
     },
     backdropPressable: {
       flex: 1,
@@ -46,9 +52,9 @@ export const useStyles = ({ dark }: { dark?: boolean } = {}) => {
       borderTopLeftRadius: SHEET_RADIUS,
       borderTopRightRadius: SHEET_RADIUS,
       paddingBottom: insets.bottom,
-      backgroundColor: dark
-        ? DARK_SHEET_SURFACE
-        : token(AmityColorToken.SurfaceSheetsBackgroundGeneral),
+      backgroundColor: (dark ? darkToken : token)(
+        AmityColorToken.SurfaceSheetsBackgroundGeneral
+      ),
       // The sheet closes by shrinking to nothing, and its children do not shrink
       // with it — the handle strip is a fixed 28 — so without this they spill
       // out of the shrinking box and stay on screen until the sheet unmounts,
