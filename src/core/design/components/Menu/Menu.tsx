@@ -64,7 +64,14 @@ function MenuItem({
   });
 
   return (
-    <Pressable style={styles.menuItem} onPress={onPress}>
+    <Pressable
+      style={({ pressed }) => [
+        styles.menuItem,
+        pressed && styles.menuItemPressed,
+      ]}
+      onPress={onPress}
+      accessibilityRole="menuitem"
+    >
       {icon ? (
         <AmityIcon name={icon} size={iconSize} tokenColor={labelColorToken} />
       ) : null}
