@@ -39,7 +39,10 @@ import useConfig from '../../../hooks/useConfig';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../core/routes/RouteParamList';
-import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import {
+  BottomSheet,
+  type BottomSheetMethods,
+} from '../../../../core/design/components/BottomSheet';
 import { StoryRepository } from '@amityco/ts-sdk-react-native';
 import CommentList from '../../Social/CommentList/CommentList';
 import { useStoryPermission } from '../../../hooks/useStoryPermission';

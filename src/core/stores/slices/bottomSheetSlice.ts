@@ -84,15 +84,21 @@ export const useBottomSheet = () => {
 
   const closeBottomSheet = () => {
     dispatch($closeBottomSheet());
-    setTimeout(() => {
-      dispatch(clearContent());
-    }, 300);
+  };
+
+  // Called once the sheet has finished sliding out, so the content is on screen
+  // for every frame of the close. This used to be a timer started alongside the
+  // close, which raced anything that reopened the sheet inside the window: the
+  // stale timer landed after the NEW content was in and emptied it.
+  const clearBottomSheetContent = () => {
+    dispatch(clearContent());
   };
 
   return {
     openBottomSheet,
     height: $height,
     closeBottomSheet,
+    clearBottomSheetContent,
     content: $content,
     open: $open,
     dark: $dark,

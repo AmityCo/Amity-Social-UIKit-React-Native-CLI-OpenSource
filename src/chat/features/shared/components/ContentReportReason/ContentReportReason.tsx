@@ -17,17 +17,17 @@
 //     stays disabled while offline (documented deviation).
 
 // 1. React / RN imports
-import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Pressable, View } from 'react-native';
 
 // 2. Third-party imports
 import {
   ContentFlagReasonEnum,
   MessageRepository,
 } from '@amityco/ts-sdk-react-native';
-import BottomSheet, { type BottomSheetMethods } from '@devvie/bottom-sheet';
 
 // 3. Internal imports
+import { BottomSheet } from '../../../../../core/design/components/BottomSheet';
 import { Typography } from '../../../../../core/design/components/Typography';
 import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
@@ -94,13 +94,24 @@ export function ContentReportReason({
   onClose,
 }: ContentReportReasonProps) {
   const { styles } = useStyles();
-  const sheetRef = useRef<BottomSheetMethods>(null);
 
   // devvie reads `height="90%"` against `containerHeight`, and its default for
   // that is the DEVICE screen — so under a host app's own chrome the sheet comes
   // out taller than 90% of the page it actually lives in. The page
   // measures its own box and publishes it; hand that over instead.
   const surfaceHeight = useChatSurfaceHeight();
+
+  // Every way out of this sheet — the X, the Close button, a successful report,
+  // the backdrop, the drag, Android's back — flips this one flag. The sheet
+  // then plays its slide-out and calls `onClose` at the end, which is what
+  // unmounts us. Calling `onClose` straight from a button would unmount the
+  // sheet mid-air instead.
+  const [sheetVisible, setSheetVisible] = useState(true);
+  const requestClose = () => setSheetVisible(false);
+
+  useEffect(() => {
+    if (!visible) setSheetVisible(false);
+  }, [visible]);
   const { online } = useNetworkOnline();
   const {
     report,
@@ -181,12 +192,6 @@ export function ContentReportReason({
   const isDisabledSubmitButton =
     !selectedReason || isOthersReasonBlank || !online || isPendingReport;
 
-  // The sheet animates itself open/closed; `visible` is the source of truth.
-  useEffect(() => {
-    if (visible) sheetRef.current?.open();
-    else sheetRef.current?.close();
-  }, [visible]);
-
   function handleBack() {
     // Web resets both the selected reason and the sub-view flag.
     setSelectedReason(undefined);
@@ -208,21 +213,21 @@ export function ContentReportReason({
 
     // The hook owns the toasts, the duplicate-report guard, the NOT_FOUND →
     // isMessageDeleted swap, and refreshing the flag state the bubble menu reads.
-    report({ reason, onSuccess: onClose });
+    report({ reason, onSuccess: requestClose });
   }
 
   return (
     <BottomSheet
-      ref={sheetRef}
+      visible={sheetVisible}
       // 90% of the viewport, per Figma — a full-height sheet, not a full screen.
       height="90%"
+      // The page measures its own box and publishes it; 90% of the device would
+      // come out taller than the page whenever a host app mounts the UIKit
+      // under its own chrome.
       containerHeight={surfaceHeight}
       closeOnDragDown
       closeOnBackdropPress
-      // The body scrolls; without this the sheet swallows the ScrollView's pans.
-      disableBodyPanning
       onClose={onClose}
-      style={styles.sheet}
     >
       <View style={styles.screen}>
         {isMessageDeleted ? (
@@ -264,27 +269,31 @@ export function ContentReportReason({
                   {isShowOthersOption ? othersTitle : reportReasonTitle}
                 </Typography>
               </View>
+              {/* The close button belongs to both screens — the design gives
+                  every frame of this sheet an X. Only the back chevron is
+                  conditional, because only the Others screen has somewhere to
+                  go back to. */}
               <View style={[styles.headerSlot, styles.headerSlotRight]}>
-                {isShowOthersOption ? (
-                  <Pressable
-                    style={styles.iconButton}
-                    onPress={onClose}
-                    accessibilityRole="button"
-                    accessibilityLabel={closeButtonText}
-                  >
-                    <AmityIcon
-                      name="cross-l"
-                      size={24}
-                      tokenColor={
-                        AmityColorToken.IconIconButtonGhostSecondaryDefault
-                      }
-                    />
-                  </Pressable>
-                ) : null}
+                <Pressable
+                  style={styles.iconButton}
+                  onPress={requestClose}
+                  accessibilityRole="button"
+                  accessibilityLabel={closeButtonText}
+                >
+                  <AmityIcon
+                    name="cross-l"
+                    size={24}
+                    tokenColor={
+                      AmityColorToken.IconIconButtonGhostSecondaryDefault
+                    }
+                  />
+                </Pressable>
               </View>
             </View>
 
-            <ScrollView
+            {/* The sheet's own scroll view, so one downward drag scrolls the
+                list to the top and then carries on into closing the sheet. */}
+            <BottomSheet.ScrollView
               style={styles.content}
               contentContainerStyle={styles.contentContainer}
             >
@@ -345,7 +354,7 @@ export function ContentReportReason({
                   </Pressable>
                 </>
               )}
-            </ScrollView>
+            </BottomSheet.ScrollView>
           </>
         )}
 
@@ -356,7 +365,7 @@ export function ContentReportReason({
               size="lg"
               fullWidth
               label={closeButtonText}
-              onPress={onClose}
+              onPress={requestClose}
             />
           ) : (
             <Button
