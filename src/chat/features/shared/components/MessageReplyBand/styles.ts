@@ -1,4 +1,10 @@
 // Styles for MessageReplyBand — ported from MessageReplyBand.module.css.
+// The band is a Banner, not a list row — full width at 62 under the thread — so
+// it takes the Banner surface and the matching Banner text colours. It had been
+// asking for the List hover ones instead. Those resolve to the same hexes today,
+// which is why nothing looked wrong, but they tie a banner that is simply there
+// to the colour a list row wears while a finger is on it: two things that have
+// no reason to move together, and that a palette is free to separate.
 // Geometry: gap 0.75rem→12; height 3.875rem→62; padding 0.625/0.75/0.625/1rem→
 // 10 top-bottom, left 16, right 12; text gap 0.125rem→2; thumb 2rem→32,
 // radius 0.25rem→4; close 1.25rem→20; close icon 1rem→16.
@@ -23,17 +29,17 @@ export const useStyles = () => {
       paddingVertical: 10,
       paddingLeft: 16,
       paddingRight: 12,
-      backgroundColor: token(AmityColorToken.SurfaceListDefaultHover),
+      backgroundColor: token(AmityColorToken.SurfaceBannerSubdueGeneral),
     },
     textCol: {
       flex: 1,
       gap: 2,
     },
     title: {
-      color: token(AmityColorToken.TextListOverlineDefaultDefault),
+      color: token(AmityColorToken.TextBannerSubdueOverlineGeneral),
     },
     body: {
-      color: token(AmityColorToken.TextListTextDescriptionDefaultDefault),
+      color: token(AmityColorToken.TextBannerSubdueTextDescriptionGeneral),
     },
     thumbWrap: {
       width: 32,
