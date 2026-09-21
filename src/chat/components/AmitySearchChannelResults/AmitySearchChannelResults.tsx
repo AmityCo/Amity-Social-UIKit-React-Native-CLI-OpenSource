@@ -11,12 +11,17 @@
 //     row navigation is wired here via React Navigation, mirroring AmityChatHomePage.
 //   - Web `Archive`/`Unarchive` SVG icons → the registry `archive-r`/`unarchive-r`
 //     glyphs (same regular variant ArchivedBadge uses).
+//   - AHEAD OF WEB: 1:1 conversations with users the viewer has blocked are
+//     hidden. The channel search endpoint does not apply block state (the home
+//     list's endpoint does), so the rows are filtered here against the viewer's
+//     blocked-user set (useBlockedUserIds).
 
 // 1. React / RN imports
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FlatList, View } from 'react-native';
 
 // 2. Third-party imports
+import { Client } from '@amityco/ts-sdk-react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -31,8 +36,10 @@ import {
 import {
   useSearchChannelsCollection,
   useArchivedChannelsCollection,
+  useBlockedUserIds,
 } from '../../hooks/collections';
 import { useChannelArchiveQuery } from '../../hooks/queries';
+import { isBlockedConversation } from '../../utils/isBlockedConversation';
 import { AmityChatListItem } from '../AmityChatListItem';
 import { EmptyState } from '../../features/shared/components/EmptyState';
 import { SwipeToLeft } from './SwipeToLeft';
@@ -78,7 +85,32 @@ export function AmitySearchChannelResults({
       { shouldCall }
     );
 
+  // Hide 1:1 conversations with users the viewer has blocked (see header).
+  const currentUserId = Client.getCurrentUser()?.userId;
+  const { blockedUserIds } = useBlockedUserIds();
+  const visibleChannels = useMemo(
+    () =>
+      channels.filter(
+        (channel) =>
+          !isBlockedConversation(channel, currentUserId, blockedUserIds)
+      ),
+    [channels, currentUserId, blockedUserIds]
+  );
+
   const isLoadingFirstPage = loading && channels.length === 0;
+
+  // A page made up entirely of hidden rows leaves the FlatList empty, so
+  // onEndReached never fires to pull the next page — request it here instead.
+  useEffect(() => {
+    if (
+      visibleChannels.length === 0 &&
+      channels.length > 0 &&
+      hasNextPage &&
+      !loading
+    ) {
+      loadMore();
+    }
+  }, [visibleChannels.length, channels.length, hasNextPage, loading, loadMore]);
 
   function handlePress(channel: Amity.Channel) {
     if (channel.type === 'community') {
@@ -97,7 +129,9 @@ export function AmitySearchChannelResults({
     return <EmptyState variant="prompt" />;
   }
 
-  if (channels.length === 0 && !isLoadingFirstPage) {
+  // Only "no results" once nothing is visible AND nothing more can be fetched;
+  // while hidden rows still have pages behind them the list shows its skeleton.
+  if (visibleChannels.length === 0 && !isLoadingFirstPage && !hasNextPage) {
     return <EmptyState variant="no-results" />;
   }
 
@@ -105,7 +139,7 @@ export function AmitySearchChannelResults({
     <FlatList
       style={styles.list}
       contentContainerStyle={styles.listContent}
-      data={channels}
+      data={visibleChannels}
       keyExtractor={(channel) => channel.channelId}
       renderItem={({ item }) => {
         const isArchived = archivedIds.has(item.channelId);

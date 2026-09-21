@@ -5,3 +5,4 @@ export * from './useChannelMembersCollection';
 export * from './useMessagesCollection';
 export * from './useSearchChannelsCollection';
 export * from './useMessageSearchCollection';
+export * from './useBlockedUserIds';
