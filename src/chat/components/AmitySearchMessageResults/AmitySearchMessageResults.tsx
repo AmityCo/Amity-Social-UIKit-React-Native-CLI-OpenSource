@@ -6,6 +6,10 @@
 //
 // RN adaptations from web:
 //   - Web `useIntersectionObserver` sentinel → FlatList `onEndReached`.
+//   - AHEAD OF WEB: messages from 1:1 conversations with users the viewer has
+//     blocked are hidden, mirroring the Chats tab (AmitySearchChannelResults).
+//     Message search applies no block state, so rows are filtered here against
+//     the viewer's blocked-user set (useBlockedUserIds).
 //
 // AmityChatListItem takes `messageBodyOverride` / `timestampOverride` /
 // `searchQuery` / `highlightStyle` props (replacing the shallow-cloned-channel
@@ -13,7 +17,7 @@
 // `jumpToMessageId` so tapping a result scrolls the thread to it.
 
 // 1. React / RN imports
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FlatList, View } from 'react-native';
 
 // 2. Third-party imports
@@ -31,7 +35,9 @@ import {
   useMessageSearchCollection,
   useChannelsByIdsCollection,
   useArchivedChannelsCollection,
+  useBlockedUserIds,
 } from '../../hooks/collections';
+import { isBlockedConversation } from '../../utils/isBlockedConversation';
 import { AmityChatListItem } from '../AmityChatListItem';
 import { EmptyState } from '../../features/shared/components/EmptyState';
 import { useStyles } from '../AmitySearchChannelResults/styles';
@@ -76,7 +82,36 @@ export function AmitySearchMessageResults({
     [matchedChannels]
   );
 
+  // Hide messages from 1:1 conversations with users the viewer has blocked (see
+  // header). A message whose channel has not resolved yet is kept — renderItem
+  // already drops it until the channel arrives.
+  const { blockedUserIds } = useBlockedUserIds();
+  const visibleMessages = useMemo(
+    () =>
+      messages.filter((message) => {
+        const channel = channelById.get(message.channelId);
+        return (
+          !channel ||
+          !isBlockedConversation(channel, currentUserId, blockedUserIds)
+        );
+      }),
+    [messages, channelById, currentUserId, blockedUserIds]
+  );
+
   const isLoadingFirstPage = loading && messages.length === 0;
+
+  // A page made up entirely of hidden rows leaves the FlatList empty, so
+  // onEndReached never fires to pull the next page — request it here instead.
+  useEffect(() => {
+    if (
+      visibleMessages.length === 0 &&
+      messages.length > 0 &&
+      hasNextPage &&
+      !loading
+    ) {
+      loadMore();
+    }
+  }, [visibleMessages.length, messages.length, hasNextPage, loading, loadMore]);
 
   function handleNavigate(message: Amity.Message) {
     const channel = channelById.get(message.channelId);
@@ -103,7 +138,9 @@ export function AmitySearchMessageResults({
     return <EmptyState variant="prompt" />;
   }
 
-  if (messages.length === 0 && !isLoadingFirstPage) {
+  // Only "no results" once nothing is visible AND nothing more can be fetched;
+  // while hidden rows still have pages behind them the list shows its skeleton.
+  if (visibleMessages.length === 0 && !isLoadingFirstPage && !hasNextPage) {
     return <EmptyState variant="no-results" />;
   }
 
@@ -111,7 +148,7 @@ export function AmitySearchMessageResults({
     <FlatList
       style={styles.list}
       contentContainerStyle={styles.listContent}
-      data={messages}
+      data={visibleMessages}
       keyExtractor={(message) => message.messageId}
       renderItem={({ item: message }) => {
         const channel = channelById.get(message.channelId);

@@ -6,6 +6,19 @@
 // is absolutely positioned near the anchor. Tapping the backdrop closes it.
 // The public API (function `trigger`, node-or-function `children`, `placement`)
 // is kept so callers such as Menu and header buttons work unchanged.
+//
+// A function `children` also receives `isAbove`: whether the popover resolved
+// to open above the anchor (explicit 'top' placement, or flipped for lack of
+// room below). Content that stacks several surfaces can reorder itself so the
+// piece meant to sit next to the anchor stays next to it on either side (web
+// leaves that to react-aria's placement data attribute).
+//
+// An optional `above` render-prop places a second surface on the OPPOSITE side
+// of the anchor while the main content opens below it — the chat design puts
+// the reaction bar above a bubble and the action menu under it, with the
+// message visible in between. It is not rendered once the popover flips above
+// (there is no room under the anchor by definition); callers fold that content
+// into `children` instead, which is why both render-props receive `isAbove`.
 
 import React, { useRef, useState } from 'react';
 import { Dimensions, Modal, Pressable, View } from 'react-native';
@@ -31,11 +44,20 @@ type TriggerArgs = {
   closePopover: () => void;
 };
 
-type ChildrenArgs = { closePopover: () => void };
+type ChildrenArgs = {
+  closePopover: () => void;
+  /** True when the popover opens above the anchor (see header). */
+  isAbove: boolean;
+};
 
 export type PopoverProps = {
   trigger: (args: TriggerArgs) => React.ReactNode;
   children: React.ReactNode | ((args: ChildrenArgs) => React.ReactNode);
+  /**
+   * Content anchored above the trigger while `children` opens below it. Not
+   * rendered when the popover itself opens above (see header).
+   */
+  above?: (args: ChildrenArgs) => React.ReactNode;
   placement?: PopoverPlacement;
   onOpen?: () => void;
   onClose?: () => void;
@@ -61,6 +83,7 @@ const ESTIMATED_MENU_HEIGHT = 260;
 export function Popover({
   trigger,
   children,
+  above,
   placement = 'bottom right',
   onOpen,
   onClose,
@@ -116,8 +139,9 @@ export function Popover({
   // `bottom` is relative to the backdrop, so measure the backdrop rather than
   // assuming it matches the window (see backdropHeight).
   const bottomReference = backdropHeight ?? screenHeight;
+  const abovePosition = { bottom: bottomReference - anchor.y + ANCHOR_GAP };
   const verticalPosition = isTop
-    ? { bottom: bottomReference - anchor.y + ANCHOR_GAP }
+    ? abovePosition
     : { top: anchor.y + anchor.height + ANCHOR_GAP };
 
   // Horizontal alignment: right-align to the anchor's right edge, else left-align to
@@ -137,7 +161,13 @@ export function Popover({
     : { left: Math.min(maxInset, Math.max(SCREEN_MARGIN, anchor.x)) };
 
   const content =
-    typeof children === 'function' ? children({ closePopover }) : children;
+    typeof children === 'function'
+      ? children({ closePopover, isAbove: isTop })
+      : children;
+  // The companion surface only exists while the main content sits below.
+  const aboveContent = isTop
+    ? null
+    : above?.({ closePopover, isAbove: false }) ?? null;
 
   return (
     <View ref={triggerRef} collapsable={false}>
@@ -174,6 +204,22 @@ export function Popover({
               content
             )}
           </Pressable>
+          {aboveContent ? (
+            <Pressable
+              style={[
+                surface ? styles.popover : styles.popoverBare,
+                abovePosition,
+                horizontalPosition,
+              ]}
+              onPress={() => {}}
+            >
+              {surface ? (
+                <View style={styles.clip}>{aboveContent}</View>
+              ) : (
+                aboveContent
+              )}
+            </Pressable>
+          ) : null}
         </Pressable>
       </Modal>
     </View>
