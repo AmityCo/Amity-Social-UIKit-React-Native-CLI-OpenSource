@@ -9,6 +9,7 @@ import { View } from 'react-native';
 
 // 2. Internal imports
 import useFile from '../../../core/hooks/useFile';
+import { ImageSizeState } from '../../../core/enums';
 import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
 import { getReactorSheetHeight } from '../../constants';
 import { useChatSurfaceHeight } from '../../hooks/useChatSurfaceHeight';
@@ -47,8 +48,12 @@ export function Chat({
   // Receiver avatar for the header (1-1 conversation), resolved from the other
   // participant's avatarFileId — the same source AmityChatListItem uses for the
   // list row (kept consistent so both show the same image).
+  // `large`, not the hook's default `medium`: this one URL serves both the 40pt
+  // header avatar and the full-screen viewer behind a tap on it, which is how
+  // web resolves it too.
   const otherUserAvatarUrl = useFile({
     fileId: c.otherUser?.avatarFileId ?? '',
+    imageSize: ImageSizeState.large,
   });
   // Reactor-list sheet — web keeps this in useBubbleMenu at the orchestration
   // level (one instance). RN MOBILE ADAPTATION: rather than render the reactor
@@ -85,6 +90,7 @@ export function Chat({
         // fall back to the navigation-passed name only while that loads.
         title={c.otherUser?.displayName || userDisplayName || ''}
         avatarUrl={otherUserAvatarUrl}
+        userId={c.otherUser?.userId}
         isBrand={(c.otherUser as { isBrand?: boolean } | undefined)?.isBrand}
         onBack={onBack}
         trailing={
