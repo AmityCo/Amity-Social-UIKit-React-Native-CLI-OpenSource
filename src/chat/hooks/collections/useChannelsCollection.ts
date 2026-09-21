@@ -6,8 +6,18 @@
 // callback delivers `{ data, loading, hasNextPage, onNextPage }`. We keep the
 // latest `onNextPage` in a ref so `loadMore()` stays stable, and re-subscribe
 // whenever the query params change, returning the unsubscriber for cleanup.
+//
+// `refreshOnFocus` re-subscribes each time the hosting screen regains focus.
+// The SDK's `createChannel` only writes the new channel into the cache and
+// fires no local event, and the channel live collection inserts an id only on
+// the realtime `channel.created` / `channel.joined` events (a sent message is
+// an `onUpdate`, which never inserts). So a conversation created from the home
+// screen's child routes is missing from the list until it re-subscribes; the
+// focus refresh does that. Rows stay in state across the refresh, so the list
+// does not flash to a skeleton. Same pattern as core `useLiveObject`.
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { ChannelRepository } from '@amityco/ts-sdk-react-native';
 import useAuth from '../../../core/hooks/useAuth';
 
@@ -19,6 +29,11 @@ export type UseChannelsCollectionParams = {
   limit?: number;
   /** Drop archived channels from the collection (web home list passes true). */
   excludeArchives?: boolean;
+  /**
+   * Re-subscribe when the hosting screen regains focus (see header). Requires
+   * a React Navigation screen ancestor. Defaults to false.
+   */
+  refreshOnFocus?: boolean;
 };
 
 export type UseChannelsCollectionResult = {
@@ -26,6 +41,8 @@ export type UseChannelsCollectionResult = {
   loading: boolean;
   hasNextPage: boolean;
   loadMore: () => void;
+  /** Re-subscribe now, keeping the current rows until the fresh page lands. */
+  refresh: () => void;
 };
 
 const DEFAULT_LIMIT = 20;
@@ -37,11 +54,14 @@ export function useChannelsCollection({
   isDeleted = false,
   limit = DEFAULT_LIMIT,
   excludeArchives,
+  refreshOnFocus = false,
 }: UseChannelsCollectionParams = {}): UseChannelsCollectionResult {
   const [channels, setChannels] = useState<Amity.Channel[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasNextPage, setHasNextPage] = useState(false);
   const onNextPageRef = useRef<(() => void) | undefined>(undefined);
+  // Bumped by `refresh()`; a dep of the subscription effect so it re-subscribes.
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // The SDK's ChannelRepository needs a connected client — calling getChannels
   // before the session is 'established' throws. Gate the subscription on it.
@@ -88,11 +108,29 @@ export function useChannelsCollection({
     isDeleted,
     limit,
     excludeArchives,
+    refreshKey,
   ]);
+
+  const refresh = useCallback(() => setRefreshKey((key) => key + 1), []);
+
+  // The first focus coincides with mount, which the effect above already
+  // subscribed for — only later focuses (returning from a child route) refresh.
+  const hasFocusedRef = useRef(false);
+  useFocusEffect(
+    useCallback(() => {
+      if (!refreshOnFocus) return undefined;
+      if (hasFocusedRef.current) {
+        refresh();
+      } else {
+        hasFocusedRef.current = true;
+      }
+      return undefined;
+    }, [refreshOnFocus, refresh])
+  );
 
   function loadMore() {
     onNextPageRef.current?.();
   }
 
-  return { channels, loading, hasNextPage, loadMore };
+  return { channels, loading, hasNextPage, loadMore, refresh };
 }

@@ -16,6 +16,9 @@
 //     `SubChannelRepository.startMessageReceiptSync(defaultSubChannelId)` here — the
 //     SDK marks all messages in the sub-channel read. Fire-and-forget; failures are
 //     non-fatal (the conversation-open path still marks read).
+//   - The collection refreshes whenever the home screen regains focus, so a chat
+//     created from a child route (new conversation / new group) is listed on
+//     return even when no realtime insert arrived — see useChannelsCollection.
 
 // 1. React / RN imports
 import { FlatList, View } from 'react-native';
@@ -70,6 +73,7 @@ export function ChannelList({
   const { channels, loading, hasNextPage, loadMore } = useChannelsCollection({
     types,
     excludeArchives: true,
+    refreshOnFocus: true,
   });
   const { archiveChannel } = useChannelArchiveQuery();
   const archiveLabel = useString('amity_chat_archive');
