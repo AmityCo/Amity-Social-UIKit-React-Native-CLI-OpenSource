@@ -15,6 +15,20 @@
 // never briefly shows "Report". Unreport calls the query's `unreport` then
 // refetches; the report screen (ContentReportReason) invalidates the same query
 // key so reopening the menu reflects the new state. Item visibility follows web.
+//
+// AHEAD OF WEB: the two surfaces are placed by which side the popover opened
+// on. Web always stacks picker-above-menu on one side of the bubble. The chat
+// design (Figma "Group chat / Chatroom", 5844:106604) instead keeps the
+// reaction bar directly above the message in both cases:
+//   - Room below the bubble: the picker goes in the Popover's `above` slot and
+//     the menu opens under the bubble, so the message stays visible between
+//     the two surfaces.
+//   - No room below (bubble near the compose bar, Popover reports `isAbove`):
+//     both surfaces stack above the bubble as menu → picker, so the picker is
+//     still the one touching the message. The picker is ordered in the tree
+//     rather than via `column-reverse` so it also paints last: its hovered
+//     reaction-name label overhangs the pill upward and must draw over the
+//     menu card, not under it.
 
 // 1. React / RN imports
 import { useState, type ReactNode } from 'react';
@@ -236,6 +250,38 @@ export function AmityMessageActionMenu({
     isFlagLoading
   );
 
+  const renderPicker = (closePopover: () => void) =>
+    isActive ? (
+      <View key="picker" style={styles.pickerCard}>
+        <ReactionPicker
+          myReaction={myReaction}
+          onReactionClick={(reactionName) => {
+            selectReaction({ message, reactionName });
+            closePopover();
+          }}
+        />
+      </View>
+    ) : null;
+
+  const renderMenu = (closePopover: () => void) => (
+    <View key="menu" style={styles.menuCard}>
+      <Menu variant="chat" container="popover">
+        {items.map((item) => (
+          <Menu.Item
+            key={item.key}
+            icon={item.icon}
+            label={item.label}
+            destructive={item.destructive}
+            onPress={() => {
+              item.onPress();
+              closePopover();
+            }}
+          />
+        ))}
+      </Menu>
+    </View>
+  );
+
   if (items.length === 0) {
     return (
       <>
@@ -256,36 +302,14 @@ export function AmityMessageActionMenu({
       surface={false}
       onOpen={() => setMenuOpen(true)}
       onClose={() => setMenuOpen(false)}
+      // Room below: the picker sits above the bubble on its own (see header).
+      above={({ closePopover }) => renderPicker(closePopover)}
     >
-      {({ closePopover }) => (
+      {({ closePopover, isAbove }) => (
         <View style={styles.content}>
-          {isActive && (
-            <View style={styles.pickerCard}>
-              <ReactionPicker
-                myReaction={myReaction}
-                onReactionClick={(reactionName) => {
-                  selectReaction({ message, reactionName });
-                  closePopover();
-                }}
-              />
-            </View>
-          )}
-          <View style={styles.menuCard}>
-            <Menu variant="chat" container="popover">
-              {items.map((item) => (
-                <Menu.Item
-                  key={item.key}
-                  icon={item.icon}
-                  label={item.label}
-                  destructive={item.destructive}
-                  onPress={() => {
-                    item.onPress();
-                    closePopover();
-                  }}
-                />
-              ))}
-            </Menu>
-          </View>
+          {isAbove
+            ? [renderMenu(closePopover), renderPicker(closePopover)]
+            : renderMenu(closePopover)}
         </View>
       )}
     </Popover>
