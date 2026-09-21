@@ -39,6 +39,8 @@ export const BehaviourProvider = ({
       AmityUserProfileHeaderComponentBehavior: {},
       AmityUserPendingFollowRequestsPageBehavior: {},
       AmityUserFeedComponentBehavior: {},
+      AmityChatPageBehavior: {},
+      AmityMessageBubbleBehavior: {},
     }),
     []
   );

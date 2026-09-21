@@ -39,6 +39,7 @@ import { splitTextByLinks } from '../../utils/linkifyText';
 import { useVideoFileUrl } from '../../hooks/useVideoFileUrl';
 import { getMediaBubbleSize } from '../../constants';
 import { isSyntheticPendingMessage } from '../../features/shared/hooks/useMessageComposer';
+import { useBehaviour } from '../../../social/providers/BehaviourProvider';
 import { TEXT_VERTICAL_PADDING, useStyles } from './styles';
 
 // One flat limit for every text bubble. There used to be a second
@@ -95,11 +96,21 @@ function renderLinkedText(
 // [{ index, length }] marks the runs to style with the mention token. Only the
 // non-mention runs are linkified (lead/tail slices) — a mention span stays plain,
 // so a display name that looks like a domain is never turned into a link.
+type MentionSpan = {
+  index: number;
+  length: number;
+  /** Present on a user mention; absent on a channel mention. */
+  userId?: string;
+  type?: string;
+};
+
 function renderTextWithMentions(
   text: string,
-  mentioned: { index: number; length: number }[] | undefined,
+  mentioned: MentionSpan[] | undefined,
   mentionStyle: object,
-  linkStyle: StyleProp<TextStyle>
+  linkStyle: StyleProp<TextStyle>,
+  /** Set only when a host app has claimed the tap; otherwise mentions are inert. */
+  onMentionUserTap?: (context: { userId: string }) => void
 ): ReactNode {
   const spans = (mentioned ?? []).slice().sort((a, b) => a.index - b.index);
   if (spans.length === 0) return renderLinkedText(text, 't', linkStyle);
@@ -117,8 +128,23 @@ function renderTextWithMentions(
       );
     }
     if (end > start) {
+      // Only a user mention leads anywhere, and only when something is
+      // listening. A channel mention keeps the colour and stays inert.
+      const tappableUserId =
+        m.type !== 'channel' && m.userId && onMentionUserTap
+          ? m.userId
+          : undefined;
       out.push(
-        <Text key={`m-${i}`} style={mentionStyle}>
+        <Text
+          key={`m-${i}`}
+          style={mentionStyle}
+          onPress={
+            tappableUserId
+              ? () => onMentionUserTap?.({ userId: tappableUserId })
+              : undefined
+          }
+          suppressHighlighting={!tappableUserId}
+        >
           {text.slice(start, end)}
         </Text>
       );
@@ -311,12 +337,10 @@ function TextBubble({
     text.length > MIN_CHARS_TO_OVERFLOW || text.split('\n').length > maxLines;
   const measuring = mightOverflow && overflowing === null;
   const isEdited = (message as { editedAt?: unknown }).editedAt != null;
+  const { AmityMessageBubbleBehavior } = useBehaviour();
+  const onMentionUserTap = AmityMessageBubbleBehavior?.onMentionUserTap;
   const mentioned = (
-    message.metadata as
-      | {
-          mentioned?: { index: number; length: number }[];
-        }
-      | undefined
+    message.metadata as { mentioned?: MentionSpan[] } | undefined
   )?.mentioned;
 
   const bubbleStyle = [
@@ -420,7 +444,8 @@ function TextBubble({
               text,
               mentioned,
               isUser ? styles.mentionOwn : styles.mentionOther,
-              linkStyle
+              linkStyle,
+              onMentionUserTap
             )}
           </Text>
         )}
@@ -465,7 +490,8 @@ function TextBubble({
                 text,
                 mentioned,
                 isUser ? styles.mentionOwn : styles.mentionOther,
-                linkStyle
+                linkStyle,
+                onMentionUserTap
               )}
             </Text>
           </View>

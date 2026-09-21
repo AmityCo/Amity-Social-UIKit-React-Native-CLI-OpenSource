@@ -43,6 +43,8 @@ export type AvatarProps = {
   indicatorStyle?: StyleProp<ViewStyle>;
   label?: string;
   onPress?: () => void;
+  /** Screen-reader name for the pressable frame. Only meaningful with `onPress`. */
+  accessibilityLabel?: string;
 };
 
 // 4. Named function component
@@ -58,6 +60,7 @@ export function Avatar({
   indicatorStyle,
   label,
   onPress,
+  accessibilityLabel,
 }: AvatarProps) {
   const { styles, glyphSize, glyphColor } = useStyles(
     size,
@@ -93,7 +96,11 @@ export function Avatar({
     <View style={styles.container}>
       <View style={styles.frameWrapper}>
         {onPress ? (
-          <Pressable onPress={onPress} accessibilityRole="button">
+          <Pressable
+            onPress={onPress}
+            accessibilityRole="button"
+            accessibilityLabel={accessibilityLabel}
+          >
             {frame}
           </Pressable>
         ) : (
