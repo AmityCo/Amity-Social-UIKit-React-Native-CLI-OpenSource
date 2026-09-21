@@ -1,4 +1,4 @@
-import { useToken } from '../../../theme/useToken';
+import { useToken, type ColorTokenRef } from '../../../theme/useToken';
 import { AmityColorToken } from '../../../tokens/amity-color-tokens';
 import type { SpinnerSize } from './Spinner';
 
@@ -8,13 +8,16 @@ const DIMENSION: Record<SpinnerSize, number> = {
   lg: 40,
 };
 
-export const useStyles = (size: SpinnerSize) => {
+export const useStyles = (size: SpinnerSize, tokenColor?: ColorTokenRef) => {
   const token = useToken();
 
   return {
     // Web arc uses --asc-color-surface-loaders-spinner-icon; the RN token set
     // exposes SurfaceLoadersSpinnerPrimaryIcon (no ...Icon), which is the same slot.
-    color: token(AmityColorToken.SurfaceLoadersSpinnerPrimaryIcon),
+    // Callers may override the slot with `tokenColor` (e.g. the grey offline banner).
+    color: token(
+      tokenColor ?? AmityColorToken.SurfaceLoadersSpinnerPrimaryIcon
+    ),
     dimension: DIMENSION[size],
     token,
   };

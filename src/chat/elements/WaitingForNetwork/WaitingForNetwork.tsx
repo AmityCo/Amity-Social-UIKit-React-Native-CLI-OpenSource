@@ -19,6 +19,7 @@ import NetInfo from '@react-native-community/netinfo';
 // 3. Internal imports (relative)
 import { Typography } from '../../../core/design/components/Typography';
 import { Loader } from '../../../core/design/atoms/Loader';
+import { AmityColorToken } from '../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../core/localization';
 import { useStyles } from './styles';
 
@@ -39,7 +40,11 @@ export function WaitingForNetwork() {
 
   return (
     <View style={styles.waitingForNetwork}>
-      <Loader.Spinner size="sm" />
+      {/* Figma: neutral grey spinner matching the caption, not the primary tint. */}
+      <Loader.Spinner
+        size="sm"
+        tokenColor={AmityColorToken.TextListTextDescriptionDefaultDefault}
+      />
       <Typography variant="caption" style={styles.text} numberOfLines={1}>
         {label}
       </Typography>

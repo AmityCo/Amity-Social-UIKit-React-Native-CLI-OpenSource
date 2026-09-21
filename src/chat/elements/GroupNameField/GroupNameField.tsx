@@ -1,14 +1,14 @@
-// GroupNameField element — ported from AmityUiKitWeb chat/elements/GroupNameField.
-// A labeled, character-counted text field for the group chat name. Wraps the
-// Input.Text atom (the RN port of web's Input.Text), keeping web's prop API.
+// GroupNameField element — a labeled, character-counted text field for the group
+// chat name, wrapping the Input.Text atom.
 //
-// A group name is single-line. Web passes no `multiLine` to Input.Text
-// (so it renders a plain <input>, which cannot hold a newline); the RN port had
-// added `multiLine`, which turned the field into a growing multiline TextInput
-// that swallowed the return key and pushed the rest of the form off screen.
-// Dropping `multiLine` restores web's shape, and `stripNewLines` on change also
-// covers a *pasted* multi-line string — which no key handler would catch, and
-// which Android does not reliably report as a cancellable Enter.
+// A group name is one line of text but may be longer than the field is wide.
+// `multiLine` is what lets it wrap to a second line instead of scrolling
+// sideways out of sight, and `blockNewLine` then refuses Enter so it stays one
+// line of *text*: without the second prop the field grew a line per return press
+// and pushed the rest of the form off screen. blockNewLine strips on change
+// rather than on key press, so it also catches a pasted multi-line string, which
+// no key handler would see and which Android does not reliably report as a
+// cancellable Enter. maxLength bounds how far the field can grow.
 
 // 1. React / RN imports
 import { View } from 'react-native';
@@ -18,8 +18,6 @@ import { Input } from '../../../core/design/atoms/Input';
 import { useString } from '../../../core/localization';
 import { useStyles } from './styles';
 
-// Web imports GROUP_NAME_MAX_LENGTH from chat/constants (= 100). Inlined here to
-// keep the port self-contained.
 const GROUP_NAME_MAX_LENGTH = 100;
 
 // 2. Types
@@ -30,12 +28,6 @@ export type GroupNameFieldProps = {
   placeholder?: string;
   onChange: (value: string) => void;
 };
-
-// Keep the value on one line whatever route the text arrives by (typing, paste,
-// autofill, a keyboard's own newline insertion).
-function stripNewLines(text: string): string {
-  return text.replace(/[\r\n]+/g, '');
-}
 
 // 3. Named function component
 export function GroupNameField({
@@ -64,10 +56,12 @@ export function GroupNameField({
         title={label}
         optionalLabel={marker}
         value={value}
-        onChange={(text) => onChange(stripNewLines(text))}
+        onChange={onChange}
         placeholder={placeholder ?? defaultPlaceholder}
         showCharacterCount
         maxLength={GROUP_NAME_MAX_LENGTH}
+        multiLine
+        blockNewLine
       />
     </View>
   );

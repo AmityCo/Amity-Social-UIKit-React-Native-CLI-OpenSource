@@ -1,9 +1,8 @@
-// MessageFullTextScreen — ported from AmityUiKitWeb features/shared/components/
-// MessageFullTextScreen. The full-screen "see more" long-text view. Web renders a
-// fixed overlay dialog + `linkify-react`; RN uses a full-screen Modal (Android
-// back button === web Escape via onRequestClose) and a small local linkifier that
-// renders URL runs as tappable Text opening the system browser. Header carries a
-// ghost back button, a centered title, and a balancing spacer.
+// MessageFullTextScreen — the full-screen "see more" long-text view. A Modal, so
+// the Android back button dismisses it through onRequestClose. URL runs render as
+// tappable Text that opens the system browser; detection lives in
+// utils/linkifyText. Header carries a ghost back button, a centered title, and a
+// balancing spacer.
 
 // 1. React / RN imports
 import { Fragment } from 'react';
@@ -15,6 +14,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Typography } from '../../../../../core/design/components/Typography';
 import { AmityIcon } from '../../../../../core/design/icons';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
+import { splitTextByLinks } from '../../../../utils/linkifyText';
 import { useStyles } from './styles';
 
 // 3. Types
@@ -25,15 +25,7 @@ type MessageFullTextScreenProps = {
   onClose: () => void;
 };
 
-// Matches http(s) URLs and bare www.* runs; kept local so the component is
-// self-contained (no dependency on the legacy PreviewLink util module). The split
-// regex is global (capturing) so URL runs survive `String.split`; a separate
-// non-global regex is used for per-part testing to avoid stateful `lastIndex`.
-const URL_SPLIT_REGEX = /((?:https?:\/\/|www\.)[^\s]+)/gi;
-const URL_TEST_REGEX = /^(?:https?:\/\/|www\.)[^\s]+$/i;
-
-function openLink(raw: string) {
-  const href = raw.startsWith('http') ? raw : `https://${raw}`;
+function openLink(href: string) {
   Linking.openURL(href).catch(() => undefined);
 }
 
@@ -46,7 +38,7 @@ export function MessageFullTextScreen({
 }: MessageFullTextScreenProps) {
   const { styles } = useStyles();
 
-  const parts = text.split(URL_SPLIT_REGEX);
+  const segments = splitTextByLinks(text);
 
   return (
     <Modal
@@ -88,18 +80,18 @@ export function MessageFullTextScreen({
           </View>
           <ScrollView style={styles.body}>
             <Typography variant="body" style={styles.text} selectable>
-              {parts.map((part, index) =>
-                URL_TEST_REGEX.test(part) ? (
+              {segments.map((segment, index) =>
+                segment.kind === 'link' ? (
                   <Typography
-                    key={`${part}-${index}`}
+                    key={`l-${index}`}
                     variant="body"
                     style={[styles.text, styles.link]}
-                    onPress={() => openLink(part)}
+                    onPress={() => openLink(segment.href)}
                   >
-                    {part}
+                    {segment.value}
                   </Typography>
                 ) : (
-                  <Fragment key={`t-${index}`}>{part}</Fragment>
+                  <Fragment key={`t-${index}`}>{segment.value}</Fragment>
                 )
               )}
             </Typography>

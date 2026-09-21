@@ -29,6 +29,7 @@ import useFile from '../../../../../core/hooks/useFile';
 import { ImageSizeState } from '../../../../../core/enums';
 import { useString } from '../../../../../core/localization';
 import { useMessageObject } from '../../../../hooks/objects';
+import { splitTextByLinks } from '../../../../utils/linkifyText';
 import { getReplyHeader, getReplyThumbnailSize } from './utils';
 import { useStyles } from './styles';
 
@@ -50,26 +51,25 @@ type MessageData = {
   thumbnailFileId?: string;
 };
 
-// Ported from web's <Linkify> in TextQuote: URLs are recoloured (inbound-link
-// token) + underlined but NOT separately tappable — the whole quote is the tap
-// target (onOpenSeeMore). Splits the text into plain strings + styled link spans.
-const URL_SPLIT_RE = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
-
+// URLs inside a quote are recoloured (inbound-link token) and underlined but are
+// NOT separately tappable — the whole quote is one tap target (onOpenSeeMore).
+// Splits the text into plain strings + styled link spans; URL detection lives in
+// utils/linkifyText.
 function renderQuoteTextWithLinks(
   text: string,
   linkStyle: StyleProp<TextStyle>
 ): ReactNode[] {
   const out: ReactNode[] = [];
-  text.split(URL_SPLIT_RE).forEach((part, i) => {
-    if (!part) return;
-    if (/^(?:https?:\/\/|www\.)/i.test(part)) {
+  splitTextByLinks(text).forEach((segment, i) => {
+    if (!segment.value) return;
+    if (segment.kind === 'link') {
       out.push(
         <Text key={`l-${i}`} style={linkStyle}>
-          {part}
+          {segment.value}
         </Text>
       );
     } else {
-      out.push(part);
+      out.push(segment.value);
     }
   });
   return out;

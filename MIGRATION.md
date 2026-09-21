@@ -41,6 +41,8 @@ Update your host app's `package.json` to match.
 | `react-native-video`             | `^6.16.1` | `^6.18.0`                    |
 | `react-native-vision-camera`     | `^4.7.1`  | `^4.7.3`                     |
 
+`react-native-reanimated` (`~4.3.4`) and `react-native-worklets` (`~0.8.3`) are new peers. The bottom sheet animates its height on the UI thread, which is something RN's own `Animated` cannot do. Both have to be installed, and `'react-native-worklets/plugin'` added as the **last** entry in the app's `babel.config.js` plugins.
+
 Other peers (`@react-native-async-storage/async-storage`, `react-native-gesture-handler`, Firebase, navigation, livekit) are unchanged.
 
 ## Public-API changes

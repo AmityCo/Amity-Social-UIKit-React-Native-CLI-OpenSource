@@ -241,7 +241,7 @@
   "amity_chat_option_unreport": "Unreport",
   "amity_chat_delete_alert_title": "Delete this message?",
   "amity_chat_delete_alert_message": "This message will also be removed from your friend's devices.",
-  "amity_chat_toast_delete_error": "Couldn't delete message. Please try again.",
+  "amity_chat_toast_delete_error": "Failed to delete message. Please try again.",
   "amity_chat_toast_copied": "Copied.",
   "amity_chat_toast_message_reported": "Message reported.",
   "amity_chat_toast_message_reported_error": "Failed to report message. Please try again.",
