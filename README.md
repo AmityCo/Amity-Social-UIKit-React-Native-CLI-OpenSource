@@ -150,7 +150,14 @@ Add following permissions to `info.plist` file (ios/{YourAppName}/Info.plist)
  <string>App needs access to the microphone to record audio.</string>
  <key>NSPhotoLibraryUsageDescription</key>
  <string>App needs access to the gallery to select photos.</string>
+ <key>NSPhotoLibraryAddUsageDescription</key>
+ <string>App needs access to the gallery to save photos and videos.</string>
 ```
+
+> **`NSPhotoLibraryAddUsageDescription` is required from 4.3.0 on.** Saving a
+> photo or video from a chat message asks iOS for permission to add to the
+> photo library. iOS terminates any app that asks without this key, so a build
+> missing it crashes the first time a user saves media from chat.
 
 > **`NSPhotoLibraryUsageDescription` is required from 4.1.0 on.** Opening the
 > media picker now asks iOS for photo-library authorization, which it needs to
@@ -166,7 +173,15 @@ Add following permissions to `AndroidManifest.xml` file (android/app/src/main/An
 ```xml
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    android:maxSdkVersion="28" />
 ```
+
+> **`WRITE_EXTERNAL_STORAGE` is required from 4.3.0 on** for saving photos and
+> videos from chat on Android 9 (API 28) and below. Android 10 and later save to
+> the gallery without it, so `android:maxSdkVersion="28"` keeps the permission
+> off those devices. Without the declaration, saving on Android 9 and below
+> always fails with a permission error.
 
 ### Usage
 
