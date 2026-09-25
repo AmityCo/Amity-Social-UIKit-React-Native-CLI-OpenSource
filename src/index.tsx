@@ -8,6 +8,12 @@ import {
   navigate,
 } from './core';
 import {
+  useLocale,
+  useString,
+  defaultLocaleMap,
+  thLocaleBundle,
+} from './core/localization';
+import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
   AmityDraftStoryPage,
@@ -178,4 +184,10 @@ export {
   AmityPendingPostListComponent,
   AmityGlobalStoryTabWrapper,
   navigate,
+  useLocale,
+  useString,
+  defaultLocaleMap,
+  thLocaleBundle,
 };
+
+export type { LocaleBundle, LocaleContextValue } from './core/localization';
