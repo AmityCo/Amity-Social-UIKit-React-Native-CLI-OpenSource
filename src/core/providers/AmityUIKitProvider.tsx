@@ -20,11 +20,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { AmityThemeProvider } from '../design/theme';
-import {
-  LocaleProvider,
-  defaultLocaleMap,
-  type LocaleBundle,
-} from '../localization';
+import { LocaleProvider, type LocaleBundle } from '../localization';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
@@ -50,7 +46,8 @@ export interface IAmityUIkitProvider {
    * - `localeMap`: map of locale code → bundle for automatic device-language
    *   detection. When `localeBundle` is not set, the device language is matched
    *   against this map (exact match, then language prefix). Falls back to
-   *   English when nothing matches. Defaults to the built-in bundles.
+   *   English when nothing matches. Unset by default, so the UIKit renders in
+   *   English unless the host opts in (pass `defaultLocaleMap` for built-in Thai).
    *
    * @example
    *   localization={{ localeBundle: jaLocale }}
@@ -227,9 +224,7 @@ export default function AmityUiKitProvider({
                             <LocaleProvider
                               initialLocaleBundle={localization?.localeBundle}
                               initialOverrides={localization?.overrides}
-                              localeMap={
-                                localization?.localeMap ?? defaultLocaleMap
-                              }
+                              localeMap={localization?.localeMap}
                             >
                               {children}
                               <BottomSheetComponent />

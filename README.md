@@ -441,8 +441,8 @@ import jaLocale from './locales/ja.json';
   // ...credentials
   localization={{
     // Picks a bundle from the device language (exact match, then prefix).
-    // Omit it to use the built-in bundles (Thai). A map you pass replaces
-    // them, so spread defaultLocaleMap to keep Thai.
+    // Without localeMap the UIKit stays in English. Spread defaultLocaleMap
+    // to also include the built-in Thai bundle.
     localeMap: { ...defaultLocaleMap, ja: jaLocale },
     // Individual keys that take precedence over the active bundle.
     overrides: { amity_chat_archive: 'Hide chat' },
