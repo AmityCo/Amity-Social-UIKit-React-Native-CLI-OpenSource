@@ -17,6 +17,7 @@ argument-hint: 'Specify the version bump options: release_as (major/minor/patch/
 - Ask the user for the version bump options:
   - `release_as`: `major` / `minor` / `patch` / `stable` / `none`
   - `pre-release`: `RC` / `alpha` / `beta` / `none`
+- Ask for the target version string (e.g. `4.0.0-RC.22`) — step 1's PR title and step 3's branch name both use it.
 - Confirm PO has given approval.
 
 ### Version bump examples
@@ -30,15 +31,45 @@ argument-hint: 'Specify the version bump options: release_as (major/minor/patch/
 
 ## Procedure
 
-### 1 — Merge all feature PRs into `production`
+### 1 — Merge `develop` into `production`
 
-Ensure all feature PRs for this release are merged into the `production` branch before creating the release branch.
+Day-to-day feature and fix PRs land on `develop`, so the release content reaches `production` through a single PR from `develop` → `production`. Never push `develop` into `production` directly.
+
+First check for open PRs targeting `develop` that should ship in this release, and ask the user to merge them before continuing:
+
+```sh
+gh pr list --repo AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource --base develop --state open
+```
+
+Then check whether a `develop` → `production` PR is already open:
+
+```sh
+gh pr list --repo AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource --base production --head develop --state open
+```
+
+If none exists, show the user what `develop` carries that `production` does not, then open the PR:
+
+```sh
+git fetch origin
+git log --oneline origin/production..origin/develop
+
+gh pr create \
+  --repo AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource \
+  --base production \
+  --head develop \
+  --title "chore: merge develop into production for v<VERSION>" \
+  --body "Brings the changes on \`develop\` into \`production\` ahead of the v<VERSION> release."
+```
+
+If `git log` prints nothing, `develop` has nothing new — confirm with the user whether the release should still proceed.
+
+Print the PR URL and **wait for the user to confirm it has been reviewed and merged** before moving on. Do not merge it yourself unless the user explicitly asks.
+
+Finally, check for any other open PRs targeting `production` (e.g. hotfixes) that should be included, and ask the user to merge them first:
 
 ```sh
 gh pr list --repo AmityCo/Amity-Social-UIKit-React-Native-CLI-OpenSource --base production --state open
 ```
-
-If there are open feature PRs that should be included, ask the user to merge them first.
 
 ### 2 — Check out the `production` branch and sync
 
@@ -111,7 +142,7 @@ Confirm the published version matches the expected new version.
 
 ### 6 — Merge the release branch into `production`
 
-Once the pipeline completes and the version is confirmed on NPM, open a PR from the release branch into `production` and merge it.
+Once the pipeline completes and the version is confirmed on NPM, open a PR from the release branch into `production`.
 
 ```sh
 gh pr create \
@@ -122,14 +153,7 @@ gh pr create \
   --body "Merging release branch after successful publish of v<VERSION> to npm."
 ```
 
-Or merge directly if permitted:
-
-```sh
-git checkout production
-git pull origin production
-git merge release/v<VERSION>
-git push origin production
-```
+Print the PR URL and wait for the user to confirm it has been merged. Never push to `production` directly.
 
 ### 7 — Done
 
