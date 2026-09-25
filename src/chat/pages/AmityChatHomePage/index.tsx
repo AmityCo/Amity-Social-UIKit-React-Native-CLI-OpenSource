@@ -40,3 +40,5 @@ export default function AmityChatHomePage() {
     </SafeAreaView>
   );
 }
+
+AmityChatHomePage.displayName = 'AmityChatHomePage';

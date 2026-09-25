@@ -270,6 +270,57 @@ export default function App() {
 }
 ```
 
+### Chat pages
+
+Every chat page can be rendered on its own the same way, inside **`AmityPageRenderer`**. `AmityUiKitChat` stays the simplest way to show the whole chat UIKit; use a single page when you want to place it yourself, for example opening a conversation straight from a notification.
+
+| Page                                   | Props                                                                       |
+| -------------------------------------- | --------------------------------------------------------------------------- |
+| `AmityChatHomePage`                    | -                                                                           |
+| `AmityChannelCreateConversationPage`   | -                                                                           |
+| `AmitySelectGroupMemberPage`           | `selectedGroupMember?: Amity.User[]`                                        |
+| `AmityCreateGroupChatPage`             | `selectedUsers: Amity.User[]`                                               |
+| `AmityChatPage`                        | `channelId: string`, `userDisplayName?: string`, `jumpToMessageId?: string` |
+| `AmityGroupChatPage`                   | `channelId: string`, `isJustCreated?: boolean`, `jumpToMessageId?: string`  |
+| `AmityGroupSettingPage`                | `channelId: string`                                                         |
+| `AmityEditGroupProfilePage`            | `channelId: string`                                                         |
+| `AmityEditGroupNotificationPage`       | `channelId: string`                                                         |
+| `AmityEditGroupMemberPermissionsPage`  | `channelId: string`                                                         |
+| `AmityGroupNotificationPreferencePage` | `channelId: string`                                                         |
+| `AmityGroupMemberListPage`             | `channelId: string`                                                         |
+| `AmityAddGroupMemberPage`              | `channelId: string`                                                         |
+| `AmityBannedGroupMemberListPage`       | `channelId: string`                                                         |
+| `AmityArchivedChatPage`                | -                                                                           |
+| `AmitySearchChannelPage`               | -                                                                           |
+
+Each page's props type is exported as `<PageName>Props`, e.g. `AmityChatPageProps`. From the rendered page the user can still move on to the other chat pages, such as a group's settings or its member list.
+
+```js
+import {
+  AmityUiKitProvider,
+  AmityPageRenderer,
+  AmityChatPage,
+} from '@amityco/react-native-social-uikit';
+
+export default function App() {
+  return (
+    <AmityUiKitProvider
+      configs={config}
+      apiKey="API_KEY"
+      apiRegion="API_REGION"
+      userId="userId"
+      displayName="displayName"
+    >
+      <AmityPageRenderer>
+        <AmityChatPage channelId="channelId" />
+      </AmityPageRenderer>
+    </AmityUiKitProvider>
+  );
+}
+```
+
+> The page you render is the first screen in its stack, so its back button has nothing to go back to. Hide the page or navigate away from your own app's navigation instead.
+
 ### Story Tab component Usage
 
 ```js

@@ -50,6 +50,45 @@ import LivestreamPostTargetSelection from '../../social/screens/LivestreamPostTa
 import CommunityMembership from '../../social/screens/CommunityMembership';
 import CreateLivestream from '../../social/screens/CreateLivestream';
 import LivestreamPlayer from '../../social/screens/LivestreamPlayer';
+import {
+  AmityChatHomePage,
+  AmityChannelCreateConversationPage,
+  AmitySelectGroupMemberPage,
+  AmityCreateGroupChatPage,
+  AmityChatPage,
+  AmityGroupChatPage,
+  AmityGroupSettingPage,
+  AmityEditGroupProfilePage,
+  AmityEditGroupNotificationPage,
+  AmityEditGroupMemberPermissionsPage,
+  AmityGroupNotificationPreferencePage,
+  AmityGroupMemberListPage,
+  AmityAddGroupMemberPage,
+  AmityBannedGroupMemberListPage,
+  AmityArchivedChatPage,
+  AmitySearchChannelPage,
+} from '../../chat/pages';
+
+// Every chat page, so any of them can be rendered standalone and still reach
+// the others: a chat page navigates to its neighbours by route name.
+const CHAT_PAGES = {
+  AmityChatHomePage,
+  AmityChannelCreateConversationPage,
+  AmitySelectGroupMemberPage,
+  AmityCreateGroupChatPage,
+  AmityChatPage,
+  AmityGroupChatPage,
+  AmityGroupSettingPage,
+  AmityEditGroupProfilePage,
+  AmityEditGroupNotificationPage,
+  AmityEditGroupMemberPermissionsPage,
+  AmityGroupNotificationPreferencePage,
+  AmityGroupMemberListPage,
+  AmityAddGroupMemberPage,
+  AmityBannedGroupMemberListPage,
+  AmityArchivedChatPage,
+  AmitySearchChannelPage,
+} satisfies Partial<Record<keyof RootStackParamList, React.ComponentType<any>>>;
 
 interface PageRendererProps {
   children: React.JSX.Element;
@@ -58,6 +97,8 @@ export default function PageRenderer({ children }: PageRendererProps) {
   const Stack = createNativeStackNavigator<RootStackParamList>();
   const { isConnected } = useAuth();
   const theme = useTheme() as MyMD3Theme;
+  const initialRouteName: keyof RootStackParamList =
+    children.type?.displayName || children.type?.name;
 
   return (
     <NavigationIndependentTree>
@@ -78,10 +119,7 @@ export default function PageRenderer({ children }: PageRendererProps) {
                 color: theme.colors.base,
               },
             }}
-            initialRouteName={
-              children.type?.displayName ||
-              (children.type?.name as keyof RootStackParamList)
-            }
+            initialRouteName={initialRouteName}
           >
             <Stack.Screen
               name="AmityStoryTabComponent"
@@ -91,6 +129,24 @@ export default function PageRenderer({ children }: PageRendererProps) {
               name="AmityPostEngagementContentComponent"
               children={() => children}
             />
+
+            {/* --- Chat --- */}
+            {(Object.keys(CHAT_PAGES) as (keyof typeof CHAT_PAGES)[]).map(
+              (name) => {
+                const Page: React.ComponentType<any> = CHAT_PAGES[name];
+                // The page the host rendered takes the host's props. The others
+                // are reached by navigation and read their route params.
+                return name === initialRouteName ? (
+                  <Stack.Screen
+                    key={name}
+                    name={name}
+                    children={() => <Page {...children.props} />}
+                  />
+                ) : (
+                  <Stack.Screen key={name} name={name} component={Page} />
+                );
+              }
+            )}
 
             {/* --- Social Home --- */}
             <Stack.Screen
