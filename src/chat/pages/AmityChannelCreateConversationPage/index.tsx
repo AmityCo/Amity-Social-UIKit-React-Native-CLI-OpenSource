@@ -22,3 +22,6 @@ export default function AmityChannelCreateConversationPage() {
     </SafeAreaView>
   );
 }
+
+AmityChannelCreateConversationPage.displayName =
+  'AmityChannelCreateConversationPage';

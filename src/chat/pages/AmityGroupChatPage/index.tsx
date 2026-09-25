@@ -1,22 +1,22 @@
 // AmityGroupChatPage — navigation destination for a group (community) conversation.
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  useNavigation,
-  useRoute,
-  type RouteProp,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import type { RootStackParamList } from '../../../core/routes/RouteParamList';
+import { usePageParams } from '../../hooks/usePageParams';
 import { GroupChat } from '../../features/group/chat';
 import { ChatSurface } from '../../hooks/useChatSurfaceHeight';
 
-export default function AmityGroupChatPage() {
+export type AmityGroupChatPageProps = RootStackParamList['AmityGroupChatPage'];
+
+export default function AmityGroupChatPage(
+  props: Partial<AmityGroupChatPageProps>
+) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const { params } =
-    useRoute<RouteProp<RootStackParamList, 'AmityGroupChatPage'>>();
+  const params = usePageParams<'AmityGroupChatPage'>(props);
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
@@ -36,3 +36,5 @@ export default function AmityGroupChatPage() {
     </SafeAreaView>
   );
 }
+
+AmityGroupChatPage.displayName = 'AmityGroupChatPage';

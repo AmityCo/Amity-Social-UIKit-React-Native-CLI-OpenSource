@@ -1,22 +1,19 @@
 // AmityGroupNotificationPreferencePage — the "allow notifications" toggle screen.
 // Ported from AmityUiKitWeb v4/chat/pages/GroupNotificationPreferencePage.
-//
-// RN adaptation: the route is not yet registered in RouteParamList (the
-// orchestrator wires it), so the channelId param is typed locally to keep this
-// file compiling independently.
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, type RouteProp } from '@react-navigation/native';
 
+import type { RootStackParamList } from '../../../core/routes/RouteParamList';
+import { usePageParams } from '../../hooks/usePageParams';
 import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import { NotificationPreference } from '../../features/group/notification-preference';
 
-type ParamList = {
-  AmityGroupNotificationPreferencePage: { channelId: string };
-};
+export type AmityGroupNotificationPreferencePageProps =
+  RootStackParamList['AmityGroupNotificationPreferencePage'];
 
-export default function AmityGroupNotificationPreferencePage() {
-  const { params } =
-    useRoute<RouteProp<ParamList, 'AmityGroupNotificationPreferencePage'>>();
+export default function AmityGroupNotificationPreferencePage(
+  props: Partial<AmityGroupNotificationPreferencePageProps>
+) {
+  const params = usePageParams<'AmityGroupNotificationPreferencePage'>(props);
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
@@ -26,3 +23,6 @@ export default function AmityGroupNotificationPreferencePage() {
     </SafeAreaView>
   );
 }
+
+AmityGroupNotificationPreferencePage.displayName =
+  'AmityGroupNotificationPreferencePage';

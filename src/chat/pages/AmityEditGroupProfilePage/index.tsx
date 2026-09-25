@@ -1,14 +1,18 @@
 // AmityEditGroupProfilePage — edit group name + avatar.
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, type RouteProp } from '@react-navigation/native';
 
 import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import type { RootStackParamList } from '../../../core/routes/RouteParamList';
+import { usePageParams } from '../../hooks/usePageParams';
 import { EditGroupProfile } from '../../features/group/edit-profile';
 
-export default function AmityEditGroupProfilePage() {
-  const { params } =
-    useRoute<RouteProp<RootStackParamList, 'AmityEditGroupProfilePage'>>();
+export type AmityEditGroupProfilePageProps =
+  RootStackParamList['AmityEditGroupProfilePage'];
+
+export default function AmityEditGroupProfilePage(
+  props: Partial<AmityEditGroupProfilePageProps>
+) {
+  const params = usePageParams<'AmityEditGroupProfilePage'>(props);
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
@@ -18,3 +22,5 @@ export default function AmityEditGroupProfilePage() {
     </SafeAreaView>
   );
 }
+
+AmityEditGroupProfilePage.displayName = 'AmityEditGroupProfilePage';
