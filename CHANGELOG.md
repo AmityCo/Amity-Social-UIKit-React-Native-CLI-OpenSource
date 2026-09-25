@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.3.1](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/compare/v4.3.0...v4.3.1) (2026-09-25)
+
+### Features
+
+- **chat:** export every chat page for standalone use in AmityPageRenderer ([a84ea01](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/a84ea01e6ade0faca12141cb10624aa445866dc0))
+- **localization:** add localization prop and export locale API ([eeaa020](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/eeaa0201eb2e3b63619b5d14d0cb6a3bedb9d059))
+
+### Bug Fixes
+
+- **localization:** keep English as the default language ([55e5b35](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/55e5b35cd02cd9417718bbe79f703d4a0103729c))
+
 ## [4.3.0](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/compare/v4.2.0...v4.3.0) (2026-09-25)
 
 ### Features
