@@ -8,6 +8,12 @@ import {
   navigate,
 } from './core';
 import {
+  useLocale,
+  useString,
+  defaultLocaleMap,
+  thLocaleBundle,
+} from './core/localization';
+import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
   AmityDraftStoryPage,
@@ -212,6 +218,10 @@ export {
   AmityBannedGroupMemberListPage,
   AmityArchivedChatPage,
   AmitySearchChannelPage,
+  useLocale,
+  useString,
+  defaultLocaleMap,
+  thLocaleBundle,
 };
 
 export type {
@@ -228,3 +238,5 @@ export type {
   AmityAddGroupMemberPageProps,
   AmityBannedGroupMemberListPageProps,
 } from './chat/pages';
+
+export type { LocaleBundle, LocaleContextValue } from './core/localization';

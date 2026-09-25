@@ -20,7 +20,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { AmityThemeProvider } from '../design/theme';
-import { LocaleProvider } from '../localization';
+import {
+  LocaleProvider,
+  defaultLocaleMap,
+  type LocaleBundle,
+} from '../localization';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
@@ -39,6 +43,25 @@ export interface IAmityUIkitProvider {
   socialCommunityCreationButtonVisible?: boolean;
   /** When true, hides the Explore tab on the Social Home page. Default: false */
   hideExplore?: boolean;
+  /**
+   * Localization configuration for the UIKit (same shape as the web UIKit).
+   * - `localeBundle`: locale bundle to use (key → translated string)
+   * - `overrides`: individual keys that take precedence over the locale bundle
+   * - `localeMap`: map of locale code → bundle for automatic device-language
+   *   detection. When `localeBundle` is not set, the device language is matched
+   *   against this map (exact match, then language prefix). Falls back to
+   *   English when nothing matches. Defaults to the built-in bundles.
+   *
+   * @example
+   *   localization={{ localeBundle: jaLocale }}
+   * @example
+   *   localization={{ localeMap: { ja: jaLocale, th: thLocale } }}
+   */
+  localization?: {
+    localeBundle?: LocaleBundle;
+    overrides?: LocaleBundle;
+    localeMap?: Record<string, LocaleBundle>;
+  };
 }
 
 export interface CustomColors {
@@ -85,6 +108,7 @@ export default function AmityUiKitProvider({
   fcmToken,
   socialCommunityCreationButtonVisible = true,
   hideExplore = false,
+  localization,
 }: IAmityUIkitProvider) {
   const colorScheme = useColorScheme();
   const SHADE_PERCENTAGES = [0.25, 0.4, 0.45, 0.6];
@@ -200,7 +224,13 @@ export default function AmityUiKitProvider({
                           <AmityThemeProvider
                             mode={isDarkTheme ? 'dark' : 'light'}
                           >
-                            <LocaleProvider>
+                            <LocaleProvider
+                              initialLocaleBundle={localization?.localeBundle}
+                              initialOverrides={localization?.overrides}
+                              localeMap={
+                                localization?.localeMap ?? defaultLocaleMap
+                              }
+                            >
                               {children}
                               <BottomSheetComponent />
                               <Toast />

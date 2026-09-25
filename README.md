@@ -429,6 +429,31 @@ The Dark Mode feature in our UIKit enhances user experience by providing an alte
 "preferred_theme": "dark" // change it to dark || light || default,
 ```
 
+### Localization
+
+Chat UIKit strings can be translated or overridden through the `localization` prop of `AmityUiKitProvider`, the same shape as the web UIKit. Keys missing from a bundle fall back to English. The English reference is [`src/core/localization/defaults/en.json`](src/core/localization/defaults/en.json).
+
+```js
+import { defaultLocaleMap } from '@amityco/react-native-social-uikit';
+import jaLocale from './locales/ja.json';
+
+<AmityUiKitProvider
+  // ...credentials
+  localization={{
+    // Picks a bundle from the device language (exact match, then prefix).
+    // Omit it to use the built-in bundles (Thai). A map you pass replaces
+    // them, so spread defaultLocaleMap to keep Thai.
+    localeMap: { ...defaultLocaleMap, ja: jaLocale },
+    // Individual keys that take precedence over the active bundle.
+    overrides: { amity_chat_archive: 'Hide chat' },
+  }}
+>
+  <AmityUiKitChat />
+</AmityUiKitProvider>;
+```
+
+Set `localeBundle` instead of `localeMap` to use one bundle for every user. To switch at runtime, call `setLocaleBundle` / `clearLocaleBundle` from `useLocale()` inside the provider.
+
 ### Documentation
 
 Please refer to our online documentation at https://docs.amity.co or contact a Ui-Kit representative at **clientsolutiomns@amity.co** for support.
