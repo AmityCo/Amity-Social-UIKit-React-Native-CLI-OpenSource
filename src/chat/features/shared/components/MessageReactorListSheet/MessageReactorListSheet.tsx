@@ -1,0 +1,390 @@
+// MessageReactorListSheet — RN port of AmityUiKitWeb
+// v4/chat/features/shared/components/MessageReactorListSheet/MessageReactorListSheet.tsx.
+// The reactor list shown in a bottom sheet: an underlined tab per distinct
+// reaction (plus an "All" tab), each listing who reacted. This renders the sheet
+// CONTENT only — the orchestrator mounts it inside the repo's @devvie bottom
+// sheet with the same `messageId` + `onClose` contract web's useBubbleMenu uses.
+//
+// RN adaptations from web:
+//   - Live message via MessageRepository.getMessage (web useMessageObject).
+//   - Reactor pagination via useReactorsCollection (web useReactionsCollection);
+//     IntersectionObserver → FlatList onEndReached.
+//   - The RN Tab atom's underlined variant renders a string label only and can't
+//     host web's icon+count node label, so the tab bar is rendered inline reusing
+//     the SoT underlined-tab tokens/geometry.
+
+// 1. React / RN imports
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { FlatList, Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  FileRepository,
+  MessageRepository,
+} from '@amityco/ts-sdk-react-native';
+
+// 2. Internal imports
+import { Typography } from '../../../../../core/design/components/Typography';
+import { Skeleton } from '../../../../../core/design/components/Skeleton';
+import { Avatar } from '../../../../../core/design/atoms/Avatar';
+import { BrandBadge } from '../../../../../core/design/elements/BrandBadge';
+import { useString } from '../../../../../core/localization';
+import { LIST_SKELETON_ROW_COUNT } from '../../../../constants';
+import { abbreviateCount } from '../../../../../core/utils/abbreviateCount';
+import { useCurrentUserId } from '../../../../hooks/useCurrentUserId';
+import { useMessageReactions } from '../../hooks/useMessageReactions';
+import { useReactorsCollection } from '../../hooks/useReactorsCollection';
+import {
+  FaceEyesXmarks,
+  ReactionGlyph,
+  SmilePlus,
+} from '../../utils/reactionIcons';
+import { useStyles } from './styles';
+
+// 3. Types
+type MessageReactorListSheetProps = {
+  messageId: string;
+  onClose: () => void;
+  /**
+   * The tapped message, if available. Seeds `currentMessage` so totalCount /
+   * reactionsCount are correct on first render — the sheet mounts from the global
+   * bottom sheet where the getMessage live-object can lag, which would otherwise
+   * show the empty state despite reactions existing. getMessage still keeps it live.
+   */
+  initialMessage?: Amity.Message | null;
+  /**
+   * The height (px) the global bottom sheet was opened with. The @devvie sheet
+   * wraps our content in an AUTO-height inner View (only the outer Animated.View
+   * carries the sheet height), so a `flex:1` child collapses to 0 and the
+   * FlatList never shows. We give the content an EXPLICIT height instead —
+   * sheetHeight minus the drag-handle and bottom safe-area the sheet reserves —
+   * so the FlatList has a bounded parent to fill and scroll within.
+   */
+  sheetHeight?: number;
+};
+
+const ALL_TAB = 'all' as const;
+
+// @devvie reserves this above the content for its drag handle
+// (DEFAULT_HANDLE_BAR_DEFAULT_HEIGHT: paddingTop 10 + height 5 + paddingBottom 10).
+const DRAG_HANDLE_HEIGHT = 25;
+
+// 4. Named function component
+export function MessageReactorListSheet({
+  messageId,
+  onClose,
+  initialMessage = null,
+  sheetHeight,
+}: MessageReactorListSheetProps) {
+  const { styles } = useStyles();
+  const insets = useSafeAreaInsets();
+  // The content area the @devvie sheet actually gives our children.
+  const contentHeight = sheetHeight
+    ? sheetHeight - DRAG_HANDLE_HEIGHT - insets.bottom
+    : undefined;
+  const currentUserId = useCurrentUserId();
+  const { removeReaction } = useMessageReactions();
+  const allTabLabel = useString('amity_chat_tab_all');
+
+  // Live message (web useMessageObject), seeded from the tapped message.
+  const [currentMessage, setCurrentMessage] = useState<Amity.Message | null>(
+    initialMessage
+  );
+  useEffect(() => {
+    const unsubscribe = MessageRepository.getMessage(messageId, (result) => {
+      // Only overwrite once real data arrives — a loading callback with no data
+      // must not wipe the seeded initialMessage (which keeps totalCount correct).
+      if (result.data) setCurrentMessage(result.data);
+    });
+    return () => unsubscribe();
+  }, [messageId]);
+
+  const isMessageDeleted = !!currentMessage?.isDeleted;
+  const reactionMap =
+    (currentMessage?.reactions as Record<string, number> | undefined) ?? {};
+  const totalCount = isMessageDeleted ? 0 : currentMessage?.reactionsCount ?? 0;
+
+  const distinctNames = useMemo(() => {
+    if (isMessageDeleted) return [];
+    return Object.entries(reactionMap)
+      .filter(([, count]) => count > 0)
+      .sort((a, b) => (a[1] === b[1] ? a[0].localeCompare(b[0]) : b[1] - a[1]))
+      .map(([name]) => name);
+  }, [currentMessage?.reactions, isMessageDeleted]);
+
+  const [activeTab, setActiveTab] = useState<string>(
+    distinctNames.length > 1 ? ALL_TAB : distinctNames[0] ?? ALL_TAB
+  );
+
+  useEffect(() => {
+    if (activeTab === ALL_TAB) return;
+    if (distinctNames.includes(activeTab)) return;
+    setActiveTab(
+      distinctNames.length > 1 ? ALL_TAB : distinctNames[0] ?? ALL_TAB
+    );
+  }, [activeTab, distinctNames]);
+
+  const { reactors, isLoading, isLoadingFirstPage, hasMore, loadMore } =
+    useReactorsCollection({
+      referenceType: 'message',
+      referenceId: messageId,
+      limit: 25,
+      ...(activeTab !== ALL_TAB ? { reactionName: activeTab } : {}),
+    });
+
+  const myReactor = useMemo(() => {
+    if (!currentUserId) return null;
+    return reactors.find((r) => r.userId === currentUserId) ?? null;
+  }, [reactors, currentUserId]);
+
+  const others = useMemo(
+    () => (myReactor ? reactors.filter((r) => r !== myReactor) : reactors),
+    [reactors, myReactor]
+  );
+
+  async function handleOwnRowPress() {
+    if (!myReactor || !currentMessage) return;
+    onClose();
+    await removeReaction({
+      message: currentMessage,
+      reactionName: myReactor.reactionName,
+    });
+  }
+
+  const rows = useMemo(() => {
+    const list: { reactor: Amity.Reactor; isOwn: boolean }[] = [];
+    if (myReactor) list.push({ reactor: myReactor, isOwn: true });
+    for (const r of others) list.push({ reactor: r, isOwn: false });
+    return list;
+  }, [myReactor, others]);
+
+  // Tab items (web `tabs()`).
+  //
+  // The "All" tab only earns its place when there is more than one reaction to
+  // filter between. With a single distinct reaction its tab and the All tab
+  // would list the same people; with none there is nothing to filter at all, and
+  // an "All 0" tab above the empty state just labels the emptiness twice. The
+  // per-reaction loop below already renders nothing in that case, so an empty
+  // list here means the bar is dropped entirely rather than reserving its row.
+  const tabItems: { value: string; icon?: ReactNode; text: string }[] = [];
+  const showAllTab = distinctNames.length > 1;
+  if (showAllTab) {
+    tabItems.push({
+      value: ALL_TAB,
+      text: `${allTabLabel} ${abbreviateCount(totalCount)}`,
+    });
+  }
+  for (const name of distinctNames) {
+    tabItems.push({
+      value: name,
+      icon: <ReactionGlyph name={name} size={20} />,
+      text: `${abbreviateCount(reactionMap[name] ?? 0)}`,
+    });
+  }
+
+  return (
+    <View
+      style={[
+        styles.container,
+        contentHeight ? { height: contentHeight } : styles.containerFill,
+      ]}
+    >
+      {tabItems.length > 0 ? (
+        <View style={styles.tabList}>
+          {tabItems.map((t) => {
+            const active = activeTab === t.value;
+            return (
+              <Pressable
+                key={t.value}
+                style={styles.tab}
+                onPress={() => setActiveTab(t.value)}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: active }}
+              >
+                <View style={styles.tabLabel}>
+                  {t.icon}
+                  <Typography
+                    style={[
+                      styles.tabLabelText,
+                      active
+                        ? styles.tabLabelTextActive
+                        : styles.tabLabelTextDefault,
+                    ]}
+                  >
+                    {t.text}
+                  </Typography>
+                </View>
+                <View
+                  style={[
+                    styles.tabIndicator,
+                    active && styles.tabIndicatorActive,
+                  ]}
+                />
+              </Pressable>
+            );
+          })}
+        </View>
+      ) : null}
+
+      {/* A deleted message has no reactions to load, so
+          it gets its own state rather than the "be the first to react" empty
+          state, which invites an action that is not possible. Checked before the
+          count, since a deleted message also reports 0. */}
+      {isMessageDeleted ? (
+        <MessageUnavailableState />
+      ) : totalCount === 0 ? (
+        <EmptyState />
+      ) : (
+        <FlatList
+          style={styles.flatList}
+          data={rows}
+          keyExtractor={(item, index) =>
+            `${item.reactor.userId ?? 'unknown'}-${index}`
+          }
+          renderItem={({ item }) => (
+            <ReactorRow
+              reactor={item.reactor}
+              isOwn={item.isOwn}
+              onPress={item.isOwn ? handleOwnRowPress : undefined}
+            />
+          )}
+          onEndReachedThreshold={0.4}
+          onEndReached={() => {
+            if (hasMore && !isLoading && !isLoadingFirstPage) loadMore();
+          }}
+          ListFooterComponent={
+            // Web renders LIST_SKELETON_ROW_COUNT (9) rows here, which
+            // is what fills the sheet's visible area. The port hardcoded 3, so
+            // the first page showed three rows and left the rest of the sheet
+            // blank. RN already carries the same constant — use it.
+            isLoadingFirstPage || isLoading ? (
+              <SkeletonRows count={LIST_SKELETON_ROW_COUNT} />
+            ) : null
+          }
+          contentContainerStyle={styles.list}
+        />
+      )}
+    </View>
+  );
+}
+
+// --- Reactor row -------------------------------------------------------------
+type ReactorRowProps = {
+  reactor: Amity.Reactor;
+  isOwn?: boolean;
+  onPress?: () => void;
+};
+
+function ReactorRow({ reactor, isOwn = false, onPress }: ReactorRowProps) {
+  const { styles } = useStyles();
+  const tapToRemoveLabel = useString(
+    'amity_common_button_tap_to_remove_reaction'
+  );
+  const displayName = reactor.user?.displayName ?? reactor.user?.userId ?? '';
+  const avatarFileUrl = (
+    reactor.user?.avatar as { fileUrl?: string } | undefined
+  )?.fileUrl;
+  const imageUrl = avatarFileUrl
+    ? FileRepository.fileUrlWithSize(avatarFileUrl, 'small')
+    : undefined;
+
+  return (
+    <Pressable
+      style={styles.row}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={isOwn ? tapToRemoveLabel : displayName}
+    >
+      {reactor.user && (
+        <Avatar
+          variant={imageUrl ? 'image' : 'text'}
+          shape="rounded"
+          size={32}
+          imageUrl={imageUrl}
+          initials={displayName.trim().charAt(0).toUpperCase() || '?'}
+        />
+      )}
+      <View style={styles.rowText}>
+        <View style={styles.rowTitleRow}>
+          <Typography
+            variant="bodyBold"
+            style={styles.rowTitle}
+            numberOfLines={1}
+          >
+            {reactor.user?.displayName ?? ''}
+          </Typography>
+          {/* The badge appears here as well, matching the member list. */}
+          {reactor.user?.isBrand ? (
+            <BrandBadge accessibilityLabel="Brand" />
+          ) : null}
+        </View>
+        {isOwn ? (
+          <Typography variant="caption" style={styles.rowCaption}>
+            {tapToRemoveLabel}
+          </Typography>
+        ) : null}
+      </View>
+      <ReactionGlyph name={reactor.reactionName} size={24} />
+    </Pressable>
+  );
+}
+
+// --- Empty state -------------------------------------------------------------
+function EmptyState() {
+  const { styles, emptyStateIconColor } = useStyles();
+  const title = useString('amity_common_button_no_reactions_yet');
+  const description = useString(
+    'amity_common_label_be_first_to_react',
+    'message'
+  );
+  return (
+    <View style={styles.emptyState}>
+      <SmilePlus size={48} color={emptyStateIconColor} />
+      <View style={styles.emptyStateText}>
+        <Typography variant="titleBold" style={styles.emptyStateTitle}>
+          {title}
+        </Typography>
+        <Typography variant="caption" style={styles.emptyStateDescription}>
+          {description}
+        </Typography>
+      </View>
+    </View>
+  );
+}
+
+// Deleted-message state (web MessageUnavailableState).
+function MessageUnavailableState() {
+  const { styles, emptyStateIconColor } = useStyles();
+  const title = useString('amity_common_button_unable_to_load_reactions');
+  const description = useString(
+    'amity_common_button_reactions_not_available',
+    'message'
+  );
+  return (
+    <View style={styles.emptyState}>
+      <FaceEyesXmarks size={64} color={emptyStateIconColor} />
+      <View style={styles.emptyStateText}>
+        <Typography variant="titleBold" style={styles.emptyStateTitle}>
+          {title}
+        </Typography>
+        <Typography variant="caption" style={styles.emptyStateDescription}>
+          {description}
+        </Typography>
+      </View>
+    </View>
+  );
+}
+
+// --- Skeleton rows -----------------------------------------------------------
+function SkeletonRows({ count }: { count: number }) {
+  const { styles } = useStyles();
+  return (
+    <>
+      {Array.from({ length: count }).map((_, i) => (
+        <View key={i} style={styles.skeletonRow}>
+          <Skeleton circle width={40} height={40} />
+          <Skeleton width={140} height={10} borderRadius={12} />
+        </View>
+      ))}
+    </>
+  );
+}

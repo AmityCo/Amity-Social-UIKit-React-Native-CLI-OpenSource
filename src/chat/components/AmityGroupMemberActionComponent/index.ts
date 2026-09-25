@@ -1,0 +1,1 @@
+export { AmityGroupMemberActionComponent } from './AmityGroupMemberActionComponent';

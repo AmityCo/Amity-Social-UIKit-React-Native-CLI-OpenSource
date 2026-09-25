@@ -6,6 +6,17 @@ const pak = require('../package.json');
 const root = path.resolve(__dirname, '..');
 const modules = Object.keys({ ...pak.peerDependencies });
 
+const defaultConfig = getDefaultConfig(__dirname);
+// The example consumes the package SRC (via extraNodeModules alias), where a .ts and
+// .json can share a basename (e.g. localization/defaults/en.ts + en.json). Metro's
+// default sourceExts resolve .json before .ts, so `import { x } from './defaults/en'`
+// would wrongly pick en.json. Put json LAST so the .ts wins. (Built consumers use en.js,
+// which already resolves before json, so this only matters for src consumption.)
+const sourceExts = [
+  ...defaultConfig.resolver.sourceExts.filter((e) => e !== 'json'),
+  'json',
+];
+
 /**
  * Metro configuration
  * https://facebook.github.io/metro/docs/configuration
@@ -31,6 +42,8 @@ const config = {
         [pak.name]: root,
       }
     ),
+
+    sourceExts,
   },
 
   transformer: {
@@ -43,4 +56,4 @@ const config = {
   },
 };
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+module.exports = mergeConfig(defaultConfig, config);

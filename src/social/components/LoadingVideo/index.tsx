@@ -165,7 +165,7 @@ const LoadingVideo = ({
             // prop — for a newly picked video that prop is empty, so the
             // generated thumbnail used to be dropped on the floor. The
             // composer stores it so the feed can show it while the server is
-            // still transcoding (PDT-4904).
+            // still transcoding.
             thumbNailImageRef.current || thumbNail
           );
       } else {
@@ -231,7 +231,7 @@ const LoadingVideo = ({
     // so this component never mounts the inline <Video> and never receives a
     // dismiss callback to unpause with. Leaving `isPause` alone keeps the play
     // icon rendered, which is what the frame shows once the viewer closes
-    // (PDT-4904); toggling it here hid the icon for the rest of the session.
+    //; toggling it here hid the icon for the rest of the session.
     if (onPlay) {
       onPlay(source);
       return;

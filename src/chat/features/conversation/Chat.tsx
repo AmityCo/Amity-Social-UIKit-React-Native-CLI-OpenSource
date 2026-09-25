@@ -1,0 +1,168 @@
+// Chat — the conversation thread container, a faithful port of AmityUiKitWeb
+// v4/chat/features/conversation/chat/Chat. All orchestration lives in useConversation
+// (→ useChatMessage); this component only wires the returned values into the
+// components with the same props web uses: Header, MessageList,
+// MutedBanner|MessageComposer, ImageViewer, VideoPlayer, MessageFullTextScreen.
+
+// 1. React / RN imports
+import { View } from 'react-native';
+
+// 2. Internal imports
+import useFile from '../../../core/hooks/useFile';
+import { ImageSizeState } from '../../../core/enums';
+import { useBottomSheet } from '../../../core/stores/slices/bottomSheetSlice';
+import { getReactorSheetHeight } from '../../constants';
+import { useChatSurfaceHeight } from '../../hooks/useChatSurfaceHeight';
+import { AmityMessageComposer } from '../../components/AmityMessageComposer';
+import { AmityConversationChatUserActionComponent } from '../../components/AmityConversationChatUserActionComponent';
+import { ImageViewer } from '../shared/components/ImageViewer';
+import { VideoPlayer } from '../shared/components/VideoPlayer';
+import { MessageFullTextScreen } from '../shared/components/MessageFullTextScreen';
+import { ContentReportReason } from '../shared/components/ContentReportReason';
+import { MessageReactorListSheet } from '../shared/components/MessageReactorListSheet';
+import { MutedBanner } from '../shared/components/MutedBanner';
+import { Header } from './components/Header';
+import { MessageList } from './components/MessageList';
+import { useConversation } from './hooks/useConversation';
+import { useStyles } from './styles';
+
+// 3. Types
+export type ChatProps = {
+  channelId?: string;
+  userDisplayName?: string;
+  /** Scroll to this message once it is loaded (from message search). */
+  jumpToMessageId?: string;
+  onBack: () => void;
+};
+
+// 4. Named function component
+export function Chat({
+  channelId,
+  userDisplayName,
+  jumpToMessageId,
+  onBack,
+}: ChatProps) {
+  const { styles } = useStyles();
+  const c = useConversation(channelId, jumpToMessageId);
+
+  // Receiver avatar for the header (1-1 conversation), resolved from the other
+  // participant's avatarFileId — the same source AmityChatListItem uses for the
+  // list row (kept consistent so both show the same image).
+  // `large`, not the hook's default `medium`: this one URL serves both the 40pt
+  // header avatar and the full-screen viewer behind a tap on it, which is how
+  // web resolves it too.
+  const otherUserAvatarUrl = useFile({
+    fileId: c.otherUser?.avatarFileId ?? '',
+    imageSize: ImageSizeState.large,
+  });
+  // Reactor-list sheet — web keeps this in useBubbleMenu at the orchestration
+  // level (one instance). RN MOBILE ADAPTATION: rather than render the reactor
+  // list inline, push it into the repo's global @devvie bottom sheet so it slides
+  // up as a sheet with a backdrop + drag/tap-to-close (BUG #15).
+  const { openBottomSheet, closeBottomSheet } = useBottomSheet();
+  const surfaceHeight = useChatSurfaceHeight();
+
+  function openReactorList(message: Amity.Message) {
+    // Half-height sheet, measured against the page rather than the device (see
+    // getReactorSheetHeight). The sheet content needs an explicit height as well
+    // (see MessageReactorListSheet: @devvie's inner wrapper is auto-height, so a
+    // flex child collapses), so pass the same number down.
+    const reactorSheetHeight = getReactorSheetHeight(surfaceHeight);
+    openBottomSheet({
+      height: reactorSheetHeight,
+      content: (
+        <MessageReactorListSheet
+          messageId={message.messageId}
+          initialMessage={message}
+          onClose={closeBottomSheet}
+          sheetHeight={reactorSheetHeight}
+        />
+      ),
+    });
+  }
+
+  return (
+    <View style={styles.container}>
+      <Header
+        // A 1-1 conversation's title is the OTHER participant's display name, not
+        // the channel's displayName (which is often empty for conversations).
+        // Resolve it from the channel's preview members (same as AmityChatListItem);
+        // fall back to the navigation-passed name only while that loads.
+        title={c.otherUser?.displayName || userDisplayName || ''}
+        avatarUrl={otherUserAvatarUrl}
+        userId={c.otherUser?.userId}
+        isBrand={(c.otherUser as { isBrand?: boolean } | undefined)?.isBrand}
+        onBack={onBack}
+        trailing={
+          c.otherUser ? (
+            <AmityConversationChatUserActionComponent
+              user={c.otherUser}
+              channelId={channelId ?? ''}
+            />
+          ) : undefined
+        }
+      />
+      <View style={{ flex: 1 }}>
+        <MessageList
+          items={c.items}
+          currentUserId={c.currentUserId}
+          isGroupChat={c.isGroupChat}
+          hasMore={c.hasMore}
+          onLoadMore={c.loadMore}
+          atBottom={c.atBottom}
+          onAtBottomChange={c.setAtBottom}
+          newMessage={c.newMessage}
+          onClearNewMessage={c.clearNewMessage}
+          onOpenImage={c.openImageViewer}
+          onOpenVideo={c.openVideoPlayer}
+          onOpenFailedSheet={c.openFailedSheet}
+          onOpenBubbleMenu={c.openBubbleMenu}
+          onOpenReactorList={(m) => openReactorList(m)}
+          isLoading={c.isLoading}
+          isLoadingFirstPage={c.isLoadingFirstPage}
+          onSeeMore={c.openSeeMore}
+          pendingUploads={c.composer.pendingUploads}
+          onMediaLoaded={c.composer.handleMediaLoaded}
+          jumpToMessageId={c.jumpToMessageId}
+          onJumpHandled={c.clearJumpToMessageId}
+          hasPrev={c.hasPrev}
+          onLoadPrev={c.loadPrev}
+          onCancelUpload={c.composer.handleCancelUpload}
+          viewerIsMutedInChannel={c.viewerIsMutedInChannel}
+          bubbleHandlers={{
+            onEdit: c.handleBubbleEdit,
+            onReply: c.handleBubbleReply,
+            onDelete: c.handleBubbleDelete,
+            onCopy: c.handleBubbleCopy,
+            onSave: c.handleBubbleSave,
+            onReport: c.handleBubbleReport,
+          }}
+        />
+      </View>
+
+      {c.showMutedBanner ? (
+        <MutedBanner variant={c.mutedVariant} />
+      ) : (
+        <AmityMessageComposer composer={c.composer} />
+      )}
+
+      {c.imageViewerProps ? <ImageViewer {...c.imageViewerProps} /> : null}
+      {c.videoPlayerProps ? <VideoPlayer {...c.videoPlayerProps} /> : null}
+      {c.seeMore ? (
+        <MessageFullTextScreen
+          visible
+          text={c.seeMore.text}
+          title={c.seeMore.title}
+          onClose={c.closeSeeMore}
+        />
+      ) : null}
+      {c.reportMessage ? (
+        <ContentReportReason
+          visible
+          message={c.reportMessage}
+          onClose={c.closeReport}
+        />
+      ) : null}
+    </View>
+  );
+}

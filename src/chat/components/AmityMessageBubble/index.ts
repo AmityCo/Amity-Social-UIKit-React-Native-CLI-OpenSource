@@ -1,0 +1,1 @@
+export { AmityMessageBubble } from './AmityMessageBubble';

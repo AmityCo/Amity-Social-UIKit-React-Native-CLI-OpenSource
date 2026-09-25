@@ -2,6 +2,7 @@ import { FileRepository } from '@amityco/ts-sdk-react-native';
 import { Alert } from 'react-native';
 import { useMutation } from '@tanstack/react-query';
 import { ERROR_CODE } from '../constants';
+import { resolveString } from '../localization';
 import { appendFileToFormData } from '../utils/fileUpload';
 
 type UploadImageResponse = Awaited<
@@ -54,17 +55,26 @@ export function useUpload() {
       },
       {
         onError: (error) => {
+          // Localized, and worded from the same four keys web resolves in
+          // v4/social/hooks/useImageUpload. These were hardcoded
+          // English, so th.json never applied even though every key was already
+          // translated — and the generic body read "Please try again." where web
+          // says "Upload Not Complete".
           if (
             error.message.includes(ERROR_CODE.INVALID_IMAGE) ||
             error.message.includes(ERROR_CODE.VIOLENCE)
           ) {
             Alert.alert(
-              'Inappropriate image',
-              'Please choose a different image to upload.',
+              resolveString('amity_social_button_inappropriate_image'),
+              resolveString('amity_social_modal_dialog_image_upload_error'),
               [{ text: 'OK' }]
             );
           } else {
-            Alert.alert('Upload failed', 'Please try again.', [{ text: 'OK' }]);
+            Alert.alert(
+              resolveString('amity_social_error_upload_failed_title'),
+              resolveString('amity_social_upload_not_complete'),
+              [{ text: 'OK' }]
+            );
           }
         },
       }

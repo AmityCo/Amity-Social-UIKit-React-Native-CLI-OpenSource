@@ -1,0 +1,173 @@
+// useFailedMessageSheet — ported from AmityUiKitWeb v4/chat/features/shared/hooks/useFailedMessageSheet.
+// Presents the "message failed to send" action sheet (Resend / Delete / Cancel) and
+// wires the retry/discard callbacks. The return shape (UseFailedMessageSheetReturn)
+// is preserved verbatim from web so useChatMessage consumes it unchanged.
+//
+// RN adaptation from web:
+//   - Web opened a bottom Drawer holding a `Menu` (Resend / Delete). RN presents
+//     the same Menu in the repo's global @devvie bottom sheet (`useBottomSheet` →
+//     BottomSheetComponent) with `container="drawer"` — the identical pattern the
+//     conversation user-action menu uses. NOT an Alert dialog.
+//   - Non-synthetic delete/resend use the existing RN `useDeleteMessage` /
+//     `useCreateMessage` mutations instead of web's query hooks. Resend
+//     re-sends under the failed message's own SDK identity (see handleResend)
+//     rather than web's useResendMessageQuery recreate-then-delete-the-original.
+
+import { StyleSheet, View } from 'react-native';
+
+import { Menu } from '../../../../core/design/components/Menu';
+import { useString } from '../../../../core/localization';
+import { useBottomSheet } from '../../../../core/stores/slices/bottomSheetSlice';
+import { useChatNotifications } from '../../../hooks/useChatNotifications';
+import { useDeleteMessage } from '../../../hooks/useDeleteMessage';
+import { useCreateMessage } from '../../../hooks/useCreateMessage';
+import { isSyntheticPendingMessage } from './useMessageComposer';
+
+type UseFailedMessageSheetParams = {
+  onRetryUpload: (clientId: string) => void;
+  onDiscardUpload: (clientId: string) => void;
+};
+
+export type UseFailedMessageSheetReturn = {
+  openFailedSheet: (message: Amity.Message) => void;
+};
+
+/**
+ * Fields the SDK's optimistic message carries that the public `Amity.Message`
+ * type does not declare: a media send passes `fileId` at the TOP LEVEL of the
+ * createMessage bundle (not inside `data`), and `createMessageOptimistic`
+ * spreads that bundle straight into the cached message.
+ */
+type OptimisticMessageExtras = {
+  fileId?: string;
+};
+
+export function useFailedMessageSheet({
+  onRetryUpload,
+  onDiscardUpload,
+}: UseFailedMessageSheetParams): UseFailedMessageSheetReturn {
+  const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
+    useBottomSheet();
+  const { error: errorToast } = useChatNotifications();
+  const { deleteMessage } = useDeleteMessage();
+  // useCreateMessage maps the SDK error to localized copy, but only through its
+  // onError callback. Nothing passed one, so a resend that failed again was
+  // completely silent — and mutateAsync's rejection went unhandled on top.
+  const { createMessage } = useCreateMessage({
+    onError: (errorMsg) => errorToast({ content: errorMsg }),
+  });
+  const resendLabel = useString('amity_chat_message_resend');
+  const deleteLabel = useString('amity_chat_option_delete');
+  const cancelLabel = useString('amity_chat_cancel');
+
+  async function handleResend(message: Amity.Message) {
+    // Synthetic bubbles are media-only: a pending upload has no SDK
+    // row until its file lands, so the composer owns its retry. Text never gets
+    // here — the SDK's own optimistic row is the failed bubble, handled below.
+    if (isSyntheticPendingMessage(message)) {
+      onRetryUpload(message.__syntheticClientId);
+      return;
+    }
+    // Resend THIS message — do not create a second one.
+    //
+    // A non-synthetic failed bubble is the SDK's own optimistic message: the
+    // create never reached the server, so it still carries the client-generated
+    // `LOCAL_…` messageId that `createMessageOptimistic` gave it, and it sits in
+    // both the message cache and the getMessages collection under
+    // `referenceId ?? messageId` (the SDK's `idResolvers.message`).
+    //
+    // `createMessage` reuses `bundle.referenceId` as the optimistic message's
+    // own messageId, so handing the failed message's id back as `referenceId`
+    // makes the SDK overwrite that exact entry instead of allocating a new one:
+    // the existing row goes error → syncing → synced in place, and the server
+    // sees the same referenceId (its idempotency key), so a create that did
+    // land server-side is reconciled rather than duplicated.
+    //
+    // Web (and RN until now) instead created the message under a fresh id and
+    // then deleted the original, which is what QA reported: a brand-new bubble
+    // appended to the thread, with both bubbles on screen until the delete of
+    // the original landed.
+    const referenceId = message.referenceId ?? message.messageId;
+    if (!referenceId) return;
+
+    // Carried over so a resend doesn't silently drop the reply target,
+    // mentions, tags or already-uploaded file of the message being resent.
+    const { fileId } = message as Amity.Message & OptimisticMessageExtras;
+
+    try {
+      await createMessage({
+        subChannelId: message.subChannelId,
+        dataType: message.dataType,
+        data: message.data,
+        referenceId,
+        ...(message.parentId ? { parentId: message.parentId } : {}),
+        ...(message.metadata ? { metadata: message.metadata } : {}),
+        ...(message.mentionees ? { mentionees: message.mentionees } : {}),
+        ...(message.tags ? { tags: message.tags } : {}),
+        ...(fileId ? { fileId } : {}),
+      } as Parameters<typeof createMessage>[0]);
+    } catch {
+      // useCreateMessage's onError already raised the toast, and the SDK has put
+      // this same row back to syncState 'error', so the failed bubble stays
+      // exactly where it was. Swallow the rejection so it isn't unhandled.
+    }
+  }
+
+  function handleDelete(message: Amity.Message) {
+    if (isSyntheticPendingMessage(message)) {
+      onDiscardUpload(message.__syntheticClientId);
+      return;
+    }
+    if (message.messageId) {
+      deleteMessage(message.messageId);
+    }
+  }
+
+  function openFailedSheet(message: Amity.Message) {
+    openBottomSheet({
+      // Three rows now (Resend / Delete / Cancel), so the sheet takes the 3-row height.
+      height: bottomSheetHeight[3 as keyof typeof bottomSheetHeight],
+      content: (
+        <View style={styles.sheetContainer}>
+          <Menu variant="chat" container="drawer">
+            {/* Web Menu.Item default typography is BodyBold — no `typography`
+                override (the earlier `body` override was the wrong button style). */}
+            <Menu.Item
+              label={resendLabel}
+              onPress={() => {
+                closeBottomSheet();
+                handleResend(message);
+              }}
+            />
+            <Menu.Item
+              label={deleteLabel}
+              destructive
+              onPress={() => {
+                closeBottomSheet();
+                handleDelete(message);
+              }}
+            />
+            {/* The Figma for this drawer (3702-37185) adds an explicit Cancel
+                row that just closes the sheet and leaves the failed bubble in
+                place. A dismiss-by-tapping-away affordance is not enough on its
+                own here. */}
+            <Menu.Item label={cancelLabel} onPress={closeBottomSheet} />
+          </Menu>
+        </View>
+      ),
+    });
+  }
+
+  return { openFailedSheet };
+}
+
+const styles = StyleSheet.create({
+  // Web's drawer container supplies the horizontal padding (its menuItem in a
+  // drawer is `0.875rem 0`, i.e. no side padding). Match the RN chat-sheet
+  // convention (AmityConversationChatUserActionComponent) so the Resend/Delete
+  // rows aren't flush to the screen edges.
+  sheetContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+});

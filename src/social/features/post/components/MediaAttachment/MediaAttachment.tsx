@@ -18,7 +18,7 @@ type AmityMediaAttachmentComponentType = {
   chosenMediaType?: mediaAttachment;
   onHeightChange?: (height: number) => void;
   /** When the 10-attachment cap is reached, the camera + gallery icons are
-   * disabled and untappable (PDT-4310 / PDT-4312). */
+   * disabled and untappable. */
   disabled?: boolean;
 };
 

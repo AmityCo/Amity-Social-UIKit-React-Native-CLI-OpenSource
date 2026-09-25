@@ -7,12 +7,26 @@
 ```md
 src/
 ├── core/ # Shared infrastructure (hooks, providers, stores, utils, types)
-└── social/
-├── components/ # Reusable UI components (moderate complexity, used across features)
-├── elements/ # Atomic, single-responsibility UI pieces
-├── screens/ # Full-page / screen-level components (navigation destinations)
-└── features/ # Business-logic + UI grouped by domain (post, user, community, …)
+├── social/
+│ ├── components/ # Reusable UI components (moderate complexity, used across features)
+│ ├── elements/ # Atomic, single-responsibility UI pieces
+│ ├── screens/ # Full-page / screen-level components (navigation destinations)
+│ └── features/ # Business-logic + UI grouped by domain (post, user, community, …)
+└── chat/ # The chat UIKit — same internal buckets as social/
+├── components/
+├── elements/
+├── features/ # conversation, group, shared
+├── hooks/
+├── pages/ # navigation destinations (AmityChatHomePage, AmityChatPage, …)
+└── utils/
 ```
+
+`chat/` sits alongside `social/` rather than under `social/features/`: it is a
+separate UIKit surface (its own entry point, `AmityUiKitChat`), not one social
+domain among many. Both draw on `core/`, and `social/` never imports from
+`chat/`. Two leftovers point the other way — chat borrows
+`social/components/Toast` and `social/hooks/useImagePicker`. Prefer `core/` for
+anything new that both surfaces need; don't add more chat → social edges.
 
 Place new code in the most specific bucket:
 

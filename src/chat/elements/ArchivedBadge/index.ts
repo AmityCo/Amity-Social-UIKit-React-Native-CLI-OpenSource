@@ -1,0 +1,1 @@
+export { ArchivedBadge } from './ArchivedBadge';

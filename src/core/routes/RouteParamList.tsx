@@ -11,6 +11,40 @@ import {
 import { AmityPostCategory } from '../../social/enums/AmityPostContentComponentStyle';
 
 export type RootStackParamList = {
+  // --- Chat ---
+  AmityChatHomePage: undefined;
+  // `jumpToMessageId`: scroll the thread to that message on open — set by a
+  // message search result.
+  AmityChatPage: {
+    channelId: string;
+    userDisplayName?: string;
+    jumpToMessageId?: string;
+  };
+  AmityChannelCreateConversationPage: undefined;
+  // --- Chat: group flows ---
+  AmityGroupChatPage: {
+    channelId: string;
+    isJustCreated?: boolean;
+    jumpToMessageId?: string;
+  };
+  // Optional: the chat-list "+" menu opens this with no params, while the
+  // create-group screen's Add-member tile re-opens it carrying the members
+  // already chosen so they come back pre-selected.
+  AmitySelectGroupMemberPage:
+    | { selectedGroupMember?: Amity.User[] }
+    | undefined;
+  AmityCreateGroupChatPage: { selectedUsers: Amity.User[] };
+  AmityAddGroupMemberPage: { channelId: string };
+  AmityGroupMemberListPage: { channelId: string };
+  AmityBannedGroupMemberListPage: { channelId: string };
+  AmityGroupSettingPage: { channelId: string };
+  AmityEditGroupProfilePage: { channelId: string };
+  AmityEditGroupMemberPermissionsPage: { channelId: string };
+  // --- Chat: M4 (search / archive / group notifications) ---
+  AmitySearchChannelPage: undefined;
+  AmityArchivedChatPage: undefined;
+  AmityGroupNotificationPreferencePage: { channelId: string };
+  AmityEditGroupNotificationPage: { channelId: string };
   AmitySocialHomePage: { postIdCallBack?: string };
   AmitySocialGlobalSearchPage: undefined;
   AmityMyCommunitiesSearchPage: undefined;

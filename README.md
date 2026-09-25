@@ -89,7 +89,7 @@ Then, inside another project, Copy tgz file to your application folder where you
 
 ```sh
 1. yarn add ./amity-react-native-social-ui-kit-x.x.x.tgz
-2. yarn add react-native-safe-area-context react-native-image-picker @react-native-async-storage/async-storage react-native-svg react-native-gesture-handler react-native-screens react-native-video react-native-compressor @react-native-community/netinfo @react-navigation/native \@react-navigation/native-stack @react-navigation/stack react-native-vision-camera  react-native-get-random-values react-native-fs@2.20.0 @react-native-community/datetimepicker react-native-video-controls @amityco/ts-sdk-react-native @babel/plugin-transform-export-namespace-from metro-react-native-babel-preset react-native-linear-gradient
+2. yarn add react-native-safe-area-context react-native-image-picker @react-native-async-storage/async-storage react-native-svg react-native-gesture-handler react-native-reanimated react-native-worklets react-native-screens react-native-video react-native-compressor @react-native-community/netinfo @react-navigation/native \@react-navigation/native-stack @react-navigation/stack react-native-vision-camera  react-native-get-random-values react-native-fs@2.20.0 @react-native-community/datetimepicker react-native-video-controls @amityco/ts-sdk-react-native @babel/plugin-transform-export-namespace-from metro-react-native-babel-preset react-native-linear-gradient
 ```
 
 ### Babel Config
@@ -98,6 +98,8 @@ Then, inside another project, Copy tgz file to your application folder where you
 module.exports = {
   plugins: [
     '@babel/plugin-transform-export-namespace-from',
+    // Must be the last plugin in the list.
+    'react-native-worklets/plugin',
   ],
 };
 ```

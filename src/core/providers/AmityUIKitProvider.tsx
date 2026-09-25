@@ -17,7 +17,10 @@ import BottomSheetComponent from '../../social/components/BottomSheetComponent/B
 import Toast from '../../social/components/Toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { AmityThemeProvider } from '../design/theme';
+import { LocaleProvider } from '../localization';
 
 export type CusTomTheme = typeof DefaultTheme;
 export interface IAmityUIkitProvider {
@@ -176,35 +179,43 @@ export default function AmityUiKitProvider({
 
   return (
     <ErrorBoundary>
-      <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <Provider store={store} context={AmityUIKitReduxContext}>
-            <AuthContextProvider
-              userId={userId}
-              displayName={displayName || undefined}
-              apiKey={apiKey}
-              apiRegion={apiRegion}
-              apiEndpoint={apiEndpoint}
-              authToken={authToken}
-              fcmToken={fcmToken}
-            >
-              <AdEngineProvider>
-                <ConfigProvider configs={configData}>
-                  <BehaviourProvider behaviour={behaviour}>
-                    <ExploreProvider>
-                      <PaperProvider theme={globalTheme}>
-                        {children}
-                        <BottomSheetComponent />
-                        <Toast />
-                      </PaperProvider>
-                    </ExploreProvider>
-                  </BehaviourProvider>
-                </ConfigProvider>
-              </AdEngineProvider>
-            </AuthContextProvider>
-          </Provider>
-        </QueryClientProvider>
-      </SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <QueryClientProvider client={queryClient}>
+            <Provider store={store} context={AmityUIKitReduxContext}>
+              <AuthContextProvider
+                userId={userId}
+                displayName={displayName || undefined}
+                apiKey={apiKey}
+                apiRegion={apiRegion}
+                apiEndpoint={apiEndpoint}
+                authToken={authToken}
+                fcmToken={fcmToken}
+              >
+                <AdEngineProvider>
+                  <ConfigProvider configs={configData}>
+                    <BehaviourProvider behaviour={behaviour}>
+                      <ExploreProvider>
+                        <PaperProvider theme={globalTheme}>
+                          <AmityThemeProvider
+                            mode={isDarkTheme ? 'dark' : 'light'}
+                          >
+                            <LocaleProvider>
+                              {children}
+                              <BottomSheetComponent />
+                              <Toast />
+                            </LocaleProvider>
+                          </AmityThemeProvider>
+                        </PaperProvider>
+                      </ExploreProvider>
+                    </BehaviourProvider>
+                  </ConfigProvider>
+                </AdEngineProvider>
+              </AuthContextProvider>
+            </Provider>
+          </QueryClientProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
     </ErrorBoundary>
   );
 }

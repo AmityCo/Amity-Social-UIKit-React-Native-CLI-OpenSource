@@ -211,6 +211,24 @@ export interface IBehaviour {
   AmityUserPendingFollowRequestsPageBehavior?: {
     goToUserProfilePage?: (context: RootStackParamList['UserProfile']) => void;
   };
+  /**
+   * Chat room header. `onAvatarTap` lets a host app take over the tap on the
+   * receiver's avatar — to push its own profile screen, say. Left unset, the
+   * header opens the picture full screen itself.
+   */
+  AmityChatPageBehavior?: {
+    onAvatarTap?: (context: { userId: string; avatarUrl?: string }) => void;
+  };
+  /**
+   * A message bubble. `onAvatarTap` covers the sender's avatar beside an
+   * inbound bubble; `onMentionUserTap` covers a resolved @mention inside the
+   * text. Left unset, the avatar opens the picture full screen and a mention is
+   * styled but inert.
+   */
+  AmityMessageBubbleBehavior?: {
+    onAvatarTap?: (context: { userId: string; avatarUrl?: string }) => void;
+    onMentionUserTap?: (context: { userId: string }) => void;
+  };
   AmityUserFeedComponentBehavior?: {
     goToPostDetailPage?: (arg?: string) => void;
   };

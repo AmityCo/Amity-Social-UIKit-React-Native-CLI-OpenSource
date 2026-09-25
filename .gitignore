@@ -86,3 +86,8 @@ lib/
 
 # Claude
 .claude/plans
+# Scratch git worktrees created for background agents
+.claude/worktrees/
+
+# Example app env (keys) — commit .env.example instead
+example/.env

@@ -1,0 +1,150 @@
+// MessageReplyBand — ported from AmityUiKitWeb features/shared/components/
+// MessageReplyBand. The "Replying to X" band shown above the composer while
+// composing a reply. The band itself is inert: tapping it must do nothing. Only
+// the trailing close button is interactive, and it cancels the reply. Web
+// tracked live deletion via useMessageObject; RN has no such hook, so deletion
+// is read from replyTo.isDeleted (the wiring layer supplies a fresh message).
+
+// 1. React / RN imports
+import { Image, Pressable, View } from 'react-native';
+
+// 2. Internal imports
+import { Typography } from '../../../../../core/design/components/Typography';
+import { AmityIcon } from '../../../../../core/design/icons';
+import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
+import useFile from '../../../../../core/hooks/useFile';
+import { ImageSizeState } from '../../../../../core/enums';
+import { useString } from '../../../../../core/localization';
+import { useStyles } from './styles';
+
+// 3. Types
+type MessageReplyBandProps = {
+  replyTo: Amity.Message;
+  currentUserId?: string | null;
+  onCancel: () => void;
+};
+
+type MessageData = {
+  text?: string;
+  fileId?: string;
+  thumbnailFileId?: string;
+};
+
+// 4. Named function component
+export function MessageReplyBand({
+  replyTo,
+  currentUserId,
+  onCancel,
+}: MessageReplyBandProps) {
+  const { styles } = useStyles();
+  const yourselfLabel = useString('amity_chat_message_replying_yourself');
+  const unknownUserLabel = useString('amity_chat_unknown_user');
+  const replyingToLabel = useString('amity_chat_replying_to');
+
+  const isParentDeleted = !!replyTo.isDeleted;
+  const isToYourself = replyTo.creatorId === currentUserId;
+  const creatorName = (
+    replyTo as unknown as { creator?: { displayName?: string } }
+  ).creator?.displayName;
+  const replyName = isToYourself
+    ? yourselfLabel
+    : creatorName ?? unknownUserLabel;
+
+  return (
+    <View style={styles.band}>
+      <View style={styles.textCol}>
+        <Typography
+          variant="captionBold"
+          style={styles.title}
+          numberOfLines={1}
+        >
+          {replyingToLabel} {replyName}
+        </Typography>
+        <ReplyBandBody replyTo={replyTo} isParentDeleted={isParentDeleted} />
+      </View>
+      {!isParentDeleted ? <ReplyBandThumb replyTo={replyTo} /> : null}
+      <Pressable
+        style={styles.close}
+        onPress={onCancel}
+        accessibilityRole="button"
+        accessibilityLabel="Cancel reply"
+      >
+        <AmityIcon
+          name="cross-r"
+          size={16}
+          tokenColor={AmityColorToken.IconIconButtonGhostSecondaryDefault}
+        />
+      </Pressable>
+    </View>
+  );
+}
+
+function ReplyBandBody({
+  replyTo,
+  isParentDeleted,
+}: {
+  replyTo: Amity.Message;
+  isParentDeleted: boolean;
+}) {
+  const { styles } = useStyles();
+  const unavailableLabel = useString('amity_chat_message_unavailable');
+  const photoLabel = useString('amity_chat_reply_photo_label');
+  const videoLabel = useString('amity_chat_reply_video_label');
+
+  let body: string | null = null;
+  if (isParentDeleted) {
+    body = unavailableLabel;
+  } else if (replyTo.dataType === 'text') {
+    body = ((replyTo.data as MessageData | undefined)?.text ?? '').toString();
+  } else if (replyTo.dataType === 'image') {
+    body = photoLabel;
+  } else if (replyTo.dataType === 'video') {
+    body = videoLabel;
+  } else if (replyTo.dataType === 'custom') {
+    body = JSON.stringify(replyTo.data ?? {});
+  }
+
+  if (body == null) return null;
+  return (
+    <Typography variant="caption" style={styles.body} numberOfLines={1}>
+      {body}
+    </Typography>
+  );
+}
+
+function ReplyBandThumb({ replyTo }: { replyTo: Amity.Message }) {
+  const { styles } = useStyles();
+  const data = replyTo.data as MessageData | undefined;
+  const isVideo = replyTo.dataType === 'video';
+  const thumbFileId = isVideo
+    ? data?.thumbnailFileId ?? ''
+    : replyTo.dataType === 'image'
+    ? data?.fileId ?? ''
+    : '';
+  const url = useFile({ fileId: thumbFileId, imageSize: ImageSizeState.small });
+
+  if (!url || (!isVideo && replyTo.dataType !== 'image')) return null;
+
+  return (
+    <View style={styles.thumbWrap}>
+      <Image source={{ uri: url }} style={styles.thumbImg} resizeMode="cover" />
+      {isVideo ? (
+        <View style={styles.playChip}>
+          <View style={styles.playChipInner}>
+            {/* The chip already IS the circle (playChipInner is a 24px round
+                scrim), so the glyph inside it is the bare play triangle — not
+                `circle-play-s`, which drew a second circle inside the first.
+                Same glyph the reply quote's play chip uses. */}
+            <AmityIcon
+              name="video-play-s"
+              size={16}
+              tokenColor={
+                AmityColorToken.IconIconButtonTransparentPrimaryDefault
+              }
+            />
+          </View>
+        </View>
+      ) : null}
+    </View>
+  );
+}
