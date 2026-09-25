@@ -20,3 +20,5 @@ export default function AmitySearchChannelPage() {
     </SafeAreaView>
   );
 }
+
+AmitySearchChannelPage.displayName = 'AmitySearchChannelPage';

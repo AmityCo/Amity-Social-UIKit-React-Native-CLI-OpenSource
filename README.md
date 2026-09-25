@@ -150,7 +150,14 @@ Add following permissions to `info.plist` file (ios/{YourAppName}/Info.plist)
  <string>App needs access to the microphone to record audio.</string>
  <key>NSPhotoLibraryUsageDescription</key>
  <string>App needs access to the gallery to select photos.</string>
+ <key>NSPhotoLibraryAddUsageDescription</key>
+ <string>App needs access to the gallery to save photos and videos.</string>
 ```
+
+> **`NSPhotoLibraryAddUsageDescription` is required from 4.3.0 on.** Saving a
+> photo or video from a chat message asks iOS for permission to add to the
+> photo library. iOS terminates any app that asks without this key, so a build
+> missing it crashes the first time a user saves media from chat.
 
 > **`NSPhotoLibraryUsageDescription` is required from 4.1.0 on.** Opening the
 > media picker now asks iOS for photo-library authorization, which it needs to
@@ -166,7 +173,15 @@ Add following permissions to `AndroidManifest.xml` file (android/app/src/main/An
 ```xml
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    android:maxSdkVersion="28" />
 ```
+
+> **`WRITE_EXTERNAL_STORAGE` is required from 4.3.0 on** for saving photos and
+> videos from chat on Android 9 (API 28) and below. Android 10 and later save to
+> the gallery without it, so `android:maxSdkVersion="28"` keeps the permission
+> off those devices. Without the declaration, saving on Android 9 and below
+> always fails with a permission error.
 
 ### Usage
 
@@ -254,6 +269,57 @@ export default function App() {
   );
 }
 ```
+
+### Chat pages
+
+Every chat page can be rendered on its own the same way, inside **`AmityPageRenderer`**. `AmityUiKitChat` stays the simplest way to show the whole chat UIKit; use a single page when you want to place it yourself, for example opening a conversation straight from a notification.
+
+| Page                                   | Props                                                                       |
+| -------------------------------------- | --------------------------------------------------------------------------- |
+| `AmityChatHomePage`                    | -                                                                           |
+| `AmityChannelCreateConversationPage`   | -                                                                           |
+| `AmitySelectGroupMemberPage`           | `selectedGroupMember?: Amity.User[]`                                        |
+| `AmityCreateGroupChatPage`             | `selectedUsers: Amity.User[]`                                               |
+| `AmityChatPage`                        | `channelId: string`, `userDisplayName?: string`, `jumpToMessageId?: string` |
+| `AmityGroupChatPage`                   | `channelId: string`, `isJustCreated?: boolean`, `jumpToMessageId?: string`  |
+| `AmityGroupSettingPage`                | `channelId: string`                                                         |
+| `AmityEditGroupProfilePage`            | `channelId: string`                                                         |
+| `AmityEditGroupNotificationPage`       | `channelId: string`                                                         |
+| `AmityEditGroupMemberPermissionsPage`  | `channelId: string`                                                         |
+| `AmityGroupNotificationPreferencePage` | `channelId: string`                                                         |
+| `AmityGroupMemberListPage`             | `channelId: string`                                                         |
+| `AmityAddGroupMemberPage`              | `channelId: string`                                                         |
+| `AmityBannedGroupMemberListPage`       | `channelId: string`                                                         |
+| `AmityArchivedChatPage`                | -                                                                           |
+| `AmitySearchChannelPage`               | -                                                                           |
+
+Each page's props type is exported as `<PageName>Props`, e.g. `AmityChatPageProps`. From the rendered page the user can still move on to the other chat pages, such as a group's settings or its member list.
+
+```js
+import {
+  AmityUiKitProvider,
+  AmityPageRenderer,
+  AmityChatPage,
+} from '@amityco/react-native-social-uikit';
+
+export default function App() {
+  return (
+    <AmityUiKitProvider
+      configs={config}
+      apiKey="API_KEY"
+      apiRegion="API_REGION"
+      userId="userId"
+      displayName="displayName"
+    >
+      <AmityPageRenderer>
+        <AmityChatPage channelId="channelId" />
+      </AmityPageRenderer>
+    </AmityUiKitProvider>
+  );
+}
+```
+
+> The page you render is the first screen in its stack, so its back button has nothing to go back to. Hide the page or navigate away from your own app's navigation instead.
 
 ### Story Tab component Usage
 
@@ -362,6 +428,29 @@ The Dark Mode feature in our UIKit enhances user experience by providing an alte
 ```js
 "preferred_theme": "dark" // change it to dark || light || default,
 ```
+
+### Localization
+
+Chat UIKit strings can be translated or overridden through the `localization` prop of `AmityUiKitProvider`, the same shape as the web UIKit. Keys missing from a bundle fall back to English. The English reference is [`src/core/localization/defaults/en.json`](src/core/localization/defaults/en.json).
+
+```js
+import jaLocale from './locales/ja.json';
+
+<AmityUiKitProvider
+  // ...credentials
+  localization={{
+    // Picks a bundle from the device language (exact match, then prefix).
+    // Without localeMap the UIKit stays in English.
+    localeMap: { ja: jaLocale },
+    // Individual keys that take precedence over the active bundle.
+    overrides: { amity_chat_archive: 'Hide chat' },
+  }}
+>
+  <AmityUiKitChat />
+</AmityUiKitProvider>;
+```
+
+Set `localeBundle` instead of `localeMap` to use one bundle for every user. To switch at runtime, call `setLocaleBundle` / `clearLocaleBundle` from `useLocale()` inside the provider.
 
 ### Documentation
 

@@ -1,16 +1,18 @@
 // AmityEditGroupMemberPermissionsPage — who can send messages (everyone / moderators).
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, type RouteProp } from '@react-navigation/native';
 
 import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import type { RootStackParamList } from '../../../core/routes/RouteParamList';
+import { usePageParams } from '../../hooks/usePageParams';
 import { EditGroupMemberPermissions } from '../../features/group/edit-permission';
 
-export default function AmityEditGroupMemberPermissionsPage() {
-  const { params } =
-    useRoute<
-      RouteProp<RootStackParamList, 'AmityEditGroupMemberPermissionsPage'>
-    >();
+export type AmityEditGroupMemberPermissionsPageProps =
+  RootStackParamList['AmityEditGroupMemberPermissionsPage'];
+
+export default function AmityEditGroupMemberPermissionsPage(
+  props: Partial<AmityEditGroupMemberPermissionsPageProps>
+) {
+  const params = usePageParams<'AmityEditGroupMemberPermissionsPage'>(props);
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
@@ -20,3 +22,6 @@ export default function AmityEditGroupMemberPermissionsPage() {
     </SafeAreaView>
   );
 }
+
+AmityEditGroupMemberPermissionsPage.displayName =
+  'AmityEditGroupMemberPermissionsPage';

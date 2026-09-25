@@ -1,21 +1,22 @@
 // AmityAddGroupMemberPage — add members to an existing group.
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  useNavigation,
-  useRoute,
-  type RouteProp,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { ChatKeyboardAvoidingView } from '../../elements/ChatKeyboardAvoidingView';
 import type { RootStackParamList } from '../../../core/routes/RouteParamList';
+import { usePageParams } from '../../hooks/usePageParams';
 import { AddGroupMember } from '../../features/group/add-member';
 
-export default function AmityAddGroupMemberPage() {
+export type AmityAddGroupMemberPageProps =
+  RootStackParamList['AmityAddGroupMemberPage'];
+
+export default function AmityAddGroupMemberPage(
+  props: Partial<AmityAddGroupMemberPageProps>
+) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const { params } =
-    useRoute<RouteProp<RootStackParamList, 'AmityAddGroupMemberPage'>>();
+  const params = usePageParams<'AmityAddGroupMemberPage'>(props);
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
@@ -28,3 +29,5 @@ export default function AmityAddGroupMemberPage() {
     </SafeAreaView>
   );
 }
+
+AmityAddGroupMemberPage.displayName = 'AmityAddGroupMemberPage';

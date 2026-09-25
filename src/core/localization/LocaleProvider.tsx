@@ -83,7 +83,7 @@ export interface LocaleProviderProps {
    * Falls back to English library defaults when no match is found.
    *
    * @example
-   *   localeMap={{ ja: jaLocale, th: thLocale }}
+   *   localeMap={{ ja: jaLocale, ko: koLocale }}
    */
   localeMap?: Record<string, LocaleBundle>;
 }
@@ -93,15 +93,29 @@ export interface LocaleProviderProps {
 // ---------------------------------------------------------------------------
 
 /**
+ * The device language as a BCP 47 tag (e.g. "th-TH"). React Native has no
+ * `navigator.language`, so fall back to the Intl locale, which Hermes and JSC
+ * take from the device settings.
+ */
+function getDeviceLanguage(): string | undefined {
+  const nav = (globalThis as { navigator?: { language?: string } }).navigator;
+  if (nav && typeof nav.language === 'string' && nav.language) return nav.language;
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().locale || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Try to match the browser/device language against a caller-supplied locale map.
  * Returns the matched bundle, or undefined if no match (falls through to EN defaults).
  */
 export function resolveDeviceLocale(
   localeMap: Record<string, LocaleBundle>,
 ): LocaleBundle | undefined {
-  const nav = (globalThis as { navigator?: { language?: string } }).navigator;
-  if (!nav || typeof nav.language !== 'string') return undefined;
-  const lang = nav.language ?? '';
+  const lang = getDeviceLanguage();
+  if (!lang) return undefined;
   // 1. Exact match  (e.g. "ja-JP" → localeMap["ja-JP"])
   if (localeMap[lang]) return localeMap[lang];
   // 2. Language-prefix match  (e.g. "ja-JP" → localeMap["ja"])
