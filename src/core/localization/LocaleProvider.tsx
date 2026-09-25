@@ -83,7 +83,7 @@ export interface LocaleProviderProps {
    * Falls back to English library defaults when no match is found.
    *
    * @example
-   *   localeMap={{ ja: jaLocale, th: thLocale }}
+   *   localeMap={{ ja: jaLocale, ko: koLocale }}
    */
   localeMap?: Record<string, LocaleBundle>;
 }
