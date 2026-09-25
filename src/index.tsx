@@ -83,6 +83,24 @@ import {
   AmityUserRelationshipPage,
   AmityBlockedUsersPage,
 } from './social';
+import {
+  AmityChatHomePage,
+  AmityChannelCreateConversationPage,
+  AmitySelectGroupMemberPage,
+  AmityCreateGroupChatPage,
+  AmityChatPage,
+  AmityGroupChatPage,
+  AmityGroupSettingPage,
+  AmityEditGroupProfilePage,
+  AmityEditGroupNotificationPage,
+  AmityEditGroupMemberPermissionsPage,
+  AmityGroupNotificationPreferencePage,
+  AmityGroupMemberListPage,
+  AmityAddGroupMemberPage,
+  AmityBannedGroupMemberListPage,
+  AmityArchivedChatPage,
+  AmitySearchChannelPage,
+} from './chat/pages';
 
 // Polyfill for BackHandler compatibility with older libraries like react-native-modalbox
 // In React Native 0.65+, BackHandler.removeEventListener was removed
@@ -184,10 +202,41 @@ export {
   AmityPendingPostListComponent,
   AmityGlobalStoryTabWrapper,
   navigate,
+  AmityChatHomePage,
+  AmityChannelCreateConversationPage,
+  AmitySelectGroupMemberPage,
+  AmityCreateGroupChatPage,
+  AmityChatPage,
+  AmityGroupChatPage,
+  AmityGroupSettingPage,
+  AmityEditGroupProfilePage,
+  AmityEditGroupNotificationPage,
+  AmityEditGroupMemberPermissionsPage,
+  AmityGroupNotificationPreferencePage,
+  AmityGroupMemberListPage,
+  AmityAddGroupMemberPage,
+  AmityBannedGroupMemberListPage,
+  AmityArchivedChatPage,
+  AmitySearchChannelPage,
   useLocale,
   useString,
   defaultLocaleMap,
   thLocaleBundle,
 };
+
+export type {
+  AmitySelectGroupMemberPageProps,
+  AmityCreateGroupChatPageProps,
+  AmityChatPageProps,
+  AmityGroupChatPageProps,
+  AmityGroupSettingPageProps,
+  AmityEditGroupProfilePageProps,
+  AmityEditGroupNotificationPageProps,
+  AmityEditGroupMemberPermissionsPageProps,
+  AmityGroupNotificationPreferencePageProps,
+  AmityGroupMemberListPageProps,
+  AmityAddGroupMemberPageProps,
+  AmityBannedGroupMemberListPageProps,
+} from './chat/pages';
 
 export type { LocaleBundle, LocaleContextValue } from './core/localization';

@@ -27,3 +27,5 @@ export default function AmityArchivedChatPage() {
     </SafeAreaView>
   );
 }
+
+AmityArchivedChatPage.displayName = 'AmityArchivedChatPage';
