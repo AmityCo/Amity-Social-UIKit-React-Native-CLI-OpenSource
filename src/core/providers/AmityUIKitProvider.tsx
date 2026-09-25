@@ -47,12 +47,12 @@ export interface IAmityUIkitProvider {
    *   detection. When `localeBundle` is not set, the device language is matched
    *   against this map (exact match, then language prefix). Falls back to
    *   English when nothing matches. Unset by default, so the UIKit renders in
-   *   English unless the host opts in (pass `defaultLocaleMap` for built-in Thai).
+   *   English unless the host passes its own bundles.
    *
    * @example
    *   localization={{ localeBundle: jaLocale }}
    * @example
-   *   localization={{ localeMap: { ja: jaLocale, th: thLocale } }}
+   *   localization={{ localeMap: { ja: jaLocale, ko: koLocale } }}
    */
   localization?: {
     localeBundle?: LocaleBundle;

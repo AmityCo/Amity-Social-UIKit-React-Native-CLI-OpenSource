@@ -7,12 +7,7 @@ import {
   ErrorBoundary,
   navigate,
 } from './core';
-import {
-  useLocale,
-  useString,
-  defaultLocaleMap,
-  thLocaleBundle,
-} from './core/localization';
+import { useLocale, useString, defaultLocaleMap } from './core/localization';
 import {
   AmityStoryTabComponent,
   AmityCreateStoryPage,
@@ -221,7 +216,6 @@ export {
   useLocale,
   useString,
   defaultLocaleMap,
-  thLocaleBundle,
 };
 
 export type {
