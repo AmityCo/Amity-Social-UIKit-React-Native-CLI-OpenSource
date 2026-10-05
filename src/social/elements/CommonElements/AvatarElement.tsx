@@ -4,7 +4,7 @@ import {
   defaultAvatarUri,
   defaultCommunityAvatarUri,
 } from '../../../core/assets';
-import { useFile } from '../../hooks';
+import { useAvatarFile } from '../../hooks';
 import { ImageSizeState } from '../../enums';
 import { ComponentID, ElementID, PageID } from '../../enums/enumUIKitID';
 import useConfig from '../../hooks/useConfig';
@@ -46,7 +46,7 @@ const AvatarElement: FC<AvatarElementType> = ({
   const [loaded, setLoaded] = useState(false);
   const { excludes } = useConfig();
   const configId = `${pageID}/${componentID}/${elementID}`;
-  const { getImage } = useFile();
+  const { getAvatarUrl } = useAvatarFile();
 
   useLayoutEffect(() => {
     const loadAvatar = async () => {
@@ -62,7 +62,7 @@ const AvatarElement: FC<AvatarElementType> = ({
         return;
       }
 
-      const avatar = await getImage({
+      const avatar = await getAvatarUrl({
         fileId: avatarId,
         imageSize: ImageSizeState.small,
       });
@@ -72,7 +72,7 @@ const AvatarElement: FC<AvatarElementType> = ({
     };
 
     loadAvatar();
-  }, [avatarId, fallbackAvatar, getImage, avatarCustomUrl]);
+  }, [avatarId, fallbackAvatar, getAvatarUrl, avatarCustomUrl]);
 
   if (excludes.includes(configId)) return null;
 

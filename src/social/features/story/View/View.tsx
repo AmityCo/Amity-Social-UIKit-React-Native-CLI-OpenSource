@@ -1,6 +1,6 @@
 import { ActivityIndicator, View } from 'react-native';
 import { FC, memo, useCallback, useLayoutEffect, useState } from 'react';
-import { useFile, useStory, useStoryPermission } from '../../../hooks';
+import { useAvatarFile, useStory, useStoryPermission } from '../../../hooks';
 import { useStyles } from './styles';
 import { isCommunityModerator } from '../../../../core/utils/permission';
 import useAuth from '../../../../core/hooks/useAuth';
@@ -40,7 +40,7 @@ const AmityViewStoryPage: FC<IAmityViewStoryPage> = ({
   const { hasStoryPermission } = useStoryPermission(targetId);
   const styles = useStyles();
   const { getStories, stories, loading } = useStory();
-  const { getImage } = useFile();
+  const { getAvatarUrl } = useAvatarFile();
   const [storyData, setStoryData] = useState<IStoryData[]>([]);
   const [current, setCurrent] = useState(0);
   const currentStory = storyData[current];
@@ -93,7 +93,7 @@ const AmityViewStoryPage: FC<IAmityViewStoryPage> = ({
         if (err) return;
         if (!fetching) {
           setCommunityData(data);
-          const avatarUrl = await getImage({
+          const avatarUrl = await getAvatarUrl({
             fileId: data.avatarFileId,
             imageSize: ImageSizeState.small,
             type: 'community',
@@ -102,7 +102,7 @@ const AmityViewStoryPage: FC<IAmityViewStoryPage> = ({
         }
       }
     );
-  }, [getImage, targetId]);
+  }, [getAvatarUrl, targetId]);
 
   useLayoutEffect(() => {
     if (!storyData?.length) return;
