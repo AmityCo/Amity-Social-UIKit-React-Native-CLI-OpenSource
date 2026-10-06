@@ -66,3 +66,9 @@ export enum ShareableLinkModel {
   users = 'users',
   livestreams = 'livestreams',
 }
+
+export enum ReportContentType {
+  post = 'post',
+  comment = 'comment',
+  reply = 'reply',
+}

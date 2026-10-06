@@ -66,6 +66,7 @@ export enum ComponentID {
   user_feed = 'user_feed',
   user_image_feed = 'user_image_feed',
   user_video_feed = 'user_video_feed',
+  content_report_reason = 'content_report_reason',
 }
 export enum ElementID {
   CloseBtn = 'close_button',
@@ -233,6 +234,7 @@ export enum ElementID {
   blocked_user_video_feed_info = 'blocked_user_video_feed_info',
   copy_link = 'copy_link',
   share_link = 'share_link',
+  submit_button = 'submit_button',
 }
 
 export interface UiKitConfigKeys {
