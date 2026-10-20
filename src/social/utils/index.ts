@@ -1,5 +1,3 @@
-import { FileRepository } from '@amityco/ts-sdk-react-native';
-
 export const isValidImageType = (mimeType: string | undefined): boolean => {
   if (!mimeType) return false;
 
@@ -11,7 +9,15 @@ export const isValidImageType = (mimeType: string | undefined): boolean => {
 export const getFileUrlWithSize = (
   fileUrl: string,
   size: 'small' | 'medium' | 'large' | 'full' = 'medium'
-) => FileRepository.fileUrlWithSize(fileUrl, size);
+) => {
+  if (!fileUrl) return fileUrl;
+  const [base, query] = fileUrl.split('?');
+  const kept = (query ?? '')
+    .split('&')
+    .filter((part) => part && !part.startsWith('size='))
+    .join('&');
+  return `${base}?${kept ? `${kept}&` : ''}size=${size}`;
+};
 
 export function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
