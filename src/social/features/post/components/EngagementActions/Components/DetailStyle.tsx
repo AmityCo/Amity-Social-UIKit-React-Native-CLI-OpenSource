@@ -39,6 +39,9 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   const styles = useStyles(themeStyles);
   const { handleInteraction } = useInteractionBehavior();
   const [postData, setPostData] = useState<Amity.Post>(null);
+  // Not `localCommentCount`: the SDK drops that field from the cached post
+  // whenever a reaction event replaces it.
+  const commentCount = postData?.getLocalCommentCount(true);
 
   const { shareLink, handleSharePress } = usePostShareAction({
     postId,
@@ -135,8 +138,7 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
           </Text>
         )}
         <Text style={styles.commentCountText}>
-          {formatNumber(postData?.localCommentCount)}{' '}
-          {renderCommentText(postData?.localCommentCount)}
+          {formatNumber(commentCount)} {renderCommentText(commentCount)}
         </Text>
       </View>
       <View style={[styles.actionSection, styles.detailActionSection]}>
