@@ -30,7 +30,6 @@ import { useTimeDifference } from '../../../../../hooks/useTimeDifference';
 import { useGlobalBehavior } from '../../../../../hooks/useGlobalBehavior';
 import {
   isReportTarget,
-  reportTargetById,
   unReportTargetById,
 } from '../../../../../../core/legacy/feed';
 import EditCommentModal from '../../../../../components/legacy/EditCommentModal';
@@ -47,6 +46,11 @@ import { useUIKitDispatch } from '../../../../../../core/stores/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
+import {
+  ContentReportReason,
+  useReportReasonSheet,
+} from '../../../../report/ContentReportReason';
+import { ReportContentType } from '../../../../../types';
 
 export interface IComment {
   commentId: string;
@@ -111,6 +115,12 @@ const ReplyCommentList = ({
   const slideAnimation = useRef(new Animated.Value(0)).current;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {
+    isReportReasonVisible,
+    openReportReason,
+    closeReportReason,
+    onMenuDismiss,
+  } = useReportReasonSheet();
 
   const openModal = () => {
     setIsVisible(true);
@@ -179,17 +189,7 @@ const ReplyCommentList = ({
         );
       }
     } else {
-      const reportPost = await reportTargetById('comment', commentId);
-      setIsVisible(false);
-      setIsReportByMe(true);
-      if (reportPost) {
-        dispatch(
-          showToastMessage({
-            toastMessage: 'Comment reported',
-            isSuccessToast: true,
-          })
-        );
-      }
+      openReportReason();
     }
   };
   const modalStyle = {
@@ -336,6 +336,7 @@ const ReplyCommentList = ({
         transparent={true}
         visible={isVisible}
         onRequestClose={closeModal}
+        onDismiss={onMenuDismiss}
       >
         <Pressable onPress={closeModal} style={styles.modalContainer}>
           <Animated.View
@@ -407,6 +408,14 @@ const ReplyCommentList = ({
           referenceType="comment"
           isModalVisible={isReactionListVisible}
           onCloseModal={() => setIsReactionListVisible(false)}
+        />
+      )}
+      {isReportReasonVisible && (
+        <ContentReportReason
+          contentType={ReportContentType.reply}
+          contentId={commentId}
+          onReported={() => setIsReportByMe(true)}
+          onClose={closeReportReason}
         />
       )}
     </View>

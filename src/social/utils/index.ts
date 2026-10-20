@@ -1,5 +1,3 @@
-import { FileRepository } from '@amityco/ts-sdk-react-native';
-
 export const isValidImageType = (mimeType: string | undefined): boolean => {
   if (!mimeType) return false;
 
@@ -8,10 +6,65 @@ export const isValidImageType = (mimeType: string | undefined): boolean => {
   return validTypes.includes(mimeType.toLowerCase());
 };
 
+// Only Amity file URLs (api/apix/upload.<region>.amity.co) take a size
+// parameter. Any other URL - a custom avatar on a third-party CDN, a local
+// file - is used as given.
+const isAmityFileUrl = (url: string) => /\.amity\.(co|io)\b/i.test(url);
+
 export const getFileUrlWithSize = (
   fileUrl: string,
   size: 'small' | 'medium' | 'large' | 'full' = 'medium'
-) => FileRepository.fileUrlWithSize(fileUrl, size);
+) => {
+  if (!fileUrl || !isAmityFileUrl(fileUrl)) return fileUrl;
+  const [base, query] = fileUrl.split('?');
+  const kept = (query ?? '')
+    .split('&')
+    .filter((part) => part && !part.startsWith('size='))
+    .join('&');
+  return `${base}?${kept ? `${kept}&` : ''}size=${size}`;
+};
+
+// Comment types the comment lists render.
+const RENDERED_COMMENT_TYPES = ['text', 'image'];
+
+/**
+ * Whether a comment belongs in a comment list. Use this instead of a
+ * `dataTypes` filter on getComments: the SDK checks `comment.dataTypes`,
+ * which its optimistic comment lacks, so the filter hid a new comment until
+ * the server answered. A failed send (syncState 'error') is left out; the
+ * composer gets its text back instead.
+ */
+export const isVisibleComment = (comment: Amity.InternalComment): boolean => {
+  // Amity.SyncState is an ambient const enum, so it can't be read at runtime.
+  if ((comment.syncState as string) === 'error') return false;
+  const types = (comment as { dataTypes?: string[] }).dataTypes ?? [
+    comment.dataType ?? 'text',
+  ];
+  return types.some((type) => RENDERED_COMMENT_TYPES.includes(type));
+};
+
+/** Whether a comment was created optimistically and is not yet on the server. */
+export const isPendingComment = (comment: Amity.InternalComment): boolean =>
+  (comment.syncState as string) === 'syncing';
+
+/**
+ * Re-applies a community query's membership filter to its results. The SDK's
+ * community live collections re-emit the same list when the current user
+ * joins or leaves a community, without filtering it again, so a community the
+ * user just left stayed in their communities list until it was refetched.
+ */
+export const filterCommunitiesByMembership = (
+  communities: Amity.Community[],
+  membership: 'all' | 'member' | 'notMember'
+) => {
+  if (membership === 'member') {
+    return communities.filter((community) => community.isJoined !== false);
+  }
+  if (membership === 'notMember') {
+    return communities.filter((community) => community.isJoined !== true);
+  }
+  return communities;
+};
 
 export function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);

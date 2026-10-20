@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CommunityRepository } from '@amityco/ts-sdk-react-native';
+import { filterCommunitiesByMembership } from '../utils';
 
 export const useCommunities = ({
   categoryId,
@@ -22,7 +23,7 @@ export const useCommunities = ({
       ({ error, loading, data, hasNextPage, onNextPage }) => {
         if (error) return;
         if (!loading) {
-          setCommunities(data);
+          setCommunities(filterCommunitiesByMembership(data, membership));
           setOnNextCommunityPage(() => {
             if (hasNextPage) return onNextPage;
             return null;

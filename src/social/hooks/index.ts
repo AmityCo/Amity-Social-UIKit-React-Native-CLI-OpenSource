@@ -35,6 +35,7 @@ export * from './queries/useBlockUser';
 export * from './usePostSubscription';
 export * from './useRoomSubscription';
 export * from './queries/useFlagPost';
+export * from './queries/useFlagContent';
 export * from './queries/useClosePoll';
 export * from './useGlobalBehavior';
 export * from './useInteractionBehavior';

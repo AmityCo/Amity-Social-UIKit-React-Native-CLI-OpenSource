@@ -5,6 +5,7 @@ import {
 } from '@amityco/ts-sdk-react-native';
 import { useState, useEffect } from 'react';
 import { TabName } from '../enums/enumTabName';
+import { filterCommunitiesByMembership } from '../utils';
 
 export const useAmityGlobalSearchViewModel = (
   searchValue: string,
@@ -39,7 +40,7 @@ export const useAmityGlobalSearchViewModel = (
           if (error) return setSearchResult(null);
           if (!loading) {
             setMyOnNextCommunityPage(() => (hasNextPage ? onNextPage : null));
-            setSearchResult(data);
+            setSearchResult(filterCommunitiesByMembership(data, 'member'));
           }
         }
       );

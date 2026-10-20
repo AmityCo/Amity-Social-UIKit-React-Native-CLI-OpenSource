@@ -31,7 +31,6 @@ import { Pressable } from 'react-native';
 import useAuth from '../../../../core/hooks/useAuth';
 import {
   isReportTarget,
-  reportTargetById,
   unReportTargetById,
 } from '../../../../core/legacy/feed';
 import EditCommentModal from '../../legacy/EditCommentModal';
@@ -49,6 +48,11 @@ import { LinkPreview } from '../../PreviewLink';
 import { Typography } from '../../../../core/components/Typography/Typography';
 import { pen, report, trash, unreport } from '../../../../core/assets/icons';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
+import {
+  ContentReportReason,
+  useReportReasonSheet,
+} from '../../../features/report/ContentReportReason';
+import { ReportContentType } from '../../../types';
 export interface IComment {
   commentId: string;
   data: Record<string, any>;
@@ -130,6 +134,12 @@ const CommentListItem = ({
     useState<boolean>(false);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { showToast } = useToast();
+  const {
+    isReportReasonVisible,
+    openReportReason,
+    closeReportReason,
+    onMenuDismiss,
+  } = useReportReasonSheet();
 
   useEffect(() => {
     getReplyComments();
@@ -255,12 +265,7 @@ const CommentListItem = ({
       setIsVisible(false);
       setIsReportByMe(false);
     } else {
-      const reportPost = await reportTargetById('comment', commentId);
-      if (reportPost) {
-        showToast({ message: 'Comment reported.', type: 'success' });
-      }
-      setIsVisible(false);
-      setIsReportByMe(true);
+      openReportReason();
     }
   };
   const modalStyle = {
@@ -456,6 +461,7 @@ const CommentListItem = ({
         transparent={true}
         visible={isVisible}
         onRequestClose={closeModal}
+        onDismiss={onMenuDismiss}
       >
         <Pressable onPress={closeModal} style={styles.modalContainer}>
           <Animated.View
@@ -543,6 +549,14 @@ const CommentListItem = ({
           }
         }}
       />
+      {isReportReasonVisible && (
+        <ContentReportReason
+          contentType={ReportContentType.comment}
+          contentId={commentId}
+          onReported={() => setIsReportByMe(true)}
+          onClose={closeReportReason}
+        />
+      )}
     </View>
   );
 };
