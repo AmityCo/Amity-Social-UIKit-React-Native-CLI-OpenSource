@@ -166,6 +166,9 @@ export const useStyles = () => {
       alignItems: 'center',
       gap: 4,
     },
+    pendingReply: {
+      opacity: 0.5,
+    },
   });
 
   return styles;

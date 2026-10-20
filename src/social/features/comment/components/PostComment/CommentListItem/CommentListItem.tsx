@@ -58,6 +58,7 @@ import {
   useReportReasonSheet,
 } from '../../../../report/ContentReportReason';
 import { ReportContentType } from '../../../../../types';
+import { isPendingComment, isVisibleComment } from '../../../../../utils';
 
 export interface IComment {
   commentId: string;
@@ -76,6 +77,7 @@ export interface IComment {
   childrenNumber: number;
   targetType?: string;
   targetId?: string;
+  isPending?: boolean;
 }
 export interface ICommentList {
   commentDetail: IComment;
@@ -199,7 +201,8 @@ const CommentListItem = ({
 
           return {
             targetType: item.targetType,
-            targetId: item.targetId,
+            // Empty on an optimistic reply until the server confirms it.
+            targetId: item.targetId || targetId,
             commentId: item.commentId,
             data: item.data as Record<string, any>,
             dataType: item.dataType,
@@ -212,6 +215,7 @@ const CommentListItem = ({
             childrenComment: item.children,
             referenceId: item.referenceId,
             mentionPosition: item?.metadata?.mentioned,
+            isPending: isPendingComment(item),
           };
         })
       );
@@ -226,14 +230,13 @@ const CommentListItem = ({
     const getCommentsParams: Amity.CommentLiveCollection = {
       referenceType: postType,
       referenceId: referenceId, // post ID
-      dataTypes: { values: ['text', 'image'], matchType: 'any' },
       limit: 5,
       parentId: commentId,
     };
 
     CommentRepository.getComments(getCommentsParams, (result) => {
       setReplyCommentCollection(result);
-      formatReplyComments(result.data);
+      formatReplyComments(result.data?.filter(isVisibleComment));
     });
   };
   const openReplyComment = () => {
@@ -458,11 +461,17 @@ const CommentListItem = ({
             <FlatList
               data={replyCommentList}
               renderItem={({ item }) => (
-                <ReplyCommentList
-                  commentId={item.commentId}
-                  commentDetail={item}
-                  onDelete={onDelete}
-                />
+                // A like on a reply the server hasn't confirmed would fail.
+                <View
+                  pointerEvents={item.isPending ? 'none' : 'auto'}
+                  style={item.isPending && styles.pendingReply}
+                >
+                  <ReplyCommentList
+                    commentId={item.commentId}
+                    commentDetail={item}
+                    onDelete={onDelete}
+                  />
+                </View>
               )}
               keyExtractor={(item) => item.commentId}
             />

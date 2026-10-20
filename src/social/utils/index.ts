@@ -24,6 +24,29 @@ export const getFileUrlWithSize = (
   return `${base}?${kept ? `${kept}&` : ''}size=${size}`;
 };
 
+// Comment types the comment lists render.
+const RENDERED_COMMENT_TYPES = ['text', 'image'];
+
+/**
+ * Whether a comment belongs in a comment list. Use this instead of a
+ * `dataTypes` filter on getComments: the SDK checks `comment.dataTypes`,
+ * which its optimistic comment lacks, so the filter hid a new comment until
+ * the server answered. A failed send (syncState 'error') is left out; the
+ * composer gets its text back instead.
+ */
+export const isVisibleComment = (comment: Amity.InternalComment): boolean => {
+  // Amity.SyncState is an ambient const enum, so it can't be read at runtime.
+  if ((comment.syncState as string) === 'error') return false;
+  const types = (comment as { dataTypes?: string[] }).dataTypes ?? [
+    comment.dataType ?? 'text',
+  ];
+  return types.some((type) => RENDERED_COMMENT_TYPES.includes(type));
+};
+
+/** Whether a comment was created optimistically and is not yet on the server. */
+export const isPendingComment = (comment: Amity.InternalComment): boolean =>
+  (comment.syncState as string) === 'syncing';
+
 export function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }

@@ -11,6 +11,7 @@ import { isAmityAd } from '../../../../hooks/useCustomRankingGlobalFeed';
 import CommentAdComponent from '../../../../components/CommentAdComponent/CommentAdComponent';
 import { usePaginatorApi } from '../../../../hooks/usePaginator';
 import { useCommentAdImpression } from '../../../../hooks/useCommentAdImpression';
+import { isPendingComment, isVisibleComment } from '../../../../utils';
 import { useStyles } from './styles';
 
 export interface IComment {
@@ -28,6 +29,7 @@ export interface IComment {
   mentionees?: string[];
   mentionPosition?: IMentionPosition[];
   childrenNumber: number;
+  isPending?: boolean;
 }
 
 type AmityPostCommentComponentType = {
@@ -78,14 +80,15 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
     if (!postId) return () => {};
     const unsubComment = CommentRepository.getComments(
       {
-        dataTypes: { matchType: 'any', values: ['text', 'image'] },
         referenceId: postId,
         referenceType: postType,
         limit: commentListLimit,
       },
       ({ loading, data, hasNextPage, onNextPage }) => {
         if (!loading) {
-          data && data.length > 0 && queryComment(data);
+          data &&
+            data.length > 0 &&
+            queryComment(data.filter(isVisibleComment));
           onNextPageRef.current = hasNextPage ? onNextPage : null;
           setTimeout(() => {
             setIsLoading(false);
@@ -111,7 +114,9 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
 
       return {
         targetType: item.targetType,
-        targetId: item.targetId,
+        // The optimistic comment has an empty targetId until the server
+        // confirms it; without the fallback the row's layout would shift.
+        targetId: item.targetId || communityId,
         commentId: item.commentId,
         data: item.data as Record<string, any>,
         dataType: item?.dataType || 'text',
@@ -125,6 +130,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         childrenNumber: item.childrenNumber,
         referenceId: item.referenceId,
         mentionPosition: item?.metadata?.mentioned ?? [],
+        isPending: isPendingComment(item),
       };
     });
     setCommentList([...formattedCommentList]);
@@ -174,14 +180,20 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         return <CommentAdComponent ad={item} pageId={pageId} />;
       }
 
+      // A like or reply on a comment the server hasn't confirmed would fail.
       return (
-        <CommentListItem
-          onDelete={onDeleteComment}
-          commentDetail={item}
-          onClickReply={handleClickReply}
-          postType={postType}
-          disabledInteraction={disabledInteraction}
-        />
+        <View
+          pointerEvents={item.isPending ? 'none' : 'auto'}
+          style={item.isPending && styles.pendingComment}
+        >
+          <CommentListItem
+            onDelete={onDeleteComment}
+            commentDetail={item}
+            onClickReply={handleClickReply}
+            postType={postType}
+            disabledInteraction={disabledInteraction}
+          />
+        </View>
       );
     },
     [
@@ -193,6 +205,7 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
       themeStyles.colors.baseShade2,
       themeStyles.colors.baseShade4,
       pageId,
+      styles.pendingComment,
     ]
   );
 
@@ -204,8 +217,10 @@ const AmityPostCommentComponent: FC<AmityPostCommentComponentType> = ({
         keyboardShouldPersistTaps="handled"
         data={itemWithAds}
         renderItem={renderCommentListItem}
+        // Comments key by id alone, so a new comment at the top doesn't
+        // remount every row. Ads keep the index: one ad can appear twice.
         keyExtractor={(item, index) =>
-          (isAmityAd(item) ? item.adId : item.commentId) + `_${index}`
+          isAmityAd(item) ? `${item.adId}_${index}` : item.commentId
         }
         onEndReachedThreshold={0.8}
         viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
