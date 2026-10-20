@@ -47,6 +47,25 @@ export const isVisibleComment = (comment: Amity.InternalComment): boolean => {
 export const isPendingComment = (comment: Amity.InternalComment): boolean =>
   (comment.syncState as string) === 'syncing';
 
+/**
+ * Re-applies a community query's membership filter to its results. The SDK's
+ * community live collections re-emit the same list when the current user
+ * joins or leaves a community, without filtering it again, so a community the
+ * user just left stayed in their communities list until it was refetched.
+ */
+export const filterCommunitiesByMembership = (
+  communities: Amity.Community[],
+  membership: 'all' | 'member' | 'notMember'
+) => {
+  if (membership === 'member') {
+    return communities.filter((community) => community.isJoined !== false);
+  }
+  if (membership === 'notMember') {
+    return communities.filter((community) => community.isJoined !== true);
+  }
+  return communities;
+};
+
 export function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
