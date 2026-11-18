@@ -16,7 +16,7 @@ import { Typography } from '../../../../../core/design/components/Typography';
 import { Loader } from '../../../../../core/design/atoms/Loader';
 import { AmityColorToken } from '../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../core/localization';
-import { useNetworkOnline } from '../../../../hooks';
+import { useNetworkOnline } from '../../../../../core/hooks/useNetworkOnline';
 import { useBehaviour } from '../../../../../social/providers/BehaviourProvider';
 import { ImageViewer } from '../../../shared/components/ImageViewer';
 import { useStyles } from './styles';

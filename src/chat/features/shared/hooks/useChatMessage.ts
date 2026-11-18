@@ -21,8 +21,8 @@ import {
   useChatNavigation,
   useChatNotifications,
   useCurrentUserId,
-  useNetworkOnline,
 } from '../../../hooks';
+import { useNetworkOnline } from '../../../../core/hooks/useNetworkOnline';
 import { useString } from '../../../../core/localization';
 import {
   groupMessagesByDate,

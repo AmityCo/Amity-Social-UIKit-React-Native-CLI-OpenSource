@@ -1,10 +1,9 @@
 // useNetworkOnline — whether the device currently has a network connection,
 // backed by `@react-native-community/netinfo`.
 //
-// Same contract as chat's own `useNetworkOnline` (social must not import from
-// chat, so the shared version lives here). NetInfo's `isConnected` is `null`
-// until the first callback, so this starts `true` and only flips to `false` on
-// an explicit disconnect, which avoids an offline flash on mount.
+// Shared by social and chat. NetInfo's `isConnected` is `null` until the first
+// callback, so this starts `true` and only flips to `false` on an explicit
+// disconnect, which avoids an offline flash on mount.
 
 import { useEffect, useState } from 'react';
 import NetInfo from '@react-native-community/netinfo';

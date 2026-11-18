@@ -6,10 +6,15 @@ export const isValidImageType = (mimeType: string | undefined): boolean => {
   return validTypes.includes(mimeType.toLowerCase());
 };
 
-// Only Amity file URLs (api/apix/upload.<region>.amity.co) take a size
-// parameter. Any other URL - a custom avatar on a third-party CDN, a local
-// file - is used as given.
-const isAmityFileUrl = (url: string) => /\.amity\.(co|io)\b/i.test(url);
+// Only Amity file URLs take a size parameter: an amity.co/amity.io host, or the
+// /api/v3/files/ path on any host (custom domains). Any other URL - a custom
+// avatar on a third-party CDN, a local file - is used as given.
+const isAmityFileUrl = (url: string) => {
+  const match = /^https?:\/\/([^/?#:]+)[^/?#]*([^?#]*)/i.exec(url);
+  if (!match) return false;
+  const [, host, path] = match;
+  return /(^|\.)amity\.(co|io)$/i.test(host) || path.includes('/api/v3/files/');
+};
 
 export const getFileUrlWithSize = (
   fileUrl: string,

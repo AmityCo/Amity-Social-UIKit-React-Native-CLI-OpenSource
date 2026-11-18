@@ -52,7 +52,6 @@ export const useFlagContent = ({ contentType, contentId }: UseFlagContent) => {
       if (contentType !== ReportContentType.post) return;
       // The post menu reads this flag state to swap to "Unreport post".
       queryClient.setQueryData(flagPostQueryKey(contentId), true);
-      queryClient.invalidateQueries({ queryKey: flagPostQueryKey(contentId) });
     },
   });
 

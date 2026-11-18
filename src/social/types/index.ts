@@ -72,3 +72,9 @@ export enum ReportContentType {
   comment = 'comment',
   reply = 'reply',
 }
+
+// shortcut: SDK 7.28.0 ships getLocalCommentCount on the post object but not in
+// its typings; drop this once the SDK declares it.
+export type PostWithLocalCommentCount = Amity.Post & {
+  getLocalCommentCount: (includePending?: boolean) => number;
+};

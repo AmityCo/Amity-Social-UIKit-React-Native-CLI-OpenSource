@@ -36,7 +36,7 @@ import { Input } from '../../../../../core/design/atoms/Input';
 import { Button } from '../../../../../core/design/atoms/Button';
 import { resolveString, useString } from '../../../../../core/localization';
 import { useFlagMessageQuery } from '../../../../hooks/queries';
-import { useNetworkOnline } from '../../../../hooks/useNetworkOnline';
+import { useNetworkOnline } from '../../../../../core/hooks/useNetworkOnline';
 import { useChatSurfaceHeight } from '../../../../hooks/useChatSurfaceHeight';
 import { FailedToShow } from '../FailedToShow';
 import { useStyles } from './styles';

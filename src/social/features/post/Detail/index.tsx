@@ -92,6 +92,8 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   // Read by handleSend: a second tap can land before the re-render that
   // clears the composer, and the state it closed over still has the text.
   const inputMessageRef = useRef(inputMessage);
+  const replyCommentIdRef = useRef(replyCommentId);
+  replyCommentIdRef.current = replyCommentId;
   const [mentionNames, setMentionNames] = useState<TSearchItem[]>([]);
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
@@ -247,6 +249,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
     // Clear the composer before sending: the list shows the SDK's optimistic
     // comment straight away, and a second tap now finds nothing to send.
     inputMessageRef.current = '';
+    replyCommentIdRef.current = '';
     setInputMessage('');
     setMentionNames([]);
     setMentionsPosition([]);
@@ -274,8 +277,9 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
       }
     } catch (error) {
       showCommentErrorToast(error);
-      // Give the text back, unless the user has already started a new one.
-      if (inputMessageRef.current === '') {
+      // Give the text back, unless the user has already started a new one or
+      // picked a new reply target.
+      if (inputMessageRef.current === '' && replyCommentIdRef.current === '') {
         inputMessageRef.current = sent.inputMessage;
         setInputMessage(sent.inputMessage);
         setMentionNames(sent.mentionNames);
