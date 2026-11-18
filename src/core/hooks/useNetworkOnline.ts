@@ -1,14 +1,11 @@
-// useNetworkOnline — RN replacement for AmityUiKitWeb's `react-use`
-// `useNetworkState().online`, backed by `@react-native-community/netinfo`
-// (already a repo dependency; see elements/WaitingForNetwork).
+// useNetworkOnline — whether the device currently has a network connection,
+// backed by `@react-native-community/netinfo`.
 //
-// Returns `{ online: boolean }`. NetInfo's `isConnected` is `null` until the
-// first callback, so we default to `true` and only flip to `false` on an explicit
-// disconnect — mirroring web's `online !== false` guard and avoiding an
-// offline flash on mount.
+// Shared by social and chat. NetInfo's `isConnected` is `null` until the first
+// callback, so this starts `true` and only flips to `false` on an explicit
+// disconnect, which avoids an offline flash on mount.
 
 import { useEffect, useState } from 'react';
-
 import NetInfo from '@react-native-community/netinfo';
 
 export type UseNetworkOnlineReturn = {

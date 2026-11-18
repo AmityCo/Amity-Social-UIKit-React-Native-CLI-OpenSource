@@ -13,7 +13,7 @@ import { Loader } from '../../../../../../core/design/atoms/Loader';
 import { AmityColorToken } from '../../../../../../core/design/tokens/amity-color-tokens';
 import { useString } from '../../../../../../core/localization';
 import { Avatar } from '../../../../../elements/Avatar';
-import { useNetworkOnline } from '../../../../../hooks';
+import { useNetworkOnline } from '../../../../../../core/hooks/useNetworkOnline';
 import { useStyles } from './styles';
 
 type HeaderProps = {

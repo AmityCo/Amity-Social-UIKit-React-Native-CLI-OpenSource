@@ -19,7 +19,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { getFileUrlWithSize } from '../../utils';
 import { useUser } from '../../../core/hooks/objects/useUser';
-import { FileRepository } from '@amityco/ts-sdk-react-native';
 
 type AvatarProps = {
   uri?: string;
@@ -147,7 +146,7 @@ function UserAvatar({
   const resolvedUri = useMemo(() => {
     const url = uri ?? user?.avatarCustomUrl ?? user?.avatar?.fileUrl;
     if (!url) return undefined;
-    return FileRepository.fileUrlWithSize(url, 'small');
+    return getFileUrlWithSize(url, 'small');
   }, [uri, user?.avatarCustomUrl, user?.avatar?.fileUrl]);
 
   const resolvedName = userName ?? user?.displayName ?? user?.userId;

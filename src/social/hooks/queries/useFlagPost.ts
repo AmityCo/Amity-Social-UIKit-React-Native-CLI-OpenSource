@@ -12,6 +12,11 @@ type UseFlagPost = {
   enabled?: boolean;
 };
 
+// Shared with the report reason sheet, which reports through its own mutation
+// and has to refresh this flag state so the post menu shows "Unreport post".
+export const flagPostQueryKey = (postId: string) =>
+  ['PostRepository', 'isPostFlaggedByMe', postId] as const;
+
 export const useFlagPost = ({ postId, enabled = true }: UseFlagPost) => {
   const { showToast } = useToast();
 
@@ -20,7 +25,7 @@ export const useFlagPost = ({ postId, enabled = true }: UseFlagPost) => {
     isLoading,
     refetch,
   } = useQuery<boolean>({
-    queryKey: ['PostRepository', 'isPostFlaggedByMe', postId],
+    queryKey: flagPostQueryKey(postId),
     queryFn: () => isReportedByMe('post', postId),
     enabled: enabled && !!postId,
   });

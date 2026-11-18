@@ -6,7 +6,6 @@ export * from './useDeleteMessage';
 export * from './useChatNotifications';
 export * from './useChatNavigation';
 export * from './usePageParams';
-export * from './useNetworkOnline';
 export * from './useCurrentUserId';
 export * from './useChannelMyMembership';
 export * from './useChatSurfaceHeight';

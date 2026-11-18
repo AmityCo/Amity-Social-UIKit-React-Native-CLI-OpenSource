@@ -27,6 +27,7 @@ import CommentButtonIconElement from '../../../../../elements/CommentButtonIconE
 import { useBehaviour } from '../../../../../providers/BehaviourProvider';
 import { formatNumber } from '../../../../../../core/utils/number';
 import { usePostShareAction } from './usePostShareAction';
+import { PostWithLocalCommentCount } from '../../../../../types';
 import { ShareButton } from '../../../../../elements/ShareButton';
 
 const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
@@ -45,6 +46,11 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [postData, setPostData] = useState<Amity.Post>(null);
+  // Not `localCommentCount`: the SDK drops that field from the cached post
+  // whenever a reaction event replaces it.
+  const commentCount = (
+    postData as PostWithLocalCommentCount | null
+  )?.getLocalCommentCount(true);
   const [isLike, setIsLike] = useState(false);
   const [totalReactions, setTotalReactions] = useState(0);
   const unsubscribeRef = useRef<() => void>(null);
@@ -139,7 +145,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
             height={20}
             resizeMode="contain"
           />
-          <Text style={styles.btnText}>{postData?.localCommentCount}</Text>
+          <Text style={styles.btnText}>{commentCount}</Text>
         </TouchableOpacity>
       </View>
       {shareLink && (

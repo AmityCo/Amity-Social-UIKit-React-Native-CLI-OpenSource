@@ -24,6 +24,7 @@ import CommentButtonIconElement from '../../../../../elements/CommentButtonIconE
 import AmityReactionListComponent from '../../../../reaction/components/List';
 import { formatNumber } from '../../../../../../core/utils/number';
 import { usePostShareAction } from './usePostShareAction';
+import { PostWithLocalCommentCount } from '../../../../../types';
 import { ShareButton } from '../../../../../elements/ShareButton';
 
 const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
@@ -39,6 +40,11 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   const styles = useStyles(themeStyles);
   const { handleInteraction } = useInteractionBehavior();
   const [postData, setPostData] = useState<Amity.Post>(null);
+  // Not `localCommentCount`: the SDK drops that field from the cached post
+  // whenever a reaction event replaces it.
+  const commentCount = (
+    postData as PostWithLocalCommentCount | null
+  )?.getLocalCommentCount(true);
 
   const { shareLink, handleSharePress } = usePostShareAction({
     postId,
@@ -135,8 +141,7 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
           </Text>
         )}
         <Text style={styles.commentCountText}>
-          {formatNumber(postData?.localCommentCount)}{' '}
-          {renderCommentText(postData?.localCommentCount)}
+          {formatNumber(commentCount)} {renderCommentText(commentCount)}
         </Text>
       </View>
       <View style={[styles.actionSection, styles.detailActionSection]}>

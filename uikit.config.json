@@ -711,6 +711,7 @@
     "community_posts_notification_page/*/*": {},
     "community_comments_notification_page/*/*": {},
     "community_stories_notification_page/*/*": {},
-    "community_livestreams_notification_page/*/*": {}
+    "community_livestreams_notification_page/*/*": {},
+    "*/content_report_reason/*": {}
   }
 }

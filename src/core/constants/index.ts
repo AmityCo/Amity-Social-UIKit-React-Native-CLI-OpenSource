@@ -92,6 +92,7 @@ export const ERROR_CODE = {
   INVALID_IMAGE:
     'Amity SDK (500000): Image uploading failed: Request has invalid image format',
   DISPLAY_NAME_UPDATE: '400301',
+  ITEM_NOT_FOUND: '400400',
 };
 
 export const VISITOR_USAGE_LIMIT_MESSAGE = {
@@ -129,6 +130,7 @@ export const CHARACTER_LIMIT = {
   USER_DESCRIPTION: 180,
   COMMUNITY_NAME: 30,
   COMMUNITY_DESCRIPTION: 180,
+  REPORT_REASON_DETAIL: 300,
 };
 
 export const QUERY_KEY = {
