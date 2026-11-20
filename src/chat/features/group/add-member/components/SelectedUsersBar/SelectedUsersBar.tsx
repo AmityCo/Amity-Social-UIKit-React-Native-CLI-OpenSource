@@ -15,7 +15,7 @@ import { useStyles } from './styles';
 
 // 3. Types
 type SelectedUsersBarProps = {
-  users: Amity.InternalUser[];
+  users: Amity.User[];
   onRemoveUser: (userId: string) => void;
 };
 

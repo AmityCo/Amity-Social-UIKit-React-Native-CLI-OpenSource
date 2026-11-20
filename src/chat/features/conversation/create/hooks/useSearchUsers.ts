@@ -21,7 +21,7 @@ export type UseSearchUsersParams = {
 };
 
 export type UseSearchUsersResult = {
-  users: Amity.InternalUser[];
+  users: Amity.User[];
   loading: boolean;
   hasNextPage: boolean;
   loadMore: () => void;
@@ -34,7 +34,7 @@ export function useSearchUsers({
   limit = DEFAULT_LIMIT,
   enabled = true,
 }: UseSearchUsersParams): UseSearchUsersResult {
-  const [users, setUsers] = useState<Amity.InternalUser[]>([]);
+  const [users, setUsers] = useState<Amity.User[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasNextPage, setHasNextPage] = useState(false);
   const onNextPageRef = useRef<(() => void) | undefined>(undefined);
