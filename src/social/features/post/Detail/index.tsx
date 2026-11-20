@@ -18,7 +18,7 @@ import {
   useLayoutEffect,
 } from 'react';
 import { ComponentID, PageID } from '../../../enums';
-import { TSearchItem, useAmityPage } from '../../../hooks';
+import { TSearchItem, useAmityPage, useKeyboardStatus } from '../../../hooks';
 import { useStyles } from './styles';
 import BackButtonIconElement from '../../../elements/BackButtonIconElement/BackButtonIconElement';
 import { CommonActions, useNavigation } from '@react-navigation/native';
@@ -47,6 +47,7 @@ import { MAX_MENTION_USERS } from '../../../../core/constants';
 import useAuth from '../../../../core/hooks/useAuth';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAncestorOffset } from '../../../../core/hooks/useAncestorOffset';
 import ErrorComponent from '../../../components/ErrorComponent/ErrorComponent';
 import { getSkeletonBackgrounColor } from '../../../../core/utils/color';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
@@ -94,6 +95,10 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const inputMessageRef = useRef(inputMessage);
   const replyCommentIdRef = useRef(replyCommentId);
   replyCommentIdRef.current = replyCommentId;
+  const contentRef = useRef<View>(null);
+  const { ancestorOffset, measureAncestorOffset } =
+    useAncestorOffset(contentRef);
+  const { isKeyboardShowing } = useKeyboardStatus();
   const [mentionNames, setMentionNames] = useState<TSearchItem[]>([]);
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
@@ -385,10 +390,15 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior="padding"
+      // Android's keyboardDidHide reports a screenY above the screen bottom,
+      // which RN's KAV keeps as padding once the keyboard has closed.
+      enabled={Platform.OS === 'ios' || isKeyboardShowing}
+      keyboardVerticalOffset={ancestorOffset}
+      onLayout={measureAncestorOffset}
     >
       <SafeAreaView
+        ref={contentRef}
         edges={['top']}
         testID={accessibilityId}
         style={styles.container}
