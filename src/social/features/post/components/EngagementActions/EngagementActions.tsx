@@ -1,8 +1,8 @@
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, memo } from 'react';
 import { AmityPostContentComponentStyleEnum } from '../../../../enums/AmityPostContentComponentStyle';
 import { AmityPostEngagementActionsSubComponent } from './Components';
 import { PostTargetType } from '../../../../../core/enums';
-import { CommunityRepository } from '@amityco/ts-sdk-react-native';
+import { useCommunity } from '../../../../../core/hooks/objects';
 import { ComponentID, PageID } from '../../../../enums';
 
 type AmityPostEngagementActionsComponentType = {
@@ -24,17 +24,10 @@ const AmityPostEngagementActionsComponent: FC<
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
 }) => {
-  const [communityData, setCommunityData] = useState<Amity.Community>(null);
-
-  useEffect(() => {
-    if (targetType === 'community' && targetId) {
-      CommunityRepository.getCommunity(targetId, ({ data, error, loading }) => {
-        if (!error && !loading) {
-          setCommunityData(data);
-        }
-      });
-    }
-  }, [targetId, targetType]);
+  const { community: communityData } = useCommunity({
+    communityId: targetId,
+    enabled: targetType === 'community',
+  });
 
   if (
     AmityPostContentComponentStyle === AmityPostContentComponentStyleEnum.feed

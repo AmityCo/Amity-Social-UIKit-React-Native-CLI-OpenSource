@@ -43,8 +43,8 @@ function Avatar({ uri, imageProps, iconProps, userAvatarProps }: AvatarProps) {
 
   const handlePress = () => {
     if (userAvatarProps?.viewable && uri) {
-      const largeUri = getFileUrlWithSize(uri, 'large');
-      navigation.navigate('ImageViewer', { images: [{ uri: largeUri }] });
+      const viewerUri = getFileUrlWithSize(uri, 'medium');
+      navigation.navigate('ImageViewer', { images: [{ uri: viewerUri }] });
     } else if (userAvatarProps?.shouldRedirectToUserProfile) {
       navigation.navigate('UserProfile', { userId: userAvatarProps?.userId });
     }

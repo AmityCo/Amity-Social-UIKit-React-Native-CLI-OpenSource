@@ -2,11 +2,11 @@ import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { FC, memo, useCallback, useEffect, useState, useRef } from 'react';
 import { AmityPostEngagementActionsSubComponentType } from './type';
 import {
-  PostRepository,
   SubscriptionLevels,
   getPostTopic,
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
+import { usePost } from '../../../../../../core/hooks/objects';
 import { useStyles } from './styles';
 import {
   useAmityComponent,
@@ -45,7 +45,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   const { handleInteraction } = useInteractionBehavior();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [postData, setPostData] = useState<Amity.Post>(null);
+  const { post: postData } = usePost({ postId });
   // Not `localCommentCount`: the SDK drops that field from the cached post
   // whenever a reaction event replaces it.
   const commentCount = (
@@ -62,17 +62,15 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   });
 
   useEffect(() => {
-    PostRepository.getPost(postId, ({ error, loading, data }) => {
-      if (!error && !loading) {
-        setPostData(data);
-        setTotalReactions(data.reactionsCount);
-        setIsLike(data.myReactions?.length > 0);
-      }
-    });
-    return () => unsubscribeRef?.current && unsubscribeRef?.current();
-  }, [postId]);
+    if (!postData) return;
+    setTotalReactions(postData.reactionsCount);
+    setIsLike(postData.myReactions?.length > 0);
+  }, [postData]);
+
+  useEffect(() => () => unsubscribeRef.current?.(), [postId]);
 
   const addReactionToPost = useCallback(async () => {
+    unsubscribeRef.current?.();
     unsubscribeRef.current = subscribeTopic(
       getPostTopic(postData, SubscriptionLevels.POST)
     );

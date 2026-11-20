@@ -1,11 +1,11 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { FC, memo, useState, useCallback, useEffect } from 'react';
 import {
-  PostRepository,
   SubscriptionLevels,
   getPostTopic,
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
+import { usePost } from '../../../../../../core/hooks/objects';
 import { AmityPostEngagementActionsSubComponentType } from './type';
 import { useStyles } from './styles';
 import {
@@ -39,7 +39,7 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   });
   const styles = useStyles(themeStyles);
   const { handleInteraction } = useInteractionBehavior();
-  const [postData, setPostData] = useState<Amity.Post>(null);
+  const { post: postData } = usePost({ postId });
   // Not `localCommentCount`: the SDK drops that field from the cached post
   // whenever a reaction event replaces it.
   const commentCount = (
@@ -56,23 +56,16 @@ const DetailStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   const [totalReactions, setTotalReactions] = useState(0);
   const [isReactionListVisible, setIsReactionListVisible] = useState(false);
   useEffect(() => {
-    if (!postId) return null;
-    let unsubscribe: () => void;
-    const unsub = PostRepository.getPost(postId, ({ error, loading, data }) => {
-      if (!error && !loading) {
-        unsubscribe = subscribeTopic(
-          getPostTopic(data, SubscriptionLevels.POST)
-        );
-        setPostData(data);
-        setTotalReactions(data.reactionsCount);
-        setIsLike(data?.myReactions?.length > 0);
-      }
-    });
-    return () => {
-      unsub();
-      unsubscribe && unsubscribe();
-    };
-  }, [postId]);
+    if (!postData) return;
+    setTotalReactions(postData.reactionsCount);
+    setIsLike(postData.myReactions?.length > 0);
+  }, [postData]);
+
+  const topic = postData
+    ? getPostTopic(postData, SubscriptionLevels.POST)
+    : undefined;
+
+  useEffect(() => (topic ? subscribeTopic(topic) : undefined), [topic]);
 
   const renderLikeText = useCallback(
     (likeNumber: number | undefined): string => {

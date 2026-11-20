@@ -35,8 +35,8 @@ const SEARCH_MIN_QUERY_LENGTH = 3;
 // 3. Types
 type UserListProps = {
   searchText: string;
-  selectedUsers: Amity.InternalUser[];
-  onChange: (users: Amity.InternalUser[]) => void;
+  selectedUsers: Amity.User[];
+  onChange: (users: Amity.User[]) => void;
 };
 
 // Checkbox row — avatar + display name, toggled via the Selection.Checkbox.
@@ -45,7 +45,7 @@ function UserRow({
   isSelected,
   onToggle,
 }: {
-  user: Amity.InternalUser;
+  user: Amity.User;
   isSelected: boolean;
   onToggle: () => void;
 }) {
@@ -124,7 +124,7 @@ export function UserList({
     return <EmptyState variant="no-results" />;
   }
 
-  function toggleUser(user: Amity.InternalUser) {
+  function toggleUser(user: Amity.User) {
     if (selectedIds.has(user.userId)) {
       onChange(selectedUsers.filter((u) => u.userId !== user.userId));
     } else {

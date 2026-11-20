@@ -1,20 +1,12 @@
-import {
-  Fragment,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { Fragment, memo, useMemo, useRef, useState } from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import useAuth from '../../../core/hooks/useAuth';
 import { IVideoPost, MediaUri } from '../legacy/Social/PostList';
-import { getPostById } from '../../../core/legacy/feed';
+import { usePostByIds } from '../../../core/hooks/usePostByIds';
 import ImageView from '../legacy/react-native-image-viewing/dist';
 import { SvgXml } from 'react-native-svg';
 import { clearIcon } from '../../../core/assets/icons/xml';
-import { RootState, useUIKitSelector } from '../../../core/stores/store';
 import {
   PostMediaElement,
   type PostMediaControls,
@@ -25,7 +17,10 @@ import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMentio
 import { IMentionPosition } from '../../../core/types';
 import PollContent from '../PollContent';
 import { MediaViewer, type MediaViewerItem } from '../MediaViewer';
-import { classifyPostChildren } from '../../utils/postChildren';
+import {
+  classifyPostChildren,
+  type ResolvedPostChild,
+} from '../../utils/postChildren';
 
 interface IPostContent {
   post: Amity.Post;
@@ -46,96 +41,52 @@ const PostContent: React.FC<IPostContent> = ({
   mentionPositionArr,
 }) => {
   const { apiRegion } = useAuth();
-  const [imagePosts, setImagePosts] = useState<string[]>([]);
-  const [videoPosts, setVideoPosts] = useState<IVideoPost[]>([]);
-  const [pollIds, setPollIds] = useState<{ pollId: string }[]>([]);
-  const [livestreamId, setLivestreamId] = useState<Amity.Room['roomId'][]>([]);
-
-  const [imagePostsFullSize, setImagePostsFullSize] = useState<MediaUri[]>([]);
-  const [videoPostsFullSize, setVideoPostsFullSize] = useState<MediaUri[]>([]);
   const [visibleFullImage, setIsVisibleFullImage] = useState<boolean>(false);
   const [imageIndex, setImageIndex] = useState<number>(0);
   const [videoViewerIndex, setVideoViewerIndex] = useState<number | null>(null);
-  const [mediaLoading, setMediaLoading] = useState<boolean>(
-    (childrenPosts?.length ?? 0) > 0
-  );
-  const [mediaChildPosts, setMediaChildPosts] = useState<Amity.Post[]>([]);
 
   const mediaControlsRef = useRef<PostMediaControls | null>(null);
   const viewerIndexRef = useRef<number>(0);
 
   const styles = useStyles();
-  const { currentPostdetail } = useUIKitSelector(
-    (state: RootState) => state.postDetail
+
+  const { posts: childPosts, isLoading: mediaLoading } =
+    usePostByIds(childrenPosts);
+
+  const {
+    images: imagePosts,
+    videos: videoPosts,
+    polls: pollIds,
+    livestreams: livestreamId,
+    media: mediaChildPosts,
+  } = useMemo(
+    () =>
+      classifyPostChildren(
+        childPosts.map((child) => ({
+          post: child,
+          dataType: child?.dataType,
+          data: child?.data as ResolvedPostChild['data'],
+        })),
+        apiRegion
+      ),
+    [childPosts, apiRegion]
   );
-  const { postList: postListGlobal } = useUIKitSelector(
-    (state: RootState) => state.globalFeed
+
+  const imagePostsFullSize = useMemo<MediaUri[]>(
+    () =>
+      imagePosts.map((url) => ({
+        uri: url.replace('size=medium', 'size=large'),
+      })),
+    [imagePosts]
   );
-  const { postList } = useUIKitSelector((state: RootState) => state.feed);
 
-  useEffect(() => {
-    setImagePostsFullSize([]);
-    setVideoPostsFullSize([]);
-    if (imagePosts.length > 0) {
-      const updatedUrls: MediaUri[] = imagePosts.map((url: string) => {
-        return {
-          uri: url.replace('size=medium', 'size=large'),
-        };
-      });
-      setImagePostsFullSize(updatedUrls);
-    }
-    if (videoPosts.length > 0) {
-      const updatedUrls: MediaUri[] = videoPosts.map((item: IVideoPost) => {
-        return {
-          uri: `https://api.${apiRegion}.amity.co/api/v3/files/${item?.thumbnailFileId}/download?size=large`,
-        };
-      });
-      setVideoPostsFullSize(updatedUrls);
-    }
-  }, [imagePosts, videoPosts, apiRegion]);
-
-  const getPostInfo = useCallback(async () => {
-    setMediaLoading((childrenPosts?.length ?? 0) > 0);
-    try {
-      const response = await Promise.all(
-        childrenPosts.map(async (id) => {
-          const { data: childrenPost } = await getPostById(id);
-          return {
-            post: childrenPost,
-            dataType: childrenPost?.dataType,
-            data: childrenPost?.data,
-          };
-        })
-      );
-
-      const { images, videos, polls, livestreams, media } =
-        classifyPostChildren(response, apiRegion);
-
-      // Set unconditionally so navigating to a post without media clears the
-      // previous media (see the effect below which no longer eagerly resets).
-      setMediaChildPosts(media);
-      setImagePosts(images);
-      setVideoPosts(videos);
-      if (polls.length > 0) {
-        setPollIds(polls);
-      }
-      if (livestreams.length > 0) {
-        setLivestreamId(livestreams);
-      }
-    } catch (error) {
-      console.log('error: ', error);
-    } finally {
-      setMediaLoading(false);
-    }
-  }, [apiRegion, childrenPosts]);
-
-  useEffect(() => {
-    // Don't clear media here: getPostInfo resolves images/videos/media to their
-    // fresh values, so the existing media stays on screen until the new data
-    // arrives. Eagerly resetting caused a blank flash whenever the feed
-    // re-rendered (e.g. realtime updates), then the content popped back in.
-    getPostInfo();
-  }, [childrenPosts, currentPostdetail, postList, postListGlobal, getPostInfo]);
+  const videoPostsFullSize = useMemo<MediaUri[]>(
+    () =>
+      videoPosts.map((item: IVideoPost) => ({
+        uri: `https://api.${apiRegion}.amity.co/api/v3/files/${item?.thumbnailFileId}/download?size=large`,
+      })),
+    [videoPosts, apiRegion]
+  );
 
   function onClickImage(index: number): void {
     viewerIndexRef.current = index;
