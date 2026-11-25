@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
+  Alert,
   TouchableOpacity,
   View,
   Text,
@@ -10,6 +11,7 @@ import {
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { closeIcon } from '../../../../core/assets/icons/xml';
+import { useString } from '../../../../core/localization';
 import { useStyles } from './styles';
 import type { IComment } from '../../../features/comment/components/PostComment/CommentListItem/CommentListItem';
 import { editComment } from '../../../../core/legacy/comment';
@@ -47,6 +49,22 @@ const EditCommentModal = ({
     []
   );
   const [privateCommunityId, setPrivateCommunityId] = useState<string>(null);
+  const discardTitle = useString(
+    'amity_social_modal_dialog_discard_changes_title'
+  );
+  const discardDescription = useString(
+    'amity_social_modal_dialog_discard_changes_description'
+  );
+  const keepEditingText = useString('amity_social_button_keep_editing');
+  const discardText = useString('amity_social_button_discard');
+
+  // Ask before throwing the edit away, as closing the post composer does.
+  const confirmClose = () => {
+    Alert.alert(discardTitle, discardDescription, [
+      { text: keepEditingText, style: 'cancel' },
+      { text: discardText, style: 'destructive', onPress: onClose },
+    ]);
+  };
 
   const { renderInput, renderSuggestions } = useMention({
     value: inputMessage,
@@ -175,9 +193,14 @@ const EditCommentModal = ({
   }, [commentDetail?.targetId, commentDetail?.targetType, visible]);
 
   return (
-    <Modal visible={visible} animationType="slide">
+    <Modal
+      visible={visible}
+      animationType="slide"
+      // Android back goes through the same question as the close icon.
+      onRequestClose={confirmClose}
+    >
       <View style={styles.header}>
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+        <TouchableOpacity style={styles.closeButton} onPress={confirmClose}>
           <SvgXml xml={closeIcon(theme.colors.base)} width="17" height="17" />
         </TouchableOpacity>
         <View style={styles.headerTextContainer}>
