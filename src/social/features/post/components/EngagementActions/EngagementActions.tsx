@@ -1,9 +1,9 @@
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, memo } from 'react';
 import { AmityPostContentComponentStyleEnum } from '../../../../enums/AmityPostContentComponentStyle';
 import { AmityPostEngagementActionsSubComponent } from './Components';
 import { PostTargetType } from '../../../../../core/enums';
-import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import { ComponentID, PageID } from '../../../../enums';
+import { useCommunity } from '../../../../hooks';
 
 type AmityPostEngagementActionsComponentType = {
   AmityPostContentComponentStyle?: AmityPostContentComponentStyleEnum;
@@ -24,17 +24,11 @@ const AmityPostEngagementActionsComponent: FC<
   pageId = PageID.WildCardPage,
   componentId = ComponentID.WildCardComponent,
 }) => {
-  const [communityData, setCommunityData] = useState<Amity.Community>(null);
-
-  useEffect(() => {
-    if (targetType === 'community' && targetId) {
-      CommunityRepository.getCommunity(targetId, ({ data, error, loading }) => {
-        if (!error && !loading) {
-          setCommunityData(data);
-        }
-      });
-    }
-  }, [targetId, targetType]);
+  // Closed when the card unmounts; the subscription here used to be dropped,
+  // leaving the post's community watched for the rest of the session.
+  const { community: communityData } = useCommunity(
+    targetType === 'community' ? targetId : undefined
+  );
 
   if (
     AmityPostContentComponentStyle === AmityPostContentComponentStyleEnum.feed

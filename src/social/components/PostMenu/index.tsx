@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
-import { getCommunityById } from '../../../core/legacy/community';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useFlagPost, isModerator, useGlobalBehavior } from '../../hooks';
+import {
+  useFlagPost,
+  isModerator,
+  useGlobalBehavior,
+  useCommunity,
+} from '../../hooks';
 import { deletePostById } from '../../../core/legacy/feed';
 import useAuth from '../../../core/hooks/useAuth';
 import globalFeedSlice from '../../../core/stores/slices/globalfeedSlice';
@@ -35,7 +39,6 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   const { handleGlobalBehavior } = useGlobalBehavior();
   const { closePoll } = useClosePoll();
   const { client } = useAuth();
-  const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const { deleteByPostId } = globalFeedSlice.actions;
   const dispatch = useUIKitDispatch();
   const navigation =
@@ -62,11 +65,11 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
 
   const childrenPost = post?.childrenPosts?.[0];
 
-  useEffect(() => {
-    if (targetType === 'community' && targetId) {
-      getCommunityInfo(targetId);
-    }
-  }, [targetId, targetType]);
+  // Closed when the menu unmounts. The legacy getCommunityById it replaces
+  // left a live community subscription behind for every post shown.
+  const { community: communityData } = useCommunity(
+    targetType === 'community' ? targetId : undefined
+  );
 
   // The menu is itself a sheet, and iOS presents one Modal at a time, so the
   // report reason sheet waits until the menu has finished closing — the point
@@ -89,15 +92,6 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
       if (secondFrame !== undefined) cancelAnimationFrame(secondFrame);
     };
   }, [isReportReasonPending, bottomSheetContent]);
-
-  async function getCommunityInfo(id: string) {
-    const { data: community }: { data: Amity.LiveObject<Amity.Community> } =
-      await getCommunityById(id);
-    if (community.error) return;
-    if (!community.loading) {
-      setCommunityData(community?.data);
-    }
-  }
 
   const goToEditPost = () => {
     closeBottomSheet();
