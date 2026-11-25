@@ -7,10 +7,11 @@ import {
   useState,
 } from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { PostRepository } from '@amityco/ts-sdk-react-native';
 import { useStyles } from './styles';
 import useAuth from '../../../core/hooks/useAuth';
 import { IVideoPost, MediaUri } from '../legacy/Social/PostList';
-import { getPostById } from '../../../core/legacy/feed';
+import { fetchPostOnce } from '../../utils/fetchPostOnce';
 import ImageView from '../legacy/react-native-image-viewing/dist';
 import { SvgXml } from 'react-native-svg';
 import { clearIcon } from '../../../core/assets/icons/xml';
@@ -25,7 +26,12 @@ import RenderTextWithMention from '../RenderTextWithMention/RenderTextWithMentio
 import { IMentionPosition } from '../../../core/types';
 import PollContent from '../PollContent';
 import { MediaViewer, type MediaViewerItem } from '../MediaViewer';
-import { classifyPostChildren } from '../../utils/postChildren';
+import {
+  childIdsToRecheck,
+  classifyPostChildren,
+  mergeFreshChildren,
+  type LoadedPostChild,
+} from '../../utils/postChildren';
 
 interface IPostContent {
   post: Amity.Post;
@@ -65,13 +71,13 @@ const PostContent: React.FC<IPostContent> = ({
   const viewerIndexRef = useRef<number>(0);
 
   const styles = useStyles();
-  const { currentPostdetail } = useUIKitSelector(
-    (state: RootState) => state.postDetail
-  );
-  const { postList: postListGlobal } = useUIKitSelector(
-    (state: RootState) => state.globalFeed
-  );
-  const { postList } = useUIKitSelector((state: RootState) => state.feed);
+  // The children as last loaded, and the ids among them worth reading again
+  // (see childIdsToRecheck).
+  const loadedChildrenRef = useRef<LoadedPostChild[]>([]);
+  const [recheckKey, setRecheckKey] = useState('');
+  // A string, so a post object rebuilt with the same children doesn't count
+  // as a change.
+  const childrenKey = (childrenPosts ?? []).join(',');
 
   useEffect(() => {
     setImagePostsFullSize([]);
@@ -94,25 +100,17 @@ const PostContent: React.FC<IPostContent> = ({
     }
   }, [imagePosts, videoPosts, apiRegion]);
 
-  const getPostInfo = useCallback(async () => {
-    setMediaLoading((childrenPosts?.length ?? 0) > 0);
-    try {
-      const response = await Promise.all(
-        childrenPosts.map(async (id) => {
-          const { data: childrenPost } = await getPostById(id);
-          return {
-            post: childrenPost,
-            dataType: childrenPost?.dataType,
-            data: childrenPost?.data,
-          };
-        })
-      );
+  const showChildren = useCallback(
+    (children: LoadedPostChild[]) => {
+      loadedChildrenRef.current = children;
+      setRecheckKey(childIdsToRecheck(children).join(','));
 
       const { images, videos, polls, livestreams, media } =
-        classifyPostChildren(response, apiRegion);
+        classifyPostChildren(children, apiRegion);
 
       // Set unconditionally so navigating to a post without media clears the
-      // previous media (see the effect below which no longer eagerly resets).
+      // previous media. Never cleared first: that unmounted the images, so
+      // they blanked until the new data put them back.
       setMediaChildPosts(media);
       setImagePosts(images);
       setVideoPosts(videos);
@@ -122,20 +120,73 @@ const PostContent: React.FC<IPostContent> = ({
       if (livestreams.length > 0) {
         setLivestreamId(livestreams);
       }
-    } catch (error) {
-      console.log('error: ', error);
-    } finally {
-      setMediaLoading(false);
-    }
-  }, [apiRegion, childrenPosts]);
+    },
+    [apiRegion]
+  );
+
+  // Loads the children when they change: on mount, and when an edit adds or
+  // removes some. It used to reload them on every feed update through the
+  // legacy getPostById, which resolved before the data arrived and never
+  // unsubscribed: one GET /posts/{id} per child of every post on screen after
+  // any reaction or comment, and a live subscription left behind each time.
+  useEffect(() => {
+    let stale = false;
+    const ids = childrenKey ? childrenKey.split(',') : [];
+    setMediaLoading(ids.length > 0);
+    Promise.all(
+      ids.map(async (id): Promise<LoadedPostChild> => {
+        const child = await fetchPostOnce(id);
+        return {
+          id,
+          post: child,
+          dataType: child?.dataType,
+          data: child?.data as Record<string, any> | undefined,
+        };
+      })
+    )
+      .then((children) => {
+        if (!stale) showChildren(children);
+      })
+      .catch((error) => console.log('error: ', error))
+      .finally(() => {
+        if (!stale) setMediaLoading(false);
+      });
+    return () => {
+      stale = true;
+    };
+  }, [childrenKey, showChildren]);
+
+  // The few children that can still change are read again on the same feed
+  // updates that used to reload everything: a video until its thumbnail
+  // exists, and a child that could not be read. Straight from the server
+  // (getPostByIds), as getPost would answer from its cache for a minute. A
+  // card with nothing to re-check selects nothing, so it no longer re-renders
+  // on every feed change.
+  const needsRecheck = recheckKey !== '';
+  const globalFeedPosts = useUIKitSelector((state: RootState) =>
+    needsRecheck ? state.globalFeed.postList : null
+  );
+  const feedPosts = useUIKitSelector((state: RootState) =>
+    needsRecheck ? state.feed.postList : null
+  );
+  const detailPost = useUIKitSelector((state: RootState) =>
+    needsRecheck ? state.postDetail.currentPostdetail : null
+  );
 
   useEffect(() => {
-    // Don't clear media here: getPostInfo resolves images/videos/media to their
-    // fresh values, so the existing media stays on screen until the new data
-    // arrives. Eagerly resetting caused a blank flash whenever the feed
-    // re-rendered (e.g. realtime updates), then the content popped back in.
-    getPostInfo();
-  }, [childrenPosts, currentPostdetail, postList, postListGlobal, getPostInfo]);
+    if (!recheckKey) return undefined;
+    let stale = false;
+    PostRepository.getPostByIds(recheckKey.split(','))
+      .then(({ data: fresh }) => {
+        if (stale || !fresh?.length) return;
+        showChildren(mergeFreshChildren(loadedChildrenRef.current, fresh));
+      })
+      // Left as they are: the next feed update tries again.
+      .catch(() => undefined);
+    return () => {
+      stale = true;
+    };
+  }, [recheckKey, globalFeedPosts, feedPosts, detailPost, showChildren]);
 
   function onClickImage(index: number): void {
     viewerIndexRef.current = index;

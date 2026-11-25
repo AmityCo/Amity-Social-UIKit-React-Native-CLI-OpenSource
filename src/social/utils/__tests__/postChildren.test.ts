@@ -1,4 +1,10 @@
-import { classifyPostChildren, type ResolvedPostChild } from '../postChildren';
+import {
+  childIdsToRecheck,
+  classifyPostChildren,
+  mergeFreshChildren,
+  type LoadedPostChild,
+  type ResolvedPostChild,
+} from '../postChildren';
 
 const REGION = 'sg';
 
@@ -148,5 +154,83 @@ describe('classifyPostChildren — de-duplication is preserved', () => {
 
     expect(images).toHaveLength(1);
     expect(media.map((post) => post.postId)).toEqual(['i1']);
+  });
+});
+
+describe('childIdsToRecheck', () => {
+  const loaded = (
+    id: string,
+    child: ResolvedPostChild = {}
+  ): LoadedPostChild => ({ id, ...child });
+
+  it('picks a video whose thumbnail the server has not made yet', () => {
+    expect(
+      childIdsToRecheck([
+        loaded('v1', processingVideoChild('v1')),
+        loaded('v2', videoChild('v2')),
+      ])
+    ).toEqual(['v1']);
+  });
+
+  it('picks a video whose thumbnail id is set but whose file is not there yet', () => {
+    const video = (fileUrl?: string): LoadedPostChild => ({
+      id: 'v1',
+      post: {
+        postId: 'v1',
+        getVideoThumbnailInfo: () => (fileUrl ? { fileUrl } : undefined),
+      } as unknown as Amity.Post,
+      dataType: 'video',
+      data: {
+        videoFileId: { original: 'v1' },
+        thumbnailFileId: 'v1_thumbnail.0000001',
+      },
+    });
+
+    expect(childIdsToRecheck([video()])).toEqual(['v1']);
+    expect(childIdsToRecheck([video('https://cdn/v1-thumb')])).toEqual([]);
+  });
+
+  it('picks a child that could not be read', () => {
+    expect(childIdsToRecheck([loaded('gone')])).toEqual(['gone']);
+  });
+
+  it('leaves images, polls and finished videos alone', () => {
+    expect(
+      childIdsToRecheck([
+        loaded('i1', imageChild('i1')),
+        loaded('p1', {
+          post: { postId: 'p1' } as Amity.Post,
+          dataType: 'poll',
+          data: { pollId: 'poll-1' },
+        }),
+        loaded('v2', videoChild('v2')),
+      ])
+    ).toEqual([]);
+  });
+});
+
+describe('mergeFreshChildren', () => {
+  it('swaps in the fresh copy and keeps the order', () => {
+    const children: LoadedPostChild[] = [
+      { id: 'i1', ...imageChild('i1') },
+      { id: 'v1', ...processingVideoChild('v1') },
+    ];
+    const fresh = {
+      postId: 'v1',
+      dataType: 'video',
+      data: { videoFileId: { original: 'v1' }, thumbnailFileId: 'v1-thumb' },
+    } as unknown as Amity.Post;
+
+    const merged = mergeFreshChildren(children, [fresh]);
+
+    expect(merged.map(({ id }) => id)).toEqual(['i1', 'v1']);
+    expect(merged[0]).toBe(children[0]);
+    expect(merged[1].data?.thumbnailFileId).toBe('v1-thumb');
+    expect(childIdsToRecheck(merged)).toEqual([]);
+  });
+
+  it('keeps a child the fresh read did not return', () => {
+    const children: LoadedPostChild[] = [{ id: 'gone' }];
+    expect(mergeFreshChildren(children, [])).toEqual(children);
   });
 });

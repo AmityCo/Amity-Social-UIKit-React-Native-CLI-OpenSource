@@ -83,3 +83,54 @@ export function classifyPostChildren(
 
   return { images, videos, polls, livestreams, media };
 }
+
+/** A post child as loaded for one card: its id, and what could be read of it. */
+export type LoadedPostChild = ResolvedPostChild & { id: string };
+
+/**
+ * Whether the feed can show a video child's own thumbnail yet. Asks the same
+ * question VideoMedia does: the linked file object, which stays absent until
+ * the server has finished transcoding. The id alone is no signal - the server
+ * fills in `thumbnailFileId` when the post is created, minutes before the file
+ * behind it exists. Falls back to the id for a child without the linked
+ * methods.
+ */
+function hasVideoThumbnail({ post, data }: ResolvedPostChild): boolean {
+  if (typeof post?.getVideoThumbnailInfo === 'function') {
+    return !!post.getVideoThumbnailInfo()?.fileUrl;
+  }
+  return !!data?.thumbnailFileId;
+}
+
+/**
+ * The children still worth reading again after the first load: a video whose
+ * thumbnail isn't there yet, so the feed looks again to show the real frame,
+ * and a child that could not be read at all. The old reload on every feed
+ * update healed both, and nothing else does once children load only once.
+ */
+export function childIdsToRecheck(children: LoadedPostChild[]): string[] {
+  return children
+    .filter(
+      (child) =>
+        !child.post || (child.dataType === 'video' && !hasVideoThumbnail(child))
+    )
+    .map(({ id }) => id);
+}
+
+/** Swaps in the fresh copy of each child found in `fresh`, keeping the order. */
+export function mergeFreshChildren(
+  children: LoadedPostChild[],
+  fresh: Amity.Post[]
+): LoadedPostChild[] {
+  const freshById = new Map(fresh.map((post) => [post.postId, post]));
+  return children.map((child) => {
+    const post = freshById.get(child.id);
+    if (!post) return child;
+    return {
+      id: child.id,
+      post,
+      dataType: post.dataType,
+      data: post.data as Record<string, any>,
+    };
+  });
+}
