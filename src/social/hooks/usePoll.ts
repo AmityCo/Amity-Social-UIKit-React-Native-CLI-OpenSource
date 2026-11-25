@@ -29,10 +29,14 @@ export const usePoll = (pollId: string) => {
   }, [poll]);
 
   useEffect(() => {
-    PollRepository.getPoll(pollId, ({ data, loading: pollLoading }) => {
-      setPoll(data);
-      setLoading(pollLoading);
-    });
+    const unsubscribe = PollRepository.getPoll(
+      pollId,
+      ({ data, loading: pollLoading }) => {
+        setPoll(data);
+        setLoading(pollLoading);
+      }
+    );
+    return () => unsubscribe();
   }, [pollId]);
 
   const handlePollError = (error: Error) => {
