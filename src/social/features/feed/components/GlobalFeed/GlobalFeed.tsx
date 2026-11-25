@@ -106,10 +106,16 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
           </>
         );
       }}
+      // Posts key by id alone: with the position in the key, a new post at the
+      // top shifted every key and remounted every card below it. An ad can
+      // appear more than once, so it keys by the post it follows.
       keyExtractor={(item, index) =>
         isAmityAd(item)
-          ? item.adId.toString() + '_' + index
-          : item.postId.toString() + '_' + index
+          ? `ad_${
+              (itemWithAds?.[index - 1] as Amity.Post | undefined)?.postId ??
+              index
+            }`
+          : item.postId.toString()
       }
       onEndReachedThreshold={0.5}
       onEndReached={handleLoadMore}
