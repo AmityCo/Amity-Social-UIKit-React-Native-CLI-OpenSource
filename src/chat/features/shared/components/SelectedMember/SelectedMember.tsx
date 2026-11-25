@@ -26,7 +26,7 @@ import { useStyles } from './styles';
 
 // 3. Types
 export type SelectedMemberProps = {
-  user: Amity.User;
+  user: Amity.InternalUser;
   onRemove?: (userId: string) => void;
 };
 
