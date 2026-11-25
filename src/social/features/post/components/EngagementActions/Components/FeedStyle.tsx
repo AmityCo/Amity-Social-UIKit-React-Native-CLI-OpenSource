@@ -62,14 +62,23 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   });
 
   useEffect(() => {
-    PostRepository.getPost(postId, ({ error, loading, data }) => {
-      if (!error && !loading) {
-        setPostData(data);
-        setTotalReactions(data.reactionsCount);
-        setIsLike(data.myReactions?.length > 0);
+    const unsubscribePost = PostRepository.getPost(
+      postId,
+      ({ error, loading, data }) => {
+        if (!error && !loading) {
+          setPostData(data);
+          setTotalReactions(data.reactionsCount);
+          setIsLike(data.myReactions?.length > 0);
+        }
       }
-    });
-    return () => unsubscribeRef?.current && unsubscribeRef?.current();
+    );
+    return () => {
+      // Close the post subscription as well as the topic. It was left open,
+      // so every card ever shown kept its SDK listeners for the rest of the
+      // session and refetched its post on each comment delete.
+      unsubscribePost();
+      unsubscribeRef?.current && unsubscribeRef?.current();
+    };
   }, [postId]);
 
   const addReactionToPost = useCallback(async () => {
