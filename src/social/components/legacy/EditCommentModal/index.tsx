@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   TouchableOpacity,
@@ -44,6 +44,7 @@ const EditCommentModal = ({
   const [inputMessage, setInputMessage] = useState(
     commentDetail?.data?.text ?? ''
   );
+  const initialMessageRef = useRef(inputMessage);
   const [mentionUsers, setMentionUsers] = useState<TSearchItem[]>([]);
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
@@ -60,6 +61,7 @@ const EditCommentModal = ({
 
   // Ask before throwing the edit away, as closing the post composer does.
   const confirmClose = () => {
+    if (inputMessage === initialMessageRef.current) return onClose();
     Alert.alert(discardTitle, discardDescription, [
       { text: keepEditingText, style: 'cancel' },
       { text: discardText, style: 'destructive', onPress: onClose },
@@ -154,6 +156,7 @@ const EditCommentModal = ({
 
       setMentionUsers(users);
       const parsedText = parsePostText(commentDetail?.data?.text ?? '', users);
+      initialMessageRef.current = parsedText;
       setInputMessage(parsedText);
       return users;
     },
@@ -172,6 +175,7 @@ const EditCommentModal = ({
         );
         setMentionsPosition(mentionPositions);
       } else {
+        initialMessageRef.current = commentDetail?.data?.text ?? '';
         setInputMessage(commentDetail?.data?.text ?? '');
       }
     }
