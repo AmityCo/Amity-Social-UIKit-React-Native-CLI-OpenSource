@@ -69,6 +69,7 @@ export interface IComment {
   childrenNumber: number;
   targetType?: string;
   targetId?: string;
+  isPending?: boolean;
 }
 export interface IReplyCommentList {
   commentId: string;
@@ -140,9 +141,13 @@ const ReplyCommentList = ({
     }
   };
 
+  // A reply still sending isn't on the server yet, so checking it would 404;
+  // check once the server has it. Its row takes no taps until then.
+  const isPending = commentDetail?.isPending;
   useEffect(() => {
+    if (isPending) return;
     checkIsReport();
-  }, [childrenComment]);
+  }, [childrenComment, isPending]);
 
   const addReactionToComment: () => Promise<void> = async () => {
     if (isLike && likeReaction) {

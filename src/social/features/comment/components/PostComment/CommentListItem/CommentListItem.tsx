@@ -149,11 +149,20 @@ const CommentListItem = ({
     closeReportReason,
     onMenuDismiss,
   } = useReportReasonSheet();
+  // One reply collection for the row's lifetime. "View replies" used to open
+  // another on every tap and none were closed, so each like, reply or delete
+  // in the thread rebuilt the list once per subscription.
+  const replyUnsubscribeRef = useRef<(() => void) | null>(null);
+  // The author lookups below resolve out of order: an older update that
+  // finishes last must not overwrite a newer list.
+  const replyUpdateIdRef = useRef({ reply: 0, preview: 0 });
 
   useEffect(() => {
     getReplyComments();
     setIsOpenReply(false);
     return () => {
+      replyUnsubscribeRef.current?.();
+      replyUnsubscribeRef.current = null;
       setIsOpenReply(false);
     };
   }, []);
@@ -180,53 +189,57 @@ const CommentListItem = ({
     replyComments,
     isPreviewReply: boolean = false
   ) => {
+    const kind = isPreviewReply ? 'preview' : 'reply';
+    const updateId = ++replyUpdateIdRef.current[kind];
+
+    // Build the new list before replacing the old one. Emptying it first
+    // unmounted every reply row while the lookups ran, and any edit modal
+    // open on a reply closed with its row.
+    const formattedCommentList: IComment[] =
+      replyComments && replyComments.length > 0
+        ? await Promise.all(
+            replyComments.map(async (item: Amity.InternalComment<any>) => {
+              const { userObject } = await getAmityUser(item.userId);
+              let formattedUserObject: UserInterface;
+              formattedUserObject = {
+                userId: userObject.data.userId,
+                displayName: userObject.data.displayName,
+                avatarFileId: userObject.data.avatarFileId,
+                avatarCustomUrl: userObject.data?.avatarCustomUrl,
+                isBrand: userObject.data?.isBrand,
+              };
+
+              return {
+                targetType: item.targetType,
+                // Empty on an optimistic reply until the server confirms it.
+                targetId: item.targetId || targetId,
+                commentId: item.commentId,
+                data: item.data as Record<string, any>,
+                dataType: item.dataType,
+                myReactions: item.myReactions as string[],
+                reactions: item.reactions as Record<string, number>,
+                user: formattedUserObject as UserInterface,
+                updatedAt: item.updatedAt,
+                editedAt: item.editedAt,
+                createdAt: item.createdAt,
+                childrenComment: item.children,
+                referenceId: item.referenceId,
+                mentionPosition: item?.metadata?.mentioned,
+                isPending: isPendingComment(item),
+              };
+            })
+          )
+        : [];
+
+    if (updateId !== replyUpdateIdRef.current[kind]) return;
     if (isPreviewReply) {
-      setPreviewReplyCommentList([]);
+      setPreviewReplyCommentList(formattedCommentList);
     } else {
-      setReplyCommentList([]);
-    }
-
-    if (replyComments && replyComments.length > 0) {
-      const formattedCommentList = await Promise.all(
-        replyComments.map(async (item: Amity.InternalComment<any>) => {
-          const { userObject } = await getAmityUser(item.userId);
-          let formattedUserObject: UserInterface;
-          formattedUserObject = {
-            userId: userObject.data.userId,
-            displayName: userObject.data.displayName,
-            avatarFileId: userObject.data.avatarFileId,
-            avatarCustomUrl: userObject.data?.avatarCustomUrl,
-            isBrand: userObject.data?.isBrand,
-          };
-
-          return {
-            targetType: item.targetType,
-            // Empty on an optimistic reply until the server confirms it.
-            targetId: item.targetId || targetId,
-            commentId: item.commentId,
-            data: item.data as Record<string, any>,
-            dataType: item.dataType,
-            myReactions: item.myReactions as string[],
-            reactions: item.reactions as Record<string, number>,
-            user: formattedUserObject as UserInterface,
-            updatedAt: item.updatedAt,
-            editedAt: item.editedAt,
-            createdAt: item.createdAt,
-            childrenComment: item.children,
-            referenceId: item.referenceId,
-            mentionPosition: item?.metadata?.mentioned,
-            isPending: isPendingComment(item),
-          };
-        })
-      );
-      if (isPreviewReply) {
-        setPreviewReplyCommentList([...formattedCommentList]);
-      } else {
-        setReplyCommentList([...formattedCommentList]);
-      }
+      setReplyCommentList(formattedCommentList);
     }
   };
-  const getReplyComments = async () => {
+  const getReplyComments = () => {
+    if (replyUnsubscribeRef.current) return;
     const getCommentsParams: Amity.CommentLiveCollection = {
       referenceType: postType,
       referenceId: referenceId, // post ID
@@ -234,18 +247,25 @@ const CommentListItem = ({
       parentId: commentId,
     };
 
-    CommentRepository.getComments(getCommentsParams, (result) => {
-      setReplyCommentCollection(result);
-      formatReplyComments(result.data?.filter(isVisibleComment));
-    });
+    replyUnsubscribeRef.current = CommentRepository.getComments(
+      getCommentsParams,
+      (result) => {
+        setReplyCommentCollection(result);
+        formatReplyComments(result.data?.filter(isVisibleComment));
+      }
+    );
   };
   const openReplyComment = () => {
     setIsOpenReply(true);
     getReplyComments();
   };
+  // A comment still sending isn't on the server yet, so checking it would
+  // 404; check once the server has it. Its row takes no taps until then.
+  const isPending = commentDetail?.isPending;
   useEffect(() => {
+    if (isPending) return;
     checkIsReport();
-  }, [childrenComment]);
+  }, [childrenComment, isPending]);
 
   const addReactionToComment: () => Promise<void> = async () => {
     if (isLike && likeReaction) {
