@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.4.0](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/compare/v4.3.1...v4.4.0) (2026-11-27)
+
+### Features
+
+- **social:** add report reason sheet for posts, comments and replies ([756f7e5](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/756f7e5df1a2c9534d7b5a2a0ac681fa7f9c83c5))
+
+### Bug Fixes
+
+- address review feedback on report reason PR ([0094265](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/00942654aa1c55af48e35a7731df229b3d338793))
+- ask before discarding a comment or reply edit ([d9701f3](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/d9701f34bf31389cbce0d544af53259b0cc3118e))
+- close the edit modal without asking when nothing changed ([adb685e](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/adb685e58741a97e9a31ea56028f3d92c7ef77a0))
+- close the poll subscription when a poll card unmounts ([98fb9f1](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/98fb9f112d2c9f286640dd074487ad6c3dbb819d))
+- close the user subscription in useUser ([4ebc04e](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/4ebc04e97007941e54b107a60f06236441cb555e))
+- keep a post's comment count when the post is liked ([fd269ef](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/fd269efdf845f73417b45aef82532fcb5daae4a1))
+- keep the reply edit modal open when the thread updates ([9bf46fa](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/9bf46fa4f0819405e5fe03e55f85ee28e8d07f5f))
+- key global feed cards by post id ([a3f11c7](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/a3f11c7ae9a0f799d46c58fb11bb4e854c75ad8a))
+- PDT-6293 - stop post cards leaking live subscriptions ([76bcb11](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/76bcb11e8b91a525b0e9ea4aea584ec8cc53a5ca))
+- PDT-6295 - load the medium avatar in the image viewer ([c7dc450](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/c7dc45018dbc3ab11c78dff1990c1371076efa94))
+- PDT-6296 - keep membership and comment count after a reaction ([3127884](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/312788453b28aec10404c17089390fd6084280e1))
+- PDT-6297 - keep post detail composer above the keyboard ([7a75984](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/7a75984afc6aeeb365417784b36833e566b44b4e))
+- remove a community from my communities as soon as I leave it ([8c19107](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/8c1910703f49f80ca084a4e09d3fa82b645a98a9))
+- show a new comment straight away while it sends ([56356ea](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/56356ea61a1f0b937323b523253e01a62ecec20e))
+- show external avatar urls as given ([905359c](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/905359c83bf19623a4d2ffb91196090a7bdff956))
+- show the private and official badges in my communities ([dbbb7ca](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/dbbb7cad9b5bf0fbcd7453a5a6bdfaf9529254af))
+- stop double-appending the size param to file urls ([bf2d45b](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/bf2d45baa534b8fe077e90fcca48ba978687b176))
+- stop the 404 "CommentId not found" error after sending a comment ([68a7d73](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/commit/68a7d73e1949e050de716a559f3955795c6e0a7c))
+
 ### [4.3.1](https://github.com/AmityCo/Amity-Social-UIKit-React-Native-OpenSource/compare/v4.3.0...v4.3.1) (2026-09-25)
 
 ### Features
