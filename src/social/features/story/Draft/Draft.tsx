@@ -25,7 +25,7 @@ import { MyMD3Theme } from '../../../../core/providers/AmityUIKitProvider';
 import { useConfigImageUri } from '../../../hooks/useConfigImageUri';
 import HyperlinkConfig from './components/HyperLinkConfig';
 import { IAmityDraftStoryPage } from '../../../types';
-import { useFile } from '../../../hooks/useFile';
+import { useAvatarFile } from '../../../hooks/useAvatarFile';
 import { getMediaTypeFromUrl } from '../../../../core/utils/url';
 import { LoadingOverlay } from '../../../components/legacy/LoadingOverlay';
 import mime from 'mime';
@@ -42,7 +42,7 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
 }) => {
   const type = getMediaTypeFromUrl(mediaType.uri);
   const styles = useStyles();
-  const { getImage } = useFile();
+  const { getAvatarUrl } = useAvatarFile();
   const [imageDisplayMode, setImageDisplayMode] =
     useState<Amity.ImageDisplayMode>('fit');
   const [isVisibleModal, setIsVisibleModal] = useState(false);
@@ -79,7 +79,7 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
       async ({ error, loading: isLoading, data }) => {
         if (error) return;
         if (!isLoading) {
-          const image = await getImage({
+          const image = await getAvatarUrl({
             fileId: data.avatarFileId,
             imageSize: ImageSizeState.small,
             type: 'community',
@@ -88,7 +88,7 @@ const AmityDraftStoryPage: FC<IAmityDraftStoryPage> = ({
         }
       }
     )();
-  }, [getImage, targetId, targetType]);
+  }, [getAvatarUrl, targetId, targetType]);
 
   const onPressBack = useCallback(() => {
     Alert.alert(

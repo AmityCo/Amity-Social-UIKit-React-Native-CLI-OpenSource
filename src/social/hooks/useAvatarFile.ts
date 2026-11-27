@@ -6,30 +6,32 @@ import {
   defaultCommunityAvatarUri,
 } from '../../core/assets/index';
 
-interface useFileProps {
+interface useAvatarFileProps {
   fileId: string;
   imageSize?: ImageSizeSubset;
   type?: 'user' | 'community';
 }
 
 /**
- * Resolves an **avatar** file to a display url.
+ * Resolves an avatar file to a display url, falling back to the default avatar
+ * image when there is nothing to resolve.
  *
- * A miss — no id, no file, no url — answers with the default avatar (or
- * community avatar) image, which is the right placeholder for a profile
- * picture and the wrong one for anything else. Post media must not be resolved
- * through here: handing an avatar back for a video whose thumbnail is still
- * transcoding renders a person icon in the carousel as though it were the
- * frame. Resolve media with FileRepository directly and let an unresolved file
- * stay undefined.
+ * That fallback is the whole reason this is not `useFile`: a miss — no id, no
+ * file, no url — answers with a picture of a person, which is right for a
+ * profile picture and wrong for everything else. Handing it back for a video
+ * whose thumbnail is still transcoding drew a person icon in the carousel as
+ * though it were the frame.
+ *
+ * For any other file use `useFile`, which resolves through the SDK and leaves
+ * an unresolved file undefined.
  */
-export const useFile = () => {
-  const getImage = useCallback(
+export const useAvatarFile = () => {
+  const getAvatarUrl = useCallback(
     async ({
       fileId,
       imageSize = ImageSizeState.medium,
       type = 'user',
-    }: useFileProps) => {
+    }: useAvatarFileProps) => {
       if (!fileId)
         return type === 'community'
           ? defaultCommunityAvatarUri
@@ -46,5 +48,5 @@ export const useFile = () => {
     },
     []
   );
-  return { getImage };
+  return { getAvatarUrl };
 };

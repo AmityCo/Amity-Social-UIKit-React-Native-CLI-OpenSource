@@ -3,7 +3,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useStyles } from './styles';
 import { CategoryRepository } from '@amityco/ts-sdk-react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useFile } from '../../hooks';
+import { useAvatarFile } from '../../hooks';
 import { ImageSizeState } from '../../enums';
 import {
   defaultAvatarUri,
@@ -28,7 +28,7 @@ export default function SearchItem({
   userProfileNavigateEnabled?: boolean;
 }) {
   const styles = useStyles();
-  const { getImage } = useFile();
+  const { getAvatarUrl } = useAvatarFile();
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [avatar, setAvatar] = useState(defaultAvatarUri);
   const [categoryName, setCategoryName] = useState<string>('');
@@ -55,7 +55,7 @@ export default function SearchItem({
     if (!target?.avatarFileId) return;
 
     (async () => {
-      const fileUrl = await getImage({
+      const fileUrl = await getAvatarUrl({
         fileId: target?.avatarFileId,
         imageSize: ImageSizeState.small,
       });
@@ -67,7 +67,7 @@ export default function SearchItem({
         : defaultAvatarUri;
       setAvatar(avatarUrl);
     })();
-  }, [getImage, target?.avatarFileId, target?.targetType]);
+  }, [getAvatarUrl, target?.avatarFileId, target?.targetType]);
 
   useEffect(() => {
     getCategory();
