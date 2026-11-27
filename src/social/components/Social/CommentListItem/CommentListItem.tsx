@@ -31,7 +31,6 @@ import { Pressable } from 'react-native';
 import useAuth from '../../../../core/hooks/useAuth';
 import {
   isReportTarget,
-  reportTargetById,
   unReportTargetById,
 } from '../../../../core/legacy/feed';
 import EditCommentModal from '../../legacy/EditCommentModal';
@@ -49,6 +48,11 @@ import { LinkPreview } from '../../PreviewLink';
 import { Typography } from '../../../../core/components/Typography/Typography';
 import { pen, report, trash, unreport } from '../../../../core/assets/icons';
 import { useToast } from '../../../../core/stores/slices/toastSlice';
+import {
+  ContentReportReason,
+  useReportReasonSheet,
+} from '../../../features/report/ContentReportReason';
+import { ReportContentType } from '../../../types';
 export interface IComment {
   commentId: string;
   data: Record<string, any>;
@@ -130,9 +134,26 @@ const CommentListItem = ({
     useState<boolean>(false);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { showToast } = useToast();
+  const {
+    isReportReasonVisible,
+    openReportReason,
+    closeReportReason,
+    onMenuDismiss,
+  } = useReportReasonSheet();
+  // One reply collection for the row's lifetime. "View replies" used to open
+  // another on every tap and none were closed, so each like, reply or delete
+  // in the thread rebuilt the list once per subscription.
+  const replyUnsubscribeRef = useRef<(() => void) | null>(null);
+  // The author lookups below resolve out of order: an older update that
+  // finishes last must not overwrite a newer list.
+  const replyUpdateIdRef = useRef({ reply: 0, preview: 0 });
 
   useEffect(() => {
     getReplyComments();
+    return () => {
+      replyUnsubscribeRef.current?.();
+      replyUnsubscribeRef.current = null;
+    };
   }, []);
 
   const openModal = () => {
@@ -157,48 +178,52 @@ const CommentListItem = ({
     replyComments,
     isPreviewReply: boolean = false
   ) => {
+    const kind = isPreviewReply ? 'preview' : 'reply';
+    const updateId = ++replyUpdateIdRef.current[kind];
+
+    // Build the new list before replacing the old one. Emptying it first
+    // unmounted every reply row while the lookups ran, and any edit modal
+    // open on a reply closed with its row.
+    const formattedCommentList: IComment[] =
+      replyComments && replyComments.length > 0
+        ? await Promise.all(
+            replyComments.map(async (item: Amity.InternalComment<any>) => {
+              const { userObject } = await getAmityUser(item.userId);
+              let formattedUserObject: UserInterface;
+
+              formattedUserObject = {
+                userId: userObject.data.userId,
+                displayName: userObject.data.displayName,
+                avatarFileId: userObject.data.avatarFileId,
+              };
+
+              return {
+                commentId: item.commentId,
+                data: item.data as Record<string, any>,
+                dataType: item.dataType,
+                myReactions: item.myReactions as string[],
+                reactions: item.reactions as Record<string, number>,
+                user: formattedUserObject as UserInterface,
+                updatedAt: item.updatedAt,
+                editedAt: item.editedAt,
+                createdAt: item.createdAt,
+                childrenComment: item.children,
+                referenceId: item.referenceId,
+                mentionPosition: item?.metadata?.mentioned,
+              };
+            })
+          )
+        : [];
+
+    if (updateId !== replyUpdateIdRef.current[kind]) return;
     if (isPreviewReply) {
-      setPreviewReplyCommentList([]);
+      setPreviewReplyCommentList(formattedCommentList);
     } else {
-      setReplyCommentList([]);
-    }
-
-    if (replyComments && replyComments.length > 0) {
-      const formattedCommentList = await Promise.all(
-        replyComments.map(async (item: Amity.InternalComment<any>) => {
-          const { userObject } = await getAmityUser(item.userId);
-          let formattedUserObject: UserInterface;
-
-          formattedUserObject = {
-            userId: userObject.data.userId,
-            displayName: userObject.data.displayName,
-            avatarFileId: userObject.data.avatarFileId,
-          };
-
-          return {
-            commentId: item.commentId,
-            data: item.data as Record<string, any>,
-            dataType: item.dataType,
-            myReactions: item.myReactions as string[],
-            reactions: item.reactions as Record<string, number>,
-            user: formattedUserObject as UserInterface,
-            updatedAt: item.updatedAt,
-            editedAt: item.editedAt,
-            createdAt: item.createdAt,
-            childrenComment: item.children,
-            referenceId: item.referenceId,
-            mentionPosition: item?.metadata?.mentioned,
-          };
-        })
-      );
-      if (isPreviewReply) {
-        setPreviewReplyCommentList([...formattedCommentList]);
-      } else {
-        setReplyCommentList([...formattedCommentList]);
-      }
+      setReplyCommentList(formattedCommentList);
     }
   };
-  const getReplyComments = async () => {
+  const getReplyComments = () => {
+    if (replyUnsubscribeRef.current) return;
     const getCommentsParams: Amity.CommentLiveCollection = {
       referenceType: postType,
       referenceId: referenceId, // post ID
@@ -207,10 +232,13 @@ const CommentListItem = ({
       parentId: commentId,
     };
 
-    CommentRepository.getComments(getCommentsParams, (result) => {
-      setReplyCommentCollection(result);
-      formatReplyComments(result.data);
-    });
+    replyUnsubscribeRef.current = CommentRepository.getComments(
+      getCommentsParams,
+      (result) => {
+        setReplyCommentCollection(result);
+        formatReplyComments(result.data);
+      }
+    );
   };
   const openReplyComment = () => {
     setIsOpenReply(true);
@@ -255,12 +283,7 @@ const CommentListItem = ({
       setIsVisible(false);
       setIsReportByMe(false);
     } else {
-      const reportPost = await reportTargetById('comment', commentId);
-      if (reportPost) {
-        showToast({ message: 'Comment reported.', type: 'success' });
-      }
-      setIsVisible(false);
-      setIsReportByMe(true);
+      openReportReason();
     }
   };
   const modalStyle = {
@@ -423,7 +446,9 @@ const CommentListItem = ({
                   onNavigate={onNavigate}
                 />
               )}
-              keyExtractor={(item, index) => item.commentId + index}
+              // Id alone: with the position in the key, a new reply above
+              // shifted every key below it and remounted those rows.
+              keyExtractor={(item) => item.commentId}
             />
           )}
 
@@ -456,6 +481,7 @@ const CommentListItem = ({
         transparent={true}
         visible={isVisible}
         onRequestClose={closeModal}
+        onDismiss={onMenuDismiss}
       >
         <Pressable onPress={closeModal} style={styles.modalContainer}>
           <Animated.View
@@ -543,6 +569,14 @@ const CommentListItem = ({
           }
         }}
       />
+      {isReportReasonVisible && (
+        <ContentReportReason
+          contentType={ReportContentType.comment}
+          contentId={commentId}
+          onReported={() => setIsReportByMe(true)}
+          onClose={closeReportReason}
+        />
+      )}
     </View>
   );
 };

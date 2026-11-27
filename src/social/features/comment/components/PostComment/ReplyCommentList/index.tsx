@@ -30,7 +30,6 @@ import { useTimeDifference } from '../../../../../hooks/useTimeDifference';
 import { useGlobalBehavior } from '../../../../../hooks/useGlobalBehavior';
 import {
   isReportTarget,
-  reportTargetById,
   unReportTargetById,
 } from '../../../../../../core/legacy/feed';
 import EditCommentModal from '../../../../../components/legacy/EditCommentModal';
@@ -47,6 +46,11 @@ import { useUIKitDispatch } from '../../../../../../core/stores/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
+import {
+  ContentReportReason,
+  useReportReasonSheet,
+} from '../../../../report/ContentReportReason';
+import { ReportContentType } from '../../../../../types';
 
 export interface IComment {
   commentId: string;
@@ -65,6 +69,7 @@ export interface IComment {
   childrenNumber: number;
   targetType?: string;
   targetId?: string;
+  isPending?: boolean;
 }
 export interface IReplyCommentList {
   commentId: string;
@@ -111,6 +116,12 @@ const ReplyCommentList = ({
   const slideAnimation = useRef(new Animated.Value(0)).current;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {
+    isReportReasonVisible,
+    openReportReason,
+    closeReportReason,
+    onMenuDismiss,
+  } = useReportReasonSheet();
 
   const openModal = () => {
     setIsVisible(true);
@@ -130,9 +141,13 @@ const ReplyCommentList = ({
     }
   };
 
+  // A reply still sending isn't on the server yet, so checking it would 404;
+  // check once the server has it. Its row takes no taps until then.
+  const isPending = commentDetail?.isPending;
   useEffect(() => {
+    if (isPending) return;
     checkIsReport();
-  }, [childrenComment]);
+  }, [childrenComment, isPending]);
 
   const addReactionToComment: () => Promise<void> = async () => {
     if (isLike && likeReaction) {
@@ -179,17 +194,7 @@ const ReplyCommentList = ({
         );
       }
     } else {
-      const reportPost = await reportTargetById('comment', commentId);
-      setIsVisible(false);
-      setIsReportByMe(true);
-      if (reportPost) {
-        dispatch(
-          showToastMessage({
-            toastMessage: 'Comment reported',
-            isSuccessToast: true,
-          })
-        );
-      }
+      openReportReason();
     }
   };
   const modalStyle = {
@@ -336,6 +341,7 @@ const ReplyCommentList = ({
         transparent={true}
         visible={isVisible}
         onRequestClose={closeModal}
+        onDismiss={onMenuDismiss}
       >
         <Pressable onPress={closeModal} style={styles.modalContainer}>
           <Animated.View
@@ -407,6 +413,14 @@ const ReplyCommentList = ({
           referenceType="comment"
           isModalVisible={isReactionListVisible}
           onCloseModal={() => setIsReactionListVisible(false)}
+        />
+      )}
+      {isReportReasonVisible && (
+        <ContentReportReason
+          contentType={ReportContentType.reply}
+          contentId={commentId}
+          onReported={() => setIsReportByMe(true)}
+          onClose={closeReportReason}
         />
       )}
     </View>

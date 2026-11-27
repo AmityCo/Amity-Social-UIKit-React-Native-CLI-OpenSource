@@ -13,11 +13,12 @@ import {
   memo,
   useCallback,
   useEffect,
+  useRef,
   useState,
   useLayoutEffect,
 } from 'react';
 import { ComponentID, PageID } from '../../../enums';
-import { TSearchItem, useAmityPage } from '../../../hooks';
+import { TSearchItem, useAmityPage, useKeyboardStatus } from '../../../hooks';
 import { useStyles } from './styles';
 import BackButtonIconElement from '../../../elements/BackButtonIconElement/BackButtonIconElement';
 import { CommonActions, useNavigation } from '@react-navigation/native';
@@ -46,6 +47,7 @@ import { MAX_MENTION_USERS } from '../../../../core/constants';
 import useAuth from '../../../../core/hooks/useAuth';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAncestorOffset } from '../../../../core/hooks/useAncestorOffset';
 import ErrorComponent from '../../../components/ErrorComponent/ErrorComponent';
 import { getSkeletonBackgrounColor } from '../../../../core/utils/color';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
@@ -88,6 +90,15 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   const [replyUserName, setReplyUserName] = useState<string>('');
   const [replyCommentId, setReplyCommentId] = useState<string>('');
   const [inputMessage, setInputMessage] = useState('');
+  // Read by handleSend: a second tap can land before the re-render that
+  // clears the composer, and the state it closed over still has the text.
+  const inputMessageRef = useRef(inputMessage);
+  const replyCommentIdRef = useRef(replyCommentId);
+  replyCommentIdRef.current = replyCommentId;
+  const contentRef = useRef<View>(null);
+  const { ancestorOffset, measureAncestorOffset } =
+    useAncestorOffset(contentRef);
+  const { isKeyboardShowing } = useKeyboardStatus();
   const [mentionNames, setMentionNames] = useState<TSearchItem[]>([]);
   const [mentionsPosition, setMentionsPosition] = useState<IMentionPosition[]>(
     []
@@ -170,6 +181,10 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   }, [postId]);
 
   useEffect(() => {
+    inputMessageRef.current = inputMessage;
+  }, [inputMessage]);
+
+  useEffect(() => {
     // Parse active mention user IDs directly from the controlled-mentions
     // value format: {@}[DisplayName](userId)
     // Using displayName.includes() is unreliable — the same name can appear as
@@ -212,7 +227,7 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   };
 
   const handleSend: () => Promise<void> = async () => {
-    if (inputMessage.trim() === '') {
+    if (inputMessageRef.current.trim() === '') {
       return;
     }
     const uniqueMentionIds = [...new Set(mentionNames.map((item) => item.id))];
@@ -228,39 +243,56 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
       inputMessage,
       ({ name }) => `@${name}`
     );
-    if (replyCommentId.length > 0) {
-      try {
+    const sent = {
+      inputMessage,
+      mentionNames,
+      mentionsPosition,
+      replyCommentId,
+      replyUserName,
+    };
+
+    // Clear the composer before sending: the list shows the SDK's optimistic
+    // comment straight away, and a second tap now finds nothing to send.
+    inputMessageRef.current = '';
+    replyCommentIdRef.current = '';
+    setInputMessage('');
+    setMentionNames([]);
+    setMentionsPosition([]);
+    onCloseReply();
+    Keyboard.dismiss();
+
+    try {
+      if (sent.replyCommentId.length > 0) {
         await createReplyComment(
           comment,
           postId,
-          replyCommentId,
+          sent.replyCommentId,
           uniqueMentionIds,
-          mentionsPosition,
+          sent.mentionsPosition,
           'post'
         );
-      } catch (error) {
-        showCommentErrorToast(error);
-        return;
-      }
-    } else {
-      try {
+      } else {
         await createComment(
           comment,
           postId,
           uniqueMentionIds,
-          mentionsPosition,
+          sent.mentionsPosition,
           'post'
         );
-      } catch (error) {
-        showCommentErrorToast(error);
-        return;
+      }
+    } catch (error) {
+      showCommentErrorToast(error);
+      // Give the text back, unless the user has already started a new one or
+      // picked a new reply target.
+      if (inputMessageRef.current === '' && replyCommentIdRef.current === '') {
+        inputMessageRef.current = sent.inputMessage;
+        setInputMessage(sent.inputMessage);
+        setMentionNames(sent.mentionNames);
+        setMentionsPosition(sent.mentionsPosition);
+        setReplyCommentId(sent.replyCommentId);
+        setReplyUserName(sent.replyUserName);
       }
     }
-    setInputMessage('');
-    Keyboard.dismiss();
-    setMentionNames([]);
-    setMentionsPosition([]);
-    onCloseReply();
   };
 
   const renderFooterComponent = () => {
@@ -358,10 +390,15 @@ const AmityPostDetailPage: FC<AmityPostDetailPageType> = ({
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior="padding"
+      // Android's keyboardDidHide reports a screenY above the screen bottom,
+      // which RN's KAV keeps as padding once the keyboard has closed.
+      enabled={Platform.OS === 'ios' || isKeyboardShowing}
+      keyboardVerticalOffset={ancestorOffset}
+      onLayout={measureAncestorOffset}
     >
       <SafeAreaView
+        ref={contentRef}
         edges={['top']}
         testID={accessibilityId}
         style={styles.container}

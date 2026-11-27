@@ -783,6 +783,7 @@
       "image": "icon",
       "text": "Copy post link"
     },
-    "community_livestreams_notification_page/*/*": {}
+    "community_livestreams_notification_page/*/*": {},
+    "*/content_report_reason/*": {}
   }
 }

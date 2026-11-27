@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
-import { getCommunityById } from '../../../core/legacy/community';
+import { useCommunity } from '../../../core/hooks/objects';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useFlagPost, isModerator, useGlobalBehavior } from '../../hooks';
@@ -21,6 +21,8 @@ import { isAdmin } from '../../utils/permissions';
 import { usePostShareAction } from '../../features/post/components/EngagementActions/Components/usePostShareAction';
 import { CopyLinkAction } from '../../elements/CopyLinkAction';
 import { ShareAction } from '../../elements/ShareAction';
+import { ContentReportReason } from '../../features/report/ContentReportReason';
+import { ReportContentType } from '../../types';
 
 type PostMenuProps = {
   pageId?: PageID;
@@ -33,16 +35,21 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   const { handleGlobalBehavior } = useGlobalBehavior();
   const { closePoll } = useClosePoll();
   const { client } = useAuth();
-  const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const { deleteByPostId } = globalFeedSlice.actions;
   const dispatch = useUIKitDispatch();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const { openBottomSheet, closeBottomSheet, bottomSheetHeight } =
-    useBottomSheet();
-  const { isFlaggedByMe, reportPost, unreportPost } = useFlagPost({
+  const {
+    openBottomSheet,
+    closeBottomSheet,
+    bottomSheetHeight,
+    content: bottomSheetContent,
+  } = useBottomSheet();
+  const { isFlaggedByMe, unreportPost } = useFlagPost({
     postId: post?.postId,
   });
+  const [isReportReasonPending, setIsReportReasonPending] = useState(false);
+  const [isReportReasonVisible, setIsReportReasonVisible] = useState(false);
 
   const { postId, targetType, targetId } = post ?? {};
   const myId = (client as Amity.Client).userId;
@@ -54,20 +61,32 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
 
   const childrenPost = post?.childrenPosts?.[0];
 
-  useEffect(() => {
-    if (targetType === 'community' && targetId) {
-      getCommunityInfo(targetId);
-    }
-  }, [targetId, targetType]);
+  const { community: communityData } = useCommunity({
+    communityId: targetId,
+    enabled: targetType === 'community',
+  });
 
-  async function getCommunityInfo(id: string) {
-    const { data: community }: { data: Amity.LiveObject<Amity.Community> } =
-      await getCommunityById(id);
-    if (community.error) return;
-    if (!community.loading) {
-      setCommunityData(community?.data);
-    }
-  }
+  // The menu is itself a sheet, and iOS presents one Modal at a time, so the
+  // report reason sheet waits until the menu has finished closing — the point
+  // where the menu's content is cleared. That clear lands in the same render as
+  // the menu's Modal unmounting, so the sheet opens two frames later, once that
+  // Modal is off screen, rather than in the same commit.
+  useEffect(() => {
+    if (!isReportReasonPending || bottomSheetContent) return undefined;
+
+    let secondFrame: number | undefined;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        setIsReportReasonPending(false);
+        setIsReportReasonVisible(true);
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      if (secondFrame !== undefined) cancelAnimationFrame(secondFrame);
+    };
+  }, [isReportReasonPending, bottomSheetContent]);
 
   const goToEditPost = () => {
     closeBottomSheet();
@@ -122,7 +141,9 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
           iconProps={{ xml: report() }}
           onPress={() => {
             closeBottomSheet();
-            handleGlobalBehavior({ defaultBehavior: () => reportPost(postId) });
+            handleGlobalBehavior({
+              defaultBehavior: () => setIsReportReasonPending(true),
+            });
           }}
         />
       ),
@@ -222,16 +243,26 @@ export function PostMenu({ pageId, componentId, post }: PostMenuProps) {
   ].filter(({ show }) => show);
 
   return (
-    <MenuButton
-      pageId={pageId}
-      componentId={componentId}
-      hitSlop={12}
-      onPress={() => {
-        openBottomSheet({
-          height: bottomSheetHeight[actions.length],
-          content: <View>{actions.map(({ action }) => action)}</View>,
-        });
-      }}
-    />
+    <>
+      <MenuButton
+        pageId={pageId}
+        componentId={componentId}
+        hitSlop={12}
+        onPress={() => {
+          openBottomSheet({
+            height: bottomSheetHeight[actions.length],
+            content: <View>{actions.map(({ action }) => action)}</View>,
+          });
+        }}
+      />
+      {isReportReasonVisible && (
+        <ContentReportReason
+          pageId={pageId}
+          contentType={ReportContentType.post}
+          contentId={postId}
+          onClose={() => setIsReportReasonVisible(false)}
+        />
+      )}
+    </>
   );
 }

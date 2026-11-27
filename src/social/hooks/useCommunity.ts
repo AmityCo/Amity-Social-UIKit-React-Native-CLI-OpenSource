@@ -1,24 +1,6 @@
-import { useEffect, useState } from 'react';
-import { CommunityRepository } from '@amityco/ts-sdk-react-native';
+import { useCommunity as useCommunityObject } from '../../core/hooks/objects';
 
 export const useCommunity = (communityId: Amity.Community['communityId']) => {
-  const [loading, setLoading] = useState(true);
-  const [community, setCommunity] = useState<Amity.Community>();
-
-  useEffect(() => {
-    const unsubscribe = CommunityRepository.getCommunity(
-      communityId,
-      ({ error, loading, data }) => {
-        setLoading(loading);
-        if (error) return;
-        if (!loading) {
-          setCommunity(data);
-        }
-      }
-    );
-    return () => {
-      unsubscribe();
-    };
-  }, [communityId]);
-  return { community, loading };
+  const { community, isLoading } = useCommunityObject({ communityId });
+  return { community, loading: isLoading };
 };

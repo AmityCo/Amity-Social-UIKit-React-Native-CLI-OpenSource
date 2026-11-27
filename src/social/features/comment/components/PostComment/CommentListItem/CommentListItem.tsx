@@ -35,7 +35,6 @@ import { Pressable } from 'react-native';
 import useAuth from '../../../../../../core/hooks/useAuth';
 import {
   isReportTarget,
-  reportTargetById,
   unReportTargetById,
 } from '../../../../../../core/legacy/feed';
 import EditCommentModal from '../../../../../components/legacy/EditCommentModal';
@@ -54,6 +53,12 @@ import { useUIKitDispatch } from '../../../../../../core/stores/store';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../../../core/routes/RouteParamList';
+import {
+  ContentReportReason,
+  useReportReasonSheet,
+} from '../../../../report/ContentReportReason';
+import { ReportContentType } from '../../../../../types';
+import { isPendingComment, isVisibleComment } from '../../../../../utils';
 
 export interface IComment {
   commentId: string;
@@ -72,6 +77,7 @@ export interface IComment {
   childrenNumber: number;
   targetType?: string;
   targetId?: string;
+  isPending?: boolean;
 }
 export interface ICommentList {
   commentDetail: IComment;
@@ -137,11 +143,26 @@ const CommentListItem = ({
   const [isReactionListVisible, setIsReactionListVisible] = useState(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {
+    isReportReasonVisible,
+    openReportReason,
+    closeReportReason,
+    onMenuDismiss,
+  } = useReportReasonSheet();
+  // One reply collection for the row's lifetime. "View replies" used to open
+  // another on every tap and none were closed, so each like, reply or delete
+  // in the thread rebuilt the list once per subscription.
+  const replyUnsubscribeRef = useRef<(() => void) | null>(null);
+  // The author lookups below resolve out of order: an older update that
+  // finishes last must not overwrite a newer list.
+  const replyUpdateIdRef = useRef({ reply: 0, preview: 0 });
 
   useEffect(() => {
     getReplyComments();
     setIsOpenReply(false);
     return () => {
+      replyUnsubscribeRef.current?.();
+      replyUnsubscribeRef.current = null;
       setIsOpenReply(false);
     };
   }, []);
@@ -168,71 +189,83 @@ const CommentListItem = ({
     replyComments,
     isPreviewReply: boolean = false
   ) => {
+    const kind = isPreviewReply ? 'preview' : 'reply';
+    const updateId = ++replyUpdateIdRef.current[kind];
+
+    // Build the new list before replacing the old one. Emptying it first
+    // unmounted every reply row while the lookups ran, and any edit modal
+    // open on a reply closed with its row.
+    const formattedCommentList: IComment[] =
+      replyComments && replyComments.length > 0
+        ? await Promise.all(
+            replyComments.map(async (item: Amity.InternalComment<any>) => {
+              const { userObject } = await getAmityUser(item.userId);
+              let formattedUserObject: UserInterface;
+              formattedUserObject = {
+                userId: userObject.data.userId,
+                displayName: userObject.data.displayName,
+                avatarFileId: userObject.data.avatarFileId,
+                avatarCustomUrl: userObject.data?.avatarCustomUrl,
+                isBrand: userObject.data?.isBrand,
+              };
+
+              return {
+                targetType: item.targetType,
+                // Empty on an optimistic reply until the server confirms it.
+                targetId: item.targetId || targetId,
+                commentId: item.commentId,
+                data: item.data as Record<string, any>,
+                dataType: item.dataType,
+                myReactions: item.myReactions as string[],
+                reactions: item.reactions as Record<string, number>,
+                user: formattedUserObject as UserInterface,
+                updatedAt: item.updatedAt,
+                editedAt: item.editedAt,
+                createdAt: item.createdAt,
+                childrenComment: item.children,
+                referenceId: item.referenceId,
+                mentionPosition: item?.metadata?.mentioned,
+                isPending: isPendingComment(item),
+              };
+            })
+          )
+        : [];
+
+    if (updateId !== replyUpdateIdRef.current[kind]) return;
     if (isPreviewReply) {
-      setPreviewReplyCommentList([]);
+      setPreviewReplyCommentList(formattedCommentList);
     } else {
-      setReplyCommentList([]);
-    }
-
-    if (replyComments && replyComments.length > 0) {
-      const formattedCommentList = await Promise.all(
-        replyComments.map(async (item: Amity.InternalComment<any>) => {
-          const { userObject } = await getAmityUser(item.userId);
-          let formattedUserObject: UserInterface;
-          formattedUserObject = {
-            userId: userObject.data.userId,
-            displayName: userObject.data.displayName,
-            avatarFileId: userObject.data.avatarFileId,
-            avatarCustomUrl: userObject.data?.avatarCustomUrl,
-            isBrand: userObject.data?.isBrand,
-          };
-
-          return {
-            targetType: item.targetType,
-            targetId: item.targetId,
-            commentId: item.commentId,
-            data: item.data as Record<string, any>,
-            dataType: item.dataType,
-            myReactions: item.myReactions as string[],
-            reactions: item.reactions as Record<string, number>,
-            user: formattedUserObject as UserInterface,
-            updatedAt: item.updatedAt,
-            editedAt: item.editedAt,
-            createdAt: item.createdAt,
-            childrenComment: item.children,
-            referenceId: item.referenceId,
-            mentionPosition: item?.metadata?.mentioned,
-          };
-        })
-      );
-      if (isPreviewReply) {
-        setPreviewReplyCommentList([...formattedCommentList]);
-      } else {
-        setReplyCommentList([...formattedCommentList]);
-      }
+      setReplyCommentList(formattedCommentList);
     }
   };
-  const getReplyComments = async () => {
+  const getReplyComments = () => {
+    if (replyUnsubscribeRef.current) return;
     const getCommentsParams: Amity.CommentLiveCollection = {
       referenceType: postType,
       referenceId: referenceId, // post ID
-      dataTypes: { values: ['text', 'image'], matchType: 'any' },
       limit: 5,
       parentId: commentId,
     };
 
-    CommentRepository.getComments(getCommentsParams, (result) => {
-      setReplyCommentCollection(result);
-      formatReplyComments(result.data);
-    });
+    replyUnsubscribeRef.current = CommentRepository.getComments(
+      getCommentsParams,
+      (result) => {
+        setReplyCommentCollection(result);
+        formatReplyComments(result.data?.filter(isVisibleComment));
+      }
+    );
   };
   const openReplyComment = () => {
     setIsOpenReply(true);
     getReplyComments();
   };
+  // A comment still sending isn't on the server yet, so checking it would
+  // 404; check once the server has it. Its row takes no taps until then.
+  const isPending = commentDetail?.isPending;
   useEffect(() => {
+    if (isPending) return;
     checkIsReport();
-  }, [childrenComment]);
+  }, [childrenComment, isPending]);
 
   const addReactionToComment: () => Promise<void> = async () => {
     if (isLike && likeReaction) {
@@ -274,17 +307,7 @@ const CommentListItem = ({
         );
       }
     } else {
-      const reportPost = await reportTargetById('comment', commentId);
-      setIsVisible(false);
-      setIsReportByMe(true);
-      if (reportPost) {
-        dispatch(
-          showToastMessage({
-            toastMessage: 'Comment reported',
-            isSuccessToast: true,
-          })
-        );
-      }
+      openReportReason();
     }
   };
   const modalStyle = {
@@ -458,11 +481,17 @@ const CommentListItem = ({
             <FlatList
               data={replyCommentList}
               renderItem={({ item }) => (
-                <ReplyCommentList
-                  commentId={item.commentId}
-                  commentDetail={item}
-                  onDelete={onDelete}
-                />
+                // A like on a reply the server hasn't confirmed would fail.
+                <View
+                  pointerEvents={item.isPending ? 'none' : 'auto'}
+                  style={item.isPending && styles.pendingReply}
+                >
+                  <ReplyCommentList
+                    commentId={item.commentId}
+                    commentDetail={item}
+                    onDelete={onDelete}
+                  />
+                </View>
               )}
               keyExtractor={(item) => item.commentId}
             />
@@ -496,6 +525,7 @@ const CommentListItem = ({
         transparent={true}
         visible={isVisible}
         onRequestClose={closeModal}
+        onDismiss={onMenuDismiss}
       >
         <Pressable onPress={closeModal} style={styles.modalContainer}>
           <Animated.View
@@ -567,6 +597,14 @@ const CommentListItem = ({
           referenceType="comment"
           isModalVisible={isReactionListVisible}
           onCloseModal={() => setIsReactionListVisible(false)}
+        />
+      )}
+      {isReportReasonVisible && (
+        <ContentReportReason
+          contentType={ReportContentType.comment}
+          contentId={commentId}
+          onReported={() => setIsReportByMe(true)}
+          onClose={closeReportReason}
         />
       )}
     </View>

@@ -2,11 +2,11 @@ import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { FC, memo, useCallback, useEffect, useState, useRef } from 'react';
 import { AmityPostEngagementActionsSubComponentType } from './type';
 import {
-  PostRepository,
   SubscriptionLevels,
   getPostTopic,
   subscribeTopic,
 } from '@amityco/ts-sdk-react-native';
+import { usePost } from '../../../../../../core/hooks/objects';
 import { useStyles } from './styles';
 import {
   useAmityComponent,
@@ -27,6 +27,7 @@ import CommentButtonIconElement from '../../../../../elements/CommentButtonIconE
 import { useBehaviour } from '../../../../../providers/BehaviourProvider';
 import { formatNumber } from '../../../../../../core/utils/number';
 import { usePostShareAction } from './usePostShareAction';
+import { PostWithLocalCommentCount } from '../../../../../types';
 import { ShareButton } from '../../../../../elements/ShareButton';
 
 const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
@@ -44,7 +45,12 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   const { handleInteraction } = useInteractionBehavior();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [postData, setPostData] = useState<Amity.Post>(null);
+  const { post: postData } = usePost({ postId });
+  // Not `localCommentCount`: the SDK drops that field from the cached post
+  // whenever a reaction event replaces it.
+  const commentCount = (
+    postData as PostWithLocalCommentCount | null
+  )?.getLocalCommentCount(true);
   const [isLike, setIsLike] = useState(false);
   const [totalReactions, setTotalReactions] = useState(0);
   const unsubscribeRef = useRef<() => void>(null);
@@ -56,17 +62,15 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
   });
 
   useEffect(() => {
-    PostRepository.getPost(postId, ({ error, loading, data }) => {
-      if (!error && !loading) {
-        setPostData(data);
-        setTotalReactions(data.reactionsCount);
-        setIsLike(data.myReactions?.length > 0);
-      }
-    });
-    return () => unsubscribeRef?.current && unsubscribeRef?.current();
-  }, [postId]);
+    if (!postData) return;
+    setTotalReactions(postData.reactionsCount);
+    setIsLike(postData.myReactions?.length > 0);
+  }, [postData]);
+
+  useEffect(() => () => unsubscribeRef.current?.(), [postId]);
 
   const addReactionToPost = useCallback(async () => {
+    unsubscribeRef.current?.();
     unsubscribeRef.current = subscribeTopic(
       getPostTopic(postData, SubscriptionLevels.POST)
     );
@@ -139,7 +143,7 @@ const FeedStyle: FC<AmityPostEngagementActionsSubComponentType> = ({
             height={20}
             resizeMode="contain"
           />
-          <Text style={styles.btnText}>{postData?.localCommentCount}</Text>
+          <Text style={styles.btnText}>{commentCount}</Text>
         </TouchableOpacity>
       </View>
       {shareLink && (

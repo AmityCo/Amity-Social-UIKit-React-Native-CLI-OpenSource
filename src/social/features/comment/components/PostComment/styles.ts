@@ -131,6 +131,9 @@ export const useStyles = () => {
     commentListFooter: {
       width: width,
     },
+    pendingComment: {
+      opacity: 0.5,
+    },
   });
 
   return styles;

@@ -14,7 +14,7 @@ const CommunityPrivateBadge: FC<CommunityPrivateBadgeProps> = ({
   componentId = ComponentID.WildCardComponent,
 }) => {
   const elementId = ElementID.community_private_badge;
-  const { isExcluded, accessibilityId, themeStyles } = useAmityElement({
+  const { config, isExcluded, accessibilityId, themeStyles } = useAmityElement({
     pageId,
     componentId,
     elementId,
@@ -26,7 +26,10 @@ const CommunityPrivateBadge: FC<CommunityPrivateBadgeProps> = ({
       component: componentId,
       element: elementId,
     },
-    configKey: 'image',
+    // Some config entries, and host configs copied from them, set this badge
+    // under `icon` rather than `image`. Reading only `image` drew the default
+    // avatar in its place.
+    configKey: config?.icon && !config?.image ? 'icon' : 'image',
   });
 
   const styles = StyleSheet.create({

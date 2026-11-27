@@ -9,7 +9,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { arrowForward } from '../../../../../core/assets/icons/xml';
 import { useStyles } from './styles';
-import { getCommunityById } from '../../../../../core/legacy/community';
+import { useCommunity } from '../../../../../core/hooks/objects';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from 'react-native-paper';
@@ -75,7 +75,6 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
   });
   const styles = useStyles(themeStyles);
   const [textPost, setTextPost] = useState<string>('');
-  const [communityData, setCommunityData] = useState<Amity.Community>(null);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [mentionPositionArr, setMentionsPositionArr] = useState<
@@ -85,8 +84,6 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
   const {
     postId,
     data,
-    myReactions = [],
-    reactions: reactionCount,
     createdAt,
     creator,
     targetType,
@@ -106,21 +103,14 @@ const AmityPostContentComponent: FC<AmityPostContentComponentProps> = ({
     }
   }, [mentionPosition]);
 
+  const { community: communityData } = useCommunity({
+    communityId: targetId,
+    enabled: targetType === 'community',
+  });
+
   useEffect(() => {
     setTextPost((data as Amity.ContentDataText)?.text);
-    if (targetType === 'community' && targetId) {
-      getCommunityInfo(targetId);
-    }
-  }, [data, myReactions, reactionCount?.like, targetId, targetType]);
-
-  async function getCommunityInfo(id: string) {
-    const { data: community }: { data: Amity.LiveObject<Amity.Community> } =
-      await getCommunityById(id);
-    if (community.error) return;
-    if (!community.loading) {
-      setCommunityData(community?.data);
-    }
-  }
+  }, [data]);
 
   const handleDisplayNamePress = () => {
     if (!creator?.userId) return null;

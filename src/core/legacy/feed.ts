@@ -91,7 +91,9 @@ export async function removePostReaction(
 export function getPostById(postId: string): Promise<any> {
   const communityObject = new Promise((resolve, reject) => {
     let object;
-    const unsubscribe = PostRepository.getPost(
+    let isSettled = false;
+    let unsubscribe: (() => void) | undefined;
+    unsubscribe = PostRepository.getPost(
       postId,
       ({ data: postInfo, loading, error }) => {
         if (error) {
@@ -100,8 +102,13 @@ export function getPostById(postId: string): Promise<any> {
         if (!loading) {
           object = postInfo;
         }
+        if (error || !loading) {
+          isSettled = true;
+          unsubscribe?.();
+        }
       }
     );
+    if (isSettled) unsubscribe();
     resolve({ data: object, unsubscribe });
   });
   return communityObject;
@@ -278,21 +285,22 @@ export async function reportTargetById(
   });
   return isReport;
 }
+/**
+ * Whether the current user has reported this content. A failed check answers
+ * false instead of throwing: every caller only acts on a yes, and a comment
+ * still sending isn't on the server yet, so checking it 404s ("CommentId …
+ * not found", 400400). That used to surface as an uncaught promise error on
+ * new comments, and the promise never settled at all when the answer was no.
+ */
 export async function isReportTarget(
   targetType: 'post' | 'comment' | 'user',
   targetId: string
 ): Promise<boolean> {
-  const isReport: Promise<boolean> = new Promise(async (resolve, reject) => {
-    try {
-      const isReportByMe = await isReportedByMe(targetType, targetId);
-      if (isReportByMe) {
-        resolve(isReportByMe);
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-  return isReport;
+  try {
+    return !!(await isReportedByMe(targetType, targetId));
+  } catch {
+    return false;
+  }
 }
 
 export async function unReportTargetById(
