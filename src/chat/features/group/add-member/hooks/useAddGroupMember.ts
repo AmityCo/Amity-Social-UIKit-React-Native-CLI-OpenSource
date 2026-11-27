@@ -22,7 +22,7 @@ const SEARCH_DEBOUNCE_MS = 300;
 
 const schema = z.object({
   searchText: z.string(),
-  selectedUsers: z.array(z.custom<Amity.InternalUser>()).min(1),
+  selectedUsers: z.array(z.custom<Amity.User>()).min(1),
 });
 
 type AddGroupMemberForm = z.infer<typeof schema>;
@@ -65,7 +65,7 @@ export function useAddGroupMember({
     form.setValue('searchText', value, { shouldValidate: true });
   }
 
-  function setSelectedUsers(users: Amity.InternalUser[]) {
+  function setSelectedUsers(users: Amity.User[]) {
     form.setValue('selectedUsers', users, {
       shouldValidate: true,
       shouldDirty: true,

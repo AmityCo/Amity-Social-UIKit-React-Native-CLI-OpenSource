@@ -15,7 +15,7 @@ import { useStyles } from './styles';
 // 3. Types
 type HeaderProps = {
   searchValue: string;
-  selectedUsers: Amity.InternalUser[];
+  selectedUsers: Amity.User[];
   onClose: () => void;
   onSearchChange: (value: string) => void;
   onRemoveUser: (userId: string) => void;

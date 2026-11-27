@@ -4,30 +4,46 @@ import { PostRepository } from '@amityco/ts-sdk-react-native';
 /**
  * Resolve a list of post ids to their loaded post objects — the same approach
  * the web UIKit uses (core/hooks/usePostByIds) to load an edited post's child
- * media. Uses the batch `getPostByIds` API, which is properly awaited, instead
- * of the racy per-id live-object fetch.
+ * media. Reads the cache first and falls back to the batch `getPostByIds` API.
+ * Nothing stays subscribed, so it adds no handlers to the SDK's post events.
  */
 export const usePostByIds = (postIds: string[]) => {
-  const [posts, setPosts] = useState<Amity.Post[]>([]);
   // Depend on a stable string key so a fresh `[]`/array identity each render
   // doesn't re-trigger the effect (and loop).
   const key = (postIds ?? []).join(',');
+  const [resolved, setResolved] = useState<{
+    key: string;
+    posts: Amity.Post[];
+  }>({ key: '', posts: [] });
 
   useEffect(() => {
-    let active = true;
-    async function run() {
-      if (!key) {
-        setPosts((prev) => (prev.length ? [] : prev));
-        return;
-      }
-      const response = await PostRepository.getPostByIds(key.split(','));
-      if (active) setPosts(response.data);
+    if (!key) {
+      setResolved({ key, posts: [] });
+      return undefined;
     }
-    run();
+
+    const ids = key.split(',');
+    const cached = PostRepository.getPostByIds.locally(ids)?.data;
+    if (cached?.length === ids.length) {
+      setResolved({ key, posts: cached });
+      return undefined;
+    }
+
+    let active = true;
+    PostRepository.getPostByIds(ids)
+      .then(({ data }) => {
+        if (active) setResolved({ key, posts: data });
+      })
+      .catch(() => {
+        if (active) setResolved({ key, posts: [] });
+      });
     return () => {
       active = false;
     };
   }, [key]);
 
-  return posts;
+  return {
+    posts: resolved.posts,
+    isLoading: !!key && resolved.key !== key,
+  };
 };

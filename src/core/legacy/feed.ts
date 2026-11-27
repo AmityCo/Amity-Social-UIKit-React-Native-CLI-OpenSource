@@ -91,7 +91,9 @@ export async function removePostReaction(
 export function getPostById(postId: string): Promise<any> {
   const communityObject = new Promise((resolve, reject) => {
     let object;
-    const unsubscribe = PostRepository.getPost(
+    let isSettled = false;
+    let unsubscribe: (() => void) | undefined;
+    unsubscribe = PostRepository.getPost(
       postId,
       ({ data: postInfo, loading, error }) => {
         if (error) {
@@ -100,8 +102,13 @@ export function getPostById(postId: string): Promise<any> {
         if (!loading) {
           object = postInfo;
         }
+        if (error || !loading) {
+          isSettled = true;
+          unsubscribe?.();
+        }
       }
     );
+    if (isSettled) unsubscribe();
     resolve({ data: object, unsubscribe });
   });
   return communityObject;
